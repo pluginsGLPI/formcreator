@@ -83,7 +83,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       }
       
       echo "<script type='text/javascript'>";
+      echo 'var editDiv = document.getElementById("editQuestion");';
+      echo 'if(editDiv == "undefined") {';
       echo 'document.getElementById("editQuestion").innerHTML = "";';
+      echo '}';
       echo "</script>";
       
       $paramsType = array('type'       => __CLASS__,
@@ -485,7 +488,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       }
       
       echo "<script type='text/javascript'>";
+      echo 'var addQuestion = document.getElementById("viewaddquestion");';
+      echo 'if(addQuestion != "undefined") {';
       echo 'document.getElementById("viewaddquestion").innerHTML = "";';
+      echo '}';
       echo "</script>";
       
       $paramsType = array('type'       => __CLASS__,
