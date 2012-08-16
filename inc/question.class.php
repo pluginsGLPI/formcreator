@@ -583,13 +583,14 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             
          echo "</td>";
          echo "</tr>";
-
-         
-         echo "<tr>";
-         echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
-         echo "</td>";
-         echo "</tr>";
+		echo "<tr>";
+		echo "<td class='center' colspan='2'>";
+			echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
+		echo "</td>";
+		echo "<td class='center' colspan='2'>";
+			echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
+		echo "</td>";
+		echo "</tr>";
          
       echo "</table>";
       echo "</div>";

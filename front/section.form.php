@@ -21,7 +21,7 @@ if (isset($_POST["add"])) {
    $form->check($_POST["id"],'d');
    $form->delete($_POST);
 
-   $form->redirectToList();
+   Html::back();
 
 } else if (isset($_POST["restore"])) {
    $form->check($_POST["id"],'d');
