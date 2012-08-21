@@ -61,7 +61,8 @@ foreach($sections as $section_id => $section_value) {
                echo "<td>";
                $helpdesk->getInputQuestion($question_id,
                                            $question_value['type'],
-                                           $question_value['data']);
+                                           $question_value['data'],
+                                           $question_value['option']);
                                            
                $question_option = json_decode($question_value['option'],true);
                $question_option_type = $question_option['type'];

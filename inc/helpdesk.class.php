@@ -56,16 +56,39 @@ class PluginFormcreatorHelpdesk {
       
    }  
      
-   function getInputQuestion($id,$type,$data) {
+   function getInputQuestion($id,$type,$data,$option) {
       global $LANG;
       
       $tab = PluginFormcreatorQuestion::_unserialize($data);
-
+      
+      $question_option = json_decode($option,true);
+      $question_option_type = $question_option['type'];
+      $question_option_regex = urldecode($question_option['value']);
+      
       switch ($type) {
 
          case PluginFormcreatorQuestion::TEXT_FIELD: // Text
-            
-            echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40"/>';
+            switch ($question_option['type']) {
+             case 1:
+                 echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40"/>';
+                 break;
+             
+             case 2:
+                 echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40" onblur="verifTextNum(this);"/>';
+                 break;
+             
+             case 3:
+                 echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40" onblur="verifText(this);"/>';
+                 break;
+             
+             case 4:
+                 echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40" onblur="verifNum(this);"/>';
+                 break;
+             
+             case 5:
+                 echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40" onblur="verifRegex(this,'. $question_option_regex .');"/>';
+                 break;
+            }
             break;
                      
          case PluginFormcreatorQuestion::SELECT_FIELD: // Select
