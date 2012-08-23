@@ -88,6 +88,9 @@ class PluginFormcreatorHelpdesk {
              case 5:
                  echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40" onblur="verifRegex(this,'. $question_option_regex .');"/>';
                  break;
+             case 6:
+                 echo '<input type="text" name="question_'.$id.'" value="'.$tab['value'].'" size="40" onblur="verifMail(this);"/>';
+                 break;
             }
             break;
                      
@@ -134,7 +137,7 @@ class PluginFormcreatorHelpdesk {
             echo '</table>';
             
             break;
-
+        
         case PluginFormcreatorQuestion::MULTIPLICATION_ITEM_FIELD: // 2 textfields sum
             echo '<script language="javascript">
             function multiplication(value1, value2, somme) { somme.value = value1 * value2; }
@@ -166,6 +169,9 @@ class PluginFormcreatorHelpdesk {
                break;
             case 4: 
                $return.= $LANG['plugin_formcreator']["regex_type"][4];
+               break;
+            case 6: 
+               $return.= $LANG['plugin_formcreator']["regex_type"][6];
                break;
          }
          $return.= '&nbsp;)</span>';

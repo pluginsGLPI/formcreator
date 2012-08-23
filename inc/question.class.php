@@ -203,8 +203,8 @@ class PluginFormcreatorQuestion extends CommonDBTM {
          case self::VALIDATION_FIELD: // Validation
             self::getValidation();
             
-            break;
-		 case self::MULTIPLICATION_ITEM_FIELD: // two fields sum
+             break;
+         case self::MULTIPLICATION_ITEM_FIELD: // two fields sum
             self::getMultiplication();
             
             break;
@@ -251,7 +251,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             </span>';
       echo "<br/><p>".$LANG['plugin_formcreator']["question"][12]." : ";
       echo "<select name='option' id='option'>";
-      for($i=1;$i<=5;$i++) { 
+      for($i=1;$i<=6;$i++) { 
          echo "<option value='".$i."'>".$LANG['plugin_formcreator']["regex_type"][$i]."</option>";
       }
       echo "</select>&nbsp;<span id='otherType'></span></p>";
@@ -277,7 +277,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             </span>';
       echo '</td>';
    }
-
+   
    static function getMultiplication($valueId=1) {
       
       if($valueId == 1) {
@@ -311,7 +311,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       echo '</div>';
       
    }
-   
+      
    static function getValue($valueId=1) {
       
       if($valueId == 1) {
@@ -374,9 +374,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       switch($type) {
          
          case self::TEXT_FIELD: // Text
-            
             $result['data']['value'] = $params['value_1'];
-            
             break;
          
          case self::SELECT_FIELD: // Select
@@ -404,7 +402,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
          case self::VALIDATION_FIELD: // Validation
             $result['data']['value'] = $params['value_1'];
             break;
-			
+        
         case self::MULTIPLICATION_ITEM_FIELD: // Sum
             for($i = 1; $i <= $nbValue; $i++) {
                $result['data']['typeMat'][$i] = $params['typeMat_'.$i];
@@ -446,6 +444,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             break;
          case 5: // Autre
             $tab['value'] = $expression;
+            break;
+         case 6: //Email
+            $tab['value'] = "#^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$";
             break;
       }
       
@@ -520,6 +521,8 @@ class PluginFormcreatorQuestion extends CommonDBTM {
    }
 
    function showFormEdit($params,$options=array()) {
+        
+      //question modification
       global $LANG, $CFG_GLPI;
       
       if ($params['id'] > 0) {
@@ -625,14 +628,16 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             
          echo "</td>";
          echo "</tr>";
-		echo "<tr>";
-		echo "<td class='center' colspan='2'>";
-			echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
-		echo "</td>";
-		echo "<td class='center' colspan='2'>";
-			echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
-		echo "</td>";
-		echo "</tr>";
+
+         
+         echo "<tr>";
+         echo "<td class='center' colspan='2'>";
+            echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
+         echo "</td>";
+         echo "<td class='center' colspan='2'>";
+            echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
+         echo "</td>";
+         echo "</tr>";
          
       echo "</table>";
       echo "</div>";
@@ -672,7 +677,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             echo "<br/><p>".$LANG['plugin_formcreator']["question"][12]." : ";
             echo "<select name='option' id='option'>";
             
-            for($i=1;$i<=5;$i++) { 
+            for($i=1;$i<=6;$i++) { 
                
                if($i == $tab_option['type']) {
                   echo "<option value='".$i."' selected='selected'>".
@@ -722,6 +727,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             self::getNextValueEdit($nbValue);
             
             break;
+         
          case self::TEXTAREA_FIELD: // Textarea
             
             echo "<input type='hidden' id='nbValue' name='nbValue' value='1'/>";
@@ -756,8 +762,8 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                   '.$LANG['plugin_formcreator']["question"][3].'
                   </span>';       
             break;
-
-		 case self::MULTIPLICATION_ITEM_FIELD: // Sum
+            
+         case self::MULTIPLICATION_ITEM_FIELD: // Sum
          
             echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";  
                       
@@ -867,10 +873,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             return $LANG['plugin_formcreator']["type_question"][6];                        
          
             break;
-		 case self::MULTIPLICATION_ITEM_FIELD: // calcul between box
+        case self::MULTIPLICATION_ITEM_FIELD: // calcul between box
             return $LANG['plugin_formcreator']["type_question"][7];                        
          
-            break;
+            break; 
       }
       
    }

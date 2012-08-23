@@ -1,6 +1,7 @@
 <?php
 
 $LANG['plugin_formcreator']["name"] = "Form Creator";
+$LANG['plugin_formcreator']["name2"] = "FU";
 
 $LANG['plugin_formcreator']["error_form"][0] = "Votre formulaire ne contient pas de nom,";
 $LANG['plugin_formcreator']["error_form"][0].= "veuillez corriger.";
@@ -22,6 +23,8 @@ $LANG['plugin_formcreator']["question"][9].= " pouvoir ajouter une question.";
 $LANG['plugin_formcreator']["question"][10] = "Expression rationnelle";
 $LANG['plugin_formcreator']["question"][11] = "Ordre d'affichage";
 $LANG['plugin_formcreator']["question"][12] = "Validation";
+$LANG['plugin_formcreator']["question"][13] = "Coefficient";
+
                                              
 $LANG['plugin_formcreator']["type_question"][1] = "Champ texte";
 $LANG['plugin_formcreator']["type_question"][2] = "Liste déroulante";
@@ -29,7 +32,7 @@ $LANG['plugin_formcreator']["type_question"][3] = "Case à cocher";
 $LANG['plugin_formcreator']["type_question"][4] = "Zone de texte";
 $LANG['plugin_formcreator']["type_question"][5] = "Envoi de fichier";
 $LANG['plugin_formcreator']["type_question"][6] = "Demande de validation";
-$LANG['plugin_formcreator']["type_question"][7] = "Somme de 2 champs";
+$LANG['plugin_formcreator']["type_question"][7] = "Multiplication de 2 champs";
       
 $LANG['plugin_formcreator']["headings"][0] = "Formulaire";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket(s) cible(s)";
@@ -41,7 +44,8 @@ $LANG['plugin_formcreator']["headings"][6] = "Liste des formulaires";
 
 $LANG['plugin_formcreator']["section"][0] = "Ajouter une nouvelle section";   
 $LANG['plugin_formcreator']["section"][1] = "Nouvelle section";   
-$LANG['plugin_formcreator']["section"][2] = "Vous devez d'abord créer une cible pour pouvoir ajouter une section.";
+$LANG['plugin_formcreator']["section"][2] = "Vous devez d'abord créer une cible pour ";
+$LANG['plugin_formcreator']["section"][2].= "pouvoir ajouter une section.";   
 $LANG['plugin_formcreator']["section"][3] = "Section";  
 
 $LANG['plugin_formcreator']["target"][0] = "Ajouter un nouveau ticket cible";   
@@ -59,6 +63,7 @@ $LANG['plugin_formcreator']["regex_type"][2] = "Alphanumérique";
 $LANG['plugin_formcreator']["regex_type"][3] = "Alphabétique";
 $LANG['plugin_formcreator']["regex_type"][4] = "Numérique";
 $LANG['plugin_formcreator']["regex_type"][5] = "Expression rationnelle";
+$LANG['plugin_formcreator']["regex_type"][6] = "Email";
 
 $LANG['plugin_formcreator']["helpdesk"][1] = "Aucun formulaire de disponible.";
 $LANG['plugin_formcreator']["helpdesk"][2] = "Taille max";

@@ -4,21 +4,6 @@ function changeNbValue(newValue) {
    return true;
 }
 
-function verifForm(f)
-{
-   var pseudoOk = verifPseudo(f.pseudo);
-   var mailOk = verifMail(f.email);
-   var ageOk = verifAge(f.age);
-   
-   if(pseudoOk && mailOk && ageOk)
-      return true;
-   else
-   {
-      alert("Please fill correctly all the form");
-      return false;
-   }
-}
-
 function verifText(champ)
 {
     var regex = /^[a-zA-Z]*$/;
@@ -77,6 +62,21 @@ function verifTextNum(champ)
 {
     var regex = /^[a-zA-Z0-9]*$/;
     if(!regex.test(champ.value) || champ.value.length < 2)
+    {
+        surligne(champ, true);
+        return false;
+    }
+    else
+    {
+        surligne(champ, false);
+        return true;
+    }
+}
+
+function verifMail(champ)
+{
+    var regex = /^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+    if(!regex.test(champ.value))
     {
         surligne(champ, true);
         return false;

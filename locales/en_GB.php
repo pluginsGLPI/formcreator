@@ -1,6 +1,7 @@
 <?php
 
 $LANG['plugin_formcreator']["name"] = "Form Creator";
+$LANG['plugin_formcreator']["name2"] = "UF";
 
 $LANG['plugin_formcreator']["error_form"][0] = "Your form does not contain name,";
 $LANG['plugin_formcreator']["error_form"][0].= "please correct.";
@@ -22,14 +23,15 @@ $LANG['plugin_formcreator']["question"][9].= " to submit a question.";
 $LANG['plugin_formcreator']["question"][10] = "Regular expression";
 $LANG['plugin_formcreator']["question"][11] = "Display order";
 $LANG['plugin_formcreator']["question"][12] = "Validation";
+$LANG['plugin_formcreator']["question"][13] = "Coefficient";
                                              
 $LANG['plugin_formcreator']["type_question"][1] = "Text field";
 $LANG['plugin_formcreator']["type_question"][2] = "Dropdown list";
 $LANG['plugin_formcreator']["type_question"][3] = "Checkbox";
 $LANG['plugin_formcreator']["type_question"][4] = "Textarea";
 $LANG['plugin_formcreator']["type_question"][5] = "File Upload";
-$LANG['plugin_formcreator']["type_question"][6] = "Validation demand";
-$LANG['plugin_formcreator']["type_question"][7] = "Two field sum";
+$LANG['plugin_formcreator']["type_question"][6] = "Validation of";
+$LANG['plugin_formcreator']["type_question"][7] = "Multiplication of two fields";
       
 $LANG['plugin_formcreator']["headings"][0] = "Form";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket target";
@@ -59,6 +61,7 @@ $LANG['plugin_formcreator']["regex_type"][2] = "Alphanumeric";
 $LANG['plugin_formcreator']["regex_type"][3] = "Alphabetical";
 $LANG['plugin_formcreator']["regex_type"][4] = "Numeric";
 $LANG['plugin_formcreator']["regex_type"][5] = "Regular expression";
+$LANG['plugin_formcreator']["regex_type"][6] = "Email";
 
 $LANG['plugin_formcreator']["helpdesk"][1] = "No form available.";
 $LANG['plugin_formcreator']["helpdesk"][2] = "Max size";
