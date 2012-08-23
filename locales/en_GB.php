@@ -28,6 +28,8 @@ $LANG['plugin_formcreator']["type_question"][2] = "Dropdown list";
 $LANG['plugin_formcreator']["type_question"][3] = "Checkbox";
 $LANG['plugin_formcreator']["type_question"][4] = "Textarea";
 $LANG['plugin_formcreator']["type_question"][5] = "File Upload";
+$LANG['plugin_formcreator']["type_question"][6] = "Validation demand";
+$LANG['plugin_formcreator']["type_question"][7] = "Two field sum";
       
 $LANG['plugin_formcreator']["headings"][0] = "Form";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket target";

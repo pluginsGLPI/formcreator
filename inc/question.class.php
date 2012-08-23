@@ -8,6 +8,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
    const TEXTAREA_FIELD = 4;
    const UPLOAD_FIELD = 5;
    const VALIDATION_FIELD = 6;
+   const MULTIPLICATION_ITEM_FIELD = 7;
    
    function canCreate() {
       return Session::haveRight('config', 'w');
@@ -110,12 +111,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             echo "<th colspan='2'>&nbsp;</th>";
          echo "</tr>";
          
-      
          echo "<tr class='tab_bg_1'>";
          echo "<td>".$LANG['common'][17]."&nbsp;:</td><td>";
          echo "<select name='type' id='typeQuestion'>";
             echo "<option value='-1'>----</option>";
-            for($i = 1; $i <= 6; $i++) {   
+            for($i = 1; $i <= 7; $i++) {   
                echo "<option value='".$i."'>
                      ".$LANG['plugin_formcreator']["type_question"][$i]."</option>";
             }
@@ -204,6 +204,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             self::getValidation();
             
             break;
+		 case self::MULTIPLICATION_ITEM_FIELD: // two fields sum
+            self::getMultiplication();
+            
+            break;
       }
       
    }
@@ -273,7 +277,41 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             </span>';
       echo '</td>';
    }
+
+   static function getMultiplication($valueId=1) {
       
+      if($valueId == 1) {
+         echo "<input type='hidden' id='nbValue' name='nbValue' value='".$valueId."'/>";
+      } else {
+         echo "<script type='text/javascript'>";
+         echo "changeNbValue(".$valueId.");";
+         echo "</script>";
+      }  
+         
+      self::getNextMultiplication($valueId);
+   }
+   
+   static function getNextMultiplication($valueId) {
+      global $LANG, $CFG_GLPI;
+      
+      Ajax::updateItemOnEvent('addField'.$valueId,
+                              'nextValue'.$valueId,
+                              $CFG_GLPI["root_doc"].
+                              '/plugins/formcreator/ajax/addnewmultiplication.php',
+                              array('id' => $valueId),
+                              array('click'));
+                              
+      echo "<p>".$LANG['common'][17]." ".$valueId." : ";
+      echo '<input type="text" name="typeMat_'.$valueId.'" value="" size="30"/>&nbsp;';
+      echo $LANG['financial'][21]." ".$valueId." : ";
+      echo '<input type="text" name="value_'.$valueId.'" value="" size="5"/>&#8364;</p>';
+      echo '<div id="nextValue'.$valueId.'">';
+      echo '<input class="submit" type="button" id="addField'.$valueId.'" 
+            value="'.$LANG['plugin_formcreator']["question"][6].'">';
+      echo '</div>';
+      
+   }
+   
    static function getValue($valueId=1) {
       
       if($valueId == 1) {
@@ -343,18 +381,14 @@ class PluginFormcreatorQuestion extends CommonDBTM {
          
          case self::SELECT_FIELD: // Select
             for($i = 1; $i <= $nbValue; $i++) {
-               
                $result['data']['value'][$i] = $params['value_'.$i];
-               
             }
             
             break;
             
          case self::CHECKBOX_FIELD: // Checkbox
             for($i = 1; $i <= $nbValue; $i++) {
-
                $result['data']['value'][$i] = $params['value_'.$i];
-
             }
 
             break;  
@@ -369,6 +403,14 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             
          case self::VALIDATION_FIELD: // Validation
             $result['data']['value'] = $params['value_1'];
+            break;
+			
+        case self::MULTIPLICATION_ITEM_FIELD: // Sum
+            for($i = 1; $i <= $nbValue; $i++) {
+               $result['data']['typeMat'][$i] = $params['typeMat_'.$i];
+               $result['data']['value'][$i] = $params['value_'.$i];
+            }
+            
             break;
       }
       
@@ -523,7 +565,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
          echo "<select name='type' id='typeQuestion'>";
             echo "<option value='-1'>----</option>";
             
-            for($i = 1; $i <= 6; $i++) {
+            for($i = 1; $i <= 7; $i++) {
                
                if($i == $this->fields['type']) { 
                   echo "<option value='".$i."' selected='selected'>
@@ -714,7 +756,38 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                   '.$LANG['plugin_formcreator']["question"][3].'
                   </span>';       
             break;
+
+		 case self::MULTIPLICATION_ITEM_FIELD: // Sum
+         
+            echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";  
+                      
+            for($i = 1; $i <= $nbValue; $i++) {
+               echo "<p>".$LANG['common'][17]." ".$i." : ";
+               echo '<input type="text" name="typeMat_'.$i.'" value="'.$values['typeMat'][$i].'" size="30"/>&nbsp;';
+               echo $LANG['financial'][21]." ".$i." : ";
+               echo '<input type="text" name="value_'.$i.'" value="'.$values['value'][$i].'" size="5"/>&#8364;</p>';
+            }
+
+            self::getNextMultiplicationEdit($nbValue);
+            
+            break;
       }   
+      
+   }
+   
+   static function getNextMultiplicationEdit($valueId) {
+      global $LANG, $CFG_GLPI;
+      
+      Ajax::updateItemOnEvent('addField'.$valueId,
+                              'nextValue'.$valueId,
+                              $CFG_GLPI["root_doc"].
+                              '/plugins/formcreator/ajax/addnewmultiplication.php',
+                              array('id' => $valueId),
+                              array('click'));
+                                          
+      echo '<div id="nextValue'.$valueId.'">';
+      echo '<input class="submit" type="button" id="addField'.$valueId.'" value="'.$LANG['plugin_formcreator']["question"][6].'">';
+      echo '</div>';
       
    }
    
@@ -793,7 +866,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
          case self::VALIDATION_FIELD: // Validation
             return $LANG['plugin_formcreator']["type_question"][6];                        
          
-            break;         
+            break;
+		 case self::MULTIPLICATION_ITEM_FIELD: // calcul between box
+            return $LANG['plugin_formcreator']["type_question"][7];                        
+         
+            break;
       }
       
    }

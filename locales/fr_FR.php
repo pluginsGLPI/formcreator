@@ -29,6 +29,7 @@ $LANG['plugin_formcreator']["type_question"][3] = "Case à cocher";
 $LANG['plugin_formcreator']["type_question"][4] = "Zone de texte";
 $LANG['plugin_formcreator']["type_question"][5] = "Envoi de fichier";
 $LANG['plugin_formcreator']["type_question"][6] = "Demande de validation";
+$LANG['plugin_formcreator']["type_question"][7] = "Somme de 2 champs";
       
 $LANG['plugin_formcreator']["headings"][0] = "Formulaire";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket(s) cible(s)";
