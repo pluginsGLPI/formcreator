@@ -41,8 +41,7 @@ $LANG['plugin_formcreator']["headings"][6] = "Liste des formulaires";
 
 $LANG['plugin_formcreator']["section"][0] = "Ajouter une nouvelle section";   
 $LANG['plugin_formcreator']["section"][1] = "Nouvelle section";   
-$LANG['plugin_formcreator']["section"][2] = "Vous devez d'abord créer une cible pour ";
-$LANG['plugin_formcreator']["section"][2].= "pouvoir ajouter une section.";   
+$LANG['plugin_formcreator']["section"][2] = "Vous devez d'abord créer une cible pour pouvoir ajouter une section.";
 $LANG['plugin_formcreator']["section"][3] = "Section";  
 
 $LANG['plugin_formcreator']["target"][0] = "Ajouter un nouveau ticket cible";   
