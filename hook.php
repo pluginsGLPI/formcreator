@@ -11,6 +11,7 @@ function plugin_formcreator_install() {
                   `is_active` tinyint(1) NOT NULL default '0',
                   `is_recursive` tinyint(1) NOT NULL default '0',
                   `entities_id` int(11) NOT NULL default '0',
+				  `language` varchar(5) NOT NULL collate utf8_unicode_ci,
                 PRIMARY KEY (`id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
@@ -72,6 +73,8 @@ function plugin_formcreator_install() {
                             VALUES (NULL,'PluginFormcreatorForm','2','2','0')";
    $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
                             VALUES (NULL,'PluginFormcreatorForm','3','3','0')";
+   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
+                            VALUES (NULL,'PluginFormcreatorForm','4','4','0')";
    
    foreach($query_displayprefs as $query) {
       $DB->query($query) or die("error insert glpi_displaypreferences datas from  

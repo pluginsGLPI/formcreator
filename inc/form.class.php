@@ -69,9 +69,10 @@ class PluginFormcreatorForm extends CommonDBTM {
       echo "<textarea name='content' cols='55' rows='6'>";
       echo $this->fields["content"];
       echo "</textarea>";
-      echo "</td>";
-      echo "<td colspan='2'>&nbsp;</td>";
-      echo "</tr>";
+      echo "</td></td>";
+      echo "<td>".$LANG['setup'][41]."</td><td>";
+      Dropdown::showLanguages("language", array('value' => $this->fields["language"]));
+      echo "</td></tr>";
             
       $this->showFormButtons($options);
       $this->addDivForTabs();
@@ -149,13 +150,16 @@ class PluginFormcreatorForm extends CommonDBTM {
                   
                      $link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
                
-                     echo "<tr>";
-                        echo "<td class='center'>".$form_id."</td>";
-                        echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
-                        echo "<td>".$value['content']."</td>";
-                     echo "</tr>";
-                     
-                     $nbForm++;
+                    if ($value['language'] == $_SESSION["glpilanguage"])
+					{
+						echo "<tr>";
+							echo "<td class='center'>".$form_id."</td>";
+							echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
+							echo "<td>".$value['content']."</td>";
+						echo "</tr>";
+
+						$nbForm++;
+					}
                   
                   }
                
