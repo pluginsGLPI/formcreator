@@ -459,7 +459,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       global $LANG, $CFG_GLPI;
       
       $question = new self;
-      $listQuestion = $question->find("plugin_formcreator_forms_id = '$formID'");
+      $listQuestion = $question->find("plugin_formcreator_forms_id = '$formID' ORDER BY plugin_formcreator_sections_id, position");
       
       if(!empty($listQuestion)) {
          echo '<div class="center">';
