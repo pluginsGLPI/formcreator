@@ -97,15 +97,15 @@ class PluginFormcreatorForm extends CommonDBTM {
       $tab = array();
       $tab['common'] = $LANG['plugin_formcreator']["search"][0];
       
-      $tab[0]['table'] = 'glpi_plugin_formcreator_forms';
-      $tab[0]['field'] = 'name';
-      $tab[0]['name']  = $LANG['common'][16];
-      $tab[0]['datatype']  = 'itemlink';
-      
       $tab[1]['table'] = 'glpi_plugin_formcreator_forms';
-      $tab[1]['field'] = 'content';
-      $tab[1]['name']  = $LANG['joblist'][6];
+      $tab[1]['field'] = 'name';
+      $tab[1]['name']  = $LANG['common'][16];
       $tab[1]['datatype']  = 'itemlink';
+      
+      $tab[0]['table'] = 'glpi_plugin_formcreator_forms';
+      $tab[0]['field'] = 'content';
+      $tab[0]['name']  = $LANG['joblist'][6];
+      $tab[0]['datatype']  = 'itemlink';
 
       $tab[2]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[2]['field'] = 'is_active';
@@ -116,6 +116,11 @@ class PluginFormcreatorForm extends CommonDBTM {
       $tab[3]['field'] = 'is_recursive';
       $tab[3]['name']  = $LANG['profiles'][28];
       $tab[3]['datatype'] = 'bool';
+	  
+	  $tab[4]['table'] = 'glpi_plugin_formcreator_forms';
+      $tab[4]['field'] = 'language';
+      $tab[4]['name']  = $LANG['setup'][41];
+      $tab[4]['datatype'] = 'text';
             
       return $tab;
    }
