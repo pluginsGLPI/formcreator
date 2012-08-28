@@ -140,15 +140,16 @@ class PluginFormcreatorHelpdesk {
         
         case PluginFormcreatorQuestion::MULTIPLICATION_ITEM_FIELD: // 2 textfields sum
             echo '<script language="javascript">
-            function multiplication(value1, value2, somme) { somme.value = value1 * value2; }
+            function multiplication(value1, value2, somme, value3) { somme.value = value1.value * value2.value; value3.value = value2.options[value2.selectedIndex].text; }
             </script>';
-            echo '<input type="text" name="question1_'.$id.'" size="5" onchange="multiplication(question1_'.$id.'.value, question2_'.$id.'.value, somme_'.$id.');"/>&nbsp;';
-            echo '<select name="question2_'.$id.'" onchange="multiplication(question1_'.$id.'.value, question2_'.$id.'.value, somme_'.$id.');">';
+            echo '<input type="text" name="question1_'.$id.'" size="5" onchange="multiplication(question1_'.$id.', question2_'.$id.', somme_'.$id.', question3_'.$id.');"/>&nbsp;';
+            echo '<select name="question2_'.$id.'" onchange="multiplication(question1_'.$id.', question2_'.$id.', somme_'.$id.', question3_'.$id.');">';
                foreach($tab['value'] as $value_id => $value) {
                   $typeMat = $tab["typeMat"][$value_id];
                   echo '<option value="'.$value.'">'.$typeMat.'</option>';
                }
             echo '</select>';
+            echo '<input type=hidden name="question3_'.$id.'">';
             echo '&nbsp;<input type="text" name="somme_'.$id.'" size="5" readonly/>&#8364;';
             break;
       }

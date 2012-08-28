@@ -120,6 +120,11 @@ echo "<div class='center'>"."\n\r";
                   $validationTab['comment_submission'] = $_POST[$question_name];
                   $validationTab['user_id'] = Session::getLoginUserID();
                   break;
+				  
+			   case PluginFormcreatorQuestion::MULTIPLICATION_ITEM_FIELD:
+                   
+                   $question[$question_name] = $_REQUEST[$question_name1]. " - ".$_REQUEST[$question_name3];
+                   break;
             }
             
          } else {
