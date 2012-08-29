@@ -25,6 +25,26 @@ if (isset($_POST["add"])) {
    $form->check($_POST["id"],'d');
    $form->delete($_POST);
 
+   $formID = $_POST["id"];
+   //suppresion question
+   $question = new PluginFormcreatorQuestion;
+   $listQuestion = $question->find("plugin_formcreator_forms_id = '$formID'");
+   foreach($listQuestion as $question_id => $values) {
+       $question->delete($values);
+   }
+   //suppresion section
+   $section = new PluginFormcreatorSection;
+   $listSection = $section->find("plugin_formcreator_forms_id = '$formID'");
+   foreach($listSection as $section_id => $values) {
+       $section->delete($values);
+   }
+   //suppression target
+   $target = new PluginFormcreatorTarget;
+   $listTarget = $target->find("plugin_formcreator_forms_id = '$formID'");
+   foreach($listTarget as $target_id => $values) {
+       $target->delete($values);
+   }
+   
    $form->redirectToList();
 
 } else if (isset($_POST["restore"])) {

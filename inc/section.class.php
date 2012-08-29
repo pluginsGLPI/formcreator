@@ -101,7 +101,8 @@ class PluginFormcreatorSection extends CommonDBTM {
          echo "</tr>";
          
          echo '<tr class="tab_bg_1">';
-         echo '<td colspan="2">&nbsp;</td>';
+         echo '<td>'.$LANG['plugin_formcreator']["question"][11].' :</td>';
+         echo '<td><input type="text" name="position" value="0" size="3" /></td>';
          echo "<td>".$LANG['joblist'][6]."&nbsp;:</td>";
          echo "<td>";
          echo "<textarea name='content' cols='55' rows='6'>";
@@ -109,6 +110,15 @@ class PluginFormcreatorSection extends CommonDBTM {
          echo "</textarea>";
          echo "</td>";
          echo '</tr>';
+         
+         echo "<tr>";
+         echo "<td colspan='2'>";
+            
+            echo "<div id='viewValues'></div>";
+         
+         echo "</td>";
+         echo "</tr>";
+         
          
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
@@ -122,11 +132,23 @@ class PluginFormcreatorSection extends CommonDBTM {
       echo "</form>";
    }
 
+   function prepareInputForAdd($input) {
+      global $CFG_GLPI, $LANG;
+      
+      if (empty($input['name'])) {
+         
+         Session::addMessageAfterRedirect($LANG['plugin_formcreator']["error_form"][3], false, ERROR);
+         return false;
+      }
+      
+      return $input;
+   }
+   
    static function getListSection($formID) {
       global $LANG, $CFG_GLPI;
       
       $section = new self;
-      $listSection = $section->find("plugin_formcreator_forms_id = '$formID'");
+      $listSection = $section->find("plugin_formcreator_forms_id = '$formID' ORDER BY position");
       
       if(!empty($listSection)) {
          echo '<div class="center">';
@@ -140,6 +162,9 @@ class PluginFormcreatorSection extends CommonDBTM {
             echo '<th>';
                echo $LANG['plugin_formcreator']["target"][2];
             echo '</th>';
+            echo '<th>';
+               echo $LANG['plugin_formcreator']["question"][11];
+            echo '</th>';
          
          foreach($listSection as $section_id => $values) {
             echo '<tr>';
@@ -152,6 +177,9 @@ class PluginFormcreatorSection extends CommonDBTM {
                echo '<td>';
                   echo PluginFormcreatorTarget::getTargetName(
                                  $values['plugin_formcreator_targets_id']);
+               echo '</td>';
+               echo '<td class="center">';
+                  echo $values['position'];
                echo '</td>';
             echo '</tr>';
 
@@ -216,7 +244,11 @@ class PluginFormcreatorSection extends CommonDBTM {
          echo "</tr>";
          
          echo '<tr class="tab_bg_1">';
-         echo '<td colspan="2">&nbsp;</td>';
+         echo '<td>'.$LANG['plugin_formcreator']["question"][11].' :</td>';
+         echo '<td><input type="text" name="position" 
+                           value="'.$this->fields['position'].'" size="3" /></td>';
+         
+         
          echo "<td>".$LANG['joblist'][6]."&nbsp;:</td>";
          echo "<td>";
          echo "<textarea name='content' cols='55' rows='6'>";

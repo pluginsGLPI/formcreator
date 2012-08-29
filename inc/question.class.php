@@ -174,6 +174,19 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       echo "</form>";
    }
    
+   function prepareInputForAdd($input) {
+      global $CFG_GLPI, $LANG;
+      
+      if (empty($input['name'])) {
+         
+         Session::addMessageAfterRedirect($LANG['plugin_formcreator']["error_form"][4], false, ERROR);
+         return false;
+      }
+      
+      return $input;
+   }
+   
+   
    static function changeAddTypeQuestion($type) {
       
       switch ($type) {

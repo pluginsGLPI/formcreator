@@ -23,7 +23,7 @@ class PluginFormcreatorHelpdesk {
    function getSection($formID) {
       
       $section = new PluginFormcreatorSection;
-      $section = $section->find("plugin_formcreator_forms_id = '$formID'");
+      $section = $section->find("plugin_formcreator_forms_id = '$formID'  ORDER BY position");
       
       return $section;
       

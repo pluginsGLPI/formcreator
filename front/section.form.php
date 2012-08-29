@@ -21,6 +21,14 @@ if (isset($_POST["add"])) {
    $form->check($_POST["id"],'d');
    $form->delete($_POST);
 
+   $sectionID = $_POST["id"];
+   //suppresion question
+   $question = new PluginFormcreatorQuestion;
+   $listQuestion = $question->find("plugin_formcreator_sections_id = '$sectionID'");
+   foreach($listQuestion as $question_id => $values) {
+       $question->delete($values);
+   }
+   
    Html::back();
 
 } else if (isset($_POST["restore"])) {

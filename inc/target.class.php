@@ -120,6 +120,18 @@ class PluginFormcreatorTarget extends CommonDBTM {
       self::popupContent($params['plugin_formcreator_forms_id']);
    }
 
+   function prepareInputForAdd($input) {
+      global $CFG_GLPI, $LANG;
+      
+      if (empty($input['name'])) {
+         
+         Session::addMessageAfterRedirect($LANG['plugin_formcreator']["error_form"][5], false, ERROR);
+         return false;
+      }
+      
+      return $input;
+   }
+   
    static function getListTarget($formID) {
       global $LANG, $CFG_GLPI;
       

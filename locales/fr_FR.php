@@ -3,10 +3,12 @@
 $LANG['plugin_formcreator']["name"] = "Form Creator";
 $LANG['plugin_formcreator']["name2"] = "FU";
 
-$LANG['plugin_formcreator']["error_form"][0] = "Votre formulaire ne contient pas de nom,";
-$LANG['plugin_formcreator']["error_form"][0].= "veuillez corriger.";
+$LANG['plugin_formcreator']["error_form"][0] = "Votre formulaire ne contient pas de nom, veuillez corriger.";
 $LANG['plugin_formcreator']["error_form"][1] = "La réponse à la question ";
 $LANG['plugin_formcreator']["error_form"][2] = " n'a pas le format attendu, veuillez corriger.";
+$LANG['plugin_formcreator']["error_form"][3] = "Votre section ne contient pas de nom, veuillez corriger.";
+$LANG['plugin_formcreator']["error_form"][4] = "Votre question ne contient pas de nom, veuillez corriger.";
+$LANG['plugin_formcreator']["error_form"][5] = "Votre cible ne contient pas de nom, veuillez corriger.";
                                                 
 $LANG['plugin_formcreator']["search"][0] = "Informations";    
        
