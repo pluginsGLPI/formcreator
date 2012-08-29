@@ -304,3 +304,4 @@ class PluginFormcreatorSection extends CommonDBTM {
       return $sectionName;      
    }
 }
+?>
