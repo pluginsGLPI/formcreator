@@ -40,6 +40,7 @@ function plugin_formcreator_install() {
                   `content` longtext collate utf8_unicode_ci,
                   `plugin_formcreator_targets_id` tinyint(1) NOT NULL,
                   `plugin_formcreator_forms_id` int(11) NOT NULL,
+				  `position` int(11) NOT NULL,
                 PRIMARY KEY (`id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
