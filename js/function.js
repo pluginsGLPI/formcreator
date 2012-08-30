@@ -6,7 +6,7 @@ function changeNbValue(newValue) {
 
 function verifText(champ)
 {
-    var regex = /^[a-zA-Z]*$/;
+    var regex = /^[a-zA-Z -]+$/;
     if(!regex.test(champ.value) || champ.value.length < 2)
     {
         surligne(champ, true);
@@ -45,8 +45,8 @@ function verifRegex(champ, regex)
 
 function verifNum(champ)
 {
-    var regex = /^[0-9]*$/;
-    if(!regex.test(champ.value) || champ.value.length < 2 || champ.value.length > 25)
+    var regex = /^[0-9]+$/;
+    if(!regex.test(champ.value) || champ.value.length < 1 || champ.value.length > 25)
     {
         surligne(champ, true);
         return false;
@@ -60,7 +60,7 @@ function verifNum(champ)
 
 function verifTextNum(champ)
 {
-    var regex = /^[a-zA-Z0-9]*$/;
+    var regex = /^[0-9a-zA-Z -]+$/;
     if(!regex.test(champ.value) || champ.value.length < 2)
     {
         surligne(champ, true);

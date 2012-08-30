@@ -79,4 +79,6 @@ $LANG['plugin_formcreator']["default"]["target"][1].= "##full_form##\n\rCordiale
 $LANG['plugin_formcreator']["default"]["section"][0] = "Section par défaut";
 $LANG['plugin_formcreator']["default"]["section"][1] = "Bonjour,\n\rCeci est la description par défaut";
 $LANG['plugin_formcreator']["default"]["section"][1].= " de votre section de question.\n\rCordialement";
+
+$LANG['plugin_formcreator']["information"][0] = "Ex : #^[0-9]*$#";
 ?>

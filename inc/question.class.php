@@ -447,19 +447,19 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             $tab['value'] = '';
             break;
          case 2: // Alphanumérique
-            $tab['value'] = "#^\S+$#";
+            $tab['value'] = "#^[0-9a-zA-Z -]*$#";
             break;
          case 3: // Alphabétique
-            $tab['value'] = "#^\S+$#";
+            $tab['value'] = "#^[a-zA-Z -]*$#";
             break;
          case 4: // Numérique
-            $tab['value'] = "#^(|-)\d+$#";
+            $tab['value'] = "#^[0-9]*$#";
             break;
          case 5: // Autre
             $tab['value'] = $expression;
             break;
          case 6: //Email
-            $tab['value'] = "#^[a-zA-Z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$";
+            $tab['value'] = "#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-z]{2,4}$#";
             break;
       }
       
@@ -705,6 +705,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             if($tab_option['type'] == 5) {
                echo '&nbsp;&nbsp;<input type="text" name="otherOption" 
                                     value="'.urldecode($tab_option['value']).'" />';
+			   echo '&nbsp;&nbsp;'.$LANG['plugin_formcreator']["information"][0];
             }
             echo "</span></p>";
             echo '</td>';
