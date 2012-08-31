@@ -138,7 +138,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                $params['plugin_formcreator_forms_id'].
                '&itemtype=PluginFormcreatorForm&glpi_tab=PluginFormcreatorSection$1">
                <img style="cursor:pointer; 
-               margin-left:2px;" src="/glpi/dev/pics/add_dropdown.png" 
+               margin-left:2px;" src="../../../pics/add_dropdown.png" 
                title="'.$LANG['plugin_formcreator']["section"][0].'" alt=""/></a>';
          echo "</td>";
          
@@ -614,7 +614,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
               $this->fields['plugin_formcreator_forms_id'].
               '&itemtype=PluginFormcreatorForm&glpi_tab=PluginFormcreatorSection$1">
               <img style="cursor:pointer; 
-              margin-left:2px;" src="/glpi/dev/pics/add_dropdown.png" 
+              margin-left:2px;" src="../../../pics/add_dropdown.png" 
               title="'.$LANG['plugin_formcreator']["section"][0].'" alt=""/></a>';
          echo "</td>";
          
