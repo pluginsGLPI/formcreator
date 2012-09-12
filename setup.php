@@ -26,7 +26,7 @@ function plugin_init_formcreator() {
 function plugin_version_formcreator() {
 
    return array('name'           => 'Form Creator',
-                'version'        => '1.3.0',
+                'version'        => '1.3.1',
                 'author'         => 'Gonéri Le Bouder, Nicolas Manceau, Dimitri Mouillard',
                 'homepage'       => 'http://www.teclib.com',
                 'minGlpiVersion' => '0.83.3',

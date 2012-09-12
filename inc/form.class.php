@@ -116,8 +116,8 @@ class PluginFormcreatorForm extends CommonDBTM {
       $tab[3]['field'] = 'is_recursive';
       $tab[3]['name']  = $LANG['profiles'][28];
       $tab[3]['datatype'] = 'bool';
-	
-	  $tab[4]['table'] = 'glpi_plugin_formcreator_forms';
+   
+     $tab[4]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[4]['field'] = 'language';
       $tab[4]['name']  = $LANG['setup'][41];
       $tab[4]['datatype'] = 'text';
@@ -134,14 +134,17 @@ class PluginFormcreatorForm extends CommonDBTM {
       $listForm = $form->find("is_active = '1'");
 
       $nbForm = 0;
-
-      if(!empty($listForm)) {
+      if(empty($listForm)) {
+         # No formular yet
+         echo $LANG['plugin_formcreator']["helpdesk"][1];
+      } else {
 
          echo"<table class='tab_cadre_fixe fix_tab_height'>";
             echo "<tr>";
                echo "<th>ID</th>";
                echo "<th>".$LANG['plugin_formcreator']["headings"][0]."</th>";
                echo "<th>".$LANG['joblist'][6]."</th>";
+               echo "<th>".$LANG['setup'][41]."</th>";
             echo "</tr>";
 
             foreach ($listForm as $form_id => $value) {
@@ -149,23 +152,26 @@ class PluginFormcreatorForm extends CommonDBTM {
                $question = new PluginFormcreatorQuestion;
                $listQuestion = $question->find("plugin_formcreator_forms_id = '".$form_id."'");
 
-               if(!empty($listQuestion)) {
 
-                  if(Session::haveAccessToEntity($value['entities_id'],$value['is_recursive'])) {
+               if(Session::haveAccessToEntity($value['entities_id'],$value['is_recursive'])) {
 
-                     $link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
+                  $link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
 
-                    if ($value['language'] == $_SESSION["glpilanguage"])
-					{
-						echo "<tr>";
-							echo "<td class='center'>".$form_id."</td>";
-							echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
-							echo "<td>".$value['content']."</td>";
-						echo "</tr>";
+                 if (
+                       Session::haveRight('config', 'w')
+                       ||
+                       empty($value['language'])
+                       ||
+                       $value['language'] == $_SESSION["glpilanguage"]
+                    ) {
+                  echo "<tr>";
+                     echo "<td class='center'>".$form_id."</td>";
+                     echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
+                     echo "<td>".$value['content']."</td>";
+                     echo "<td>".$value['language']."</td>";
+                  echo "</tr>";
 
-						$nbForm++;
-					}
-
+                  $nbForm++;
                   }
 
                }
@@ -179,9 +185,6 @@ class PluginFormcreatorForm extends CommonDBTM {
             }
 
          echo "</table>";
-
-      } else {
-         echo $LANG['plugin_formcreator']["helpdesk"][1];
       }
 
       echo "</div>";

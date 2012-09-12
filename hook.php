@@ -11,7 +11,7 @@ function plugin_formcreator_install() {
                   `is_active` tinyint(1) NOT NULL default '0',
                   `is_recursive` tinyint(1) NOT NULL default '0',
                   `entities_id` int(11) NOT NULL default '0',
-                  `language` varchar(5) NOT NULL collate utf8_unicode_ci,
+                  `language` varchar(5) NOT NULL collate utf8_unicode_ci DEFAULT '',
                 PRIMARY KEY (`id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
@@ -50,7 +50,10 @@ function plugin_formcreator_install() {
       $query = "ALTER TABLE `glpi_plugin_formcreator_sections` ADD `position` INT( 11 ) NOT NULL";
       $DB->query($query) or die("Can't add glpi_plugin_formcreator_sections.position ". $DB->error());
    }
-
+   if (!FieldExists("glpi_plugin_formcreator_forms", "language")) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD `language` varchar(5) NOT NULL collate utf8_unicode_ci DEFAULT ''";
+      $DB->query($query) or die("Can't add glpi_plugin_formcreator_forms.language ". $DB->error());
+   }
 
    if (!TableExists("glpi_plugin_formcreator_questions")) {
       $query = "CREATE TABLE `glpi_plugin_formcreator_questions` (

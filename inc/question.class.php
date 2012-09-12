@@ -368,6 +368,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       }
 
       $type = $params['type'];
+
+      if ($type < 1) { # No type selected
+         return;
+      }
+
       $question = $params['name'];
       $nbValue = $params['nbValue'];
 
