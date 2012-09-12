@@ -13,7 +13,7 @@ $form = new PluginFormcreatorSection;
 
 if (isset($_POST["add"])) {
    $form->check(-1,'w',$_POST);
-   
+
    $newID = $form->add($_POST);
    Html::back();
 
@@ -28,7 +28,7 @@ if (isset($_POST["add"])) {
    foreach($listQuestion as $question_id => $values) {
        $question->delete($values);
    }
-   
+
    Html::back();
 
 } else if (isset($_POST["restore"])) {

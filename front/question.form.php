@@ -12,11 +12,11 @@ if (empty($_REQUEST["id"])) {
 $form = new PluginFormcreatorQuestion;
 
 if (isset($_POST["add"])) {
-   
+
    $form->check(-1,'w',$_POST);
-   
+
    $result = PluginFormcreatorQuestion::getQuestionArray($_REQUEST);
-   
+
    $newID = $form->add($result);
    Html::back();
 
@@ -53,7 +53,7 @@ if (isset($_POST["add"])) {
                "formcreator",
                "form"
                );
-               
+
    $form->showForm($_REQUEST);
 
    Html::footer();

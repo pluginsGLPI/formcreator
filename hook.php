@@ -2,7 +2,7 @@
 
 function plugin_formcreator_install() {
    global $DB;
-   
+
    if (!TableExists("glpi_plugin_formcreator_forms")) {
       $query = "CREATE TABLE `glpi_plugin_formcreator_forms` (
                   `id` int(11) NOT NULL auto_increment,
@@ -50,8 +50,8 @@ function plugin_formcreator_install() {
       $query = "ALTER TABLE `glpi_plugin_formcreator_sections` ADD `position` INT( 11 ) NOT NULL";
       $DB->query($query) or die("Can't add glpi_plugin_formcreator_sections.position ". $DB->error());
    }
-   
-   
+
+
    if (!TableExists("glpi_plugin_formcreator_questions")) {
       $query = "CREATE TABLE `glpi_plugin_formcreator_questions` (
                   `id` int(11) NOT NULL auto_increment,
@@ -72,54 +72,54 @@ function plugin_formcreator_install() {
    $query="DELETE FROM `glpi_displaypreferences`
               WHERE `itemtype`='PluginFormcreatorForm'";
    $DB->query($query) or die($DB->error());
- 
+
    $query_displayprefs = array();
-   
-   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
+
+   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences`
                             VALUES (NULL,'PluginFormcreatorForm','0','0','0')";
-   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
+   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences`
                             VALUES (NULL,'PluginFormcreatorForm','1','1','0')";
-   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
+   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences`
                             VALUES (NULL,'PluginFormcreatorForm','2','2','0')";
-   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
+   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences`
                             VALUES (NULL,'PluginFormcreatorForm','3','3','0')";
-   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
+   $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences`
                             VALUES (NULL,'PluginFormcreatorForm','4','4','0')";
-   
+
    foreach($query_displayprefs as $query) {
-      $DB->query($query) or die("error insert glpi_displaypreferences datas from  
-                                 glpi_plugin_formcreator_forms". $DB->error());
+      $DB->query($query) or die("error insert glpi_displaypreferences datas from ".
+                                 "glpi_plugin_formcreator_forms". $DB->error());
    }
-     
+
    CronTask::Register('PluginFormcreator', 'Init', DAY_TIMESTAMP, array('param' => 50));
    return true;
 }
 
 function plugin_formcreator_uninstall() {
    global $DB;
-   
+
    $tables = array();
    $tables[] = "glpi_plugin_formcreator_forms";
    $tables[] = "glpi_plugin_formcreator_questions";
    $tables[] = "glpi_plugin_formcreator_targets";
    $tables[] = "glpi_plugin_formcreator_sections";
-   
+
    foreach($tables as $table) {
       if (TableExists($table)) {
          $query = "DROP TABLE `".$table."`";
          $DB->query($query) or die("error deleting ".$table);
       }
    }
-   
+
    $querys_data = array();
-   $querys_data[] = "DELETE FROM `glpi_displaypreferences` 
+   $querys_data[] = "DELETE FROM `glpi_displaypreferences`
                      WHERE `itemtype` = 'PluginFormcreatorForm'";
-                     
+
    foreach($querys_data as $query) {
-      $DB->query($query) or die("error delete datas from  
+      $DB->query($query) or die("error delete datas from
                                  glpi_plugin_formcreator_forms". $DB->error());
    }
-   
+
    return true;
 }
 ?>
