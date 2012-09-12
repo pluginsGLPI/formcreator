@@ -32,7 +32,7 @@ function plugin_formcreator_install() {
 
       $DB->query($query) or die("error creating glpi_plugin_formcreator_targets ". $DB->error());
    }
-   
+
    if (!TableExists("glpi_plugin_formcreator_sections")) {
       $query = "CREATE TABLE `glpi_plugin_formcreator_sections` (
                   `id` int(11) NOT NULL auto_increment,
@@ -46,6 +46,11 @@ function plugin_formcreator_install() {
 
       $DB->query($query) or die("error creating glpi_plugin_formcreator_sections ". $DB->error());
    }
+   if (!FieldExists("glpi_plugin_formcreator_sections", "position")) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_sections` ADD `position` INT( 11 ) NOT NULL";
+      $DB->query($query) or die("Can't add glpi_plugin_formcreator_sections.position ". $DB->error());
+   }
+   
    
    if (!TableExists("glpi_plugin_formcreator_questions")) {
       $query = "CREATE TABLE `glpi_plugin_formcreator_questions` (
