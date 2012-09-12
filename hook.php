@@ -11,7 +11,7 @@ function plugin_formcreator_install() {
                   `is_active` tinyint(1) NOT NULL default '0',
                   `is_recursive` tinyint(1) NOT NULL default '0',
                   `entities_id` int(11) NOT NULL default '0',
-				  `language` varchar(5) NOT NULL collate utf8_unicode_ci,
+                  `language` varchar(5) NOT NULL collate utf8_unicode_ci,
                 PRIMARY KEY (`id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
@@ -40,7 +40,7 @@ function plugin_formcreator_install() {
                   `content` longtext collate utf8_unicode_ci,
                   `plugin_formcreator_targets_id` tinyint(1) NOT NULL,
                   `plugin_formcreator_forms_id` int(11) NOT NULL,
-				  `position` int(11) NOT NULL,
+                  `position` int(11) NOT NULL,
                 PRIMARY KEY (`id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
