@@ -171,7 +171,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       
-      echo "</form>";
+      Html::closeForm();
    }
    
    function prepareInputForAdd($input) {
@@ -655,7 +655,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       
-      echo "</form>";
+      Html::closeForm();
    }
    
    static function getEditValue($type, $values=array(),$option=array()) {

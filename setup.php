@@ -3,7 +3,9 @@
 function plugin_init_formcreator() {
    global $PLUGIN_HOOKS,$LANG,$CFG_GLPI;
    
-    Plugin::registerClass('PluginFormcreatorForm');
+   Plugin::registerClass('PluginFormcreatorForm');
+
+   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
     
    if (Session::haveRight("config", "w")) {
       $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
@@ -24,10 +26,10 @@ function plugin_init_formcreator() {
 function plugin_version_formcreator() {
 
    return array('name'           => 'Form Creator',
-                'version'        => '1.0.0',
-                'author'         => 'Dimitri Mouillard',
+                'version'        => '1.3.0',
+                'author'         => 'Gonéri Le Bouder, Nicolas Manceau, Dimitri Mouillard',
                 'homepage'       => 'http://www.teclib.com',
-                'minGlpiVersion' => '0.83',
+                'minGlpiVersion' => '0.83.3',
                 'license'        => 'GPLv2');
 }
 

@@ -115,7 +115,7 @@ class PluginFormcreatorTarget extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       
-      echo "</form>";
+      Html::closeForm();
       
       self::popupContent($params['plugin_formcreator_forms_id']);
    }
@@ -242,7 +242,7 @@ class PluginFormcreatorTarget extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       
-      echo "</form>";
+      Html::closeForm();
       
       self::popupContent($this->fields['plugin_formcreator_forms_id']);
    }

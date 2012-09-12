@@ -129,7 +129,7 @@ class PluginFormcreatorSection extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       
-      echo "</form>";
+      Html::closeForm();
    }
 
    function prepareInputForAdd($input) {
@@ -269,7 +269,7 @@ class PluginFormcreatorSection extends CommonDBTM {
       echo "</table>";
       echo "</div>";
       
-      echo "</form>";
+      Html::closeForm();
    }
    
    static function getSelectSection($formID,

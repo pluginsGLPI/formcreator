@@ -63,7 +63,11 @@ function plugin_formcreator_install() {
 
       $DB->query($query) or die("error creating glpi_plugin_formcreator_questions ". $DB->error());
    }
-         
+
+   $query="DELETE FROM `glpi_displaypreferences`
+              WHERE `itemtype`='PluginFormcreatorForm'";
+   $DB->query($query) or die($DB->error());
+ 
    $query_displayprefs = array();
    
    $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 

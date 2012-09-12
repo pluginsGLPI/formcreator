@@ -83,7 +83,7 @@ foreach($sections as $section_id => $section_value) {
 }
 
 echo '<input type="submit" name="add" value="'.$LANG['buttons'][8].'" class="submit"/>';
-echo '</form>';
+Html::closeForm();;
 
 } else {
    echo $LANG['plugin_formcreator']["target"][7];
