@@ -147,6 +147,14 @@ echo "<div class='center'>"."\n\r";
                $ticket['content'] = str_replace("##$answer_name##",
                                                 $question[$question_name],
                                                 $ticket['content']);
+																				
+               $ticket['name'] = str_replace("##$question_name##",
+                                                $question_value['name'],
+                                                $ticket['name']);
+                                             
+               $ticket['name'] = str_replace("##$answer_name##",
+                                                $question[$question_name],
+                                                $ticket['name']);
             }
       }
 
