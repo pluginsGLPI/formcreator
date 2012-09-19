@@ -64,7 +64,7 @@ echo "<div class='center'>"."\n\r";
 
          $question_name = 'question_'.$question_id;
 
-         if(isset($_REQUEST[$question_name])) {
+         if ((isset($_REQUEST[$question_name])) || (isset($_REQUEST['question1_'.$question_id]))) {
 
             switch($question_value['type']) {
 
@@ -123,7 +123,7 @@ echo "<div class='center'>"."\n\r";
 				
 			   case PluginFormcreatorQuestion::MULTIPLICATION_ITEM_FIELD:
 
-                   $question[$question_name] = $_REQUEST[$question_name1]. " - ".$_REQUEST[$question_name3];
+                   $question[$question_name] = $_REQUEST['question1_'.$question_id;]. " - ".$_REQUEST['question3_'.$question_id;];
                    break;
             }
 
