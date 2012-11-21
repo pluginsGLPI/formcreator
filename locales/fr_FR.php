@@ -1,7 +1,5 @@
 <?php
-
 $LANG['plugin_formcreator']["name"] = "Form Creator";
-$LANG['plugin_formcreator']["name2"] = "FU";
 
 $LANG['plugin_formcreator']["error_form"][0] = "Votre formulaire ne contient pas de nom, veuillez corriger.";
 $LANG['plugin_formcreator']["error_form"][1] = "La réponse à la question ";
@@ -27,7 +25,6 @@ $LANG['plugin_formcreator']["question"][11] = "Ordre d'affichage";
 $LANG['plugin_formcreator']["question"][12] = "Validation";
 $LANG['plugin_formcreator']["question"][13] = "Coefficient";
 
-
 $LANG['plugin_formcreator']["type_question"][1] = "Champ texte";
 $LANG['plugin_formcreator']["type_question"][2] = "Liste déroulante";
 $LANG['plugin_formcreator']["type_question"][3] = "Case à cocher";
@@ -35,6 +32,8 @@ $LANG['plugin_formcreator']["type_question"][4] = "Zone de texte";
 $LANG['plugin_formcreator']["type_question"][5] = "Envoi de fichier";
 $LANG['plugin_formcreator']["type_question"][6] = "Demande de validation";
 $LANG['plugin_formcreator']["type_question"][7] = "Multiplication de 2 champs";
+$LANG['plugin_formcreator']["type_question"][8] = "Select - Question onChange";
+$LANG['plugin_formcreator']["type_question"][9] = "Select - Section onChange";
 
 $LANG['plugin_formcreator']["headings"][0] = "Formulaire";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket(s) cible(s)";
@@ -59,26 +58,40 @@ $LANG['plugin_formcreator']["target"][5] = "Modifier un ticket cible";
 $LANG['plugin_formcreator']["target"][6] = "Réponse";
 $LANG['plugin_formcreator']["target"][7] = "Il n'y a pas encore de question pour ce formulaire.";
 $LANG['plugin_formcreator']["target"][8] = "Ticket cible";
+$LANG['plugin_formcreator']["target"][9] = "Code dans le titre du ticket";
 
 $LANG['plugin_formcreator']["regex_type"][1] = "Sans validation";
-$LANG['plugin_formcreator']["regex_type"][2] = "Alphanumérique";
+$LANG['plugin_formcreator']["regex_type"][2] = "Obligatoire";
 $LANG['plugin_formcreator']["regex_type"][3] = "Alphabétique";
 $LANG['plugin_formcreator']["regex_type"][4] = "Numérique";
 $LANG['plugin_formcreator']["regex_type"][5] = "Expression rationnelle";
 $LANG['plugin_formcreator']["regex_type"][6] = "Email";
+$LANG['plugin_formcreator']["regex_type"][7] = "Date";
 
 $LANG['plugin_formcreator']["helpdesk"][1] = "Aucun formulaire de disponible.";
 $LANG['plugin_formcreator']["helpdesk"][2] = "Taille max";
-$LANG['plugin_formcreator']["helpdesk"][3] = "Vous avez correctement répondu au formulaire.";
+$LANG['plugin_formcreator']["helpdesk"][3] = "Votre demande à été prise en considération.";
 $LANG['plugin_formcreator']["helpdesk"][4] = "Aucune réponse choisi par l'utilisateur";
 
 $LANG['plugin_formcreator']["default"]["target"][0] = "Ticket cible par défaut";
 $LANG['plugin_formcreator']["default"]["target"][1] = "Bonjour,\n\rCeci est le contenu par défaut.\n\r";
-$LANG['plugin_formcreator']["default"]["target"][1].= "##full_form##\n\rCordialement";
+$LANG['plugin_formcreator']["default"]["target"][1].= "##FULLFORM##\n\rCordialement";
 
 $LANG['plugin_formcreator']["default"]["section"][0] = "Section par défaut";
 $LANG['plugin_formcreator']["default"]["section"][1] = "Bonjour,\n\rCeci est la description par défaut";
 $LANG['plugin_formcreator']["default"]["section"][1].= " de votre section de question.\n\rCordialement";
 
 $LANG['plugin_formcreator']["information"][0] = "Ex : #^[0-9]*$#";
+$LANG['plugin_formcreator']["information"][1] = "Somme total des achats : ";
+$LANG['plugin_formcreator']["information"][2] = "Doit être inférieur à ";
+
+$LANG['plugin_formcreator']["purchase_form"][0] = "S'il s'agit d'un achat veuillez rentrer le prix ";
+$LANG['plugin_formcreator']["purchase_form"][1] = "min : ";
+$LANG['plugin_formcreator']["purchase_form"][2] = "max : ";
+
+$LANG['plugin_formcreator']["bbcode"][0] = "BB Code disponible :";
+$LANG['plugin_formcreator']["bbcode"][1] = "Lien URL : [url=website]lien[/url]";
+$LANG['plugin_formcreator']["bbcode"][2] = "Gras : [b][/b]";
+$LANG['plugin_formcreator']["bbcode"][3] = "Italique : [i][/i]";
+$LANG['plugin_formcreator']["bbcode"][4] = "Souligné : [u][/u]";
 ?>

@@ -13,12 +13,12 @@ $form = new PluginFormcreatorForm;
 
 if (isset($_POST["add"])) {
    $form->check(-1,'w',$_POST);
-
+   
    $newID = $form->add($_POST);
 
    $newTarget = $form->createDefaultTarget($newID);
    $newSection = $form->createDefaultSection($newID,$newTarget);
-
+   
    Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.form.php?id=".$newID);
 
 } else if (isset($_POST["delete"])) {
@@ -44,7 +44,7 @@ if (isset($_POST["add"])) {
    foreach($listTarget as $target_id => $values) {
        $target->delete($values);
    }
-
+   
    $form->redirectToList();
 
 } else if (isset($_POST["restore"])) {

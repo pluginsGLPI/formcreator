@@ -13,7 +13,7 @@ $form = new PluginFormcreatorTarget;
 
 if (isset($_POST["add"])) {
    $form->check(-1,'w',$_POST);
-
+   
    $newID = $form->add($_POST);
    Html::back();
 

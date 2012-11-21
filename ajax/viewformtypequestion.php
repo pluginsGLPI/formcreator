@@ -8,7 +8,7 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-PluginFormcreatorQuestion::changeAddTypeQuestion($_REQUEST['value']);
+PluginFormcreatorQuestion::changeAddTypeQuestion($_REQUEST['value'], $_REQUEST['id']);
 
 Html::ajaxFooter();
 ?>

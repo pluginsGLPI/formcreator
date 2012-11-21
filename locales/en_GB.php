@@ -1,7 +1,5 @@
 <?php
-
 $LANG['plugin_formcreator']["name"] = "Form Creator";
-$LANG['plugin_formcreator']["name2"] = "UF";
 
 $LANG['plugin_formcreator']["error_form"][0] = "Your form does not contain name, please correct.";
 $LANG['plugin_formcreator']["error_form"][1] = "The answer does not have the expected format, ";
@@ -34,6 +32,8 @@ $LANG['plugin_formcreator']["type_question"][4] = "Textarea";
 $LANG['plugin_formcreator']["type_question"][5] = "File Upload";
 $LANG['plugin_formcreator']["type_question"][6] = "Validation of";
 $LANG['plugin_formcreator']["type_question"][7] = "Multiplication of two fields";
+$LANG['plugin_formcreator']["type_question"][8] = "Select - Question onChange";
+$LANG['plugin_formcreator']["type_question"][9] = "Select - Section onChange";
 
 $LANG['plugin_formcreator']["headings"][0] = "Form";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket target";
@@ -57,13 +57,15 @@ $LANG['plugin_formcreator']["target"][5] = "Edit a ticket target";
 $LANG['plugin_formcreator']["target"][6] = "Answer";
 $LANG['plugin_formcreator']["target"][7] = "There are no questions yet for this form.";
 $LANG['plugin_formcreator']["target"][8] = "Ticket target";
+$LANG['plugin_formcreator']["target"][9] = "Code in the ticket's title";
 
 $LANG['plugin_formcreator']["regex_type"][1] = "Without validation";
-$LANG['plugin_formcreator']["regex_type"][2] = "Alphanumeric";
+$LANG['plugin_formcreator']["regex_type"][2] = "Required";
 $LANG['plugin_formcreator']["regex_type"][3] = "Alphabetical";
 $LANG['plugin_formcreator']["regex_type"][4] = "Numeric";
 $LANG['plugin_formcreator']["regex_type"][5] = "Regular expression";
 $LANG['plugin_formcreator']["regex_type"][6] = "Email";
+$LANG['plugin_formcreator']["regex_type"][7] = "Date";
 
 $LANG['plugin_formcreator']["helpdesk"][1] = "No form available.";
 $LANG['plugin_formcreator']["helpdesk"][2] = "Max size";
@@ -72,11 +74,19 @@ $LANG['plugin_formcreator']["helpdesk"][4] = "No answer selected by the user";
 
 $LANG['plugin_formcreator']["default"]["target"][0] = "Ticket target by default";
 $LANG['plugin_formcreator']["default"]["target"][1] = "Hello,\n\rThis is the default content.\n\r";
-$LANG['plugin_formcreator']["default"]["target"][1].= "##full_form##";
+$LANG['plugin_formcreator']["default"]["target"][1].= "##FULLFORM##";
 
 $LANG['plugin_formcreator']["default"]["section"][0] = "Section by default";
 $LANG['plugin_formcreator']["default"]["section"][1] = "Hello,\n\rThis is the default content of";
 $LANG['plugin_formcreator']["default"]["section"][1].= " your section of question.";
 
 $LANG['plugin_formcreator']["information"][0] = "Ex : #^[0-9]*$#";
+$LANG['plugin_formcreator']["information"][1] = "Purchase total request : ";
+$LANG['plugin_formcreator']["information"][2] = "Must be less than ";
+
+$LANG['plugin_formcreator']["bbcode"][0] = "BB Code available :";
+$LANG['plugin_formcreator']["bbcode"][1] = "URL link: [url=website]link[/url]";
+$LANG['plugin_formcreator']["bbcode"][2] = "Bold : [b][/b]";
+$LANG['plugin_formcreator']["bbcode"][3] = "Italic : [i][/i]";
+$LANG['plugin_formcreator']["bbcode"][4] = "underlined : [u][/u]";
 ?>

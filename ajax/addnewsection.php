@@ -8,12 +8,11 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-$item   = new $_POST['type']();
-$value = $_POST['value'];
+$valueId = $_REQUEST['valueId'];
+$formID = $_REQUEST['formID'];
+$valueIdSection = $_REQUEST['valueIdSection']+1;
 
-if($value == 5) {
-   $item->getInputOtherType();
-}
+PluginFormcreatorQuestion::getNextValueDynamicSection($formID, $valueId, $valueIdSection);
 
 Html::ajaxFooter();
 ?>

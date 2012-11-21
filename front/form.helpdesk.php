@@ -3,93 +3,177 @@
 define('GLPI_ROOT', '../../..');
 include (GLPI_ROOT . "/inc/includes.php");
 
-Session::checkLoginUser();
+//anonyme or not ?
+Session::checkFaqAccess();
 
-if ($_SESSION["glpiactiveprofile"]["interface"] == "central") {
+//onload
+$helpdesk = new PluginFormcreatorHelpdesk;
+$formID = $_GET['form'];
+$verifQuestion = $helpdesk->getQuestionByForm($formID);
+
+if (!empty($verifQuestion)) {
+
+    $cache = "\"";
+    $affiche = "\"";
+    foreach ($verifQuestion as $question_id => $question_value) {
+        $x = $y =0;
+        if ($question_value['type'] == 8) {
+            $tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
+            foreach ($tab['value'] as $value_id => $value) {
+                if ($x != 0) {
+                    $cache .= $helpdesk->creationTabDyna($tab['question'][$value_id]).":";
+                } else {
+                    $affiche .= $helpdesk->creationTabDyna($tab['question'][$value_id]).":";
+                    $x = 1;
+                }
+            }
+        }
+        else if ($question_value['type'] == 9) {
+            $tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
+            foreach ($tab['value'] as $value_id => $value) {
+                if ($y != 0) {
+                    $cache .= $helpdesk->creationTabDynaSection($tab['section'][$value_id]).":";
+                } else {
+                    $affiche .= $helpdesk->creationTabDynaSection($tab['section'][$value_id]).":";
+                    $y = 1;
+                }
+            }
+        }
+    }
+}
+
+$cache  = str_replace ("::", ":", $cache);
+$affiche  = str_replace ("::", ":", $affiche);
+
+while ($cache{strlen($cache)-1} == ":")
+        $cache = substr($cache, 0, -1);
+
+while ($affiche{strlen($affiche)-1} == ":")
+        $affiche = substr($affiche, 0, -1);
+		
+while ($cache[0] == ":")
+        $cache = substr($cache, 1, 0);
+
+while ($affiche[0] == ":")
+        $affiche = substr($affiche, 1, 0);
+
+
+$cache .= "\"";
+$affiche .= "\"";
+
+if (Session::getLoginUserID()) {
    Html::header($LANG['plugin_formcreator']['name'],
                $_SERVER['PHP_SELF'],
                "plugins",
                "formcreator",
-               "form"
+               "form",
+               "chargement($cache, $affiche)"
                );
 } else {
-   Html::helpHeader($LANG['plugin_formcreator']['name'], $_SERVER['PHP_SELF']);
+        Html::simpleHeader($LANG['plugin_formcreator']['name2'],array($LANG['login'][10] => "../../../index.php?co=1",
+                                                   $LANG['Menu'][20]  => "../../../front/helpdesk.faq.php",
+                                                   $LANG['plugin_formcreator']['name2'] => "./formlist.php"),
+                                                   "chargement($cache, $affiche)");
 }
 
-$helpdesk = new PluginFormcreatorHelpdesk;
-$formID = $_GET['form'];
-
-echo "<div class='center'>"."\n\r";
+echo "<div class='center'>" . "\n\r";
 
 $form = $helpdesk->getForm($formID);
 
-echo "<p class='h1'>".$form['name']."</p>";
-echo "<p class='h6'>".$form['content']."</p><br />";
+echo "<p class='h1'>" . $form['name'] . "</p>";
+echo "<p class='h6'>" . $form['content'] . "</p><br />";
 
-$verifQuestion = $helpdesk->getQuestionByForm($formID);
+if (!empty($verifQuestion)) {
+    
+    echo '<form action="' . $CFG_GLPI["root_doc"] . '/plugins/formcreator/front/helpdesk.form.php" 
+         enctype="multipart/form-data" id="form_ticket" name="form_ticket" method="post">';
 
-if(!empty($verifQuestion)) {
+    echo '<input type="hidden" name="id" value="' . $form['id'] . '" />';
 
-echo '<form action="'.$CFG_GLPI["root_doc"].'/plugins/formcreator/front/helpdesk.form.php"
-         enctype="multipart/form-data" name="form_ticket" method="post">';
+    $sections = $helpdesk->getSection($formID);
+    
+    $listequestion = "'";
+	$boolMultiplication = 0;
+    foreach ($sections as $section_id => $section_value) {
 
-echo '<input type="hidden" name="id" value="'.$form['id'].'" />';
+        $questions = $helpdesk->getQuestionBySection($section_id);
+        
+        if (!empty($questions)) {
 
-$sections = $helpdesk->getSection($formID);
-
-foreach($sections as $section_id => $section_value) {
-
-   $questions = $helpdesk->getQuestionBySection($section_id);
-
-   if(!empty($questions)) {
-
-      echo "<div class='spaced' id='tabsbody'>";
-      echo"<table class='tab_cadre_fixe fix_tab_height'>";
-         echo "<tr>";
-            echo "<th colspan='3'>".$section_value['name']."</th>";
-         echo "</tr>";
-
-         if(!empty($section_value['content'])) {
+            echo "<div class='spaced' id='sec_".$section_id."'>";
+            echo"<table class='tab_cadre_fixe fix_tab_height'>";
             echo "<tr>";
-               echo "<td colspan='3' class='center'>".nl2br($section_value['content']).'</td>';
+            echo "<th colspan='5'>" . $section_value['name'] . "</th>";
             echo "</tr>";
-         }
 
-         foreach($questions as $question_id => $question_value) {
-            echo "<tr>";
-               echo "<td>".$question_value['name']."</td>";
-               echo "<td>";
-               $helpdesk->getInputQuestion($question_id,
-                                           $question_value['type'],
-                                           $question_value['data'],
-                                           $question_value['option']);
+            if (!empty($section_value['content'])) {
+                echo "<tr>";
+                echo "<td colspan='4' class='center'>" . nl2br($section_value['content']) . '</td>';
+                echo "</tr>";
+            }
 
-               $question_option = json_decode($question_value['option'],true);
-               $question_option_type = $question_option['type'];
+            foreach ($questions as $question_id => $question_value) {
+                echo "<tr id='" . $question_id . "'>";
+                if ($question_value['type'] != "10") // empeche de mettre le nom de la question sur le formulaire pour liste déraoulante utlisateur
+                    echo "<td>" . $question_value['name'] . "</td>";
+                echo "<td>";
+                $helpdesk->getInputQuestion($question_id, $question_value['type'], $question_value['data'], $question_value['option']);
 
-               if($question_value['type'] == 1) {
-                  echo $helpdesk->getNameRegexType($question_option['type']);
-               }
-
-               echo "</td>";
-               echo "<td>".$question_value['content']."</td>";
-            echo "</tr>";
-         }
-
-      echo "</table>";
-      echo "</div>";
-
-   }
-}
-
-echo '<input type="submit" name="add" value="'.$LANG['buttons'][8].'" class="submit"/>';
-Html::closeForm();;
-
+                $question_option = json_decode($question_value['option'], true);
+				
+				//si la question est du type champ texte
+                if ($question_value['type'] == 1) {
+                    echo $helpdesk->getNameRegexType($question_option['type']);
+					//si il y a un controle sur le champ
+                    if ($question_option['type'] != 1) {
+                        //remplissage de la liste pour effectuer la vérification si le champ est non caché et obligatoire à la fois
+                        $question_option = json_decode($question_value['option'], true);
+                        $question_option_value = urldecode($question_option['value']);
+						$question_value['name'] = str_replace("'","\'",$question_value['name']);
+                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".$question_value['name']."&&";
+                    }
+                }
+                if (($question_value['type'] == "7") || ($question_value['type'] == "11")) //initialisation d'une variable pour savoir s'il y a un champ de multiplication de champ pour implémenter un champ total somme
+                    $boolMultiplication = 1;
+                $chaine = $question_value['content'];
+                //remplacement lien url en BBCODE
+                $chaine = preg_replace("#\[url\]((ht|f)tp://)([^\r\n\t<\"]*?)\[/url\]#sie", "'<a href=\"\\1' . str_replace(' ', '%20', '\\3') . '\">\\1\\3</a>'", $chaine);
+                $chaine = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/", "<a href=\"$1\">$2</a>", $chaine);
+                //remplacement gras en BBCODE
+                $chaine = str_replace("[b]", "<b>", $chaine);
+                $chaine = str_replace("[/b]", "</b>", $chaine);
+                //remplacement italique en BBCODE
+                $chaine = str_replace("[i]", "<em>", $chaine);
+                $chaine = str_replace("[/i]", "</em>", $chaine);
+                //remplacement souligne en BBCODE
+                $chaine = str_replace("[u]", "<u>", $chaine);
+                $chaine = str_replace("[/u]", "</u>", $chaine);
+                
+                echo "</td>";
+                echo "<td>" . $chaine . "</td>";
+                echo "</tr>";
+            }
+            
+            echo "</table>";
+            echo "</div>";
+        }
+    }
+    if ($boolMultiplication == 1) {
+        echo '<input type="hidden" name="liste_champ_somme" id="liste_champ_somme" value=""/>';
+        echo $LANG['plugin_formcreator']["information"][1].'<input type="text" name="somme_total_achat" id="somme_total_achat" value="0" readonly="readonly"/>&nbsp;&nbsp;'.$LANG['plugin_formcreator']["information"][2].$form['max_price'].' €<br/><br/>';
+    }
+    if (strlen($listequestion) > 1)
+        $listequestion = substr($listequestion, 0, -2);
+    $listequestion .= "'";
+	
+	
+    echo '<input type="button" onClick="verif('.$listequestion.');" name="add" value="' . $LANG['buttons'][8] . '" class="submit"/>';
+    Html::closeForm();
 } else {
-   echo $LANG['plugin_formcreator']["target"][7];
+    echo $LANG['plugin_formcreator']["target"][7];
 }
 
-echo "</div>"."\n\r";
+echo "</div>" . "\n\r";
 
 Html::footer();
 ?>
