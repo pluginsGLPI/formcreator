@@ -859,7 +859,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 echo "<br/><p>" . $LANG['plugin_formcreator']["question"][12] . " : ";
                 echo "<select name='option' id='option'>";
 
-                for ($i = 1; $i <= 9; $i++) {
+                for ($i = 1; $i <= 7; $i++) {
 
                     if ($i == $tab_option['type']) {
                         echo "<option value='" . $i . "' selected='selected'>" .
