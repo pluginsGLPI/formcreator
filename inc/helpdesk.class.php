@@ -147,7 +147,8 @@ class PluginFormcreatorHelpdesk {
             case PluginFormcreatorQuestion::MULTIPLICATION_ITEM_FIELD: // 2 textfields sum
                 echo '<input type="text" name="question1_' . $id . '" size="5" onKeyUp="multiplication(question1_' . $id . ', question2_' . $id . ', somme_' . $id . ', question3_' . $id . ', ' . $id . ');"/>&nbsp;';
                 echo '<select name="question2_' . $id . '" onchange="multiplication(question1_' . $id . ', question2_' . $id . ', somme_' . $id . ', question3_' . $id . ', ' . $id . ');">';
-                foreach ($tab['value'] as $value_id => $value) {
+                echo '<option value=""></option>';
+				foreach ($tab['value'] as $value_id => $value) {
                     $typeMat = $tab["typeMat"][$value_id];
                     echo '<option value="' . $value . '">' . $typeMat . '</option>';
                 }
