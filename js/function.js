@@ -217,9 +217,16 @@ function verifMail(champ)
 
 function multiplication(value1, value2, somme, value3, id)
 {
+	if ((value1.value == "") && (value2.value != ""))
+		value1.value = 1;
+	
     somme.value = value1.value * value2.value;
     value3.value = value2.options[value2.selectedIndex].text;
     
+	if (value2.value == "") { //si on ne choisit plus rien dans la liste des achats, on enlève la valeur de nombre et de la somme
+		value1.value = "";
+	}
+	
     var champ = document.getElementById('liste_champ_somme').value;
     var cpt = 0;
     var strLen = champ.length;
@@ -248,6 +255,7 @@ function multiplication(value1, value2, somme, value3, id)
     {
         Total = Total + eval(document.getElementById('somme_' + listeChampTotal[i]).value);
     }
+    document.getElementById('somme_total_achat').value = Total;
 }
 
 
