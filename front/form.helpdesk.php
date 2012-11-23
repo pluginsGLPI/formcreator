@@ -160,7 +160,7 @@ if (!empty($verifQuestion)) {
     }
     if ($boolMultiplication == 1) {
         echo '<input type="hidden" name="liste_champ_somme" id="liste_champ_somme" value=""/>';
-        echo $LANG['plugin_formcreator']["information"][1].'<input type="text" name="somme_total_achat" id="somme_total_achat" value="0" readonly="readonly"/>&nbsp;&nbsp;'.$LANG['plugin_formcreator']["information"][2].$form['max_price'].' €<br/><br/>';
+        echo $LANG['plugin_formcreator']["information"][1].'<input type="text" name="somme_total_achat" id="somme_total_achat" value="0" readonly="readonly"/>&nbsp;&nbsp;<br/><br/>';
     }
     if (strlen($listequestion) > 1)
         $listequestion = substr($listequestion, 0, -2);
