@@ -1,29 +1,31 @@
 function verif(listequestion) {
-    var listemauvaisereponse = "";
-    var cpt = 0;
-	
-	
-    var listequestion1 = listequestion.split('&&');
-    for (var i = 0; i < listequestion1.length; i++){
-        var listequestion2 = listequestion1[i].split('::');
-        if ((document.getElementById(listequestion2[0]).className != "hidden") && (document.getElementById(listequestion2[1]).className != "hidden")){
-            var reg = new RegExp(listequestion2[2]);
-            if (!reg.test(document.getElementById("question_" + listequestion2[1]).value)) {
-                listemauvaisereponse = listemauvaisereponse + '\n- ' + listequestion2[3];
-                surligne(document.getElementById("question_" + listequestion2[1]), true);
-                cpt++;
-            }
-        }
-    }	
-	
-    if (cpt == 0) {
-        document.getElementById("form_ticket").submit();
-    } else if (cpt == 1){
-        alert('La question suivante est mal renseignée :' + listemauvaisereponse);
-    } else {
-        alert('Les questions suivantes sont mal renseignées :' + listemauvaisereponse);
-    }
-	
+	if (listequestion.length != 0) {
+		var listemauvaisereponse = "";
+		var cpt = 0;
+		
+		var listequestion1 = listequestion.split('&&');
+		for (var i = 0; i < listequestion1.length; i++){
+			var listequestion2 = listequestion1[i].split('::');
+			if ((document.getElementById(listequestion2[0]).className != "hidden") && (document.getElementById(listequestion2[1]).className != "hidden")){
+				var reg = new RegExp(listequestion2[2]);
+				if (!reg.test(document.getElementById("question_" + listequestion2[1]).value)) {
+					listemauvaisereponse = listemauvaisereponse + '\n- ' + listequestion2[3];
+					surligne(document.getElementById("question_" + listequestion2[1]), true);
+					cpt++;
+				}
+			}
+		}	
+		
+		if (cpt == 0) {
+			document.getElementById("form_ticket").submit();
+		} else if (cpt == 1){
+			alert('La question suivante est mal renseignée :' + listemauvaisereponse);
+		} else {
+			alert('Les questions suivantes sont mal renseignées :' + listemauvaisereponse);
+		}
+	} else {
+		document.getElementById("form_ticket").submit();
+	}
 }
 
 function changeNbValue(newValue) {
