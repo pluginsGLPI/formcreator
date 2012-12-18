@@ -63,15 +63,18 @@ function afficher_cacher(identifiant) {
 
 function cacher(identifiant){
     for (var i = 0; i < identifiant.length; i++){
-        document.getElementById(identifiant[i]).className = "hidden";
+		if (document.getElementById(identifiant[i])) {
+			document.getElementById(identifiant[i]).className = "hidden";
+		}
     }
 }
 
 function afficher(identifiant){
     for (var i = 0; i < identifiant.length; i++){
-        document.getElementById(identifiant[i]).className = "visible";
+		if (document.getElementById(identifiant[i])) {
+			document.getElementById(identifiant[i]).className = "visible";
+		}
     }
-    
 }
 
 function chargement(tableau, affiche) {
