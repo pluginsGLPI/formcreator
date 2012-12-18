@@ -44,7 +44,7 @@ function afficher_cacher(identifiant) {
     if (typeof identifiant === "string")
     {
         if (document.getElementById(identifiant).className == "hidden") {
-            document.getElementById(identifiant).className = "visible";
+            document.getElementById(identifiant).className = "";
         } else {
             document.getElementById(identifiant).className = "hidden";
         }
@@ -53,7 +53,7 @@ function afficher_cacher(identifiant) {
     {
         for (var i = 0; i < identifiant.length; i++){
             if (document.getElementById(identifiant[i]).className == "hidden") {
-                document.getElementById(identifiant[i]).className = "visible";
+                document.getElementById(identifiant[i]).className = "";
             } else {
                 document.getElementById(identifiant[i]).className = "hidden";
             }
@@ -72,7 +72,7 @@ function cacher(identifiant){
 function afficher(identifiant){
     for (var i = 0; i < identifiant.length; i++){
 		if (document.getElementById(identifiant[i])) {
-			document.getElementById(identifiant[i]).className = "visible";
+			document.getElementById(identifiant[i]).className = "";
 		}
     }
 }
