@@ -4,7 +4,7 @@ define('GLPI_ROOT', '../../..');
 include (GLPI_ROOT . "/inc/includes.php");
 
 //anonyme or not ?
-Session::checkFaqAccess();
+Session::checkLoginUser();
 
 //onload
 $helpdesk = new PluginFormcreatorHelpdesk;

@@ -3,7 +3,9 @@
 function plugin_init_formcreator() {
    global $PLUGIN_HOOKS,$LANG,$CFG_GLPI;
    
-    Plugin::registerClass('PluginFormcreatorForm');
+   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
+   
+   Plugin::registerClass('PluginFormcreatorForm');
     
    if (Session::haveRight("config", "w")) {
       $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
@@ -24,7 +26,7 @@ function plugin_init_formcreator() {
 function plugin_version_formcreator() {
 
    return array('name'           => 'Form Creator',
-                'version'        => '1.4.2',
+                'version'        => '1.4.6',
                 'author'         => 'Goneri Le Bouder, Nicolas Manceau, Dimitri Mouillard',
                 'homepage'       => 'https://forge.indepnet.net/projects/formcreator',
                 'minGlpiVersion' => '0.83.3',

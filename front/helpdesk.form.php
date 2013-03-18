@@ -5,7 +5,7 @@ include (GLPI_ROOT . "/inc/includes.php");
 global $CFG_GLPI;
 
 //anonyme or not ?
-Session:: checkFaqAccess();
+Session::checkLoginUser();
 
 if (Session::getLoginUserID()) {
     Html::header($LANG['plugin_formcreator']['name'], $_SERVER['PHP_SELF'], "plugins", "formcreator", "form"
