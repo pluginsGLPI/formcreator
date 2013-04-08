@@ -70,7 +70,7 @@ $LANG['plugin_formcreator']["regex_type"][7] = "Date";
 
 $LANG['plugin_formcreator']["helpdesk"][1] = "Aucun formulaire de disponible.";
 $LANG['plugin_formcreator']["helpdesk"][2] = "Taille max";
-$LANG['plugin_formcreator']["helpdesk"][3] = "Votre demande à été prise en considération.";
+$LANG['plugin_formcreator']["helpdesk"][3] = "Votre demande a été prise en considération.";
 $LANG['plugin_formcreator']["helpdesk"][4] = "Aucune réponse choisi par l'utilisateur";
 
 $LANG['plugin_formcreator']["default"]["target"][0] = "Ticket cible par défaut";
