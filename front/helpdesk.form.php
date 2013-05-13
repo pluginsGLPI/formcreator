@@ -156,6 +156,8 @@ foreach ($targets as $target_id => $target_value) {
 	$ticket['users_id_recipient'] = $user->fields['id'];
 	$ticket['users_id_lastupdater'] = $user->fields['id'];
     $ticket['type'] = 2;
+	
+	$ticket['name'] = str_replace("'", "\'", $ticket['name']);
 
     $track = new Ticket();
     $ticketID = $track->add($ticket);
