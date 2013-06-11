@@ -34,6 +34,7 @@ $LANG['plugin_formcreator']["type_question"][6] = "Validation of";
 $LANG['plugin_formcreator']["type_question"][7] = "Multiplication of two fields";
 $LANG['plugin_formcreator']["type_question"][8] = "Select - Question onChange";
 $LANG['plugin_formcreator']["type_question"][9] = "Select - Section onChange";
+$LANG['plugin_formcreator']["type_question"][10] = "Listing Item";
 
 $LANG['plugin_formcreator']["headings"][0] = "Form";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket target";
@@ -89,4 +90,12 @@ $LANG['plugin_formcreator']["bbcode"][1] = "URL link: [url=website]link[/url]";
 $LANG['plugin_formcreator']["bbcode"][2] = "Bold : [b][/b]";
 $LANG['plugin_formcreator']["bbcode"][3] = "Italic : [i][/i]";
 $LANG['plugin_formcreator']["bbcode"][4] = "underlined : [u][/u]";
+
+
+$LANG['plugin_formcreator']["item"][0] = "Table to have : ";
+$LANG['plugin_formcreator']["item"][1] = "Location";
+$LANG['plugin_formcreator']["item"][2] = "Computer";
+
+$LANG['plugin_formcreator']["item_table"][1] = "location";
+$LANG['plugin_formcreator']["item_table"][2] = "computer";
 ?>

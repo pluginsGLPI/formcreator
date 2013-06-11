@@ -11,8 +11,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
     const MULTIPLICATION_ITEM_FIELD = 7;
     const DYNAMIC_FIELD = 8;
     const DYNAMIC_SECTION = 9;
-    const USER_DROPDOWN = 10;
-    const PURCHASE_ITEM = 11;
+    const ITEM = 10;
 
     function canCreate() {
         return Session::haveRight('config', 'w');
@@ -113,7 +112,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         echo "<td>" . $LANG['common'][17] . "&nbsp;:</td><td>";
         echo "<select name='type' id='typeQuestion'>";
         echo "<option value='-1'>----</option>";
-        for ($i = 1; $i <= 9; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             echo "<option value='" . $i . "'>
                      " . $LANG['plugin_formcreator']["type_question"][$i] . "</option>";
         }
@@ -262,9 +261,24 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             case self::DYNAMIC_SECTION: //select for dynamic section
                 self::getValueSection($formID);
                 break;
+				
+			case self::ITEM: //select for dynamic section
+                self::getItem();
+                break;
         }
     }
 
+	static function getItem() {
+        global $LANG;
+		$nb_item = 2;
+        echo "<input type='hidden' id='nbValue' name='nbValue' value='".$nb_item."'/>";
+        echo '<table><tr><td>' . $LANG['plugin_formcreator']["item"][0] . '</td><td>';
+		echo '<select name="item_liste">';
+        for ($i = 1; $i <= $nb_item; $i++) {
+            echo '<option value="' . $LANG['plugin_formcreator']["item_table"][$i] . '">' . $LANG['plugin_formcreator']["item"][$i] . '</option>';
+        }
+        echo '</select></td></tr></table>';
+    }
 
     static function getValidation() {
         global $LANG;
@@ -597,6 +611,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                     }
                 }
                 break;
+				
+			case self::ITEM: // purchase item listing
+				$result['data']['value'] = $params['item_liste'];
+                break;
         }
 
         $result['data'] = self::_serialize($result['data']);
@@ -749,7 +767,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         echo "<select name='type' id='typeQuestion'>";
         echo "<option value='-1'>----</option>";
 
-        for ($i = 1; $i <= 9; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
 
             if ($i == $this->fields['type']) {
                 echo "<option value='" . $i . "' selected='selected'>
@@ -1018,6 +1036,18 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 self::getNextValueSectionEdit($formID, $nbValue);
 
                 break;
+				
+			case self::ITEM: // Liste item
+                echo "<input type='hidden' id='nbValue' name='nbValue' value='".$nbValue."'/>";
+                echo $LANG['plugin_formcreator']["item"][0] . '<select name="item_liste">';
+                for ($i = 1; $i <= $nbValue; $i++) {
+                    if ($values['value'] == $LANG['plugin_formcreator']["item_table"][$i])
+                        echo '<option value="' . $LANG['plugin_formcreator']["item_table"][$i] . '" SELECTED>'.$LANG['plugin_formcreator']["item"][$i].'</option>';
+                    else
+						echo '<option value="' . $LANG['plugin_formcreator']["item_table"][$i] . '">'.$LANG['plugin_formcreator']["item"][$i].'</option>';
+                }
+				echo '</select>';
+                break;
         }
     }
 
@@ -1159,6 +1189,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
             case self::DYNAMIC_SECTION: // dynamic question
                 return $LANG['plugin_formcreator']["type_question"][9];
+                break;
+				
+			case self::ITEM: // item listing
+                return $LANG['plugin_formcreator']["type_question"][10];
                 break;
         }
     }

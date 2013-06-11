@@ -34,6 +34,7 @@ $LANG['plugin_formcreator']["type_question"][6] = "Demande de validation";
 $LANG['plugin_formcreator']["type_question"][7] = "Multiplication de 2 champs";
 $LANG['plugin_formcreator']["type_question"][8] = "Select - Question onChange";
 $LANG['plugin_formcreator']["type_question"][9] = "Select - Section onChange";
+$LANG['plugin_formcreator']["type_question"][10] = "Liste Item";
 
 $LANG['plugin_formcreator']["headings"][0] = "Formulaire";
 $LANG['plugin_formcreator']["headings"][1] = "Ticket(s) cible(s)";
@@ -94,4 +95,11 @@ $LANG['plugin_formcreator']["bbcode"][1] = "Lien URL : [url=website]lien[/url]";
 $LANG['plugin_formcreator']["bbcode"][2] = "Gras : [b][/b]";
 $LANG['plugin_formcreator']["bbcode"][3] = "Italique : [i][/i]";
 $LANG['plugin_formcreator']["bbcode"][4] = "Souligné : [u][/u]";
+
+$LANG['plugin_formcreator']["item"][0] = "Table à incorporer : ";
+$LANG['plugin_formcreator']["item"][1] = "Lieux";
+$LANG['plugin_formcreator']["item"][2] = "Ordinateur";
+
+$LANG['plugin_formcreator']["item_table"][1] = "location";
+$LANG['plugin_formcreator']["item_table"][2] = "computer";
 ?>

@@ -121,6 +121,10 @@ foreach ($targets as $target_id => $target_value) {
                     $reponse = explode("&&", $_REQUEST[$question_name]);
                     $question[$question_name] = $reponse[0];
                     break;
+					
+				case PluginFormcreatorQuestion::ITEM:
+                    $question[$question_name] = $_REQUEST[$question_name];
+                    break;
             }
         } else {
             $question[$question_name] = $LANG['plugin_formcreator']["helpdesk"][4];

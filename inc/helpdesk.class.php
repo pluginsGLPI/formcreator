@@ -191,7 +191,7 @@ class PluginFormcreatorHelpdesk {
                 
                 echo '<select name="question_'. $id.'" onchange="choixSelectDyna(this.options[this.selectedIndex].value);">';
                 foreach ($tab['value'] as $value_id => $value) {
-                    $tableau = self::creationTabDynaSection($tab['section'][$value_id]);
+                    $tableau = self::creationTabDynaSection($tab['value']);
                     if ($tableau != "")
                         $tableau = "&&".$tableau;
                     echo "<option id='dynaQuestion_" . $id . "_" . $value_id . "' value='".$value."&&".$listing.$tableau."'>" . $value . "</option>";
@@ -199,7 +199,22 @@ class PluginFormcreatorHelpdesk {
                 echo '</select>';
 
                 break;
+				
+			case PluginFormcreatorQuestion::ITEM: // item listing
+                echo '<select name="question_' . $id . '">';
+                $retour = self::getTabItem($tab['value']);
+                for ($i = 1; $i <= count($retour); $i++) {
+                    echo '<option value="' . $retour[$i]["name"] . '">' . $retour[$i]["name"] . '</option>';
+                }
+                echo '</select>';
+                break;
         }
+    }
+	
+	function getTabItem($table) {
+		$object = new $table;
+        $tab_obj = $object->find();
+        return $tab_obj;
     }
     
     function creationTabDyna($tab) {
