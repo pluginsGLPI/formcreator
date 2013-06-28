@@ -159,7 +159,7 @@ foreach ($targets as $target_id => $target_value) {
 
 	$ticket['users_id_recipient'] = $user->fields['id'];
 	$ticket['users_id_lastupdater'] = $user->fields['id'];
-    $ticket['type'] = 2;
+	$ticket['type'] = $target_value['type'];
 	
 	$ticket['name'] = str_replace("'", "\'", $ticket['name']);
 

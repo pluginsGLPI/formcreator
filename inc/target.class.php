@@ -89,11 +89,19 @@ class PluginFormcreatorTarget extends CommonDBTM {
          echo "</tr>";
          
          echo "<tr>";
-         echo "<td rowspan='2'>";
+         echo "<td rowspan='3'>";
          echo $LANG['joblist'][6]." :";
-         echo "</td><td rowspan='2'>";
+         echo "</td><td rowspan='3'>";
          echo "<textarea name='content' cols='65' rows='12'>".$this->fields['content']."</textarea>";
          echo "</td>";
+		 echo "<td>".$LANG['common'][17]." :</td>";
+         echo "<td>";
+         echo '<select name="type">';
+		 echo '<option value="2">'.$LANG['job'][2].'</option>';
+		 echo '<option value="1">'.$LANG['job'][1].'</option>';
+		 echo '</select>';
+         echo "</td>";
+         echo "</tr><tr>";
          echo "<td>".$LANG['joblist'][29]." :</td>";
          echo "<td>";
          Ticket::dropdownUrgency("urgency",$this->fields["urgency"]);
@@ -216,11 +224,24 @@ class PluginFormcreatorTarget extends CommonDBTM {
          echo "</tr>";
          
          echo "<tr>";
-         echo "<td rowspan='2'>";
+         echo "<td rowspan='3'>";
          echo $LANG['joblist'][6]." :";
-         echo "</td><td rowspan='2'>";
+         echo "</td><td rowspan='3'>";
          echo "<textarea name='content' cols='65' rows='12'>".$this->fields['content']."</textarea>";
          echo "</td>";
+		 echo "<td>".$LANG['common'][17]." :</td>";
+         echo "<td>";
+         echo '<select name="type">';
+		 if ($this->fields['type'] == 2) {
+			echo '<option value="2">'.$LANG['job'][2].'</option>';
+			echo '<option value="1">'.$LANG['job'][1].'</option>';
+		 } else {
+			echo '<option value="2">'.$LANG['job'][2].'</option>';
+			echo '<option value="1" SELECTED>'.$LANG['job'][1].'</option>';
+		 }
+		 echo '</select>';
+         echo "</td>";
+         echo "</tr><tr>";
          echo "<td>".$LANG['joblist'][29]." :</td>";
          echo "<td>";
          Ticket::dropdownUrgency("urgency",$this->fields["urgency"]);
