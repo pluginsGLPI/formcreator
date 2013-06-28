@@ -25,6 +25,7 @@ function plugin_formcreator_install() {
                   `content` longtext collate utf8_unicode_ci,
                   `urgency` int(11) NOT NULL default '1',
                   `priority` int(11) NOT NULL default '1',
+                  `type` tinyint(1) NOT NULL default '2',
                   `itilcategories_id` int(11) NOT NULL default '0',
                   `plugin_formcreator_forms_id` int(11) NOT NULL,
                 PRIMARY KEY (`id`)
