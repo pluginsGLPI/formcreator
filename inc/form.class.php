@@ -71,7 +71,10 @@ class PluginFormcreatorForm extends CommonDBTM {
       echo "</textarea>";
       echo "</td></td>";
       echo "<td>".$LANG['setup'][41]."</td><td>";
-      Dropdown::showLanguages("language", array('value' => $this->fields["language"], 'value' => $_SESSION['glpilanguage']));
+      if ($this->fields["language"])
+		Dropdown::showLanguages("language", array('value' => $this->fields["language"]));
+	  else
+		Dropdown::showLanguages("language", array('value' => $_SESSION['glpilanguage']));
       echo "</td></tr>";
 	       
       $this->showFormButtons($options);
