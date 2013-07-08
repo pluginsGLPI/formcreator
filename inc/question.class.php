@@ -197,16 +197,32 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         $section = new PluginFormcreatorSection;
         $listSection = $section->find("plugin_formcreator_forms_id = '$formID' ORDER BY position");
 
+		//fonction qui permet de savoir s'il s'agit d'une question ou section pour le selected
+		if (preg_match("/sec_/", $selected)) {
+			$select_choix = 1;
+		} else {
+			$select_choix = 0;
+		}
+		
         echo '<select name="' . $sectionName . '">';
         echo '<option value="-1"></option>';
         foreach ($listSection as $section_id => $values) {
-            if ($selected == $section_id) {
-                echo '<option value="' . $section_id . '" selected="selected">' . $values['name'] . '</option>';
+            if ($selected == "sec_".$section_id) {
+                echo '<option value="sec_' . $section_id . '" selected="selected">' . $values['name'] . '</option>';
             } else {
-                echo '<option value="' . $section_id . '">' . $values['name'] . '</option>';
+                echo '<option value="sec_' . $section_id . '">' . $values['name'] . '</option>';
             }
         }
-
+		 echo '<option value="-1">------</option>';
+		$question = new self;
+        $listQuestion = $question->find("plugin_formcreator_forms_id = '$formID' ORDER BY plugin_formcreator_sections_id,position");
+		foreach ($listQuestion as $question_id => $values) {
+            if (($selected == $question_id) && ($select_choix == 0)) {
+                echo '<option value="' . $question_id . '" selected="selected">' . $values['name'] . '</option>';
+            } else {
+                echo '<option value="' . $question_id . '">' . $values['name'] . '</option>';
+            }
+        }
         echo '</select>';
     }
 

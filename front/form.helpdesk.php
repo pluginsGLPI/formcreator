@@ -20,29 +20,43 @@ if (!empty($verifQuestion)) {
         if ($question_value['type'] == 8) {
             $tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
             foreach ($tab['value'] as $value_id => $value) {
-                if ($x != 0) {
-                    $cache .= $helpdesk->creationTabDyna($tab['question'][$value_id]).":";
-                } else {
-                    $affiche .= $helpdesk->creationTabDyna($tab['question'][$value_id]).":";
-                    $x = 1;
-                }
+					if ($x != 0) {
+							$cache .= $helpdesk->creationTabDyna($tab['question'][$value_id]);
+							if (strlen($cache)>2)
+								$cache .= ":";
+					} else {
+						if (isset($tab['question'][$value_id])) {
+							$affiche .= $helpdesk->creationTabDyna($tab['question'][$value_id]);
+							if (strlen($affiche)>2)
+								$affiche .= ":";
+						}
+						$x = 1;
+					}
             }
         }
         else if ($question_value['type'] == 9) {
             $tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
             foreach ($tab['value'] as $value_id => $value) {
-                if ($y != 0) {
-                    $cache .= $helpdesk->creationTabDynaSection($tab['section'][$value_id]).":";
-                } else {
-                    $affiche .= $helpdesk->creationTabDynaSection($tab['section'][$value_id]).":";
-                    $y = 1;
-                }
+				if ($y != 0) {
+						$cache .= $helpdesk->creationTabDyna($tab['section'][$value_id]);
+						if (strlen($cache)>2)
+							$cache .= ":";
+				} else {
+					if (isset($tab['section'][$value_id])) {
+						$affiche .= $helpdesk->creationTabDyna($tab['section'][$value_id]);
+						if (strlen($affiche)>2){
+							$affiche .= ":";
+						}
+					}
+					$y = 1;
+				}
             }
         }
     }
 }
-
 $cache  = str_replace ("::", ":", $cache);
+$cache  = str_replace ("::", ":", $cache);
+$affiche  = str_replace ("::", ":", $affiche);
 $affiche  = str_replace ("::", ":", $affiche);
 
 while ($cache{strlen($cache)-1} == ":")

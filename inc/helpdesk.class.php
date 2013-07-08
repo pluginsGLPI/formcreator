@@ -180,24 +180,27 @@ class PluginFormcreatorHelpdesk {
                 break;
                 
              case PluginFormcreatorQuestion::DYNAMIC_SECTION: // Select section dynamic 
+				$listing = "";
                 foreach ($tab['value'] as $value_id => $value) {
-                    $listing .= self::creationTabDynaSection($tab['section'][$value_id]);
-                    if ($listing != "")
-                        $listing .= ":";
+					if (isset($tab['section'][$value_id])) {
+						$listing .= self::creationTabDyna($tab['section'][$value_id]);
+						if ($listing != "")
+							$listing .= ":";
+					}
                 }
+                if (strlen($listing) > 0) {
+					while ($listing{strlen($listing)-1} == ":")
+						$listing = substr($listing, 0, -1);
+				}
                 
-                while ($listing{strlen($listing)-1} == ":")
-                    $listing = substr($listing, 0, -1);
-                
-                echo '<select name="question_'. $id.'" onchange="choixSelectDyna(this.options[this.selectedIndex].value);">';
+                echo '<select id="question_' . $id . '" name="question_'. $id.'" onchange="choixSelectDyna(this.options[this.selectedIndex].value);">';
                 foreach ($tab['value'] as $value_id => $value) {
-                    $tableau = self::creationTabDynaSection($tab['value']);
+                    $tableau = self::creationTabDyna($tab['section'][$value_id]);
                     if ($tableau != "")
                         $tableau = "&&".$tableau;
                     echo "<option id='dynaQuestion_" . $id . "_" . $value_id . "' value='".$value."&&".$listing.$tableau."'>" . $value . "</option>";
                 }
                 echo '</select>';
-
                 break;
 				
 			case PluginFormcreatorQuestion::ITEM: // item listing
