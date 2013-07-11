@@ -133,7 +133,7 @@ class PluginFormcreatorHelpdesk {
                 echo '<table>';
                 echo '<tr>';
                 echo '<td>' . $LANG['validation'][21] . "&nbsp;:</td><td>";
-                User::dropdown(array('name' => 'users_id_validate',
+                User::dropdown(array('name' => 'users_id_validate_' . $id,
                     'entity' => $_SESSION["glpiactive_entity"],
                     'right' => 'validate_ticket'));
                 echo '</td></tr>';

@@ -51,6 +51,8 @@ foreach ($targets as $target_id => $target_value) {
     $ticket = array();
 
     $validation_exist = false;
+	$validationTab = array();
+	$cpt_valid = 0;
 
     $ticket['entities_id'] = $form->fields['entities_id'];
     $ticket['urgency'] = $target_value['urgency'];
@@ -101,11 +103,11 @@ foreach ($targets as $target_id => $target_value) {
 
                     $validation_exist = true;
 
-                    $validationTab = array();
-                    $validationTab['users_id_validate'] = $_REQUEST['users_id_validate'];
-                    $validationTab['entities_id'] = $form->fields['entities_id'];
-                    $validationTab['comment_submission'] = $_POST[$question_name];
-                    $validationTab['user_id'] = Session::getLoginUserID();
+                    $validationTab[$cpt_valid]['users_id_validate'] = $_REQUEST['users_id_validate_' . $question_id];
+                    $validationTab[$cpt_valid]['entities_id'] = $form->fields['entities_id'];
+                    $validationTab[$cpt_valid]['comment_submission'] = $_POST[$question_name];
+                    $validationTab[$cpt_valid]['user_id'] = Session::getLoginUserID();
+					$cpt_valid++;
                     break;
 
                 case PluginFormcreatorQuestion::MULTIPLICATION_ITEM_FIELD:
@@ -166,11 +168,12 @@ foreach ($targets as $target_id => $target_value) {
     $track = new Ticket();
     $ticketID = $track->add($ticket);
 
-    $validationTab['tickets_id'] = $ticketID;
-
     if ($validation_exist) {
-        $validation = new Ticketvalidation();
-        $validation->add($validationTab);
+		for ($cpt_valid = 0 ; $cpt_valid < count($validationTab) ; $cpt_valid++) {
+			$validationTab[$cpt_valid]['tickets_id'] = $ticketID;
+			$validation = new Ticketvalidation();
+			$validation->add($validationTab[$cpt_valid]);
+		}
     }
 
     $sections = new PluginFormcreatorSection;
