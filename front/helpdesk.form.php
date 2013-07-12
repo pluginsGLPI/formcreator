@@ -155,7 +155,62 @@ foreach ($targets as $target_id => $target_value) {
     $ticket['content'] = str_replace('##FULLFORM##', getFullForm($questions, $question, $ticket['content']), $ticket['content']);
     $ticket['content'] = PluginFormcreatorQuestion::protectData($ticket['content']);
 
+	//modif yt pour prendre en compte valeurs prédéfinies du gabarit**********;
 
+	$query = "SELECT `tickettemplates_id_incident`,`tickettemplates_id_demand` FROM `glpi_itilcategories` WHERE ID= ".$ticket['itilcategories_id'];
+	$res=$DB->query($query);
+	$tickettemplates_id_demand=$DB->result($res, 0, "tickettemplates_id_demand");
+	$tickettemplates_id_incident=$DB->result($res, 0, "tickettemplates_id_incident");
+    switch ($target_value['type'])
+	{
+		case "1":
+			// formulaire par defaut pour les incidents de la catégorie;
+			$template_id = $tickettemplates_id_incident;
+			break;
+			
+		case "2":
+			// formulaire par defaut pour les demandes de la catégorie;
+			$template_id = $tickettemplates_id_demand;
+			break;
+			
+		default:
+			// sans précision le formulaire est indiqué par défaut;
+			$template_id = "1";//formulaire par defaut;
+			break;
+	}
+                
+	$tt = new TicketTemplate();            
+	$tt->getFromDBWithDatas($template_id, true);
+	$ttp = new TicketTemplatePredefinedField();
+	$predefined = $ttp->getPredefinedFields($template_id, true);
+
+	if (isset($predefined['itemtype'])) {
+		$ticket['itemtype'] = $predefined['itemtype'];
+	}
+	if (isset($predefined['items_id'])) {
+		$ticket['items_id'] = $predefined['items_id'];
+	}
+	if (isset($predefined['_users_id_observer'])) {
+		$ticket['_users_id_observer'] = $predefined['_users_id_observer'];
+	}
+	if (isset($predefined['_users_id_assign'])) {
+		$ticket['_users_id_assign'] = $predefined['_users_id_assign'];
+	}
+	if (isset($predefined['_users_id_requester'])) {
+		$ticket['_users_id_requester'] = $predefined['_users_id_requester'];
+	}
+	if (isset($predefined['_groups_id_requester'])) {
+		$ticket['_groups_id_requester'] = $predefined['_groups_id_requester'];
+	}
+	if (isset($predefined['suppliers_id_assign'])) {
+		$ticket['suppliers_id_assign'] = $predefined['suppliers_id_assign'];
+	}
+	if (isset($predefined['requesttypes_id'])) {
+		$ticket['requesttypes_id'] = $predefined['requesttypes_id'];
+	}
+
+	// **********fin modif yt pour prendre en compte valeurs prédéfinies du gabarit**********;
+	
     $user = new User;
 	$user->getFromDB(Session::getLoginUserID());
 
