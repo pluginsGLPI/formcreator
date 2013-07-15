@@ -210,7 +210,7 @@ foreach ($targets as $target_id => $target_value) {
 	}
 
 	// **********fin modif yt pour prendre en compte valeurs prédéfinies du gabarit**********;
-	
+
     $user = new User;
 	$user->getFromDB(Session::getLoginUserID());
 

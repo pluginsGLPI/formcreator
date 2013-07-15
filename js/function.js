@@ -1,3 +1,18 @@
+function Suite(lien){
+	
+	var objet = document.getElementById("cat_"+lien); // entre les deux ' tu mes le nom du div que tu veux faire apparaître !
+	
+	if (objet.style.display == "none"){
+		objet.style.display = "";
+		document.getElementById("bas_"+lien).style.display = "none";
+		document.getElementById("haut_"+lien).style.display = "";
+	} else {
+		objet.style.display = "none";
+		document.getElementById("bas_"+lien).style.display = "";
+		document.getElementById("haut_"+lien).style.display = "none";
+	}
+}
+
 function verif(listequestion) {
 	if (listequestion.length != 0) {
 		var listemauvaisereponse = "";

@@ -24,6 +24,8 @@ class PluginFormcreatorForm extends CommonDBTM {
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
       $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
       $this->addStandardTab('PluginFormcreatorSection', $ong, $options);
+	  $this->addStandardTab('PluginFormcreatorCat', $ong, $options);
+	  $this->addStandardTab('PluginFormcreatorTitle', $ong, $options);
       
       return $ong;
    }   
@@ -71,12 +73,14 @@ class PluginFormcreatorForm extends CommonDBTM {
       echo "</textarea>";
       echo "</td></td>";
       echo "<td>".$LANG['setup'][41]."</td><td>";
-      // Dropdown::showLanguages("language", array('value' => $this->fields["language"], 'value' => $_SESSION['glpilanguage']));
 	  if ($this->fields["language"])
 		Dropdown::showLanguages("language", array('value' => $this->fields["language"]));
 	  else
 		Dropdown::showLanguages("language", array('value' => $_SESSION['glpilanguage']));
       echo "</td></tr>";
+	  echo '<tr><td>'.$LANG['plugin_formcreator']["cat"][3].'</td><td>';
+	  PluginFormcreatorCat::getSelectCat($ID, $this->fields["cat"]);
+	  echo '</td></tr>';
 	       
       $this->showFormButtons($options);
       $this->addDivForTabs();
@@ -131,47 +135,71 @@ class PluginFormcreatorForm extends CommonDBTM {
    
    static function getHelpdeskListForm() {
       global $LANG, $CFG_GLPI;
+	  $language = $_SESSION["glpilanguage"];
+	  $title = PluginFormcreatorTitle::getSelectTitle($language);
+	  if (!empty($title)) {
+		  echo '<table class="curvedEdges">';
+		  echo '<td>'.PluginFormcreatorTitle::getSelectTitle($language).'</td>';
+		  echo '</tr></table>';
+		  echo "<br/><br/>";
+	  }
       
       echo '<div class="center">';
       $form = new PluginFormcreatorForm;
       $listForm = $form->find("is_active = '1' ORDER BY `name` ASC");
       
+	  $cat = PluginFormcreatorCat::getListing();
+	  
+	  
       $nbForm = 0;
       
       if(!empty($listForm)) {
-         
-         echo"<table class='tab_cadre_fixe fix_tab_height'>";
-            echo "<tr>";
-               echo "<th>".$LANG['plugin_formcreator']["headings"][0]."</th>";
-               echo "<th>".$LANG['joblist'][6]."</th>";
-            echo "</tr>";
+         echo"<table class='tab_cadre_fixe fix_tab_height colspan='3''>";
+			
+			foreach ($cat as $cat_id => $cat_name) {
+				$listForm_cat = $form->find("is_active = '1' AND cat = '$cat_id'ORDER BY `name` ASC");
+				
+				if (!empty($listForm_cat)) {
+					if (count($cat) != 1) {
+						echo '<tr style="cursor:pointer" onclick="Suite(\''.$cat_id.'\');">';
+						echo "<td colspan='3' class='classcat'><img id='bas_".$cat_id."' src=\"../pics/deroulebas.jpg\"/><img id='haut_".$cat_id."' style=\"display:none\" src=\"../pics/deroulehaut.jpg\"/>&nbsp;&nbsp;".$cat_name."</td>";
+						echo "</tr>";
+						echo '<tbody id="cat_'.$cat_id.'" style="display:none">';
+						echo "<tr>";
+					} else {
+						echo '<tr><td colspan="3" class="classcat">'.$cat_name.'</td></tr><tr>';
+					}
+					echo "<th style='width:25px;'></th>";
+					echo "<th style='width:300px;'>".$LANG['plugin_formcreator']["headings"][0]."</th>";
+					echo "<th style='width:605px;'>".$LANG['joblist'][6]."</th>";
+					echo "</tr>";
+				}
+				
+				foreach ($listForm_cat as $form_id => $value) {
+				   $question = new PluginFormcreatorQuestion;
+				   $listQuestion = $question->find("plugin_formcreator_forms_id = '".$form_id."'");
 
-            foreach ($listForm as $form_id => $value) {
-               
-               $question = new PluginFormcreatorQuestion;
-               $listQuestion = $question->find("plugin_formcreator_forms_id = '".$form_id."'");
-
-               if(!empty($listQuestion)) {
-                  
-                  //if(Session::haveAccessToEntity($value['entities_id'],$value['is_recursive'])) {
-                  
-                     $link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
-               
-                    if ($value['language'] == $_SESSION["glpilanguage"])
+				   if(!empty($listQuestion)) {
+					//if(Session::haveAccessToEntity($value['entities_id'],$value['is_recursive'])) {
+					$link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
+			   
+					if ($value['language'] == $_SESSION["glpilanguage"])
 					{
 						echo "<tr>";
+							echo '<td><a href='.$link.'?form='.$form_id.'><img src="../pics/link.png"></a></td>';
 							echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
 							echo "<td>".$value['content']."</td>";
 						echo "</tr>";
 
 						$nbForm++;
 					}
-                  
-                  //}
-               
-               }
-
-            }
+					//}
+				   }
+				}
+				if (!empty($listForm_cat) && (count($cat) != 1)) {
+					echo '</tbody>';
+				}
+			}
             
             if(!$nbForm) {
                echo '<tr>';

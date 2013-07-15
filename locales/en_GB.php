@@ -43,6 +43,8 @@ $LANG['plugin_formcreator']["headings"][3] = "Questions";
 $LANG['plugin_formcreator']["headings"][4] = "Formatting the ticket";
 $LANG['plugin_formcreator']["headings"][5] = "List of available tags";
 $LANG['plugin_formcreator']["headings"][6] = "List of forms";
+$LANG['plugin_formcreator']["headings"][7] = "Categories";
+$LANG['plugin_formcreator']["headings"][8] = "Title";
 
 $LANG['plugin_formcreator']["section"][0] = "Add a new section";
 $LANG['plugin_formcreator']["section"][1] = "New section";
@@ -59,6 +61,16 @@ $LANG['plugin_formcreator']["target"][6] = "Answer";
 $LANG['plugin_formcreator']["target"][7] = "There are no questions yet for this form.";
 $LANG['plugin_formcreator']["target"][8] = "Ticket target";
 $LANG['plugin_formcreator']["target"][9] = "Code in the ticket's title";
+
+$LANG['plugin_formcreator']["cat"][0] = "Add a new category";
+$LANG['plugin_formcreator']["cat"][1] = "Category's name";
+$LANG['plugin_formcreator']["cat"][2] = "Position";
+$LANG['plugin_formcreator']["cat"][3] = "Form in the category :";
+
+$LANG['plugin_formcreator']["title"][0] = "Add Title";
+$LANG['plugin_formcreator']["title"][1] = "Title";
+$LANG['plugin_formcreator']["title"][2] = "Language";
+$LANG['plugin_formcreator']["title"][3] = "Overview";
 
 $LANG['plugin_formcreator']["regex_type"][1] = "Without validation";
 $LANG['plugin_formcreator']["regex_type"][2] = "Required";

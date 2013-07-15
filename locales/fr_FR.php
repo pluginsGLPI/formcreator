@@ -43,6 +43,8 @@ $LANG['plugin_formcreator']["headings"][3] = "Question(s)";
 $LANG['plugin_formcreator']["headings"][4] = "Formatage du (des) ticket(s)";
 $LANG['plugin_formcreator']["headings"][5] = "Liste des balises disponibles";
 $LANG['plugin_formcreator']["headings"][6] = "Liste des formulaires";
+$LANG['plugin_formcreator']["headings"][7] = "Catégories";
+$LANG['plugin_formcreator']["headings"][8] = "Titre";
 
 $LANG['plugin_formcreator']["section"][0] = "Ajouter une nouvelle section";
 $LANG['plugin_formcreator']["section"][1] = "Nouvelle section";
@@ -60,6 +62,16 @@ $LANG['plugin_formcreator']["target"][6] = "Réponse";
 $LANG['plugin_formcreator']["target"][7] = "Il n'y a pas encore de question pour ce formulaire.";
 $LANG['plugin_formcreator']["target"][8] = "Ticket cible";
 $LANG['plugin_formcreator']["target"][9] = "Code dans le titre du ticket";
+
+$LANG['plugin_formcreator']["cat"][0] = "Ajouter une nouvelle catégorie";
+$LANG['plugin_formcreator']["cat"][1] = "Nom de la catégorie";
+$LANG['plugin_formcreator']["cat"][2] = "Position";
+$LANG['plugin_formcreator']["cat"][3] = "Appartenant à la catégorie :";
+
+$LANG['plugin_formcreator']["title"][0] = "Ajout d'un titre";
+$LANG['plugin_formcreator']["title"][1] = "Titre";
+$LANG['plugin_formcreator']["title"][2] = "Langue";
+$LANG['plugin_formcreator']["title"][3] = "Aperçu";
 
 $LANG['plugin_formcreator']["regex_type"][1] = "Sans validation";
 $LANG['plugin_formcreator']["regex_type"][2] = "Obligatoire";

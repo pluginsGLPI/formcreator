@@ -1,3 +1,23 @@
+table.curvedEdges{
+	border:6px solid /*#002b55*/;
+	border-radius:13px;
+	margin-left:auto;
+	width: 1100px;
+	margin-right:auto;
+	vertical-align:middle;
+}
+table.curvedEdges td, table.curvedEdges th {
+	padding:5px;
+	vertical-align:middle;
+}
+
+td.classcat {
+	font-size: 14px;
+	padding:10px;
+	padding-left:20%;
+	border: thin solid #000000;
+}
+
 .fix_tab_height {
     margin: 0 auto -2px;
 }

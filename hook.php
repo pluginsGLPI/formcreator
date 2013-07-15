@@ -12,10 +12,21 @@ function plugin_formcreator_install() {
                   `is_recursive` tinyint(1) NOT NULL default '0',
                   `entities_id` int(11) NOT NULL default '0',
 				  `language` varchar(5) NOT NULL collate utf8_unicode_ci,
+				  `cat` INT( 3 ) NOT NULL,
                 PRIMARY KEY (`id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
       $DB->query($query) or die("error creating glpi_plugin_formcreator_forms ". $DB->error());
+   } else {
+	  $query = "SELECT column_name
+				FROM INFORMATION_SCHEMA.COLUMNS
+				WHERE table_name = 'glpi_plugin_formcreator_forms'
+				AND column_name = 'cat'";
+	  $retour = $DB->query($query) or die("error creating glpi_plugin_formcreator_forms ". $DB->error());
+	  if ( mysql_num_rows( $retour ) == 0 ) {
+		  $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD `cat` INT( 3 ) NOT NULL;";
+		  $DB->query($query) or die("error creating glpi_plugin_formcreator_forms ". $DB->error());
+	  }
    }
 
    if (!TableExists("glpi_plugin_formcreator_targets")) {
@@ -68,6 +79,26 @@ function plugin_formcreator_install() {
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
       $DB->query($query) or die("error creating glpi_plugin_formcreator_questions ". $DB->error());
+	}
+	  
+	if (!TableExists("glpi_plugin_formcreator_cats")) {
+      $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_cats` (
+			  `id` int(11) NOT NULL AUTO_INCREMENT,
+			  `name` varchar(255) NOT NULL,
+			  `position` int(3) NOT NULL,
+			  PRIMARY KEY (`id`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;";
+      $DB->query($query) or die("error creating glpi_plugin_formcreator_cats ". $DB->error());
+   }
+   
+   if (!TableExists("glpi_plugin_formcreator_titles")) {
+      $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_titles` (
+			  `id` int(2) NOT NULL AUTO_INCREMENT,
+			  `name` longtext NOT NULL,
+			  `language` varchar(5) NOT NULL,
+			  PRIMARY KEY (`id`)
+			) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;";
+      $DB->query($query) or die("error creating glpi_plugin_formcreator_cats ". $DB->error());
    }
    
    $query = 'DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = "PluginFormcreatorForm"';
@@ -103,6 +134,8 @@ function plugin_formcreator_uninstall() {
    $tables[] = "glpi_plugin_formcreator_questions";
    $tables[] = "glpi_plugin_formcreator_targets";
    $tables[] = "glpi_plugin_formcreator_sections";
+   $tables[] = "glpi_plugin_formcreator_cats";
+   $tables[] = "glpi_plugin_formcreator_titles";
    
    foreach($tables as $table) {
       if (TableExists($table)) {
