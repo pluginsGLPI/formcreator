@@ -116,11 +116,16 @@ function plugin_formcreator_install() {
                             VALUES (NULL,'PluginFormcreatorForm','3','3','0')";
    $query_displayprefs[] = "INSERT INTO `glpi_displaypreferences` 
                             VALUES (NULL,'PluginFormcreatorForm','4','4','0')";
+   $query = "INSERT INTO `glpi_plugin_formcreator_cats` (`id`, `name`, `position`) VALUES (0, 'Default cat', 0);";
    
    foreach($query_displayprefs as $query) {
       $DB->query($query) or die("error insert glpi_displaypreferences datas from  
                                  glpi_plugin_formcreator_forms". $DB->error());
    }
+   
+   //ajout d'une catégorie sinon pas d'affichage s'il n'y en pas
+   $query = "INSERT INTO `glpi_plugin_formcreator_cats` (`name`, `position`) VALUES ('Default cat', 0);";
+   $DB->query($query) or die("error inserting cat ". $DB->error());
      
    CronTask::Register('PluginFormcreator', 'Init', DAY_TIMESTAMP, array('param' => 50));
    return true;
