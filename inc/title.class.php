@@ -208,28 +208,11 @@ class PluginFormcreatorTitle extends CommonDBTM {
    }
    
    static function getSelectTitle($language) {
+	  $text = '';
       $title = new self;
       $requete = $title->find("language='".$language."'");  
       foreach ($requete as $value) {
 		$text = $value["name"];
-	  }
-      return self::bbCode($text);
-   }
-   
-   static function getSelectTitle2($language) {
-      $title = new self;
-      $requete = $title->find("language='".$language."'");  
-      foreach ($requete as $value) {
-		$text = $value["titre_2"];
-	  }
-      return self::bbCode($text);
-   }
-   
-   static function getSelectTitle3($language) {
-      $title = new self;
-      $requete = $title->find("language='".$language."'");  
-      foreach ($requete as $value) {
-		$text = $value["titre_3"];
 	  }
       return self::bbCode($text);
    }
