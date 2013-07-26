@@ -87,7 +87,7 @@ function plugin_formcreator_install() {
 			  `name` varchar(255) NOT NULL,
 			  `position` int(3) NOT NULL,
 			  PRIMARY KEY (`id`)
-			) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;";
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;";
       $DB->query($query) or die("error creating glpi_plugin_formcreator_cats ". $DB->error());
    }
    
@@ -97,7 +97,7 @@ function plugin_formcreator_install() {
 			  `name` longtext NOT NULL,
 			  `language` varchar(5) NOT NULL,
 			  PRIMARY KEY (`id`)
-			) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;";
+			) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;";
       $DB->query($query) or die("error creating glpi_plugin_formcreator_cats ". $DB->error());
    }
    
