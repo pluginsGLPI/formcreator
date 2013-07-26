@@ -180,20 +180,20 @@ class PluginFormcreatorForm extends CommonDBTM {
 				   $listQuestion = $question->find("plugin_formcreator_forms_id = '".$form_id."'");
 
 				   if(!empty($listQuestion)) {
-					//if(Session::haveAccessToEntity($value['entities_id'],$value['is_recursive'])) {
-					$link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
-			   
-					if ($value['language'] == $_SESSION["glpilanguage"])
-					{
-						echo "<tr>";
-							echo '<td><a href='.$link.'?form='.$form_id.'><img src="../pics/link.png"></a></td>';
-							echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
-							echo "<td>".$value['content']."</td>";
-						echo "</tr>";
+					if(Session::haveAccessToEntity($value['entities_id'],$value['is_recursive'])) {
+						$link = $CFG_GLPI["root_doc"]."/plugins/formcreator/front/form.helpdesk.php";
+				   
+						if ($value['language'] == $_SESSION["glpilanguage"])
+						{
+							echo "<tr>";
+								echo '<td><a href='.$link.'?form='.$form_id.'><img src="../pics/link.png"></a></td>';
+								echo '<td><a href='.$link.'?form='.$form_id.'>'.$value['name'].'</a></td>';
+								echo "<td>".$value['content']."</td>";
+							echo "</tr>";
 
-						$nbForm++;
+							$nbForm++;
+						}
 					}
-					//}
 				   }
 				}
 				if (!empty($listForm_cat) && (count($cat) != 1)) {
