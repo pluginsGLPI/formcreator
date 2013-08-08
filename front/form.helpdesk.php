@@ -144,7 +144,7 @@ if (!empty($verifQuestion)) {
                         $question_option = json_decode($question_value['option'], true);
                         $question_option_value = urldecode($question_option['value']);
 						$question_value['name'] = str_replace("'","\'",$question_value['name']);
-                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".$question_value['name']."&&";
+                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".str_replace("'", "\'", $question_value['name'])."&&";
                     }
                 }
                 if (($question_value['type'] == "7") || ($question_value['type'] == "11")) //initialisation d'une variable pour savoir s'il y a un champ de multiplication de champ pour implémenter un champ total somme
@@ -152,7 +152,7 @@ if (!empty($verifQuestion)) {
 				if ($question_value['type'] == "8" || $question_value['type'] == "9") { // section dynamique et question dynamique obligatoire
 					$tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
 					if ((isset($tab["obli"])) && ($tab["obli"] == "1")) {
-						$listequestion .= "sec_".$section_id."::".$question_id."::".$question_value['name']."&&";
+						$listequestion .= "sec_".$section_id."::".$question_id."::".str_replace("'", "\'", $question_value['name'])."&&";
 					}
 				}
                 $chaine = $question_value['content'];
