@@ -168,7 +168,7 @@ class PluginFormcreatorHelpdesk {
                 while ($listing{strlen($listing)-1} == ":")
                     $listing = substr($listing, 0, -1);
                 
-                echo '<select name="question_'. $id.'" onchange="choixSelectDyna(this.options[this.selectedIndex].value);">';
+                echo '<select id="question_'. $id.'" name="question_'. $id.'" onchange="choixSelectDyna(this.options[this.selectedIndex].value);">';
                 foreach ($tab['value'] as $value_id => $value) {
                     $tableau = self::creationTabDyna($tab['question'][$value_id]);
                     if ($tableau != "")
