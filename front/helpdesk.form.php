@@ -36,6 +36,49 @@ function getFullForm($questions, $question, $content) {
     return $out;
 }
 
+function processIfs($string, $question) {  
+	if (preg_match_all("/##IF([a-z\_0-9]*)[=]?(.*?)##/i",$string,$out)) {
+		foreach ($out[1] as $key => $tag_infos) {
+			$if_field = $tag_infos;
+			preg_match("/([0-9]+)/i",$if_field,$matches);
+			$question_name = "question_".$matches[1];
+			//Get the field tag value (if one)
+			$regex_if = "/##IF".$if_field."[=]?.*##(.*)##ENDIF".$if_field."##/Uis";
+			//Get the else tag value (if one)
+			$regex_else = "/##ELSE".$if_field."[=]?.*##(.*)##ENDELSE".$if_field."##/Uis";
+
+			if (empty($out[2][$key]) && !strlen($out[2][$key]) ) { // No = : check if ot empty or not null
+				if (isset($question[$question_name])
+				&& $question[$question_name] != ''
+				&& $question[$question_name] != '&nbsp;'
+				&& !is_null($question[$question_name])) {
+					$condition_ok = true;
+				} else {
+					$condition_ok = false;
+				}
+			} else { // check exact match
+				if (isset($question[$question_name])
+				&& Html::entity_decode_deep($question[$question_name]) == Html::entity_decode_deep($out[2][$key])) {
+					$condition_ok = true;
+				} else {
+					$condition_ok = false;
+				}
+			}        
+			
+			// Force only one replacement to permit multiple use of the same condition
+			if ($condition_ok) { // Do IF
+				$string = preg_replace($regex_if, "\\1", $string,1);
+				$string = preg_replace($regex_else, "",  $string,1);
+
+			} else { // Do ELSE
+				$string = preg_replace($regex_if, "", $string,1);
+				$string = preg_replace($regex_else, "\\1",  $string,1);
+			}
+		}
+	}
+	return $string;
+}
+
 echo "<div class='center'>" . "\n\r";
 
 $helpdesk = new PluginFormcreatorHelpdesk;
@@ -133,7 +176,7 @@ foreach ($targets as $target_id => $target_value) {
         }
     }
 
-    $ticket['content'] = $target_value['content'];
+    $ticket['content'] = processIfs($target_value['content'], $question);
 
     foreach ($questions as $question_id => $question_value) {
         $question_name = "question_" . $question_id;
