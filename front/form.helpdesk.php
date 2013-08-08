@@ -143,7 +143,6 @@ if (!empty($verifQuestion)) {
                         //remplissage de la liste pour effectuer la vérification si le champ est non caché et obligatoire à la fois
                         $question_option = json_decode($question_value['option'], true);
                         $question_option_value = urldecode($question_option['value']);
-						$question_value['name'] = str_replace("'","\'",$question_value['name']);
                         $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".str_replace("'", "\'", $question_value['name'])."&&";
                     }
                 }
