@@ -22,11 +22,21 @@ function verif(listequestion) {
 		for (var i = 0; i < listequestion1.length; i++){
 			var listequestion2 = listequestion1[i].split('::');
 			if ((document.getElementById(listequestion2[0]).className != "hidden") && (document.getElementById(listequestion2[1]).className != "hidden")){
-				var reg = new RegExp(listequestion2[2]);
-				if (!reg.test(document.getElementById("question_" + listequestion2[1]).value)) {
-					listemauvaisereponse = listemauvaisereponse + '\n- ' + listequestion2[3];
-					surligne(document.getElementById("question_" + listequestion2[1]), true);
-					cpt++;
+				if (document.getElementById("question_" + listequestion2[1]).type == "text") {
+					var reg = new RegExp(listequestion2[2]);
+					if (!reg.test(document.getElementById("question_" + listequestion2[1]).value)) {
+						listemauvaisereponse = listemauvaisereponse + '\n- ' + listequestion2[3];
+						surligne(document.getElementById("question_" + listequestion2[1]), true);
+						cpt++;
+					}
+				} else  if (document.getElementById("question_" + listequestion2[1]).type == "select-one") {
+					if (document.getElementById("question_" + listequestion2[1]).selectedIndex == 0) {
+						listemauvaisereponse = listemauvaisereponse + '\n- ' + listequestion2[2];
+						surligne(document.getElementById("question_" + listequestion2[1]), true);
+						cpt++;
+					} else {
+						surligne(document.getElementById("question_" + listequestion2[1]), false);
+					}
 				}
 			}
 		}	

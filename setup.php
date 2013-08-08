@@ -26,7 +26,7 @@ function plugin_init_formcreator() {
 function plugin_version_formcreator() {
 
    return array('name'           => 'Form Creator',
-                'version'        => '1.7.2',
+                'version'        => '1.7.3',
                 'author'         => 'Goneri Le Bouder, Nicolas Manceau, Dimitri Mouillard',
                 'homepage'       => 'https://forge.indepnet.net/projects/formcreator',
                 'minGlpiVersion' => '0.83.3',

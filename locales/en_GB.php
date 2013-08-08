@@ -96,6 +96,7 @@ $LANG['plugin_formcreator']["default"]["section"][1].= " your section of questio
 $LANG['plugin_formcreator']["information"][0] = "Ex : #^[0-9]*$#";
 $LANG['plugin_formcreator']["information"][1] = "Purchase total request : ";
 $LANG['plugin_formcreator']["information"][2] = "Must be less than ";
+$LANG['plugin_formcreator']["information"][3] = "If required, the first choice is not selectable";
 
 $LANG['plugin_formcreator']["bbcode"][0] = "BB Code available :";
 $LANG['plugin_formcreator']["bbcode"][1] = "URL link: [url=website]link[/url]";

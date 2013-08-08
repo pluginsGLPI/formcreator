@@ -387,9 +387,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
     }
 
     static function getValueDynamic($formID, $valueId = 1) {
-
+		 global $LANG;
         if ($valueId == 1) {
             echo "<input type='hidden' id='nbValue' name='nbValue' value='" . $valueId . "'/>";
+			echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/> ".$LANG['plugin_formcreator']["information"][3];
         } else {
             echo "<script type='text/javascript'>";
             echo "changeNbValue(" . $valueId . ");";
@@ -449,9 +450,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
     }
 
     static function getValueSection($formID, $valueId = 1) {
-
+		 global $LANG;
         if ($valueId == 1) {
             echo "<input type='hidden' id='nbValue' name='nbValue' value='" . $valueId . "'/>";
+            echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/> ".$LANG['plugin_formcreator']["information"][3];
         } else {
             echo "<script type='text/javascript'>";
             echo "changeNbValue(" . $valueId . ");";
@@ -601,6 +603,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 break;
 
             case self::DYNAMIC_FIELD: // dynamic question
+				$result['data']['obli'] = $params['obli'];
                 for ($i = 1; $i <= $nbValue; $i++) {
                     $result['data']['value'][$i] = $params['value_' . $i];
                     $nbValueQuestion = $params['nbValue' . $i];
@@ -615,9 +618,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 break;
 
             case self::DYNAMIC_SECTION: // dynamic question
+				$result['data']['obli'] = $params['obli'];
                 for ($i = 1; $i <= $nbValue; $i++) {
                     $result['data']['value'][$i] = $params['value_' . $i];
                     $nbValueSection = $params['nbValue' . $i];
+					
 
                     if ($params['section_' . $i . '_1'] != "-1") {
                         $result['data']['nbSection'][$i] = $nbValueSection;
@@ -986,6 +991,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             case self::MULTIPLICATION_ITEM_FIELD: // Sum
 
                 echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";
+				
+				if (isset($values['obli']) && $values['obli'] == 1)
+					echo "<input type='checkbox' id='obli' name='obli' value='1' CHECKED/>";
+				else
+					echo "<input type='checkbox' id='obli' name='obli' value='1'/>";
 
                 for ($i = 1; $i <= $nbValue; $i++) {
                     echo "<p>" . $LANG['common'][17] . " " . $i . " : ";
@@ -1001,6 +1011,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             case self::DYNAMIC_FIELD: // select for one dynamic question
 
                 echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";
+				
+				if (isset($values['obli']) && $values['obli'] == 1)
+					echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1' CHECKED/> ".$LANG['plugin_formcreator']["information"][3];
+				else
+					echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/> ".$LANG['plugin_formcreator']["information"][3];
 
                 for ($i = 1; $i <= $nbValue; $i++) {
                     echo "<p>" . $LANG['financial'][21] . " " . $i . " : ";
@@ -1029,6 +1044,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             case self::DYNAMIC_SECTION: // select for dynamic section
 
                 echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";
+				
+				if (isset($values['obli']) && $values['obli'] == 1)
+					echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1' CHECKED/> ".$LANG['plugin_formcreator']["information"][3];
+				else
+					echo $LANG['plugin_formcreator']["regex_type"][2]. " : <input type='checkbox' id='obli' name='obli' value='1'/> ".$LANG['plugin_formcreator']["information"][3];
 
                 for ($i = 1; $i <= $nbValue; $i++) {
                     echo "<p>" . $LANG['financial'][21] . " " . $i . " : ";

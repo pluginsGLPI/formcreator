@@ -97,6 +97,7 @@ $LANG['plugin_formcreator']["default"]["section"][1].= " de votre section de que
 $LANG['plugin_formcreator']["information"][0] = "Ex : #^[0-9]*$#";
 $LANG['plugin_formcreator']["information"][1] = "Somme total des achats : ";
 $LANG['plugin_formcreator']["information"][2] = "Doit être inférieur à ";
+$LANG['plugin_formcreator']["information"][3] = "Si obligatoire, le premier choix ne sera pas sélectionnable";
 
 $LANG['plugin_formcreator']["purchase_form"][0] = "S'il s'agit d'un achat veuillez rentrer le prix ";
 $LANG['plugin_formcreator']["purchase_form"][1] = "min : ";
