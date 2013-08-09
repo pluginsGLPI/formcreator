@@ -348,8 +348,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         global $LANG;
 
         echo "<input type='hidden' id='nbValue' name='nbValue' value='1'/>";
+		echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/><br/>";
 
-        echo "<td>" . $LANG['setup'][46] . "<br /></td>";
+        echo "<tr><td>" . $LANG['setup'][46] . "<br /></td>";
         echo '<td><textarea name="value_1" cols="60" rows="6"></textarea>';
         echo '<br /><span style="font-size:10px;">
             ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -585,6 +586,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
             case self::TEXTAREA_FIELD: // Textarea
                 $result['data']['value'] = $params['value_1'];
+				$result['data']['obli'] = $params['obli'];
                 break;
 
             case self::UPLOAD_FIELD: // Upload
@@ -952,6 +954,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             case self::TEXTAREA_FIELD: // Textarea
 
                 echo "<input type='hidden' id='nbValue' name='nbValue' value='1'/>";
+				if (isset($values['obli']) && $values['obli'] == 1)
+					echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1' CHECKED/><br/>";
+				else
+					echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/><br/>";
 
                 if (isset($values['value'])) {
                     $val = $values['value'];

@@ -120,7 +120,7 @@ class PluginFormcreatorHelpdesk {
                 break;
 
             case PluginFormcreatorQuestion::TEXTAREA_FIELD: // Textarea
-                echo '<textarea name="question_' . $id . '" cols="50" rows="8">' . $tab['value'] . '</textarea>';
+                echo '<textarea id="question_' . $id . '" name="question_' . $id . '" cols="50" rows="8">' . $tab['value'] . '</textarea>';
 
                 break;
 

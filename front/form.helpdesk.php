@@ -148,7 +148,7 @@ if (!empty($verifQuestion)) {
                 }
                 if (($question_value['type'] == "7") || ($question_value['type'] == "11")) //initialisation d'une variable pour savoir s'il y a un champ de multiplication de champ pour implémenter un champ total somme
                     $boolMultiplication = 1;
-				if ($question_value['type'] == "8" || $question_value['type'] == "9") { // section dynamique et question dynamique obligatoire
+				if ($question_value['type'] == "8" || $question_value['type'] == "9" || $question_value['type'] == "4") { // section dynamique et question dynamique obligatoire
 					$tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
 					if ((isset($tab["obli"])) && ($tab["obli"] == "1")) {
 						$listequestion .= "sec_".$section_id."::".$question_id."::".str_replace("'", "\'", $question_value['name'])."&&";

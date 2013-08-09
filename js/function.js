@@ -37,6 +37,15 @@ function verif(listequestion) {
 					} else {
 						surligne(document.getElementById("question_" + listequestion2[1]), false);
 					}
+				} else  if (document.getElementById("question_" + listequestion2[1]).type == "textarea") {
+					var reg = new RegExp(/./);
+					if (!reg.test(document.getElementById("question_" + listequestion2[1]).value)) {
+						listemauvaisereponse = listemauvaisereponse + '\n- ' + listequestion2[2];
+						surligne(document.getElementById("question_" + listequestion2[1]), true);
+						cpt++;
+					} else {
+						surligne(document.getElementById("question_" + listequestion2[1]), false);
+					}
 				}
 			}
 		}	
@@ -217,7 +226,7 @@ function verifBUmanager(champ)
 function verifTextNum(champ)
 {
     var regex = /./;
-    if(!regex.test(champ.value) || champ.value.length < 2)
+    if(!regex.test(champ.value) || champ.value.length < 1)
     {
         surligne(champ, true);
         return false;
