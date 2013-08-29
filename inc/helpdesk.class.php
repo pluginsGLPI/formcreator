@@ -199,9 +199,12 @@ class PluginFormcreatorHelpdesk {
                 
                 echo '<select id="question_' . $id . '" name="question_'. $id.'" onchange="choixSelectDyna(this.options[this.selectedIndex].value);">';
                 foreach ($tab['value'] as $value_id => $value) {
-                    $tableau = self::creationTabDyna($tab['section'][$value_id]);
-                    if ($tableau != "")
+					if (isset($tab['section'][$value_id]) && $tab['section'][$value_id] != "") {
+						$tableau = self::creationTabDyna($tab['section'][$value_id]);
                         $tableau = "&&".$tableau;
+					} else {
+						$tableau = "";
+					}
                     echo "<option id='dynaQuestion_" . $id . "_" . $value_id . "' value='".$value."&&".$listing.$tableau."'>" . $value . "</option>";
                 }
                 echo '</select>';
