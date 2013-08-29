@@ -2,11 +2,11 @@
 
 class PluginFormcreatorCat extends CommonDBTM {
 
-   function canCreate() {
+   static function canCreate() {
       return Session::haveRight('config', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return Session::haveRight('config', 'r');
    }
    
@@ -89,7 +89,9 @@ class PluginFormcreatorCat extends CommonDBTM {
 		 
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][8]."' name='add'>";
+            echo "<input class='submit' type='submit' value='";
+			echo __('Add');
+			echo "' name='add'>";
          echo "</td>";
          echo "</tr>";
          
@@ -211,10 +213,14 @@ class PluginFormcreatorCat extends CommonDBTM {
 		 
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
+            echo "<input class='submit' type='submit' value='";
+			echo __('Update');
+			echo "' name='update'>";
          echo "</td>";
 		 echo "<td class='center' colspan='2'>";
-			echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
+			echo "<input class='submit' type='submit' value='";
+			echo __('Purge');
+			echo "' name='delete'>";
 		 echo "</td>";
          echo "</tr>";
          

@@ -1,7 +1,7 @@
 <?php
 
 function plugin_init_formcreator() {
-   global $PLUGIN_HOOKS,$LANG,$CFG_GLPI;
+   global $PLUGIN_HOOKS,$CFG_GLPI;
    
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
    
@@ -26,30 +26,29 @@ function plugin_init_formcreator() {
 function plugin_version_formcreator() {
 
    return array('name'           => 'Form Creator',
-                'version'        => '1.7.5',
+                'version'        => '1.8.0',
                 'author'         => 'Goneri Le Bouder, Nicolas Manceau, Dimitri Mouillard',
                 'homepage'       => 'https://forge.indepnet.net/projects/formcreator',
-                'minGlpiVersion' => '0.83.3',
+                'minGlpiVersion' => '0.84',
                 'license'        => 'GPLv2');
 }
 
 function plugin_formcreator_check_prerequisites() {
 
-   if (GLPI_VERSION >= 0.83) {
+   if (GLPI_VERSION >= 0.84) {
       return true;
    } else {
-      echo "GLPI version not compatible, need 0.83";
+      echo "GLPI version not compatible, need 0.84";
    }
 }
 
 function plugin_formcreator_check_config($verbose=false) {
-   global $LANG;
 
    if (true) { // Your configuration check
       return true;
    }
    if ($verbose) {
-      echo $LANG['plugins'][2];
+      echo __('Installed / not configured');
    }
    return false;
 }

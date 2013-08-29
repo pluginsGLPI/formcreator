@@ -132,13 +132,17 @@ class PluginFormcreatorHelpdesk {
             case PluginFormcreatorQuestion::VALIDATION_FIELD: // Validation
                 echo '<table>';
                 echo '<tr>';
-                echo '<td>' . $LANG['validation'][21] . "&nbsp;:</td><td>";
+                echo '<td>';
+				echo __('Approver');
+				echo "&nbsp;:</td><td>";
                 User::dropdown(array('name' => 'users_id_validate_' . $id,
                     'entity' => $_SESSION["glpiactive_entity"],
                     'right' => 'validate_ticket'));
                 echo '</td></tr>';
                 echo '<tr>';
-                echo '<td>' . $LANG['validation'][5] . '&nbsp;:</td>';
+                echo '<td>';
+				echo __('Request comment');
+				echo '&nbsp;:</td>';
                 echo '<td><textarea name="question_' . $id . '" cols="50" rows="8">' . $tab['value'] . '</textarea></td></tr>';
                 echo '</table>';
 
@@ -221,6 +225,7 @@ class PluginFormcreatorHelpdesk {
     }
     
     function creationTabDyna($tab) {
+		$tableau = "";
         foreach($tab as $cle => $valeur)
         {
             if ($cle == 1)
@@ -233,6 +238,7 @@ class PluginFormcreatorHelpdesk {
     }
     
     function creationTabDynaSection($tab) {
+		$tableau = "";
         foreach($tab as $cle => $valeur)
         {
             if ($cle == 1)
@@ -276,7 +282,7 @@ class PluginFormcreatorHelpdesk {
         $memory_limit = (int) (ini_get('memory_limit'));
 
         return $LANG['plugin_formcreator']["helpdesk"][2]
-                . " : " . min($max_upload, $max_post, $memory_limit) . $LANG['common'][82];
+                . " : " . min($max_upload, $max_post, $memory_limit) . __('MB');
     }
 
     function addFilesTickets($id, $question_name, $entities_id) {
@@ -315,7 +321,7 @@ class PluginFormcreatorHelpdesk {
                     $docID = $doc->fields["id"];
                 } else {
                     $input2 = array();
-                    $input2["name"] = addslashes($LANG['tracking'][24] . " $id");
+                    $input2["name"] = addslashes(__('Document Ticket') . " $id");
 
                     $input2["tickets_id"] = $id;
                     $input2["entities_id"] = $entities_id;

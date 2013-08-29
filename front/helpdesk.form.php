@@ -1,8 +1,6 @@
 <?php
 
-define('GLPI_ROOT', '../../..');
-include (GLPI_ROOT . "/inc/includes.php");
-global $CFG_GLPI;
+include ('../../../inc/includes.php');
 
 //anonyme or not ?
 Session::checkLoginUser();
@@ -12,8 +10,8 @@ if (Session::getLoginUserID()) {
     );
 } else {
     //$_SESSION["glpilanguage"] = $CFG_GLPI['language'];
-    Html::simpleHeader($LANG['plugin_formcreator']['name2'], array($LANG['login'][10] => "../../../index.php?co=1",
-        $LANG['Menu'][20] => "../../../front/helpdesk.faq.php",
+    Html::simpleHeader($LANG['plugin_formcreator']['name2'], array(__('Authentication') => "../../../index.php?co=1",
+        __('FAQ') => "../../../front/helpdesk.faq.php",
         $LANG['plugin_formcreator']['name2'] => "./formlist.php"));
 }
 
@@ -28,7 +26,7 @@ function getFullForm($questions, $question, $content) {
             $answer_name = "answer_" . $question_id;
 
             if (array_key_exists($question_name, $question)) {
-                $out.= $question_value['name'] . ' : ' . $question[$question_name] . "\n\r";
+                $out.= $question_value['name'] . ' : ' . $question[$question_name] . "\n";
             }
         }
     }

@@ -2,11 +2,11 @@
 
 class PluginFormcreatorSection extends CommonDBTM {
 
-   function canCreate() {
+   static function canCreate() {
       return Session::haveRight('config', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return Session::haveRight('config', 'r');
    }
    
@@ -94,7 +94,7 @@ class PluginFormcreatorSection extends CommonDBTM {
          PluginFormcreatorTarget::getSelectTarget($params['plugin_formcreator_forms_id']);
          
          echo "</td>";
-         echo "<td>".$LANG['common'][16]."&nbsp;:</td>";
+         echo "<td>". __('Name')."&nbsp;:</td>";
          echo "<td>";
          echo "<input type='text' name='name' value='' size='54'/>";
          echo "</td>";
@@ -103,7 +103,7 @@ class PluginFormcreatorSection extends CommonDBTM {
          echo '<tr class="tab_bg_1">';
          echo '<td>'.$LANG['plugin_formcreator']["question"][11].' :</td>';
          echo '<td><input type="text" name="position" value="0" size="3" /></td>';
-         echo "<td>".$LANG['joblist'][6]."&nbsp;:</td>";
+         echo "<td>".__('Description')."&nbsp;:</td>";
          echo "<td>";
          echo "<textarea name='content' cols='55' rows='6'>";
          echo $this->fields["content"];
@@ -122,7 +122,7 @@ class PluginFormcreatorSection extends CommonDBTM {
          
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][8]."' name='add'>";
+            echo "<input class='submit' type='submit' value='".__('Add')."' name='add'>";
          echo "</td>";
          echo "</tr>";
          
@@ -237,7 +237,7 @@ class PluginFormcreatorSection extends CommonDBTM {
                                                   $this->fields['plugin_formcreator_targets_id']);
          
          echo "</td>";
-         echo "<td>".$LANG['common'][16]."&nbsp;:</td>";
+         echo "<td>".__('Name')."&nbsp;:</td>";
          echo "<td>";
          echo '<input type="text" name="name" value="'.$this->fields['name'].'" size="54"/>';
          echo "</td>";
@@ -249,7 +249,7 @@ class PluginFormcreatorSection extends CommonDBTM {
                            value="'.$this->fields['position'].'" size="3" /></td>';
          
          
-         echo "<td>".$LANG['joblist'][6]."&nbsp;:</td>";
+         echo "<td>".__('Description')."&nbsp;:</td>";
          echo "<td>";
          echo "<textarea name='content' cols='55' rows='6'>";
          echo $this->fields["content"];
@@ -259,10 +259,10 @@ class PluginFormcreatorSection extends CommonDBTM {
         
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
+            echo "<input class='submit' type='submit' value='".__('Update')."' name='update'>";
          echo "</td>";
          echo "<td class='center' colspan='2'>";
-			echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
+			echo "<input class='submit' type='submit' value='".__('Purge')."' name='delete'>";
 		 echo "</td>";
 		 echo "</tr>";
          

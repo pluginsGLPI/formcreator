@@ -2,22 +2,23 @@ il faut modifier GLPI comme ici : http://www.mail-archive.com/glpi-dev@gna.org/m
 
 fichier inc/html.class.php
 La fonction header doit être de la forme suivante :
-static function header($title, $url='', $sector="none", $item="none", $option="", $onload="") {
-  global $CFG_GLPI, $LANG, $PLUGIN_HOOKS, $HEADER_LOADED, $DB;
+   static function header($title, $url='', $sector="none", $item="none", $option="", $onload="") {
+      global $CFG_GLPI, $PLUGIN_HOOKS, $HEADER_LOADED, $DB;
 
-  // Print a nice HTML-head for every page
-  if ($HEADER_LOADED) {
-	 return;
-  }
-  $HEADER_LOADED = true;
+      // Print a nice HTML-head for every page
+      if ($HEADER_LOADED) {
+         return;
+      }
+      $HEADER_LOADED = true;
 
-  self::includeHeader($title);
-  // Body
-  echo "<body";
-  if (!empty($onload)) {
-		echo " onload='$onload'";
-  }
-  echo ">";
+      self::includeHeader($title);
+      // Body
+      echo "<body";
+	  if (!empty($onload)) {
+			echo " onload='$onload'";
+	  }
+	  echo ">";
+      // Generate array for menu and check right
 
   
   ---------------------------------------------------
@@ -26,19 +27,20 @@ You must modify GLPI like here : http://www.mail-archive.com/glpi-dev@gna.org/ms
 
 file inc/html.class.php
 The header function must be like :
-static function header($title, $url='', $sector="none", $item="none", $option="", $onload="") {
-  global $CFG_GLPI, $LANG, $PLUGIN_HOOKS, $HEADER_LOADED, $DB;
+   static function header($title, $url='', $sector="none", $item="none", $option="", $onload="") {
+      global $CFG_GLPI, $PLUGIN_HOOKS, $HEADER_LOADED, $DB;
 
-  // Print a nice HTML-head for every page
-  if ($HEADER_LOADED) {
-	 return;
-  }
-  $HEADER_LOADED = true;
+      // Print a nice HTML-head for every page
+      if ($HEADER_LOADED) {
+         return;
+      }
+      $HEADER_LOADED = true;
 
-  self::includeHeader($title);
-  // Body
-  echo "<body";
-  if (!empty($onload)) {
-		echo " onload='$onload'";
-  }
-  echo ">";
+      self::includeHeader($title);
+      // Body
+      echo "<body";
+	  if (!empty($onload)) {
+			echo " onload='$onload'";
+	  }
+	  echo ">";
+      // Generate array for menu and check right

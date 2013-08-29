@@ -2,15 +2,15 @@
 
 class PluginFormcreatorForm extends CommonDBTM {
 
-   function canCreate() {
+   static function canCreate() {
       return Session::haveRight('config', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return Session::haveRight('config', 'r');
    }
    
-   static function getTypeName() {
+   static function getTypeName($nb = 0) {
       global $LANG;
 
       return $LANG['plugin_formcreator']["name"];
@@ -54,25 +54,33 @@ class PluginFormcreatorForm extends CommonDBTM {
       
       $this->showTabs($options);
       $this->showFormHeader($options);
-      
+	  
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".$LANG['common'][16]."&nbsp;:</td>";
+      echo "<td>";
+	  echo __('Name');
+	  echo "&nbsp;:</td>";
       echo "<td>";
       echo '<input type="text" name="name" value="'.$this->fields["name"].'" size="54"/>';
       echo "</td>";
-      echo "</td><td>".$LANG['common'][60]."&nbsp;:</td><td>";
+      echo "</td><td>";
+	  echo __('Active');
+	  echo "&nbsp;:</td><td>";
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
       echo "</td></tr>";
       
       
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".$LANG['joblist'][6]."&nbsp;:</td>";
+      echo "<td>";
+	  echo __('Description');
+	  echo "&nbsp;:</td>";
       echo "<td>";
       echo "<textarea name='content' cols='55' rows='6'>";
       echo $this->fields["content"];
       echo "</textarea>";
       echo "</td></td>";
-      echo "<td>".$LANG['setup'][41]."</td><td>";
+      echo "<td>";
+	  echo __('Select Language');
+	  echo "</td><td>";
 	  if ($this->fields["language"])
 		Dropdown::showLanguages("language", array('value' => $this->fields["language"]));
 	  else
@@ -107,27 +115,27 @@ class PluginFormcreatorForm extends CommonDBTM {
       
       $tab[1]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[1]['field'] = 'name';
-      $tab[1]['name']  = $LANG['common'][16];
+      $tab[1]['name']  = __('Name');
       $tab[1]['datatype']  = 'itemlink';
       
       $tab[0]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[0]['field'] = 'content';
-      $tab[0]['name']  = $LANG['joblist'][6];
+      $tab[0]['name']  = __('Description');;
       $tab[0]['datatype']  = 'itemlink';
 
       $tab[2]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[2]['field'] = 'is_active';
-      $tab[2]['name']  = $LANG['common'][60];
+      $tab[2]['name']  = __('Active');
       $tab[2]['datatype'] = 'bool';
 
       $tab[3]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[3]['field'] = 'is_recursive';
-      $tab[3]['name']  = $LANG['profiles'][28];
+      $tab[3]['name']  = __('Recursive');
       $tab[3]['datatype'] = 'bool';
 	  
 	  $tab[4]['table'] = 'glpi_plugin_formcreator_forms';
       $tab[4]['field'] = 'language';
-      $tab[4]['name']  = $LANG['setup'][41];
+      $tab[4]['name']  = __('Select Language');
       $tab[4]['datatype'] = 'text';
             
       return $tab;
@@ -171,7 +179,9 @@ class PluginFormcreatorForm extends CommonDBTM {
 					}
 					echo "<th style='width:25px;'></th>";
 					echo "<th style='width:300px;'>".$LANG['plugin_formcreator']["headings"][0]."</th>";
-					echo "<th style='width:605px;'>".$LANG['joblist'][6]."</th>";
+					echo "<th style='width:605px;'>";
+					echo __('Description');
+					echo "</th>";
 					echo "</tr>";
 				}
 				

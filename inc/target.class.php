@@ -2,11 +2,11 @@
 
 class PluginFormcreatorTarget extends CommonDBTM {
 
-   function canCreate() {
+   static function canCreate() {
       return Session::haveRight('config', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return Session::haveRight('config', 'r');
    }
    
@@ -82,7 +82,7 @@ class PluginFormcreatorTarget extends CommonDBTM {
          echo '<td><input type="text" name="name" 
                value="'.$this->fields['name'].'" size="54"/></td>';
          echo "</td>";
-         echo "<td>".$LANG['common'][36]."&nbsp;:</td>";
+         echo "<td>".__('Category')."&nbsp;:</td>";
          echo "<td>";
          Dropdown::show('ITILCategory', array('value' => $this->fields["itilcategories_id"]));
          echo "</td>";
@@ -90,33 +90,33 @@ class PluginFormcreatorTarget extends CommonDBTM {
          
          echo "<tr>";
          echo "<td rowspan='3'>";
-         echo $LANG['joblist'][6]." :";
+         echo __('Description')." :";
          echo "</td><td rowspan='3'>";
          echo "<textarea name='content' cols='65' rows='12'>".$this->fields['content']."</textarea>";
          echo "</td>";
-		 echo "<td>".$LANG['common'][17]." :</td>";
+		 echo "<td>".__('Type')." :</td>";
          echo "<td>";
          echo '<select name="type">';
-		 echo '<option value="2">'.$LANG['job'][2].'</option>';
-		 echo '<option value="1">'.$LANG['job'][1].'</option>';
+		 echo '<option value="2">'.__('Request').'</option>';
+		 echo '<option value="1">'.__('Incident').'</option>';
 		 echo '</select>';
          echo "</td>";
          echo "</tr><tr>";
-         echo "<td>".$LANG['joblist'][29]." :</td>";
+         echo "<td>".__('Urgency')." :</td>";
          echo "<td>";
-         Ticket::dropdownUrgency("urgency",$this->fields["urgency"]);
+         Ticket::dropdownUrgency(array("urgency",$this->fields["urgency"]));
          echo "</td>";
          echo "</tr><tr>";
-         echo "<td rownspan='2'>".$LANG['joblist'][2]." :</td>";
+         echo "<td rownspan='2'>".__('Priority')." :</td>";
          echo "<td>";
-         CommonITILObject::dropdownPriority("priority",$this->fields["priority"]);
+         CommonITILObject::dropdownPriority(array("priority",$this->fields["priority"]));
          echo "</td>";
          echo "</tr>";
 
          
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][8]."' name='add'>";
+            echo "<input class='submit' type='submit' value='".__('Add')."' name='add'>";
          echo "</td>";
          echo "</tr>";
          
@@ -217,7 +217,7 @@ class PluginFormcreatorTarget extends CommonDBTM {
          echo '<td><input type="text" name="name" 
                value="'.$this->fields['name'].'" size="54"/></td>';
          echo "</td>";
-         echo "<td>".$LANG['common'][36]."&nbsp;:</td>";
+         echo "<td>".__('Category')."&nbsp;:</td>";
          echo "<td>";
          Dropdown::show('ITILCategory', array('value' => $this->fields["itilcategories_id"]));
          echo "</td>";
@@ -225,41 +225,41 @@ class PluginFormcreatorTarget extends CommonDBTM {
          
          echo "<tr>";
          echo "<td rowspan='3'>";
-         echo $LANG['joblist'][6]." :";
+         echo __('Description')." :";
          echo "</td><td rowspan='3'>";
          echo "<textarea name='content' cols='65' rows='12'>".$this->fields['content']."</textarea>";
          echo "</td>";
-		 echo "<td>".$LANG['common'][17]." :</td>";
+		 echo "<td>".__('Type')." :</td>";
          echo "<td>";
          echo '<select name="type">';
 		 if ($this->fields['type'] == 2) {
-			echo '<option value="2">'.$LANG['job'][2].'</option>';
-			echo '<option value="1">'.$LANG['job'][1].'</option>';
+			echo '<option value="2">'.__('Request').'</option>';
+			echo '<option value="1">'.__('Incident').'</option>';
 		 } else {
-			echo '<option value="2">'.$LANG['job'][2].'</option>';
-			echo '<option value="1" SELECTED>'.$LANG['job'][1].'</option>';
+			echo '<option value="2">'.__('Request').'</option>';
+			echo '<option value="1" SELECTED>'.__('Incident').'</option>';
 		 }
 		 echo '</select>';
          echo "</td>";
          echo "</tr><tr>";
-         echo "<td>".$LANG['joblist'][29]." :</td>";
+         echo "<td>".__('Urgency')." :</td>";
          echo "<td>";
-         Ticket::dropdownUrgency("urgency",$this->fields["urgency"]);
+         Ticket::dropdownUrgency(array("urgency",$this->fields["urgency"]));
          echo "</td>";
          echo "</tr><tr>";
-         echo "<td rownspan='2'>".$LANG['joblist'][2]." :</td>";
+         echo "<td rownspan='2'>".__('Priority')." :</td>";
          echo "<td>";
-         CommonITILObject::dropdownPriority("priority",$this->fields["priority"]);
+         CommonITILObject::dropdownPriority(array("priority",$this->fields["priority"]));
          echo "</td>";
          echo "</tr>";
 
          
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
+            echo "<input class='submit' type='submit' value='".__('Update')."' name='update'>";
          echo "</td>";
 		 echo "<td class='center' colspan='2'>";
-			echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
+			echo "<input class='submit' type='submit' value='".__('Purge')."' name='delete'>";
 		 echo "</td>";
          echo "</tr>";
          
@@ -312,7 +312,7 @@ class PluginFormcreatorTarget extends CommonDBTM {
       echo"<table class='tab_cadre_fixe fix_tab_height'>";
          echo "<tr>";
             echo "<th>".$LANG['plugin_formcreator']["question"][2]."</th>";
-            echo "<th>".$LANG['log'][44]."</th>";
+            echo "<th>".__('Heading')."</th>";
             echo "<th>".$LANG['plugin_formcreator']["target"][6]."</th>";
             echo "<th>".$LANG['plugin_formcreator']["section"][3]."</th>";
          echo "</tr>";

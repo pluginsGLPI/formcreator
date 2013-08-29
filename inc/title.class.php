@@ -2,11 +2,11 @@
 
 class PluginFormcreatorTitle extends CommonDBTM {
 
-   function canCreate() {
+   static function canCreate() {
       return Session::haveRight('config', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return Session::haveRight('config', 'r');
    }
    
@@ -73,7 +73,9 @@ class PluginFormcreatorTitle extends CommonDBTM {
       echo"<table class='tab_cadre_fixe fix_tab_height'>";
          echo "<tr>";
             echo "<th colspan='1'>".$LANG['plugin_formcreator']["title"][0]."</th>";
-            echo "<th colspan='1'>".$LANG['setup'][41]."</th>";
+            echo "<th colspan='1'>";
+			echo __('Select Language');
+			echo "</th>";
          echo "</tr>";
          
 		 echo "<tr class='tab_bg_1'>";
@@ -89,7 +91,9 @@ class PluginFormcreatorTitle extends CommonDBTM {
 		 
          echo "<tr>";
          echo "<td class='center' colspan='2'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][8]."' name='add'>";
+            echo "<input class='submit' type='submit' value='";
+			echo __('Add');
+			echo "' name='add'>";
          echo "</td>";
          echo "</tr>";
          
@@ -194,10 +198,14 @@ class PluginFormcreatorTitle extends CommonDBTM {
 		 
          echo "<tr>";
          echo "<td class='center' colspan='1'>";
-            echo "<input class='submit' type='submit' value='".$LANG['buttons'][7]."' name='update'>";
+            echo "<input class='submit' type='submit' value='";
+			echo __('Update');
+			echo "' name='update'>";
          echo "</td>";
 		 echo "<td class='center' colspan='1'>";
-			echo "<input class='submit' type='submit' value='".$LANG['buttons'][22]."' name='delete'>";
+			echo "<input class='submit' type='submit' value='";
+			echo __('Purge');
+			echo "' name='delete'>";
 		 echo "</td>";
          echo "</tr>";
          

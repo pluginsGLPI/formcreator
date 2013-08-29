@@ -13,11 +13,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
     const DYNAMIC_SECTION = 9;
     const ITEM = 10;
 
-    function canCreate() {
+    static function canCreate() {
         return Session::haveRight('config', 'w');
     }
 
-    function canView() {
+    static function canView() {
         return Session::haveRight('config', 'r');
     }
 
@@ -109,7 +109,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         echo "</tr>";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td>" . $LANG['common'][17] . "&nbsp;:</td><td>";
+        echo "<td>";
+		echo __('Type');
+		echo "&nbsp;:</td><td>";
         echo "<select name='type' id='typeQuestion'>";
         echo "<option value='-1'>----</option>";
         for ($i = 1; $i <= 10; $i++) {
@@ -139,7 +141,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                title="' . $LANG['plugin_formcreator']["section"][0] . '" alt=""/></a>';
         echo "</td>";
 
-        echo "<td>" . $LANG['joblist'][6] . "&nbsp;:</td>";
+        echo "<td>";
+		echo __('Description');
+		echo "&nbsp;:</td>";
         echo "<td>";
         echo "<textarea name='content' cols='55' rows='6'>";
         echo $this->fields["content"];
@@ -164,7 +168,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
         echo "<tr>";
         echo "<td class='center' colspan='2'>";
-        echo "<input class='submit' type='submit' value='" . $LANG['buttons'][8] . "' name='add'>";
+        echo "<input class='submit' type='submit' value='";
+		echo __('Add');
+		echo "' name='add'>";
         echo "</td>";
         echo "</tr>";
 
@@ -301,7 +307,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
         echo "<input type='hidden' id='nbValue' name='nbValue' value='1'/>";
 
-        echo "<td>" . $LANG['setup'][46] . "<br /></td>";
+        echo "<td>";
+		echo __('Default value');
+		echo "<br /></td>";
         echo '<td><textarea name="value_1" cols="60" rows="6"></textarea>';
         echo '<br /><span style="font-size:10px;">
             ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -324,7 +332,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         Ajax::updateItemOnSelectEvent('option', "otherType", $CFG_GLPI["root_doc"] .
                 "/plugins/formcreator/ajax/viewothertypequestion.php", $paramsType);
 
-        echo "<td>" . $LANG['setup'][46] . "&nbsp;</td>";
+        echo "<td>";
+		echo __('Default value');
+		echo "&nbsp;</td>";
         echo '<td><input type="text" name="value_1" value="" size="30"/>';
         echo '&nbsp;<span style="font-size:10px;">
             ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -350,7 +360,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         echo "<input type='hidden' id='nbValue' name='nbValue' value='1'/>";
 		echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/><br/>";
 
-        echo "<tr><td>" . $LANG['setup'][46] . "<br /></td>";
+        echo "<tr><td>";
+		echo __('Default value');
+		echo "<br /></td>";
         echo '<td><textarea name="value_1" cols="60" rows="6"></textarea>';
         echo '<br /><span style="font-size:10px;">
             ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -377,9 +389,11 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         Ajax::updateItemOnEvent('addField' . $valueId, 'nextValue' . $valueId, $CFG_GLPI["root_doc"] .
                 '/plugins/formcreator/ajax/addnewmultiplication.php', array('id' => $valueId), array('click'));
 
-        echo "<p>" . $LANG['common'][17] . " " . $valueId . " : ";
+        echo "<p>";
+		echo __('Type');
+		echo " " . $valueId . " : ";
         echo '<input type="text" name="typeMat_' . $valueId . '" value="" size="30"/>&nbsp;';
-        echo $LANG['financial'][21] . " " . $valueId . " : ";
+        echo __('Value') . " " . $valueId . " : ";
         echo '<input type="text" name="value_' . $valueId . '" value="" size="5"/>&#8364;</p>';
         echo '<div id="nextValue' . $valueId . '">';
         echo '<input class="submit" type="button" id="addField' . $valueId . '" 
@@ -408,7 +422,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 '/plugins/formcreator/ajax/addnewdynamic.php', array('id' => $valueId, 'formID' => $formID), array('click'));
 
         //valeur du select
-        echo "<p>" . $LANG['financial'][21] . " " . $valueId . " : ";
+        echo "<p>" . __('Value') . " " . $valueId . " : ";
         echo '<input type="text" name="value_' . $valueId . '" value="" size="30"/></p>';
 
         //input caché permettant de savoir le nombre de questions relié au select
@@ -471,7 +485,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 '/plugins/formcreator/ajax/addnewdynamicsection.php', array('id' => $valueId, 'formID' => $formID), array('click'));
 
         //valeur du select
-        echo "<p>" . $LANG['financial'][21] . " " . $valueId . " : ";
+        echo "<p>" . __('Value') . " " . $valueId . " : ";
         echo '<input type="text" name="value_' . $valueId . '" value="" size="30"/></p>';
 
         //input caché permettant de savoir le nombre de questions relié au select
@@ -532,7 +546,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
         Ajax::updateItemOnEvent('addField' . $valueId, 'nextValue' . $valueId, $CFG_GLPI["root_doc"] .
                 '/plugins/formcreator/ajax/addnewvalue.php', array('id' => $valueId), array('click'));
 
-        echo "<p>" . $LANG['financial'][21] . " " . $valueId . " : ";
+        echo "<p>" . __('Value') . " " . $valueId . " : ";
         echo '<input type="text" name="value_' . $valueId . '" value="" size="30"/></p>';
 
         echo '<div id="nextValue' . $valueId . '">';
@@ -620,7 +634,8 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 break;
 
             case self::DYNAMIC_SECTION: // dynamic question
-				$result['data']['obli'] = $params['obli'];
+				if (isset($params['obli']))
+					$result['data']['obli'] = $params['obli'];
                 for ($i = 1; $i <= $nbValue; $i++) {
                     $result['data']['value'][$i] = $params['value_' . $i];
                     $nbValueSection = $params['nbValue' . $i];
@@ -702,7 +717,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
             echo $LANG['plugin_formcreator']["question"][2];
             echo '</th>';
             echo '<th>';
-            echo $LANG['common'][17];
+            echo __('Type');
             echo '</th>';
             echo '<th>';
             echo $LANG['plugin_formcreator']["section"][3];
@@ -786,7 +801,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td>" . $LANG['common'][17] . "&nbsp;:</td><td>";
+        echo "<td>" . __('Type') . "&nbsp;:</td><td>";
         echo "<select name='type' id='typeQuestion'>";
         echo "<option value='-1'>----</option>";
 
@@ -825,7 +840,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
               title="' . $LANG['plugin_formcreator']["section"][0] . '" alt=""/></a>';
         echo "</td>";
 
-        echo "<td>" . $LANG['joblist'][6] . "&nbsp;:</td>";
+        echo "<td>" . __('Description') . "&nbsp;:</td>";
         echo "<td>";
         echo "<textarea name='content' cols='55' rows='6'>";
         echo $this->fields["content"];
@@ -856,10 +871,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
         echo "<tr>";
         echo "<td class='center' colspan='2'>";
-        echo "<input class='submit' type='submit' value='" . $LANG['buttons'][7] . "' name='update'>";
+        echo "<input class='submit' type='submit' value='" . __('Update') . "' name='update'>";
         echo "</td>";
         echo "<td class='center' colspan='2'>";
-        echo "<input class='submit' type='submit' value='" . $LANG['buttons'][22] . "' name='delete'>";
+        echo "<input class='submit' type='submit' value='" . __('Purge') . "' name='delete'>";
         echo "</td>";
         echo "</tr>";
 
@@ -892,7 +907,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 
                 $tab_option = json_decode($option, true);
 
-                echo $LANG['setup'][46] . "&nbsp;";
+                echo __('Default value') . "&nbsp;";
                 echo '<input type="text" name="value_1" value="' . $val . '" size="30"/>';
                 echo '&nbsp;<span style="font-size:10px;">
                   ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -926,7 +941,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";
 
                 for ($i = 1; $i <= $nbValue; $i++) {
-                    echo "<p>" . $LANG['financial'][21] . " " . $i . " : ";
+                    echo "<p>" . __('Value') . " " . $i . " : ";
                     echo '<input type="text" 
                      name="value_' . $i . '" 
                      value="' . $values['value'][$i] . '" size="30"/></p>';
@@ -941,7 +956,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 echo "<input type='hidden' id='nbValue' name='nbValue' value='$nbValue'/>";
 
                 for ($i = 1; $i <= $nbValue; $i++) {
-                    echo "<p>" . $LANG['financial'][21] . " " . $i . " : ";
+                    echo "<p>" . __('Value') . " " . $i . " : ";
                     echo '<input type="text" 
                      name="value_' . $i . '" 
                      value="' . $values['value'][$i] . '" size="30"/></p>';
@@ -965,7 +980,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                     $val = '';
                 }
 
-                echo $LANG['setup'][46] . "&nbsp;";
+                echo __('Default value') . "&nbsp;";
                 echo '<textarea name="value_1" cols="60" rows="6">' . $val . '</textarea>';
                 echo '<br /><span style="font-size:10px;">
                   ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -987,7 +1002,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                     $val = '';
                 }
 
-                echo $LANG['setup'][46] . "&nbsp;";
+                echo __('Default value') . "&nbsp;";
                 echo '<textarea name="value_1" cols="60" rows="6">' . $val . '</textarea>';
                 echo '<br /><span style="font-size:10px;">
                   ' . $LANG['plugin_formcreator']["question"][3] . '
@@ -1004,9 +1019,9 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 					echo "<input type='checkbox' id='obli' name='obli' value='1'/>";
 
                 for ($i = 1; $i <= $nbValue; $i++) {
-                    echo "<p>" . $LANG['common'][17] . " " . $i . " : ";
+                    echo "<p>" . __('Type') . " " . $i . " : ";
                     echo '<input type="text" name="typeMat_' . $i . '" value="' . $values['typeMat'][$i] . '" size="30"/>&nbsp;';
-                    echo $LANG['financial'][21] . " " . $i . " : ";
+                    echo __('Value') . " " . $i . " : ";
                     echo '<input type="text" name="value_' . $i . '" value="' . $values['value'][$i] . '" size="5"/>&#8364;</p>';
                 }
 
@@ -1024,7 +1039,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 					echo $LANG['plugin_formcreator']["regex_type"][2]." : <input type='checkbox' id='obli' name='obli' value='1'/> ".$LANG['plugin_formcreator']["information"][3];
 
                 for ($i = 1; $i <= $nbValue; $i++) {
-                    echo "<p>" . $LANG['financial'][21] . " " . $i . " : ";
+                    echo "<p>" . __('Value') . " " . $i . " : ";
                     echo '<input type="text" name="value_' . $i . '" value="' . $values['value'][$i] . '" size="30"/>';
 
                     $nbValueQuestion = $values['nbQuestion'][$i];
@@ -1057,7 +1072,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 					echo $LANG['plugin_formcreator']["regex_type"][2]. " : <input type='checkbox' id='obli' name='obli' value='1'/> ".$LANG['plugin_formcreator']["information"][3];
 
                 for ($i = 1; $i <= $nbValue; $i++) {
-                    echo "<p>" . $LANG['financial'][21] . " " . $i . " : ";
+                    echo "<p>" . __('Value') . " " . $i . " : ";
                     echo '<input type="text" name="value_' . $i . '" value="' . $values['value'][$i] . '" size="30"/>';
 
                     $nbValueSection = $values['nbSection'][$i];
