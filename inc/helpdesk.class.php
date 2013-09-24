@@ -213,9 +213,9 @@ class PluginFormcreatorHelpdesk {
 			case PluginFormcreatorQuestion::ITEM: // item listing
                 echo '<select name="question_' . $id . '">';
                 $retour = self::getTabItem($tab['value']);
-                for ($i = 1; $i <= count($retour); $i++) {
-                    echo '<option value="' . $retour[$i]["name"] . '">' . $retour[$i]["name"] . '</option>';
-                }
+				foreach($retour as $key => $value) {
+					echo '<option value="' . $value["name"] . '">' . $value["name"] . '</option>';
+				}
                 echo '</select>';
                 break;
         }
