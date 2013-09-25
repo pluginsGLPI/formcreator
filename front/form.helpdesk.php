@@ -128,7 +128,7 @@ if (!empty($verifQuestion)) {
             foreach ($questions as $question_id => $question_value) {
                 echo "<tr id='" . $question_id . "'>";
                 if ($question_value['type'] != "10") // empeche de mettre le nom de la question sur le formulaire pour liste déraoulante utlisateur
-                    echo "<td>" . $question_value['name'] . "</td>";
+                    echo "<td>" . stripslashes($question_value['name']) . "</td>";
                 echo "<td>";
                 $helpdesk->getInputQuestion($question_id, $question_value['type'], $question_value['data'], $question_value['option']);
 
@@ -142,7 +142,7 @@ if (!empty($verifQuestion)) {
                         //remplissage de la liste pour effectuer la vérification si le champ est non caché et obligatoire à la fois
                         $question_option = json_decode($question_value['option'], true);
                         $question_option_value = urldecode($question_option['value']);
-                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".str_replace("'", "\'", $question_value['name'])."&&";
+                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".$question_value['name']."&&";
                     }
                 }
                 if (($question_value['type'] == "7") || ($question_value['type'] == "11")) //initialisation d'une variable pour savoir s'il y a un champ de multiplication de champ pour implémenter un champ total somme
@@ -150,7 +150,7 @@ if (!empty($verifQuestion)) {
 				if ($question_value['type'] == "8" || $question_value['type'] == "9" || $question_value['type'] == "4") { // section dynamique et question dynamique obligatoire
 					$tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
 					if ((isset($tab["obli"])) && ($tab["obli"] == "1")) {
-						$listequestion .= "sec_".$section_id."::".$question_id."::".str_replace("'", "\'", $question_value['name'])."&&";
+						$listequestion .= "sec_".$section_id."::".$question_id."::".$question_value['name']."&&";
 					}
 				}
                 $chaine = $question_value['content'];
