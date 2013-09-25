@@ -17,16 +17,6 @@ function plugin_formcreator_install() {
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
       $DB->query($query) or die("error creating glpi_plugin_formcreator_forms ". $DB->error());
-   } else {
-	  $query = "SELECT column_name
-				FROM INFORMATION_SCHEMA.COLUMNS
-				WHERE table_name = 'glpi_plugin_formcreator_forms'
-				AND column_name = 'cat'";
-	  $retour = $DB->query($query) or die("error creating glpi_plugin_formcreator_forms ". $DB->error());
-	  if ( mysql_num_rows( $retour ) == 0 ) {
-		  $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD `cat` INT( 3 ) NOT NULL;";
-		  $DB->query($query) or die("error creating glpi_plugin_formcreator_forms ". $DB->error());
-	  }
    }
 
    if (!TableExists("glpi_plugin_formcreator_targets")) {
