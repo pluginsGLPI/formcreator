@@ -127,8 +127,12 @@ if (!empty($verifQuestion)) {
 
             foreach ($questions as $question_id => $question_value) {
                 echo "<tr id='" . $question_id . "'>";
-                if ($question_value['type'] != "10") // empeche de mettre le nom de la question sur le formulaire pour liste déraoulante utlisateur
+                // empeche de mettre le nom de la question sur le formulaire pour liste déraoulante utlisateur
+                if ($question_value['type'] != "10") {
                     echo "<td>" . stripslashes($question_value['name']) . "</td>";
+                } else {
+                	echo "<td>&nbsp;</td>";
+                }
                 echo "<td>";
                 $helpdesk->getInputQuestion($question_id, $question_value['type'], $question_value['data'], $question_value['option']);
 
