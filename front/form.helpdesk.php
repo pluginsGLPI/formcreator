@@ -155,7 +155,12 @@ if (!empty($verifQuestion)) {
 				}
                 $chaine = $question_value['content'];
                 //remplacement lien url en BBCODE
-                $chaine = preg_replace("#\[url\]((ht|f)tp://)([^\r\n\t<\"]*?)\[/url\]#sie", "'<a href=\"\\1' . str_replace(' ', '%20', '\\3') . '\">\\1\\3</a>'", $chaine);
+                //$chaine = preg_replace("#\[url\]((ht|f)tp://)([^\r\n\t<\"]*?)\[/url\]#sie", "'<a href=\"\\1' . str_replace(' ', '%20', '\\3') . '\">\\1\\3</a>'", $chaine);
+                $chaine = preg_replace_callback(
+                	"#\[url\]((ht|f)tp://)([^\r\n\t<\"]*?)\[/url\]#si", 
+                	function ($s) { return '<a href="' . $s[1] . str_replace(' ', '%20', $s[3]) . '">' . $s[1].$s[3] . '</a>'; }, 
+                	$chaine
+        		);
                 $chaine = preg_replace("/\[url=(.+?)\](.+?)\[\/url\]/", "<a href=\"$1\">$2</a>", $chaine);
                 //remplacement gras en BBCODE
                 $chaine = str_replace("[b]", "<b>", $chaine);
