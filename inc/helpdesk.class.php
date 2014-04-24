@@ -211,12 +211,20 @@ class PluginFormcreatorHelpdesk {
                 break;
 				
 			case PluginFormcreatorQuestion::ITEM: // item listing
-                echo '<select name="question_' . $id . '">';
-                $retour = self::getTabItem($tab['value']);
-				foreach($retour as $key => $value) {
-					echo '<option value="' . $value["name"] . '">' . $value["name"] . '</option>';
+//                 echo '<select name="question_' . $id . '">';
+//                 $retour = self::getTabItem($tab['value']);
+// 				foreach($retour as $key => $value) {
+// 					echo '<option value="' . $value["name"] . '">' . $value["name"] . '</option>';
+// 				}
+//                 echo '</select>';
+				switch ($tab['value']) {
+					case 'location':
+				       Dropdown::show('Location', array('name' => 'question_' . $id));
+				       break;
+					case 'computer':
+					   Dropdown::show('Computer', array('name' => 'question_' . $id));
+					   break;
 				}
-                echo '</select>';
                 break;
         }
     }

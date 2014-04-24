@@ -166,7 +166,19 @@ foreach ($targets as $target_id => $target_value) {
                     break;
 					
 				case PluginFormcreatorQuestion::ITEM:
-                    $question[$question_name] = $_REQUEST[$question_name];
+                    $question_value['data'] = PluginFormcreatorQuestion::_unserialize($question_value['data']);
+                    switch ($question_value['data']['value']) {
+                    	case 'location':
+                    	   $location = new Location();
+                    	   $location->getFromDB($_REQUEST[$question_name]);
+                    	   $question[$question_name] = $location->getField('name');
+                    	   break;
+                    	case 'computer':
+                    	   $computer = new Computer();
+                    	   $computer->getFromDB($_REQUEST[$question_name]);
+                    	   $question[$question_name] = $computer->getField('name');
+                    	   break;
+                    }
                     break;
             }
         } else {

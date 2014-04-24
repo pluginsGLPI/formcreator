@@ -1095,9 +1095,10 @@ class PluginFormcreatorQuestion extends CommonDBTM {
                 break;
 				
 			case self::ITEM: // Liste item
-                echo "<input type='hidden' id='nbValue' name='nbValue' value='".$nbValue."'/>";
+			    $nb_item = 2;
+                echo "<input type='hidden' id='nbValue' name='nbValue' value='1'/>";
                 echo $LANG['plugin_formcreator']["item"][0] . '<select name="item_liste">';
-                for ($i = 1; $i <= $nbValue; $i++) {
+                for ($i = 1; $i <= $nb_item; $i++) {
                     if ($values['value'] == $LANG['plugin_formcreator']["item_table"][$i])
                         echo '<option value="' . $LANG['plugin_formcreator']["item_table"][$i] . '" SELECTED>'.$LANG['plugin_formcreator']["item"][$i].'</option>';
                     else

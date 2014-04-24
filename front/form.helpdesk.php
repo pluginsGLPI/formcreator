@@ -138,25 +138,36 @@ if (!empty($verifQuestion)) {
 
                 $question_option = json_decode($question_value['option'], true);
 				
-				//si la question est du type champ texte
-                if ($question_value['type'] == 1) {
-                    echo $helpdesk->getNameRegexType($question_option['type']);
-					//si il y a un controle sur le champ
-                    if ($question_option['type'] != 1) {
-                        //remplissage de la liste pour effectuer la vérification si le champ est non caché et obligatoire à la fois
-                        $question_option = json_decode($question_value['option'], true);
-                        $question_option_value = urldecode($question_option['value']);
-                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".$question_value['name']."&&";
-                    }
+                switch ($question_value['type']) {
+                	case 1:
+                		//si la question est du type champ texte
+                        echo $helpdesk->getNameRegexType($question_option['type']);
+						//si il y a un controle sur le champ
+	                    if ($question_option['type'] != 1) {
+	                        //remplissage de la liste pour effectuer la vérification si le champ est non caché et obligatoire à la fois
+	                        $question_option = json_decode($question_value['option'], true);
+	                        $question_option_value = urldecode($question_option['value']);
+	                        $listequestion .= "sec_".$section_id."::".$question_id."::".$question_option_value."::".$question_value['name']."&&";
+	                    }
+	                    break;
+	                     
+                	case 7:
+                	case 11:
+                		//initialisation d'une variable pour savoir s'il y a un champ de multiplication de champ pour implémenter un champ total somme
+                		$boolMultiplication = 1;
+                		break;
+                		
+                	case 4:
+                	case 8:
+                	case 9:
+                		// section dynamique et question dynamique obligatoire
+                		$tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
+						if ((isset($tab["obli"])) && ($tab["obli"] == "1")) {
+							$listequestion .= "sec_".$section_id."::".$question_id."::".$question_value['name']."&&";
+						}
+                		break;
                 }
-                if (($question_value['type'] == "7") || ($question_value['type'] == "11")) //initialisation d'une variable pour savoir s'il y a un champ de multiplication de champ pour implémenter un champ total somme
-                    $boolMultiplication = 1;
-				if ($question_value['type'] == "8" || $question_value['type'] == "9" || $question_value['type'] == "4") { // section dynamique et question dynamique obligatoire
-					$tab = PluginFormcreatorQuestion::_unserialize($question_value['data']);
-					if ((isset($tab["obli"])) && ($tab["obli"] == "1")) {
-						$listequestion .= "sec_".$section_id."::".$question_id."::".$question_value['name']."&&";
-					}
-				}
+				
                 $chaine = $question_value['content'];
                 //remplacement lien url en BBCODE
                 //$chaine = preg_replace("#\[url\]((ht|f)tp://)([^\r\n\t<\"]*?)\[/url\]#sie", "'<a href=\"\\1' . str_replace(' ', '%20', '\\3') . '\">\\1\\3</a>'", $chaine);
