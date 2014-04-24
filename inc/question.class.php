@@ -293,7 +293,7 @@ class PluginFormcreatorQuestion extends CommonDBTM {
 	static function getItem() {
         global $LANG;
 		$nb_item = 2;
-        echo "<input type='hidden' id='nbValue' name='nbValue' value='".$nb_item."'/>";
+        echo "<input type='hidden' id='nbValue' name='nbValue' value='1' />";
         echo '<table><tr><td>' . $LANG['plugin_formcreator']["item"][0] . '</td><td>';
 		echo '<select name="item_liste">';
         for ($i = 1; $i <= $nb_item; $i++) {
