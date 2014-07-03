@@ -1,0 +1,89 @@
+Contexte
+========
+
+Le plugin FormCreator a été initialement créé par Teclib'.
+Le plugin a ensuite été rendu libre et mis en ligne sur la forge Indepnet.
+De nombreuses fonctionnalités ont été ajoutées entrainant de nombreux bug et une instabilité importante du plugin.
+
+Nous souhaitons aujourd'hui reprendre le plugin de 0 afin de repartir sur une base saine et un plugin fonctionnel.
+En outre, certains clients ont besoin de fonctionnalités supplémentaires.
+
+Il faudrait reposer le code du plugin sur la forge GLPI quand ça sera ok, afin de ne pas se retrouver dans la situation de fields/customfields.
+
+
+Fonctionnement général
+======================
+
+Le plugin FormCreator permet la création de formulaire "simplifiés", principalement destinés aux utilisateurs lambda, aboutissants à la création d'un ou plusieurs tickets GLPI.
+
+
+Roadmap
+=======
+
+V 2.0 (fonctionnement actuel amélioré)
+--------------------------------------
+
+- Installation du plugin
+     - Créer une valeur d'intitulé pour "Source de la demende" égale à "Formulaire
+- Import / migration à partir de la version actuelle de formcreator
+- Menu au 1er niveau de l'interface simplifiée
+- Configuration du plugin
+     - Catégories de formulaire : Intitulé
+     - Présentation : Texte mis en forme qui viendra s'afficher au dessus de la liste des formulaires
+- Création de formulaires :
+     - Droit d'accès par entités / récursif
+     - Droit d'accès public : Formulaire accessible sur une page web publique via une URL sans authentification.
+         - Si identifiés uniquement : Droit d'accès par profil (liste des profils avec cases à cocher), Tous par défaut.
+     - Champs :
+         - Titre : Afficher dans la liste des formulaire et comme titre de la page sur le forumulaire (obligatoire)
+         - Description courte :  Affichée dans la liste des formulaire (1 ligne)
+         - Description longue : Texte long mis en forme affiché sur la page du formulaire en haut de page juste après le titre
+         - Catégorie : Catégorie du formulaire
+         - Actif : Oui / Non (non par défaut, le temps de créer le formulaire)
+         - Langue : Liste des langues (la langue de l'utilisateur courant sélectionnée par défaut)
+         - Cible : Ticket (PDF ou E-mail dans les versions suivantes)
+             - Si ticket : Affichers champs : titre, description (avec TAG des questions + FULL_FORM), gabarie de ticket.
+             - Si ticket : La source de la demande est automatiquement remplie par la valeur "Formulaire" créée à l'installation
+         - Accès direct en Interface simplifiée (case à cochée, non par défaut)
+- Ajout de sections de questions aux formulaires
+    - Les sections peuvent êtres réorganisées. L'ordre est modifiable par des flèches permettant de monté ou descendre les sections
+- Ajout de questions aux sections des formulaires
+    - Les questions peuvent êtres réorganisées. L'ordre est modifiable par des flèches permettant de monté ou descendre les questions
+    - Champs :
+        - Intitulé : texte de la question (1 ligne, obligatoire)
+        - Type :
+            - Texte, zone de texte (texte brut) : champs de validation facultatifs : taille max, taille min, validation supplémentaire regex
+            - nombre : champs de validation facultatifs : valeur max, valeur min, entier / flotant
+            - date : Affichage d'un calendrier standard GLPI
+            - e-mail
+            - intitulés : ajouter une valeur vide au début ? Valeur sélectionnée par défaut ?
+            - cases à cocher : champs de validation facultatifs : Nombre de sélection max, Nombre de sélection min (si champ obligatoire = oui, min > 0 par défaut)
+            - fichier
+        - Champ obligatoire : indiqué par une étoile rouge ou grise sur la liste des questions
+        - Affichée : Toujours / Si la valeur du champ XXX  est égale|différente|supérieure|inférieure à YYY. (Où XXX = liste des questions et YYY saisie manuelle d'une valeur)
+        - Description : Affichée par infobulle au survol d'une icone d'aide (?)
+        - Options avancés :
+            - Champs cible (si ticket) : Aucun par défaut (saisie manuelle par TAG dans la description cible (ticket)), Champ texte permettant la saisie d'un champ de BDD
+
+
+V 2.1 (fonctionnalités supplémentaires urgentes)
+------------------------------------------------
+- Afficher la liste des champs de base de données disponibles dans les options avancés des questions
+- Pouvoir remplir un champ de Fields avec une donnée d'un formulaire
+- Cible de formulaire : Ticket
+    - Si ticket : Ajouter la possibilité de créer plusieurs tâches. Pour chaque tâche, on aura les champs : titre, description (avec TAG), catégorie, statut, privée, assignée à.
+- Ajout de questions aux sections des formulaires
+    - Champs :
+        - Type :
+            - Liste LDAP : Liste déroulante alimenté par un annuaire LDAP activé dans GLPI.
+                - champs de validation facultatifs : ajouter une valeur vide au début ? Valeur sélectionnée par défaut ?
+
+
+Non planifiées
+--------------
+- Ajouter la possibilité de rendre un champ obligatoire en un clic (ajax) à partir de la page du formulaire (liste des questions)
+- Amélioration du changement d'ordre des sections est question par drag & drop
+- Ajouter sur les options avancés des question une liste des champs disponible (standard + Fields)
+- Cible de formulaire : Ticket, PDF ou e-mail
+    - Si PDF : Stockage sous forme de Document ? Envoi par mail ? Définir le répertoire de stockage dans la config du plugin ou du formulaire ?
+    - Si E-mail : Ajouter les champs : Objet, contenu (avec TAGS), destinataires (Double liste similaire aux notifications)
