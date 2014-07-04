@@ -49,3 +49,12 @@ function plugin_formcreator_uninstall() {
    }
    return true ;
 }
+
+/**
+ * Define Dropdown tables to be manage in GLPI :
+ */
+function plugin_formcreator_getDropdown() {
+   return array(
+      'PluginFormcreatorCategory' => __("Form categories", 'formcreator'),
+   );
+}

@@ -2,7 +2,11 @@
 
 class PluginFormcreatorForm extends CommonDBTM
 {
-   public $dohistory = true;
+   public $dohistory       = true;
+
+   const ACCESS_PUBLIC     = 0;
+   const ACCESS_PRIVATE    = 1;
+   const ACCESS_RESTRICTED = 2;
 
    /**
     * Check if current user have the right to create and modify requests
@@ -33,14 +37,14 @@ class PluginFormcreatorForm extends CommonDBTM
             'name'          => __('ID', 'formcreator'),
             'datatype'      => 'number',
             'searchtype'    => 'equals',
-            'massiveaction' => false
+            'massiveaction' => false,
          ),
          '2' => array(
             'table'         => $this->getTable(),
             'field'         => 'name',
             'name'          => __('Name', 'formcreator'),
             'datatype'      => 'itemlink',
-            'massiveaction' => false
+            'massiveaction' => false,
          ),
          '3' => array(
             'table'         => $this->getTable(),
@@ -48,32 +52,87 @@ class PluginFormcreatorForm extends CommonDBTM
             'name'          => __('Status', 'formcreator'),
             'datatype'      => 'specific',
             'searchtype'    => array('equals', 'notequals'),
-            'massiveaction' => false
+            'massiveaction' => true,
+         ),
+         '4' => array(
+            'table'         => $this->getTable(),
+            'field'         => 'description',
+            'name'          => __('Description', 'formcreator'),
+            'massiveaction' => false,
+         ),
+         '5' => array(
+            'table'         => 'glpi_entities',
+            'field'         => 'completename',
+            'name'          => _n('Entity', 'Entities', 1),
+            'datatype'      => 'dropdown',
+            'massiveaction' => false,
+         ),
+         '6' => array(
+            'table'         => $this->getTable(),
+            'field'         => 'is_recursive',
+            'name'          => __('Recursive', 'formcreator'),
+            'datatype'      => 'bool',
+            'massiveaction' => false,
+         ),
+         '7' => array(
+            'table'         => $this->getTable(),
+            'field'         => 'language',
+            'name'          => __('Language'),
+            'massiveaction' => false,
+         ),
+         '8' => array(
+            'table'         => $this->getTable(),
+            'field'         => 'helpdesk_home',
+            'name'          => __('Homepage', 'formcreator'),
+            'datatype'      => 'bool',
+            'searchtype'    => array('equals', 'notequals'),
+            'massiveaction' => true,
+         ),
+         '9' => array(
+            'table'         => $this->getTable(),
+            'field'         => 'access_rights',
+            'name'          => __('Access', 'formcreator'),
+            'datatype'      => 'specific',
+            'searchtype'    => array('equals', 'notequals'),
+            'massiveaction' => true,
          ),
       );
       return $tab;
    }
 
-   static function getDefaultSearchRequest() {
-
+   public static function getDefaultSearchRequest()
+   {
       $search = array('field'      => array(0 => 3),
                       'searchtype' => array(0 => 'equals'),
                       'contains'   => array(0 => 1),
                       'sort'       => 2,
                       'order'      => 'ASC');
-
-     return $search;
+      return $search;
    }
 
 
-   static function getSpecificValueToDisplay($field, $values, array $options=array()) {
-
+   public static function getSpecificValueToDisplay($field, $values, array $options=array())
+   {
       if (!is_array($values)) {
          $values = array($field => $values);
       }
       switch ($field) {
          case 'is_active':
             return ($values[$field] == 0) ? __('Inactive', 'formcreator') : __('Active', 'formcreator');
+            break;
+         case 'access_rights':
+            switch($values[$field]) {
+               case self::ACCESS_PUBLIC :
+                  return __('Public access', 'formcreator');
+                  break;
+               case self::ACCESS_PRIVATE :
+                  return __('Private access', 'formcreator');
+                  break;
+               case self::ACCESS_RESTRICTED :
+                  return __('Restricted access', 'formcreator');
+                  break;
+            }
+            return '';
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
@@ -88,7 +147,8 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param $values          (default '')
     * @param $options   array
     **/
-   static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array())
+   {
 
       if (!is_array($values)) {
          $values = array($field => $values);
@@ -105,6 +165,24 @@ class PluginFormcreatorForm extends CommonDBTM
                         . __('Active', 'formcreator')
                         . "</option>";
             $output .=  "</select>";
+
+            return $output;
+            break;
+         case 'access_rights' :
+            $output  = '<select name="' . $name . '">';
+            $output .=  '<option value="' . self::ACCESS_PUBLIC . '" '
+                           . (($values[$field] == 0) ? ' selected ' : '') . '>'
+                        . __('Public access', 'formcreator')
+                        . '</option>';
+            $output .=  '<option value="' . self::ACCESS_PRIVATE . '" '
+                           . (($values[$field] == 1) ? ' selected ' : '') . '>'
+                        . __('Private access', 'formcreator')
+                        . '</option>';
+            $output .=  '<option value="' . self::ACCESS_RESTRICTED . '" '
+                           . (($values[$field] == 1) ? ' selected ' : '') . '>'
+                        . __('Restricted access', 'formcreator')
+                        . '</option>';
+            $output .=  '</select>';
 
             return $output;
             break;
@@ -151,23 +229,42 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Show categories
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
-      $form_table = getTableForItemType('PluginFormcreatorCategory');
-      $query  = "SELECT $cat_table.`name`
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                  FROM $cat_table
                  WHERE 0 < (
-                     SELECT COUNT(id)
+                     SELECT COUNT($form_table.id)
                      FROM $form_table
-                     WHERE $form_table.`formcreator_categories_id` = $cat_table.`id
+                     LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
+                     WHERE $form_table.`formcreator_categories_id` = $cat_table.`id`
                      AND $form_table.`is_active` = 1
-                     AND $where
-                     AND $form_table.`language` = {$_SESSION['glpilanguage']}
+                     AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
                   )
                  ORDER BY $cat_table.`name` ASC";
       $result = $DB->query($query);
       if(!empty($result)) {
          echo '<table class="tab_cadre_fixe">';
-         while(list($category_name) = $DB->fetch_array($result)) {
-            echo '<tr><th>' . $category_name . '</t></tr>';
+         while($category = $DB->fetch_array($result)) {
+            echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
+
+            $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+                            FROM $form_table
+                            LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
+                            WHERE $form_table.`formcreator_categories_id` = {$category['id']}
+                            AND $form_table.`is_active` = 1
+                            AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
+                            ORDER BY $form_table.name ASC";
+            $result_forms = $DB->query($query_forms);
+            while($form = $DB->fetch_array($result_forms)) {
+               echo '<tr>';
+               echo '<td><a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '">'
+                        . $form['name']
+                        . '</a></td>';
+               echo '<td>' . $form['description'] . '</td>';
+               echo '</tr>';
+            }
+
          }
          echo '</table>';
       }
@@ -175,9 +272,83 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
    }
 
+   public function showForm($options=array())
+   {
+      if(!empty($options['id'])) {
+         $id = $options['id'];
+         $this->canView();
+      } else {
+         $id = 0;
+         $this->canCreate();
+      }
+      $this->initForm($id);
+      $this->showTabs($options);
+      $this->showFormHeader($options);
+
+      echo '<tr class="tab_bg_1">';
+      echo '<td>' . __('Name') . ' <span class="red">*</span></td>';
+      echo '<td><input type="text" name="name" value="' . $this->fields["name"] . '" size="54"/></td>';
+      echo '<td>' . __('Active') . ' <span class="red">*</span></td>';
+      echo '<td>';
+      Dropdown::showYesNo("is_active", $this->fields["is_active"]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="tab_bg_2">';
+      echo '<td>' . __('Description') . '</td>';
+      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="54" /></td>';
+      echo '<td>' . __('Language') . ' <span class="red">*</span></td>';
+      echo '<td>';
+      Dropdown::showLanguages('language', array(
+         'value' => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
+      ));
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="tab_bg_1">';
+      echo '<td>' . __('Category') . ' <span class="red">*</span></td>';
+      echo '<td>';
+      PluginFormcreatorCategory::dropdown(array(
+         'name'  => 'formcreator_categories_id',
+         'value' => ($id != 0) ? $this->fields["formcreator_categories_id"] : 1,
+      ));
+      echo '</td>';
+      echo '<td>' . __('Access') . ' <span class="red">*</span></td>';
+      echo '<td>';
+      Dropdown::showFromArray(
+         'access_rights',
+         array(
+            self::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
+            self::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
+            self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+         ),
+         array(
+            'value' => ($id != 0) ? $this->fields["access_rights"] : 1,
+         )
+      );
+      echo '</td></tr>';
+
+      echo '<tr class="tab_bg_2">';
+      echo '<td colspan="2">&nbsp;</td>';
+      echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
+      echo '<td>';
+      Dropdown::showYesNo("helpdesk_home", $this->fields["helpdesk_home"]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="tab_bg_1">';
+      echo '<td>' . __('Header') . '</td>';
+      echo '<td colspan="3"><textarea name="content" cols="115" rows="10">' . $this->fields["content"] . '</textarea></td>';
+      Html::initEditorSystem('content');
+      echo '</tr>';
+
+      $this->showFormButtons($options);
+      $this->addDivForTabs();
+   }
 
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
+   {
       switch ($item->getType()) {
          case "PluginFormcreatorConfig":
             $object  = new self;
@@ -188,17 +359,27 @@ class PluginFormcreatorForm extends CommonDBTM
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-      global $CFG_GLPI;
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
+   {
+      $params = $_REQUEST;
+      $params += self::getDefaultSearchRequest();
+      Search::manageGetValues(__CLASS__);
+      Search::showGenericSearch(__CLASS__, $params);
+      Search::showList(__CLASS__, $params);
+   }
 
-      switch ($item->getType()) {
-         case "PluginFormcreatorConfig":
-            $params = $_GET;
-            Search::manageGetValues(__CLASS__);
-            Search::showGenericSearch(__CLASS__, $_GET);
-            Search::showList(__CLASS__, $params);
+   public function displayUserForm(CommonGLPI $item)
+   {
+
+      echo '<div class="center">';
+      if(!empty($item->fields['content'])) {
+         echo '<table class="tab_cadre_fixe">';
+         echo '<tr><td>' . html_entity_decode($item->fields['content']) . '</td></tr>';
+         echo '</table>';
+         echo '<br />';
       }
-      return false;
+
+      echo '</div>';
    }
 
    /**
@@ -233,6 +414,7 @@ class PluginFormcreatorForm extends CommonDBTM
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                      `entities_id` int(11) NOT NULL DEFAULT '0',
                      `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+                     `access_rights` tinyint(1) NOT NULL DEFAULT '1',
                      `requesttype` int(11) NOT NULL DEFAULT '$requesttype',
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                      `description` varchar(255) COLLATE utf8_unicode_ci,
@@ -240,7 +422,8 @@ class PluginFormcreatorForm extends CommonDBTM
                      `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL,
                      `is_active` tinyint(1) NOT NULL DEFAULT '0',
                      `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-                     `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0'
+                     `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
+                     `is_deleted` tinyint(1) NOT NULL DEFAULT '0'
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8

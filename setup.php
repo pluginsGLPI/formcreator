@@ -80,7 +80,7 @@ function plugin_init_formcreator () {
    $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
       'options'      => array('title'  => __('Forms', 'formcreator'),
                               'links'  => array(
-                                  'search'   => '/plugins/formcreator/front/form.php',
+                                  'search'   => '/plugins/formcreator/front/formlist.php',
                                   'config'   => '/plugins/formcreator/front/config.form.php',
                                   'add'      => '/plugins/formcreator/front/form.form.php')),
    );

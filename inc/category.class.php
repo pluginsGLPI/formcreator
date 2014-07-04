@@ -32,38 +32,30 @@ class PluginFormcreatorCategory extends CommonDropdown
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      switch ($item->getType()) {
-         case "PluginFormcreatorConfig":
-            $env = new self;
-            $found_env = $env->find();
-            $nb = count($found_env);
-            return self::createTabEntry(self::getTypeName($nb), $nb);
-      }
-      return '';
+      $env = new self;
+      $found_env = $env->find();
+      $nb = count($found_env);
+      return self::createTabEntry(self::getTypeName($nb), $nb);
    }
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $CFG_GLPI;
 
-      switch ($item->getType()) {
-         case "PluginFormcreatorConfig":
-            echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
-               <h3 class="tab_bg_2" style="padding: 5px">
-                 <a href="' . Toolbox::getItemTypeFormURL(__CLASS__). '" class="submit">
-                      <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
-                      '.__('Add a form category', 'formcreator').'
-                  </a>
-               </h3>
-            </div>';
+      echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
+         <h3 class="tab_bg_2" style="padding: 5px">
+           <a href="' . Toolbox::getItemTypeFormURL(__CLASS__). '" class="submit">
+                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
+                '.__('Add a form category', 'formcreator').'
+            </a>
+         </h3>
+      </div>';
 
-            $params['sort']  = (!empty($_POST['sort'])) ? (int) $_POST['sort'] : 0;
-            $params['order'] = (!empty($_POST['order']) && in_array($_POST['order'], array('ASC', 'DESC')))
-                                 ? $_POST['order'] : 'ASC';
-            $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
-            Search::manageGetValues(__CLASS__);
-            //Search::showGenericSearch(__CLASS__, $_GET);
-            Search::showList(__CLASS__, $params);
-      }
-      return false;
+      $params['sort']  = (!empty($_POST['sort'])) ? (int) $_POST['sort'] : 0;
+      $params['order'] = (!empty($_POST['order']) && in_array($_POST['order'], array('ASC', 'DESC')))
+                           ? $_POST['order'] : 'ASC';
+      $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
+      Search::manageGetValues(__CLASS__);
+      //Search::showGenericSearch(__CLASS__, $_GET);
+      Search::showList(__CLASS__, $params);
    }
 }
