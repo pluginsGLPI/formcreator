@@ -71,7 +71,7 @@ function plugin_init_formcreator () {
    }
 
    // Add a link in the main menu plugins for technician and admin panel
-   $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/form.php';
+   $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
    // Add a link in the main menu for simple suser (helpdesk) panel
    $PLUGIN_HOOKS['helpdesk_menu_entry']['formcreator'] = '/front/form.php';

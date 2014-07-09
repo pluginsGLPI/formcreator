@@ -2,8 +2,13 @@
 
 class PluginFormcreatorConfig extends CommonGLPI
 {
-
-   static function getTypeName($nb=1) {
+   /**
+    * Return the name for the Itemtype
+    *
+    * @param  integer $nb    Number of item(s) (for single or plural)
+    * @return String         Name of the item to be displayed
+    */
+   public static function getTypeName($nb=1) {
       return __('Formcreator settings', 'formcreator');
    }
 
@@ -14,7 +19,7 @@ class PluginFormcreatorConfig extends CommonGLPI
     * @static
     * @return boolean
     */
-   static function canCreate() {
+   public static function canCreate() {
       return Session::haveRight('config', 'w');
    }
 
@@ -25,11 +30,11 @@ class PluginFormcreatorConfig extends CommonGLPI
     * @static
     * @return boolean
     */
-   static function canView() {
+   public static function canView() {
       return Session::haveRight('config', 'r');
    }
 
-   function defineTabs($options=array())
+   public function defineTabs($options=array())
    {
       $ong = array();
       $this->addStandardTab('PluginFormcreatorForm', $ong, $options);

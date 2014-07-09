@@ -28,6 +28,22 @@ class PluginFormcreatorForm extends CommonDBTM
       return true;
    }
 
+   /**
+    * Returns the type name with consideration of plural
+    *
+    * @param number $nb Number of item(s)
+    * @return string Itemtype name
+    */
+   public static function getTypeName($nb = 0)
+   {
+      return _n('Form', 'Forms', $nb, 'formcreator');
+   }
+
+   /**
+    * Define search options for forms
+    *
+    * @return Array Array of fields to show in search engine and options for each fields
+    */
    public function getSearchOptions()
    {
       $tab = array(
@@ -100,6 +116,11 @@ class PluginFormcreatorForm extends CommonDBTM
       return $tab;
    }
 
+   /**
+    * Define default search request
+    *
+    * @return Array Array of search options : [field, searchtype, contains, sort, order]
+    */
    public static function getDefaultSearchRequest()
    {
       $search = array('field'      => array(0 => 3),
@@ -110,42 +131,17 @@ class PluginFormcreatorForm extends CommonDBTM
       return $search;
    }
 
-
-   public static function getSpecificValueToDisplay($field, $values, array $options=array())
-   {
-      if (!is_array($values)) {
-         $values = array($field => $values);
-      }
-      switch ($field) {
-         case 'is_active':
-            return ($values[$field] == 0) ? __('Inactive', 'formcreator') : __('Active', 'formcreator');
-            break;
-         case 'access_rights':
-            switch($values[$field]) {
-               case self::ACCESS_PUBLIC :
-                  return __('Public access', 'formcreator');
-                  break;
-               case self::ACCESS_PRIVATE :
-                  return __('Private access', 'formcreator');
-                  break;
-               case self::ACCESS_RESTRICTED :
-                  return __('Restricted access', 'formcreator');
-                  break;
-            }
-            return '';
-            break;
-      }
-      return parent::getSpecificValueToDisplay($field, $values, $options);
-   }
-
-
    /**
+    * Define how to display search field for a specific type
+    *
     * @since version 0.84
     *
-    * @param $field
-    * @param $name            (default '')
-    * @param $values          (default '')
-    * @param $options   array
+    * @param String $field           Name of the field as define in $this->getSearchOptions()
+    * @param String $name            Name attribute for the field to be posted (default '')
+    * @param Array  $values          Array of all values to display in search engine (default '')
+    * @param Array  $options         Options (optional)
+    *
+    * @return String                 Html string to be displayed for the form field
     **/
    public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array())
    {
@@ -190,88 +186,48 @@ class PluginFormcreatorForm extends CommonDBTM
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
 
+   /**
+    * Define how to display a specific value in search result table
+    *
+    * @param  String $field   Name of the field as define in $this->getSearchOptions()
+    * @param  Mixed  $values  The value as it is stored in DB
+    * @param  Array  $options Options (optional)
+    * @return Mixed           Value to be displayed
+    */
+   public static function getSpecificValueToDisplay($field, $values, array $options=array())
+   {
+      if (!is_array($values)) {
+         $values = array($field => $values);
+      }
+      switch ($field) {
+         case 'is_active':
+            return ($values[$field] == 0) ? __('Inactive', 'formcreator') : __('Active', 'formcreator');
+            break;
+         case 'access_rights':
+            switch($values[$field]) {
+               case self::ACCESS_PUBLIC :
+                  return __('Public access', 'formcreator');
+                  break;
+               case self::ACCESS_PRIVATE :
+                  return __('Private access', 'formcreator');
+                  break;
+               case self::ACCESS_RESTRICTED :
+                  return __('Restricted access', 'formcreator');
+                  break;
+            }
+            return '';
+            break;
+      }
+      return parent::getSpecificValueToDisplay($field, $values, $options);
+   }
 
    /**
-    * Returns the type name with consideration of plural
+    * Show the Form edit form the the adminsitrator in the config page
     *
-    * @param number $nb Number of item(s)
-    * @return string Itemtype name
+    * @param  Array  $options Optional options
+    *
+    * @return NULL         Nothing, just display the form
     */
-   public static function getTypeName($nb = 0)
-   {
-      return _n('Form', 'Forms', $nb, 'formcreator');
-   }
-
-   public function showList()
-   {
-      global $DB;
-
-      echo '<div class="center">';
-
-      // Get entities we can access
-      $entities_table = getTableForItemType('Entity');
-      $where          = getEntitiesRestrictRequest( "", $entities_table, "", "", true, true);
-
-      // Show header for the current entity or it's first parent header
-      $table  = getTableForItemType('PluginFormcreatorHeader');
-      $query  = "SELECT $table.`comment`
-                 FROM $table, $entities_table
-                 WHERE $where
-                 ORDER BY $entities_table.`completename` DESC";
-      $result = $DB->query($query);
-      if(!empty($result)) {
-         list($description) = $DB->fetch_array($result);
-         echo '<table class="tab_cadre_fixe">';
-         echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
-         echo '</table>';
-         echo '<br />';
-      }
-
-      // Show categories
-      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
-      $form_table = getTableForItemType('PluginFormcreatorForm');
-      $query  = "SELECT $cat_table.`name`, $cat_table.`id`
-                 FROM $cat_table
-                 WHERE 0 < (
-                     SELECT COUNT($form_table.id)
-                     FROM $form_table
-                     LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
-                     WHERE $form_table.`formcreator_categories_id` = $cat_table.`id`
-                     AND $form_table.`is_active` = 1
-                     AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
-                  )
-                 ORDER BY $cat_table.`name` ASC";
-      $result = $DB->query($query);
-      if(!empty($result)) {
-         echo '<table class="tab_cadre_fixe">';
-         while($category = $DB->fetch_array($result)) {
-            echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
-
-            $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
-                            FROM $form_table
-                            LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
-                            WHERE $form_table.`formcreator_categories_id` = {$category['id']}
-                            AND $form_table.`is_active` = 1
-                            AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
-                            ORDER BY $form_table.name ASC";
-            $result_forms = $DB->query($query_forms);
-            while($form = $DB->fetch_array($result_forms)) {
-               echo '<tr>';
-               echo '<td><a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '">'
-                        . $form['name']
-                        . '</a></td>';
-               echo '<td>' . $form['description'] . '</td>';
-               echo '</tr>';
-            }
-
-         }
-         echo '</table>';
-      }
-
-      echo '</div>';
-   }
-
    public function showForm($options=array())
    {
       if(!empty($options['id'])) {
@@ -347,6 +303,14 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
 
+   /**
+    * Return the name of the tab for item including forms like the config page
+    *
+    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
+    * @param  integer    $withtemplate
+    *
+    * @return String                   Name to be displayed
+    */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
    {
       switch ($item->getType()) {
@@ -359,6 +323,17 @@ class PluginFormcreatorForm extends CommonDBTM
       return '';
    }
 
+   /**
+    * Display a list of all forms on the configuration page
+    *
+    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
+    * @param  integer    $tabnum       Number of the current tab
+    * @param  integer    $withtemplate
+    *
+    * @see CommonDBTM::displayTabContentForItem
+    *
+    * @return null                     Nothing, just display the list
+    */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
       $params = $_REQUEST;
@@ -368,6 +343,97 @@ class PluginFormcreatorForm extends CommonDBTM
       Search::showList(__CLASS__, $params);
    }
 
+
+   public function defineTabs($options=array())
+   {
+      $ong = array();
+      $this->addStandardTab(__CLASS__, $ong, $options);
+      $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
+      return $ong;
+   }
+
+   /**
+    * Show the list of forms to be displayed to the end-user
+    */
+   public function showList()
+   {
+      global $DB;
+
+      echo '<div class="center">';
+
+      // Get entities we can access
+      $entities_table = getTableForItemType('Entity');
+      $where          = getEntitiesRestrictRequest( "", $entities_table, "", "", true, true);
+
+      // Show header for the current entity or it's first parent header
+      $table  = getTableForItemType('PluginFormcreatorHeader');
+      $query  = "SELECT $table.`comment`
+                 FROM $table, $entities_table
+                 WHERE $where
+                 ORDER BY $entities_table.`completename` DESC";
+      $result = $DB->query($query);
+      if(!empty($result)) {
+         list($description) = $DB->fetch_array($result);
+         echo '<table class="tab_cadre_fixe">';
+         echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
+         echo '</table>';
+         echo '<br />';
+      }
+
+      // Show categories wicth have at least one form user can access
+      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $query  = "SELECT $cat_table.`name`, $cat_table.`id`
+                 FROM $cat_table
+                 WHERE 0 < (
+                     SELECT COUNT($form_table.id)
+                     FROM $form_table
+                     LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
+                     WHERE $form_table.`formcreator_categories_id` = $cat_table.`id`
+                     AND $form_table.`is_active` = 1
+                     AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
+                  )
+                 ORDER BY $cat_table.`name` ASC";
+      $result = $DB->query($query);
+      if(!empty($result)) {
+         echo '<table class="tab_cadre_fixe">';
+
+         // For each categories, show the list of forms the user can fill
+         while($category = $DB->fetch_array($result)) {
+            echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
+
+            $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+                            FROM $form_table
+                            LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
+                            WHERE $form_table.`formcreator_categories_id` = {$category['id']}
+                            AND $form_table.`is_active` = 1
+                            AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
+                            ORDER BY $form_table.name ASC";
+            $result_forms = $DB->query($query_forms);
+            while($form = $DB->fetch_array($result_forms)) {
+               echo '<tr>';
+               echo '<td><a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '">'
+                        . $form['name']
+                        . '</a></td>';
+               echo '<td>' . $form['description'] . '</td>';
+               echo '</tr>';
+            }
+
+         }
+         echo '</table>';
+      }
+
+      echo '</div>';
+   }
+
+   /**
+    * Display the Form end-user form to be filled
+    *
+    * @param  CommonGLPI   $item       Instance of the Form to be displayed
+    *
+    * @return Null                     Nothing, just display the form
+    */
    public function displayUserForm(CommonGLPI $item)
    {
 
