@@ -75,7 +75,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $section          = new PluginFormcreatorSection();
       $founded_sections = $section->find('plugin_formcreator_forms_id = ' . $item->getId(), '`order`');
       $section_number   = count($founded_sections);
-      $tab_sections      = array();
+      $tab_sections     = array();
+      $tab_questions    = array();
       foreach($founded_sections as $section) {
          $tab_sections[] = $section['id'];
          echo '<tr id="section_row_' . $section['id'] . '">';
@@ -120,10 +121,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $question          = new PluginFormcreatorQuestion();
          $founded_questions = $question->find('plugin_formcreator_sections_id = ' . $section['id'], '`order`');
          $question_number   = count($founded_questions);
+         $i = 0;
          foreach($founded_questions as $question) {
-            echo '<tr class="line1">';
-            echo '<td>';
-            echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/ui-text-field.png" alt="" title="" /> ';
+            $i++;
+            $tab_questions[] = $question['id'];
+            echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
+            echo '<td onclick="editQuestion(' . $question['id'] . ', ' . $section['id'] . ')" style="cursor: pointer">';
+            echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/ui-' . $question['fieldtype'] . '-field.png" alt="" title="" /> ';
             echo $question['name'];
             echo '</td>';
 
@@ -131,18 +135,18 @@ class PluginFormcreatorQuestion extends CommonDBChild
             if($question['required']) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/required.png"
                         alt="*" title="' . __('Required', 'formcreator') . '"
-                        onclick="setRequired(' . 0 . ', this)" align="absmiddle" style="cursor: pointer" /> ';
+                        onclick="setRequired(' . $question['id'] . ', 0)" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/not-required.png"
                         alt="*" title="' . __('Required', 'formcreator') . '"
-                        onclick="setRequired(' . 0 . ', this)" align="absmiddle" style="cursor: pointer" /> ';
+                        onclick="setRequired(' . $question['id'] . ', 1)" align="absmiddle" style="cursor: pointer" /> ';
             }
             echo '</td>';
             echo '<td align="center">';
             if($question['order'] != 1) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/up.png"
                         alt="*" title="' . __('Edit', 'formcreator') . '"
-                        onclick="editField(' . 0 . ', this)" align="absmiddle" style="cursor: pointer" /> ';
+                        onclick="moveQuestion(' . $question['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
             }
@@ -151,7 +155,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             if($question['order'] != $question_number) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/down.png"
                         alt="*" title="' . __('Edit', 'formcreator') . '"
-                        onclick="editField(' . 0 . ', this)" align="absmiddle" style="cursor: pointer" /> ';
+                        onclick="moveQuestion(' . $question['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
             }
@@ -159,17 +163,18 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/pencil.png"
                      alt="*" title="' . __('Edit', 'formcreator') . '"
-                     onclick="editField(' . 0 . ', this)" align="absmiddle" style="cursor: pointer" /> ';
+                     onclick="editQuestion(' . $question['id'] . ', ' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
             echo '<td align="center">';
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/delete.png"
                      alt="*" title="' . __('Delete', 'formcreator') . '"
-                     onclick="removeField(' . 0 . ', this)" align="absmiddle" style="cursor: pointer" /> ';
+                     onclick="deleteQuestion(' . $question['id'] . ', \'' . addslashes($question['name']) . '\')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
             echo '</tr>';
          }
 
-         echo '<tr class="line0">';
+
+         echo '<tr class="line' . (($i + 1) % 2) . '">';
          echo '<td colspan="6" id="add_question_td_' . $section['id'] . '" class="add_question_tds">';
          echo '<a href="javascript:addQuestion(' . $section['id'] . ');">
                    <img src="'.$GLOBALS['CFG_GLPI']['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
@@ -190,32 +195,95 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo "</table>";
 
-      $js_tab_values = "";
+      $js_tab_sections  = "";
+      $js_tab_questions = "";
+      $js_line_questions = "";
       foreach($tab_sections as $key) {
-         $js_tab_values .= "tab_sections[$key] = document.getElementById('section_row_$key').innerHTML;".PHP_EOL;
+         $js_tab_sections  .= "tab_sections[$key] = document.getElementById('section_row_$key').innerHTML;".PHP_EOL;
+         $js_tab_questions .= "tab_questions[$key] = document.getElementById('add_question_td_$key').innerHTML;".PHP_EOL;
+      }
+      foreach($tab_questions as $key) {
+         $js_line_questions .= "line_questions[$key] = document.getElementById('question_row_$key').innerHTML;".PHP_EOL;
       }
 
       echo '<script type="text/javascript">
-               var add_section_link = document.getElementById("add_section_th").innerHTML;
-
-               var tab_sections = [];
-               ' . $js_tab_values . '
+               // === QUESTIONS ===
+               var tab_questions = [];
+               ' . $js_tab_questions . '
+               var line_questions = [];
+               ' . $js_line_questions . '
 
                function addQuestion(section) {
+                  resetAll();
                   Ext.get("add_question_td_" + section).load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php",
-                     scripts: false,
+                     scripts: true,
                      params: "section_id=" + section + "&form_id=" + ' . $item->getId() . '
                   });
                }
 
-               function editQuestion(question) {
+               function editQuestion(question, section) {
+                  resetAll();
+                  document.getElementById("question_row_" + question).innerHTML = "<td colspan=\"6\"></td>";
+                  Ext.get("question_row_" + question + "").child("td").load({
+                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php",
+                     scripts: true,
+                     params: "question_id=" + question + "&section_id=" + section + "&form_id=' . $item->getId() . '"
+                  });
                }
 
+               function setRequired(question_id, value) {
+                  Ext.Ajax.request({
+                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
+                     success: reloadTab,
+                     params: {
+                        set_required: 1,
+                        id: question_id,
+                        value: value,
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     }
+                  });
+               }
+
+               function moveQuestion(question_id, way) {
+                  Ext.Ajax.request({
+                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
+                     success: reloadTab,
+                     params: {
+                        move: 1,
+                        id: question_id,
+                        way: way,
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     }
+                  });
+               }
+
+               function deleteQuestion(question_id, question_name) {
+                  if(confirm("' . __('Are you sure you want to delete this question:', 'formcreator') . ' " + question_name)) {
+                     Ext.Ajax.request({
+                        url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
+                        success: reloadTab,
+                        params: {
+                           delete: 1,
+                           id: question_id,
+                           plugin_formcreator_forms_id: ' . $item->getId() . ',
+                           _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                        }
+                     });
+                  }
+               }
+
+               // === SECTIONS ===
+               var add_section_link = document.getElementById("add_section_th").innerHTML;
+
+               var tab_sections = [];
+               ' . $js_tab_sections . '
+
                function addSection() {
+                  resetAll();
                   Ext.get("add_section_th").load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                     scripts: false,
+                     scripts: true,
                      params: "form_id=' . $item->getId() . '"
                   });
                }
@@ -225,7 +293,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   document.getElementById("section_row_" + section).innerHTML = "<th colspan=\"6\"></th>";
                   Ext.get("section_row_" + section + "").child("th").load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                     scripts: false,
+                     scripts: true,
                      params: "section_id=" + section + "&form_id=' . $item->getId() . '"
                   });
                }
@@ -261,13 +329,135 @@ class PluginFormcreatorQuestion extends CommonDBChild
                function resetAll() {
                   document.getElementById("add_section_th").innerHTML = add_section_link;
                   for(section_id in tab_sections) {
-                     if(parseInt(section_id))
+                     if(parseInt(section_id)) {
                         document.getElementById("section_row_" + section_id).innerHTML = tab_sections[section_id];
+                        document.getElementById("add_question_td_" + section_id).innerHTML = tab_questions[section_id];
+                     }
+                  }
+                  for(question_id in line_questions) {
+                     if(parseInt(question_id)) {
+                        document.getElementById("question_row_" + question_id).innerHTML = line_questions[question_id];
+                     }
                   }
                }
 
             </script>';
 
+   }
+
+   /**
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForAdd($input)
+   {
+      global $DB;
+
+      // Control fields values :
+      // - name is required
+      if(empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+      // - field type is required
+      if(empty($input['fieldtype'])) {
+         Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+      // - section is required
+      if(empty($input['plugin_formcreator_sections_id'])) {
+         Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+
+      // Get next order
+      $obj = new self();
+      $query = "SELECT MAX(`order`) AS `order`
+                FROM `{$obj->getTable()}`
+                WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+      $result = $DB->query($query);
+      $line = $DB->fetch_array($result);
+      $input['order'] = $line['order'] + 1;
+
+      return $input;
+   }
+
+   /**
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForUpdate($input)
+   {
+      global $DB;
+
+      // Control fields values :
+      // - name is required
+      if(empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+      // - field type is required
+      if(empty($input['fieldtype'])) {
+         Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+      // - section is required
+      if(empty($input['plugin_formcreator_sections_id'])) {
+         Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+
+      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+      if($input['fieldtype'] == 'dropdown') {
+         $input['default_values'] = $input['dropdown_default_value'];
+         $input['values']         = $input['dropdown_values'];
+      }
+
+      // If change section, reorder questions
+      if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
+         // Reorder other questions from the old section
+         $query = "UPDATE `{$this->getTable()}` SET
+             `order` = `order` - 1
+             WHERE `order` > {$this->fields['order']}
+             AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
+         $DB->query($query);
+
+         // Get the order for the new section
+         $obj = new self();
+         $query = "SELECT MAX(`order`) AS `order`
+                   FROM `{$obj->getTable()}`
+                   WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+         $result = $DB->query($query);
+         $line = $DB->fetch_array($result);
+         $input['order'] = $line['order'] + 1;
+      }
+
+      return $input;
+   }
+
+   /**
+    * Actions done after the PURGE of the item in the database
+    * Reorder other questions
+    *
+    * @return nothing
+   **/
+   public function post_purgeItem()
+   {
+      global $DB;
+
+      $query = "UPDATE `{$this->getTable()}` SET
+                `order` = `order` - 1
+                WHERE `order` > {$this->fields['order']}
+                AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
+      $DB->query($query);
    }
 
    /**
@@ -290,21 +480,25 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                      `plugin_formcreator_sections_id` tinyint(1) NOT NULL,
-                     `plugin_formcreator_fieldtypes_id` tinyint(1) NOT NULL DEFAULT '0',
+                     `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                     `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
+                     `show_field` int(11) NULL DEFAULT NULL,
+                     `show_condition` enum('equal', 'notequal', 'lower', 'greater') NULL DEFAULT NULL,
+                     `show_value` varchar(255) NULL DEFAULT NULL,
                      `required` boolean NOT NULL DEFAULT FALSE,
-                     `displayed` tinyint(1) NOT NULL DEFAULT '0',
-                     `plugin_formcreator_questions_id` int(11) NOT NULL,
-                     `value_to_displayed` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `save_to_target` boolean NOT NULL DEFAULT FALSE,
-                     `target_itemtype` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `target_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                     `show_empty` boolean NOT NULL DEFAULT FALSE,
+                     `default_values` text NULL DEFAULT NULL,
+                     `values` text NULL DEFAULT NULL,
+                     `range_min` varchar(10) NULL DEFAULT NULL,
+                     `range_max` varchar(10) NULL DEFAULT NULL,
+                     `description` text NOT NULL DEFAULT '',
+                     `regex` varchar(255) NULL DEFAULT NULL,
                      `order` int(11) NOT NULL DEFAULT '0'
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
-                  COLLATE = utf8_unicode_ci;";
+                  COLLATE = utf8_unicode_ci";
          $DB->query($query) or die ($DB->error());
       }
 

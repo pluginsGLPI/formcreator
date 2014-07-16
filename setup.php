@@ -58,9 +58,8 @@ function plugin_init_formcreator () {
 
    if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
       $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk.js';
-   } elseif (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/form.php") !== false) {
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
    }
+   $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
 
    // Set the plugin CSRF compliance (required in GLPI 0.84)
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
@@ -84,4 +83,7 @@ function plugin_init_formcreator () {
                                   'config'   => '/plugins/formcreator/front/config.form.php',
                                   'add'      => '/plugins/formcreator/front/form.form.php')),
    );
+
+   // Load field class and all its method to manage fields
+   Plugin::registerClass('PluginFormcreatorFields');
 }

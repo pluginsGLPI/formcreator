@@ -374,10 +374,12 @@ class PluginFormcreatorForm extends CommonDBTM
       $result = $DB->query($query);
       if(!empty($result)) {
          list($description) = $DB->fetch_array($result);
-         echo '<table class="tab_cadre_fixe">';
-         echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
-         echo '</table>';
-         echo '<br />';
+         if(!empty($description)) {
+            echo '<table class="tab_cadre_fixe">';
+            echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
+            echo '</table>';
+            echo '<br />';
+         }
       }
 
       // Show categories wicth have at least one form user can access

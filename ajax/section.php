@@ -13,18 +13,23 @@ if(empty($_REQUEST['section_id'])) {
    $name          = $section->fields['name'];
 }
 
-echo '<form name="form_section" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php">';
+echo '<form name="form_section" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php" onsubmit="return validateForm(this);">';
 echo '<table class="tab_cadre_fixe">';
-echo '<tr><th colspan="2">';
+echo '<tr>';
+echo '<th colspan="2">';
 if(0 == $section_id) {
    echo  __('Add a section', 'formcreator');
 } else {
    echo  __('Edit a section', 'formcreator');
 }
-echo '</th></tr>';
+echo '</th>';
+echo '</tr>';
+
 echo '<tr class="line0">';
 echo '<td width="20%">' . __('Title', 'formcreator') . ' <span style="color:red;">*</span></td>';
-echo '<td width="70%"><input type="text" name="name" style="width:100%;" value="' . $name . '"></td>';
+echo '<td width="70%"><input type="text" name="name" style="width:100%;" value="' . $name . '" class="required"></td>';
+echo '</tr>';
+
 echo '<tr class="line1">';
 echo '<td colspan="2" class="center">';
 echo '<input type="hidden" name="id" value="' . $section_id . '" />';
@@ -38,5 +43,6 @@ if(0 == $section_id) {
 }
 echo '</td>';
 echo '</tr>';
+
 echo '</table>';
 Html::closeForm();

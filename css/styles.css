@@ -56,6 +56,12 @@ input.submit_button[disabled] {
    filter: none;
    ms-filter: none;
 }
+select {
+   vertical-align: bottom;
+}
+.small_text {
+   width: 40px;
+}
 
 #status_line .status_step {
    display: block;

@@ -88,7 +88,7 @@ class PluginFormcreatorSection extends CommonDBChild
 
    /**
     * Prepare input datas for adding the section
-    * Get the order for the new section
+    * Check fields values and get the order for the new section
     *
     * @param $input datas used to add the item
     *
@@ -97,6 +97,13 @@ class PluginFormcreatorSection extends CommonDBChild
    public function prepareInputForAdd($input)
    {
       global $DB;
+
+      // Control fields values :
+      // - name is required
+      if(empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
+         return array();
+      }
 
       // Get next order
       $obj = new self();
