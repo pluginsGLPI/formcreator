@@ -16,8 +16,8 @@ class dropdownField implements Field
       echo '</label>';
       if(!empty($field['values'])) {
          Dropdown::show($field['values'], array(
-            'name'  => 'formcreator_field_' . $field['id'],
-            'value' => $field['default_values'],
+            'name'     => 'formcreator_field_' . $field['id'],
+            'value'    => $field['default_values'],
             'comments' => false
          ));
       }

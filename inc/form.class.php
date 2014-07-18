@@ -1,5 +1,4 @@
 <?php
-
 class PluginFormcreatorForm extends CommonDBTM
 {
    public $dohistory       = true;
@@ -230,7 +229,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function showForm($options=array())
    {
-      if(!empty($options['id'])) {
+      if (!empty($options['id'])) {
          $id = $options['id'];
          $this->canView();
       } else {
@@ -386,9 +385,9 @@ class PluginFormcreatorForm extends CommonDBTM
                  WHERE $where
                  ORDER BY $entities_table.`completename` DESC";
       $result = $DB->query($query);
-      if(!empty($result)) {
+      if (!empty($result)) {
          list($description) = $DB->fetch_array($result);
-         if(!empty($description)) {
+         if (!empty($description)) {
             echo '<table class="tab_cadre_fixe">';
             echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
             echo '</table>';
@@ -411,7 +410,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   )
                  ORDER BY $cat_table.`name` ASC";
       $result = $DB->query($query);
-      if(!empty($result)) {
+      if (!empty($result)) {
          echo '<table class="tab_cadre_fixe">';
 
          // For each categories, show the list of forms the user can fill
@@ -459,7 +458,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<h1 class="form-title">' . $item->fields['name'] . '</h1>';
 
       // Form Header
-      if(!empty($item->fields['content'])) {
+      if (!empty($item->fields['content'])) {
          echo '<div class="form_header">';
          echo html_entity_decode($item->fields['content']);
          echo '</div>';
@@ -500,7 +499,7 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       global $DB;
 
-      $obj = new self();
+      $obj   = new self();
       $table = $obj->getTable();
 
       if (!TableExists($table)) {
@@ -509,7 +508,7 @@ class PluginFormcreatorForm extends CommonDBTM
          // Create default request type
          $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
          $result = $DB->query($query) or die ($DB->error());
-         if( !empty($result)) {
+         if ( !empty($result)) {
             list($requesttype) = $DB->fetch_array($result);
          } else {
             $query = "INSERT IGNORE INTO `glpi_requesttypes` SET `name` = 'Formcreator';";

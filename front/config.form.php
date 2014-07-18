@@ -1,5 +1,4 @@
 <?php
-
 include ('../../../inc/includes.php');
 
 if(isset($_SESSION['is_popup'])) unset($_SESSION['is_popup']);
@@ -32,6 +31,6 @@ if ($plugin->isActivated("formcreator")) {
    }
 
 // Or display a "Not found" error
-}else{
+} else {
    Html::displayNotFoundError();
 }

@@ -1,30 +1,29 @@
 <?php
-
 class PluginFormcreatorHeader extends CommonDropdown
 {
-   static function getTypeName($nb=1) {
+   public static function getTypeName($nb=1) {
       return _n('Header', 'Headers', $nb, 'formcreator');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+   {
       switch ($item->getType()) {
          case "PluginFormcreatorConfig":
-            $env = new self;
+            $env       = new self;
             $found_env = $env->find();
-            $nb = count($found_env);
+            $nb        = count($found_env);
             return self::createTabEntry(self::getTypeName($nb), $nb);
       }
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-      global $CFG_GLPI;
-
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+   {
       echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
          <h3 class="tab_bg_2" style="padding: 5px">
-           <a href="' . Toolbox::getItemTypeFormURL(__CLASS__). '" class="submit">
-                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
-                '.__('Add an header', 'formcreator').'
+           <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) .  '" class="submit">
+                <img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
+                ' . __('Add an header', 'formcreator') . '
             </a>
          </h3>
       </div>';
@@ -38,13 +37,12 @@ class PluginFormcreatorHeader extends CommonDropdown
       Search::showList(__CLASS__, $params);
    }
 
-   function showForm($ID, $options = array()) {
-      global $CFG_GLPI;
-
+   public function showForm($ID, $options = array())
+   {
       if (!$this->isNewID($ID)) {
-         $this->check($ID,'r');
+         $this->check($ID, 'r');
       } else {
-         $this->check(-1,'w');
+         $this->check(-1, 'w');
       }
       $options['colspan'] = 2;
       $options['target']  = Toolbox::getItemTypeFormURL(__CLASS__);
@@ -74,9 +72,8 @@ class PluginFormcreatorHeader extends CommonDropdown
       return true;
    }
 
-   static function install(Migration $migration) {
-      global $DB;
-
+   public static function install(Migration $migration)
+   {
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -88,16 +85,15 @@ class PluginFormcreatorHeader extends CommonDropdown
                      PRIMARY KEY (`id`),
                      KEY `name` (`name`)
                      ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       }
 
       return true;
       }
 
-   static function uninstall() {
-      global $DB;
-
-      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+   public static function uninstall()
+   {
+      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
+      return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
    }
 }

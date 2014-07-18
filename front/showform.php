@@ -1,5 +1,4 @@
 <?php
-
 include ("../../../inc/includes.php");
 
 if(!isset($_SESSION['glpiID'])) {
@@ -9,7 +8,8 @@ if(!isset($_SESSION['glpiID'])) {
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if ($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
+
+if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
    $form = new PluginFormcreatorForm();
    if($form->getFromDB((int) $_REQUEST['id'])) {
       Html::header(
@@ -28,6 +28,6 @@ if ($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric(
    }
 
 // Or display a "Not found" error
-}else{
+} else {
    Html::displayNotFoundError();
 }

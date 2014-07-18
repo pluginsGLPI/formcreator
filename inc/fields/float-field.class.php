@@ -4,7 +4,8 @@ require_once('field.interface.php');
 
 class floatField implements Field
 {
-   public static function show($field) {
+   public static function show($field)
+   {
       if($field['required'])  $required = ' required';
       else $required = '';
 

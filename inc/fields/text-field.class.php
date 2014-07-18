@@ -30,12 +30,12 @@ class textField implements Field
          return false;
 
       // Min range not set or text length longer than min length
-      }elseif(!is_null($field['range_min']) && strlen($input['formcreator_field_' . $field['id']] < $field['range_min'])) {
+      } elseif(!is_null($field['range_min']) && strlen($input['formcreator_field_' . $field['id']] < $field['range_min'])) {
          Session::addMessageAfterRedirect(__('The text is too short:', 'formcreator') . ' ' . $field['name']);
          return false;
 
       // Max range not set or text length shorter than max length
-      }elseif(!is_null($field['range_max']) && strlen($input['formcreator_field_' . $field['id']] > $field['range_max'])) {
+      } elseif(!is_null($field['range_max']) && strlen($input['formcreator_field_' . $field['id']] > $field['range_max'])) {
          Session::addMessageAfterRedirect(__('The text is too long:', 'formcreator') . ' ' . $field['name']);
          return false;
 

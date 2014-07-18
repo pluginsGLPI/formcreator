@@ -1,5 +1,4 @@
 <?php
-
 class PluginFormcreatorFields
 {
    /**
@@ -7,7 +6,8 @@ class PluginFormcreatorFields
     *
     * @return Array     field_type => File_path
     */
-   public static function getTypes() {
+   public static function getTypes()
+   {
       $tab_field_types     = array();
 
       foreach(glob(dirname(__FILE__) . '/fields/*-field.class.php') as $class_file) {
@@ -29,7 +29,8 @@ class PluginFormcreatorFields
     *
     * @return Array     field_type => Name
     */
-   public static function getNames() {
+   public static function getNames()
+   {
       // Get field types and file path
       $tab_field_types = self::getTypes();
 

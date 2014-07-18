@@ -66,6 +66,6 @@ if ($plugin->isActivated("formcreator")) {
    }
 
 // Or display a "Not found" error
-}else{
+} else {
    Html::displayNotFoundError();
 }
