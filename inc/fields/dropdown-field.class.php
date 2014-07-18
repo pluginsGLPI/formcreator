@@ -1,24 +1,32 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class dropdownField extends Field
+class dropdownField implements Field
 {
-   public function show()
+   public static function show($field)
    {
-      echo '<div class="dropdown_field" id="dropdown_field_' . $this->_id . '">';
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
+      if(!empty($field['values'])) {
+         Dropdown::show($field['values'], array(
+            'name'  => 'formcreator_field_' . $field['id'],
+            'value' => $field['default_values'],
+            'comments' => false
+         ));
+      }
       echo '</div>';
    }
 
-   public function isValid()
+   public static function isValid($field, $input)
    {
       return true;
-   }
-
-   public function getPost()
-   {
-      return '';
    }
 
    public static function getName()

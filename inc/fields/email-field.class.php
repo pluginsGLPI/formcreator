@@ -1,52 +1,31 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class emailField extends Field
+class emailField implements Field
 {
-	public function show() {
-		echo '<dl>'.PHP_EOL;
-		echo "\t".'<dt>'.PHP_EOL;
-		echo "\t\t".'<label for="emailField'.$this->_id.'"';
-		if($this->_required === true) echo ' class="required"';
-		echo '>';
-		echo $this->_label;
-		if($this->_required === true) echo ' <span class="asterisk">*</span>';
-		else echo ' &nbsp;&nbsp;';
-		echo '</label>'.PHP_EOL;
-		echo "\t".'</dt>'.PHP_EOL;
-		echo "\t".'<dd>'.PHP_EOL;
+   public static function show($field)
+   {
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
-		if(isset($_POST['emailField'.$this->_id])) $value = $_POST['emailField'.$this->_id];
-		else $value = $this->_value[0];
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
 
-		echo "\t\t".'<input type="text" name="emailField'.$this->_id.'" id="emailField'.$this->_id.'" value="'.$value.'" maxlength="255" />';
-		echo "\t".'</dd>'.PHP_EOL;
-		echo '</dl>'.PHP_EOL;
-	}
+      echo '<input type="email" class="form-control"
+               name="formcreator_field_' . $field['id'] . '"
+               id="formcreator_field_' . $field['id'] . '"
+               value="' . $field['id'] . '" />';
+      echo '</div>' . PHP_EOL;
+   }
 
-	public function isValid() {
-		$regExp = '#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#';
-		if(($this->_required !== true) || !empty($_POST['emailField'.$this->_id])) {
-			if(preg_match($regExp, $_POST['emailField'.$this->_id])) {
-  				list($username, $domaine) = explode('@', $_POST['emailField'.$this->_id]);
-				if(function_exists('checkdnsrr') && (!checkdnsrr($domaine, "MX"))) {
-					$this->_addError('<label for="emailField'.$this->_id.'">' . TXT_ERR_BAD_EMAIL_DOMAIN . '</label>');
-					return false;
-				}else return true;
-			}else{
-				$this->_addError('<label for="emailField'.$this->_id.'">' . TXT_ERR_BAD_EMAIL_FORMAT . '</label>');
-				return false;
-			}
-		}else{
-			$this->_addError('<label for="emailField'.$this->_id.'">' . TXT_ERR_EMPTY_EMAIL . '</label>');
-			return false;
-		}
-	}
-
-	public function getPost() {
-		return '<a href="mailto:'.trim(strip_tags($_POST['emailField'.$this->_id])).'">'.trim(strip_tags($_POST['emailField'.$this->_id])).'</a>';
-	}
+   public static function isValid($field, $input)
+   {
+      return true;
+   }
 
    public static function getName()
    {

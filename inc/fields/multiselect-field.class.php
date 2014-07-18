@@ -1,56 +1,46 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class multiSelectField extends Field
+class multiSelectField implements Field
 {
-	public function show() {
-		echo '<dl>'.PHP_EOL;
-		echo "\t".'<dt>'.PHP_EOL;
-		echo "\t\t".'<label for="multiSelectField'.$this->_id.'"';
-		if($this->_required === true) echo ' class="required"';
-		echo '>';
-		echo $this->_label;
-		if($this->_required === true) echo ' <span class="asterisk">*</span>';
-		else echo ' &nbsp;&nbsp;';
-		echo '</label>'.PHP_EOL;
-		echo "\t".'</dt>'.PHP_EOL;
-		echo "\t".'<dd>'.PHP_EOL;
-		echo "\t\t".'<select name="multiSelectField'.$this->_id.'[]" id="multiSelectField'.$this->_id.'" multiple="multiple" size="4">'.PHP_EOL;
-		foreach($this->_value as $value) {
-			$value = trim(str_replace('"', "'", $value));
-			echo "\t\t\t".'<option value="'.$value.'"';
-			if(isset($_post['multiselectfield'.$this->_id]) && (in_array($value, $_POST['multiSelectField'.$this->_id])))
-				echo ' selected="selected"';
-			echo '>'.$value.'</option>'.PHP_EOL;
-		}
-		echo "\t\t".'</select>'.PHP_EOL;
-		echo "\t".'</dd>'.PHP_EOL;
-		echo '</dl>'.PHP_EOL;
-	}
+   public static function show($field)
+   {
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
-	public function isValid() {
-		if(($this->_required !== true) || !empty($_POST['multiSelectField'.$this->_id])) {
-			foreach($_POST['multiSelectField'.$this->_id] as $value) {
-				if(!in_array($value, $this->_value)) {
-					$this->_addError('<label for="multiSelectField'.$this->_id.'">' . TXT_ERR_FORBIDEN_MULTISELECT_VALUE . '<span style="color:#000">'.$this->_label.'</span></label>');
-					return false;
-				}
-			}
-			return true;
-		}else{
-			$this->_addError('<label for="multiSelectField'.$this->_id.'">' . TXT_ERR_EMPTY_MULTISELECT . '<span style="color:#000">'.$this->_label.'</span></label>');
-			return false;
-		}
-	}
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
 
-	public function getPost() {
-		$values = '<br />';
-		foreach($_POST['multiSelectField'.$this->_id] as $value) {
-			$values .= trim(strip_tags($value)).'<br />'.PHP_EOL;
-		}
-		return $values;
-	}
+      if(!empty($field['values'])) {
+         $values         = explode("\r\n", $field['values']);
+         $tab_values     = array();
+         foreach($values as $value) {
+            $tab_values[$value] = $value;
+         }
+         $default_values = explode("\r\n", $field['default_values']);
+
+         if($field['show_empty'])
+            array_unshift($values, array('' => '---'));
+
+         Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values, array(
+            'values'   => $default_values,
+            'multiple' => true,
+            'size'     => 5,
+         ));
+
+      }
+
+      echo '</div>' . PHP_EOL;
+   }
+
+   public static function isValid($field, $input)
+   {
+      return true;
+   }
 
    public static function getName()
    {

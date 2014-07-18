@@ -1,64 +1,50 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class radioField extends Field
+class radiosField implements Field
 {
-	protected $_disposition = 'V';
+   public static function show($field)
+   {
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
-	public function setVertical() {
-		$this->_disposition = 'V';
-	}
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
 
-	public function setHorizontal() {
-		$this->_disposition = 'H';
-	}
+      if(!empty($field['values'])) {
+         $values         = explode("\r\n", $field['values']);
+         $default_values = explode("\r\n", $field['default_values']);
+         $default_value  = array_shift($default_values);
 
-	public function show() {
-		echo '<dl>'.PHP_EOL;
-		echo "\t".'<dt>'.PHP_EOL;
-		echo "\t\t".'<label for="radioField'.$this->_id.'_1"';
-		if($this->_required === true) echo ' class="required"';
-		echo '>';
-		echo $this->_label;
-		if($this->_required === true) echo ' <span class="asterisk">*</span>';
-		else echo ' &nbsp;&nbsp;';
-		echo '</label>'.PHP_EOL;
-		echo "\t".'</dt>'.PHP_EOL;
-		echo "\t".'<dd>'.PHP_EOL;
-		$i=0;
-		foreach($this->_value as $value) {
-			$i++;
-			$value = trim(str_replace('"', "'", $value));
-			echo "\t\t".'<label class="radio'.$this->_disposition.'">';
-			echo '<input type="radio" name="radioField'.$this->_id.'" id="radioField'.$this->_id.'_'.$i.'" value="'.$value.'"';
-			if(isset($_post['radiofield'.$this->_id]) && ($_POST['radioField'.$this->_id] == $value))
-				echo ' checked="checked"';
-			echo ' /> ';
-			echo $value;
-			echo '</label>'.PHP_EOL;
-		}
-		echo "\t".'</dd>'.PHP_EOL;
-		echo '</dl>'.PHP_EOL;
-	}
+         echo '<div class="checkbox">';
+         $i = 0;
+         foreach($values as $value) {
+            $i++;
+            $checked = ($value == $default_value) ? ' checked' : '';
+            echo '<input type="radio" class="form-control"
+                  name="formcreator_field_' . $field['id'] . '"
+                  id="formcreator_field_' . $field['id'] . '_' . $i . '"
+                  value="' . addslashes($value) . '"
+                  ' . $checked . ' /> ';
+            echo '<label for="formcreator_field_' . $field['id'] . '_' . $i . '">';
+            echo $value;
+            echo '</label>';
+            if($i != count($values)) echo '<br />';
+         }
+         echo '</div>';
+      }
 
-	public function isValid() {
-		if(($this->_required !== true) || !empty($_POST['radioField'.$this->_id])) {
-			if(in_array($_POST['radioField'.$this->_id], $this->_value)) {
-				return true;
-			}else{
-				$this->_addError('<label for="radioField'.$this->_id.'">' . TXT_ERR_FORBIDEN_RADIO_VALUE . '<span style="color:#000">'.$this->_label.'</span></label>');
-				return false;
-			}
-		}else{
-			$this->_addError('<label for="radioField'.$this->_id.'">' . TXT_ERR_EMPTY_RADIO . '<span style="color:#000">'.$this->_label.'</span></label>');
-			return false;
-		}
-	}
+      echo '</div>' . PHP_EOL;
+   }
 
-	public function getPost() {
-		return trim(strip_tags($_POST['radioField'.$this->_id]));
-	}
+   public static function isValid($field, $input)
+   {
+      return true;
+   }
 
    public static function getName()
    {

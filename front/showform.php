@@ -2,6 +2,11 @@
 
 include ("../../../inc/includes.php");
 
+if(!isset($_SESSION['glpiID'])) {
+   $_SESSION['glpiID'] = 2;
+   $_SESSION['glpi_active_profile'] = 2;
+}
+
 // Check if plugin is activated...
 $plugin = new Plugin();
 if ($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {

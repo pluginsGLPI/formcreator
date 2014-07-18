@@ -1,24 +1,19 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class descriptionField extends Field
+class descriptionField implements Field
 {
-   public function show()
+   public static function show($field)
    {
-      echo '<div class="description_field" id="description-field">';
-      echo $this->_value;
+      echo '<div class="description_field form-group" id="description-field">';
+      echo html_entity_decode($field['description']);
       echo '</div>';
    }
 
-   public function isValid()
+   public static function isValid($field, $input)
    {
       return true;
-   }
-
-   public function getPost()
-   {
-      return '';
    }
 
    public static function getName()

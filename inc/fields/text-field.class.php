@@ -1,41 +1,53 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class textField extends Field
+class textField implements Field
 {
-	public function show() {
-		echo '<dl>'.PHP_EOL;
-		echo "\t".'<dt>'.PHP_EOL;
-		echo "\t\t".'<label for="textField'.$this->_id.'"';
-		if($this->_required === true) echo ' class="required"';
-		echo '>';
-		echo $this->_label;
-		if($this->_required === true) echo ' <span class="asterisk">*</span>';
-		else echo ' &nbsp;&nbsp;';
-		echo '</label>'.PHP_EOL;
-		echo "\t".'</dt>'.PHP_EOL;
-		echo "\t".'<dd>'.PHP_EOL;
+	public static function show($field)
+   {
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
-		if(isset($_POST['textField'.$this->_id])) $value = $_POST['textField'.$this->_id];
-		else $value = $this->_value[0];
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
 
-		echo "\t\t".'<input type="text" name="textField'.$this->_id.'" id="textField'.$this->_id.'" value="'.$value.'" maxlength="255" />';
-		echo "\t".'</dd>'.PHP_EOL;
-		echo '</dl>'.PHP_EOL;
+      echo '<input type="text" class="form-control"
+               name="formcreator_field_' . $field['id'] . '"
+               id="formcreator_field_' . $field['id'] . '"
+               value="' . $field['id'] . '" />';
+      echo '</div>' . PHP_EOL;
 	}
 
-	public function isValid() {
-		if(($this->_required !== true) || !empty($_POST['textField'.$this->_id]))
+	public static function isValid($field, $input)
+   {
+      // Not required or not empty
+      if($field['required'] && empty($input['formcreator_field_' . $field['id']])) {
+         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name']);
+         return false;
+
+      // Min range not set or text length longer than min length
+      }elseif(!is_null($field['range_min']) && strlen($input['formcreator_field_' . $field['id']] < $field['range_min'])) {
+         Session::addMessageAfterRedirect(__('The text is too short:', 'formcreator') . ' ' . $field['name']);
+         return false;
+
+      // Max range not set or text length shorter than max length
+      }elseif(!is_null($field['range_max']) && strlen($input['formcreator_field_' . $field['id']] > $field['range_max'])) {
+         Session::addMessageAfterRedirect(__('The text is too long:', 'formcreator') . ' ' . $field['name']);
+         return false;
+
+      // Specific format not set or well match
+      } elseif(!is_null($field['regex']) && !preg_match($field['regex'], $input['formcreator_field_' . $field['id']])) {
+         Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name']);
+         return false;
+
+      // All is OK
+		} else {
 			return true;
-		else{
-			$this->_addError('<label for="textField'.$this->_id.'">' . TXT_ERR_EMPTY_TEXT . '<span style="color:#000">'.$this->_label.'</span></label>');
-			return false;
 		}
-	}
-
-	public function getPost() {
-		return trim(strip_tags($_POST['textField'.$this->_id]));
 	}
 
    public static function getName()

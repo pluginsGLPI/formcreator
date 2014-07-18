@@ -1,38 +1,30 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class fileField extends Field
+class fileField implements Field
 {
-	public function show() {
-		echo '<dl>'.PHP_EOL;
-		echo "\t".'<dt>'.PHP_EOL;
-		echo "\t\t".'<label for="fileField'.$this->_id.'"';
-		if($this->_required === true) echo ' class="required"';
-		echo '>';
-		echo $this->_label;
-		if($this->_required === true) echo ' <span class="asterisk">*</span>';
-		echo '</label>'.PHP_EOL;
-		echo "\t".'</dt>'.PHP_EOL;
-		echo "\t".'<dd>'.PHP_EOL;
-		echo "\t\t".'<input type="file" name="fileField'.$this->_id.'" id="fileField'.$this->_id.'" />';
-		echo "\t".'</dd>'.PHP_EOL;
-		echo '</dl>'.PHP_EOL;
-	}
+   public static function show($field)
+   {
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
-	public function isValid() {
-		if(($this->_required !== true) || is_file($_FILES['fileField'.$this->_id]['tmp_name']))
-			return true;
-		else{
-			$this->_addError('<label for="fileField'.$this->_id.'">' . TXT_ERR_EMPTY_FILE . '<span style="color:#000">'.$this->_label.'</span></label>');
-			return false;
-		}
-	}
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
 
-	public function getPost() {
-		move_uploaded_file($_FILES['fileField'.$this->_id]['tmp_name'], FILE_PATH.'/'.$_FILES['fileField'.$this->_id]['name']);
-		return $_FILES['fileField'.$this->_id]['name'];
-	}
+      echo '<input type="file" class="form-control"
+               name="formcreator_field_' . $field['id'] . '"
+               id="formcreator_field_' . $field['id'] . '" />';
+      echo '</div>' . PHP_EOL;
+   }
+
+   public static function isValid($field, $input)
+   {
+      return true;
+   }
 
    public static function getName()
    {

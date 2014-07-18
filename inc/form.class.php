@@ -319,6 +319,10 @@ class PluginFormcreatorForm extends CommonDBTM
             $founded = $object->find();
             $number  = count($founded);
             return self::createTabEntry(self::getTypeName($number), $number);
+            break;
+         case "PluginFormcreatorForm":
+            return __('Preview', 'formcreator');
+            break;
       }
       return '';
    }
@@ -336,19 +340,28 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
-      $params = $_REQUEST;
-      $params += self::getDefaultSearchRequest();
-      Search::manageGetValues(__CLASS__);
-      Search::showGenericSearch(__CLASS__, $params);
-      Search::showList(__CLASS__, $params);
+      switch ($item->getType()) {
+         case "PluginFormcreatorConfig":
+            $params = $_REQUEST;
+            $params += self::getDefaultSearchRequest();
+            Search::manageGetValues(__CLASS__);
+            Search::showGenericSearch(__CLASS__, $params);
+            Search::showList(__CLASS__, $params);
+            break;
+         case "PluginFormcreatorForm":
+            echo '<div style="text-align: left">';
+            $item->displayUserForm($item);
+            echo '</div>';
+            break;
+      }
    }
 
 
    public function defineTabs($options=array())
    {
       $ong = array();
-      $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
+      $this->addStandardTab(__CLASS__, $ong, $options);
       return $ong;
    }
 
@@ -412,8 +425,11 @@ class PluginFormcreatorForm extends CommonDBTM
                             AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
                             ORDER BY $form_table.name ASC";
             $result_forms = $DB->query($query_forms);
+            $i = 0;
             while($form = $DB->fetch_array($result_forms)) {
-               echo '<tr>';
+               $i++;
+               echo '<tr class="line' . ($i % 2) . '" onclick="document.location = \'' . $GLOBALS['CFG_GLPI']['root_doc']
+                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '\'" style="cursor:pointer">';
                echo '<td><a href="' . $GLOBALS['CFG_GLPI']['root_doc']
                         . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '">'
                         . $form['name']
@@ -438,16 +454,39 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function displayUserForm(CommonGLPI $item)
    {
+      echo '<form name="formcreator_form' . $item->getId() . '" method="post" action="" role="form" class="formcreator_form form_horizontal">';
+      echo '<h1 class="form-title">' . $item->fields['name'] . '</h1>';
 
-      echo '<div class="center">';
+      // Form Header
       if(!empty($item->fields['content'])) {
-         echo '<table class="tab_cadre_fixe">';
-         echo '<tr><td>' . html_entity_decode($item->fields['content']) . '</td></tr>';
-         echo '</table>';
-         echo '<br />';
+         echo '<div class="form_header">';
+         echo html_entity_decode($item->fields['content']);
+         echo '</div>';
+      }
+      // Get and display sections of the form
+      $section  = new PluginFormcreatorSection();
+      $question = new PluginFormcreatorQuestion();
+      $sections = $section->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
+      foreach($sections as $section_line) {
+         echo '<div class="form_section">';
+         echo '<h2>' . $section_line['name'] . '</h2>';
+
+         // Display all fields of the section
+         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         foreach($questions as $question_line) {
+            PluginFormcreatorFields::showField($question_line);
+         }
+
+         echo '</div>';
       }
 
+      // Display submit button
+      echo '<div class="center">';
+      echo '<input type="submit" class="submit_button" />';
       echo '</div>';
+
+      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+      echo '</form>';
    }
 
    /**

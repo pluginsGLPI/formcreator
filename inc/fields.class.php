@@ -64,4 +64,15 @@ class PluginFormcreatorFields
          }
       }
    }
+
+   public static function showField($field)
+   {
+      // Get field types and file path
+      $tab_field_types = self::getTypes();
+
+      if(array_key_exists($field['fieldtype'], $tab_field_types)) {
+         $fieldClass = $field['fieldtype'] . 'Field';
+         $fieldClass::show($field);
+      }
+   }
 }

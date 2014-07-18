@@ -1,12 +1,3 @@
-blockquote {
-   padding: 5px;
-   font-size: .8em;
-   font-style: italic;
-   color: #333;
-}
-small {
-   font-size: .8em;
-}
 a.submit_button, input.submit_button {
    display: inline-block;
    min-width: 150px !important;
@@ -56,41 +47,17 @@ input.submit_button[disabled] {
    filter: none;
    ms-filter: none;
 }
-select {
-   vertical-align: bottom;
-}
-.small_text {
-   width: 40px;
-}
-
-#status_line .status_step {
-   display: block;
-   float: left;
-   padding-left: auto;
-   text-align: center;
-}
-#status_line .status_img {
-   background: url(../pics/state_off.png) no-repeat;
-   width: 104px;
-   height: 30px;
-   display: block;
-   padding-top: 16px;
-   font-weight: bold;
-   font-size: 1.2em;
-}
-
-#status_line .on .status_img {
-   background: url(../pics/state_on.png) no-repeat;
-}
-
-#status_line .on{
-   font-weight: bold;
-}
-
-div#status_important {
-   background: url(../pics/important-pt.png) no-repeat;
-   color:red;
-   padding-left: 30px;
+input.submit_button:focus {
+   color: #573706;
+   border-color: #a57a26 #a67528 #a67623 #a67528;
+   background-color: #ffaf30;
+   background-image: -webkit-gradient(linear, left top, left bottom, from(#ffcd35), to(#ffaf30));
+   background-image: -webkit-linear-gradient(top, #ffcd35, #ffaf30);
+   background-image: -moz-linear-gradient(top, #ffcd35, #ffaf30);
+   background-image: -ms-linear-gradient(top, #ffcd35, #ffaf30);
+   background-image: -o-linear-gradient(top, #ffcd35, #ffaf30);
+   background-image: linear-gradient(top, #ffcd35, #ffaf30);
+   box-shadow: 0 0 10px rgba(233,175,102,1);
 }
 
 .line0 {
@@ -102,43 +69,124 @@ div#status_important {
 .line0:hover, .line1:hover {
    background-color: #FFF;
 }
-.task_description {
-   display: none;
-}
-.task_description div {
-   padding: 10px;
-   background-color: #FFF;
-   border-left: 5px solid #AAA;
-   color: #333;
-   font-style: italic;
-   margin: 0 4px;
-}
 
-/* === MENU === */
-ul.eachange_menu {
-   margin: 0 auto;
-   width:786px;
-   height: 80px;
+form.formcreator_form {
+   width: 950px;
+   margin: 10px auto !important;
+   display: block;
+   position: relative;
+   line-height: 1.4em;
 }
-
-ul.eachange_menu li {
-   height: 60px;
-   width: 350px;
-   float: left;
-   border-radius: 5px;
-   background-color: #f1f4e3;
-   border: 1px solid #659900;
-   margin: 5px;
-   padding: 15px 5px 0 2px;
-}
-
-ul.eachange_menu li a {
+form.formcreator_form > h1 {
+   text-align: center;
+   font-weight: bold;
    font-size: 1.5em;
-   line-height: 48px;
+   text-decoration: underline;
+   margin: 0 0 15px;
 }
 
-ul.eachange_menu li img {
+form.formcreator_form > .form_header {
+   padding: 10px 15px;
+}
+
+form.formcreator_form > .form_header, form.formcreator_form > .form_section {
+   background: #EEE;
+   border-radius: 4px;
+   box-shadow: 2px 2px 2px #CCC;
+   margin: 0 0 10px;
+}
+
+
+form.formcreator_form > .form_header > h1 {
+   font-size: 1.2em;
+   margin: 0 0 10px;
+}
+
+form.formcreator_form > .form_section > h2 {
+   background: #E1D39E;
+   margin:  0 0 10px;
+   border-radius: 4px 4px 0 0;
+   padding: 5px 10px;
+   border-bottom: 1px solid #FFF;
+   box-shadow: 0px 2px 2px #CCC;
+   text-align: center;
+}
+
+form.formcreator_form .form-group {
+   padding: 5px 15px;
+}
+
+
+form.formcreator_form .form-group:nth-child(odd) {
+   background: #E0E0E0;
+}
+
+form.formcreator_form .form-group > label {
+   display: block;
+   font-size: 1.2em;
    float: left;
-   vertical-align: middle;
-   margin: 0 10px;
+   width: 250px;
+}
+form.formcreator_form .form-group:after {
+   content: '';
+   display: block;
+   clear: both;
+}
+
+form.formcreator_form .form-group.required > label {
+   font-weight: bold;
+}
+
+form.formcreator_form .description_field {
+   border-left: 4px solid #999;
+   margin: 10px 15px;
+}
+
+form.formcreator_form .checkbox, form.formcreator_form .radio {
+   margin-left: 250px;
+}
+
+form.formcreator_form .form-group > input, form.formcreator_form textarea, form.formcreator_form select {
+   background: rgba(255, 255, 255, 0.7);
+   border: 1px solid #999;
+   border-radius: 3px;
+   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.20);
+   line-height: 18px;
+   min-height: 30px;
+   padding: 3px 10px;
+   margin: 0;
+   width: 670px;
+   color: #333;
+   font-size: 1.1em;
+}
+
+form.formcreator_form .form-group > input:focus,
+form.formcreator_form textarea:focus,
+form.formcreator_form select:focus,
+form.formcreator_form .form-group > input:focus
+{
+   border-color: #66afe9;
+   box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+}
+
+form.formcreator_form input[type = checkbox]:focus + label,
+form.formcreator_form input[type = radio]:focus + label,
+form.formcreator_form input[type = file]:focus {
+   color: rgba(102,175,233, 1);
+   border-bottom: rgba(102,175,233,.8) dotted 1px !important;
+}
+
+form.formcreator_form .form-group > input, form.formcreator_form textarea {
+   width: 648px;
+   min-height: 24px;
+}
+
+form.formcreator_form .form-group option {
+   background: none;
+   border: none;
+}
+form.formcreator_form .form-group > input[type = file] {
+   background: none;
+   border: none;
+   box-shadow: none;
 }

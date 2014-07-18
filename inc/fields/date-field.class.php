@@ -1,41 +1,32 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.class.php');
+require_once('field.interface.php');
 
-class dateField extends Field
+class dateField implements Field
 {
-   public function show() {
-      echo '<dl>'.PHP_EOL;
-      echo "\t".'<dt>'.PHP_EOL;
-      echo "\t\t".'<label for="dateField'.$this->_id.'"';
-      if($this->_required === true) echo ' class="required"';
-      echo '>';
-      echo $this->_label;
-      if($this->_required === true) echo ' <span class="asterisk">*</span>';
-      else echo ' &nbsp;&nbsp;';
-      echo '</label>'.PHP_EOL;
-      echo "\t".'</dt>'.PHP_EOL;
-      echo "\t".'<dd>'.PHP_EOL;
+   public static function show($field)
+   {
+      if($field['required'])  $required = ' required';
+      else $required = '';
 
-      if(isset($_POST['dateField'.$this->_id])) $value = $_POST['dateField'.$this->_id];
-      else $value = $this->_value[0];
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<label>';
+      echo  $field['name'];
+      if($field['required'])  echo ' <span class="red">*</span>';
+      echo '</label>';
 
-      echo "\t\t".'<input type="text" name="dateField'.$this->_id.'" id="dateField'.$this->_id.'" value="'.$value.'" maxlength="255" />';
-      echo "\t".'</dd>'.PHP_EOL;
-      echo '</dl>'.PHP_EOL;
+      Html::showDateTimeField('formcreator_field_' . $field['id'], array(
+         'value'   => (empty($field['default_values'])) ? date(('Y-m-d H:i:s')) : $field['default_values'],
+         'mindate' => $field['range_min'],
+         'maxdate' => $field['range_max'],
+      ));
+
+      echo '</div>' . PHP_EOL;
    }
 
-   public function isValid() {
-      if(($this->_required !== true) || !empty($_POST['dateField'.$this->_id]))
-         return true;
-      else{
-         $this->_addError('<label for="dateField'.$this->_id.'">' . TXT_ERR_EMPTY_TEXT . '<span style="color:#000">'.$this->_label.'</span></label>');
-         return false;
-      }
-   }
-
-   public function getPost() {
-      return trim(strip_tags($_POST['dateField'.$this->_id]));
+   public static function isValid($field, $input)
+   {
+      return true;
    }
 
    public static function getName()
