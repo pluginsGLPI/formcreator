@@ -21,7 +21,7 @@ class checkboxesField implements Field
 
          echo '<div class="checkbox">';
          $i = 0;
-         foreach($values as $value) {
+         foreach ($values as $value) {
             $i++;
             $checked = (in_array($value, $default_values)) ? ' checked' : '';
             echo '<input type="checkbox" class="form-control"

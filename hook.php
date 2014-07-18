@@ -10,7 +10,7 @@ function plugin_formcreator_install()
    $migration = new Migration($version['version']);
 
    // Parse inc directory
-   foreach(glob(dirname(__FILE__).'/inc/*') as $filepath) {
+   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
       // Load *.class.php files and get the class name
       if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
          $classname = 'PluginFormcreator' . ucfirst($matches[1]);
@@ -33,7 +33,7 @@ function plugin_formcreator_install()
 function plugin_formcreator_uninstall()
 {
    // Parse inc directory
-   foreach(glob(dirname(__FILE__).'/inc/*') as $filepath) {
+   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
       // Load *.class.php files and get the class name
       if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
          $classname = 'PluginFormcreator' . ucfirst($matches[1]);

@@ -10,7 +10,7 @@ class PluginFormcreatorFields
    {
       $tab_field_types     = array();
 
-      foreach(glob(dirname(__FILE__) . '/fields/*-field.class.php') as $class_file) {
+      foreach (glob(dirname(__FILE__) . '/fields/*-field.class.php') as $class_file) {
          preg_match("/fields.(.+)-field\.class.php/", $class_file, $matches);
          $classname = $matches[1] . 'Field';
 
@@ -39,7 +39,7 @@ class PluginFormcreatorFields
       $tab_field_types_name[''] = '---';
 
       // Get localized names of field types
-      foreach($tab_field_types as $field_type => $class_file) {
+      foreach ($tab_field_types as $field_type => $class_file) {
          $classname = $field_type . 'Field';
 
          if(method_exists($classname, 'getName')) {
@@ -57,7 +57,7 @@ class PluginFormcreatorFields
       $tab_field_types = self::getTypes();
 
       // Get field types preference for JS
-      foreach($tab_field_types as $field_type => $class_file) {
+      foreach ($tab_field_types as $field_type => $class_file) {
          $classname = $field_type . 'Field';
 
          if(method_exists($classname, 'getJSFields')) {

@@ -22,7 +22,7 @@ class radiosField implements Field
 
          echo '<div class="checkbox">';
          $i = 0;
-         foreach($values as $value) {
+         foreach ($values as $value) {
             $i++;
             $checked = ($value == $default_value) ? ' checked' : '';
             echo '<input type="radio" class="form-control"

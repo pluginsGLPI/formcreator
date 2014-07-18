@@ -203,7 +203,7 @@ class PluginFormcreatorForm extends CommonDBTM
             return ($values[$field] == 0) ? __('Inactive', 'formcreator') : __('Active', 'formcreator');
             break;
          case 'access_rights':
-            switch($values[$field]) {
+            switch ($values[$field]) {
                case self::ACCESS_PUBLIC :
                   return __('Public access', 'formcreator');
                   break;
@@ -414,7 +414,7 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '<table class="tab_cadre_fixe">';
 
          // For each categories, show the list of forms the user can fill
-         while($category = $DB->fetch_array($result)) {
+         while ($category = $DB->fetch_array($result)) {
             echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
 
             $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
@@ -426,7 +426,7 @@ class PluginFormcreatorForm extends CommonDBTM
                             ORDER BY $form_table.name ASC";
             $result_forms = $DB->query($query_forms);
             $i = 0;
-            while($form = $DB->fetch_array($result_forms)) {
+            while ($form = $DB->fetch_array($result_forms)) {
                $i++;
                echo '<tr class="line' . ($i % 2) . '" onclick="document.location = \'' . $GLOBALS['CFG_GLPI']['root_doc']
                         . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '\'" style="cursor:pointer">';
@@ -467,13 +467,13 @@ class PluginFormcreatorForm extends CommonDBTM
       $section  = new PluginFormcreatorSection();
       $question = new PluginFormcreatorQuestion();
       $sections = $section->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
-      foreach($sections as $section_line) {
+      foreach ($sections as $section_line) {
          echo '<div class="form_section">';
          echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
-         foreach($questions as $question_line) {
+         foreach ($questions as $question_line) {
             PluginFormcreatorFields::showField($question_line);
          }
 

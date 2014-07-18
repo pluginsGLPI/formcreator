@@ -76,7 +76,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $section_number   = count($founded_sections);
       $tab_sections     = array();
       $tab_questions    = array();
-      foreach($founded_sections as $section) {
+      foreach ($founded_sections as $section) {
          $tab_sections[] = $section['id'];
          echo '<tr id="section_row_' . $section['id'] . '">';
          echo '<th>' . $section['name'] . '</th>';
@@ -121,7 +121,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $founded_questions = $question->find('plugin_formcreator_sections_id = ' . $section['id'], '`order`');
          $question_number   = count($founded_questions);
          $i = 0;
-         foreach($founded_questions as $question) {
+         foreach ($founded_questions as $question) {
             $i++;
             $tab_questions[] = $question['id'];
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
@@ -197,11 +197,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $js_tab_sections   = "";
       $js_tab_questions  = "";
       $js_line_questions = "";
-      foreach($tab_sections as $key) {
+      foreach ($tab_sections as $key) {
          $js_tab_sections  .= "tab_sections[$key] = document.getElementById('section_row_$key').innerHTML;".PHP_EOL;
          $js_tab_questions .= "tab_questions[$key] = document.getElementById('add_question_td_$key').innerHTML;".PHP_EOL;
       }
-      foreach($tab_questions as $key) {
+      foreach ($tab_questions as $key) {
          $js_line_questions .= "line_questions[$key] = document.getElementById('question_row_$key').innerHTML;".PHP_EOL;
       }
 
@@ -327,13 +327,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
                function resetAll() {
                   document.getElementById("add_section_th").innerHTML = add_section_link;
-                  for(section_id in tab_sections) {
+                  for (section_id in tab_sections) {
                      if(parseInt(section_id)) {
                         document.getElementById("section_row_" + section_id).innerHTML = tab_sections[section_id];
                         document.getElementById("add_question_td_" + section_id).innerHTML = tab_questions[section_id];
                      }
                   }
-                  for(question_id in line_questions) {
+                  for (question_id in line_questions) {
                      if(parseInt(question_id)) {
                         document.getElementById("question_row_" + question_id).innerHTML = line_questions[question_id];
                      }

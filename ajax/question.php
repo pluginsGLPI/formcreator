@@ -73,7 +73,7 @@ $rand = mt_rand();
                     WHERE `plugin_formcreator_forms_id` = $form_id
                     ORDER BY `order`";
             $result = $GLOBALS['DB']->query($sql);
-            while($section = $GLOBALS['DB']->fetch_array($result)) {
+            while ($section = $GLOBALS['DB']->fetch_array($result)) {
                $sections[$section['id']] = $section['name'];
             }
             Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, array(
@@ -110,7 +110,7 @@ $rand = mt_rand();
                        AND q.`id` != $question_id
                        ORDER BY s.`order`, q.`order`";
                $result = $GLOBALS['DB']->query($sql);
-               while($line = $GLOBALS['DB']->fetch_array($result)) {
+               while ($line = $GLOBALS['DB']->fetch_array($result)) {
                   $questions_tab[$line['id']] = (strlen($line['name']) < 30)
                      ? $line['name']
                      : substr($line['name'], 0, strrpos(substr($line['name'], 0, 30), ' ')) . '...';
