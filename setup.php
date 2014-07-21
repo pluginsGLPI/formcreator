@@ -59,6 +59,12 @@ function plugin_init_formcreator ()
 
    if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
       $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk.js';
+   } elseif(strpos($_SERVER['REQUEST_URI'], "front/central.php") !== false) {
+      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/homepage.js';
+   }
+
+   if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk-menu.js';
    }
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
 
@@ -72,9 +78,6 @@ function plugin_init_formcreator ()
 
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
-
-   // Add a link in the main menu for simple suser (helpdesk) panel
-   $PLUGIN_HOOKS['helpdesk_menu_entry']['formcreator'] = '/front/form.php';
 
    // Set options for pages (title, links, buttons...)
    $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(

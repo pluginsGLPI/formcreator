@@ -14,6 +14,7 @@ class dropdownField implements Field
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
+
       if(!empty($field['values'])) {
          Dropdown::show($field['values'], array(
             'name'     => 'formcreator_field_' . $field['id'],

@@ -1,30 +1,76 @@
 <?php
 include ("../../../inc/includes.php");
 
-if(!isset($_SESSION['glpiID'])) {
-   $_SESSION['glpiID'] = 2;
-   $_SESSION['glpi_active_profile'] = 2;
-}
-
 // Check if plugin is activated...
 $plugin = new Plugin();
 
 if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
    $form = new PluginFormcreatorForm();
    if($form->getFromDB((int) $_REQUEST['id'])) {
-      Html::header(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF'],
-         'plugins',
-         'formcreator',
-         'options'
-      );
+
+      if($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
+         Session::checkLoginUser();
+      }
+      if($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
+         $table = getTableForItemType('PluginFormcreatorFormprofiles');
+         $query = "SELECT *
+                   FROM $table
+                   WHERE plugin_formcreator_profiles_id = {$_SESSION['glpiactiveprofile']['id']}
+                   AND plugin_formcreator_forms_id = {$form->fields['id']}";
+         $result = $DB->query($query);
+
+         if($DB->numrows($result) == 0) {
+            Html::displayRightError();
+            exit();
+         }
+      }
+
+      // If user is not authenticated, create temporary user
+      if(!isset($_SESSION['glpiname'])) {
+         $_SESSION['glpiname'] = 'formcreator_temp_user';
+      }
+
+      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+         Html::helpHeader(
+            __('Form list', 'formcreator'),
+            $_SERVER['PHP_SELF']
+         );
+
+         $form->displayUserForm($form);
+
+         Html::helpFooter();
+
+      } elseif(!empty($_SESSION['glpiactiveprofile'])) {
+         Html::header(
+            __('Form Creator', 'formcreator'),
+            $_SERVER['PHP_SELF'],
+            'plugins',
+            'formcreator',
+            'options'
+         );
+
+         $form->displayUserForm($form);
+
+         Html::footer();
+
+      } else {
+         Html::nullHeader(
+            __('Form Creator', 'formcreator'),
+            $_SERVER['PHP_SELF']
+         );
+      }
 
       $form->displayUserForm($form);
 
-      Html::footer();
+      Html::nullFooter();
+
    } else {
       Html::displayNotFoundError();
+   }
+
+   // If user was not authenticated, remove temporary user
+   if($_SESSION['glpiname'] == 'formcreator_temp_user') {
+      unset($_SESSION['glpiname']);
    }
 
 // Or display a "Not found" error

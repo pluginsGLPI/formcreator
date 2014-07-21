@@ -255,7 +255,8 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<td>' . __('Language') . ' <span class="red">*</span></td>';
       echo '<td>';
       Dropdown::showLanguages('language', array(
-         'value' => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
+         'value'               => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
+         'display_emptychoice' => true,
       ));
       echo '</td>';
       echo '</tr>';
@@ -361,6 +362,8 @@ class PluginFormcreatorForm extends CommonDBTM
       $ong = array();
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
       $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
+      if(self::ACCESS_RESTRICTED == $this->fields['access_rights'])
+         $this->addStandardTab('PluginFormcreatorFormprofiles', $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       return $ong;
    }
@@ -374,16 +377,12 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<div class="center">';
 
-      // Get entities we can access
-      $entities_table = getTableForItemType('Entity');
-      $where          = getEntitiesRestrictRequest( "", $entities_table, "", "", true, true);
-
       // Show header for the current entity or it's first parent header
       $table  = getTableForItemType('PluginFormcreatorHeader');
+      $where  = getEntitiesRestrictRequest( "", $table, "", "", true, false);
       $query  = "SELECT $table.`comment`
-                 FROM $table, $entities_table
-                 WHERE $where
-                 ORDER BY $entities_table.`completename` DESC";
+                 FROM $table
+                 WHERE $where";
       $result = $DB->query($query);
       if (!empty($result)) {
          list($description) = $DB->fetch_array($result);
@@ -398,15 +397,21 @@ class PluginFormcreatorForm extends CommonDBTM
       // Show categories wicth have at least one form user can access
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
       $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                  FROM $cat_table
                  WHERE 0 < (
                      SELECT COUNT($form_table.id)
                      FROM $form_table
-                     LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
                      WHERE $form_table.`formcreator_categories_id` = $cat_table.`id`
                      AND $form_table.`is_active` = 1
-                     AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
+                     AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                     AND $where
+                     AND ($form_table.`access_rights` != " . self::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                        SELECT plugin_formcreator_forms_id
+                        FROM $table_fp
+                        WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                   )
                  ORDER BY $cat_table.`name` ASC";
       $result = $DB->query($query);
@@ -417,12 +422,18 @@ class PluginFormcreatorForm extends CommonDBTM
          while ($category = $DB->fetch_array($result)) {
             echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
 
+            $where       = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+            $table_fp    = getTableForItemType('PluginFormcreatorFormprofiles');
             $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                             FROM $form_table
-                            LEFT JOIN $entities_table ON $entities_table.`id` =  $form_table.`entities_id` AND $where
                             WHERE $form_table.`formcreator_categories_id` = {$category['id']}
                             AND $form_table.`is_active` = 1
-                            AND $form_table.`language` = '{$_SESSION['glpilanguage']}'
+                            AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                            AND $where
+                            AND (`access_rights` != " . self::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                               SELECT plugin_formcreator_forms_id
+                               FROM $table_fp
+                               WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                             ORDER BY $form_table.name ASC";
             $result_forms = $DB->query($query_forms);
             $i = 0;

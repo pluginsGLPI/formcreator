@@ -77,6 +77,10 @@ form.formcreator_form {
    position: relative;
    line-height: 1.4em;
 }
+#bloc > form.formcreator_form {
+   width: 700px;
+}
+
 form.formcreator_form > h1 {
    text-align: center;
    font-weight: bold;
@@ -90,7 +94,7 @@ form.formcreator_form > .form_header {
 }
 
 form.formcreator_form > .form_header, form.formcreator_form > .form_section {
-   background: #EEE;
+   background: rgba(232, 232, 232, .8); /*#EEE;*/
    border-radius: 4px;
    box-shadow: 2px 2px 2px #CCC;
    margin: 0 0 10px;
@@ -118,7 +122,7 @@ form.formcreator_form .form-group {
 
 
 form.formcreator_form .form-group:nth-child(odd) {
-   background: #E0E0E0;
+   background:  rgba(216, 216, 216, .8);  /*#E0E0E0;*/
 }
 
 form.formcreator_form .form-group > label {
@@ -189,4 +193,16 @@ form.formcreator_form .form-group > input[type = file] {
    background: none;
    border: none;
    box-shadow: none;
+}
+
+#bloc > form.formcreator_form  .form-group > input, form.formcreator_form textarea {
+   width: 395px;
+}
+#bloc > form.formcreator_form select {
+   width: 417px;
+}
+#footer-login {
+   position: relative !important;
+   height: 30px;
+   margin: 0 15px 0 0;
 }
