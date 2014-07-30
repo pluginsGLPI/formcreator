@@ -1,22 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Resources Development Team
+# Copyright (C) 2014 Taclib'
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Translators:
+# Jérémy MOREAU <jmoreau@teclib.com>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - Resources plugin 1.5.0\n"
+"Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
 "PO-Revision-Date: 2014-07-30 16:13+0200\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
-"Language-Team: Jérémy MOREAU <jmoreau@teclib.com>\n"
-"Language: French\n"
+"Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/language/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: hook.php:55
 msgid "Form categories"
