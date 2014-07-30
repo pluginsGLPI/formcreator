@@ -4,21 +4,29 @@ require_once('field.interface.php');
 
 class radiosField implements Field
 {
-   public static function show($field)
+   public static function show($field, $datas)
    {
+      $default_values = explode("\r\n", $field['default_values']);
+      $default_value  = array_shift($default_values);
+      $default_value = (!empty($datas['formcreator_field_' . $field['id']]))
+               ? $datas['formcreator_field_' . $field['id']]
+               : $default_value;
+
       if($field['required'])  $required = ' required';
       else $required = '';
 
-      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
+      echo '<input type="hidden" class="form-control"
+               name="formcreator_field_' . $field['id'] . '" value="" />' . PHP_EOL;
+
       if(!empty($field['values'])) {
          $values         = explode("\r\n", $field['values']);
-         $default_values = explode("\r\n", $field['default_values']);
-         $default_value  = array_shift($default_values);
 
          echo '<div class="checkbox">';
          $i = 0;
@@ -38,12 +46,59 @@ class radiosField implements Field
          echo '</div>';
       }
 
+      echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
+
+      switch ($field['show_condition']) {
+         case 'notequal':
+            $condition = '!=';
+            break;
+         case 'lower':
+            $condition = '<';
+            break;
+         case 'greater':
+            $condition = '>';
+            break;
+
+         default:
+            $condition = '==';
+            break;
+      }
+
+      if ($field['show_type'] == 'hide') {
+         echo '<script type="text/javascript">
+                  document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  function showFormGroup' . $field['id'] . '() {
+                     var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
+
+                     if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
+                     } else {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                     }
+                  }
+                  showFormGroup' . $field['id'] . '();
+               </script>';
+      }
+
       echo '</div>' . PHP_EOL;
    }
 
-   public static function isValid($field, $input)
+   public static function displayValue($value, $values)
    {
-      return true;
+      return $value;
+   }
+
+   public static function isValid($field, $value)
+   {
+      // Not required or not empty
+      if($field['required'] && empty($value)) {
+         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         return false;
+
+      // All is OK
+      } else {
+         return true;
+      }
    }
 
    public static function getName()

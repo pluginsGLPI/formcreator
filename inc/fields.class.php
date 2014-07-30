@@ -50,6 +50,27 @@ class PluginFormcreatorFields
       return $tab_field_types_name;
    }
 
+   /**
+    * Get field value to display
+    *
+    * @param Field $field     Field object to display
+    *
+    * @return String          field_value
+    */
+   public static function getValue($field, $value)
+   {
+      $class_file = dirname(__FILE__) . '/fields/' . $field['fieldtype'] . '-field.class.php';
+      if(is_file($class_file)) {
+         include_once ($class_file);
+
+         $classname = $field['fieldtype'] . 'Field';
+         if(class_exists($classname)) {
+            return $classname::displayValue($value, $field['values']);
+         }
+      }
+      return $value;
+   }
+
 
    public static function printAllTabFieldsForJS()
    {
@@ -66,14 +87,14 @@ class PluginFormcreatorFields
       }
    }
 
-   public static function showField($field)
+   public static function showField($field, $datas = null)
    {
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
       if(array_key_exists($field['fieldtype'], $tab_field_types)) {
          $fieldClass = $field['fieldtype'] . 'Field';
-         $fieldClass::show($field);
+         $fieldClass::show($field, $datas);
       }
    }
 }

@@ -48,26 +48,26 @@ class PluginFormcreatorForm extends CommonDBTM
       $tab = array(
          '1' => array(
             'table'         => $this->getTable(),
+            'field'         => 'is_active',
+            'name'          => __('Status', 'formcreator'),
+            'datatype'      => 'specific',
+            'searchtype'    => array('equals', 'notequals'),
+            'massiveaction' => true,
+         ),
+         '2' => array(
+            'table'         => $this->getTable(),
             'field'         => 'id',
             'name'          => __('ID', 'formcreator'),
             'datatype'      => 'number',
             'searchtype'    => 'equals',
             'massiveaction' => false,
          ),
-         '2' => array(
+         '3' => array(
             'table'         => $this->getTable(),
             'field'         => 'name',
             'name'          => __('Name', 'formcreator'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
-         ),
-         '3' => array(
-            'table'         => $this->getTable(),
-            'field'         => 'is_active',
-            'name'          => __('Status', 'formcreator'),
-            'datatype'      => 'specific',
-            'searchtype'    => array('equals', 'notequals'),
-            'massiveaction' => true,
          ),
          '4' => array(
             'table'         => $this->getTable(),
@@ -122,7 +122,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function getDefaultSearchRequest()
    {
-      $search = array('field'      => array(0 => 3),
+      $search = array('field'      => array(0 => 1),
                       'searchtype' => array(0 => 'equals'),
                       'contains'   => array(0 => 1),
                       'sort'       => 2,
@@ -200,7 +200,18 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       switch ($field) {
          case 'is_active':
-            return ($values[$field] == 0) ? __('Inactive', 'formcreator') : __('Active', 'formcreator');
+            if($values[$field] == 0) {
+               $output = '<div style="text-align: center"><img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/inactive.png"
+                           height="16" width="16"
+                           alt="' . __('Inactive', 'formcreator') . '"
+                           title="' . __('Inactive', 'formcreator') . '" /></div>';
+            } else {
+               $output = '<div style="text-align: center"><img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/active.png"
+                           height="16" width="16"
+                           alt="' . __('Active', 'formcreator') . '"
+                           title="' . __('Active', 'formcreator') . '" /></div>';
+            }
+            return $output;
             break;
          case 'access_rights':
             switch ($values[$field]) {
@@ -241,35 +252,23 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showFormHeader($options);
 
       echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Name') . ' <span class="red">*</span></td>';
+      echo '<td><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
       echo '<td><input type="text" name="name" value="' . $this->fields["name"] . '" size="54"/></td>';
-      echo '<td>' . __('Active') . ' <span class="red">*</span></td>';
+      echo '<td><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
       echo '<td>';
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Description') . '</td>';
-      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="54" /></td>';
-      echo '<td>' . __('Language') . ' <span class="red">*</span></td>';
-      echo '<td>';
-      Dropdown::showLanguages('language', array(
-         'value'               => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
-         'display_emptychoice' => true,
-      ));
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Category') . ' <span class="red">*</span></td>';
+      echo '<td><strong>' . __('Category') . ' <span class="red">*</span></strong></td>';
       echo '<td>';
       PluginFormcreatorCategory::dropdown(array(
          'name'  => 'formcreator_categories_id',
          'value' => ($id != 0) ? $this->fields["formcreator_categories_id"] : 1,
       ));
       echo '</td>';
-      echo '<td>' . __('Access') . ' <span class="red">*</span></td>';
+      echo '<td><strong>' . __('Access') . ' <span class="red">*</span></strong></td>';
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
@@ -282,7 +281,20 @@ class PluginFormcreatorForm extends CommonDBTM
             'value' => ($id != 0) ? $this->fields["access_rights"] : 1,
          )
       );
-      echo '</td></tr>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="tab_bg_1">';
+      echo '<td>' . __('Description') . '</td>';
+      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="54" /></td>';
+      echo '<td>' . __('Language') . '</td>';
+      echo '<td>';
+      Dropdown::showLanguages('language', array(
+         'value'               => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
+         'display_emptychoice' => true,
+      ));
+      echo '</td>';
+      echo '</tr>';
 
       echo '<tr class="tab_bg_2">';
       echo '<td colspan="2">&nbsp;</td>';
@@ -340,19 +352,22 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
-      switch ($item->getType()) {
-         case "PluginFormcreatorConfig":
-            $params = $_REQUEST;
-            $params += self::getDefaultSearchRequest();
-            Search::manageGetValues(__CLASS__);
-            Search::showGenericSearch(__CLASS__, $params);
-            Search::showList(__CLASS__, $params);
-            break;
-         case "PluginFormcreatorForm":
+      $uri = strrchr($_SERVER['HTTP_REFERER'], '/');
+      if(strpos($uri, '?')) $uri = substr($uri, 0, strpos($uri, '?'));
+      $uri = trim($uri, '/');
+
+      switch ($uri) {
+         case "form.form.php":
             echo '<div style="text-align: left">';
             $item->displayUserForm($item);
             echo '</div>';
             break;
+         default:
+            $params = $_REQUEST;
+            // $params += self::getDefaultSearchRequest();
+            Search::manageGetValues(__CLASS__);
+            Search::showGenericSearch(__CLASS__, $params);
+            Search::showList(__CLASS__, $params);
       }
    }
 
@@ -465,7 +480,15 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function displayUserForm(CommonGLPI $item)
    {
-      echo '<form name="formcreator_form' . $item->getId() . '" method="post" action="" role="form" class="formcreator_form form_horizontal">';
+      if(isset($_SESSION['formcreator']['datas'])) {
+         $datas = $_SESSION['formcreator']['datas'];
+         unset($_SESSION['formcreator']['datas']);
+      } else {
+         $datas = null;
+      }
+
+      echo '<form name="formcreator_form' . $item->getID() . '" method="post" role="form" enctype="multipart/form-data"
+               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/form.form.php" class="formcreator_form form_horizontal">';
       echo '<h1 class="form-title">' . $item->fields['name'] . '</h1>';
 
       // Form Header
@@ -475,17 +498,18 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '</div>';
       }
       // Get and display sections of the form
-      $section  = new PluginFormcreatorSection();
-      $question = new PluginFormcreatorQuestion();
-      $sections = $section->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
-      foreach ($sections as $section_line) {
+      $question      = new PluginFormcreatorQuestion();
+
+      $section_class = new PluginFormcreatorSection();
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
+      foreach ($find_sections as $section_line) {
          echo '<div class="form_section">';
          echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            PluginFormcreatorFields::showField($question_line);
+            PluginFormcreatorFields::showField($question_line, $datas);
          }
 
          echo '</div>';
@@ -493,11 +517,157 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Display submit button
       echo '<div class="center">';
-      echo '<input type="submit" class="submit_button" />';
+      echo '<input type="submit" name="submit_formcreator" class="submit_button" />';
       echo '</div>';
 
+      echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
       echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
       echo '</form>';
+   }
+
+   /**
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForAdd($input)
+   {
+      // Control fields values :
+      // - name is required
+      if(empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+         return array();
+      }
+      // - field type is required
+      if(empty($input['itemtype'])) {
+         Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
+         return array();
+      }
+
+      switch ($input['itemtype']) {
+         case 'PluginFormcreatorTargetTicket':
+            $targetticket      = new PluginFormcreatorTargetTicket();
+            $id_targetticket   = $targetticket->add(array(
+               'name'    => $input['name'],
+               'comment' => '##FULLFORM##'
+            ));
+            $input['items_id'] = $id_targetticket;
+            break;
+      }
+
+      return $input;
+   }
+
+
+   public function saveToTargets($datas)
+   {
+      $valid = true;
+
+      // Validate form fields
+      foreach ($_POST as $key => $value) {
+         if (substr($key, 0, 18) == 'formcreator_field_') {
+            $question_id = (int) substr($key, 18);
+            $question    = new PluginFormcreatorQuestion();
+            $question->getFromDB($question_id);
+            $className   = $question->fields['fieldtype'] . 'Field';
+            $filePath    = dirname(__FILE__) . '/fields/' . $question->fields['fieldtype'] . '-field.class.php';
+            if(is_file($filePath)) {
+               include_once ($filePath);
+               if (class_exists($className)) {
+                  if (!$className::isValid($question->fields, $value)) {
+                     $valid = false;
+                  }
+               }
+            } else {
+               $valid = false;
+            }
+         }
+      }
+
+      // If not valid back to form
+      if (!$valid) {
+         $_SESSION['formcreator']['datas'] = $datas;
+         Html::back();
+
+      // Otherwize  generate targets
+      } else {
+         $doc = new Document();
+         $_SESSION['formcreator_documents'] = array();
+
+         // Save files as Documents
+         foreach ($_FILES as $question_name => $file) {
+            $question_id = trim(strrchr($question_name, '_'), '_');
+            $question    = new PluginFormcreatorQuestion();
+            $question->getFromDB($question_id);
+
+            $file_datas                 = array();
+            $file_datas["name"]         = $this->fields['name'] . ' - ' . $question->fields['name'];
+            $file_datas["entities_id"]  = (isset($_SESSION['glpiactive_entity']))
+                                          ? $_SESSION['glpiactive_entity']
+                                          : $this->fields['entities_id'];
+            $file_datas["is_recursive"] = $this->fields['is_recursive'];
+            Document::uploadDocument($file_datas, $file);
+
+            if ($docID = $doc->add($file_datas)) {
+               $_SESSION['formcreator_documents'][] = $docID;
+               $table = getTableForItemType('Document');
+               $query = "UPDATE $table SET filename = '" . addslashes($file['name']) . "' WHERE id = " . $docID;
+               $GLOBALS['DB']->query($query);
+            }
+         }
+
+         // Get all targets
+         $target_class    = new PluginFormcreatorTarget();
+         $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->getID());
+
+         foreach($founded_targets as $target) {
+            $obj = new $target['itemtype'];
+            $obj->getFromDB($target['items_id']);
+            $obj->save($this, $datas);
+         }
+
+         Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
+         unset($_SESSION['formcreator_documents']);
+         Html::redirect('formlist.php');
+      }
+   }
+
+   public function getFullForm($datas)
+   {
+      $question_no = 0;
+
+      $output = strtoupper(__('Form data', 'formcreator')) . PHP_EOL;
+      for($i = 0; $i < strlen(__('Form data', 'formcreator')); $i++) $output .= '=';
+      $output .= PHP_EOL . PHP_EOL;
+
+      $section_class = new PluginFormcreatorSection();
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $this->getID(), '`order` ASC');
+      foreach ($find_sections as $section_line) {
+         $output .= $section_line['name'] . PHP_EOL;
+         for($i = 0; $i < strlen($section_line['name']); $i++) $output .= '-';
+         $output .= PHP_EOL . PHP_EOL;
+
+         // Display all fields of the section
+         $question  = new PluginFormcreatorQuestion();
+         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         foreach ($questions as $question_line) {
+            $question_no ++;
+
+            if(isset($datas['formcreator_field_' . $question_line['id']])) {
+               $value = (is_array($datas['formcreator_field_' . $question_line['id']]))
+                        ? implode(', ', $datas['formcreator_field_' . $question_line['id']])
+                        : $value = strip_tags($datas['formcreator_field_' . $question_line['id']]);
+            } else $value = '';
+
+            $output .= $question_no . ') ' . $question_line['name'] . PHP_EOL;
+            $output .= $value . PHP_EOL . PHP_EOL;
+         }
+      }
+
+      return $output;
    }
 
    /**
@@ -519,7 +689,7 @@ class PluginFormcreatorForm extends CommonDBTM
          // Create default request type
          $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
          $result = $DB->query($query) or die ($DB->error());
-         if ( !empty($result)) {
+         if (!empty($result)) {
             list($requesttype) = $DB->fetch_array($result);
          } else {
             $query = "INSERT IGNORE INTO `glpi_requesttypes` SET `name` = 'Formcreator';";

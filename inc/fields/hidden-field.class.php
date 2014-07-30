@@ -4,7 +4,7 @@ require_once('field.interface.php');
 
 class hiddenField implements Field
 {
-   public static function show($field)
+   public static function show($field, $datas)
    {
       echo '<input type="hidden" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
@@ -12,7 +12,12 @@ class hiddenField implements Field
                value="' . $field['default_values'] . '" />' . PHP_EOL;
    }
 
-   public static function isValid($field, $input)
+   public static function displayValue($value, $values)
+   {
+      return $value;
+   }
+
+   public static function isValid($field, $value)
    {
       return true;
    }

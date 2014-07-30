@@ -42,6 +42,13 @@ if ($plugin->isActivated("formcreator")) {
       $form->delete($_POST,1);
       $form->redirectToList();
 
+   // Save form to target
+   } elseif (isset($_POST['submit_formcreator'])) {
+      if($form->getFromDB($_POST['formcreator_form'])) {
+         $form->saveToTargets($_POST);
+      }
+
+
    // Show forms form
    } else {
       Html::header(

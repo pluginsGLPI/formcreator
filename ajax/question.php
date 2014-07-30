@@ -130,7 +130,7 @@ $rand = mt_rand();
                ));
                ?>
 
-               <input type="text" name="show_value" id="show_value" value="<?php echo $question->fields['show_value']; ?>" class="small_text">
+               <input type="text" name="show_value" id="show_value" value="<?php echo $question->fields['show_value']; ?>" class="small_text" size="8">
             </div>
          </td>
       </tr>

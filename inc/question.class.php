@@ -32,7 +32,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     */
    public static function getTypeName($nb = 0)
    {
-      return _n('Question', 'Queestions', $nb, 'formcreator');
+      return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
    /**
@@ -47,9 +47,19 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       switch ($item->getType()) {
          case "PluginFormcreatorForm":
-            $object  = new self;
-            $founded = $object->find();
-            $number  = count($founded);
+            $number      = 0;
+            $section     = new PluginFormcreatorSection();
+            $founded     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
+            $tab_section = array();
+            foreach($founded as $section_item) {
+               $tab_section[] = $section_item['id'];
+            }
+
+            if(!empty($tab_section)) {
+               $object  = new self;
+               $founded = $object->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')');
+               $number  = count($founded);
+            }
             return self::createTabEntry(self::getTypeName($number), $number);
       }
       return '';

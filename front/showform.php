@@ -58,11 +58,11 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
             __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF']
          );
+
+         $form->displayUserForm($form);
+
+         Html::nullFooter();
       }
-
-      $form->displayUserForm($form);
-
-      Html::nullFooter();
 
    } else {
       Html::displayNotFoundError();

@@ -1,0 +1,357 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Resources Development Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - Resources plugin 1.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-30 16:13+0200\n"
+"PO-Revision-Date: 2014-07-30 16:13+0200\n"
+"Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
+"Language-Team: Jérémy MOREAU <jmoreau@teclib.com>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: hook.php:55
+msgid "Form categories"
+msgstr "Catégories de formulaire"
+
+#: setup.php:9
+msgid "FormCreator"
+msgstr "Formcreator"
+
+#: setup.php:26
+msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
+msgstr "Ce plugin nécessite GLPI >= 0.84 et GLPI < 0.85"
+
+#: setup.php:45
+msgid "Installed / not configured"
+msgstr "Installé / non configuré"
+
+#: setup.php:84 ajax/homepage_forms.php:24 ajax/homepage_link.php:4
+msgid "Forms"
+msgstr "Formulaires"
+
+#: ajax/question.php:27 inc/question.class.php:190
+msgid "Add a question"
+msgstr "Ajouter une question"
+
+#: ajax/question.php:28
+msgid "Edit a question"
+msgstr "Modifier une question"
+
+#: ajax/question.php:36 ajax/section.php:29 inc/targetticket.class.php:86
+msgid "Title"
+msgstr "Intitulé"
+
+#: ajax/question.php:45
+msgid "Type"
+msgstr "Type"
+
+#: ajax/question.php:63 inc/targetticket.class.php:88
+msgid "Section"
+msgstr "Section"
+
+#: ajax/question.php:86
+msgid "Show field"
+msgstr "Affichage du champ"
+
+#: ajax/question.php:92
+msgid "Always"
+msgstr "Toujours"
+
+#: ajax/question.php:93
+msgid "Only if field"
+msgstr "Seulement si le champ"
+
+#: ajax/question.php:141 inc/question.class.php:146 inc/question.class.php:150
+msgid "Required"
+msgstr "Requis"
+
+#: ajax/question.php:153
+msgid "Show empty"
+msgstr "Afficher une valeur vide"
+
+#: ajax/question.php:168
+msgid "Default value(s)"
+msgstr "Valeur(s) par défaut"
+
+#: ajax/question.php:169
+msgid "One per line for lists"
+msgstr "Une par ligne pour les listes"
+
+#: ajax/question.php:172
+msgid "Default value"
+msgstr "Valeur par défaut"
+
+#: ajax/question.php:197
+msgid "Values"
+msgstr "Valeurs"
+
+#: ajax/question.php:198
+msgid "One per line"
+msgstr "Une par ligne"
+
+#: ajax/question.php:201
+msgid "Dropdown"
+msgstr "Intitulés"
+
+#: ajax/question.php:222
+msgid "Range"
+msgstr "Taille"
+
+#: ajax/question.php:226
+msgid "Min"
+msgstr "Min"
+
+#: ajax/question.php:231
+msgid "Max"
+msgstr "Max"
+
+#: ajax/question.php:241 inc/form.class.php:75
+msgid "Description"
+msgstr "Description"
+
+#: ajax/question.php:253
+msgid "Additional validation"
+msgstr "Validation supplémentaire"
+
+#: ajax/question.php:256
+msgid "Regular expression"
+msgstr "Expression rationnelle"
+
+#: ajax/question.php:269 ajax/section.php:37 ajax/target.php:25
+#: inc/targetticket.class.php:122
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ajax/section.php:21 inc/question.class.php:200
+msgid "Add a section"
+msgstr "Ajouter une section"
+
+#: ajax/section.php:23
+msgid "Edit a section"
+msgstr "Modifier une section"
+
+#: ajax/target.php:8 inc/target.class.php:82
+msgid "Add a target"
+msgstr "Ajouter une cible"
+
+#: front/category.form.php:13
+msgid "A category already exists with the same name! Category creation failed."
+msgstr "Une catégorie éxiste déjà avec ce nom ! Création impossible."
+
+#: front/config.form.php:21 front/form.form.php:55 front/showform.php:45
+#: front/showform.php:58 front/targetticket.form.php:20
+msgid "Form Creator"
+msgstr "Formcreator"
+
+#: front/formlist.php:13 front/formlist.php:18 front/showform.php:35
+msgid "Form list"
+msgstr "Liste des formulaires"
+
+#: inc/category.class.php:6
+msgid "Form category"
+msgid_plural "Form categories"
+msgstr[0] "Catégorie de formulaire"
+msgstr[1] "Catégories de formulaire"
+
+#: inc/category.class.php:25
+msgid "Add a form category"
+msgstr "Ajouter une catégorie de formulaire"
+
+#: inc/config.class.php:11
+msgid "Formcreator settings"
+msgstr "Configuration de Formcreator"
+
+#: inc/form.class.php:38
+msgid "Form"
+msgid_plural "Forms"
+msgstr[0] "Formulaire"
+msgstr[1] "Formulaires"
+
+#: inc/form.class.php:52
+msgid "Status"
+msgstr "Statut"
+
+#: inc/form.class.php:60
+msgid "ID"
+msgstr "ID"
+
+#: inc/form.class.php:68
+msgid "Name"
+msgstr "Nom"
+
+#: inc/form.class.php:88
+msgid "Recursive"
+msgstr "Récursif"
+
+#: inc/form.class.php:101
+msgid "Homepage"
+msgstr "Page d'accueil"
+
+#: inc/form.class.php:109
+msgid "Access"
+msgstr "Accès"
+
+#: inc/form.class.php:157 inc/form.class.php:206 inc/form.class.php:207
+msgid "Inactive"
+msgstr "Inactif"
+
+#: inc/form.class.php:160 inc/form.class.php:211 inc/form.class.php:212
+msgid "Active"
+msgstr "Actif"
+
+#: inc/form.class.php:170 inc/form.class.php:219 inc/form.class.php:276
+msgid "Public access"
+msgstr "Accès public"
+
+#: inc/form.class.php:174 inc/form.class.php:222 inc/form.class.php:277
+msgid "Private access"
+msgstr "Accès privé"
+
+#: inc/form.class.php:178 inc/form.class.php:225 inc/form.class.php:278
+msgid "Restricted access"
+msgstr "Accès restreint"
+
+#: inc/form.class.php:301
+msgid "Direct access on homepage"
+msgstr "Accès direct depuis la page d'accueil"
+
+#: inc/form.class.php:336
+msgid "Preview"
+msgstr "Aperçu"
+
+#: inc/form.class.php:541 inc/target.class.php:141
+msgid "The name cannot be empty!"
+msgstr "Le nom ne doit pas être vide !"
+
+#: inc/form.class.php:546 inc/target.class.php:146
+msgid "The type cannot be empty!"
+msgstr "Le type ne doit pas être vide !"
+
+#: inc/form.class.php:632
+msgid "The form have been successfully saved!"
+msgstr "Le formulaire été sauvegardé avec succès"
+
+#: inc/form.class.php:642 inc/form.class.php:643
+msgid "Form data"
+msgstr "Données du formulaire"
+
+#: inc/formprofiles.class.php:12
+msgid "Profile"
+msgid_plural "Profiles"
+msgstr[0] "Profil"
+msgstr[1] "Profils"
+
+#: inc/header.class.php:5
+msgid "Header"
+msgid_plural "Headers"
+msgstr[0] "Entête"
+msgstr[1] "Entêtes"
+
+#: inc/header.class.php:26
+msgid "Add an header"
+msgstr "Ajouter une Entête"
+
+#: inc/question.class.php:35 inc/section.class.php:35
+#: inc/targetticket.class.php:85
+msgid "Question"
+msgid_plural "Questions"
+msgstr[0] "Question"
+msgstr[1] "Questions"
+
+#: inc/question.class.php:98 inc/question.class.php:107
+#: inc/question.class.php:116 inc/question.class.php:157
+#: inc/question.class.php:166 inc/question.class.php:174
+#: inc/target.class.php:63
+msgid "Edit"
+msgstr "Modifier"
+
+#: inc/question.class.php:122 inc/question.class.php:179
+#: inc/target.class.php:69
+msgid "Delete"
+msgstr "Supprimer"
+
+#: inc/question.class.php:271
+msgid "Are you sure you want to delete this question:"
+msgstr "Êtes-vous sûr de vouloir supprimer la question suivante :"
+
+#: inc/question.class.php:311
+msgid "Are you sure you want to delete this section:"
+msgstr "Êtes-vous sûr de vouloir supprimer la section suivante :"
+
+#: inc/question.class.php:370 inc/question.class.php:409
+#: inc/section.class.php:97
+msgid "The title is required"
+msgstr "L'intitulé est obligatoire"
+
+#: inc/question.class.php:375 inc/question.class.php:414
+msgid "The field type is required"
+msgstr "Le type de champ est obligatoire"
+
+#: inc/question.class.php:380 inc/question.class.php:419
+msgid "The section is required"
+msgstr "La section est obligatoire"
+
+#: inc/target.class.php:26
+msgid "Target"
+msgid_plural "Targets"
+msgstr[0] "Cible"
+msgstr[1] "Cibles"
+
+#: inc/target.class.php:46
+msgid "Targets"
+msgstr "Cibles"
+
+#: inc/target.class.php:112
+msgid "Are you sure you want to delete this target:"
+msgstr "Êtes-vous sûr de vouloir supprimer la cible suivante :"
+
+#: inc/targetticket.class.php:26 inc/targetticket.class.php:59
+msgid "Target ticket"
+msgid_plural "Target tickets"
+msgstr[0] "Ticket cible"
+msgstr[1] "Tickets cible"
+
+#: inc/targetticket.class.php:50
+msgid "Edit a target"
+msgstr "Modifier une cible"
+
+#: inc/targetticket.class.php:62
+msgid "Ticket title"
+msgstr "Titre du ticket"
+
+#: inc/targetticket.class.php:72
+msgid "Ticket template"
+msgstr "Gabarit de ticket"
+
+#: inc/targetticket.class.php:83
+msgid "List of available tags"
+msgstr "Liste des balises disponibles"
+
+#: inc/targetticket.class.php:87
+msgid "Answer"
+msgstr "Réponse"
+
+#: inc/targetticket.class.php:92
+msgid "Full form"
+msgstr "Formulaire complet"
+
+#: inc/targetticket.class.php:145
+msgid "The title cannot be empty!"
+msgstr "Le titre ne doit pas être vide !"
+
+#: inc/targetticket.class.php:151
+msgid "The description cannot be empty!"
+msgstr "La desciption ne doit pas être vide !"
+
+#: scripts/forms-validation.js.php:25
+msgid "A required field is empty"
+msgstr "Un champ obligatoire est vide"

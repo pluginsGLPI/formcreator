@@ -193,9 +193,17 @@ form.formcreator_form .form-group > input[type = file] {
    background: none;
    border: none;
    box-shadow: none;
+   width: auto;
+}
+form.formcreator_form .form-group > .help-block {
+   margin-left: 250px;
+   font-size: 0.8em;
+   color: #333;
+   padding: 5px 0;
+   font-style: italic;
 }
 
-#bloc > form.formcreator_form  .form-group > input, form.formcreator_form textarea {
+#bloc > form.formcreator_form  .form-group > input, #bloc > form.formcreator_form textarea {
    width: 395px;
 }
 #bloc > form.formcreator_form select {

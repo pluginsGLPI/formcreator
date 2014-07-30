@@ -4,14 +4,53 @@ require_once('field.interface.php');
 
 class descriptionField implements Field
 {
-   public static function show($field)
+   public static function show($field, $datas)
    {
-      echo '<div class="description_field form-group" id="description-field">';
+      $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+      echo '<div class="description_field form-group" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo html_entity_decode($field['description']);
-      echo '</div>';
+
+      switch ($field['show_condition']) {
+         case 'notequal':
+            $condition = '!=';
+            break;
+         case 'lower':
+            $condition = '<';
+            break;
+         case 'greater':
+            $condition = '>';
+            break;
+
+         default:
+            $condition = '==';
+            break;
+      }
+
+      if ($field['show_type'] == 'hide') {
+         echo '<script type="text/javascript">
+                  document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  function showFormGroup' . $field['id'] . '() {
+                     var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
+
+                     if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
+                     } else {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                     }
+                  }
+                  showFormGroup' . $field['id'] . '();
+               </script>';
+      }
+
+      echo '</div>' . PHP_EOL;
    }
 
-   public static function isValid($field, $input)
+   public static function displayValue($value, $values)
+   {
+      return '';
+   }
+
+   public static function isValid($field, $value)
    {
       return true;
    }

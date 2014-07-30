@@ -63,9 +63,9 @@ function plugin_init_formcreator ()
       $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/homepage.js';
    }
 
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+   //if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
       $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk-menu.js';
-   }
+   //}
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
 
    // Set the plugin CSRF compliance (required in GLPI 0.84)
