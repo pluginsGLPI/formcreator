@@ -225,12 +225,14 @@ $rand = mt_rand();
             <label for="range_min" id="label_range_min">
                <?php echo __('Min', 'formcreator'); ?>
             </label>
-            <input type="text" name="range_min" id="range_min" class="small_text" value="<?php echo $question->fields['range_min']; ?>" />
+            <input type="text" name="range_min" id="range_min" class="small_text"
+               style="width: 90px" value="<?php echo $question->fields['range_min']; ?>" />
             &nbsp;
             <label for="range_max" id="label_range_max">
                <?php echo __('Max', 'formcreator'); ?>
             </label>
-            <input type="text" name="range_max" id="range_max" class="small_text" value="<?php echo $question->fields['range_max']; ?>" />
+            <input type="text" name="range_max" id="range_max" class="small_text"
+               style="width: 90px" value="<?php echo $question->fields['range_max']; ?>" />
          </td>
          <td colspan="2">&nbsp;</td>
       </tr>
