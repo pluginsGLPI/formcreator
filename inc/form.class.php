@@ -268,7 +268,7 @@ class PluginFormcreatorForm extends CommonDBTM
          'value' => ($id != 0) ? $this->fields["formcreator_categories_id"] : 1,
       ));
       echo '</td>';
-      echo '<td><strong>' . __('Access') . ' <span class="red">*</span></strong></td>';
+      echo '<td><strong>' . __('Access', 'formcreator') . ' <span class="red">*</span></strong></td>';
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
@@ -305,7 +305,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Header') . '</td>';
+      echo '<td>' . __('Header', 'formcreator') . '</td>';
       echo '<td colspan="3"><textarea name="content" cols="115" rows="10">' . $this->fields["content"] . '</textarea></td>';
       Html::initEditorSystem('content');
       echo '</tr>';
