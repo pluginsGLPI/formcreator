@@ -388,8 +388,6 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function showList()
    {
-      global $DB;
-
       echo '<div class="center">';
 
       // Show header for the current entity or it's first parent header
@@ -398,9 +396,9 @@ class PluginFormcreatorForm extends CommonDBTM
       $query  = "SELECT $table.`comment`
                  FROM $table
                  WHERE $where";
-      $result = $DB->query($query);
+      $result = $GLOBALS['DB']->query($query);
       if (!empty($result)) {
-         list($description) = $DB->fetch_array($result);
+         list($description) = $GLOBALS['DB']->fetch_array($result);
          if (!empty($description)) {
             echo '<table class="tab_cadre_fixe">';
             echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
@@ -429,12 +427,12 @@ class PluginFormcreatorForm extends CommonDBTM
                         WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                   )
                  ORDER BY $cat_table.`name` ASC";
-      $result = $DB->query($query);
+      $result = $GLOBALS['DB']->query($query);
       if (!empty($result)) {
          echo '<table class="tab_cadre_fixe">';
 
          // For each categories, show the list of forms the user can fill
-         while ($category = $DB->fetch_array($result)) {
+         while ($category = $GLOBALS['DB']->fetch_array($result)) {
             echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
 
             $where       = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
@@ -450,9 +448,9 @@ class PluginFormcreatorForm extends CommonDBTM
                                FROM $table_fp
                                WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                             ORDER BY $form_table.name ASC";
-            $result_forms = $DB->query($query_forms);
+            $result_forms = $GLOBALS['DB']->query($query_forms);
             $i = 0;
-            while ($form = $DB->fetch_array($result_forms)) {
+            while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
                $i++;
                echo '<tr class="line' . ($i % 2) . '" onclick="document.location = \'' . $GLOBALS['CFG_GLPI']['root_doc']
                         . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '\'" style="cursor:pointer">';
@@ -678,8 +676,6 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function install(Migration $migration)
    {
-      global $DB;
-
       $obj   = new self();
       $table = $obj->getTable();
 
@@ -688,13 +684,13 @@ class PluginFormcreatorForm extends CommonDBTM
 
          // Create default request type
          $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-         $result = $DB->query($query) or die ($DB->error());
-         if (!empty($result)) {
-            list($requesttype) = $DB->fetch_array($result);
+         $result = $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         if ($GLOBALS['DB']->numrows($result) > 0) {
+            list($requesttype) = $GLOBALS['DB']->fetch_array($result);
          } else {
-            $query = "INSERT IGNORE INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
-            $DB->query($query) or die ($DB->error());
-            $requesttype = $DB->insert_id();
+            $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+            $requesttype = $GLOBALS['DB']->insert_id();
          }
 
          // Create Forms table
@@ -716,7 +712,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
 
       return true;
@@ -729,13 +725,11 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function uninstall()
    {
-      global $DB;
-
       $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
 
       // Delete logs of the plugin
-      $DB->query('DELETE FROM `glpi_logs` WHERE itemtype = "' . __CLASS__ . '"');
+      $GLOBALS['DB']->query('DELETE FROM `glpi_logs` WHERE itemtype = "' . __CLASS__ . '"');
 
       return true;
    }
