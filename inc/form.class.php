@@ -524,8 +524,7 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for adding the question
-    * Check fields values and get the order for the new question
+    * Prepare input datas for adding the form
     *
     * @param $input datas used to add the item
     *
@@ -539,26 +538,39 @@ class PluginFormcreatorForm extends CommonDBTM
          Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
-      // - field type is required
-      if(empty($input['itemtype'])) {
-         Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
+
+      // - Category is required
+      if(empty($input['formcreator_categories_id'])) {
+         Session::addMessageAfterRedirect(__('The form category cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
 
-      switch ($input['itemtype']) {
-         case 'PluginFormcreatorTargetTicket':
-            $targetticket      = new PluginFormcreatorTargetTicket();
-            $id_targetticket   = $targetticket->add(array(
-               'name'    => $input['name'],
-               'comment' => '##FULLFORM##'
-            ));
-            $input['items_id'] = $id_targetticket;
-            break;
+      // - Status is required
+      if(empty($input['is_active'])) {
+         Session::addMessageAfterRedirect(__('The status cannot be empty!', 'formcreator'), false, ERROR);
+         return array();
+      }
+
+      // - Access type is required
+      if($input['access_rights'] == '') {
+         Session::addMessageAfterRedirect(__('The access type cannot be empty!', 'formcreator'), false, ERROR);
+         return array();
       }
 
       return $input;
    }
 
+   /**
+    * Prepare input datas for updating the form
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForUpdate($input)
+   {
+      return $this->prepareInputForAdd($input);
+   }
 
    public function saveToTargets($datas)
    {

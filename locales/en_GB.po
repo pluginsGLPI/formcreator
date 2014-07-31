@@ -228,9 +228,21 @@ msgstr "Direct access on homepage"
 msgid "Preview"
 msgstr "Preview"
 
-#: inc/form.class.php:541 inc/target.class.php:141
+#: inc/form.class.php:537 inc/target.class.php:141
 msgid "The name cannot be empty!"
 msgstr "The name cannot be empty!"
+
+#: inc/form.class.php:543
+msgid "The form category cannot be empty!"
+msgstr "The form category cannot be empty!"
+
+#: inc/form.class.php:550
+msgid "The status cannot be empty!"
+msgstr "The status cannot be empty!"
+
+#: inc/form.class.php:556
+msgid "The access type cannot be empty!"
+msgstr "The access type cannot be empty!"
 
 #: inc/form.class.php:546 inc/target.class.php:146
 msgid "The type cannot be empty!"

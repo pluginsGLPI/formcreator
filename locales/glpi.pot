@@ -228,11 +228,23 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: inc/form.class.php:541 inc/target.class.php:141
+#: inc/form.class.php:537 inc/target.class.php:141
 msgid "The name cannot be empty!"
 msgstr ""
 
-#: inc/form.class.php:546 inc/target.class.php:146
+#: inc/form.class.php:543
+msgid "The form category cannot be empty!"
+msgstr ""
+
+#: inc/form.class.php:550
+msgid "The status cannot be empty!"
+msgstr ""
+
+#: inc/form.class.php:556
+msgid "The access type cannot be empty!"
+msgstr ""
+
+#: inc/target.class.php:146
 msgid "The type cannot be empty!"
 msgstr ""
 

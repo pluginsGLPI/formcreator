@@ -228,9 +228,21 @@ msgstr "Accès direct depuis la page d'accueil"
 msgid "Preview"
 msgstr "Aperçu"
 
-#: inc/form.class.php:541 inc/target.class.php:141
+#: inc/form.class.php:537 inc/target.class.php:141
 msgid "The name cannot be empty!"
 msgstr "Le nom ne doit pas être vide !"
+
+#: inc/form.class.php:543
+msgid "The form category cannot be empty!"
+msgstr "La cétégorie de formulaire est obligatoire !"
+
+#: inc/form.class.php:550
+msgid "The status cannot be empty!"
+msgstr "Le statut du formulaire est obligatoire !"
+
+#: inc/form.class.php:556
+msgid "The access type cannot be empty!"
+msgstr "Le type d'accès au formulaire est obligatoire !"
 
 #: inc/form.class.php:546 inc/target.class.php:146
 msgid "The type cannot be empty!"
