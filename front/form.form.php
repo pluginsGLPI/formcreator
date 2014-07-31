@@ -1,7 +1,7 @@
 <?php
 include ("../../../inc/includes.php");
 
-Session::checkRight("config", "w");
+// Session::checkRight("config", "w");
 
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -45,7 +45,22 @@ if ($plugin->isActivated("formcreator")) {
    // Save form to target
    } elseif (isset($_POST['submit_formcreator'])) {
       if($form->getFromDB($_POST['formcreator_form'])) {
+
+         // If user is not authenticated, create temporary user
+         if(!isset($_SESSION['glpiname'])) {
+            $_SESSION['glpiname'] = 'formcreator_temp_user';
+         }
+
+         // Save form
          $form->saveToTargets($_POST);
+
+         // If user was not authenticated, remove temporary user
+         if($_SESSION['glpiname'] == 'formcreator_temp_user') {
+            unset($_SESSION['glpiname']);
+            Html::back();
+         } else {
+            Html::redirect('formlist.php');
+         }
       }
 
 

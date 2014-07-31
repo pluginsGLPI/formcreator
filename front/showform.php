@@ -59,6 +59,8 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
             $_SERVER['PHP_SELF']
          );
 
+         Html::displayMessageAfterRedirect();
+
          $form->displayUserForm($form);
 
          Html::nullFooter();

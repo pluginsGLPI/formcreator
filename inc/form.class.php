@@ -641,7 +641,6 @@ class PluginFormcreatorForm extends CommonDBTM
 
          Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
          unset($_SESSION['formcreator_documents']);
-         Html::redirect('formlist.php');
       }
    }
 
