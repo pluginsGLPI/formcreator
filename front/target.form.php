@@ -14,7 +14,7 @@ if ($plugin->isActivated("formcreator")) {
       if($target->add($_POST)) {
          switch ($_POST['itemtype']) {
             case 'PluginFormcreatorTargetTicket':
-               Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/targetticket.form.php?id=' . $_POST['items_id']);
+               Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/targetticket.form.php?id=' . $target->fields['items_id']);
                break;
 
             default :
