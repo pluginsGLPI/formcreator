@@ -31,22 +31,22 @@ $rand = mt_rand();
       </tr>
 
       <tr class="line0">
-         <td width="12%">
+         <td width="17%">
             <label for="name" id="label_name">
                <?php echo  __('Title', 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
-         <td width="38%">
+         <td width="33%">
             <input type="text" name="name" id="name" style="width:90%;" value="<?php echo $question->fields['name']; ?>" class="required">
          </td>
-         <td width="12%">
+         <td width="17%">
             <label for="fieldtype" id="label_fieldtype">
                <?php echo __('Type', 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
-         <td width="38%">
+         <td width="33%">
             <?php
             $fieldtypes = PluginFormcreatorFields::getNames();
             Dropdown::showFromArray('fieldtype', $fieldtypes, array(
@@ -58,13 +58,13 @@ $rand = mt_rand();
          </td>
       </tr>
       <tr class="line1">
-         <td width="12%">
+         <td width="17%">
             <label for="section" id="label_name">
                <?php echo  __('Section', 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
-         <td width="38%">
+         <td width="33%">
             <?php
             $table = getTableForItemtype('PluginFormcreatorSection');
             $sections = array();
@@ -81,12 +81,12 @@ $rand = mt_rand();
             ));
             ?>
          </td>
-         <td width="12%">
+         <td width="17%">
             <label for="show_type" id="label_show_type">
                <?php echo __('Show field', 'formcreator'); ?>
             </label>
          </td>
-         <td width="38%">
+         <td width="33%">
             <?php
             Dropdown::showFromArray('show_type', array(
                'show'        => __('Always', 'formcreator'),
@@ -136,24 +136,24 @@ $rand = mt_rand();
       </tr>
 
       <tr class="line0" id="required_tr">
-         <td width="12%">
+         <td width="17%">
             <label for="required" id="label_required">
                <?php echo __('Required', 'formcreator'); ?>
             </label>
          </td>
-         <td width="38%">
+         <td width="33%">
             <?php
             dropdown::showYesNo('required', $question->fields['required'], -1, array(
                'rand'  => $rand,
             ));
             ?>
          </td>
-         <td width="12%">
+         <td width="17%">
             <label for="show_empty" id="label_show_empty">
                <?php echo __('Show empty', 'formcreator'); ?>
             </label>
          </td>
-         <td width="38%">
+         <td width="33%">
             <?php
             dropdown::showYesNo('show_empty', $question->fields['show_empty'], -1, array(
                'rand'  => $rand,
@@ -163,7 +163,7 @@ $rand = mt_rand();
       </tr>
 
       <tr class="line1" id="values_tr">
-         <td width="12%">
+         <td width="17%">
             <label for="default_values" id="label_default_values">
                <?php echo __('Default value(s)', 'formcreator'); ?><br />
                <small>(<?php echo __('One per line for lists', 'formcreator'); ?>)</small>
@@ -172,8 +172,8 @@ $rand = mt_rand();
                <?php echo __('Default value', 'formcreator'); ?>
             </label>
          </td>
-         <td width="38%">
-            <textarea name="default_values" id="default_values" rows="4" cols="40"><?php echo $question->fields['default_values']; ?></textarea>
+         <td width="33%">
+            <textarea name="default_values" id="default_values" rows="4" cols="40" style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
             <div id="dropdown_default_value_field">
                <?php
                if(($question->fields['fieldtype'] == 'dropdown') && !empty($question->fields['values'])
@@ -192,7 +192,7 @@ $rand = mt_rand();
 
             </div>
          </td>
-         <td width="12%">
+         <td width="17%">
             <label for="values" id="label_values">
                <?php echo __('Values', 'formcreator'); ?><br />
                <small>(<?php echo __('One per line', 'formcreator'); ?>)</small>
@@ -201,8 +201,8 @@ $rand = mt_rand();
                <?php echo __('Dropdown', 'formcreator'); ?>
             </label>
          </td>
-         <td width="38%">
-            <textarea name="values" id="values" rows="4" cols="40"><?php echo $question->fields['values']; ?></textarea>
+         <td width="33%">
+            <textarea name="values" id="values" rows="4" cols="40" style="width: 90%"><?php echo $question->fields['values']; ?></textarea>
             <div id="dropdown_values_field">
                <?php
                   $optgroup = Dropdown::getStandardDropdownItemTypes();
@@ -218,10 +218,10 @@ $rand = mt_rand();
       </tr>
 
       <tr class="line0" id="range_tr">
-         <td width="12%">
+         <td width="17%">
             <span id="label_range"><?php echo __('Range', 'formcreator'); ?></span>
          </td>
-         <td width="38%">
+         <td width="33%">
             <label for="range_min" id="label_range_min">
                <?php echo __('Min', 'formcreator'); ?>
             </label>
@@ -236,19 +236,19 @@ $rand = mt_rand();
       </tr>
 
       <tr class="line1" id="description_tr">
-         <td width="12%">
+         <td width="17%">
             <label for="description" id="label_description">
                <?php echo __('Description', 'formcreator'); ?>
             </label>
          </td>
-         <td width="85%" colspan="3">
-            <textarea name="description" id="description" rows="6" cols="108"><?php echo $question->fields['description']; ?></textarea>
+         <td width="80%" colspan="3">
+            <textarea name="description" id="description" rows="6" cols="108" style="width: 97%"><?php echo $question->fields['description']; ?></textarea>
             <?php Html::initEditorSystem('description'); ?>
          </td>
       </tr>
 
       <tr class="line0" id="regex_tr">
-         <td width="12%">
+         <td width="17%">
             <label for="regex" id="label_regex">
                <?php echo __('Additional validation', 'formcreator'); ?><br />
                <small>
@@ -257,7 +257,7 @@ $rand = mt_rand();
                </small>
             </label>
          </td>
-         <td width="85%" colspan="3">
+         <td width="80%" colspan="3">
             <input type="text" name="regex" id="regex" style="width:98%;" value="<?php echo $question->fields['regex']; ?>" />
          </td>
       </tr>
