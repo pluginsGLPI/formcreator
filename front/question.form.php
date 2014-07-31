@@ -58,7 +58,6 @@ if ($plugin->isActivated("formcreator")) {
             $DB->query("UPDATE $table SET `order` = $order WHERE `id` = $id2");
          }
       }
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Return to form list
    } else {
