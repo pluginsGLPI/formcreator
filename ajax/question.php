@@ -271,7 +271,7 @@ $rand = mt_rand();
             <?php if(0 == $question_id) : ?>
                <input type="submit" name="add" class="submit_button" value="<?php echo __('Add'); ?>" />
             <?php else : ?>
-               <input type="submit" name="update" class="submit_button" value="<?php echo __('Edit'); ?>" />
+               <input type="submit" name="update" class="submit_button" value="<?php echo __('Save'); ?>" />
             <?php endif; ?>
          </td>
       </tr>
