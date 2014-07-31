@@ -72,7 +72,7 @@ msgstr "Seulement si le champ"
 
 #: ajax/question.php:141 inc/question.class.php:146 inc/question.class.php:150
 msgid "Required"
-msgstr "Requis"
+msgstr "Champ obligatoire"
 
 #: ajax/question.php:153
 msgid "Show empty"
