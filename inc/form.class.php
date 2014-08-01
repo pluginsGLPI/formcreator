@@ -292,6 +292,7 @@ class PluginFormcreatorForm extends CommonDBTM
       Dropdown::showLanguages('language', array(
          'value'               => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
          'display_emptychoice' => true,
+         'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
       ));
       echo '</td>';
       echo '</tr>';

@@ -220,6 +220,10 @@ msgstr "Accès privé"
 msgid "Restricted access"
 msgstr "Accès restreint"
 
+#: inc/form.class.php:295
+msgid "All langages"
+msgstr "Toutes les langues"
+
 #: inc/form.class.php:301
 msgid "Direct access on homepage"
 msgstr "Accès direct depuis la page d'accueil"
