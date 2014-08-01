@@ -723,6 +723,15 @@ class PluginFormcreatorForm extends CommonDBTM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+         // Create standard search options
+         $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
+                  (NULL, '" . __CLASS__ . "', 1, 1, 0),
+                  (NULL, '" . __CLASS__ . "', 3, 2, 0),
+                  (NULL, '" . __CLASS__ . "', 7, 3, 0),
+                  (NULL, '" . __CLASS__ . "', 8, 4, 0),
+                  (NULL, '" . __CLASS__ . "', 9, 5, 0);";
+         $DB->query($query) or die ($DB->error());
       }
 
       return true;
