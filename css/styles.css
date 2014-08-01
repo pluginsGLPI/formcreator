@@ -159,7 +159,7 @@ form.formcreator_form .form-group > input, form.formcreator_form textarea, form.
    min-height: 30px;
    padding: 3px 10px;
    margin: 0;
-   width: 670px;
+   width: 660px;
    color: #333;
    font-size: 1.1em;
 }
@@ -181,7 +181,7 @@ form.formcreator_form input[type = file]:focus {
 }
 
 form.formcreator_form .form-group > input, form.formcreator_form textarea {
-   width: 648px;
+   width: 638px;
    min-height: 24px;
 }
 
