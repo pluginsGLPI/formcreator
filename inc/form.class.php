@@ -665,11 +665,10 @@ class PluginFormcreatorForm extends CommonDBTM
          foreach ($questions as $question_line) {
             $question_no ++;
 
-            if(isset($datas['formcreator_field_' . $question_line['id']])) {
-               $value = (is_array($datas['formcreator_field_' . $question_line['id']]))
-                        ? implode(', ', $datas['formcreator_field_' . $question_line['id']])
-                        : $value = strip_tags($datas['formcreator_field_' . $question_line['id']]);
-            } else $value = '';
+            $id        = $question_line['id'];
+            $name      = $question_line['name'];
+            $value     = isset($datas['formcreator_field_' . $id]) ? $datas['formcreator_field_' . $id] : '';
+            $value     = PluginFormcreatorFields::getValue($question_line, $value);
 
             $output .= $question_no . ') ' . $question_line['name'] . PHP_EOL;
             $output .= $value . PHP_EOL . PHP_EOL;
