@@ -516,7 +516,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Display submit button
       echo '<div class="center">';
-      echo '<input type="submit" name="submit_formcreator" class="submit_button" />';
+      echo '<input type="submit" name="submit_formcreator" class="submit_button" value="' . __('Send') . '" />';
       echo '</div>';
 
       echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
