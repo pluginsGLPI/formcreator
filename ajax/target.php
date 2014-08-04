@@ -5,7 +5,7 @@ Session::checkRight("config", "w");
 echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/target.form.php">';
 echo '<table class="tab_cadre_fixe">';
 
-echo '<tr><th colspan="4">' . __('Add a target', 'formcreator') . '</th></tr>';
+echo '<tr><th colspan="4">' . __('Add a destination', 'formcreator') . '</th></tr>';
 
 echo '<tr class="line1">';
 echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';

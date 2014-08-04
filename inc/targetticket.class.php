@@ -47,7 +47,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="5">' . __('Edit a target', 'formcreator') . '</th></tr>';
+      echo '<tr><th colspan="5">' . __('Edit a destination', 'formcreator') . '</th></tr>';
 
       echo '<tr class="line1">';
       echo '<td width="20%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';

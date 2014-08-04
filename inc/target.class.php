@@ -23,7 +23,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
    public static function getTypeName($nb = 1)
    {
-      return _n('Target', 'Targets', $nb, 'formcreator');
+      return _n('Destination', 'Destinations', $nb, 'formcreator');
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -43,7 +43,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
-      echo '<th colspan="3">' . __('Targets', 'formcreator') . '</th>';
+      echo '<th colspan="3">' . __('Destinations', 'formcreator') . '</th>';
       echo '</tr>';
 
       $target_class    = new PluginFormcreatorTarget();
@@ -79,7 +79,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '<td colspan="3">';
       echo '<a href="javascript:addTarget(' . $item->fields['id'] . ');">
                 <img src="'.$GLOBALS['CFG_GLPI']['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
-                '.__('Add a target', 'formcreator').'
+                '.__('Add a destination', 'formcreator').'
             </a>';
       echo '</td>';
       echo '</tr>';
@@ -109,7 +109,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                }
 
                function deleteTarget(target_id, target_name) {
-                  if(confirm("' . __('Are you sure you want to delete this target:', 'formcreator') . ' " + target_name)) {
+                  if(confirm("' . __('Are you sure you want to delete this destination:', 'formcreator') . ' " + target_name)) {
                      Ext.Ajax.request({
                         url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/target.form.php",
                         success: reloadTab,

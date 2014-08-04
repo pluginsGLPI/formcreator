@@ -322,6 +322,12 @@ msgid_plural "Targets"
 msgstr[0] "Target"
 msgstr[1] "Targets"
 
+#: inc/target.class.php:26
+msgid "Destination"
+msgid_plural "Destinations"
+msgstr[0] "Destination"
+msgstr[1] "Destinations"
+
 #: inc/target.class.php:46
 msgid "Targets"
 msgstr "Targets"
@@ -339,6 +345,18 @@ msgstr[1] "Target tickets"
 #: inc/targetticket.class.php:50
 msgid "Edit a target"
 msgstr "Edit a target"
+
+#: ajax/target.php:8 inc/target.class.php:82
+msgid "Add a destination"
+msgstr "Add a destination"
+
+#: inc/targetticket.class.php:50
+msgid "Edit a destination"
+msgstr "Edit a destination"
+
+#: inc/target.class.php:112
+msgid "Are you sure you want to delete this destination:"
+msgstr "Are you sure you want to delete this destination:"
 
 #: inc/targetticket.class.php:62
 msgid "Ticket title"
