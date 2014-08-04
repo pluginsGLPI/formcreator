@@ -38,6 +38,10 @@ msgstr ""
 msgid "Forms"
 msgstr ""
 
+#: inc/fields/datetime-field.class.php:84
+msgid "Datetime"
+msgstr ""
+
 #: ajax/question.php:27 inc/question.class.php:190
 msgid "Add a question"
 msgstr ""

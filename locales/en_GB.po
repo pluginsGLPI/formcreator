@@ -38,6 +38,10 @@ msgstr "Installed / not configured"
 msgid "Forms"
 msgstr "Forms"
 
+#: inc/fields/datetime-field.class.php:84
+msgid "Datetime"
+msgstr "Date & time"
+
 #: ajax/question.php:27 inc/question.class.php:190
 msgid "Add a question"
 msgstr "Add a question"

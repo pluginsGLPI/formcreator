@@ -2,7 +2,7 @@
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
 require_once('field.interface.php');
 
-class dateField implements Field
+class datetimeField implements Field
 {
    public static function show($field, $datas)
    {
@@ -20,7 +20,7 @@ class dateField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
-      Html::showDateField('formcreator_field_' . $field['id'], array(
+      Html::showDateTimeField('formcreator_field_' . $field['id'], array(
          'value' => $value
       ));
 
@@ -63,7 +63,7 @@ class dateField implements Field
 
    public static function displayValue($value, $values)
    {
-      return Html::convDate($value);
+      return Html::convDateTime($value);
    }
 
    public static function isValid($field, $value)
@@ -81,7 +81,7 @@ class dateField implements Field
 
    public static function getName()
    {
-      return __('Date');
+      return __('Datetime', 'formcreator');
    }
 
    public static function getJSFields()
