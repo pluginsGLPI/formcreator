@@ -63,7 +63,7 @@ class dateField implements Field
 
    public static function displayValue($value, $values)
    {
-      return $value;
+      return Html::convDateTime($value);
    }
 
    public static function isValid($field, $value)
