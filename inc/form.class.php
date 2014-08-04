@@ -649,15 +649,15 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       $question_no = 0;
 
-      $output = strtoupper(__('Form data', 'formcreator')) . PHP_EOL;
-      for($i = 0; $i < strlen(__('Form data', 'formcreator')); $i++) $output .= '=';
+      $output = mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . PHP_EOL;
+      $output .= '=================';
       $output .= PHP_EOL . PHP_EOL;
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $this->getID(), '`order` ASC');
       foreach ($find_sections as $section_line) {
          $output .= $section_line['name'] . PHP_EOL;
-         for($i = 0; $i < strlen($section_line['name']); $i++) $output .= '-';
+         $output .= '---------------------------------';
          $output .= PHP_EOL . PHP_EOL;
 
          // Display all fields of the section
@@ -671,7 +671,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $value     = isset($datas['formcreator_field_' . $id]) ? $datas['formcreator_field_' . $id] : '';
             $value     = PluginFormcreatorFields::getValue($question_line, $value);
 
-            $output .= $question_no . ') ' . $question_line['name'] . PHP_EOL;
+            $output .= $question_no . ') ' . $question_line['name'] . ' : ';
             $output .= $value . PHP_EOL . PHP_EOL;
          }
       }

@@ -64,7 +64,7 @@ class textareaField implements Field
 
    public static function displayValue($value, $values)
    {
-      return $value;
+      return PHP_EOL . $value;
    }
 
    public static function isValid($field, $value)
