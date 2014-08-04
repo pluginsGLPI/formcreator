@@ -210,15 +210,15 @@ msgstr "Actif"
 
 #: inc/form.class.php:170 inc/form.class.php:219 inc/form.class.php:276
 msgid "Public access"
-msgstr "Accès public"
+msgstr "Accès public / anonyme"
 
 #: inc/form.class.php:174 inc/form.class.php:222 inc/form.class.php:277
 msgid "Private access"
-msgstr "Accès privé"
+msgstr "Utilisateur GLPI authentifié"
 
 #: inc/form.class.php:178 inc/form.class.php:225 inc/form.class.php:278
 msgid "Restricted access"
-msgstr "Accès restreint"
+msgstr "Droits restreint (profils)"
 
 #: inc/form.class.php:295
 msgid "All langages"
