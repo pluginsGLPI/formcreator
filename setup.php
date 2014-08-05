@@ -6,7 +6,7 @@
  */
 function plugin_version_formcreator ()
 {
-   return array('name'       => __('FormCreator', 'formcreator'),
+   return array('name'       => __('Forms', 'formcreator'),
             'version'        => '0.84-2.0',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
@@ -81,6 +81,12 @@ function plugin_init_formcreator ()
 
    // Set options for pages (title, links, buttons...)
    $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
+      'config'         => array('title'  => __('Settings'),
+                              'page'   => '/plugins/formcreator/front/showform.php',
+                              'links'  => array(
+                                  'search'   => '/plugins/formcreator/front/formlist.php',
+                                  'config'   => '/plugins/formcreator/front/config.form.php',
+                                  'add'      => '/plugins/formcreator/front/form.form.php')),
       'options'      => array('title'  => __('Forms', 'formcreator'),
                               'links'  => array(
                                   'search'   => '/plugins/formcreator/front/formlist.php',

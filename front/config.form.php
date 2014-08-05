@@ -22,7 +22,7 @@ if ($plugin->isActivated("formcreator")) {
          $_SERVER['PHP_SELF'],
          'plugins',
          'formcreator',
-         'options'
+         'config'
       );
 
       $config->show($_GET);
