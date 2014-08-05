@@ -276,6 +276,14 @@ msgid_plural "Headers"
 msgstr[0] "Entête"
 msgstr[1] "Entêtes"
 
+#: inc/header.class.php:31 inc/header.class.php:111
+msgid "An header already exists for this entity! You can have only one header per entity."
+msgstr "Une entête existe déjà pour cette entité ! Vous ne pouvez avoir qu'une seule entête par entité."
+
+#: inc/header.class.php:48
+msgid "An header exists for a parent entity! Another header will overwrite the previous one."
+msgstr "Une entête existe pour une entité parente ! Ajouter une entête remplacera la précédente pour cette entité."
+
 #: inc/header.class.php:26
 msgid "Add an header"
 msgstr "Ajouter une Entête"

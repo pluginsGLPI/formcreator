@@ -276,6 +276,14 @@ msgstr[1] ""
 msgid "Add an header"
 msgstr ""
 
+#: inc/header.class.php:31 inc/header.class.php:111
+msgid "An header already exists for this entity! You can have only one header per entity."
+msgstr ""
+
+#: inc/header.class.php:48
+msgid "An header exists for a parent entity! Another header will overwrite the previous one."
+msgstr ""
+
 #: inc/question.class.php:35 inc/section.class.php:35
 #: inc/targetticket.class.php:85
 msgid "Question"
