@@ -268,20 +268,11 @@ class PluginFormcreatorForm extends CommonDBTM
          'value' => ($id != 0) ? $this->fields["formcreator_categories_id"] : 1,
       ));
       echo '</td>';
-      echo '<td><strong>' . __('Access', 'formcreator') . ' <span class="red">*</span></strong></td>';
+      echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
       echo '<td>';
-      Dropdown::showFromArray(
-         'access_rights',
-         array(
-            self::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
-            self::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
-            self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-         ),
-         array(
-            'value' => ($id != 0) ? $this->fields["access_rights"] : 1,
-         )
-      );
+      Dropdown::showYesNo("helpdesk_home", $this->fields["helpdesk_home"]);
       echo '</td>';
+
       echo '</tr>';
 
       echo '<tr class="tab_bg_1">';
@@ -294,14 +285,6 @@ class PluginFormcreatorForm extends CommonDBTM
          'display_emptychoice' => true,
          'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
       ));
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="tab_bg_2">';
-      echo '<td colspan="2">&nbsp;</td>';
-      echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
-      echo '<td>';
-      Dropdown::showYesNo("helpdesk_home", $this->fields["helpdesk_home"]);
       echo '</td>';
       echo '</tr>';
 
@@ -377,9 +360,8 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       $ong = array();
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
+      $this->addStandardTab('PluginFormcreatorFormprofiles', $ong, $options);
       $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
-      if(self::ACCESS_RESTRICTED == $this->fields['access_rights'])
-         $this->addStandardTab('PluginFormcreatorFormprofiles', $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       return $ong;
    }
@@ -552,12 +534,6 @@ class PluginFormcreatorForm extends CommonDBTM
          return array();
       }
 
-      // - Access type is required
-      if($input['access_rights'] == '') {
-         Session::addMessageAfterRedirect(__('The access type cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
-
       return $input;
    }
 
@@ -570,7 +546,11 @@ class PluginFormcreatorForm extends CommonDBTM
    **/
    public function prepareInputForUpdate($input)
    {
-      return $this->prepareInputForAdd($input);
+      if (isset($input['access_rights'])) {
+         return $input;
+      } else {
+         return $this->prepareInputForAdd($input);
+      }
    }
 
    public function saveToTargets($datas)

@@ -71,7 +71,7 @@ if ($plugin->isActivated("formcreator")) {
          $_SERVER['PHP_SELF'],
          'plugins',
          'formcreator',
-         'options'
+         'config'
       );
 
       $form->showForm($_REQUEST);
