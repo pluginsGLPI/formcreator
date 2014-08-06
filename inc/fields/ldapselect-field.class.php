@@ -2,13 +2,18 @@
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
 require_once('field.interface.php');
 
-class textField implements Field
+class ldapselectField implements Field
 {
-	public static function show($field, $datas)
+   public static function show($field, $datas)
    {
-      $value = (!empty($datas['formcreator_field_' . $field['id']]))
-               ? $datas['formcreator_field_' . $field['id']]
-               : $field['default_values'];
+
+
+
+//      $default_values = explode("\r\n", $field['default_values']);
+//      $default_value  = array_shift($default_values);
+//      $default_value = (!empty($datas['formcreator_field_' . $field['id']]))
+//               ? $datas['formcreator_field_' . $field['id']]
+//               : $default_value;
 
       if($field['required'])  $required = ' required';
       else $required = '';
@@ -20,10 +25,24 @@ class textField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
-      echo '<input type="text" class="form-control"
-               name="formcreator_field_' . $field['id'] . '"
-               id="formcreator_field_' . $field['id'] . '"
-               value="' . stripslashes($value) . '" />';
+      if(!empty($field['values'])) {
+         $ldap_values = json_decode($field['values']);
+         $config_ldap = new AuthLDAP();
+         $config_ldap->getFromDB($ldap_values->ldap_auth);
+         $ds      = $config_ldap->connect();
+         $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, array($ldap_values->ldap_attribute));
+         $entries = ldap_get_entries($ds, $sn);
+         array_shift($entries);
+
+         $tab_values = array();
+         foreach($entries as $id => $attribute) {
+            if(isset($attribute[$ldap_values->ldap_attribute]))
+               $tab_values[$id] = $attribute[$ldap_values->ldap_attribute][0];
+         }
+
+         if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
+         Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values);
+      }
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
@@ -60,59 +79,44 @@ class textField implements Field
       }
 
       echo '</div>' . PHP_EOL;
-	}
+   }
 
    public static function displayValue($value, $values)
    {
       return $value;
    }
 
-	public static function isValid($field, $value)
+   public static function isValid($field, $value)
    {
       // Not required or not empty
-      if($field['required'] && empty($value)) {
+      if($field['required'] && ($value == '')) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
-      // Min range not set or text length longer than min length
-      } elseif(!empty($field['range_min']) && strlen($value) < $field['range_min']) {
-         Session::addMessageAfterRedirect(__('The text is too short:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-         return false;
-
-      // Max range not set or text length shorter than max length
-      } elseif(!empty($field['range_max']) && strlen($value) > $field['range_max']) {
-         Session::addMessageAfterRedirect(__('The text is too long:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-         return false;
-
-      // Specific format not set or well match
-      } elseif(!empty($field['regex']) && !preg_match($field['regex'], $value)) {
-         Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-         return false;
-
       // All is OK
-		} else {
-			return true;
-		}
-	}
+      } else {
+         return true;
+      }
+   }
 
    public static function getName()
    {
-      return __('Text', 'formcreator');
+      return __('LDAP Select', 'formcreator');
    }
 
    public static function getJSFields()
    {
       $prefs = array(
          'required'       => 1,
-         'default_values' => 1,
+         'default_values' => 0,
          'values'         => 0,
-         'range'          => 1,
-         'show_empty'     => 0,
-         'regex'          => 1,
+         'range'          => 0,
+         'show_empty'     => 1,
+         'regex'          => 0,
          'show_type'      => 1,
          'dropdown_value' => 0,
-         'ldap_values'    => 0,
+         'ldap_values'    => 1,
       );
-      return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
+      return "tab_fields_fields['ldapselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

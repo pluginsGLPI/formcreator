@@ -95,6 +95,7 @@ class datetimeField implements Field
          'regex'          => 0,
          'show_type'      => 1,
          'dropdown_value' => 0,
+         'ldap_values'    => 0,
       );
       return "tab_fields_fields['date'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

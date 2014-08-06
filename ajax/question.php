@@ -41,7 +41,7 @@ $rand = mt_rand();
             <input type="text" name="name" id="name" style="width:90%;" value="<?php echo $question->fields['name']; ?>" class="required">
          </td>
          <td width="17%">
-            <label for="fieldtype" id="label_fieldtype">
+            <label for="dropdown_fieldtype<?php echo $rand; ?>" id="label_fieldtype">
                <?php echo __('Type', 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
@@ -59,7 +59,7 @@ $rand = mt_rand();
       </tr>
       <tr class="line1">
          <td width="17%">
-            <label for="section" id="label_name">
+            <label for="dropdown_plugin_formcreator_sections_id<?php echo $rand; ?>" id="label_name">
                <?php echo  __('Section', 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
@@ -77,12 +77,13 @@ $rand = mt_rand();
                $sections[$section['id']] = $section['name'];
             }
             Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, array(
-               'value' => $question->fields['plugin_formcreator_sections_id']
+               'value' => $question->fields['plugin_formcreator_sections_id'],
+               'rand'  => $rand,
             ));
             ?>
          </td>
          <td width="17%">
-            <label for="show_type" id="label_show_type">
+            <label for="dropdown_show_type<?php echo $rand; ?>" id="label_show_type">
                <?php echo __('Show field', 'formcreator'); ?>
             </label>
          </td>
@@ -137,7 +138,7 @@ $rand = mt_rand();
 
       <tr class="line0" id="required_tr">
          <td width="17%">
-            <label for="required" id="label_required">
+            <label for="dropdown_required<?php echo $rand; ?>" id="label_required">
                <?php echo __('Required', 'formcreator'); ?>
             </label>
          </td>
@@ -149,7 +150,7 @@ $rand = mt_rand();
             ?>
          </td>
          <td width="17%">
-            <label for="show_empty" id="label_show_empty">
+            <label for="dropdown_show_empty<?php echo $rand; ?>" id="label_show_empty">
                <?php echo __('Show empty', 'formcreator'); ?>
             </label>
          </td>
@@ -164,11 +165,11 @@ $rand = mt_rand();
 
       <tr class="line1" id="values_tr">
          <td width="17%">
-            <label for="default_values" id="label_default_values">
+            <label for="dropdown_default_values<?php echo $rand; ?>" id="label_default_values">
                <?php echo __('Default value(s)', 'formcreator'); ?><br />
                <small>(<?php echo __('One per line for lists', 'formcreator'); ?>)</small>
             </label>
-            <label for="dropdown_default_value" id="label_dropdown_default_value">
+            <label for="dropdown_dropdown_default_value<?php echo $rand; ?>" id="label_dropdown_default_value">
                <?php echo __('Default value', 'formcreator'); ?>
             </label>
          </td>
@@ -184,7 +185,7 @@ $rand = mt_rand();
                      'rand'  => $rand,
                   ));
                } else {
-                  echo '<select name="dropdown_default_value" id="dropdown_dropdown_default_value' . $rand . '">
+                  echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>" id="dropdown_dropdown_default_value' . $rand . '">
                            <option value="">---</option>
                         </select>';
                }
@@ -197,7 +198,7 @@ $rand = mt_rand();
                <?php echo __('Values', 'formcreator'); ?><br />
                <small>(<?php echo __('One per line', 'formcreator'); ?>)</small>
             </label>
-            <label for="dropdown_values" id="label_dropdown_values">
+            <label for="dropdown_dropdown_values<?php echo $rand; ?>" id="label_dropdown_values">
                <?php echo __('Dropdown', 'formcreator'); ?>
             </label>
          </td>
@@ -215,6 +216,43 @@ $rand = mt_rand();
                ?>
             </div>
          </td>
+      </tr>
+
+      <?php $ldap_values = json_decode($question->fields['values']); ?>
+      <tr class="line1" id="ldap_tr">
+         <td width="17%">
+            <label for="ldap_filter">
+               <?php echo __('Filter', 'formcreator'); ?>
+            </label>
+         </td>
+         <td width="33%">
+            <input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;" value="<?php echo $ldap_values->ldap_filter; ?>" />
+         </td>
+         <td width="17%">
+            <label for="dropdown_ldap_auth<?php echo $rand; ?>">
+               <?php echo __('LDAP directory', 'formcreator'); ?>
+            </label>
+         </td>
+         <td width="33%">
+            <?php
+            Dropdown::show('AuthLDAP', array(
+               'name'  => 'ldap_auth',
+               'rand'  => $rand,
+               'value' => $ldap_values->ldap_auth,
+            ));
+            ?>
+         </td>
+      </tr>
+      <tr class="line0" id="ldap_tr2">
+         <td width="17%">
+            <label for="ldap_attribute">
+               <?php echo __('Attribute', 'formcreator'); ?>
+            </label>
+         </td>
+         <td width="33%">
+            <input type="text" name="ldap_attribute" id="ldap_attribute" style="width:98%;" value="<?php echo $ldap_values->ldap_attribute; ?>" />
+         </td>
+         <td colspan="2">&nbsp;</td>
       </tr>
 
       <tr class="line0" id="range_tr">
@@ -290,13 +328,12 @@ $rand = mt_rand();
 
             eval(tab_fields_fields[value]);
          } else {
-            showFields(0, 0, 0, 0, 0, 0, 0, 0);
+            showFields(0, 0, 0, 0, 0, 0, 0, 0, 0);
          }
       }
       changeQuestionType();
 
-      function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value) {
-         console.log('test');
+      function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, ldap_values) {
          if(required) {
             document.getElementById('dropdown_required<?php echo $rand; ?>').style.display   = 'inline';
             document.getElementById('label_required').style.display                          = 'inline';
@@ -376,6 +413,13 @@ $rand = mt_rand();
             document.getElementById('required_tr').style.display                             = 'table-row';
          } else {
             document.getElementById('required_tr').style.display                             = 'none';
+         }
+         if(ldap_values) {
+            document.getElementById('ldap_tr').style.display                                 = 'table-row';
+            document.getElementById('ldap_tr2').style.display                                = 'table-row';
+         } else {
+            document.getElementById('ldap_tr').style.display                                 = 'none';
+            document.getElementById('ldap_tr2').style.display                                = 'none';
          }
       }
 

@@ -116,6 +116,7 @@ class floatField implements Field
          'regex'          => 1,
          'show_type'      => 1,
          'dropdown_value' => 0,
+         'ldap_values'    => 0,
       );
       return "tab_fields_fields['float'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

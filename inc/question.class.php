@@ -381,6 +381,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return array();
       }
 
+      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+      if(!empty($input['ldap_auth'])) {
+         $input['values'] = json_encode(array(
+            'ldap_auth'      => $input['ldap_auth'],
+            'ldap_filter'    => $input['ldap_filter'],
+            'ldap_attribute' => $input['ldap_attribute'],
+         ));
+      }
+
       // Get next order
       $obj    = new self();
       $query  = "SELECT MAX(`order`) AS `order`
@@ -424,6 +433,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if($input['fieldtype'] == 'dropdown') {
          $input['default_values'] = $input['dropdown_default_value'];
          $input['values']         = $input['dropdown_values'];
+      }
+
+      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+      if(!empty($input['ldap_auth'])) {
+         $input['values'] = json_encode(array(
+            'ldap_auth'      => $input['ldap_auth'],
+            'ldap_filter'    => $input['ldap_filter'],
+            'ldap_attribute' => $input['ldap_attribute'],
+         ));
       }
 
       // If change section, reorder questions
