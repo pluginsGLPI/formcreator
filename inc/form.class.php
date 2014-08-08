@@ -670,19 +670,19 @@ class PluginFormcreatorForm extends CommonDBTM
       $obj   = new self();
       $table = $obj->getTable();
 
+      // Create default request type
+      $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
+      $result = $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      if ($GLOBALS['DB']->numrows($result) > 0) {
+         list($requesttype) = $GLOBALS['DB']->fetch_array($result);
+      } else {
+         $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         $requesttype = $GLOBALS['DB']->insert_id();
+      }
+
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
-
-         // Create default request type
-         $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-         $result = $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-         if ($GLOBALS['DB']->numrows($result) > 0) {
-            list($requesttype) = $GLOBALS['DB']->fetch_array($result);
-         } else {
-            $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
-            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-            $requesttype = $GLOBALS['DB']->insert_id();
-         }
 
          // Create Forms table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -704,16 +704,32 @@ class PluginFormcreatorForm extends CommonDBTM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      } else {
 
-         // Create standard search options
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                  (NULL, '" . __CLASS__ . "', 1, 1, 0),
-                  (NULL, '" . __CLASS__ . "', 3, 2, 0),
-                  (NULL, '" . __CLASS__ . "', 7, 3, 0),
-                  (NULL, '" . __CLASS__ . "', 8, 4, 0),
-                  (NULL, '" . __CLASS__ . "', 9, 5, 0);";
-         $DB->query($query) or die ($DB->error());
+         // Migration from previous version
+         if (FieldExists($table, 'cat')) {
+            $query = "ALTER TABLE `$table`
+                      CHANGE `cat` `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                      ADD `access_rights` tinyint(1) NOT NULL DEFAULT '1',
+                      ADD `requesttype` int(11) NOT NULL DEFAULT '$requesttype',
+                      ADD `description` varchar(255) COLLATE utf8_unicode_ci,
+                      ADD `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
+                      ADD `is_deleted` tinyint(1) NOT NULL DEFAULT '0';";
+            $GLOBALS['DB']->query($query);
+         }
       }
+
+      // Create standard search options
+      $query = 'DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = "PluginFormcreatorForm"';
+      $GLOBALS['DB']->query($query) or die("error deleting glpi_displaypreferences ". $GLOBALS['DB']->error());
+
+      $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
+               (NULL, '" . __CLASS__ . "', 1, 1, 0),
+               (NULL, '" . __CLASS__ . "', 3, 2, 0),
+               (NULL, '" . __CLASS__ . "', 7, 3, 0),
+               (NULL, '" . __CLASS__ . "', 8, 4, 0),
+               (NULL, '" . __CLASS__ . "', 9, 5, 0);";
+      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
 
       return true;
    }

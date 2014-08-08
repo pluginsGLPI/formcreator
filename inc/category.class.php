@@ -50,6 +50,14 @@ class PluginFormcreatorCategory extends CommonDropdown
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       }
 
+      // Migration from previous version
+      if (TableExists('glpi_plugin_formcreator_cats')) {
+         $query = "INSERT INTO `$table` (`id`, `name`)
+                     SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
+         $GLOBALS['DB']->query($query);
+         $GLOBALS['DB']->query("DROP TABLE glpi_plugin_formcreator_cats");
+      }
+
       return true;
    }
 

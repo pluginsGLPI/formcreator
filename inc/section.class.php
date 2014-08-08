@@ -32,7 +32,7 @@ class PluginFormcreatorSection extends CommonDBChild
     */
    public static function getTypeName($nb = 0)
    {
-      return _n('Question', 'Queestions', $nb, 'formcreator');
+      return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
    /**
@@ -46,13 +46,14 @@ class PluginFormcreatorSection extends CommonDBChild
       $obj   = new self();
       $table = $obj->getTable();
 
+      // Create new table
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `plugin_formcreator_forms_id` tinyint(1) NOT NULL,
+                     `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                      `order` int(11) NOT NULL DEFAULT '0'
                   )
@@ -60,6 +61,45 @@ class PluginFormcreatorSection extends CommonDBChild
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      }
+
+      // Migration from previous version => Remove useless target field
+      if(FieldExists($table, 'plugin_formcreator_targets_id')) {
+         $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `plugin_formcreator_targets_id`;");
+      }
+
+      // Migration from previous version => Rename "position" into "order" and start order from 1 instead of 0
+      if(FieldExists($table, 'position')) {
+         $GLOBALS['DB']->query("ALTER TABLE `$table` CHANGE `position` `order` INT(11) NOT NULL DEFAULT '0';");
+         $GLOBALS['DB']->query("UPDATE TABLE `$table` SET `order` = `order` + 1;");
+      }
+
+      // Migration from previous version => Update Question table, then create a "description" question from content
+      if(FieldExists($table, 'content')) {
+         $version   = plugin_version_formcreator();
+         $migration = new Migration($version['version']);
+         PluginFormcreatorQuestion::install($version);
+         $table_questions = getTableForItemType('PluginFormcreatorQuestion');
+
+         // Increment the order of questions which are in a section with a description
+         $query = "UPDATE TABLE `$table_questions`
+                   SET `order` = `order` + 1
+                   WHERE `plugin_formcreator_sections_id` IN (
+                     SELECT `id`
+                     FROM $table
+                     WHERE `content` != ''
+                  );";
+         $GLOBALS['DB']->query($query);
+
+         // Create description from content
+         $query = "INSERT INTO `$table_questions` (`plugin_formcreator_sections_id`, `fieldtype`, `name`, `description`, `order`)
+                     SELECT `id`, 'description' AS fieldtype, CONCAT('Description ', `id`) AS name,  `content`, 1 AS `order`
+                     FROM $table
+                     WHERE `content` != ''";
+         $GLOBALS['DB']->query($query);
+
+         // Delete content column
+         $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `content`;");
       }
 
       return true;

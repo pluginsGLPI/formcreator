@@ -236,7 +236,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       return true;
-      }
+   }
 
    public static function uninstall()
    {

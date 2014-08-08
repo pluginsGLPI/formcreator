@@ -519,6 +519,128 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      } elseif(!FieldExists($table, 'fieldtype')) {
+         // Migration from previous version
+         $query = "ALTER TABLE `$table`
+                   ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
+                   ADD `show_field` int(11) DEFAULT NULL,
+                   ADD `show_condition` enum('equal','notequal','lower','greater') COLLATE utf8_unicode_ci DEFAULT NULL,
+                   ADD `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                   ADD `required` tinyint(1) NOT NULL DEFAULT '0',
+                   ADD `show_empty` tinyint(1) NOT NULL DEFAULT '0',
+                   ADD `default_values` text COLLATE utf8_unicode_ci,
+                   ADD `values` text COLLATE utf8_unicode_ci,
+                   ADD `range_min` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+                   ADD `range_max` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+                   ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                   CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
+                   CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+         // order start from 1 instead of 0
+         $GLOBALS['DB']->query("UPDATE `$table` SET `order` = `order` + 1;") or die ($GLOBALS['DB']->error());
+
+         // Match new type
+         $query  = "SELECT `id`, `type`, `data`, `option`
+                    FROM $table";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $datas    = json_decode($line['data']);
+            $options  = json_decode($line['option']);
+
+            $fieldtype = 'text';
+            $values    = '';
+            $default   = '';
+            $regex     = '';
+            $required  = 0;
+
+            foreach($datas->value as $value) {
+               $values .= urldecode($value) . PHP_EOL;
+            }
+
+            switch ($line['type']) {
+               case '1':
+                  $fieldtype = 'text';
+
+                  if (isset($options->type)) {
+                     switch ($options->type) {
+                        case '2':
+                           $required  = 1;
+                           break;
+                        case '3':
+                           $regex = '[[:alpha:]]';
+                           break;
+                        case '4':
+                           $fieldtype = 'float';
+                           break;
+                        case '5':
+                           $regex = urldecode($options->value);
+                           break;
+                        case '6':
+                           $fieldtype = 'email';
+                           break;
+                        case '7':
+                           $fieldtype = 'date';
+                           break;
+                     }
+                  }
+                  $default_values = $values;
+                  $values = '';
+                  break;
+
+               case '2':
+                  $fieldtype = 'select';
+                  break;
+
+               case '3':
+                  $fieldtype = 'checkboxes';
+                  break;
+
+               case '4':
+                  $fieldtype = 'textarea';
+                  if (isset($options->type) && ($options->type == 2)) {
+                     $required = 1;
+                  }
+                  $default_values = $values;
+                  $values = '';
+                  break;
+
+               case '5':
+                  $fieldtype = 'file';
+                  break;
+
+               case '8':
+                  $fieldtype = 'select';
+                  break;
+
+               case '9':
+                  $fieldtype = 'select';
+                  break;
+
+               case '10':
+                  $fieldtype = 'dropdown';
+                  break;
+
+               default :
+                  $data = null;
+                  break;
+            }
+
+            $query_udate = "UPDATE $table SET
+                               `fieldtype` = $fieldtype,
+                               `values`    = $values,
+                               `default`   = $default,
+                               `regex`     = $regex,
+                               `required`  = $required
+                            WHERE `id` = {$line['id']}";
+            $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
+         }
+
+         $query = "ALTER TABLE `$table`
+                   DROP `type`,
+                   DROP `data`,
+                   DROP `option`;";
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
 
       return true;

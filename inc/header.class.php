@@ -122,7 +122,7 @@ class PluginFormcreatorHeader extends CommonDropdown
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL auto_increment,
                      `entities_id` int(11) NOT NULL DEFAULT '0',
-                     `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+                     `is_recursive` tinyint(1) NOT NULL DEFAULT '1',
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `comment` text collate utf8_unicode_ci,
                      PRIMARY KEY (`id`),
@@ -130,6 +130,15 @@ class PluginFormcreatorHeader extends CommonDropdown
                      ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       }
+
+      // Migration from previous version
+      if (TableExists('glpi_plugin_formcreator_titles')) {
+         $query = "INSERT INTO `$table` (`id`, `name`, `comment`)
+                     SELECT `id`, CONCAT('Header ', `id`) AS name, `name` AS comment FROM glpi_plugin_formcreator_titles";
+         $GLOBALS['DB']->query($query);
+         $GLOBALS['DB']->query("DROP TABLE glpi_plugin_formcreator_titles");
+      }
+
 
       return true;
       }
