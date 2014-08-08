@@ -386,7 +386,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['values'] = json_encode(array(
             'ldap_auth'      => $input['ldap_auth'],
             'ldap_filter'    => $input['ldap_filter'],
-            'ldap_attribute' => $input['ldap_attribute'],
+            'ldap_attribute' => strtolower($input['ldap_attribute']),
          ));
       }
 
@@ -440,7 +440,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['values'] = json_encode(array(
             'ldap_auth'      => $input['ldap_auth'],
             'ldap_filter'    => $input['ldap_filter'],
-            'ldap_attribute' => $input['ldap_attribute'],
+            'ldap_attribute' => strtolower($input['ldap_attribute']),
          ));
       }
 
