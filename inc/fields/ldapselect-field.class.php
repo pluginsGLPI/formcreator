@@ -6,15 +6,6 @@ class ldapselectField implements Field
 {
    public static function show($field, $datas)
    {
-
-
-
-//      $default_values = explode("\r\n", $field['default_values']);
-//      $default_value  = array_shift($default_values);
-//      $default_value = (!empty($datas['formcreator_field_' . $field['id']]))
-//               ? $datas['formcreator_field_' . $field['id']]
-//               : $default_value;
-
       if($field['required'])  $required = ' required';
       else $required = '';
 
@@ -36,8 +27,10 @@ class ldapselectField implements Field
 
          $tab_values = array();
          foreach($entries as $id => $attribute) {
-            if(isset($attribute[$ldap_values->ldap_attribute]))
+            if(isset($attribute[$ldap_values->ldap_attribute])
+               && !in_array($attribute[$ldap_values->ldap_attribute][0], $tab_values)) {
                $tab_values[$id] = $attribute[$ldap_values->ldap_attribute][0];
+            }
          }
 
          if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
@@ -83,7 +76,24 @@ class ldapselectField implements Field
 
    public static function displayValue($value, $values)
    {
-      return $value;
+      if(!empty($values)) {
+         $ldap_values = json_decode($values);
+         $config_ldap = new AuthLDAP();
+         $config_ldap->getFromDB($ldap_values->ldap_auth);
+         $ds      = $config_ldap->connect();
+         $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, array($ldap_values->ldap_attribute));
+         $entries = ldap_get_entries($ds, $sn);
+         array_shift($entries);
+
+         $tab_values = array();
+         foreach($entries as $id => $attribute) {
+            if(isset($attribute[$ldap_values->ldap_attribute])
+               && !in_array($attribute[$ldap_values->ldap_attribute][0], $tab_values)) {
+               $tab_values[$id] = $attribute[$ldap_values->ldap_attribute][0];
+            }
+         }
+      }
+      return $tab_values[$value];
    }
 
    public static function isValid($field, $value)
