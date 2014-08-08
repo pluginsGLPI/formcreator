@@ -38,7 +38,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <input type="text" name="name" id="name" style="width:90%;" value="<?php echo $question->fields['name']; ?>" class="required">
+            <input type="text" name="name" id="name" style="width:90%;"
+               value="<?php echo $question->fields['name']; ?>" class="required">
          </td>
          <td width="17%">
             <label for="dropdown_fieldtype<?php echo $rand; ?>" id="label_fieldtype">
@@ -97,9 +98,10 @@ $rand = mt_rand();
                'on_change'   => 'toggleCondition(this);',
                'rand'        => $rand,
             ));
-            ?>
 
-            <div id="div_show_condition"<?php if($question->fields['show_type'] != 'hide') echo ' style="display:none"'; ?>>
+            $hide = ($question->fields['show_type'] != 'hide') ? ' style="display:none"' : '';
+            ?>
+            <div id="div_show_condition"<?php echo $hide; ?>>
                <?php
                $table_question = getTableForItemtype('PluginFormcreatorQuestion');
                $table_section  = getTableForItemtype('PluginFormcreatorSection');
@@ -131,7 +133,8 @@ $rand = mt_rand();
                ));
                ?>
 
-               <input type="text" name="show_value" id="show_value" value="<?php echo $question->fields['show_value']; ?>" class="small_text" size="8">
+               <input type="text" name="show_value" id="show_value" class="small_text"
+                  value="<?php echo $question->fields['show_value']; ?>" size="8">
             </div>
          </td>
       </tr>
@@ -174,7 +177,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <textarea name="default_values" id="default_values" rows="4" cols="40" style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
+            <textarea name="default_values" id="default_values" rows="4" cols="40"
+               style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
             <div id="dropdown_default_value_field">
                <?php
                if(($question->fields['fieldtype'] == 'dropdown') && !empty($question->fields['values'])
@@ -185,7 +189,8 @@ $rand = mt_rand();
                      'rand'  => $rand,
                   ));
                } else {
-                  echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>" id="dropdown_dropdown_default_value' . $rand . '">
+                  echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>"
+                           id="dropdown_dropdown_default_value' . $rand . '">
                            <option value="">---</option>
                         </select>';
                }
@@ -203,7 +208,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <textarea name="values" id="values" rows="4" cols="40" style="width: 90%"><?php echo $question->fields['values']; ?></textarea>
+            <textarea name="values" id="values" rows="4" cols="40"
+               style="width: 90%"><?php echo $question->fields['values']; ?></textarea>
             <div id="dropdown_values_field">
                <?php
                   $optgroup = Dropdown::getStandardDropdownItemTypes();
@@ -226,7 +232,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;" value="<?php echo $ldap_values->ldap_filter; ?>" />
+            <input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"
+               value="<?php echo (isset($ldap_values->ldap_filter)) ? $ldap_values->ldap_filter : ''; ?>" />
          </td>
          <td width="17%">
             <label for="dropdown_ldap_auth<?php echo $rand; ?>">
@@ -238,7 +245,7 @@ $rand = mt_rand();
             Dropdown::show('AuthLDAP', array(
                'name'  => 'ldap_auth',
                'rand'  => $rand,
-               'value' => $ldap_values->ldap_auth,
+               'value' => (isset($ldap_values->ldap_auth)) ? $ldap_values->ldap_auth : '',
             ));
             ?>
          </td>
@@ -250,7 +257,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <input type="text" name="ldap_attribute" id="ldap_attribute" style="width:98%;" value="<?php echo $ldap_values->ldap_attribute; ?>" />
+            <input type="text" name="ldap_attribute" id="ldap_attribute" style="width:98%;"
+               value="<?php echo (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : ''; ?>" />
          </td>
          <td colspan="2">&nbsp;</td>
       </tr>
@@ -282,7 +290,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="80%" colspan="3">
-            <textarea name="description" id="description" rows="6" cols="108" style="width: 97%"><?php echo $question->fields['description']; ?></textarea>
+            <textarea name="description" id="description" rows="6" cols="108"
+               style="width: 97%"><?php echo $question->fields['description']; ?></textarea>
             <?php Html::initEditorSystem('description'); ?>
          </td>
       </tr>
@@ -298,7 +307,8 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="80%" colspan="3">
-            <input type="text" name="regex" id="regex" style="width:98%;" value="<?php echo $question->fields['regex']; ?>" />
+            <input type="text" name="regex" id="regex" style="width:98%;"
+               value="<?php echo $question->fields['regex']; ?>" />
          </td>
       </tr>
 
@@ -366,12 +376,12 @@ $rand = mt_rand();
             document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').style.display = 'inline';
             document.getElementById('label_dropdown_values').style.display                   = 'inline';
             document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'inline';
-            document.getElementById('label_dropdown_default_value').style.display                   = 'inline';
+            document.getElementById('label_dropdown_default_value').style.display            = 'inline';
          } else {
             document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').style.display = 'none';
             document.getElementById('label_dropdown_values').style.display                   = 'none';
             document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'none';
-            document.getElementById('label_dropdown_default_value').style.display                   = 'none';
+            document.getElementById('label_dropdown_default_value').style.display            = 'none';
          }
          if(range) {
             document.getElementById('range_min').style.display                               = 'inline';
