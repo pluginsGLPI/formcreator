@@ -141,7 +141,17 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '</td>';
 
             echo '<td align="center">';
-            if($question['required']) {
+
+            $question_type = $question['fieldtype'] . 'Field';
+
+
+            $question_types = PluginFormcreatorFields::getTypes();
+            $classname = $question['fieldtype'] . 'Field';
+            $fields = $classname::getPrefs();
+
+            if ($fields['required'] == 0) {
+               echo '&nbsp;';
+            } elseif($question['required']) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/required.png"
                         alt="*" title="' . __('Required', 'formcreator') . '"
                         onclick="setRequired(' . $question['id'] . ', 0)" align="absmiddle" style="cursor: pointer" /> ';

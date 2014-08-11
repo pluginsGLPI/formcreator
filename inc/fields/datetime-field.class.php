@@ -84,9 +84,9 @@ class datetimeField implements Field
       return __('Datetime', 'formcreator');
    }
 
-   public static function getJSFields()
+   public static function getPrefs()
    {
-      $prefs = array(
+      return array(
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -97,6 +97,11 @@ class datetimeField implements Field
          'dropdown_value' => 0,
          'ldap_values'    => 0,
       );
+   }
+
+   public static function getJSFields()
+   {
+      $prefs = self::getPrefs();
       return "tab_fields_fields['date'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

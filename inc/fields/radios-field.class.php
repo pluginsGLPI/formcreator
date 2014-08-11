@@ -108,9 +108,9 @@ class radiosField implements Field
       return __('Radios', 'formcreator');
    }
 
-   public static function getJSFields()
+   public static function getPrefs()
    {
-      $prefs = array(
+      return array(
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -121,6 +121,11 @@ class radiosField implements Field
          'dropdown_value' => 0,
          'ldap_values'    => 0,
       );
+   }
+
+   public static function getJSFields()
+   {
+      $prefs = self::getPrefs();
       return "tab_fields_fields['radios'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

@@ -114,9 +114,9 @@ class ldapselectField implements Field
       return __('LDAP Select', 'formcreator');
    }
 
-   public static function getJSFields()
+   public static function getPrefs()
    {
-      $prefs = array(
+      return array(
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -127,6 +127,11 @@ class ldapselectField implements Field
          'dropdown_value' => 0,
          'ldap_values'    => 1,
       );
+   }
+
+   public static function getJSFields()
+   {
+      $prefs = self::getPrefs();
       return "tab_fields_fields['ldapselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

@@ -120,9 +120,9 @@ class checkboxesField implements Field
       return __('Checkboxes', 'formcreator');
    }
 
-   public static function getJSFields()
+   public static function getPrefs()
    {
-      $prefs = array(
+      return array(
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -133,6 +133,11 @@ class checkboxesField implements Field
          'dropdown_value' => 0,
          'ldap_values'    => 0,
       );
+   }
+
+   public static function getJSFields()
+   {
+      $prefs = self::getPrefs();
       return "tab_fields_fields['checkboxes'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

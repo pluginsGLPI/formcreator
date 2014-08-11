@@ -91,9 +91,9 @@ class dropdownField implements Field
       return __('Dropdown', 'formcreator');
    }
 
-   public static function getJSFields()
+   public static function getPrefs()
    {
-      $prefs = array(
+      return array(
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -104,6 +104,11 @@ class dropdownField implements Field
          'dropdown_value' => 1,
          'ldap_values'    => 0,
       );
+   }
+
+   public static function getJSFields()
+   {
+      $prefs = self::getPrefs();
       return "tab_fields_fields['dropdown'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

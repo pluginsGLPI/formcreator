@@ -100,9 +100,9 @@ class textareaField implements Field
       return __('Textarea', 'formcreator');
    }
 
-   public static function getJSFields()
+   public static function getPrefs()
    {
-      $prefs = array(
+      return array(
          'required'       => 1,
          'default_values' => 1,
          'values'         => 0,
@@ -113,6 +113,11 @@ class textareaField implements Field
          'dropdown_value' => 0,
          'ldap_values'    => 0,
       );
+   }
+
+   public static function getJSFields()
+   {
+      $prefs = self::getPrefs();
       return "tab_fields_fields['textarea'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }
