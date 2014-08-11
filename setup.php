@@ -10,7 +10,7 @@ function plugin_version_formcreator ()
             'version'        => '0.84-2.0',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
-            'homepage'       => '<a href="http://www.teclib.com" target="_blank">http://www.teclib.com</a>',
+            'homepage'       => 'http://www.teclib.com',
             'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
             'minGlpiVersion' => "0.84");
 }
