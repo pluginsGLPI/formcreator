@@ -93,6 +93,8 @@ class PluginFormcreatorForm extends CommonDBTM
             'table'         => $this->getTable(),
             'field'         => 'language',
             'name'          => __('Language'),
+            'datatype'      => 'specific',
+            'searchtype'    => array('equals'),
             'massiveaction' => false,
          ),
          '8' => array(
@@ -181,6 +183,14 @@ class PluginFormcreatorForm extends CommonDBTM
 
             return $output;
             break;
+         case 'language' :
+            return Dropdown::showLanguages('language', array(
+               'value'               => $values[$field],
+               'display_emptychoice' => true,
+               'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
+               'display'             => false
+            ));
+            break;
       }
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
@@ -226,6 +236,9 @@ class PluginFormcreatorForm extends CommonDBTM
                   break;
             }
             return '';
+            break;
+         case 'language' :
+            return Dropdown::getLanguageName($values[$field]);
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
