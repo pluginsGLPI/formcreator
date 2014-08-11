@@ -113,6 +113,13 @@ class PluginFormcreatorForm extends CommonDBTM
             'searchtype'    => array('equals', 'notequals'),
             'massiveaction' => true,
          ),
+         '10' => array(
+            'table'         => getTableForItemType('PluginFormcreatorCategory'),
+            'field'         => 'name',
+            'name'          => PluginFormcreatorCategory::getTypeName(1),
+            'datatype'      => 'dropdown',
+
+         ),
       );
       return $tab;
    }
@@ -277,8 +284,8 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<td><strong>' . __('Category') . ' <span class="red">*</span></strong></td>';
       echo '<td>';
       PluginFormcreatorCategory::dropdown(array(
-         'name'  => 'formcreator_categories_id',
-         'value' => ($id != 0) ? $this->fields["formcreator_categories_id"] : 1,
+         'name'  => 'plugin_formcreator_categories_id',
+         'value' => ($id != 0) ? $this->fields["plugin_formcreator_categories_id"] : 1,
       ));
       echo '</td>';
       echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
@@ -413,7 +420,7 @@ class PluginFormcreatorForm extends CommonDBTM
                  WHERE 0 < (
                      SELECT COUNT($form_table.id)
                      FROM $form_table
-                     WHERE $form_table.`formcreator_categories_id` = $cat_table.`id`
+                     WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
                      AND $form_table.`is_active` = 1
                      AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
                      AND $where
@@ -435,7 +442,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $table_fp    = getTableForItemType('PluginFormcreatorFormprofiles');
             $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                             FROM $form_table
-                            WHERE $form_table.`formcreator_categories_id` = {$category['id']}
+                            WHERE $form_table.`plugin_formcreator_categories_id` = {$category['id']}
                             AND $form_table.`is_active` = 1
                             AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
                             AND $where
@@ -536,7 +543,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // - Category is required
-      if(empty($input['formcreator_categories_id'])) {
+      if(empty($input['plugin_formcreator_categories_id'])) {
          Session::addMessageAfterRedirect(__('The form category cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
@@ -701,7 +708,7 @@ class PluginFormcreatorForm extends CommonDBTM
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                      `description` varchar(255) COLLATE utf8_unicode_ci,
                      `content` longtext COLLATE utf8_unicode_ci,
-                     `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL,
+                     `plugin_formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL,
                      `is_active` tinyint(1) NOT NULL DEFAULT '0',
                      `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
                      `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
@@ -715,14 +722,14 @@ class PluginFormcreatorForm extends CommonDBTM
          // Migration from previous version
          if (FieldExists($table, 'cat', false)) {
             $query = "ALTER TABLE `$table`
-                      CHANGE `cat` `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0';";
+                      CHANGE `cat` `plugin_formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0';";
             $GLOBALS['DB']->query($query);
          }
 
          // Migration from previous version
-         if (!FieldExists($table, 'formcreator_categories_id', false)) {
+         if (!FieldExists($table, 'plugin_formcreator_categories_id', false)) {
             $query = "ALTER TABLE `$table`
-                      ADD `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '1';";
+                      ADD `plugin_formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '1';";
             $GLOBALS['DB']->query($query);
          }
 
@@ -745,9 +752,10 @@ class PluginFormcreatorForm extends CommonDBTM
       $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
                (NULL, '" . __CLASS__ . "', 1, 1, 0),
                (NULL, '" . __CLASS__ . "', 3, 2, 0),
-               (NULL, '" . __CLASS__ . "', 7, 3, 0),
-               (NULL, '" . __CLASS__ . "', 8, 4, 0),
-               (NULL, '" . __CLASS__ . "', 9, 5, 0);";
+               (NULL, '" . __CLASS__ . "', 10, 3, 0),
+               (NULL, '" . __CLASS__ . "', 7, 4, 0),
+               (NULL, '" . __CLASS__ . "', 8, 5, 0),
+               (NULL, '" . __CLASS__ . "', 9, 6, 0);";
       $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
 
       return true;
