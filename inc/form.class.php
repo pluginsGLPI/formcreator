@@ -46,10 +46,10 @@ class PluginFormcreatorForm extends CommonDBTM
    public function getSearchOptions()
    {
       $tab = array(
-         '1' => array(
+         '30' => array(
             'table'         => $this->getTable(),
             'field'         => 'is_active',
-            'name'          => __('Status', 'formcreator'),
+            'name'          => __('Active', 'formcreator'),
             'datatype'      => 'specific',
             'searchtype'    => array('equals', 'notequals'),
             'massiveaction' => true,
@@ -62,7 +62,7 @@ class PluginFormcreatorForm extends CommonDBTM
             'searchtype'    => 'equals',
             'massiveaction' => false,
          ),
-         '3' => array(
+         '1' => array(
             'table'         => $this->getTable(),
             'field'         => 'name',
             'name'          => __('Name', 'formcreator'),
@@ -118,26 +118,27 @@ class PluginFormcreatorForm extends CommonDBTM
             'field'         => 'name',
             'name'          => PluginFormcreatorCategory::getTypeName(1),
             'datatype'      => 'dropdown',
+            'massiveaction' => true,
 
          ),
       );
       return $tab;
    }
 
-   /**
-    * Define default search request
-    *
-    * @return Array Array of search options : [field, searchtype, contains, sort, order]
-    */
-   public static function getDefaultSearchRequest()
-   {
-      $search = array('field'      => array(0 => 1),
-                      'searchtype' => array(0 => 'equals'),
-                      'contains'   => array(0 => 1),
-                      'sort'       => 2,
-                      'order'      => 'ASC');
-      return $search;
-   }
+   // /**
+   //  * Define default search request
+   //  *
+   //  * @return Array Array of search options : [field, searchtype, contains, sort, order]
+   //  */
+   // public static function getDefaultSearchRequest()
+   // {
+   //    $search = array('field'      => array(0 => 30),
+   //                    'searchtype' => array(0 => 'equals'),
+   //                    'contains'   => array(0 => 30),
+   //                    'sort'       => 2,
+   //                    'order'      => 'ASC');
+   //    return $search;
+   // }
 
    /**
     * Define how to display search field for a specific type
@@ -201,6 +202,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
+
 
    /**
     * Define how to display a specific value in search result table
@@ -560,7 +562,7 @@ class PluginFormcreatorForm extends CommonDBTM
    **/
    public function prepareInputForUpdate($input)
    {
-      if (isset($input['access_rights'])) {
+      if (isset($input['access_rights']) || isset($_POST['massiveaction'])) {
          return $input;
       } else {
          return $this->prepareInputForAdd($input);
@@ -750,7 +752,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $GLOBALS['DB']->query($query) or die("error deleting glpi_displaypreferences ". $GLOBALS['DB']->error());
 
       $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-               (NULL, '" . __CLASS__ . "', 1, 1, 0),
+               (NULL, '" . __CLASS__ . "', 30, 1, 0),
                (NULL, '" . __CLASS__ . "', 3, 2, 0),
                (NULL, '" . __CLASS__ . "', 10, 3, 0),
                (NULL, '" . __CLASS__ . "', 7, 4, 0),
