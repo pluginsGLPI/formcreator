@@ -15,9 +15,9 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                    WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                 AND helpdesk_home = 1
                 ORDER BY $form_table.name ASC";
-$result_forms = $DB->query($query_forms);
+$result_forms = $GLOBALS['DB']->query($query_forms) or die($GLOBALS['DB']->error());
 
-if (count($DB->numrows($result_forms)) > 0) {
+if (count($GLOBALS['DB']->numrows($result_forms)) > 0) {
    echo '<table class="tab_cadrehov">';
 
    echo '<tr>';
@@ -25,7 +25,7 @@ if (count($DB->numrows($result_forms)) > 0) {
    echo '</tr>';
 
    $i = 0;
-   while($form = $DB->fetch_array($result_forms)) {
+   while($form = $GLOBALS['DB']->fetch_array($result_forms)) {
       $i++;
       echo '<tr class="line' . ($i % 2) . '">';
       echo '<td><a href="../plugins/formcreator/front/showform.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';

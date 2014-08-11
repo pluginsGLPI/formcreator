@@ -705,11 +705,23 @@ class PluginFormcreatorForm extends CommonDBTM
                   COLLATE = utf8_unicode_ci;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       } else {
+         // Migration from previous version
+         if (FieldExists($table, 'cat', false)) {
+            $query = "ALTER TABLE `$table`
+                      CHANGE `cat` `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0';";
+            $GLOBALS['DB']->query($query);
+         }
 
          // Migration from previous version
-         if (FieldExists($table, 'cat')) {
+         if (!FieldExists($table, 'formcreator_categories_id', false)) {
             $query = "ALTER TABLE `$table`
-                      CHANGE `cat` `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                      ADD `formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '1';";
+            $GLOBALS['DB']->query($query);
+         }
+
+         // Migration from previous version
+         if (!FieldExists($table, 'requesttype', false)) {
+            $query = "ALTER TABLE `$table`
                       ADD `access_rights` tinyint(1) NOT NULL DEFAULT '1',
                       ADD `requesttype` int(11) NOT NULL DEFAULT '$requesttype',
                       ADD `description` varchar(255) COLLATE utf8_unicode_ci,

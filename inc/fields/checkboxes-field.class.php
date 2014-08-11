@@ -31,17 +31,19 @@ class checkboxesField implements Field
 
          $i = 0;
          foreach ($values as $value) {
-            $i++;
-            $checked = (in_array($value, $default_values)) ? ' checked' : '';
-            echo '<input type="checkbox" class="form-control"
-                     name="formcreator_field_' . $field['id'] . '[]"
-                     id="formcreator_field_' . $field['id'] . '_' . $i . '"
-                     value="' . addslashes($value) . '"
-                     ' . $checked . ' /> ' . PHP_EOL;
-            echo '<label for="formcreator_field_' . $field['id'] . '_' . $i . '">';
-            echo $value;
-            echo '</label>' . PHP_EOL;
-            if($i != count($values)) echo '<br />';
+            if (!empty($value)) {
+               $i++;
+               $checked = (in_array($value, $default_values)) ? ' checked' : '';
+               echo '<input type="checkbox" class="form-control"
+                        name="formcreator_field_' . $field['id'] . '[]"
+                        id="formcreator_field_' . $field['id'] . '_' . $i . '"
+                        value="' . addslashes($value) . '"
+                        ' . $checked . ' /> ' . PHP_EOL;
+               echo '<label for="formcreator_field_' . $field['id'] . '_' . $i . '">';
+               echo $value;
+               echo '</label>' . PHP_EOL;
+               if($i != count($values)) echo '<br />';
+            }
          }
 
          switch ($field['show_condition']) {

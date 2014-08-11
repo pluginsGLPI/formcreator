@@ -519,10 +519,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-      } elseif(!FieldExists($table, 'fieldtype')) {
+      } elseif(!FieldExists($table, 'fieldtype', false)) {
          // Migration from previous version
          $query = "ALTER TABLE `$table`
                    ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
+                   ADD `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
                    ADD `show_field` int(11) DEFAULT NULL,
                    ADD `show_condition` enum('equal','notequal','lower','greater') COLLATE utf8_unicode_ci DEFAULT NULL,
                    ADD `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -554,8 +555,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $regex     = '';
             $required  = 0;
 
-            foreach($datas->value as $value) {
-               $values .= urldecode($value) . PHP_EOL;
+            if (isset($datas->value) && !empty($datas->value)) {
+               foreach($datas->value as $value) {
+                  if (!empty($value)) $values .= urldecode($value) . "\r\n";
+               }
             }
 
             switch ($line['type']) {
@@ -627,11 +630,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
             }
 
             $query_udate = "UPDATE $table SET
-                               `fieldtype` = $fieldtype,
-                               `values`    = $values,
-                               `default`   = $default,
-                               `regex`     = $regex,
-                               `required`  = $required
+                               `fieldtype`      = '$fieldtype',
+                               `values`         = '$values',
+                               `default_values` = '$default',
+                               `regex`          = '$regex',
+                               `required`       = '$required'
                             WHERE `id` = {$line['id']}";
             $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
          }
@@ -654,7 +657,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    public static function uninstall()
    {
       $obj = new self();
-      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
 
       // Delete logs of the plugin
       $GLOBALS['DB']->query('DELETE FROM `glpi_logs` WHERE itemtype = "' . __CLASS__ . '"');

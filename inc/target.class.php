@@ -175,9 +175,9 @@ class PluginFormcreatorTarget extends CommonDBTM
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
 
       // Migration from previous version
-      } elseif(!FieldExists($table, 'itemtype')) {
+      } elseif(!FieldExists($table, 'itemtype', false)) {
          // Migration from version 1.5 to 1.6
-         if (!FieldExists($table, 'type')) {
+         if (!FieldExists($table, 'type', false)) {
             $query = "ALTER TABLE `$table`
                       ADD `type` tinyint(1) NOT NULL default '2';";
             $GLOBALS['DB']->query($query);
@@ -251,7 +251,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          // Prepare Mysql CASE For each ticket template
          $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
          foreach ($_SESSION["formcreator_tmp"]["ticket_template"] as $id => $value) {
-            $mysql_case_template .= "WHEN $id THEN $value";
+            $mysql_case_template .= " WHEN $id THEN $value ";
          }
          $mysql_case_template .= "END AS `tickettemplates_id`";
 
@@ -265,9 +265,9 @@ class PluginFormcreatorTarget extends CommonDBTM
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
             // Insert target ticket
             $query_insert = "INSERT INTO $table_targetticket SET
-                              `name` = {$line['name']},
-                              `tickettemplates_id` = {$line['tickettemplates_id']},
-                              `comment` = {$line['content']}";
+                              `name` = '{$line['name']}',
+                              `tickettemplates_id` = '{$line['tickettemplates_id']}',
+                              `comment` = '{$line['content']}'";
             $GLOBALS['DB']->query($query_insert);
             $targetticket_id = $GLOBALS['DB']->insert_id();
 

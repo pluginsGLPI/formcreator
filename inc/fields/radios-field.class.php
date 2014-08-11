@@ -31,17 +31,19 @@ class radiosField implements Field
          echo '<div class="checkbox">';
          $i = 0;
          foreach ($values as $value) {
-            $i++;
-            $checked = ($value == $default_value) ? ' checked' : '';
-            echo '<input type="radio" class="form-control"
-                  name="formcreator_field_' . $field['id'] . '"
-                  id="formcreator_field_' . $field['id'] . '_' . $i . '"
-                  value="' . addslashes($value) . '"
-                  ' . $checked . ' /> ';
-            echo '<label for="formcreator_field_' . $field['id'] . '_' . $i . '">';
-            echo $value;
-            echo '</label>';
-            if($i != count($values)) echo '<br />';
+            if (!empty($value)) {
+               $i++;
+               $checked = ($value == $default_value) ? ' checked' : '';
+               echo '<input type="radio" class="form-control"
+                     name="formcreator_field_' . $field['id'] . '"
+                     id="formcreator_field_' . $field['id'] . '_' . $i . '"
+                     value="' . addslashes($value) . '"
+                     ' . $checked . ' /> ';
+               echo '<label for="formcreator_field_' . $field['id'] . '_' . $i . '">';
+               echo $value;
+               echo '</label>';
+               if($i != count($values)) echo '<br />';
+            }
          }
          echo '</div>';
       }

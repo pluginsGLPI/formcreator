@@ -64,25 +64,25 @@ class PluginFormcreatorSection extends CommonDBChild
       }
 
       // Migration from previous version => Remove useless target field
-      if(FieldExists($table, 'plugin_formcreator_targets_id')) {
+      if(FieldExists($table, 'plugin_formcreator_targets_id', false)) {
          $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `plugin_formcreator_targets_id`;");
       }
 
       // Migration from previous version => Rename "position" into "order" and start order from 1 instead of 0
-      if(FieldExists($table, 'position')) {
+      if(FieldExists($table, 'position', false)) {
          $GLOBALS['DB']->query("ALTER TABLE `$table` CHANGE `position` `order` INT(11) NOT NULL DEFAULT '0';");
-         $GLOBALS['DB']->query("UPDATE TABLE `$table` SET `order` = `order` + 1;");
+         $GLOBALS['DB']->query("UPDATE `$table` SET `order` = `order` + 1;");
       }
 
       // Migration from previous version => Update Question table, then create a "description" question from content
-      if(FieldExists($table, 'content')) {
+      if(FieldExists($table, 'content', false)) {
          $version   = plugin_version_formcreator();
          $migration = new Migration($version['version']);
-         PluginFormcreatorQuestion::install($version);
+         PluginFormcreatorQuestion::install($migration);
          $table_questions = getTableForItemType('PluginFormcreatorQuestion');
 
          // Increment the order of questions which are in a section with a description
-         $query = "UPDATE TABLE `$table_questions`
+         $query = "UPDATE `$table_questions`
                    SET `order` = `order` + 1
                    WHERE `plugin_formcreator_sections_id` IN (
                      SELECT `id`
