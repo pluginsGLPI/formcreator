@@ -56,25 +56,3 @@ function plugin_formcreator_getDropdown()
       'PluginFormcreatorCategory' => __("Form categories", 'formcreator'),
    );
 }
-
-
-function plugin_example_giveItem($type,$ID,$data,$num)
-{
-   $searchopt = &Search::getOptions($type);
-   $table = $searchopt[$ID]["table"];
-   $field = $searchopt[$ID]["field"];
-
-   switch ($table.'.'.$field) {
-      case "glpi_plugin_formcreator_forms.is_active" :
-         $output  = "<select name='".$name."'>";
-         $output .=  "<option value='0'>"
-                     . __('Inactive', 'formcreator')
-                     . "</option>";
-         $output .=  "<option value='1'>"
-                     . __('Active', 'formcreator')
-                     . "</option>";
-         $output .=  "</select>";
-         return $output;
-   }
-   return "";
-}
