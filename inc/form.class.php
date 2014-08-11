@@ -247,7 +247,11 @@ class PluginFormcreatorForm extends CommonDBTM
             return '';
             break;
          case 'language' :
-            return Dropdown::getLanguageName($values[$field]);
+            if (empty($values[$field])) {
+               return __('All langages', 'formcreator');
+            } else {
+               return Dropdown::getLanguageName($values[$field]);
+            }
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
