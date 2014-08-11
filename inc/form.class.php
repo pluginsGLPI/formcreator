@@ -541,12 +541,6 @@ class PluginFormcreatorForm extends CommonDBTM
          return array();
       }
 
-      // - Status is required
-      if(empty($input['is_active'])) {
-         Session::addMessageAfterRedirect(__('The status cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
-
       return $input;
    }
 
