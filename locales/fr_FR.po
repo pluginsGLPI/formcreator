@@ -242,7 +242,7 @@ msgstr "Le nom ne doit pas être vide !"
 
 #: inc/form.class.php:543
 msgid "The form category cannot be empty!"
-msgstr "La cétégorie de formulaire est obligatoire !"
+msgstr "La catégorie de formulaire est obligatoire !"
 
 #: inc/form.class.php:550
 msgid "The status cannot be empty!"
