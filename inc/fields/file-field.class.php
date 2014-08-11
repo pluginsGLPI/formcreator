@@ -89,7 +89,7 @@ class fileField implements Field
    public static function getJSFields()
    {
       $prefs = array(
-         'required'       => 0,
+         'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
          'range'          => 0,
