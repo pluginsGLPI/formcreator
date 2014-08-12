@@ -92,7 +92,7 @@ class integerField implements Field
          return false;
 
       // Specific format not set or well match
-      } elseif (!empty($field['regex']) && !preg_match($field['regex'], $value)) {
+      } elseif (!empty($field['regex']) && !preg_match('/' . trim($field['regex']) . '/', $value)) {
          Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
