@@ -42,7 +42,7 @@ function plugin_formcreator_check_config($verbose=false)
       return true;
    }
    if ($verbose) {
-      echo _x('Installed / not configured');
+      echo _x('plugin', 'Installed / not configured');
    }
    return false;
 }
