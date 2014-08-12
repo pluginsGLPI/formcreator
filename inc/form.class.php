@@ -49,7 +49,7 @@ class PluginFormcreatorForm extends CommonDBTM
          '30' => array(
             'table'         => $this->getTable(),
             'field'         => 'is_active',
-            'name'          => __('Active', 'formcreator'),
+            'name'          => __('Active'),
             'datatype'      => 'specific',
             'searchtype'    => array('equals', 'notequals'),
             'massiveaction' => true,
@@ -57,7 +57,7 @@ class PluginFormcreatorForm extends CommonDBTM
          '2' => array(
             'table'         => $this->getTable(),
             'field'         => 'id',
-            'name'          => __('ID', 'formcreator'),
+            'name'          => __('ID'),
             'datatype'      => 'number',
             'searchtype'    => 'equals',
             'massiveaction' => false,
@@ -65,7 +65,7 @@ class PluginFormcreatorForm extends CommonDBTM
          '1' => array(
             'table'         => $this->getTable(),
             'field'         => 'name',
-            'name'          => __('Name', 'formcreator'),
+            'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
          ),
@@ -85,7 +85,7 @@ class PluginFormcreatorForm extends CommonDBTM
          '6' => array(
             'table'         => $this->getTable(),
             'field'         => 'is_recursive',
-            'name'          => __('Recursive', 'formcreator'),
+            'name'          => __('Recursive'),
             'datatype'      => 'bool',
             'massiveaction' => false,
          ),
@@ -164,10 +164,10 @@ class PluginFormcreatorForm extends CommonDBTM
          case 'is_active' :
             $output  = "<select name='".$name."'>";
             $output .=  "<option value='0' ".(($values[$field] == 0)?" selected ":"").">"
-                        . __('Inactive', 'formcreator')
+                        . __('Inactive')
                         . "</option>";
             $output .=  "<option value='1' ".(($values[$field] == 1)?" selected ":"").">"
-                        . __('Active', 'formcreator')
+                        . __('Active')
                         . "</option>";
             $output .=  "</select>";
 
@@ -222,13 +222,13 @@ class PluginFormcreatorForm extends CommonDBTM
             if($values[$field] == 0) {
                $output = '<div style="text-align: center"><img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/inactive.png"
                            height="16" width="16"
-                           alt="' . __('Inactive', 'formcreator') . '"
-                           title="' . __('Inactive', 'formcreator') . '" /></div>';
+                           alt="' . __('Inactive') . '"
+                           title="' . __('Inactive') . '" /></div>';
             } else {
                $output = '<div style="text-align: center"><img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/active.png"
                            height="16" width="16"
-                           alt="' . __('Active', 'formcreator') . '"
-                           title="' . __('Active', 'formcreator') . '" /></div>';
+                           alt="' . __('Active') . '"
+                           title="' . __('Active') . '" /></div>';
             }
             return $output;
             break;
@@ -315,7 +315,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="tab_bg_1">';
-      echo '<td>' . __('Header', 'formcreator') . '</td>';
+      echo '<td>' . _n('Header', 'Headers', 1, 'formcreator') . '</td>';
       echo '<td colspan="3"><textarea name="content" cols="115" rows="10">' . $this->fields["content"] . '</textarea></td>';
       Html::initEditorSystem('content');
       echo '</tr>';
@@ -343,7 +343,7 @@ class PluginFormcreatorForm extends CommonDBTM
             return self::createTabEntry(self::getTypeName($number), $number);
             break;
          case "PluginFormcreatorForm":
-            return __('Preview', 'formcreator');
+            return __('Preview');
             break;
       }
       return '';

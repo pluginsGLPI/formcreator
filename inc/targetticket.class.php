@@ -56,7 +56,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       echo '<tr><td colspan="5">&nbsp;</td></tr>';
 
-      echo '<tr><th colspan="5">' . __('Target ticket', 'formcreator') . '</th></tr>';
+      echo '<tr><th colspan="5">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
 
       echo '<tr class="line1">';
       echo '<td width="20%"><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
@@ -69,7 +69,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="line1">';
-      echo '<td width="20%">' . __('Ticket template', 'formcreator') . '</td>';
+      echo '<td width="20%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
       echo '<td width="70%" colspan="4">';
       Dropdown::show('TicketTemplate', array(
          'name'  => 'tickettemplates_id',
@@ -80,12 +80,12 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       echo '<tr><td colspan="5">&nbsp;</td></tr>';
 
-      echo '<tr><th colspan="5">' . __('List of available tags', 'formcreator') . '</th></tr>';
+      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
       echo '<tr>';
-      echo '<th width="40%" colspan="2">' . __('Question', 'formcreator') . '</th>';
-      echo '<th width="20%">' . __('Title', 'formcreator') . '</th>';
+      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . __('Title') . '</th>';
       echo '<th width="20%">' . __('Answer', 'formcreator') . '</th>';
-      echo '<th width="20%">' . __('Section', 'formcreator') . '</th>';
+      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
       echo '</tr>';
 
       echo '<tr class="line0">';

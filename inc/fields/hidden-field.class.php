@@ -24,7 +24,7 @@ class hiddenField implements Field
 
    public static function getName()
    {
-      return __('Hidden field', 'formcreator');
+      return _n('Hidden field', 'Hidden fields', 1);
    }
 
    public static function getPrefs()

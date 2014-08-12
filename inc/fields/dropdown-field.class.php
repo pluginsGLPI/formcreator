@@ -88,7 +88,7 @@ class dropdownField implements Field
 
    public static function getName()
    {
-      return __('Dropdown', 'formcreator');
+      return _n('Dropdown', 'Dropdowns', 1);
    }
 
    public static function getPrefs()

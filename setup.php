@@ -6,7 +6,7 @@
  */
 function plugin_version_formcreator ()
 {
-   return array('name'       => __('Forms', 'formcreator'),
+   return array('name'       => _n('Form', 'Forms', 2, 'formcreator'),
             'version'        => '0.84-2.0',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
@@ -23,7 +23,7 @@ function plugin_version_formcreator ()
 function plugin_formcreator_check_prerequisites ()
 {
    if (version_compare(GLPI_VERSION,'0.84','lt') || version_compare(GLPI_VERSION,'0.85','ge')) {
-      echo __("This plugin requires GLPI >= 0.84 and GLPI < 0.85", 'formcreator');
+      echo __('This plugin requires GLPI >= 0.84 and GLPI < 0.85', 'formcreator');
    } else {
       return true;
    }
@@ -42,7 +42,7 @@ function plugin_formcreator_check_config($verbose=false)
       return true;
    }
    if ($verbose) {
-      echo __('Installed / not configured', 'formcreator');
+      echo _x('Installed / not configured');
    }
    return false;
 }
@@ -87,7 +87,7 @@ function plugin_init_formcreator ()
                                   'search'   => '/plugins/formcreator/front/formlist.php',
                                   'config'   => '/plugins/formcreator/front/config.form.php',
                                   'add'      => '/plugins/formcreator/front/form.form.php')),
-      'options'      => array('title'  => __('Forms', 'formcreator'),
+      'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
                               'links'  => array(
                                   'search'   => '/plugins/formcreator/front/formlist.php',
                                   'config'   => '/plugins/formcreator/front/config.form.php',

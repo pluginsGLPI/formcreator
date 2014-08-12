@@ -81,12 +81,14 @@ class integerField implements Field
 
       // Min range not set or text length longer than min length
       } elseif (!empty($field['range_min']) && ($value < $field['range_min'])) {
-         Session::addMessageAfterRedirect(__('The number is too small:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $field['range_min']);
+         Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Max range not set or text length shorter than max length
       } elseif (!empty($field['range_max']) && ($value > $field['range_max'])) {
-         Session::addMessageAfterRedirect(__('The number is too big:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $field['range_min']);
+         Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Specific format not set or well match

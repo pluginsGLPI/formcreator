@@ -95,7 +95,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo '<th align="center" width="32">';
          if($section['order'] != 1) {
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/up2.png"
-                     alt="*" title="' . __('Edit', 'formcreator') . '"
+                     alt="*" title="' . __('Edit') . '"
                      onclick="moveSection(' . $section['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
          } else {
             echo '&nbsp;';
@@ -104,7 +104,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo '<th align="center" width="32">';
          if($section['order'] != $section_number) {
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/down2.png"
-                     alt="*" title="' . __('Edit', 'formcreator') . '"
+                     alt="*" title="' . __('Edit') . '"
                      onclick="moveSection(' . $section['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
          } else {
             echo '&nbsp;';
@@ -113,7 +113,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          echo '<th align="center" width="32">';
          echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/pencil.png"
-                  alt="*" title="' . __('Edit', 'formcreator') . '"
+                  alt="*" title="' . __('Edit') . '"
                   onclick="editSection(' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
          echo '</th>';
 
@@ -164,7 +164,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
             if($question['order'] != 1) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/up.png"
-                        alt="*" title="' . __('Edit', 'formcreator') . '"
+                        alt="*" title="' . __('Edit') . '"
                         onclick="moveQuestion(' . $question['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
@@ -173,7 +173,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
             if($question['order'] != $question_number) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/down.png"
-                        alt="*" title="' . __('Edit', 'formcreator') . '"
+                        alt="*" title="' . __('Edit') . '"
                         onclick="moveQuestion(' . $question['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
@@ -181,7 +181,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '</td>';
             echo '<td align="center">';
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/pencil.png"
-                     alt="*" title="' . __('Edit', 'formcreator') . '"
+                     alt="*" title="' . __('Edit') . '"
                      onclick="editQuestion(' . $question['id'] . ', ' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
             echo '<td align="center">';

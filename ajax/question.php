@@ -33,7 +33,7 @@ $rand = mt_rand();
       <tr class="line0">
          <td width="17%">
             <label for="name" id="label_name">
-               <?php echo  __('Title', 'formcreator'); ?>&nbsp;
+               <?php echo  __('Title'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
@@ -43,7 +43,7 @@ $rand = mt_rand();
          </td>
          <td width="17%">
             <label for="dropdown_fieldtype<?php echo $rand; ?>" id="label_fieldtype">
-               <?php echo __('Type', 'formcreator'); ?>&nbsp;
+               <?php echo _n('Type', 'Types', 1); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
@@ -61,7 +61,7 @@ $rand = mt_rand();
       <tr class="line1">
          <td width="17%">
             <label for="dropdown_plugin_formcreator_sections_id<?php echo $rand; ?>" id="label_name">
-               <?php echo  __('Section', 'formcreator'); ?>&nbsp;
+               <?php echo  _n('Section', 'Sections', 1, 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
@@ -91,7 +91,7 @@ $rand = mt_rand();
          <td width="33%">
             <?php
             Dropdown::showFromArray('show_type', array(
-               'show'        => __('Always', 'formcreator'),
+               'show'        => __('Always'),
                'hide'        => __('Only if field', 'formcreator'),
             ), array(
                'value'       => $question->fields['show_type'],
@@ -169,11 +169,11 @@ $rand = mt_rand();
       <tr class="line1" id="values_tr">
          <td width="17%">
             <label for="dropdown_default_values<?php echo $rand; ?>" id="label_default_values">
-               <?php echo __('Default value(s)', 'formcreator'); ?><br />
+               <?php echo __('Default values'); ?><br />
                <small>(<?php echo __('One per line for lists', 'formcreator'); ?>)</small>
             </label>
             <label for="dropdown_dropdown_default_value<?php echo $rand; ?>" id="label_dropdown_default_value">
-               <?php echo __('Default value', 'formcreator'); ?>
+               <?php echo __('Default value'); ?>
             </label>
          </td>
          <td width="33%">
@@ -204,7 +204,7 @@ $rand = mt_rand();
                <small>(<?php echo __('One per line', 'formcreator'); ?>)</small>
             </label>
             <label for="dropdown_dropdown_values<?php echo $rand; ?>" id="label_dropdown_values">
-               <?php echo __('Dropdown', 'formcreator'); ?>
+               <?php echo _n('Dropdown', 'Dropdowns', 1); ?>
             </label>
          </td>
          <td width="33%">
@@ -237,7 +237,7 @@ $rand = mt_rand();
          </td>
          <td width="17%">
             <label for="dropdown_ldap_auth<?php echo $rand; ?>">
-               <?php echo __('LDAP directory', 'formcreator'); ?>
+               <?php echo _n('LDAP directory', 'LDAP directories', 1); ?>
             </label>
          </td>
          <td width="33%">
@@ -286,7 +286,7 @@ $rand = mt_rand();
       <tr class="line1" id="description_tr">
          <td width="17%">
             <label for="description" id="label_description">
-               <?php echo __('Description', 'formcreator'); ?>
+               <?php echo __('Description'); ?>
             </label>
          </td>
          <td width="80%" colspan="3">

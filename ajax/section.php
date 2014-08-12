@@ -26,7 +26,7 @@ echo '</th>';
 echo '</tr>';
 
 echo '<tr class="line0">';
-echo '<td width="20%">' . __('Title', 'formcreator') . ' <span style="color:red;">*</span></td>';
+echo '<td width="20%">' . __('Title') . ' <span style="color:red;">*</span></td>';
 echo '<td width="70%"><input type="text" name="name" style="width:100%;" value="' . $name . '" class="required"></td>';
 echo '</tr>';
 

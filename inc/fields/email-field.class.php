@@ -87,7 +87,7 @@ class emailField implements Field
 
    public static function getName()
    {
-      return __('E-mail', 'formcreator');
+      return _n('Email', 'Emails', 1);
    }
 
    public static function getPrefs()

@@ -32,7 +32,7 @@ class PluginFormcreatorSection extends CommonDBChild
     */
    public static function getTypeName($nb = 0)
    {
-      return _n('Question', 'Questions', $nb, 'formcreator');
+      return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
    /**

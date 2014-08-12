@@ -83,7 +83,7 @@ class fileField implements Field
 
    public static function getName()
    {
-      return __('File', 'formcreator');
+      return __('File');
    }
 
    public static function getPrefs()

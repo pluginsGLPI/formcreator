@@ -21,7 +21,7 @@ if (count($GLOBALS['DB']->numrows($result_forms)) > 0) {
    echo '<table class="tab_cadrehov">';
 
    echo '<tr>';
-   echo '<th>' . __('Forms', 'formcreator') . '</th>';
+   echo '<th>' . _n('Form', 'Forms', 2, 'formcreator') . '</th>';
    echo '</tr>';
 
    $i = 0;

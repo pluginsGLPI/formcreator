@@ -57,7 +57,7 @@ class descriptionField implements Field
 
    public static function getName()
    {
-      return __('Description', 'formcreator');
+      return __('Description');
    }
 
    public static function getPrefs()

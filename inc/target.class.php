@@ -43,7 +43,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr>';
-      echo '<th colspan="3">' . __('Destinations', 'formcreator') . '</th>';
+      echo '<th colspan="3">' . _n('Destinations', 'Destinations', 2, 'formcreator') . '</th>';
       echo '</tr>';
 
       $target_class    = new PluginFormcreatorTarget();
@@ -60,7 +60,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
          echo '<td align="center" width="32">';
          echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/pencil.png"
-                  alt="*" title="' . __('Edit', 'formcreator') . '"
+                  alt="*" title="' . __('Edit') . '"
                   onclick="document.location=\'../front/targetticket.form.php?id=' . $target['items_id'] . '\'" align="absmiddle" style="cursor: pointer" /> ';
          echo '</td>';
 

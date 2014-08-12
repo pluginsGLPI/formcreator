@@ -10,7 +10,7 @@ echo '<tr><th colspan="4">' . __('Add a destination', 'formcreator') . '</th></t
 echo '<tr class="line1">';
 echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
 echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
-echo '<td width="15%"><strong>' . __('Type') . ' <span style="color:red;">*</span></strong></td>';
+echo '<td width="15%"><strong>' . _n('Type', 'Types', 1) . ' <span style="color:red;">*</span></strong></td>';
 echo '<td width="30%">';
 Dropdown::showFromArray('itemtype', array(
    ''                              => '-----',

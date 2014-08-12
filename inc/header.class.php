@@ -79,9 +79,7 @@ class PluginFormcreatorHeader extends CommonDropdown
       $options['target']  = Toolbox::getItemTypeFormURL(__CLASS__);
       $this->showTabs($options);
       $this->showFormHeader($options);
-      // echo '<form method="post" action="' . Toolbox::getItemTypeFormURL(__CLASS__) . '">';
       echo '<table class="tab_cadre_fixe">';
-      //echo '<tr><th colspan="2">' . __('Headers', 'formcreator') . '</th></tr>';
 
       echo "<tr class='line0'><td>" . __('Name') . "</td>";
       echo "<td>";
