@@ -93,7 +93,7 @@ class ldapselectField implements Field
             }
          }
       }
-      return $tab_values[$value];
+      return ($value != '') ? $tab_values[$value] : '';
    }
 
    public static function isValid($field, $value)

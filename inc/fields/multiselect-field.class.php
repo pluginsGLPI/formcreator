@@ -78,7 +78,7 @@ class multiSelectField implements Field
 
    public static function displayValue($value, $values)
    {
-      return implode(', ', $value);
+      return ($value != '') ? implode(', ', $value) : '';
    }
 
    public static function isValid($field, $value)
