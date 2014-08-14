@@ -70,32 +70,33 @@ class floatField implements Field
    public static function isValid($field, $value)
    {
       // Not required or not empty
-      if($field['required'] && empty($value)) {
+      if($field['required'] && ($value == '')) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Not a number
-      } elseif (!is_numeric($value)) {
-         Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-         return false;
+      } elseif ($value != '') {
+         if (!is_numeric($value)) {
+            Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+            return false;
 
-      // Min range not set or text length longer than min length
-      } elseif (!empty($field['range_min']) && ($value < $field['range_min'])) {
-         $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $field['range_min']);
-         Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
-         return false;
+         // Min range not set or text length longer than min length
+         } elseif (!empty($field['range_min']) && ($value < $field['range_min'])) {
+            $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $field['range_min']);
+            Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
+            return false;
 
-      // Max range not set or text length shorter than max length
-      } elseif (!empty($field['range_max']) && ($value > $field['range_max'])) {
-         $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $field['range_max']);
-         Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
-         return false;
+         // Max range not set or text length shorter than max length
+         } elseif (!empty($field['range_max']) && ($value > $field['range_max'])) {
+            $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $field['range_max']);
+            Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
+            return false;
 
-      // Specific format not set or well match
-      } elseif (!empty($field['regex']) && !preg_match($field['regex'], $value)) {
-         Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-         return false;
-
+         // Specific format not set or well match
+         } elseif (!empty($field['regex']) && !preg_match($field['regex'], $value)) {
+            Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+            return false;
+         }
       // All is OK
       } else {
          return true;
