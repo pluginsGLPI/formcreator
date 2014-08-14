@@ -25,7 +25,7 @@ class multiSelectField implements Field
          $values         = explode("\r\n", $field['values']);
          $tab_values     = array();
          foreach ($values as $value) {
-            if (!empty($value)) $tab_values[$value] = $value;
+            if ((trim($value) != '')) $tab_values[$value] = $value;
          }
 
          if($field['show_empty'])

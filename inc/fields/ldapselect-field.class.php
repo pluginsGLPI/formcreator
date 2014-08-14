@@ -16,7 +16,7 @@ class ldapselectField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
-      if(!empty($field['values'])) {
+      if (!empty($field['values'])) {
          $ldap_values = json_decode($field['values']);
          $config_ldap = new AuthLDAP();
          $config_ldap->getFromDB($ldap_values->ldap_auth);
