@@ -20,6 +20,7 @@ class multiSelectField implements Field
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
+      echo '<input type="hidden" name="formcreator_field_' . $field['id'] . '[]" value="" />';
 
       if(!empty($field['values'])) {
          $values         = explode("\r\n", $field['values']);
@@ -84,7 +85,7 @@ class multiSelectField implements Field
    public static function isValid($field, $value)
    {
       // Not required or not empty
-      if($field['required'] && count($value) == 0) {
+      if($field['required'] && count($value) - 1 == 0) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
