@@ -90,13 +90,13 @@ class multiSelectField implements Field
          return false;
 
       // Min range not set or number of selected item lower than min
-      } elseif (!empty($field['range_min']) && (count($value) < $field['range_min'])) {
+      } elseif (!empty($field['range_min']) && (count($value) - 1 < $field['range_min'])) {
          $message = sprintf(__('The following question needs of at least %d answers'), $field['range_min']);
          Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Max range not set or number of selected item greater than max
-      } elseif (!empty($field['range_max']) && (count($value) > $field['range_max'])) {
+      } elseif (!empty($field['range_max']) && (count($value) - 1 > $field['range_max'])) {
          $message = sprintf(__('The following question does not accept more than %d answers'), $field['range_max']);
          Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
          return false;
