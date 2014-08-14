@@ -342,6 +342,18 @@ msgstr ""
 msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
 msgstr ""
 
+#: front/question.form.php:15
+msgid "The question have been successfully saved!"
+msgstr ""
+
+#: front/question.form.php:22
+msgid "The question have been successfully updated!"
+msgstr ""
+
+#: front/question.form.php:29
+msgid "The question have been successfully removed!"
+msgstr ""
+
 #: hook.php:56 inc/category.class.php:6
 msgid "Form category"
 msgid_plural "Form categories"

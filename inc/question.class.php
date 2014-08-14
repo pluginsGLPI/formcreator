@@ -281,7 +281,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   if(confirm("' . __('Are you sure you want to delete this question:', 'formcreator') . ' " + question_name)) {
                      Ext.Ajax.request({
                         url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
-                        success: reloadTab,
+                        success: window.location.reload(),
                         params: {
                            delete: 1,
                            id: question_id,

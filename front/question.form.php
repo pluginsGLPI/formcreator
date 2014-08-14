@@ -12,21 +12,24 @@ if ($plugin->isActivated("formcreator")) {
    if(isset($_POST["add"])) {
       $question->check(-1,'w',$_POST);
       $question->add($_POST);
+      Session::addMessageAfterRedirect(__('The question have been successfully saved!', 'formcreator'), true, INFO, true);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Edit an existinf Question
    } elseif(isset($_POST["update"])) {
       $question->check($_POST['id'],'w');
       $question->update($_POST);
+      Session::addMessageAfterRedirect(__('The question have been successfully updated!', 'formcreator'), true, INFO, true);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Delete a Question
    } elseif(isset($_POST["delete"])) {
       $question->check($_POST['id'], 'd');
       $question->delete($_POST);
+      Session::addMessageAfterRedirect(__('The question have been successfully removed!', 'formcreator'), true, INFO, true);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Move a Question
+   // Set a Question required
    } elseif(isset($_POST["set_required"])) {
       global $DB;
       $question->check($_POST['id'], 'w');

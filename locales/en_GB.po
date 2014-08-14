@@ -360,6 +360,18 @@ msgstr "The description cannot be empty!"
 msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
 msgstr "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
 
+#: front/question.form.php:15
+msgid "The question have been successfully saved!"
+msgstr "The question have been successfully saved!"
+
+#: front/question.form.php:22
+msgid "The question have been successfully updated!"
+msgstr "The question have been successfully updated!"
+
+#: front/question.form.php:29
+msgid "The question have been successfully removed!"
+msgstr "The question have been successfully removed!"
+
 #: hook.php:56 inc/category.class.php:6
 msgid "Form category"
 msgid_plural "Form categories"

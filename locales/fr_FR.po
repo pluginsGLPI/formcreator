@@ -359,6 +359,18 @@ msgstr "La desciption ne doit pas être vide !"
 msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
 msgstr "Ce plugin nécessite GLPI >= 0.84 et GLPI < 0.85"
 
+#: front/question.form.php:15
+msgid "The question have been successfully saved!"
+msgstr "La question a été sauvegardée avec succès !"
+
+#: front/question.form.php:22
+msgid "The question have been successfully updated!"
+msgstr "La question a été mise à jour avec succès !"
+
+#: front/question.form.php:29
+msgid "The question have been successfully removed!"
+msgstr "La question a été supprimée avec succès !"
+
 #: hook.php:56 inc/category.class.php:6
 msgid "Form category"
 msgid_plural "Form categories"
