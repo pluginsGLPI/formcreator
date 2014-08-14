@@ -605,28 +605,30 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Otherwize  generate targets
       } else {
-         $doc = new Document();
          $_SESSION['formcreator_documents'] = array();
 
          // Save files as Documents
          foreach ($_FILES as $question_name => $file) {
-            $question_id = trim(strrchr($question_name, '_'), '_');
-            $question    = new PluginFormcreatorQuestion();
-            $question->getFromDB($question_id);
+            if (isset($_FILES['tmp_name']) && is_file($_FILES['tmp_name'])) {
+               $doc         = new Document();
+               $question_id = trim(strrchr($question_name, '_'), '_');
+               $question    = new PluginFormcreatorQuestion();
+               $question->getFromDB($question_id);
 
-            $file_datas                 = array();
-            $file_datas["name"]         = $this->fields['name'] . ' - ' . $question->fields['name'];
-            $file_datas["entities_id"]  = (isset($_SESSION['glpiactive_entity']))
-                                          ? $_SESSION['glpiactive_entity']
-                                          : $this->fields['entities_id'];
-            $file_datas["is_recursive"] = $this->fields['is_recursive'];
-            Document::uploadDocument($file_datas, $file);
+               $file_datas                 = array();
+               $file_datas["name"]         = $this->fields['name'] . ' - ' . $question->fields['name'];
+               $file_datas["entities_id"]  = (isset($_SESSION['glpiactive_entity']))
+                                             ? $_SESSION['glpiactive_entity']
+                                             : $this->fields['entities_id'];
+               $file_datas["is_recursive"] = $this->fields['is_recursive'];
+               Document::uploadDocument($file_datas, $file);
 
-            if ($docID = $doc->add($file_datas)) {
-               $_SESSION['formcreator_documents'][] = $docID;
-               $table = getTableForItemType('Document');
-               $query = "UPDATE $table SET filename = '" . addslashes($file['name']) . "' WHERE id = " . $docID;
-               $GLOBALS['DB']->query($query);
+               if ($docID = $doc->add($file_datas)) {
+                  $_SESSION['formcreator_documents'][] = $docID;
+                  $table = getTableForItemType('Document');
+                  $query = "UPDATE $table SET filename = '" . addslashes($file['name']) . "' WHERE id = " . $docID;
+                  $GLOBALS['DB']->query($query);
+               }
             }
          }
 
