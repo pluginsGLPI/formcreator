@@ -566,8 +566,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $required  = 0;
 
             if (isset($datas->value) && !empty($datas->value)) {
-               foreach($datas->value as $value) {
-                  if (!empty($value)) $values .= urldecode($value) . "\r\n";
+               Toolbox::logDebug($datas->value);
+               if(is_object($datas->value)) {
+                  foreach($datas->value as $value) {
+                     if (!empty($value)) $values .= urldecode($value) . "\r\n";
+                  }
+               } else {
+                  $values .= urldecode($datas->value);
                }
             }
 

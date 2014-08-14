@@ -258,9 +258,10 @@ class PluginFormcreatorTarget extends CommonDBTM
          // Create Target ticket
          $version   = plugin_version_formcreator();
          $migration = new Migration($version['version']);
+         require_once ('targetticket.class.php');
          PluginFormcreatorTargetTicket::install($migration);
          $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
-         $query = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
+         $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
          $result = $GLOBALS['DB']->query($query);
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
             // Insert target ticket
