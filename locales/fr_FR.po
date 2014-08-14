@@ -146,7 +146,7 @@ msgstr "La valeur du champs suivant ne correspond pas au format attendu :"
 
 #: inc/fields/checkboxes-field.class.php:122
 msgid "Checkboxes"
-msgstr "Cases à chochées"
+msgstr "Cases à cochées"
 
 #: inc/fields/datetime-field.class.php:84
 msgid "Datetime"
