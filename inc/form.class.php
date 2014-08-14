@@ -664,15 +664,17 @@ class PluginFormcreatorForm extends CommonDBTM
          $question  = new PluginFormcreatorQuestion();
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            $question_no ++;
+            if ($question_line['fieldtype'] != 'file') {
+               $question_no ++;
 
-            $id        = $question_line['id'];
-            $name      = $question_line['name'];
-            $value     = isset($datas['formcreator_field_' . $id]) ? $datas['formcreator_field_' . $id] : '';
-            $value     = PluginFormcreatorFields::getValue($question_line, $value);
+               $id        = $question_line['id'];
+               $name      = $question_line['name'];
+               $value     = isset($datas['formcreator_field_' . $id]) ? $datas['formcreator_field_' . $id] : '';
+               $value     = PluginFormcreatorFields::getValue($question_line, $value);
 
-            $output .= $question_no . ') ' . $question_line['name'] . ' : ';
-            $output .= $value . PHP_EOL . PHP_EOL;
+               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
+               $output .= $value . PHP_EOL . PHP_EOL;
+            }
          }
       }
 
