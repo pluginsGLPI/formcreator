@@ -1,6 +1,5 @@
 <?php
-include ('../../../inc/includes.php');
-
+require_once ('../../../inc/includes.php');
 if(isset($_SESSION['is_popup'])) unset($_SESSION['is_popup']);
 
 Session::checkRight("config", "w");
