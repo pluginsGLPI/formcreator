@@ -78,7 +78,7 @@ $rand = mt_rand();
                $sections[$section['id']] = $section['name'];
             }
             Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, array(
-               'value' => $question->fields['plugin_formcreator_sections_id'],
+               'value' => ($question->fields['plugin_formcreator_sections_id']) ?: (int) $_REQUEST['section_id'],
                'rand'  => $rand,
             ));
             ?>
