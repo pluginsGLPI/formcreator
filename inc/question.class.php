@@ -566,7 +566,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $required  = 0;
 
             if (isset($datas->value) && !empty($datas->value)) {
-               Toolbox::logDebug($datas->value);
                if(is_object($datas->value)) {
                   foreach($datas->value as $value) {
                      if (!empty($value)) $values .= urldecode($value) . "\r\n";
@@ -657,7 +656,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $query = "ALTER TABLE `$table`
                    DROP `type`,
                    DROP `data`,
-                   DROP `option`;";
+                   DROP `option`,
+                   DROP `plugin_formcreator_forms_id`;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
 

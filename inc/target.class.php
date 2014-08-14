@@ -266,9 +266,9 @@ class PluginFormcreatorTarget extends CommonDBTM
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
             // Insert target ticket
             $query_insert = "INSERT INTO $table_targetticket SET
-                              `name` = '{$line['name']}',
-                              `tickettemplates_id` = '{$line['tickettemplates_id']}',
-                              `comment` = '{$line['content']}'";
+                              `name` = \"{$line['name']}\",
+                              `tickettemplates_id` = \"{$line['tickettemplates_id']}\",
+                              `comment` = \"{$line['content']}\"";
             $GLOBALS['DB']->query($query_insert);
             $targetticket_id = $GLOBALS['DB']->insert_id();
 
