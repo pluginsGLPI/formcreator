@@ -20,9 +20,11 @@ class datetimeField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
+      echo '<div>';
       Html::showDateTimeField('formcreator_field_' . $field['id'], array(
          'value' => $value
       ));
+      echo '</div>';
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
