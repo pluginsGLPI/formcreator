@@ -23,7 +23,9 @@ class integerField implements Field
       echo '<input type="number" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
                id="formcreator_field_' . $field['id'] . '"
-               value="' . $value . '" />';
+               value="' . $value . '"
+               min="' . $field['range_min'] . '"
+               max="' . $field['range_max'] . '" />';
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
