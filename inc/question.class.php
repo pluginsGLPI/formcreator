@@ -391,6 +391,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return array();
       }
 
+      // format values for numbers
+      if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
+         $input['default_values'] = (float) str_replace(',', '.', $input['default_values']);
+         $input['range_min']      = (float) str_replace(',', '.', $input['range_min']);
+         $input['range_max']      = (float) str_replace(',', '.', $input['range_max']);
+      }
+
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
       if(!empty($input['ldap_auth'])) {
          $input['values'] = json_encode(array(
@@ -424,25 +431,32 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       // Control fields values :
       // - name is required
-      if(empty($input['name'])) {
+      if (empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
       }
       // - field type is required
-      if(empty($input['fieldtype'])) {
+      if (empty($input['fieldtype'])) {
          Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
          return array();
       }
       // - section is required
-      if(empty($input['plugin_formcreator_sections_id'])) {
+      if (empty($input['plugin_formcreator_sections_id'])) {
          Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
          return array();
       }
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-      if($input['fieldtype'] == 'dropdown') {
+      if ($input['fieldtype'] == 'dropdown') {
          $input['default_values'] = $input['dropdown_default_value'];
          $input['values']         = $input['dropdown_values'];
+      }
+
+      // format values for numbers
+      if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
+         $input['default_values'] = (float) str_replace(',', '.', $input['default_values']);
+         $input['range_min']      = (float) str_replace(',', '.', $input['range_min']);
+         $input['range_max']      = (float) str_replace(',', '.', $input['range_max']);
       }
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones

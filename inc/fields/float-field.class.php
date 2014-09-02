@@ -20,7 +20,7 @@ class floatField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
-      echo '<input type="number" class="form-control" step="0.1"
+      echo '<input type="number" class="form-control" step="0.01"
                name="formcreator_field_' . $field['id'] . '"
                id="formcreator_field_' . $field['id'] . '"
                value="' . $value . '"
