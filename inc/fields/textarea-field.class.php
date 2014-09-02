@@ -71,17 +71,24 @@ class textareaField implements Field
    {
       // Not required or not empty
       if($field['required'] && empty($value)) {
-         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator')
+                                          . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Min range not set or text length longer than min length
       } elseif(!empty($field['range_min']) && strlen($value) < $field['range_min']) {
-         Session::addMessageAfterRedirect(__('The text is too short (minimum %d characters):', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('The text is too short (minimum %d characters):', 'formcreator'),
+                    $field['range_min'])
+            . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Max range not set or text length shorter than max length
       } elseif(!empty($field['range_max']) && strlen($value) > $field['range_max']) {
-         Session::addMessageAfterRedirect(__('The text is too long (maximum %d characters):', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         Session::addMessageAfterRedirect(
+            sprintf(__('The text is too long (maximum %d characters):', 'formcreator'),
+               $field['range_max'])
+            . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Specific format not set or well match

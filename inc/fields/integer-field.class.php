@@ -88,7 +88,7 @@ class integerField implements Field
 
          // Max range not set or text length shorter than max length
          } elseif (!empty($field['range_max']) && ($value > $field['range_max'])) {
-            $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $field['range_min']);
+            $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $field['range_max']);
             Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
             return false;
 
