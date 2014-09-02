@@ -35,6 +35,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
+
+   function addMessageOnAddAction() {}
+   function addMessageOnUpdateAction() {}
+   function addMessageOnDeleteAction() {}
+
    /**
     * Return the name of the tab for item including forms like the config page
     *
@@ -398,13 +403,40 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['range_max']      = (float) str_replace(',', '.', $input['range_max']);
       }
 
-      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-      if(!empty($input['ldap_auth'])) {
-         $input['values'] = json_encode(array(
-            'ldap_auth'      => $input['ldap_auth'],
-            'ldap_filter'    => $input['ldap_filter'],
-            'ldap_attribute' => strtolower($input['ldap_attribute']),
-         ));
+      // LDAP fields validation
+      if ($input['fieldtype'] == 'ldap') {
+         // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+         if(!empty($input['ldap_auth'])) {
+
+            $config_ldap = new AuthLDAP();
+            $config_ldap->getFromDB($input['ldap_auth']);
+
+            // Set specific error handler too catch LDAP errors
+            if (!function_exists('warning_handler')) {
+               function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+                  if (0 === error_reporting()) return false;
+                  throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+               }
+            }
+            set_error_handler("warning_handler", E_WARNING);
+
+            try {
+               $ds      = $config_ldap->connect();
+               $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], array(strtolower($input['ldap_attribute'])));
+               $entries = ldap_get_entries($ds, $sn);
+            } catch(Exception $e) {
+               Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator') . ' ' . $field['name'], false, ERROR);
+               return false;
+            }
+
+            restore_error_handler();
+
+            $input['values'] = json_encode(array(
+               'ldap_auth'      => $input['ldap_auth'],
+               'ldap_filter'    => $input['ldap_filter'],
+               'ldap_attribute' => strtolower($input['ldap_attribute']),
+            ));
+         }
       }
 
       // Get next order
@@ -459,13 +491,39 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['range_max']      = (float) str_replace(',', '.', $input['range_max']);
       }
 
-      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-      if(!empty($input['ldap_auth'])) {
-         $input['values'] = json_encode(array(
-            'ldap_auth'      => $input['ldap_auth'],
-            'ldap_filter'    => $input['ldap_filter'],
-            'ldap_attribute' => strtolower($input['ldap_attribute']),
-         ));
+      // LDAP fields validation
+      if ($input['fieldtype'] == 'ldapselect') {
+         // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+         if(!empty($input['ldap_auth'])) {
+
+            $config_ldap = new AuthLDAP();
+            $config_ldap->getFromDB($input['ldap_auth']);
+
+            // Set specific error handler too catch LDAP errors
+            if (!function_exists('warning_handler')) {
+               function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+                  if (0 === error_reporting()) return false;
+                  throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+               }
+            }
+            set_error_handler("warning_handler", E_WARNING);
+
+            try {
+               $ds      = $config_ldap->connect();
+               $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], array(strtolower($input['ldap_attribute'])));
+               $entries = ldap_get_entries($ds, $sn);
+            } catch(Exception $e) {
+               Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
+            }
+
+            restore_error_handler();
+
+            $input['values'] = json_encode(array(
+               'ldap_auth'      => $input['ldap_auth'],
+               'ldap_filter'    => $input['ldap_filter'],
+               'ldap_attribute' => strtolower($input['ldap_attribute']),
+            ));
+         }
       }
 
       // If change section, reorder questions

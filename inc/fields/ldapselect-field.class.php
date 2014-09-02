@@ -18,23 +18,44 @@ class ldapselectField implements Field
 
       if (!empty($field['values'])) {
          $ldap_values = json_decode($field['values']);
+         $ldap_dropdown = new RuleRightParameter();
+         $ldap_dropdown->getFromDB($ldap_values->ldap_attribute);
+         $attribute = array($ldap_dropdown->fields['value']);
+
          $config_ldap = new AuthLDAP();
          $config_ldap->getFromDB($ldap_values->ldap_auth);
-         $ds      = $config_ldap->connect();
-         $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, array($ldap_values->ldap_attribute));
-         $entries = ldap_get_entries($ds, $sn);
-         array_shift($entries);
 
-         $tab_values = array();
-         foreach($entries as $id => $attribute) {
-            if(isset($attribute[$ldap_values->ldap_attribute])
-               && !in_array($attribute[$ldap_values->ldap_attribute][0], $tab_values)) {
-               $tab_values[$id] = $attribute[$ldap_values->ldap_attribute][0];
+         if (!function_exists('warning_handler')) {
+            function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+               if (0 === error_reporting()) return false;
+               throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
             }
          }
+         set_error_handler("warning_handler", E_WARNING);
 
-         if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
-         Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values);
+         try {
+            $ds      = $config_ldap->connect();
+            $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
+            $entries = ldap_get_entries($ds, $sn);
+            array_shift($entries);
+
+            $tab_values = array();
+            foreach($entries as $id => $attr) {
+               if(isset($attr[$attribute[0]])
+                  && !in_array($attr[$attribute[0]][0], $tab_values)) {
+                  $tab_values[$id] = $attr[$attribute[0]][0];
+               }
+            }
+
+            if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
+            Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values);
+         } catch(Exception $e) {
+            echo '<b><i class="red">';
+            echo __('Cannot recover LDAP informations!', 'formcreator');
+            echo '</i></b>';
+         }
+
+         restore_error_handler();
       }
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
@@ -78,18 +99,23 @@ class ldapselectField implements Field
    {
       if(!empty($values)) {
          $ldap_values = json_decode($values);
+
+         $ldap_dropdown = new RuleRightParameter();
+         $ldap_dropdown->getFromDB($ldap_values->ldap_attribute);
+         $attribute = array($ldap_dropdown->fields['value']);
+
          $config_ldap = new AuthLDAP();
          $config_ldap->getFromDB($ldap_values->ldap_auth);
          $ds      = $config_ldap->connect();
-         $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, array($ldap_values->ldap_attribute));
+         $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
          $entries = ldap_get_entries($ds, $sn);
          array_shift($entries);
 
          $tab_values = array();
-         foreach($entries as $id => $attribute) {
-            if(isset($attribute[$ldap_values->ldap_attribute])
-               && !in_array($attribute[$ldap_values->ldap_attribute][0], $tab_values)) {
-               $tab_values[$id] = $attribute[$ldap_values->ldap_attribute][0];
+         foreach($entries as $id => $attr) {
+            if(isset($attr[$attribute[0]])
+               && !in_array($attr[$attribute[0]][0], $tab_values)) {
+               $tab_values[$id] = $attr[$attribute[0]][0];
             }
          }
       }

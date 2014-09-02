@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-08-12 14:45+0100\n"
+"PO-Revision-Date: 2014-09-02 13:49+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -196,6 +196,11 @@ msgstr "Integer"
 #: inc/fields/ldapselect-field.class.php:114
 msgid "LDAP Select"
 msgstr "LDAP Select"
+
+#: inc/fields/ldapselect-field.class.php:50 inc/question.class.php:428
+#: inc/question.class.php:516
+msgid "Cannot recover LDAP informations!"
+msgstr "Cannot recover LDAP informations!"
 
 #: inc/fields/multiselect-field.class.php:111
 msgid "Multiselect"

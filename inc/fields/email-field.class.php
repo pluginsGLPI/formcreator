@@ -75,7 +75,7 @@ class emailField implements Field
          return false;
 
       // Specific format not set or well match
-      } elseif(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+      } elseif(!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
          Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 

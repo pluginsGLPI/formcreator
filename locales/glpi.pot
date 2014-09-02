@@ -190,6 +190,10 @@ msgstr ""
 msgid "LDAP Select"
 msgstr ""
 
+#: inc/fields/ldapselect-field.class.php:50 inc/question.class.php:428 inc/question.class.php:516
+msgid "Cannot recover LDAP informations!"
+msgstr ""
+
 #: inc/fields/multiselect-field.class.php:111
 msgid "Multiselect"
 msgstr ""

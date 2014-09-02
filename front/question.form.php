@@ -11,22 +11,25 @@ if ($plugin->isActivated("formcreator")) {
    // Add a new Question
    if(isset($_POST["add"])) {
       $question->check(-1,'w',$_POST);
-      $question->add($_POST);
-      Session::addMessageAfterRedirect(__('The question have been successfully saved!', 'formcreator'), true, INFO, true);
+      if ($question->add($_POST)) {
+         Session::addMessageAfterRedirect(__('The question have been successfully saved!', 'formcreator'), true, INFO);
+      }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Edit an existinf Question
    } elseif(isset($_POST["update"])) {
       $question->check($_POST['id'],'w');
-      $question->update($_POST);
-      Session::addMessageAfterRedirect(__('The question have been successfully updated!', 'formcreator'), true, INFO, true);
+      if ($question->update($_POST)) {
+         Session::addMessageAfterRedirect(__('The question have been successfully updated!', 'formcreator'), true, INFO);
+      }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Delete a Question
    } elseif(isset($_POST["delete"])) {
       $question->check($_POST['id'], 'd');
-      $question->delete($_POST);
-      Session::addMessageAfterRedirect(__('The question have been successfully removed!', 'formcreator'), true, INFO, true);
+      if ($question->delete($_POST)) {
+         Session::addMessageAfterRedirect(__('The question have been successfully removed!', 'formcreator'), true, INFO, true);
+      }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Set a Question required

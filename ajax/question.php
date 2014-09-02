@@ -243,9 +243,10 @@ $rand = mt_rand();
          <td width="33%">
             <?php
             Dropdown::show('AuthLDAP', array(
-               'name'  => 'ldap_auth',
-               'rand'  => $rand,
-               'value' => (isset($ldap_values->ldap_auth)) ? $ldap_values->ldap_auth : '',
+               'name'      => 'ldap_auth',
+               'rand'      => $rand,
+               'value'     => (isset($ldap_values->ldap_auth)) ? $ldap_values->ldap_auth : '',
+               'on_change' => 'change_LDAP(this)',
             ));
             ?>
          </td>
@@ -257,8 +258,15 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <input type="text" name="ldap_attribute" id="ldap_attribute" style="width:98%;"
-               value="<?php echo (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : ''; ?>" />
+            <?php
+            Dropdown::show('RuleRightParameter', array(
+               'name'  => 'ldap_attribute',
+               'rand'  => $rand,
+               'value' => (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : '',
+            ));
+            ?>
+            <!-- <input type="text" name="ldap_attribute" id="ldap_attribute" style="width:98%;"
+               value="<?php echo (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : ''; ?>" /> -->
          </td>
          <td colspan="2">&nbsp;</td>
       </tr>
@@ -450,6 +458,21 @@ $rand = mt_rand();
             params: "dropdown_itemtype=" + dropdown_itemtype + "&rand=<?php echo $rand; ?>"
          });
 
+      }
+
+      function change_LDAP(ldap) {
+         var ldap_directory = ldap.value;
+
+         Ext.Ajax.request({
+            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/ldap_filter.php",
+            success: function(response){
+               document.getElementById('ldap_filter').value = response.responseText;
+            },
+            params: {
+               value: ldap_directory,
+               _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
+            }
+         });
       }
    </script>
 
