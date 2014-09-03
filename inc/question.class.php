@@ -384,12 +384,17 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if(empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
+      } else {
+         $input['name'] = htmlentities(strip_tags(html_entity_decode($input['name'])));
       }
+
+
       // - field type is required
       if(empty($input['fieldtype'])) {
          Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
          return array();
       }
+
       // - section is required
       if(empty($input['plugin_formcreator_sections_id'])) {
          Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
@@ -466,12 +471,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
+      } else {
+         $input['name'] = htmlentities(strip_tags(html_entity_decode($input['name'])));
       }
+
       // - field type is required
       if (empty($input['fieldtype'])) {
          Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
          return array();
       }
+
       // - section is required
       if (empty($input['plugin_formcreator_sections_id'])) {
          Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
