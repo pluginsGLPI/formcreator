@@ -71,7 +71,7 @@ V 2.1
 
 Non planifiées
 --------------
-- Amélioration du changement d'ordre des sections et questions par drag & drop ( => A faire sur la version GLPI 0.85 avec jQuery, déjà fait sur Davfi)
+- Amélioration du changement d'ordre des sections et questions par drag & drop ( => A faire sur la version GLPI 0.85 avec jQuery)
 - Ajouter sur les options avancées des questions une liste des champs disponibles (standard + Fields)
 - Avoir la possibilité de cloner un formulaire
 - Cible de formulaire : Ticket, PDF ou e-mail
