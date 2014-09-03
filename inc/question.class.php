@@ -401,6 +401,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return array();
       }
 
+      // - Escape tags and specials caracters from values
+      if(!empty($input['values'])) {
+         $input['values'] = htmlentities(strip_tags(html_entity_decode($input['values'])));
+      }
+
+      // - Escape tags and specials caracters from default values
+      if(!empty($input['default_values'])) {
+         $input['default_values'] = htmlentities(strip_tags(html_entity_decode($input['default_values'])));
+      }
+
       // format values for numbers
       if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
          $input['default_values'] = (float) str_replace(',', '.', $input['default_values']);
@@ -485,6 +495,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (empty($input['plugin_formcreator_sections_id'])) {
          Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
          return array();
+      }
+
+      // - Escape tags and specials caracters from values
+      if(!empty($input['values'])) {
+         $input['values'] = htmlentities(strip_tags(html_entity_decode($input['values'])));
+      }
+
+      // - Escape tags and specials caracters from default values
+      if(!empty($input['default_values'])) {
+         $input['default_values'] = htmlentities(strip_tags(html_entity_decode($input['default_values'])));
       }
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
