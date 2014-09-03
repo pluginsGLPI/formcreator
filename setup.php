@@ -72,7 +72,8 @@ function plugin_init_formcreator ()
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
 
    // Config page
-   if (Session::haveRight('config','w')) {
+   $plugin = new Plugin();
+   if (Session::haveRight('config','w') && $plugin->isActivated("formcreator")) {
       $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/config.form.php';
    }
 
