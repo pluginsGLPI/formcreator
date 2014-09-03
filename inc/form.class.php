@@ -609,7 +609,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          // Save files as Documents
          foreach ($_FILES as $question_name => $file) {
-            if (isset($_FILES['tmp_name']) && is_file($_FILES['tmp_name'])) {
+            if (isset($file['tmp_name']) && is_file($file['tmp_name'])) {
                $doc         = new Document();
                $question_id = trim(strrchr($question_name, '_'), '_');
                $question    = new PluginFormcreatorQuestion();
