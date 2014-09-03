@@ -48,6 +48,7 @@ class ldapselectField implements Field
             }
 
             if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
+            sort($tab_values);
             Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values);
          } catch(Exception $e) {
             echo '<b><i class="red">';
