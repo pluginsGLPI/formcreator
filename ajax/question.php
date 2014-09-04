@@ -323,8 +323,6 @@ $rand = mt_rand();
       <tr class="line1">
          <td colspan="4" class="center">
             <input type="hidden" name="id" value="<?php echo $question_id; ?>" />
-            <input type="reset" name="reset" class="submit_button" onclick="resetAll()"
-                   value="<?php echo __('Cancel', 'formcreator'); ?>" /> &nbsp;
             <input type="hidden" name="plugin_formcreator_forms_id" value="<?php echo (int) $_REQUEST['form_id']; ?>" />
             <?php if(0 == $question_id) : ?>
                <input type="submit" name="add" class="submit_button" value="<?php echo __('Add'); ?>" />

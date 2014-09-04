@@ -232,6 +232,17 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       echo '<script type="text/javascript">
+               var modalWindow = new Ext.Window({
+                  layout: "fit",
+                  width: "964",
+                  height: "600",
+                  closeAction: "hide",
+                  modal: "true",
+                  autoScroll: true,
+                  y: 500
+               });
+
+
                // === QUESTIONS ===
                var tab_questions = [];
                ' . $js_tab_questions . '
@@ -239,21 +250,31 @@ class PluginFormcreatorQuestion extends CommonDBChild
                ' . $js_line_questions . '
 
                function addQuestion(section) {
-                  resetAll();
-                  Ext.get("add_question_td_" + section).load({
+                  modalWindow.show();
+                  modalWindow.load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php",
-                     scripts: true,
-                     params: "section_id=" + section + "&form_id=" + ' . $item->getId() . '
+                     params: {
+                        section_id: section,
+                        form_id: ' . $item->getId() . ',
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     },
+                     timeout: 30,
+                     scripts: true
                   });
                }
 
                function editQuestion(question, section) {
-                  resetAll();
-                  document.getElementById("question_row_" + question).innerHTML = "<td colspan=\"6\"></td>";
-                  Ext.get("question_row_" + question + "").child("td").load({
+                  modalWindow.show();
+                  modalWindow.load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php",
-                     scripts: true,
-                     params: "question_id=" + question + "&section_id=" + section + "&form_id=' . $item->getId() . '"
+                     params: {
+                        question_id: question,
+                        section_id: section,
+                        form_id: ' . $item->getId() . ',
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     },
+                     timeout: 30,
+                     scripts: true
                   });
                }
 
@@ -305,7 +326,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
                ' . $js_tab_sections . '
 
                function addSection() {
-                  resetAll();
                   Ext.get("add_section_th").load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
                      scripts: true,
@@ -314,7 +334,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
                }
 
                function editSection(section) {
-                  resetAll();
                   document.getElementById("section_row_" + section).innerHTML = "<th colspan=\"6\"></th>";
                   Ext.get("section_row_" + section + "").child("th").load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
