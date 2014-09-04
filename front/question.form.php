@@ -26,11 +26,9 @@ if ($plugin->isActivated("formcreator")) {
 
    // Delete a Question
    } elseif(isset($_POST["delete"])) {
+      Toolbox::logDebug($_POST);
       $question->check($_POST['id'], 'd');
-      if ($question->delete($_POST)) {
-         Session::addMessageAfterRedirect(__('The question have been successfully removed!', 'formcreator'), true, INFO, true);
-      }
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+      $question->delete($_POST);
 
    // Set a Question required
    } elseif(isset($_POST["set_required"])) {

@@ -39,6 +39,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}
+   function addMessageOnPurgeAction() {}
 
    /**
     * Return the name of the tab for item including forms like the config page
@@ -71,9 +72,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Display a list of all forms on the configuration page
+    * Display a list of all form sections and questions
     *
-    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
+    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Form Item)
     * @param  integer    $tabnum       Number of the current tab
     * @param  integer    $withtemplate
     *
@@ -286,7 +287,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   if(confirm("' . __('Are you sure you want to delete this question:', 'formcreator') . ' " + question_name)) {
                      Ext.Ajax.request({
                         url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
-                        success: window.location.reload(),
+                        success: reloadTab,
                         params: {
                            delete: 1,
                            id: question_id,
