@@ -104,6 +104,6 @@ class datetimeField implements Field
    public static function getJSFields()
    {
       $prefs = self::getPrefs();
-      return "tab_fields_fields['date'] = 'showFields(" . implode(', ', $prefs) . ");';";
+      return "tab_fields_fields['datetime'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }
