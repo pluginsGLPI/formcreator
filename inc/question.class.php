@@ -371,111 +371,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
-    * Check fields values and get the order for the new question
+    * Validate form fields before add or update a question
     *
-    * @param $input datas used to add the item
+    * @param  Array $input Datas used to add the item
     *
-    * @return the modified $input array
-   **/
-   public function prepareInputForAdd($input)
-   {
-      // Control fields values :
-      // - name is required
-      if(empty($input['name'])) {
-         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-         return array();
-      } else {
-         $input['name'] = htmlentities(strip_tags(html_entity_decode($input['name'])));
-      }
-
-
-      // - field type is required
-      if(empty($input['fieldtype'])) {
-         Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
-         return array();
-      }
-
-      // - section is required
-      if(empty($input['plugin_formcreator_sections_id'])) {
-         Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
-         return array();
-      }
-
-      // - Escape tags and specials caracters from values
-      if(!empty($input['values'])) {
-         $input['values'] = htmlentities(strip_tags(html_entity_decode($input['values'])));
-      }
-
-      // - Escape tags and specials caracters from default values
-      if(!empty($input['default_values'])) {
-         $input['default_values'] = htmlentities(strip_tags(html_entity_decode($input['default_values'])));
-      }
-
-      // format values for numbers
-      if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
-         $input['default_values'] = (float) str_replace(',', '.', $input['default_values']);
-         $input['range_min']      = (float) str_replace(',', '.', $input['range_min']);
-         $input['range_max']      = (float) str_replace(',', '.', $input['range_max']);
-      }
-
-      // LDAP fields validation
-      if ($input['fieldtype'] == 'ldap') {
-         // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-         if(!empty($input['ldap_auth'])) {
-
-            $config_ldap = new AuthLDAP();
-            $config_ldap->getFromDB($input['ldap_auth']);
-
-            // Set specific error handler too catch LDAP errors
-            if (!function_exists('warning_handler')) {
-               function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
-                  if (0 === error_reporting()) return false;
-                  throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-               }
-            }
-            set_error_handler("warning_handler", E_WARNING);
-
-            try {
-               $ds      = $config_ldap->connect();
-               $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], array(strtolower($input['ldap_attribute'])));
-               $entries = ldap_get_entries($ds, $sn);
-            } catch(Exception $e) {
-               Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator') . ' ' . $field['name'], false, ERROR);
-               return false;
-            }
-
-            restore_error_handler();
-
-            $input['values'] = json_encode(array(
-               'ldap_auth'      => $input['ldap_auth'],
-               'ldap_filter'    => $input['ldap_filter'],
-               'ldap_attribute' => strtolower($input['ldap_attribute']),
-            ));
-         }
-      }
-
-      // Get next order
-      $obj    = new self();
-      $query  = "SELECT MAX(`order`) AS `order`
-                 FROM `{$obj->getTable()}`
-                 WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-      $result = $GLOBALS['DB']->query($query);
-      $line   = $GLOBALS['DB']->fetch_array($result);
-      $input['order'] = $line['order'] + 1;
-
-      return $input;
-   }
-
-   /**
-    * Prepare input datas for adding the question
-    * Check fields values and get the order for the new question
+    * @return Array        The modified $input array
     *
-    * @param $input datas used to add the item
-    *
-    * @return the modified $input array
-   **/
-   public function prepareInputForUpdate($input)
+    * @param  [type] $input [description]
+    * @return [type]        [description]
+    */
+   private function checkBeforeSave($input)
    {
       // Control fields values :
       // - name is required
@@ -555,6 +460,48 @@ class PluginFormcreatorQuestion extends CommonDBChild
             ));
          }
       }
+
+      return $input;
+   }
+
+   /**
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForAdd($input)
+   {
+      $input = $this->checkBeforeSave($input);
+
+      // Get next order
+      $obj    = new self();
+      $query  = "SELECT MAX(`order`) AS `order`
+                 FROM `{$obj->getTable()}`
+                 WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+      $result = $GLOBALS['DB']->query($query);
+      $line   = $GLOBALS['DB']->fetch_array($result);
+      $input['order'] = $line['order'] + 1;
+
+      Toolbox::logDebug(PHP_EOL . PHP_EOL .' === BEFORE === ' . PHP_EOL . PHP_EOL);
+      Toolbox::logDebug($input);
+
+      return $input;
+   }
+
+   /**
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForUpdate($input)
+   {
+      $input = $this->checkBeforeSave($input);
 
       // If change section, reorder questions
       if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
