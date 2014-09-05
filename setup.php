@@ -74,7 +74,7 @@ function plugin_init_formcreator ()
    // Config page
    $plugin = new Plugin();
    if (Session::haveRight('config','w') && $plugin->isActivated("formcreator")) {
-      $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/config.form.php';
+      $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
    }
 
    // Add a link in the main menu plugins for technician and admin panel
@@ -82,16 +82,10 @@ function plugin_init_formcreator ()
 
    // Set options for pages (title, links, buttons...)
    $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
-      'config'         => array('title'  => __('Settings'),
-                              'page'   => '/plugins/formcreator/front/config.form.php',
-                              'links'  => array(
-                                  'search'   => '/plugins/formcreator/front/formlist.php',
-                                  'config'   => '/plugins/formcreator/front/config.form.php',
-                                  'add'      => '/plugins/formcreator/front/form.form.php')),
       'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
                               'links'  => array(
                                   'search'   => '/plugins/formcreator/front/formlist.php',
-                                  'config'   => '/plugins/formcreator/front/config.form.php',
+                                  'config'   => '/plugins/formcreator/front/form.php',
                                   'add'      => '/plugins/formcreator/front/form.form.php')),
    );
 
