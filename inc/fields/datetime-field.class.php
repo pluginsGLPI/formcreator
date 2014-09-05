@@ -13,8 +13,7 @@ class datetimeField implements Field
       if($field['required'])  $required = ' required';
       else $required = '';
 
-      $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
-      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
       echo '<label>';
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';
@@ -46,17 +45,19 @@ class datetimeField implements Field
 
       if ($field['show_type'] == 'hide') {
          echo '<script type="text/javascript">
-                  document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                  function showFormGroup' . $field['id'] . '() {
-                     var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
+                  Ext.onReady(function () {
+                     document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                     function showFormGroup' . $field['id'] . '() {
+                        var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
 
-                     if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                        if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
+                           document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
+                        } else {
+                           document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                        }
                      }
-                  }
-                  showFormGroup' . $field['id'] . '();
+                     showFormGroup' . $field['id'] . '();
+                  });
                </script>';
       }
 
