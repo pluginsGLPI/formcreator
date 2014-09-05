@@ -16,12 +16,13 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                 AND helpdesk_home = 1
                 ORDER BY $form_table.name ASC";
 $result_forms = $GLOBALS['DB']->query($query_forms) or die($GLOBALS['DB']->error());
+$nb_forms = $GLOBALS['DB']->numrows($result_forms);
 
-if (count($GLOBALS['DB']->numrows($result_forms)) > 0) {
+if ($nb_forms > 0) {
    echo '<table class="tab_cadrehov">';
 
    echo '<tr>';
-   echo '<th>' . _n('Form', 'Forms', 2, 'formcreator') . '</th>';
+   echo '<th>' . _n('Form', 'Forms', $nb_forms, 'formcreator') . '</th>';
    echo '</tr>';
 
    $i = 0;
