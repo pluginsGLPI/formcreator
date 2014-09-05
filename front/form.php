@@ -16,7 +16,7 @@ if(PluginFormcreatorForm::canView()) {
       $_SERVER['PHP_SELF'],
       'plugins',
       'formcreator',
-      'options'
+      'config'
    );
 
    Search::show('PluginFormcreatorForm');

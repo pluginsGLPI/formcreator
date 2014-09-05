@@ -1,7 +1,18 @@
 <?php
 class PluginFormcreatorHeader extends CommonDropdown
 {
-   public static function getTypeName($nb=1) {
+   static function canCreate()
+   {
+      return Session::haveRight('config', 'w');
+   }
+
+   static function canView()
+   {
+      return Session::haveRight('config', 'r');
+   }
+
+   public static function getTypeName($nb=1)
+   {
       return _n('Header', 'Headers', $nb, 'formcreator');
    }
 

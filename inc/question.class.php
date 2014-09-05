@@ -585,11 +585,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      `show_value` varchar(255) NULL DEFAULT NULL,
                      `required` boolean NOT NULL DEFAULT FALSE,
                      `show_empty` boolean NOT NULL DEFAULT FALSE,
-                     `default_values` text NULL DEFAULT NULL,
-                     `values` text NULL DEFAULT NULL,
+                     `default_values` text NULL,
+                     `values` text NULL,
                      `range_min` varchar(10) NULL DEFAULT NULL,
                      `range_max` varchar(10) NULL DEFAULT NULL,
-                     `description` text NOT NULL DEFAULT '',
+                     `description` text NOT NULL,
                      `regex` varchar(255) NULL DEFAULT NULL,
                      `order` int(11) NOT NULL DEFAULT '0'
                   )

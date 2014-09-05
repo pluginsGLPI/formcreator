@@ -82,6 +82,12 @@ function plugin_init_formcreator ()
 
    // Set options for pages (title, links, buttons...)
    $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
+      'config'         => array('title'  => __('Setup'),
+                              'page'   => '/plugins/formcreator/front/form.php',
+                              'links'  => array(
+                                  'search'   => '/plugins/formcreator/front/formlist.php',
+                                  'config'   => '/plugins/formcreator/front/form.php',
+                                  'add'      => '/plugins/formcreator/front/form.form.php')),
       'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
                               'links'  => array(
                                   'search'   => '/plugins/formcreator/front/formlist.php',
