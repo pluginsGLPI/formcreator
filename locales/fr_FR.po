@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-09-02 13:49+0100\n"
+"PO-Revision-Date: 2014-09-05 15:48+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -251,7 +251,7 @@ msgstr "Utilisateur GLPI authentifié"
 
 #: inc/form.class.php:188 inc/form.class.php:244 inc/formprofiles.class.php:35
 msgid "Restricted access"
-msgstr "Droits restreint (profils)"
+msgstr "Droits restreints (profils)"
 
 #: inc/form.class.php:198 inc/form.class.php:251 inc/form.class.php:312
 msgid "All langages"
