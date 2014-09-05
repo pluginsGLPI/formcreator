@@ -26,7 +26,6 @@ if ($plugin->isActivated("formcreator")) {
 
    // Delete a Question
    } elseif(isset($_POST["delete"])) {
-      Toolbox::logDebug($_POST);
       $question->check($_POST['id'], 'd');
       $question->delete($_POST);
 

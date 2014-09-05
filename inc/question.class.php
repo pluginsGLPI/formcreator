@@ -504,9 +504,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $line   = $GLOBALS['DB']->fetch_array($result);
       $input['order'] = $line['order'] + 1;
 
-      Toolbox::logDebug(PHP_EOL . PHP_EOL .' === BEFORE === ' . PHP_EOL . PHP_EOL);
-      Toolbox::logDebug($input);
-
       return $input;
    }
 
