@@ -17,7 +17,7 @@ class hiddenField implements Field
       return $value;
    }
 
-   public static function isValid($field, $value)
+   public static function isValid($field, $value, $datas)
    {
       return true;
    }

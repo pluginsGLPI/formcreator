@@ -67,7 +67,7 @@ class fileField implements Field
       return '';
    }
 
-   public static function isValid($field, $value)
+   public static function isValid($field, $value, $datas)
    {
       // Not required or not empty
       if($field['required'] && (empty($_FILES['formcreator_field_' . $field['id']]['tmp_name'])

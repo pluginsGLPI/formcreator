@@ -587,7 +587,7 @@ class PluginFormcreatorForm extends CommonDBTM
             if(is_file($filePath)) {
                include_once ($filePath);
                if (class_exists($className)) {
-                  if (!$className::isValid($question->fields, $value)) {
+                  if (!$className::isValid($question->fields, $value, $datas)) {
                      $valid = false;
                   }
                }

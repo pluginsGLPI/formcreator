@@ -67,7 +67,7 @@ class dateField implements Field
       return Html::convDate($value);
    }
 
-   public static function isValid($field, $value)
+   public static function isValid($field, $value, $datas)
    {
       // Not required or not empty
       if($field['required'] && ($value == 'NULL')) {

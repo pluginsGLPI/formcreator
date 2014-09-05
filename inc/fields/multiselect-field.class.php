@@ -82,7 +82,7 @@ class multiSelectField implements Field
       return ($value != '') ? implode(', ', $value) : '';
    }
 
-   public static function isValid($field, $value)
+   public static function isValid($field, $value, $datas)
    {
       // Not required or not empty
       if($field['required'] && count($value) - 1 == 0) {

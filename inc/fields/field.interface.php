@@ -2,7 +2,7 @@
 
 interface Field
 {
-	public static function isValid($field, $input);
+	public static function isValid($field, $input, $datas);
    public static function show($field, $datas);
    public static function getName();
    public static function getPrefs();

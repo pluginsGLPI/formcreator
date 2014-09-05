@@ -69,7 +69,7 @@ class datetimeField implements Field
       return Html::convDateTime($value);
    }
 
-   public static function isValid($field, $value)
+   public static function isValid($field, $value, $datas)
    {
       // Not required or not empty
       if($field['required'] && ($value == 'NULL')) {

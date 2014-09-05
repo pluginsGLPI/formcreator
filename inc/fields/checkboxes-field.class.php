@@ -92,10 +92,36 @@ class checkboxesField implements Field
       return implode(', ', $value);
    }
 
-	public static function isValid($field, $value)
+	public static function isValid($field, $value, $datas)
    {
+      if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
+         $hidden = true;
+
+         switch ($field['show_condition']) {
+            case 'notequal':
+               if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
+                  $hidden = false;
+               break;
+            case 'lower':
+               if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
+                  $hidden = false;
+               break;
+            case 'greater':
+               if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
+                  $hidden = false;
+               break;
+
+            default:
+               if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
+                  $hidden = false;
+               break;
+         }
+      } else {
+         $hidden = false;
+      }
+
       // Not required or not empty
-      if($field['required'] && empty($value)) {
+      if($field['required'] && empty($value) && !$hidden) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
