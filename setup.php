@@ -71,30 +71,29 @@ function plugin_init_formcreator ()
    // Set the plugin CSRF compliance (required in GLPI 0.84)
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
 
-   // Config page
-   $plugin = new Plugin();
-   if (Session::haveRight('config','w') && $plugin->isActivated("formcreator")) {
-      $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
-   }
 
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-   // Set options for pages (title, links, buttons...)
-   $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
-      'config'         => array('title'  => __('Setup'),
-                              'page'   => '/plugins/formcreator/front/form.php',
-                              'links'  => array(
-                                  'search'   => '/plugins/formcreator/front/formlist.php',
-                                  'config'   => '/plugins/formcreator/front/form.php',
-                                  'add'      => '/plugins/formcreator/front/form.form.php')),
-      'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                              'links'  => array(
-                                  'search'   => '/plugins/formcreator/front/formlist.php',
-                                  'config'   => '/plugins/formcreator/front/form.php',
-                                  'add'      => '/plugins/formcreator/front/form.form.php')),
-   );
 
+   // Config page
+   $plugin = new Plugin();
+   $links  = array();
+   if (Session::haveRight('config','w') && $plugin->isActivated("formcreator")) {
+      $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
+      $links['config'] = '/plugins/formcreator/front/form.php';
+      $links['add']    = '/plugins/formcreator/front/form.form.php';
+   }
+
+   // Set options for pages (title, links, buttons...)
+   $links['search'] = '/plugins/formcreator/front/formlist.php';
+   $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
+      'config'       => array('title'  => __('Setup'),
+                              'page'   => '/plugins/formcreator/front/form.php',
+                              'links'  => $links),
+      'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
+                              'links'  => $links),
+   );
    // Load field class and all its method to manage fields
    Plugin::registerClass('PluginFormcreatorFields');
 }
