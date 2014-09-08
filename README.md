@@ -1,4 +1,4 @@
-![Configuration](/screenshots.png "Configuration")
+![Configuration](/screenshot.png "Configuration")
 
 Fonctionnement général
 ======================
