@@ -6,6 +6,12 @@ class ldapselectField implements Field
 {
    public static function show($field, $datas)
    {
+      $default_values = explode("\r\n", $field['default_values']);
+      $default_value  = array_shift($default_values);
+      $default_value = (!empty($datas['formcreator_field_' . $field['id']]))
+               ? $datas['formcreator_field_' . $field['id']]
+               : $default_value;
+
       if($field['required'])  $required = ' required';
       else $required = '';
 
@@ -49,7 +55,12 @@ class ldapselectField implements Field
 
             if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
             sort($tab_values);
-            Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values);
+            Dropdown::showFromArray('formcreator_field_' . $field['id'],
+                                    $tab_values,
+                                    array(
+                                       'value'               => $default_value,
+                                    )
+            );
          } catch(Exception $e) {
             echo '<b><i class="red">';
             echo __('Cannot recover LDAP informations!', 'formcreator');
@@ -199,6 +210,7 @@ class ldapselectField implements Field
                $tab_values[$id] = $attr[$attribute[0]][0];
             }
          }
+         sort($tab_values);
       }
       return ($value != '') ? $tab_values[$value] : '';
    }
