@@ -1,8 +1,6 @@
 <?php
 include ("../../../inc/includes.php");
 
-Session::checkRight("config", "w");
-
 // Check if plugin is activated...
 $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
@@ -66,6 +64,8 @@ if ($plugin->isActivated("formcreator")) {
 
    // Show forms form
    } else {
+      Session::checkRight("config", "w");
+
       Html::header(
          __('Form Creator', 'formcreator'),
          $_SERVER['PHP_SELF'],
