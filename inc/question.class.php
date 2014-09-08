@@ -449,6 +449,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
       }
 
+      // A description field should have a description
+      if (($input['fieldtype'] == 'description') && empty($input['description'])) {
+            Session::addMessageAfterRedirect(__('A description field should have a description', 'formcreator'), false, ERROR);
+            return array();
+      }
+
       // format values for numbers
       if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
          $input['default_values'] = (float) str_replace(',', '.', $input['default_values']);
