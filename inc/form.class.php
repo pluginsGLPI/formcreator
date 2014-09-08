@@ -584,6 +584,12 @@ class PluginFormcreatorForm extends CommonDBTM
             $question->getFromDB($question_id);
             $className   = $question->fields['fieldtype'] . 'Field';
             $filePath    = dirname(__FILE__) . '/fields/' . $question->fields['fieldtype'] . '-field.class.php';
+
+            if ($question->fields['fieldtype'] == 'float') {
+               $value = str_replace(',', '.', $datas['formcreator_field_' . $question_id]);
+               $datas['formcreator_field_' . $question_id] = $value;
+            }
+
             if(is_file($filePath)) {
                include_once ($filePath);
                if (class_exists($className)) {
