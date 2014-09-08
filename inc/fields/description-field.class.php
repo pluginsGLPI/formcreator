@@ -43,7 +43,7 @@ class descriptionField implements Field
                      var checkedValue = false;
 
                      for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].checked) {
+                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
                            checkedValue = true;
                         }
                      }
@@ -66,7 +66,7 @@ class descriptionField implements Field
                      var checkedValue = false;
 
                      for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].selected) {
+                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
                            checkedValue = true;
                         }
                      }
@@ -92,7 +92,7 @@ class descriptionField implements Field
                      var checkedValue = false;
 
                      for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].checked) {
+                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
                            checkedValue = true;
                         }
                      }

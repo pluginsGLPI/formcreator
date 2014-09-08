@@ -66,7 +66,7 @@ class dropdownField implements Field
                      var checkedValue = false;
 
                      for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].checked) {
+                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
                            checkedValue = true;
                         }
                      }
@@ -89,7 +89,7 @@ class dropdownField implements Field
                      var checkedValue = false;
 
                      for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].selected) {
+                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
                            checkedValue = true;
                         }
                      }
@@ -115,7 +115,7 @@ class dropdownField implements Field
                      var checkedValue = false;
 
                      for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].checked) {
+                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
                            checkedValue = true;
                         }
                      }
@@ -155,6 +155,7 @@ class dropdownField implements Field
 
    public static function isValid($field, $value, $datas)
    {
+      // If the field are hidden, don't test it
       if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
          $hidden = true;
 
@@ -177,8 +178,8 @@ class dropdownField implements Field
                   $hidden = false;
                break;
          }
-      } else {
-         $hidden = false;
+
+         if ($hidden) return true;
       }
 
       // Not required or not empty

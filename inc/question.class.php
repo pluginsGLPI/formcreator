@@ -428,7 +428,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
-      $itemtypes = array('dropdown', 'select', 'multiselect', 'checkboxes', 'radios', 'ldap');
+      $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
       if (empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
          Session::addMessageAfterRedirect(__('The field value is required', 'formcreator'), false, ERROR);
          return array();
@@ -442,7 +442,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
       if ($input['fieldtype'] == 'dropdown') {
          if (empty($input['dropdown_values'])) {
-            Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
+            Session::addMessageAfterRedirect(__('The field value is required', 'formcreator'), false, ERROR);
             return array();
          }
          $input['values']         = $input['dropdown_values'];
