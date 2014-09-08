@@ -665,7 +665,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $question  = new PluginFormcreatorQuestion();
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            if ($question_line['fieldtype'] != 'file') {
+            if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
                $question_no ++;
 
                $id        = $question_line['id'];
