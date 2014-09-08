@@ -46,11 +46,90 @@ class floatField implements Field
       }
 
       if ($field['show_type'] == 'hide') {
-         echo '<script type="text/javascript">
+         $conditionnalField = new PluginFormcreatorQuestion();
+         $conditionnalField->getFromDB($field['show_field']);
+
+         switch ($conditionnalField->fields['fieldtype']) {
+            case 'checkboxes' :
+               echo '<script type="text/javascript">
+                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
+
+                  for(var i=0; inputElements[i]; ++i) {
+                     inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  }
+
+                  function showFormGroup' . $field['id'] . '() {
+                     var checkedValue = false;
+
+                     for(var i=0; inputElements[i]; ++i) {
+                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].checked) {
+                           checkedValue = true;
+                        }
+                     }
+
+                     if(checkedValue) {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
+                     } else {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                     }
+                  }
+                  showFormGroup' . $field['id'] . '();
+               </script>';
+               break;
+            case 'multiselect' :
+               echo '<script type="text/javascript">
+                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
+                  inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+
+                  function showFormGroup' . $field['id'] . '() {
+                     var checkedValue = false;
+
+                     for(var i=0; inputElements[i]; ++i) {
+                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].selected) {
+                           checkedValue = true;
+                        }
+                     }
+
+                     if(checkedValue) {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
+                     } else {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                     }
+                  }
+                  showFormGroup' . $field['id'] . '();
+               </script>';
+               break;
+            case 'radios' :
+               echo '<script type="text/javascript">
+                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
+
+                  for(var i=0; inputElements[i]; ++i) {
+                     inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  }
+
+                  function showFormGroup' . $field['id'] . '() {
+                     var checkedValue = false;
+
+                     for(var i=0; inputElements[i]; ++i) {
+                        if (inputElements[i].value ' . $condition . ' ' . $field['show_value'] . ' && inputElements[i].checked) {
+                           checkedValue = true;
+                        }
+                     }
+
+                     if(checkedValue) {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
+                     } else {
+                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
+                     }
+                  }
+                  showFormGroup' . $field['id'] . '();
+               </script>';
+               break;
+            default :
+               echo '<script type="text/javascript">
                   document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
                   function showFormGroup' . $field['id'] . '() {
                      var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
-
                      if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
                         document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
                      } else {
@@ -59,6 +138,7 @@ class floatField implements Field
                   }
                   showFormGroup' . $field['id'] . '();
                </script>';
+         }
       }
 
       echo '</div>' . PHP_EOL;
