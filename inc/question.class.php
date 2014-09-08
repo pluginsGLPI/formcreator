@@ -427,6 +427,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['values'] = htmlentities(strip_tags(html_entity_decode($input['values'])));
       }
 
+      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
+      $itemtypes = array('dropdown', 'select', 'multiselect', 'checkboxes', 'radios', 'ldap');
+      if (empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
+         Session::addMessageAfterRedirect(__('The field value is required', 'formcreator'), false, ERROR);
+         return array();
+      }
+
       // - Escape tags and specials caracters from default values
       if(!empty($input['default_values'])) {
          $input['default_values'] = htmlentities(strip_tags(html_entity_decode($input['default_values'])));
@@ -434,8 +441,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
       if ($input['fieldtype'] == 'dropdown') {
-         $input['default_values'] = $input['dropdown_default_value'];
+         if (empty($input['dropdown_values'])) {
+            Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
+            return array();
+         }
          $input['values']         = $input['dropdown_values'];
+         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
       }
 
       // format values for numbers
@@ -505,15 +516,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       $input = $this->checkBeforeSave($input);
 
-      // Get next order
-      $obj    = new self();
-      $query  = "SELECT MAX(`order`) AS `order`
-                 FROM `{$obj->getTable()}`
-                 WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-      $result = $GLOBALS['DB']->query($query);
-      $line   = $GLOBALS['DB']->fetch_array($result);
-      $input['order'] = $line['order'] + 1;
-
+      if (!empty($input)) {
+         // Get next order
+         $obj    = new self();
+         $query  = "SELECT MAX(`order`) AS `order`
+                    FROM `{$obj->getTable()}`
+                    WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+         $result = $GLOBALS['DB']->query($query);
+         $line   = $GLOBALS['DB']->fetch_array($result);
+         $input['order'] = $line['order'] + 1;
+      }
       return $input;
    }
 
@@ -529,23 +541,25 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       $input = $this->checkBeforeSave($input);
 
-      // If change section, reorder questions
-      if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
-         // Reorder other questions from the old section
-         $query = "UPDATE `{$this->getTable()}` SET
-             `order` = `order` - 1
-             WHERE `order` > {$this->fields['order']}
-             AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
-         $GLOBALS['DB']->query($query);
+      if (!empty($input)) {
+         // If change section, reorder questions
+         if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
+            // Reorder other questions from the old section
+            $query = "UPDATE `{$this->getTable()}` SET
+                `order` = `order` - 1
+                WHERE `order` > {$this->fields['order']}
+                AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
+            $GLOBALS['DB']->query($query);
 
-         // Get the order for the new section
-         $obj    = new self();
-         $query  = "SELECT MAX(`order`) AS `order`
-                    FROM `{$obj->getTable()}`
-                    WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-         $result = $GLOBALS['DB']->query($query);
-         $line   = $GLOBALS['DB']->fetch_array($result);
-         $input['order'] = $line['order'] + 1;
+            // Get the order for the new section
+            $obj    = new self();
+            $query  = "SELECT MAX(`order`) AS `order`
+                       FROM `{$obj->getTable()}`
+                       WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+            $result = $GLOBALS['DB']->query($query);
+            $line   = $GLOBALS['DB']->fetch_array($result);
+            $input['order'] = $line['order'] + 1;
+         }
       }
 
       return $input;
