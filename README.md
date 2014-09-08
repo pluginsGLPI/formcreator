@@ -1,3 +1,5 @@
+![Configuration](/screenshots.png "Configuration")
+
 Fonctionnement général
 ======================
 
