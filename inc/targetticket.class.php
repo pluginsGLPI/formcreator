@@ -175,8 +175,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
       $datas                = array_merge($datas, $predefined_fields);
 
-      $datas['name']        = $this->fields['name'];
-      $datas['content']     = $this->parseContent($form, $input);
+      $datas['name']        =$this->parseTags($this->fields['name'], $form, $input);
+      $datas['content']     = $this->parseTags($this->fields['comment'], $form, $input);
       $datas['entities_id'] = (isset($_SESSION['glpiactive_entity']))
                               ? $_SESSION['glpiactive_entity']
                               : $form->fields['entities_id'];
@@ -194,8 +194,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
    }
 
-   private function parseContent($form, $input) {
-      $content     = $this->fields['comment'];
+   private function parseTags($content, $form, $input) {
       $content     = str_replace('##FULLFORM##', $form->getFullForm($input), $content);
 
       $section     = new PluginFormcreatorSection();
