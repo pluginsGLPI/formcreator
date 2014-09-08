@@ -480,6 +480,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
       }
 
+      // Add leading and trailing regex marker automaticaly
+      if (!empty($input['regex'])) {
+         if (substr($input['regex'], 0, 1)  != '/')
+            if (substr($input['regex'], 0, 1)  != '^')   $input['regex'] = '/^' . $input['regex'];
+            else                                         $input['regex'] = '/' . $input['regex'];
+         if (substr($input['regex'], -1, 1) != '/')
+            if (substr($input['regex'], -1, 1)  != '$')  $input['regex'] = $input['regex'] . '$/';
+            else                                         $input['regex'] = $input['regex'] . '/';
+      }
+
       return $input;
    }
 
@@ -657,6 +667,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
                            break;
                         case '5':
                            $regex = urldecode($options->value);
+                           // Add leading and trailing regex marker (automaticaly added in V1)
+                           if (substr($regex, 0, 1)  != '/') $regex = '/' . $regex;
+                           if (substr($regex, -1, 1) != '/') $regex = $regex . '/';
                            break;
                         case '6':
                            $fieldtype = 'email';
