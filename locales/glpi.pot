@@ -175,11 +175,11 @@ msgid "This is not a number:"
 msgstr ""
 
 #: inc/question.class.php:445
-msgid "The field value is required"
+msgid "The field value is required:"
 msgstr ""
 
 #: inc/question.class.php:454
-msgid "A description field should have a description"
+msgid "A description field should have a description:"
 msgstr ""
 
 #: inc/fields/float-field.class.php:107

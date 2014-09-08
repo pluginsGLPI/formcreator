@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-09-08 15:06+0100\n"
+"PO-Revision-Date: 2014-09-08 15:10+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -182,12 +182,12 @@ msgid "This is not a number:"
 msgstr "This is not a number:"
 
 #: inc/question.class.php:445
-msgid "The field value is required"
-msgstr "The field value is required"
+msgid "The field value is required:"
+msgstr "The field value is required:"
 
 #: inc/question.class.php:454
-msgid "A description field should have a description"
-msgstr "A description field should have a description"
+msgid "A description field should have a description:"
+msgstr "A description field should have a description:"
 
 #: inc/fields/float-field.class.php:107
 msgid "Float"
