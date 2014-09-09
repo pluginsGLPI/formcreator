@@ -181,7 +181,9 @@ $rand = mt_rand();
                style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
             <div id="dropdown_default_value_field">
                <?php
-               if(($question->fields['fieldtype'] == 'dropdown') && !empty($question->fields['values'])
+               if((($question->fields['fieldtype'] == 'dropdown')
+                     || ($question->fields['fieldtype'] == 'glpiselect'))
+                   && !empty($question->fields['values'])
                    && class_exists($question->fields['values'])) {
                   Dropdown::show($question->fields['values'], array(
                      'name'  => 'dropdown_default_value',
@@ -206,6 +208,9 @@ $rand = mt_rand();
             <label for="dropdown_dropdown_values<?php echo $rand; ?>" id="label_dropdown_values">
                <?php echo _n('Dropdown', 'Dropdowns', 1); ?>
             </label>
+            <label for="dropdown_glpi_objects<?php echo $rand; ?>" id="label_glpi_objects">
+               <?php echo _n('GLPI object', 'GLPI objects', 1); ?>
+            </label>
          </td>
          <td width="33%">
             <textarea name="values" id="values" rows="4" cols="40"
@@ -218,6 +223,46 @@ $rand = mt_rand();
                      'value'     => $question->fields['values'],
                      'rand'      => $rand,
                      'on_change' => 'change_dropdown();',
+                  ));
+               ?>
+            </div>
+            <div id="glpi_objects_field">
+               <?php
+                  $optgroup = array(
+                                 __("Assets") => array(
+                                    'Computer'           => _n("Computer", "Computers", 2),
+                                    'Monitor'            => _n("Monitor", "Monitors", 2),
+                                    'Software'           => _n("Software", "Software", 2),
+                                    'Networkequipment'   => _n("Network", "Networks", 2),
+                                    'Peripheral'         => _n("Device", "Devices", 2),
+                                    'Printer'            => _n("Printer", "Printers", 2),
+                                    'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
+                                    'Consumableitem'     => _n("Consumable", "Consumables", 2),
+                                    'Phone'              => _n("Phone", "Phones", 2)),
+                                 __("Assistance") => array(
+                                    'Ticket'             => _n("Ticket", "Tickets", 2),
+                                    'Problem'            => _n("Problem", "Problems", 2),
+                                    'TicketRecurrent'    => __("Recurrent tickets")),
+                                 __("Management") => array(
+                                    'Budget'             => _n("Budget", "Budgets", 2),
+                                    'Supplier'           => _n("Supplier", "Suppliers", 2),
+                                    'Contact'            => _n("Contact", "Contacts", 2),
+                                    'Contract'           => _n("Contract", "Contracts", 2),
+                                    'Document'           => _n("Document", "Documents", 2)),
+                                 __("Tools") => array(
+                                    'Notes'              => __("Notes"),
+                                    'RSSFeed'            => __("RSS feed")),
+                                 __("Administration") => array(
+                                    'User'               => _n("User", "Users", 2),
+                                    'Group'              => _n("Group", "Groups", 2),
+                                    'Entity'             => _n("Entity", "Entities", 2),
+                                    'Profile'            => _n("Profile", "Profiles", 2))
+                              );;
+                  array_unshift($optgroup, '---');
+                  Dropdown::showFromArray('glpi_objects', $optgroup, array(
+                     'value'     => $question->fields['values'],
+                     'rand'      => $rand,
+                     'on_change' => 'change_glpi_objects();',
                   ));
                ?>
             </div>
@@ -344,12 +389,12 @@ $rand = mt_rand();
 
             eval(tab_fields_fields[value]);
          } else {
-            showFields(0, 0, 0, 0, 0, 0, 0, 0, 0);
+            showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
          }
       }
       changeQuestionType();
 
-      function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, ldap_values) {
+      function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
          if(required) {
             document.getElementById('dropdown_required<?php echo $rand; ?>').style.display   = 'inline';
             document.getElementById('label_required').style.display                          = 'inline';
@@ -381,11 +426,21 @@ $rand = mt_rand();
          if(dropdown_value) {
             document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').style.display = 'inline';
             document.getElementById('label_dropdown_values').style.display                   = 'inline';
-            document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'inline';
-            document.getElementById('label_dropdown_default_value').style.display            = 'inline';
          } else {
             document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').style.display = 'none';
             document.getElementById('label_dropdown_values').style.display                   = 'none';
+         }
+         if(glpi_object) {
+            document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').style.display = 'inline';
+            document.getElementById('label_glpi_objects').style.display                   = 'inline';
+         } else {
+            document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').style.display = 'none';
+            document.getElementById('label_glpi_objects').style.display                   = 'none';
+         }
+         if (dropdown_value || glpi_object) {
+            document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'inline';
+            document.getElementById('label_dropdown_default_value').style.display            = 'inline';
+         } else {
             document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'none';
             document.getElementById('label_dropdown_default_value').style.display            = 'none';
          }
@@ -420,7 +475,7 @@ $rand = mt_rand();
             document.getElementById('label_regex').style.display                             = 'none';
             document.getElementById('regex_tr').style.display                                = 'none';
          }
-         if(values || default_values || dropdown_value) {
+         if(values || default_values || dropdown_value || glpi_object) {
             document.getElementById('values_tr').style.display                               = 'table-row';
          } else {
             document.getElementById('values_tr').style.display                               = 'none';
@@ -454,6 +509,17 @@ $rand = mt_rand();
             url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
             scripts: true,
             params: "dropdown_itemtype=" + dropdown_itemtype + "&rand=<?php echo $rand; ?>"
+         });
+
+      }
+
+      function change_glpi_objects() {
+         glpi_object = document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').value;
+
+         Ext.get("dropdown_default_value_field").load({
+            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
+            scripts: true,
+            params: "dropdown_itemtype=" + glpi_object + "&rand=<?php echo $rand; ?>"
          });
 
       }

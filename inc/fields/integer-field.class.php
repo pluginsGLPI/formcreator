@@ -227,6 +227,7 @@ class integerField implements Field
          'regex'          => 1,
          'show_type'      => 1,
          'dropdown_value' => 0,
+         'glpi_objects'   => 0,
          'ldap_values'    => 0,
       );
    }
