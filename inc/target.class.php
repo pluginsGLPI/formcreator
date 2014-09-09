@@ -190,9 +190,10 @@ class PluginFormcreatorTarget extends CommonDBTM
          $GLOBALS['DB']->query($query);
 
          // Create ticket template for each configuration in DB
-         $query = "SELECT `urgency`, `priority`, `itilcategories_id`, `type`
-                   FROM `glpi_plugin_formcreator_targets`
-                   GROUP BY `urgency`, `priority`, `itilcategories_id`, `type`";
+         $query = "SELECT t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`
+                   FROM `glpi_plugin_formcreator_targets` t, `glpi_plugin_formcreator_forms` f
+                   WHERE f.`id` = t.`plugin_formcreator_forms_id`
+                   GROUP BY t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`";
          $result = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
 
          $i = 0;
@@ -203,7 +204,7 @@ class PluginFormcreatorTarget extends CommonDBTM
             $template    = new TicketTemplate();
             $template_id = $template->add(array(
                'name'         => 'Template Formcreator ' . $i,
-               'entities_id'  => 0,
+               'entities_id'  => $ligne['entities_id'],
                'is_recursive' => 1,
             ));
 
