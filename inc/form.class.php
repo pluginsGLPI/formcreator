@@ -263,16 +263,9 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=array())
+   public function showForm($ID, $options=array())
    {
-      if (!empty($options['id'])) {
-         $id = $options['id'];
-         $this->canView();
-      } else {
-         $id = 0;
-         $this->canCreate();
-      }
-      $this->initForm($id);
+      $this->initForm($ID, $options);
       $this->showTabs($options);
       $this->showFormHeader($options);
 
@@ -290,7 +283,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<td>';
       PluginFormcreatorCategory::dropdown(array(
          'name'  => 'plugin_formcreator_categories_id',
-         'value' => ($id != 0) ? $this->fields["plugin_formcreator_categories_id"] : 1,
+         'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 1,
       ));
       echo '</td>';
       echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
@@ -306,7 +299,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<td>' . __('Language') . '</td>';
       echo '<td>';
       Dropdown::showLanguages('language', array(
-         'value'               => ($id != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
+         'value'               => ($ID != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
          'display_emptychoice' => true,
          'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
       ));

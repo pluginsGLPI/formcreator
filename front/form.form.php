@@ -74,7 +74,7 @@ if ($plugin->isActivated("formcreator")) {
          'config'
       );
 
-      $form->showForm($_REQUEST);
+      $form->showForm($_GET['id']);
 
       Html::footer();
    }
