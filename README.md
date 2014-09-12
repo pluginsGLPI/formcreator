@@ -82,18 +82,18 @@ New in version 2.0
 - Previewing forms directly from the configuration
 - Multiple Controls on the answers to questions (eg E-mail + mandatory, Number + greater than X + less than Y, etc.)
 - New types of fields:
-     - Date
-     - Date & Time
-     - Description
-     - GLPI dropdowns
-     - LDAP list
-     - List of objects from GLPI
-     - E-mail
-     - Integers
-     - Floating numbers
-     - Hidden Fields
-     - List of radio buttons
-     - Multiple choice lists
+    - Date
+    - Date & Time
+    - Description
+    - GLPI dropdowns
+    - LDAP list
+    - List of objects from GLPI
+    - E-mail
+    - Integers
+    - Floating numbers
+    - Hidden Fields
+    - List of radio buttons
+    - Multiple choice lists
 
 For more informations, see the [WIKI](https://github.com/TECLIB/formcreator/wiki)
 
