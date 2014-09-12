@@ -214,3 +214,15 @@ form.formcreator_form .form-group > .help-block {
    height: 30px;
    margin: 0 15px 0 0;
 }
+
+.form_description {
+   display: none;
+}
+.form_description div {
+   padding: 10px;
+   background-color: #FFF;
+   border-left: 5px solid #AAA;
+   color: #333;
+   font-style: italic;
+   margin: 0 4px;
+}

@@ -408,6 +408,28 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
+      echo '<div style="width: 950px; margin: 0 auto;">';
+      echo '<div style="float:right; width: 375px;">';
+         echo '<table class="tab_cadrehov" style="width: 375px">';
+            echo '<tr><th colspan="2">' . __('My forms (requester)', 'formcreator') . '</th></tr>';
+            echo '<tr><td colspan="2" class="line1" align="center">' . __('No form posted yet', 'formcreator') . '</td></tr>';
+         echo '</table>';
+
+         echo '<br />';
+
+         if ((isset($_SESSION['glpiactiveprofile']['validate_request'])
+               && ($_SESSION['glpiactiveprofile']['validate_request'] == 1))
+            || (isset($_SESSION['glpiactiveprofile']['validate_incident'])
+               && ($_SESSION['glpiactiveprofile']['validate_incident'] == 1))) {
+            echo '<table class="tab_cadrehov" style="width: 375px">';
+               echo '<tr><th colspan="2">' . __('My forms (validator)', 'formcreator') . '</t></tr>';
+               echo '<tr><td colspan="2" class="line1" align="center">' . __('No form waiting for validation', 'formcreator') . '</td></tr>';
+            echo '</table>';
+         }
+
+      echo '</div>';
+      echo '<div style="width: 550px; margin: 0 auto; padding-right: 400px">';
+
       // Show categories wicth have at least one form user can access
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
@@ -430,11 +452,11 @@ class PluginFormcreatorForm extends CommonDBTM
                  ORDER BY $cat_table.`name` ASC";
       $result = $GLOBALS['DB']->query($query);
       if (!empty($result)) {
-         echo '<table class="tab_cadre_fixe">';
 
          // For each categories, show the list of forms the user can fill
          while ($category = $GLOBALS['DB']->fetch_array($result)) {
-            echo '<tr><th colspan="2">' . $category['name'] . '</t></tr>';
+         echo '<table class="tab_cadrehov" style="width: 550px">';
+            echo '<tr><th>' . $category['name'] . '</th></tr>';
 
             $where       = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
             $table_fp    = getTableForItemType('PluginFormcreatorFormprofiles');
@@ -453,21 +475,43 @@ class PluginFormcreatorForm extends CommonDBTM
             $i = 0;
             while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
                $i++;
-               echo '<tr class="line' . ($i % 2) . '" onclick="document.location = \'' . $GLOBALS['CFG_GLPI']['root_doc']
-                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '\'" style="cursor:pointer">';
-               echo '<td><a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '">'
+               echo '<tr class="line' . ($i % 2) . '">';
+               echo '<td>';
+               echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png" alt="+" title=""
+                         onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+               echo '&nbsp;';
+               echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
+                        title="' . htmlentities(strip_tags($form['description'])) . '">'
                         . $form['name']
                         . '</a></td>';
-               echo '<td>' . $form['description'] . '</td>';
+               echo '</tr>';
+               echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
+               echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
                echo '</tr>';
             }
 
-         }
          echo '</table>';
+         echo '<br />';
+         }
       }
+      echo '</div>';
 
       echo '</div>';
+      echo '</div>';
+      echo '<script type="text/javascript">
+               function showDescription(id, img){
+                  if(img.alt == "+") {
+                    img.alt = "-";
+                    img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/moins.png";
+                    document.getElementById("desc" + id).style.display = "table-row";
+                  } else {
+                    img.alt = "+";
+                    img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png";
+                    document.getElementById("desc" + id).style.display = "none";
+                  }
+               }
+            </script>';
    }
 
    /**
