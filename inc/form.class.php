@@ -499,6 +499,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '</div>';
       echo '</div>';
+      echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
       echo '<script type="text/javascript">
                function showDescription(id, img){
                   if(img.alt == "+") {
