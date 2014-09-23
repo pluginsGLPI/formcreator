@@ -76,7 +76,11 @@ class radiosField implements Field
                   var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
 
                   for(var i=0; inputElements[i]; ++i) {
-                     inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                     if (inputElements[i].addEventListener) {
+                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                     } else {
+                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
+                     }
                   }
 
                   function showFormGroup' . $field['id'] . '() {
@@ -100,7 +104,11 @@ class radiosField implements Field
             case 'multiselect' :
                echo '<script type="text/javascript">
                   var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
-                  inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  if (inputElements.addEventListener) {
+                     inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  } else {
+                     inputElements.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
+                  }
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
@@ -125,7 +133,11 @@ class radiosField implements Field
                   var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
 
                   for(var i=0; inputElements[i]; ++i) {
-                     inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                     if (inputElements[i].addEventListener) {
+                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                     } else {
+                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
+                     }
                   }
 
                   function showFormGroup' . $field['id'] . '() {
@@ -148,7 +160,12 @@ class radiosField implements Field
                break;
             default :
                echo '<script type="text/javascript">
-                  document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  var element = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0];
+                  if (element.addEventListener) {
+                     element.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
+                  } else {
+                     element.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
+                  }
                   function showFormGroup' . $field['id'] . '() {
                      var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
                      if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
