@@ -312,6 +312,62 @@ class PluginFormcreatorForm extends CommonDBTM
       Html::initEditorSystem('content');
       echo '</tr>';
 
+      echo '<tr class="tab_bg_2">';
+      echo '<td>' . __('Need to be validate ?') . '</td>';
+      echo '<td>';
+      Dropdown::showYesNo("validation_required",
+         $this->fields["validation_required"],
+         -1,
+         array('on_change' => 'changeValidators(this.value)'));
+      echo '</td>';
+      echo '<td><label for="validators" id="label_validators">' . __('Available validators', 'formcreator') . '</label></td>';
+      echo '<td>';
+
+      $validators = array();
+      $query = "SELECT `users_id`
+                FROM `glpi_plugin_formcreator_formvalidators`
+                WHERE `forms_id` = '" . $this->getID(). "'";
+      $result = $GLOBALS['DB']->query($query);
+      while(list($id) = $GLOBALS['DB']->fetch_array($result)) {
+         $validators[] = $id;
+      }
+
+      $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
+      $query = 'SELECT u.`id`, u.`name`, u.`realname`
+                FROM `glpi_users` u
+                INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+                INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+                WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
+                AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
+                OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
+                GROUP BY u.`id`
+                ORDER BY u.`name`';
+      $result = $GLOBALS['DB']->query($query);
+      echo '<select name="_validators[]" size="4" style="width: 100%" multiple id="validators">';
+      while($user = $GLOBALS['DB']->fetch_assoc($result)) {
+         echo '<option value="' . $user['id'] . '"';
+         if (in_array($user['id'], $validators)) echo ' selected="selected"';
+         echo '>' . $user['name'] . '</option>';
+      }
+      echo '</select>';
+      echo '<script type="text/javascript">
+               function changeValidators(value) {
+                  if (value == 1) {
+                     document.getElementById("label_validators").style.display = "inline";
+                     document.getElementById("validators").style.display       = "inline";
+                  } else {
+                     document.getElementById("label_validators").style.display = "none";
+                     document.getElementById("validators").style.display       = "none";
+                  }
+               }
+               changeValidators(' . $this->fields["validation_required"] . ');
+            </script>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</td>';
+      echo '</tr>';
+
       $this->showFormButtons($options);
       $this->addDivForTabs();
    }
@@ -546,8 +602,8 @@ class PluginFormcreatorForm extends CommonDBTM
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
+      echo '<div class="form_section">';
       foreach ($find_sections as $section_line) {
-         echo '<div class="form_section">';
          echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
@@ -556,8 +612,23 @@ class PluginFormcreatorForm extends CommonDBTM
             PluginFormcreatorFields::showField($question_line, $datas);
          }
 
-         echo '</div>';
       }
+
+      // Show validator selector
+      $query = "SELECT u.`id`, u.`name`, u.`realname`
+                FROM `glpi_users` u
+                LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
+                WHERE fv.`forms_id` = '" . $this->getID(). "'";
+      $result = $GLOBALS['DB']->query($query);
+      while(list($id, $name, $realname) = $GLOBALS['DB']->fetch_array($result)) {
+         $validators[$id] = empty($realname) ? $name : $realname;
+      }
+      echo '<div class="form-group required" id="form-validator">';
+      echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+      Dropdown::showFromArray('formcreator_validator', $validators);
+      echo '</div>';
+
+      echo '</div>';
 
       // Display submit button
       echo '<div class="center">';
@@ -591,6 +662,18 @@ class PluginFormcreatorForm extends CommonDBTM
          return array();
       }
 
+      // Save form validators
+      $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators` WHERE `forms_id` = "' . $this->getID() . '"';
+      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      if(($input['validation_required'] == '1') && (!empty($input['_validators']))) {
+         foreach ($input['_validators'] as $user) {
+            $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
+                      `forms_id` = "' . $this->getID() . '",
+                      `users_id` = "' . $user . '"';
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         }
+      }
+
       return $input;
    }
 
@@ -610,7 +693,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
    }
 
-   public function saveToTargets($datas)
+   public function saveForm($datas)
    {
       $valid = true;
 
@@ -646,47 +729,10 @@ class PluginFormcreatorForm extends CommonDBTM
          $_SESSION['formcreator']['datas'] = $datas;
          Html::back();
 
-      // Otherwize  generate targets
+      // Save form
       } else {
-         $_SESSION['formcreator_documents'] = array();
-
-         // Save files as Documents
-         foreach ($_FILES as $question_name => $file) {
-            if (isset($file['tmp_name']) && is_file($file['tmp_name'])) {
-               $doc         = new Document();
-               $question_id = trim(strrchr($question_name, '_'), '_');
-               $question    = new PluginFormcreatorQuestion();
-               $question->getFromDB($question_id);
-
-               $file_datas                 = array();
-               $file_datas["name"]         = $this->fields['name'] . ' - ' . $question->fields['name'];
-               $file_datas["entities_id"]  = (isset($_SESSION['glpiactive_entity']))
-                                             ? $_SESSION['glpiactive_entity']
-                                             : $this->fields['entities_id'];
-               $file_datas["is_recursive"] = $this->fields['is_recursive'];
-               Document::uploadDocument($file_datas, $file);
-
-               if ($docID = $doc->add($file_datas)) {
-                  $_SESSION['formcreator_documents'][] = $docID;
-                  $table = getTableForItemType('Document');
-                  $query = "UPDATE $table SET filename = '" . addslashes($file['name']) . "' WHERE id = " . $docID;
-                  $GLOBALS['DB']->query($query);
-               }
-            }
-         }
-
-         // Get all targets
-         $target_class    = new PluginFormcreatorTarget();
-         $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->getID());
-
-         foreach($founded_targets as $target) {
-            $obj = new $target['itemtype'];
-            $obj->getFromDB($target['items_id']);
-            $obj->save($this, $datas);
-         }
-
-         Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
-         unset($_SESSION['formcreator_documents']);
+         $formanswer = new PluginFormcreatorFormanswer();
+         $formanswer->saveAnswers($datas);
       }
    }
 
@@ -765,7 +811,8 @@ class PluginFormcreatorForm extends CommonDBTM
                      `is_active` tinyint(1) NOT NULL DEFAULT '0',
                      `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
                      `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
-                     `is_deleted` tinyint(1) NOT NULL DEFAULT '0'
+                     `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+                     `validation_required` tinyint(1) NOT NULL DEFAULT '0'
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -796,6 +843,18 @@ class PluginFormcreatorForm extends CommonDBTM
                       ADD `is_deleted` tinyint(1) NOT NULL DEFAULT '0';";
             $GLOBALS['DB']->query($query);
          }
+      }
+
+      if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
+         $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formvalidators` (
+                     `forms_id` int(11) NOT NULL,
+                     `users_id` int(11) NOT NULL,
+                     PRIMARY KEY (`forms_id`, `users_id`)
+                  )
+                  ENGINE = MyISAM
+                  DEFAULT CHARACTER SET = utf8
+                  COLLATE = utf8_unicode_ci;";
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
 
       // Create standard search options

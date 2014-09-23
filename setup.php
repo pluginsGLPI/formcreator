@@ -7,7 +7,7 @@
 function plugin_version_formcreator ()
 {
    return array('name'       => _n('Form', 'Forms', 2, 'formcreator'),
-            'version'        => '0.84-2.0',
+            'version'        => '0.84-2.1',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
             'homepage'       => 'http://www.teclib.com',
@@ -86,6 +86,10 @@ function plugin_init_formcreator ()
       $links['config'] = '/plugins/formcreator/front/form.php';
       $links['add']    = '/plugins/formcreator/front/form.form.php';
    }
+   $img = '<img  src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/check.png"
+               title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
+
+   $links[$img] = '/plugins/formcreator/front/formanswer.php';
 
    // Set options for pages (title, links, buttons...)
    $links['search'] = '/plugins/formcreator/front/formlist.php';
@@ -96,6 +100,9 @@ function plugin_init_formcreator ()
       'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
                               'links'  => $links),
    );
+
+
+
    // Load field class and all its method to manage fields
    Plugin::registerClass('PluginFormcreatorFields');
 }

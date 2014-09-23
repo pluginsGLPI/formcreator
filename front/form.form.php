@@ -50,7 +50,7 @@ if ($plugin->isActivated("formcreator")) {
          }
 
          // Save form
-         $form->saveToTargets($_POST);
+         $form->saveForm($_POST);
 
          // If user was not authenticated, remove temporary user
          if($_SESSION['glpiname'] == 'formcreator_temp_user') {

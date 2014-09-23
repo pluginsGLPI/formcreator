@@ -30,7 +30,8 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          $_SESSION['glpiname'] = 'formcreator_temp_user';
       }
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+      if (isset($_SESSION['glpiactiveprofile']['interface'])
+            && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
          Html::helpHeader(
             __('Form list', 'formcreator'),
             $_SERVER['PHP_SELF']
