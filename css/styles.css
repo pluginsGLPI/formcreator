@@ -94,6 +94,7 @@ form.formcreator_form > .form_header {
 }
 
 form.formcreator_form > .form_header, form.formcreator_form > .form_section {
+   background: #EEE; /*#EEE;*/
    background: rgba(232, 232, 232, .8); /*#EEE;*/
    border-radius: 4px;
    box-shadow: 2px 2px 2px #CCC;
@@ -122,7 +123,8 @@ form.formcreator_form .form-group {
 
 
 form.formcreator_form .form-group:nth-child(odd) {
-   background:  rgba(216, 216, 216, .8);  /*#E0E0E0;*/
+   background: #E0E0E0;  /*#E0E0E0;*/
+   background: rgba(216, 216, 216, .8);  /*#E0E0E0;*/
 }
 
 form.formcreator_form .form-group > label {
@@ -151,6 +153,7 @@ form.formcreator_form .checkbox, form.formcreator_form .radio {
 }
 
 form.formcreator_form .form-group > input, form.formcreator_form textarea, form.formcreator_form select {
+   background: #FFF;
    background: rgba(255, 255, 255, 0.7);
    border: 1px solid #999;
    border-radius: 3px;
@@ -176,7 +179,9 @@ form.formcreator_form .form-group > input:focus
 form.formcreator_form input[type = checkbox]:focus + label,
 form.formcreator_form input[type = radio]:focus + label,
 form.formcreator_form input[type = file]:focus {
+   color: #66afe9;
    color: rgba(102,175,233, 1);
+   border-bottom: #66afe9 dotted 1px !important;
    border-bottom: rgba(102,175,233,.8) dotted 1px !important;
 }
 
