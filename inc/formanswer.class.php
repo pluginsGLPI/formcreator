@@ -235,7 +235,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                                              ? $datas['formcreator_validator']
                                              : 0,
          'status'                      => $status,
-         'request_date'                => date('Y-m-d'),
+         'request_date'                => date('Y-m-d H:i:s'),
       ));
 
       $query = "SELECT q.`id`
