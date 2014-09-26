@@ -472,7 +472,7 @@ class PluginFormcreatorForm extends CommonDBTM
                       FROM glpi_plugin_formcreator_forms f
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                       WHERE fa.`requester_id` = '" . $_SESSION['glpiID'] . "'
-                      ORDER BY fa.`status` ASC
+                      ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
             $result = $GLOBALS['DB']->query($query);
             if ($GLOBALS['DB']->numrows($result) == 0) {
@@ -510,7 +510,7 @@ class PluginFormcreatorForm extends CommonDBTM
                       FROM glpi_plugin_formcreator_forms f
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                       WHERE fa.`validator_id` = '" . $_SESSION['glpiID'] . "'
-                      ORDER BY fa.`status` ASC
+                      ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
             $result = $GLOBALS['DB']->query($query);
             if ($GLOBALS['DB']->numrows($result) == 0) {
@@ -669,18 +669,39 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Show validator selector
-      $query = "SELECT u.`id`, u.`name`, u.`realname`
-                FROM `glpi_users` u
-                LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
-                WHERE fv.`forms_id` = '" . $this->getID(). "'";
-      $result = $GLOBALS['DB']->query($query);
-      while(list($id, $name, $realname) = $GLOBALS['DB']->fetch_array($result)) {
-         $validators[$id] = empty($realname) ? $name : $realname;
+      if ($item->fields['validation_required']) {
+         $query = "SELECT u.`id`, u.`name`, u.`realname`
+                   FROM `glpi_users` u
+                   LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
+                   WHERE fv.`forms_id` = '" . $this->getID(). "'";
+         $result = $GLOBALS['DB']->query($query);
+         if ($GLOBALS['DB']->numrows($result) > 0) {
+            while(list($id, $name, $realname) = $GLOBALS['DB']->fetch_array($result)) {
+               $validators[$id] = empty($realname) ? $name : $realname;
+            }
+         } else {
+            $validators  = array();
+            $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
+            $query = 'SELECT u.`id`, u.`name`, u.`realname`
+                      FROM `glpi_users` u
+                      INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+                      INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+                      WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
+                      AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
+                      OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
+                      GROUP BY u.`id`
+                      ORDER BY u.`name`';
+            $result = $GLOBALS['DB']->query($query);
+            while($user = $GLOBALS['DB']->fetch_assoc($result)) {
+               $validators[$user['id']] = empty($user['realname']) ? $user['name'] : $user['realname'];
+            }
+         }
+
+         echo '<div class="form-group required" id="form-validator">';
+         echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+         Dropdown::showFromArray('formcreator_validator', $validators);
+         echo '</div>';
       }
-      echo '<div class="form-group required" id="form-validator">';
-      echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-      Dropdown::showFromArray('formcreator_validator', $validators);
-      echo '</div>';
 
       echo '</div>';
 
