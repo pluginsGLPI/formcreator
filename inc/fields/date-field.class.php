@@ -4,14 +4,25 @@ require_once('field.interface.php');
 
 class dateField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
-      $value = ($datas['formcreator_field_' . $field['id']] != 'NULL')
+      $value = (isset($datas['formcreator_field_' . $field['id']])
+                  && ($datas['formcreator_field_' . $field['id']] != 'NULL'))
                ? $datas['formcreator_field_' . $field['id']]
                : $field['default_values'];
 
       if($field['required'])  $required = ' required';
       else $required = '';
+
+      if (!$edit) {
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<label>' . $field['name'] . '</label>';
+         echo (isset($datas['formcreator_field_' . $field['id']]))
+            ? Html::convDate($datas['formcreator_field_' . $field['id']])
+            : '';
+         echo '</div>' . PHP_EOL;
+         return;
+      }
 
       echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
       echo '<label>';

@@ -4,7 +4,7 @@ require_once('field.interface.php');
 
 class descriptionField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
       echo '<div class="description_field form-group" id="form-group-field' . $field['id'] . '"' . $hide . '>';

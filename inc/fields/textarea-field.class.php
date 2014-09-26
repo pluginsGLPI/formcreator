@@ -4,7 +4,7 @@ require_once('field.interface.php');
 
 class textareaField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       $value = (!empty($datas['formcreator_field_' . $field['id']]))
                ? str_replace('\r\n', PHP_EOL, $datas['formcreator_field_' . $field['id']])
@@ -14,6 +14,15 @@ class textareaField implements Field
       else $required = '';
 
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+
+      if (!$edit) {
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<label>' . $field['name'] . '</label>';
+         echo '<div style="float:left">' . nl2br(strip_tags($datas['formcreator_field_' . $field['id']])) . '</div>';
+         echo '</div>' . PHP_EOL;
+         return;
+      }
+
       echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];

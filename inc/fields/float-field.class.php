@@ -4,7 +4,7 @@ require_once('field.interface.php');
 
 class floatField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       $value = (!empty($datas['formcreator_field_' . $field['id']]))
                ? $datas['formcreator_field_' . $field['id']]
@@ -14,6 +14,15 @@ class floatField implements Field
       else $required = '';
 
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+
+      if (!$edit) {
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<label>' . $field['name'] . '</label>';
+         echo $datas['formcreator_field_' . $field['id']];
+         echo '</div>' . PHP_EOL;
+         return;
+      }
+
       echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];
@@ -220,10 +229,10 @@ class floatField implements Field
          } elseif (!empty($field['regex']) && !preg_match($field['regex'], $value)) {
             Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
             return false;
+         // All is OK
+         } else {
+            return true;
          }
-      // All is OK
-      } else {
-         return true;
       }
    }
 

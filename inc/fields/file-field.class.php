@@ -4,12 +4,21 @@ require_once('field.interface.php');
 
 class fileField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       if($field['required'])  $required = ' required';
       else $required = '';
 
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+
+      if (!$edit) {
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<label>' . $field['name'] . '</label>';
+         echo $datas['formcreator_field_' . $field['id']];
+         echo '</div>' . PHP_EOL;
+         return;
+      }
+
       echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];

@@ -4,7 +4,7 @@ require_once('field.interface.php');
 
 class emailField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       $value = (!empty($datas['formcreator_field_' . $field['id']]))
                ? $datas['formcreator_field_' . $field['id']]
@@ -14,6 +14,15 @@ class emailField implements Field
       else $required = '';
 
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+
+      if (!$edit) {
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<label>' . $field['name'] . '</label>';
+         echo $datas['formcreator_field_' . $field['id']];
+         echo '</div>' . PHP_EOL;
+         return;
+      }
+
       echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];

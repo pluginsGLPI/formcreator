@@ -156,6 +156,72 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    }
 
 
+   public function showForm($datas) {
+      if (!isset($datas['id']) || !$this->getFromDB($datas['id'])) {
+         Html::displayNotFoundError();
+      }
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+
+      echo '<form name="formcreator_form' . $form->getID() . '" method="post" role="form" enctype="multipart/form-data"
+               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/formanswer.form.php"
+               class="formcreator_form form_horizontal">';
+      echo '<h1 class="form-title">' . $form->fields['name'] . '</h1>';
+
+      // Form Header
+      if (!empty($form->fields['content'])) {
+         echo '<div class="form_header">';
+         echo html_entity_decode($form->fields['content']);
+         echo '</div>';
+      }
+      // Get and display sections of the form
+      $question      = new PluginFormcreatorQuestion();
+
+      $section_class = new PluginFormcreatorSection();
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $form->getID(), '`order` ASC');
+      echo '<div class="form_section">';
+      foreach ($find_sections as $section_line) {
+         echo '<h2>' . $section_line['name'] . '</h2>';
+
+         // Display all fields of the section
+         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         foreach ($questions as $question_line) {
+            $answer = new PluginFormcreatorAnswer();
+            $found = $answer->find('plugin_formcreator_formanwers_id = "' . $this->getID() . '"
+                            AND plugin_formcreator_question_id = "' . $question_line['id'] . '"');
+            $found = array_shift($found);
+            $datas = array('formcreator_field_' . $found['plugin_formcreator_question_id'] => $found['answer']);
+            $canEdit = $this->fields['status'] == 'refused' && $_SESSION['glpiID'] == $this->fields['requester_id'];
+            if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
+               PluginFormcreatorFields::showField($question_line, $datas, $canEdit);
+            }
+         }
+
+      }
+
+      echo '</div>';
+
+      // Display submit button
+      if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+         echo '<div class="center">';
+         echo '<input type="submit" name="save_formanswer" class="submit_button" value="' . __('Save') . '" />';
+         echo '</div>';
+      } elseif(($this->fields['status'] == 'waiting') && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
+         echo '<div class="center" style="float: left; width: 50%;">';
+         echo '<input type="submit" name="refuse_formanswer" class="submit_button" value="' . __('Refuse', 'formcreator') . '" />';
+         echo '</div>';
+         echo '<div class="center">';
+         echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
+         echo '</div>';
+      }
+
+      echo '<input type="hidden" name="formcreator_form" value="' . $form->getID() . '">';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '">';
+      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+      echo '</form>';
+   }
+
+
    /**
     * Define how to display a specific value in search result table
     *
@@ -214,47 +280,77 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $form = new PluginFormcreatorForm();
       $form->getFromDB($datas['formcreator_form']);
 
-      // Does the form need to be validate ?
-      if ($form->fields['validation_required']) {
-         $status = 'waiting';
-      } else {
-         $status = 'accepted';
-      }
-
-      $obj        = new self();
-      $formanswer = $obj->add(array(
-         'entities_id'                 => isset($_SESSION['glpiactive_entity'])
-                                             ? $_SESSION['glpiactive_entity']
-                                             : $form->fields['entities_id'],
-         'is_recursive'                => $form->fields['is_recursive'],
-         'plugin_formcreator_forms_id' => $datas['formcreator_form'],
-         'requester_id'                => isset($_SESSION['glpiID'])
-                                             ? $_SESSION['glpiID']
-                                             : 0,
-         'validator_id'                => isset($datas['formcreator_validator'])
-                                             ? $datas['formcreator_validator']
-                                             : 0,
-         'status'                      => $status,
-         'request_date'                => date('Y-m-d H:i:s'),
-      ));
-
       $query = "SELECT q.`id`
                 FROM glpi_plugin_formcreator_questions q
                 LEFT JOIN glpi_plugin_formcreator_sections s ON s.`id` = q.`plugin_formcreator_sections_id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
       $result = $GLOBALS['DB']->query($query);
 
-      while ($question = $GLOBALS['DB']->fetch_array($result)) {
-         $answer = new PluginFormcreatorAnswer();
-         $answer->add(array(
-            'plugin_formcreator_formanwers_id' => $formanswer,
-            'plugin_formcreator_question_id'   => $question['id'],
-            'answer'                           => isset($datas['formcreator_field_' . $question['id']])
-                                                   ? is_array($datas['formcreator_field_' . $question['id']])
-                                                      ? implode(',', $datas['formcreator_field_' . $question['id']])
-                                                      : $datas['formcreator_field_' . $question['id']]
-                                                   : '',
+
+      // Update form answers
+      if (isset($_POST['save_formanswer'])) {
+         $status = 'waiting';
+         $formanswer = new self();
+         $formanswer->update(array(
+            'id'                          => (int) $datas['id'],
+            'status'                      => $status,
          ));
+
+         // Update questions answers
+         while ($question = $GLOBALS['DB']->fetch_array($result)) {
+            $answer = new PluginFormcreatorAnswer();
+            $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
+                                    AND `plugin_formcreator_question_id` = ' . $question['id']);
+            $found = array_shift($found);
+            $answer->update(array(
+               'id'     => $found['id'],
+               'answer' => isset($datas['formcreator_field_' . $question['id']])
+                           ? is_array($datas['formcreator_field_' . $question['id']])
+                              ? implode(',', $datas['formcreator_field_' . $question['id']])
+                              : $datas['formcreator_field_' . $question['id']]
+                           : '',
+            ));
+         }
+
+      // Create new form answer object
+      } else {
+         // Does the form need to be validate ?
+         if ($form->fields['validation_required']) {
+            $status = 'waiting';
+         } else {
+            $status = 'accepted';
+         }
+
+         $obj        = new self();
+         $formanswer = $obj->add(array(
+            'entities_id'                 => isset($_SESSION['glpiactive_entity'])
+                                                ? $_SESSION['glpiactive_entity']
+                                                : $form->fields['entities_id'],
+            'is_recursive'                => $form->fields['is_recursive'],
+            'plugin_formcreator_forms_id' => $datas['formcreator_form'],
+            'requester_id'                => isset($_SESSION['glpiID'])
+                                                ? $_SESSION['glpiID']
+                                                : 0,
+            'validator_id'                => isset($datas['formcreator_validator'])
+                                                ? $datas['formcreator_validator']
+                                                : 0,
+            'status'                      => $status,
+            'request_date'                => date('Y-m-d H:i:s'),
+         ));
+
+         // Save questions answers
+         while ($question = $GLOBALS['DB']->fetch_array($result)) {
+            $answer = new PluginFormcreatorAnswer();
+            $answer->add(array(
+               'plugin_formcreator_formanwers_id' => $formanswer,
+               'plugin_formcreator_question_id'   => $question['id'],
+               'answer'                           => isset($datas['formcreator_field_' . $question['id']])
+                                                      ? is_array($datas['formcreator_field_' . $question['id']])
+                                                         ? implode(',', $datas['formcreator_field_' . $question['id']])
+                                                         : $datas['formcreator_field_' . $question['id']]
+                                                      : '',
+            ));
+         }
       }
 
       // If form is accepted, generate targets
@@ -299,6 +395,19 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
          unset($_SESSION['formcreator_documents']);
       }
+   }
+
+   /**
+    * Actions done after the PURGE of the item in the database
+    * Delete answers
+    *
+    * @return nothing
+   **/
+   public function post_purgeItem()
+   {
+      $table = getTableForItemType('PluginFormcreatorAnswer');
+      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_formanwers_id` = {$this->getID()};";
+      $GLOBALS['DB']->query($query);
    }
 
    /**

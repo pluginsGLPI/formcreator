@@ -4,17 +4,28 @@ require_once('field.interface.php');
 
 class multiSelectField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       $default_values = explode("\r\n", $field['default_values']);
       $default_values = (!empty($datas['formcreator_field_' . $field['id']]))
-               ? $datas['formcreator_field_' . $field['id']]
+               ? is_array($datas['formcreator_field_' . $field['id']])
+                  ? $datas['formcreator_field_' . $field['id']]
+                  : explode(',', $datas['formcreator_field_' . $field['id']])
                : $default_values;
 
       if($field['required'])  $required = ' required';
       else $required = '';
 
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
+
+      if (!$edit) {
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<label>' . $field['name'] . '</label>';
+         echo str_replace(',', ', ', trim($datas['formcreator_field_' . $field['id']], ','));
+         echo '</div>' . PHP_EOL;
+         return;
+      }
+
       echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];

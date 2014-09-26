@@ -4,7 +4,7 @@ require_once('field.interface.php');
 
 class hiddenField implements Field
 {
-   public static function show($field, $datas)
+   public static function show($field, $datas, $edit = true)
    {
       echo '<input type="hidden" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
