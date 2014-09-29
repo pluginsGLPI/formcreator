@@ -275,8 +275,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
    public function saveAnswers($datas)
    {
-      $accepted = false;
-
       $form = new PluginFormcreatorForm();
       $form->getFromDB($datas['formcreator_form']);
 
@@ -289,27 +287,28 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
-         $status = 'waiting';
-         $formanswer = new self();
-         $formanswer->update(array(
+         $status = $_POST['status'];
+         $this->update(array(
             'id'                          => (int) $datas['id'],
             'status'                      => $status,
          ));
 
          // Update questions answers
-         while ($question = $GLOBALS['DB']->fetch_array($result)) {
-            $answer = new PluginFormcreatorAnswer();
-            $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
-                                    AND `plugin_formcreator_question_id` = ' . $question['id']);
-            $found = array_shift($found);
-            $answer->update(array(
-               'id'     => $found['id'],
-               'answer' => isset($datas['formcreator_field_' . $question['id']])
-                           ? is_array($datas['formcreator_field_' . $question['id']])
-                              ? implode(',', $datas['formcreator_field_' . $question['id']])
-                              : $datas['formcreator_field_' . $question['id']]
-                           : '',
-            ));
+         if ($status == 'waiting') {
+            while ($question = $GLOBALS['DB']->fetch_array($result)) {
+               $answer = new PluginFormcreatorAnswer();
+               $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
+                                       AND `plugin_formcreator_question_id` = ' . $question['id']);
+               $found = array_shift($found);
+               $answer->update(array(
+                  'id'     => $found['id'],
+                  'answer' => isset($datas['formcreator_field_' . $question['id']])
+                              ? is_array($datas['formcreator_field_' . $question['id']])
+                                 ? implode(',', $datas['formcreator_field_' . $question['id']])
+                                 : $datas['formcreator_field_' . $question['id']]
+                              : '',
+               ));
+            }
          }
 
       // Create new form answer object
@@ -321,8 +320,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $status = 'accepted';
          }
 
-         $obj        = new self();
-         $formanswer = $obj->add(array(
+         $id = $this->add(array(
             'entities_id'                 => isset($_SESSION['glpiactive_entity'])
                                                 ? $_SESSION['glpiactive_entity']
                                                 : $form->fields['entities_id'],
@@ -342,7 +340,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          while ($question = $GLOBALS['DB']->fetch_array($result)) {
             $answer = new PluginFormcreatorAnswer();
             $answer->add(array(
-               'plugin_formcreator_formanwers_id' => $formanswer,
+               'plugin_formcreator_formanwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
                'answer'                           => isset($datas['formcreator_field_' . $question['id']])
                                                       ? is_array($datas['formcreator_field_' . $question['id']])
@@ -381,20 +379,74 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                }
             }
          }
-
-         // Get all targets
-         $target_class    = new PluginFormcreatorTarget();
-         $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->getID());
-
-         foreach($founded_targets as $target) {
-            $obj = new $target['itemtype'];
-            $obj->getFromDB($target['items_id']);
-            $obj->save($this, $datas);
-         }
-
-         Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
+         $this->generateTarget();
          unset($_SESSION['formcreator_documents']);
       }
+      Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
+   }
+
+   public function generateTarget()
+   {
+      // Get all targets
+      $target_class    = new PluginFormcreatorTarget();
+      $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
+
+      // Generate targets
+      foreach($founded_targets as $target) {
+         $obj = new $target['itemtype'];
+         $obj->getFromDB($target['items_id']);
+         $obj->save($this);
+      }
+   }
+
+   /**
+    * Get entire form to be inserted into a target content
+    *
+    * @return String                                    Full form questions and answers to be print
+    */
+   public function getFullForm()
+   {
+      $question_no = 0;
+
+      $output = mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . PHP_EOL;
+      $output .= '=================';
+      $output .= PHP_EOL . PHP_EOL;
+
+      $section_class = new PluginFormcreatorSection();
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = '
+                                             . $this->fields['plugin_formcreator_forms_id'], '`order` ASC');
+      foreach ($find_sections as $section_line) {
+         $output .= $section_line['name'] . PHP_EOL;
+         $output .= '---------------------------------';
+         $output .= PHP_EOL . PHP_EOL;
+
+         // Display all fields of the section
+         $question  = new PluginFormcreatorQuestion();
+         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         foreach ($questions as $question_line) {
+            if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
+               $question_no ++;
+
+               $id     = $question_line['id'];
+               $name   = $question_line['name'];
+               $answer = new PluginFormcreatorAnswer();
+               $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID()
+                                       . ' AND `plugin_formcreator_question_id` = ' . $id);
+               if (count($found)) {
+                  $datas = array_shift($found);
+                  $value = $datas['answer'];
+               } else {
+                  $value = '';
+               }
+               $value   = PluginFormcreatorFields::getValue($question_line, $value);
+
+               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
+               $output .= $value . PHP_EOL . PHP_EOL;
+            }
+         }
+      }
+
+      return $output;
    }
 
    /**

@@ -16,23 +16,27 @@ if ($plugin->isActivated("formcreator")) {
 
    } elseif(isset($_POST['refuse_formanswer'])) {
       $formanswer->check($_POST['id'],'w');
-      $formanswer->update(array(
-         'id'                          => (int) $_POST['id'],
-         'plugin_formcreator_forms_id' => (int) $_POST['formcreator_form'],
-         'status'                      => 'refused',
-      ));
+
+      $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
+      $_POST['status']                      = 'refused';
+      $_POST['save_formanswer']             = true;
+      $formanswer->saveAnswers($_POST);
+
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
 
    } elseif(isset($_POST['accept_formanswer'])) {
       $formanswer->check($_POST['id'],'w');
-      $formanswer->update(array(
-         'id'                          => (int) $_POST['id'],
-         'plugin_formcreator_forms_id' => (int) $_POST['formcreator_form'],
-         'status'                      => 'accepted',
-      ));
+
+      $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
+      $_POST['status']                      = 'accepted';
+      $_POST['save_formanswer']             = true;
+      $formanswer->saveAnswers($_POST);
+
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
 
    } elseif(isset($_POST['save_formanswer'])) {
+      $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
+      $_POST['status']                      = 'waiting';
       $formanswer->saveAnswers($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
 

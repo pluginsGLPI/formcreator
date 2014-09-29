@@ -811,42 +811,6 @@ class PluginFormcreatorForm extends CommonDBTM
       }
    }
 
-   public function getFullForm($datas)
-   {
-      $question_no = 0;
-
-      $output = mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . PHP_EOL;
-      $output .= '=================';
-      $output .= PHP_EOL . PHP_EOL;
-
-      $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $this->getID(), '`order` ASC');
-      foreach ($find_sections as $section_line) {
-         $output .= $section_line['name'] . PHP_EOL;
-         $output .= '---------------------------------';
-         $output .= PHP_EOL . PHP_EOL;
-
-         // Display all fields of the section
-         $question  = new PluginFormcreatorQuestion();
-         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
-         foreach ($questions as $question_line) {
-            if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
-               $question_no ++;
-
-               $id        = $question_line['id'];
-               $name      = $question_line['name'];
-               $value     = isset($datas['formcreator_field_' . $id]) ? $datas['formcreator_field_' . $id] : '';
-               $value     = PluginFormcreatorFields::getValue($question_line, $value);
-
-               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
-               $output .= $value . PHP_EOL . PHP_EOL;
-            }
-         }
-      }
-
-      return $output;
-   }
-
    /**
     * Database table installation for the item type
     *

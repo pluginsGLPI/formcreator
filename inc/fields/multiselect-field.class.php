@@ -187,7 +187,7 @@ class multiSelectField implements Field
 
    public static function displayValue($value, $values)
    {
-      return ($value != '') ? implode(', ', $value) : '';
+      return ($value != '') ? str_replace(',', ', ', trim($value, ',')) : '';
    }
 
    public static function isValid($field, $value, $datas)

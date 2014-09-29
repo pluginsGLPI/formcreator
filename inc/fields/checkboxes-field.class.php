@@ -198,7 +198,7 @@ class checkboxesField implements Field
 
    public static function displayValue($value, $values)
    {
-      return (!empty($value)) ? implode(', ', $value) : '';
+      return ($value != '') ? str_replace(',', ', ', trim($value, ',')) : '';
    }
 
 	public static function isValid($field, $value, $datas)

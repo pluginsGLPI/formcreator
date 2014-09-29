@@ -151,13 +151,17 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
-      $input['name'] = $input['title'];
+      $input['name'] = htmlentities($input['title']);
 
       return $input;
    }
 
-
-   public function save($form, $input)
+   /**
+    * Save form datas to the target
+    *
+    * @param  PluginFormcreatorFormanswer $formanswer    Answers previously saved
+    */
+   public function save(PluginFormcreatorFormanswer $formanswer)
    {
       $datas   = array();
       $ticket  = new Ticket();
@@ -175,14 +179,17 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
       $datas                = array_merge($datas, $predefined_fields);
 
-      $datas['name']        =$this->parseTags($this->fields['name'], $form, $input);
-      $datas['content']     = $this->parseTags($this->fields['comment'], $form, $input);
+      // Parse datas and tags
+      $datas['name']        = $this->parseTags($this->fields['name'], $formanswer);
+      $datas['content']     = $this->parseTags($this->fields['comment'], $formanswer);
       $datas['entities_id'] = (isset($_SESSION['glpiactive_entity']))
                               ? $_SESSION['glpiactive_entity']
                               : $form->fields['entities_id'];
 
+      // Create the target ticket
       $ticketID = $ticket->add($datas);
 
+      // Attach documents to ticket
       if(!empty($_SESSION['formcreator_documents'])) {
          foreach ($_SESSION['formcreator_documents'] as $docID) {
             $docItem->add(array(
@@ -194,11 +201,19 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
    }
 
-   private function parseTags($content, $form, $input) {
-      $content     = str_replace('##FULLFORM##', $form->getFullForm($input), $content);
+   /**
+    * Parse target content to replace TAGS like ##FULLFORM## by the values
+    *
+    * @param  String $content                            String to be parsed
+    * @param  PluginFormcreatorFormanswer $formanswer    Formanswer object where answers are stored
+    * @return String                                     Parsed string with tags replaced by form values
+    */
+   private function parseTags($content, PluginFormcreatorFormanswer $formanswer) {
+      $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
 
       $section     = new PluginFormcreatorSection();
-      $founded     = $section->find('plugin_formcreator_forms_id = ' . $form->getID(), '`order` ASC');
+      $founded     = $section->find('plugin_formcreator_forms_id = '
+                                    . $formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
       $tab_section = array();
       foreach($founded as $section_item) {
          $tab_section[] = $section_item['id'];
@@ -208,13 +223,22 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          $question  = new PluginFormcreatorQuestion();
          $founded = $question->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')', '`order` ASC');
          foreach($founded as $question_line) {
-            $id        = $question_line['id'];
-            $name      = $question_line['name'];
-            $value     = isset($input['formcreator_field_' . $id]) ? $input['formcreator_field_' . $id] : '';
-            $value     = PluginFormcreatorFields::getValue($question_line, $value);
+            $id     = $question_line['id'];
+            $name   = $question_line['name'];
 
-            $content   = str_replace('##question_' . $id . '##', $name, $content);
-            $content   = str_replace('##answer_' . $id . '##', $value, $content);
+            $answer = new PluginFormcreatorAnswer();
+            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $formanswer->getID()
+                                    . ' AND `plugin_formcreator_question_id` = ' . $id);
+            if (count($found)) {
+               $datas = array_shift($found);
+               $value = $datas['answer'];
+            } else {
+               $value = '';
+            }
+            $value   = PluginFormcreatorFields::getValue($question_line, $value);
+
+            $content = str_replace('##question_' . $id . '##', $name, $content);
+            $content = str_replace('##answer_' . $id . '##', $value, $content);
          }
       }
 
