@@ -310,12 +310,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $form = new PluginFormcreatorForm();
       $form->getFromDB($datas['formcreator_form']);
 
-      $query = "SELECT q.`id`
+      $query = "SELECT q.`id`, q.`fieldtype`, q.`name`
                 FROM glpi_plugin_formcreator_questions q
                 LEFT JOIN glpi_plugin_formcreator_sections s ON s.`id` = q.`plugin_formcreator_sections_id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
       $result = $GLOBALS['DB']->query($query);
-
 
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
@@ -329,18 +328,54 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          // Update questions answers
          if ($status == 'waiting') {
             while ($question = $GLOBALS['DB']->fetch_array($result)) {
-               $answer = new PluginFormcreatorAnswer();
-               $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
-                                       AND `plugin_formcreator_question_id` = ' . $question['id']);
-               $found = array_shift($found);
-               $answer->update(array(
-                  'id'     => $found['id'],
-                  'answer' => isset($datas['formcreator_field_' . $question['id']])
-                              ? is_array($datas['formcreator_field_' . $question['id']])
-                                 ? implode(',', $datas['formcreator_field_' . $question['id']])
-                                 : $datas['formcreator_field_' . $question['id']]
-                              : '',
-               ));
+               if ($question['fieldtype'] != 'file') {
+                  $answer = new PluginFormcreatorAnswer();
+                  $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
+                                          AND `plugin_formcreator_question_id` = ' . $question['id']);
+                  $found = array_shift($found);
+                  $answer->update(array(
+                     'id'     => $found['id'],
+                     'answer' => isset($datas['formcreator_field_' . $question['id']])
+                                 ? is_array($datas['formcreator_field_' . $question['id']])
+                                    ? implode(',', $datas['formcreator_field_' . $question['id']])
+                                    : $datas['formcreator_field_' . $question['id']]
+                                 : '',
+                  ));
+               } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
+                     && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
+                  $doc    = new Document();
+                  $answer = new PluginFormcreatorAnswer();
+                  $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
+                                          AND `plugin_formcreator_question_id` = ' . $question['id']);
+                  $found  = array_shift($found);
+
+                  $file_datas                 = array();
+                  $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
+                  $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
+                                                      ? $_SESSION['glpiactive_entity']
+                                                      : $form->fields['entities_id'];
+                  $file_datas["is_recursive"] = $form->fields['is_recursive'];
+                  Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
+
+                  if ($docID = $doc->add($file_datas)) {
+                     $table    = getTableForItemType('Document');
+                     $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
+                     $query    = "UPDATE $table SET filename = '" . $filename . "' WHERE id = " . $docID;
+                     $GLOBALS['DB']->query($query);
+
+                     $docItem = new Document_Item();
+                     $docItemId = $docItem->add(array(
+                        'documents_id' => $docID,
+                        'itemtype'     => __CLASS__,
+                        'items_id'     => (int) $datas['id'],
+                     ));
+
+                     $answer->update(array(
+                        'id'     => $found['id'],
+                        'answer' => $docID,
+                     ));
+                  }
+               }
             }
          }
 
@@ -370,50 +405,63 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          ));
 
          // Save questions answers
-         while ($question = $GLOBALS['DB']->fetch_array($result)) {
-            $answer = new PluginFormcreatorAnswer();
-            $answer->add(array(
+         while ($question = $GLOBALS['DB']->fetch_assoc($result)) {
+            // If the answer is set, check if it is an array (then implode id).
+            if (isset($datas['formcreator_field_' . $question['id']])) {
+               if (is_array($datas['formcreator_field_' . $question['id']])) {
+                  $question_answer = implode(',', $datas['formcreator_field_' . $question['id']]);
+               } else {
+                  $question_answer = $datas['formcreator_field_' . $question['id']];
+               }
+            } else {
+               $question_answer = '';
+            }
+
+            $answer   = new PluginFormcreatorAnswer();
+            $answerID = $answer->add(array(
                'plugin_formcreator_formanwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
-               'answer'                           => isset($datas['formcreator_field_' . $question['id']])
-                                                      ? is_array($datas['formcreator_field_' . $question['id']])
-                                                         ? implode(',', $datas['formcreator_field_' . $question['id']])
-                                                         : $datas['formcreator_field_' . $question['id']]
-                                                      : '',
+               'answer'                           => $question_answer,
             ));
+
+            // If the question is a file field, save the file as a document
+            if (($question['fieldtype'] == 'file')
+                  && (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name']))
+                  && (is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name']))) {
+               $doc         = new Document();
+               $file_datas                 = array();
+               $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
+               $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
+                                                   ? $_SESSION['glpiactive_entity']
+                                                   : $form->fields['entities_id'];
+               $file_datas["is_recursive"] = $form->fields['is_recursive'];
+               Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
+
+               if ($docID = $doc->add($file_datas)) {
+                  $table    = getTableForItemType('Document');
+                  $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
+                  $query    = "UPDATE $table SET filename = '" . $filename . "' WHERE id = " . $docID;
+                  $GLOBALS['DB']->query($query);
+
+                  $docItem = new Document_Item();
+                  $docItemId = $docItem->add(array(
+                     'documents_id' => $docID,
+                     'itemtype'     => __CLASS__,
+                     'items_id'     => $id,
+                  ));
+
+                  $answer->update(array(
+                     'id'     => $answerID,
+                     'answer' => $docID,
+                  ));
+               }
+            }
          }
       }
 
       // If form is accepted, generate targets
       if ($status == 'accepted') {
-         $_SESSION['formcreator_documents'] = array();
-
-         // Save files as Documents
-         foreach ($_FILES as $question_name => $file) {
-            if (isset($file['tmp_name']) && is_file($file['tmp_name'])) {
-               $doc         = new Document();
-               $question_id = trim(strrchr($question_name, '_'), '_');
-               $question    = new PluginFormcreatorQuestion();
-               $question->getFromDB($question_id);
-
-               $file_datas                 = array();
-               $file_datas["name"]         = $this->fields['name'] . ' - ' . $question->fields['name'];
-               $file_datas["entities_id"]  = (isset($_SESSION['glpiactive_entity']))
-                                             ? $_SESSION['glpiactive_entity']
-                                             : $this->fields['entities_id'];
-               $file_datas["is_recursive"] = $this->fields['is_recursive'];
-               Document::uploadDocument($file_datas, $file);
-
-               if ($docID = $doc->add($file_datas)) {
-                  $_SESSION['formcreator_documents'][] = $docID;
-                  $table = getTableForItemType('Document');
-                  $query = "UPDATE $table SET filename = '" . addslashes($file['name']) . "' WHERE id = " . $docID;
-                  $GLOBALS['DB']->query($query);
-               }
-            }
-         }
          $this->generateTarget();
-         unset($_SESSION['formcreator_documents']);
       }
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
    }

@@ -189,11 +189,14 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // Create the target ticket
       $ticketID = $ticket->add($datas);
 
+
+      $founded = $docItem->find('itemtype = "PluginFormcreatorFormanswer" AND items_id = ' . $formanswer->getID());
+
       // Attach documents to ticket
-      if(!empty($_SESSION['formcreator_documents'])) {
-         foreach ($_SESSION['formcreator_documents'] as $docID) {
+      if(count($founded) > 0) {
+         foreach ($founded as $document) {
             $docItem->add(array(
-               'documents_id' => $docID,
+               'documents_id' => $document['documents_id'],
                'itemtype'     => 'Ticket',
                'items_id'     => $ticketID
             ));

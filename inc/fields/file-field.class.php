@@ -14,7 +14,10 @@ class fileField implements Field
       if (!$edit) {
          echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo $datas['formcreator_field_' . $field['id']];
+         $doc = new Document();
+         if($doc->getFromDB($datas['formcreator_field_' . $field['id']])) {
+            echo $doc->getDownloadLink();
+         }
          echo '</div>' . PHP_EOL;
          return;
       }
