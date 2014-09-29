@@ -172,8 +172,15 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       if (!empty($form->fields['content'])) {
          echo '<div class="form_header">';
          echo html_entity_decode($form->fields['content']);
+
          echo '</div>';
       }
+      if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+         echo '<div class="refused_header">';
+         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
+         echo '</div>';
+      }
+
       // Get and display sections of the form
       $question      = new PluginFormcreatorQuestion();
 
@@ -199,26 +206,51 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       }
 
-      echo '</div>';
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+         echo '<div class="form-group">';
          echo '<div class="center">';
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="' . __('Save') . '" />';
          echo '</div>';
+         echo '</div>';
       } elseif(($this->fields['status'] == 'waiting') && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
+
+         echo '<div class="form-group required">';
+         echo '<label for="comment">' . __('Comment') . ' <span class="red">*</span></label>';
+         $value = htmlentities(stripslashes(strip_tags(html_entity_decode($this->fields['comment']))));
+         echo '<textarea class="form-control"
+                  rows="5"
+                  name="comment"
+                  id="comment">' . $value . '</textarea>';
+         echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
+         echo '</div>';
+
+         echo '<div class="form-group">';
          echo '<div class="center" style="float: left; width: 50%;">';
-         echo '<input type="submit" name="refuse_formanswer" class="submit_button" value="' . __('Refuse', 'formcreator') . '" />';
+         echo '<input type="submit" name="refuse_formanswer" class="submit_button"
+                  value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
          echo '</div>';
          echo '<div class="center">';
          echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
+         echo '</div>';
          echo '</div>';
       }
 
       echo '<input type="hidden" name="formcreator_form" value="' . $form->getID() . '">';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '">';
       echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+
+      echo '</div>';
       echo '</form>';
+      echo '<script type="text/javascript">
+               function checkComment(field) {
+                  if (document.getElementById("comment").value == "") {
+                     alert("' . __('Refused comment is required!', 'formcreator') . '");
+                     return false;
+                  }
+               }
+            </script>';
    }
 
 
@@ -291,6 +323,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $this->update(array(
             'id'                          => (int) $datas['id'],
             'status'                      => $status,
+            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
          ));
 
          // Update questions answers
@@ -485,7 +518,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      `requester_id` int(11) NULL,
                      `validator_id` int(11) NULL,
                      `request_date` datetime NOT NULL,
-                     `status` enum('waiting', 'refused', 'accepted') NOT NULL DEFAULT 'waiting'
+                     `status` enum('waiting', 'refused', 'accepted') NOT NULL DEFAULT 'waiting',
+                     `comment` text NULL DEFAULT NULL
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8

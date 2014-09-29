@@ -92,6 +92,22 @@ form.formcreator_form > h1 {
 form.formcreator_form > .form_header {
    padding: 10px 15px;
 }
+form.formcreator_form > .refused_header {
+   padding: 10px 15px;
+   background: #EED0D0; /*#EEE;*/
+   border-radius: 4px;
+   box-shadow: 2px 2px 2px #CCC;
+   margin: 0 0 10px;
+}
+form.formcreator_form > .refused_header > div {
+   padding: 3px 10px;
+   border-left: 5px solid #A00;
+   color: #C00;
+   font-style: italic;
+   font-weight: bold;
+   margin: 0 4px;
+}
+
 
 form.formcreator_form > .form_header, form.formcreator_form > .form_section {
    background: #EEE; /*#EEE;*/
