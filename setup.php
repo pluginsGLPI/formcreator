@@ -101,8 +101,18 @@ function plugin_init_formcreator ()
                               'links'  => $links),
    );
 
+   //CFG_GLPI['root_doc']."/front/central.php?redirect=plugin_formcreator_".$id
+   $PLUGIN_HOOKS['redirect_page']['formcreator'] = 'front/formanswer.form.php';
+   //redirect=plugin_formcreator_formanswer_#id
+   // $PLUGIN_HOOKS['redirect_page']['formcreator'] = array('formanswer' => 'front/formanswer.form.php');
+
 
 
    // Load field class and all its method to manage fields
    Plugin::registerClass('PluginFormcreatorFields');
+
+   // Notification
+   Plugin::registerClass('PluginFormcreatorFormanswer', array(
+      'notificationtemplates_types' => true
+   ));
 }

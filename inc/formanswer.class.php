@@ -459,9 +459,24 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
+      switch ($status) {
+         case 'waiting' :
+            // Notify the validator
+            NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
+            break;
+         case 'refused' :
+            // Notify the requester
+            NotificationEvent::raiseEvent('plugin_formcreator_refused', $this);
+            break;
+         case 'accepted' :
+            // Notify the requester
+            NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+            $this->generateTarget();
+            break;
+      }
+
       // If form is accepted, generate targets
       if ($status == 'accepted') {
-         $this->generateTarget();
       }
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
    }
@@ -541,6 +556,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $table = getTableForItemType('PluginFormcreatorAnswer');
       $query = "DELETE FROM `$table` WHERE `plugin_formcreator_formanwers_id` = {$this->getID()};";
       $GLOBALS['DB']->query($query);
+
+      // If the form was waiting for validation
+      if ($this->fields['status'] == 'waiting') {
+         // Notify the requester
+         NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
+      }
    }
 
    /**
