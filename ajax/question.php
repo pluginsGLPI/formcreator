@@ -209,7 +209,7 @@ $rand = mt_rand();
                <?php echo _n('Dropdown', 'Dropdowns', 1); ?>
             </label>
             <label for="dropdown_glpi_objects<?php echo $rand; ?>" id="label_glpi_objects">
-               <?php echo _n('GLPI object', 'GLPI objects', 1); ?>
+               <?php echo _n('GLPI object', 'GLPI objects', 1, 'formcreator'); ?>
             </label>
          </td>
          <td width="33%">
