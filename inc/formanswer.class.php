@@ -63,7 +63,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'table'         => getTableForItemType('PluginFormcreatorForm'),
             'field'         => 'name',
             'name'          => PluginFormcreatorForm::getTypeName(1),
-            'datatype'      => 'itemlink',
+            'datatype'      => 'string',
             'massiveaction' => false,
 
          ),
@@ -595,6 +595,15 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   COLLATE = utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
+
+      // Create standard search options
+      $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
+               (NULL, '" . __CLASS__ . "', 2, 2, 0),
+               (NULL, '" . __CLASS__ . "', 3, 3, 0),
+               (NULL, '" . __CLASS__ . "', 4, 4, 0),
+               (NULL, '" . __CLASS__ . "', 5, 5, 0),
+               (NULL, '" . __CLASS__ . "', 6, 6, 0);";
+      $DB->query($query) or die ($DB->error());
 
       return true;
    }
