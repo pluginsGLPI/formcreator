@@ -313,7 +313,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="tab_bg_2">';
-      echo '<td>' . __('Need to be validate ?') . '</td>';
+      echo '<td>' . __('Need to be validate?', 'formcreator') . '</td>';
       echo '<td>';
       Dropdown::showYesNo("validation_required",
          $this->fields["validation_required"],

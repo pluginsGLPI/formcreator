@@ -84,7 +84,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<tr>';
       echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
       echo '<th width="20%">' . __('Title') . '</th>';
-      echo '<th width="20%">' . __('Answer', 'formcreator') . '</th>';
+     echo '<th width="20%">' . _n('Answer', 'Answers', 1 'formcreator') . '</th>';
       echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
       echo '</tr>';
 

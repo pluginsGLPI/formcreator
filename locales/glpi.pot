@@ -334,9 +334,11 @@ msgstr ""
 msgid "Ticket title"
 msgstr ""
 
-#: inc/targetticket.class.php:87
+#: inc/targetticket.class.php:87 inc/answer.class.php:35
 msgid "Answer"
-msgstr ""
+msgid_plural "Answers"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/targetticket.class.php:92
 msgid "Full form"
@@ -413,3 +415,153 @@ msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] ""
 msgstr[1] ""
+
+#: inc/form.class.php:316
+msgid "Need to be validate?"
+msgstr ""
+
+#: inc/form.class.php:323
+msgid "Available validators"
+msgstr ""
+
+#: inc/form.class.php:470
+msgid "My last forms (requester)"
+msgstr ""
+
+#: inc/form.class.php:494
+msgid "All my forms (requester)"
+msgstr ""
+
+#: inc/form.class.php:508
+msgid "My last forms (validator)"
+msgstr ""
+
+#: inc/form.class.php:532
+msgid "All my forms (validator)"
+msgstr ""
+
+#: inc/form.class.php:479
+msgid "No form posted yet"
+msgstr ""
+
+#: inc/formanswer.class.php:140
+msgid "waiting"
+msgstr ""
+
+#: inc/formanswer.class.php:148
+msgid "refused"
+msgstr ""
+
+#: inc/formanswer.class.php:144
+msgid "accepted"
+msgstr ""
+
+#: inc/form.class.php:701
+msgid "Choose a validator"
+msgstr ""
+
+#: inc/formanswer.class.php:73 inc/notificationtargetformanswer.class.php:47
+msgid "Requester"
+msgstr ""
+
+#: inc/formanswer.class.php:82 inc/notificationtargetformanswer.class.php:48
+msgid "Validator"
+msgstr ""
+
+#: inc/formanswer.class.php:226
+msgid "Required if refused"
+msgstr ""
+
+#: inc/formanswer.class.php:232
+msgid "Refuse"
+msgstr ""
+
+#: inc/formanswer.class.php:249
+msgid "Refused comment is required!"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:12 inc/notificationtargetformanswer.class.php:84
+msgid "A form need to be validate"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:13 inc/notificationtargetformanswer.class.php:90
+msgid "The form is refused"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:14 inc/notificationtargetformanswer.class.php:96
+msgid "The form is accepted"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:15 inc/notificationtargetformanswer.class.php:102
+msgid "The form is deleted"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:45
+msgid "Form #"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:46
+msgid "Form name"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:50
+msgid "Full form answers"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:51
+msgid "Refused comment"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:52
+msgid "Validation link"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:85
+msgid "A form from GLPI need to be validate"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:86
+msgid ""
+"Hi,\n"
+"A form from GLPI need to be validate and you have been choosen as the validator.\n"
+"You can access it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid "Your form have been refused by the validator"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:92
+msgid ""
+"Hi,\n"
+"We are sorry to inform you that your form have been refused by the validator for the reason below:\n"
+"##formcreator.validation_comment##\n\n"
+"You can still modify and resubmit it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:97
+msgid "Your form have been accepted by the validator"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:98
+msgid ""
+"Hi,\n"
+"We are pleased to inform you that your form have been accepted by the validator.\n"
+"Your request will be considered soon."
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:103
+msgid "Your form have been deleted by an administrator"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:104
+msgid ""
+"Hi,\n"
+"We are sorry to inform you that your request can't be considered and have been deleted by an administrator."
+msgstr ""
+
+#: setup.php:90
+msgid "Forms waiting for validation"
+msgstr ""

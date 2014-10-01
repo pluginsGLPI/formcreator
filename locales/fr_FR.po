@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-09-08 15:11+0100\n"
+"PO-Revision-Date: 2014-09-30 17:39+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -352,9 +352,11 @@ msgstr "Modifier une destination"
 msgid "Ticket title"
 msgstr "Titre du ticket"
 
-#: inc/targetticket.class.php:87
+#: inc/targetticket.class.php:87 inc/answer.class.php:35
 msgid "Answer"
-msgstr "Réponse"
+msgid_plural "Answers"
+msgstr[0] "Réponse"
+msgstr[1] "Réponses"
 
 #: inc/targetticket.class.php:92
 msgid "Full form"
@@ -432,3 +434,182 @@ msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Ticket cible"
 msgstr[1] "Tickets cible"
+
+#: inc/form.class.php:316
+msgid "Need to be validate?"
+msgstr "Validation requise ?"
+
+#: inc/form.class.php:323
+msgid "Available validators"
+msgstr "Valideurs disponibles"
+
+#: inc/form.class.php:470
+msgid "My last forms (requester)"
+msgstr "Mes derniers formulaires (Demandeur)"
+
+#: inc/form.class.php:494
+msgid "All my forms (requester)"
+msgstr "Tous mes formulaires (Demandeur)"
+
+#: inc/form.class.php:508
+msgid "My last forms (validator)"
+msgstr "Mes derniers formulaires (Valideur)"
+
+#: inc/form.class.php:532
+msgid "All my forms (validator)"
+msgstr "Tous mes formulaires (Valideur)"
+
+#: inc/form.class.php:479
+msgid "No form posted yet"
+msgstr "Aucun formulaire saisi pour le moment"
+
+#: inc/formanswer.class.php:140
+msgid "waiting"
+msgstr "en attente"
+
+#: inc/formanswer.class.php:148
+msgid "refused"
+msgstr "refusé"
+
+#: inc/formanswer.class.php:144
+msgid "accepted"
+msgstr "accepté"
+
+#: inc/form.class.php:701
+msgid "Choose a validator"
+msgstr "Choisissez un valideur"
+
+#: inc/formanswer.class.php:73 inc/notificationtargetformanswer.class.php:47
+msgid "Requester"
+msgstr "Demandeur"
+
+#: inc/formanswer.class.php:82 inc/notificationtargetformanswer.class.php:48
+msgid "Validator"
+msgstr "Valideur"
+
+#: inc/formanswer.class.php:226
+msgid "Required if refused"
+msgstr "Requis en cas de refus"
+
+#: inc/formanswer.class.php:232
+msgid "Refuse"
+msgstr "Refuser"
+
+#: inc/formanswer.class.php:249
+msgid "Refused comment is required!"
+msgstr "Le commentaire de refus est obligatoire !"
+
+#: inc/notificationtargetformanswer.class.php:12
+#: inc/notificationtargetformanswer.class.php:84
+msgid "A form need to be validate"
+msgstr "Un formulaire est en attente de validation"
+
+#: inc/notificationtargetformanswer.class.php:13
+#: inc/notificationtargetformanswer.class.php:90
+msgid "The form is refused"
+msgstr "Le formulaire a été refusé"
+
+#: inc/notificationtargetformanswer.class.php:14
+#: inc/notificationtargetformanswer.class.php:96
+msgid "The form is accepted"
+msgstr "Le formulaire est accepté"
+
+#: inc/notificationtargetformanswer.class.php:15
+#: inc/notificationtargetformanswer.class.php:102
+msgid "The form is deleted"
+msgstr "Le formulaire a été supprimé"
+
+#: inc/notificationtargetformanswer.class.php:45
+msgid "Form #"
+msgstr "Formulaire N°"
+
+#: inc/notificationtargetformanswer.class.php:46
+msgid "Form name"
+msgstr "Nom du formulaire"
+
+#: inc/notificationtargetformanswer.class.php:50
+msgid "Full form answers"
+msgstr "Formulaire complet"
+
+#: inc/notificationtargetformanswer.class.php:51
+msgid "Refused comment"
+msgstr "Commentaire de refus"
+
+#: inc/notificationtargetformanswer.class.php:52
+msgid "Validation link"
+msgstr "Lien de validation"
+
+#: inc/notificationtargetformanswer.class.php:85
+msgid "A form from GLPI need to be validate"
+msgstr "Un formulaire GLPI est en attente de validation"
+
+#: inc/notificationtargetformanswer.class.php:86
+msgid ""
+"Hi,\n"
+"A form from GLPI need to be validate and you have been choosen as the "
+"validator.\n"
+"You can access it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+"Bonjour,\n"
+"Un formulaire GLPI est en attente de validation et vous avez été désigné "
+"comme valideur.\n"
+"Vous pouvez y accédé en suivant le lien ci-dessous :\n"
+"##formcreator.validation_link##"
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid "Your form have been refused by the validator"
+msgstr "Votre formulaire a été refusé par le valideur"
+
+#: inc/notificationtargetformanswer.class.php:92
+msgid ""
+"Hi,\n"
+"We are sorry to inform you that your form have been refused by the validator "
+"for the reason below:\n"
+"##formcreator.validation_comment##\n"
+"\n"
+"You can still modify and resubmit it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+"Bonjour,\n"
+"Nous somme au regret de vous annoncé que votre formulaire a été refusé par "
+"le valideur pour la raison suivante :\n"
+"##formcreator.validation_comment##\n"
+"\n"
+"Vous pouvez toutefois modifier vos réponse et envoyer de nouveau le "
+"formulaire en suivant le lien ci-dessous :\n"
+"##formcreator.validation_link##"
+
+#: inc/notificationtargetformanswer.class.php:97
+msgid "Your form have been accepted by the validator"
+msgstr "Votre formulaire a été accepté par le valideur"
+
+#: inc/notificationtargetformanswer.class.php:98
+msgid ""
+"Hi,\n"
+"We are pleased to inform you that your form have been accepted by the "
+"validator.\n"
+"Your request will be considered soon."
+msgstr ""
+"Bonjour,\n"
+"Nous avons le plaisir de vous annoncé que votre formulaire a été accepté par "
+"le valideur.\n"
+"Votre demande sera prise en compte très prochainement."
+
+#: inc/notificationtargetformanswer.class.php:103
+msgid "Your form have been deleted by an administrator"
+msgstr "Votre formulaire a été supprimé par un administrateur"
+
+#: inc/notificationtargetformanswer.class.php:104
+msgid ""
+"Hi,\n"
+"We are sorry to inform you that your request can't be considered and have "
+"been deleted by an administrator."
+msgstr ""
+"Bonjour,\n"
+"Nous avons le regret de vous annoncé que votre formulaire n'est pas "
+"recevable et a été supprimé par un administrateur."
+
+#: setup.php:90
+msgid "Forms waiting for validation"
+msgstr "Formulaire en attente de validation"

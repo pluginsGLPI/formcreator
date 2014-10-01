@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-09-08 15:10+0100\n"
+"PO-Revision-Date: 2014-09-30 17:26+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -353,9 +353,11 @@ msgstr "Edit a destination"
 msgid "Ticket title"
 msgstr "Ticket title"
 
-#: inc/targetticket.class.php:87
+#: inc/targetticket.class.php:87 inc/answer.class.php:35
 msgid "Answer"
-msgstr "Answer"
+msgid_plural "Answers"
+msgstr[0] "Answer"
+msgstr[1] "Answers"
 
 #: inc/targetticket.class.php:92
 msgid "Full form"
@@ -433,3 +435,181 @@ msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Target ticket"
 msgstr[1] "Target tickets"
+
+#: inc/form.class.php:316
+msgid "Need to be validate?"
+msgstr "Need to be validate?"
+
+#: inc/form.class.php:323
+msgid "Available validators"
+msgstr "Available validators"
+
+#: inc/form.class.php:470
+msgid "My last forms (requester)"
+msgstr "My last forms (requester)"
+
+#: inc/form.class.php:494
+msgid "All my forms (requester)"
+msgstr "All my forms (requester)"
+
+#: inc/form.class.php:508
+msgid "My last forms (validator)"
+msgstr "My last forms (validator)"
+
+#: inc/form.class.php:532
+msgid "All my forms (validator)"
+msgstr "All my forms (validator)"
+
+#: inc/form.class.php:479
+msgid "No form posted yet"
+msgstr "No form posted yet"
+
+#: inc/formanswer.class.php:140
+msgid "waiting"
+msgstr "waiting"
+
+#: inc/formanswer.class.php:148
+msgid "refused"
+msgstr "refused"
+
+#: inc/formanswer.class.php:144
+msgid "accepted"
+msgstr "accepted"
+
+#: inc/form.class.php:701
+msgid "Choose a validator"
+msgstr "Choose a validator"
+
+#: inc/formanswer.class.php:73 inc/notificationtargetformanswer.class.php:47
+msgid "Requester"
+msgstr "Requester"
+
+#: inc/formanswer.class.php:82 inc/notificationtargetformanswer.class.php:48
+msgid "Validator"
+msgstr "Validator"
+
+#: inc/formanswer.class.php:226
+msgid "Required if refused"
+msgstr "Required if refused"
+
+#: inc/formanswer.class.php:232
+msgid "Refuse"
+msgstr "Refuse"
+
+#: inc/formanswer.class.php:249
+msgid "Refused comment is required!"
+msgstr "Refused comment is required!"
+
+#: inc/notificationtargetformanswer.class.php:12
+#: inc/notificationtargetformanswer.class.php:84
+msgid "A form need to be validate"
+msgstr "A form need to be validate"
+
+#: inc/notificationtargetformanswer.class.php:13
+#: inc/notificationtargetformanswer.class.php:90
+msgid "The form is refused"
+msgstr "The form is refused"
+
+#: inc/notificationtargetformanswer.class.php:14
+#: inc/notificationtargetformanswer.class.php:96
+msgid "The form is accepted"
+msgstr "The form is accepted"
+
+#: inc/notificationtargetformanswer.class.php:15
+#: inc/notificationtargetformanswer.class.php:102
+msgid "The form is deleted"
+msgstr "The form is deleted"
+
+#: inc/notificationtargetformanswer.class.php:45
+msgid "Form #"
+msgstr "Form #"
+
+#: inc/notificationtargetformanswer.class.php:46
+msgid "Form name"
+msgstr "Form name"
+
+#: inc/notificationtargetformanswer.class.php:50
+msgid "Full form answers"
+msgstr "Full form answers"
+
+#: inc/notificationtargetformanswer.class.php:51
+msgid "Refused comment"
+msgstr "Refused comment"
+
+#: inc/notificationtargetformanswer.class.php:52
+msgid "Validation link"
+msgstr "Validation link"
+
+#: inc/notificationtargetformanswer.class.php:85
+msgid "A form from GLPI need to be validate"
+msgstr "A form from GLPI need to be validate"
+
+#: inc/notificationtargetformanswer.class.php:86
+msgid ""
+"Hi,\n"
+"A form from GLPI need to be validate and you have been choosen as the "
+"validator.\n"
+"You can access it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+"Hi,\n"
+"A form from GLPI need to be validate and you have been choosen as the "
+"validator.\n"
+"You can access it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid "Your form have been refused by the validator"
+msgstr "Your form have been refused by the validator"
+
+#: inc/notificationtargetformanswer.class.php:92
+msgid ""
+"Hi,\n"
+"We are sorry to inform you that your form have been refused by the validator "
+"for the reason below:\n"
+"##formcreator.validation_comment##\n"
+"\n"
+"You can still modify and resubmit it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+"Hi,\n"
+"We are sorry to inform you that your form have been refused by the validator "
+"for the reason below:\n"
+"##formcreator.validation_comment##\n"
+"\n"
+"You can still modify and resubmit it by clicking onto this link:\n"
+"##formcreator.validation_link##"
+
+#: inc/notificationtargetformanswer.class.php:97
+msgid "Your form have been accepted by the validator"
+msgstr "Your form have been accepted by the validator"
+
+#: inc/notificationtargetformanswer.class.php:98
+msgid ""
+"Hi,\n"
+"We are pleased to inform you that your form have been accepted by the "
+"validator.\n"
+"Your request will be considered soon."
+msgstr ""
+"Hi,\n"
+"We are pleased to inform you that your form have been accepted by the "
+"validator.\n"
+"Your request will be considered soon."
+
+#: inc/notificationtargetformanswer.class.php:103
+msgid "Your form have been deleted by an administrator"
+msgstr "Your form have been deleted by an administrator"
+
+#: inc/notificationtargetformanswer.class.php:104
+msgid ""
+"Hi,\n"
+"We are sorry to inform you that your request can't be considered and have "
+"been deleted by an administrator."
+msgstr ""
+"Hi,\n"
+"We are sorry to inform you that your request can't be considered and have "
+"been deleted by an administrator."
+
+#: setup.php:90
+msgid "Forms waiting for validation"
+msgstr "Forms waiting for validation"
