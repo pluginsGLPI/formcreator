@@ -408,26 +408,20 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return null                     Nothing, just display the list
     */
-   // public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
-   // {
-   //    $uri = strrchr($_SERVER['HTTP_REFERER'], '/');
-   //    if(strpos($uri, '?')) $uri = substr($uri, 0, strpos($uri, '?'));
-   //    $uri = trim($uri, '/');
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
+   {
+      $uri = strrchr($_SERVER['HTTP_REFERER'], '/');
+      if(strpos($uri, '?')) $uri = substr($uri, 0, strpos($uri, '?'));
+      $uri = trim($uri, '/');
 
-   //    switch ($uri) {
-   //       case "form.form.php":
-   //          echo '<div style="text-align: left">';
-   //          $item->displayUserForm($item);
-   //          echo '</div>';
-   //          break;
-   //       default:
-   //          $params = $_REQUEST;
-   //          // $params += self::getDefaultSearchRequest();
-   //          Search::manageGetValues(__CLASS__);
-   //          Search::showGenericSearch(__CLASS__, $params);
-   //          Search::showList(__CLASS__, $params);
-   //    }
-   // }
+      switch ($uri) {
+         case "form.form.php":
+            echo '<div style="text-align: left">';
+            $item->displayUserForm($item);
+            echo '</div>';
+            break;
+      }
+   }
 
 
    public function defineTabs($options=array())
