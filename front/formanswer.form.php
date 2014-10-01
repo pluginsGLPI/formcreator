@@ -1,8 +1,6 @@
 <?php
 include ("../../../inc/includes.php");
 
-Session::checkRight("config", "w");
-
 // Check if plugin is activated...
 $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {

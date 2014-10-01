@@ -57,3 +57,20 @@ function plugin_formcreator_getDropdown()
        'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
    );
 }
+
+function plugin_formcreator_addDefaultWhere($type) {
+
+   // Example of default WHERE item to be added
+   // No need of the function if you do not have specific cases
+   switch ($type) {
+//       case "PluginExampleExample" :
+      case "PluginFormcreatorFormanswer" :
+         if ((!isset($_SESSION['glpiactiveprofile']['validate_request'])
+                  || !$_SESSION['glpiactiveprofile']['validate_request'])
+                && (!isset($_SESSION['glpiactiveprofile']['validate_incident'])
+                  || !$_SESSION['glpiactiveprofile']['validate_incident'])) {
+            return " `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
+         }
+   }
+   return "";
+}
