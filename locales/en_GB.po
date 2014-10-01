@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-01 10:05+0100\n"
+"PO-Revision-Date: 2014-10-01 10:30+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -619,3 +619,11 @@ msgstr ""
 #: setup.php:90
 msgid "Forms waiting for validation"
 msgstr "Forms waiting for validation"
+
+#: inc/formanswer.class.php:220
+msgid "Comment"
+msgstr "Comment"
+
+#: inc/formanswer.class.php:235
+msgid "Accept"
+msgstr "Accept"

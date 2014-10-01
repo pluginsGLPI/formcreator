@@ -571,3 +571,11 @@ msgstr ""
 #: setup.php:90
 msgid "Forms waiting for validation"
 msgstr ""
+
+#: inc/formanswer.class.php:220
+msgid "Comment"
+msgstr ""
+
+#: inc/formanswer.class.php:235
+msgid "Accept"
+msgstr ""

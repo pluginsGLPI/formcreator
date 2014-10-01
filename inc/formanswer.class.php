@@ -217,7 +217,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       } elseif(($this->fields['status'] == 'waiting') && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
 
          echo '<div class="form-group required">';
-         echo '<label for="comment">' . __('Comment') . ' <span class="red">*</span></label>';
+         echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
          $value = htmlentities(stripslashes(strip_tags(html_entity_decode($this->fields['comment']))));
          echo '<textarea class="form-control"
                   rows="5"
