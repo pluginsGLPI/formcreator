@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-09-30 17:26+0100\n"
+"PO-Revision-Date: 2014-10-01 10:05+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -225,6 +225,12 @@ msgstr "Select"
 #: inc/fields/text-field.class.php:100 inc/fields/textarea-field.class.php:100
 msgid "Text"
 msgstr "Text"
+
+#: inc/fields/glpiselect-field.class.php:10
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "GLPI object"
+msgstr[1] "GLPI objects"
 
 #: inc/fields/text-field.class.php:79 inc/fields/textarea-field.class.php:79
 msgid "The text is too short (minimum %d characters):"

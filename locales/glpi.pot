@@ -218,6 +218,12 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
+#: inc/fields/glpiselect-field.class.php:10
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] ""
+msgstr[1] ""
+
 #: inc/fields/text-field.class.php:79 inc/fields/textarea-field.class.php:79
 msgid "The text is too short (minimum %d characters):"
 msgstr ""

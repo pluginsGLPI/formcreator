@@ -7,7 +7,7 @@ class glpiselectField extends dropdownField
 {
    public static function getName()
    {
-      return _n('GLPI object', 'GLPI objects', 1);
+      return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 
    public static function getPrefs()
