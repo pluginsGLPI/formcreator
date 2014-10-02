@@ -169,7 +169,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       // Get default request type
       $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $GLOBALS['DB']->query($query) or die ($DB->error());
+      $result  = $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       list($requesttypes_id) = $GLOBALS['DB']->fetch_array($result);
 
       $datas['requesttypes_id'] = $requesttypes_id;
