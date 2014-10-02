@@ -58,12 +58,15 @@ function plugin_formcreator_getDropdown()
    );
 }
 
-function plugin_formcreator_addDefaultWhere($type) {
-
-   // Example of default WHERE item to be added
-   // No need of the function if you do not have specific cases
+/**
+ * Define specific search request
+ *
+ * @param  String $type    Itemtype for the search engine
+ * @return String          Specific search request
+ */
+function plugin_formcreator_addDefaultWhere($type)
+{
    switch ($type) {
-//       case "PluginExampleExample" :
       case "PluginFormcreatorFormanswer" :
          if ((!isset($_SESSION['glpiactiveprofile']['validate_request'])
                   || !$_SESSION['glpiactiveprofile']['validate_request'])
@@ -71,6 +74,8 @@ function plugin_formcreator_addDefaultWhere($type) {
                   || !$_SESSION['glpiactiveprofile']['validate_incident'])) {
             return " `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
          }
+         break;
+      default:
+         return '';
    }
-   return "";
 }
