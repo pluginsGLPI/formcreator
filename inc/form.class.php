@@ -676,7 +676,7 @@ class PluginFormcreatorForm extends CommonDBTM
          } else {
             $validators  = array();
             $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-            $query = 'SELECT u.`id`, u.`name`, u.`realname`
+            $query = 'SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
                       FROM `glpi_users` u
                       INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                       INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
@@ -687,7 +687,13 @@ class PluginFormcreatorForm extends CommonDBTM
                       ORDER BY u.`name`';
             $result = $GLOBALS['DB']->query($query);
             while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-               $validators[$user['id']] = empty($user['realname']) ? $user['name'] : $user['realname'];
+               $firstname = !empty($user['firstname']) ? $user['firstname'] : '';
+               $realname  = !empty($user['realname'])  ? $user['realname']  : '';
+               if (!empty($firstname) || !empty($realname)) {
+                  $validators[$user['id']] = trim($firstname . ' ' . $realname);
+               } else {
+                  $validators[$user['id']] = $user['name'];
+               }
             }
          }
 
