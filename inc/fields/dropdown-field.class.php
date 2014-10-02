@@ -25,19 +25,29 @@ class dropdownField implements Field
          return;
       }
 
-      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
+      echo '<div class="form-group liste' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
       if(!empty($field['values'])) {
-         Dropdown::show($field['values'], array(
-            'name'                => 'formcreator_field_' . $field['id'],
-            'value'               => $default_value,
-            'comments'            => false,
-            'display_emptychoice' => $field['show_empty'],
-         ));
+         if ($field['values'] == 'User') {
+            User::dropdown(array(
+               'name'                => 'formcreator_field_' . $field['id'],
+               'value'               => $default_value,
+               'comments'            => false,
+               'right'               => 'all',
+               'display_emptychoice' => $field['show_empty'],
+            ));
+         } else {
+            Dropdown::show($field['values'], array(
+               'name'                => 'formcreator_field_' . $field['id'],
+               'value'               => $default_value,
+               'comments'            => false,
+               'display_emptychoice' => $field['show_empty'],
+            ));
+         }
       }
 
       echo PHP_EOL . '<div class="help-block">' . html_entity_decode($field['description']) . '</div>' . PHP_EOL;
