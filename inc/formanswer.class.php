@@ -179,6 +179,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          echo '<div class="refused_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
+      } elseif($this->fields['status'] == 'accepted') {
+         echo '<div class="accepted_header">';
+         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
+         echo '</div>';
       }
 
       // Get and display sections of the form
