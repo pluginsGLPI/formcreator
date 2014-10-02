@@ -101,7 +101,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
          'plugin_formcreator_deleted'         => array(
                'name'     => __('The form is deleted', 'formcreator'),
                'subject'  => __('Your form have been deleted by an administrator', 'formcreator'),
-               'content'  => __("Hi,\\nWe are sorry to inform you that your request can't be considered and have been deleted by an administrator.", 'formcreator'),
+               'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and have been deleted by an administrator.', 'formcreator'),
                'notified' => self::AUTHOR,
             ),
       );
