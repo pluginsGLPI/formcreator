@@ -536,6 +536,30 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                }
                $value   = PluginFormcreatorFields::getValue($question_line, $value);
 
+
+
+               // if ($question_line['show_type'] == 'hide' ) {
+               //    switch ($field['show_condition']) {
+               //       case 'notequal':
+               //          $condition = '!=';
+               //          break;
+               //       case 'lower':
+               //          $condition = '<';
+               //          break;
+               //       case 'greater':
+               //          $condition = '>';
+               //          break;
+
+               //       default:
+               //          $condition = '==';
+               //          break;
+               //    }
+               //    $hidden = eval($question_line['show_value'] . ' ' . $condition . ' ' . $question_line['show_field'])
+               // }
+
+
+
+
                $output .= $question_no . ') ' . $question_line['name'] . ' : ';
                $output .= $value . PHP_EOL . PHP_EOL;
             }
@@ -603,7 +627,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 4, 4, 0),
                (NULL, '" . __CLASS__ . "', 5, 5, 0),
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
-      $DB->query($query) or die ($DB->error());
+      $GLOBALS['DB']->query($query) or die ($DB->error());
 
       return true;
    }
