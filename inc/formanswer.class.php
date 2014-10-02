@@ -627,7 +627,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 4, 4, 0),
                (NULL, '" . __CLASS__ . "', 5, 5, 0),
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
-      $GLOBALS['DB']->query($query) or die ($DB->error());
+      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
 
       return true;
    }
