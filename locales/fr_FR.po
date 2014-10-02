@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-01 10:30+0100\n"
+"PO-Revision-Date: 2014-10-02 11:07+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -495,7 +495,7 @@ msgstr "Valideur"
 
 #: inc/formanswer.class.php:226
 msgid "Required if refused"
-msgstr "Requis en cas de refus"
+msgstr "Obligatoire en cas de refus"
 
 #: inc/formanswer.class.php:232
 msgid "Refuse"
@@ -518,7 +518,7 @@ msgstr "Le formulaire a été refusé"
 #: inc/notificationtargetformanswer.class.php:14
 #: inc/notificationtargetformanswer.class.php:96
 msgid "The form is accepted"
-msgstr "Le formulaire est accepté"
+msgstr "Le formulaire a été accepté"
 
 #: inc/notificationtargetformanswer.class.php:15
 #: inc/notificationtargetformanswer.class.php:102
@@ -560,7 +560,7 @@ msgstr ""
 "Bonjour,\n"
 "Un formulaire GLPI est en attente de validation et vous avez été désigné "
 "comme valideur.\n"
-"Vous pouvez y accédé en suivant le lien ci-dessous :\n"
+"Vous pouvez y accéder en suivant le lien ci-dessous :\n"
 "##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:91
@@ -578,11 +578,11 @@ msgid ""
 "##formcreator.validation_link##"
 msgstr ""
 "Bonjour,\n"
-"Nous somme au regret de vous annoncé que votre formulaire a été refusé par "
+"Nous somme au regret de vous annoncer que votre formulaire a été refusé par "
 "le valideur pour la raison suivante :\n"
 "##formcreator.validation_comment##\n"
 "\n"
-"Vous pouvez toutefois modifier vos réponse et envoyer de nouveau le "
+"Vous pouvez toutefois modifier vos réponses et envoyer de nouveau le "
 "formulaire en suivant le lien ci-dessous :\n"
 "##formcreator.validation_link##"
 
@@ -598,8 +598,8 @@ msgid ""
 "Your request will be considered soon."
 msgstr ""
 "Bonjour,\n"
-"Nous avons le plaisir de vous annoncé que votre formulaire a été accepté par "
-"le valideur.\n"
+"Nous avons le plaisir de vous annoncer que votre formulaire a été accepté "
+"par le valideur.\n"
 "Votre demande sera prise en compte très prochainement."
 
 #: inc/notificationtargetformanswer.class.php:103
@@ -609,11 +609,11 @@ msgstr "Votre formulaire a été supprimé par un administrateur"
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your request can't be considered and have "
+"We are sorry to inform you that your request cannot be considered and have "
 "been deleted by an administrator."
 msgstr ""
 "Bonjour,\n"
-"Nous avons le regret de vous annoncé que votre formulaire n'est pas "
+"Nous avons le regret de vous annoncer que votre formulaire n'est pas "
 "recevable et a été supprimé par un administrateur."
 
 #: setup.php:90
@@ -627,3 +627,7 @@ msgstr "Commentaire"
 #: inc/formanswer.class.php:235
 msgid "Accept"
 msgstr "Accepter"
+
+#: inc/form.class.php:511
+msgid "No form waiting for validation"
+msgstr "Aucun formulaire en attente de validation"

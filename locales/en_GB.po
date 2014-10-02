@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-01 10:30+0100\n"
+"PO-Revision-Date: 2014-10-02 11:08+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -609,11 +609,11 @@ msgstr "Your form have been deleted by an administrator"
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your request can't be considered and have "
+"We are sorry to inform you that your request cannot be considered and have "
 "been deleted by an administrator."
 msgstr ""
 "Hi,\n"
-"We are sorry to inform you that your request can't be considered and have "
+"We are sorry to inform you that your request cannot be considered and have "
 "been deleted by an administrator."
 
 #: setup.php:90
@@ -627,3 +627,7 @@ msgstr "Comment"
 #: inc/formanswer.class.php:235
 msgid "Accept"
 msgstr "Accept"
+
+#: inc/form.class.php:511
+msgid "No form waiting for validation"
+msgstr "No form waiting for validation"

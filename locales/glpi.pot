@@ -565,7 +565,7 @@ msgstr ""
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your request can't be considered and have been deleted by an administrator."
+"We are sorry to inform you that your request cannot be considered and have been deleted by an administrator."
 msgstr ""
 
 #: setup.php:90
@@ -578,4 +578,8 @@ msgstr ""
 
 #: inc/formanswer.class.php:235
 msgid "Accept"
+msgstr ""
+
+#: inc/form.class.php:511
+msgid "No form waiting for validation"
 msgstr ""
