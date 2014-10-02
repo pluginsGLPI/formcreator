@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-02 11:07+0100\n"
+"PO-Revision-Date: 2014-10-02 11:19+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/GLPI/"
 "language/fr_FR/)\n"
@@ -532,6 +532,12 @@ msgstr "Formulaire N°"
 #: inc/notificationtargetformanswer.class.php:46
 msgid "Form name"
 msgstr "Nom du formulaire"
+
+#: inc/formanswer.class.php:35
+msgid "Form answer"
+msgid_plural "Form answers"
+msgstr[0] "Formulaire saisi"
+msgstr[1] "Formulaires saisis"
 
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"

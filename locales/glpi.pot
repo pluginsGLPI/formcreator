@@ -510,6 +510,12 @@ msgstr ""
 msgid "Form name"
 msgstr ""
 
+#: inc/formanswer.class.php:35
+msgid "Form answer"
+msgid_plural "Form answers"
+msgstr[0] ""
+msgstr[1] ""
+
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
 msgstr ""
