@@ -20,7 +20,7 @@ class dropdownField implements Field
       if (!$edit) {
          echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo $datas['formcreator_field_' . $field['id']];
+         echo self::displayValue($datas['formcreator_field_' . $field['id']], $field['values']);
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -186,7 +186,11 @@ class dropdownField implements Field
 
    public static function displayValue($value, $values)
    {
-      return Dropdown::getDropdownName(getTableForItemtype($values), $value);
+      if ($values == 'User') {
+         return getUserName($value);
+      } else {
+         return Dropdown::getDropdownName(getTableForItemType($values), $value);
+      }
    }
 
    public static function isValid($field, $value, $datas)

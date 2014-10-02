@@ -664,25 +664,17 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Show validator selector
       if ($item->fields['validation_required']) {
-         $query = "SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
+         $validators  = array();
+
+         $query = "SELECT u.`id`
                    FROM `glpi_users` u
                    LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
                    WHERE fv.`forms_id` = '" . $this->getID(). "'";
          $result = $GLOBALS['DB']->query($query);
-         if ($GLOBALS['DB']->numrows($result) > 0) {
-            while($user = $GLOBALS['DB']->fetch_array($result)) {
-               $firstname = !empty($user['firstname']) ? $user['firstname'] : '';
-               $realname  = !empty($user['realname'])  ? $user['realname']  : '';
-               if (!empty($firstname) || !empty($realname)) {
-                  $validators[$user['id']] = trim($firstname . ' ' . $realname);
-               } else {
-                  $validators[$user['id']] = $user['name'];
-               }
-            }
-         } else {
-            $validators  = array();
+
+         if ($GLOBALS['DB']->numrows($result) == 0) {
             $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-            $query = 'SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
+            $query = 'SELECT u.`id`
                       FROM `glpi_users` u
                       INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                       INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
@@ -692,15 +684,10 @@ class PluginFormcreatorForm extends CommonDBTM
                       GROUP BY u.`id`
                       ORDER BY u.`name`';
             $result = $GLOBALS['DB']->query($query);
-            while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-               $firstname = !empty($user['firstname']) ? $user['firstname'] : '';
-               $realname  = !empty($user['realname'])  ? $user['realname']  : '';
-               if (!empty($firstname) || !empty($realname)) {
-                  $validators[$user['id']] = trim($firstname . ' ' . $realname);
-               } else {
-                  $validators[$user['id']] = $user['name'];
-               }
-            }
+         }
+
+         while($user = $GLOBALS['DB']->fetch_assoc($result)) {
+            $validators[$user['id']] = getUserName($user['id']);
          }
 
          echo '<div class="form-group required" id="form-validator">';
