@@ -860,6 +860,13 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
          // Migration from previous version
+         if (FieldExists($table, 'validation_required', false)) {
+            $query = "ALTER TABLE `$table`
+                      ADD `validation_required` tinyint(1) NOT NULL DEFAULT '0';";
+            $GLOBALS['DB']->query($query);
+         }
+
+         // Migration from previous version
          if (!FieldExists($table, 'plugin_formcreator_categories_id', false)) {
             $query = "ALTER TABLE `$table`
                       ADD `plugin_formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '1';";
