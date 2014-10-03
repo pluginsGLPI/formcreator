@@ -40,13 +40,20 @@ if ($plugin->isActivated("formcreator")) {
 
    // Show target ticket form
    } else {
-      Html::header(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF'],
-         'plugins',
-         'formcreator',
-         'options'
-      );
+      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+         Html::helpHeader(
+            __('Form list', 'formcreator'),
+            $_SERVER['PHP_SELF']
+         );
+      } else {
+         Html::header(
+            __('Form list', 'formcreator'),
+            $_SERVER['PHP_SELF'],
+            'plugins',
+            'formcreator',
+            'options'
+         );
+      }
 
       $formanswer->showForm($_REQUEST);
 
