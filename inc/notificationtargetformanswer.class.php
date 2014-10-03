@@ -59,7 +59,8 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
                'events' => NotificationTarget::TAG_FOR_ALL_EVENTS));
       }
    }
-   public function getAdditionalTargets($event=’’)
+
+   public function getAdditionalTargets($event='')
    {
       $this->addTarget(self::AUTHOR, __('Author'));
       $this->addTarget(self::APPROVER, __('Approver'));
