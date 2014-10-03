@@ -8,13 +8,20 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
 }
 
 if(PluginFormcreatorFormanswer::canView()) {
-   Html::header(
-      _n('Form', 'Forms', 2, 'formcreator'),
-      $_SERVER['PHP_SELF'],
-      'plugins',
-      'formcreator',
-      'options'
-   );
+   if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+      Html::helpHeader(
+         __('Form Creator', 'formcreator'),
+         $_SERVER['PHP_SELF']
+      );
+   } else {
+      Html::header(
+         __('Form Creator', 'formcreator'),
+         $_SERVER['PHP_SELF'],
+         'plugins',
+         'formcreator',
+         'options'
+      );
+   }
 
    Search::show('PluginFormcreatorFormanswer');
 
