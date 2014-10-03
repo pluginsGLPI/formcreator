@@ -42,12 +42,12 @@ if ($plugin->isActivated("formcreator")) {
    } else {
       if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          Html::helpHeader(
-            __('Form list', 'formcreator'),
+            __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF']
          );
       } else {
          Html::header(
-            __('Form list', 'formcreator'),
+            __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF'],
             'plugins',
             'formcreator',
