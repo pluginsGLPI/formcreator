@@ -304,9 +304,10 @@ $rand = mt_rand();
          </td>
          <td width="33%">
             <?php
+            $rand2 = mt_rand();
             Dropdown::show('RuleRightParameter', array(
                'name'  => 'ldap_attribute',
-               'rand'  => $rand,
+               'rand'  => $rand2,
                'value' => (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : '',
             ));
             ?>
