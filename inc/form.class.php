@@ -859,7 +859,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
          // Migration from previous version
-         if (FieldExists($table, 'validation_required', false)) {
+         if (!FieldExists($table, 'validation_required', false)) {
             $query = "ALTER TABLE `$table`
                       ADD `validation_required` tinyint(1) NOT NULL DEFAULT '0';";
             $GLOBALS['DB']->query($query);
