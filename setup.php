@@ -81,7 +81,7 @@ function plugin_init_formcreator ()
    // Config page
    $plugin = new Plugin();
    $links  = array();
-   if (Session::haveRight('config','w') && $plugin->isActivated("formcreator")) {
+   if (Session::haveRight('entity','w') && $plugin->isActivated("formcreator")) {
       $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
       $links['config'] = '/plugins/formcreator/front/form.php';
       $links['add']    = '/plugins/formcreator/front/form.form.php';

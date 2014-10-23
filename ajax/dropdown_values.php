@@ -1,7 +1,7 @@
 <?php
 include ('../../../inc/includes.php');
 
-Session::checkRight("config", "w");
+Session::checkRight("entity", "w");
 
 if(class_exists($_REQUEST['dropdown_itemtype'])) {
    Dropdown::show($_REQUEST['dropdown_itemtype'], array(

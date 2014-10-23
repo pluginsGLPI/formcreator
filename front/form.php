@@ -2,7 +2,7 @@
 require_once ('../../../inc/includes.php');
 
 // Check if current user have config right
-Session::checkRight("config", "w");
+Session::checkRight("entity", "w");
 
 // Check if plugin is activated...
 $plugin = new Plugin();

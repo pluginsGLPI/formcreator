@@ -1,7 +1,7 @@
 <?php
 include ('../../../inc/includes.php');
 
-Session::checkRight("config", "w");
+Session::checkRight("entity", "w");
 
 // Check if plugin is activated...
 $plugin = new Plugin();

@@ -3,12 +3,12 @@ class PluginFormcreatorCategory extends CommonDropdown
 {
    static function canCreate()
    {
-      return Session::haveRight('config', 'w');
+      return Session::haveRight('entity', 'w');
    }
 
    static function canView()
    {
-      return Session::haveRight('config', 'r');
+      return Session::haveRight('entity', 'r');
    }
 
    public static function getTypeName($nb = 1)

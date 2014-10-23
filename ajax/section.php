@@ -1,7 +1,7 @@
 <?php
 include ('../../../inc/includes.php');
 
-Session::checkRight("config", "w");
+Session::checkRight("entity", "w");
 
 if(empty($_REQUEST['section_id'])) {
    $section_id    = 0;

@@ -1,6 +1,6 @@
 <?php
 include ('../../../inc/includes.php');
-Session::checkRight("config", "w");
+Session::checkRight("entity", "w");
 
 echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/target.form.php">';
 echo '<table class="tab_cadre_fixe">';

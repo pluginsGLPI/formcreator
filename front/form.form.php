@@ -64,7 +64,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Show forms form
    } else {
-      Session::checkRight("config", "w");
+      Session::checkRight("entity", "w");
 
       Html::header(
          __('Form Creator', 'formcreator'),
