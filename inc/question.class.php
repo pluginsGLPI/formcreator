@@ -763,7 +763,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   break;
             }
 
-            $query_udate = 'UPDATE $table SET
+            $query_udate = 'UPDATE ' . $table . ' SET
                                `fieldtype`      = "' . $fieldtype . '",
                                `values`         = "' . htmlspecialchars($values) . '",
                                `default_values` = "' . htmlspecialchars($default) . '",
