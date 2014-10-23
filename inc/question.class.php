@@ -763,13 +763,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   break;
             }
 
-            $query_udate = "UPDATE $table SET
-                               `fieldtype`      = '$fieldtype',
-                               `values`         = '$values',
-                               `default_values` = '$default',
-                               `regex`          = '$regex',
-                               `required`       = '$required'
-                            WHERE `id` = {$line['id']}";
+            $query_udate = 'UPDATE $table SET
+                               `fieldtype`      = "' . $fieldtype . '",
+                               `values`         = "' . htmlspecialchars($values) . '",
+                               `default_values` = "' . htmlspecialchars($default) . '",
+                               `regex`          = "' . $regex . '",
+                               `required`       = "' . $required .' "
+                            WHERE `id` = ' . $line['id'];
             $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
          }
 
