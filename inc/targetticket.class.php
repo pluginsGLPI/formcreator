@@ -266,7 +266,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
    public static function uninstall()
    {
-      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
+      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
       return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
    }
 }
