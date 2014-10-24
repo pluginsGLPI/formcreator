@@ -1,6 +1,9 @@
 <?php
 class PluginFormcreatorCategory extends CommonDropdown
 {
+   // Activate translation on GLPI 0.85
+   var $can_be_translated = true;
+
    static function canCreate()
    {
       return Session::haveRight('entity', 'w');
