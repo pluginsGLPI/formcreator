@@ -25,7 +25,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Delete a Question
-   } elseif(isset($_POST["delete"])) {
+   } elseif(isset($_POST["delete_question"])) {
       $question->check($_POST['id'], 'd');
       $question->delete($_POST);
 

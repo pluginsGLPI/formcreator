@@ -33,12 +33,12 @@ echo '</tr>';
 echo '<tr class="line1">';
 echo '<td colspan="2" class="center">';
 echo '<input type="hidden" name="id" value="' . $section_id . '" />';
-echo '<input type="reset" name="reset" class="submit_button" onclick="resetAll()"
-         value="' . __('Cancel', 'formcreator') . '" /> &nbsp; ';
 echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . (int) $_REQUEST['form_id'] . '" />';
 if(0 == $section_id) {
+   echo '<input type="hidden" name="add" value="1" />';
    echo '<input type="submit" name="add" class="submit_button" value="' . __('Add') . '" />';
 } else {
+   echo '<input type="hidden" name="update" value="1" />';
    echo '<input type="submit" name="update" class="submit_button" value="' . __('Edit') . '" />';
 }
 echo '</td>';

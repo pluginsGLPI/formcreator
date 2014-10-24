@@ -291,14 +291,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   });
                }
 
-               function moveQuestion(question_id, way) {
+               function moveQuestion(question_id, action) {
                   Ext.Ajax.request({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
                      success: reloadTab,
                      params: {
                         move: 1,
                         id: question_id,
-                        way: way,
+                        way: action,
                         _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
                      }
                   });
@@ -308,10 +308,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   if(confirm("' . __('Are you sure you want to delete this question:', 'formcreator') . ' " + question_name)) {
                      Ext.Ajax.request({
                         url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
-                        success: reloadTab,
+                        success: reloadTab ,
                         params: {
-                           delete: 1,
                            id: question_id,
+                           delete_question: 1,
                            plugin_formcreator_forms_id: ' . $item->getId() . ',
                            _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
                         }
@@ -326,19 +326,36 @@ class PluginFormcreatorQuestion extends CommonDBChild
                ' . $js_tab_sections . '
 
                function addSection() {
-                  Ext.get("add_section_th").load({
+                  modalWindow.show();
+                  modalWindow.load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                     scripts: true,
-                     params: "form_id=' . $item->getId() . '"
+                     params: {
+                        form_id: ' . $item->getId() . ',
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     },
+                     timeout: 30,
+                     scripts: true
                   });
                }
 
                function editSection(section) {
-                  document.getElementById("section_row_" + section).innerHTML = "<th colspan=\"6\"></th>";
-                  Ext.get("section_row_" + section + "").child("th").load({
+                  // document.getElementById("section_row_" + section).innerHTML = "<th colspan=\"6\"></th>";
+                  // Ext.get("section_row_" + section + "").child("th").load({
+                  //    url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
+                  //    scripts: true,
+                  //    params: "section_id=" + section + "&form_id=' . $item->getId() . '"
+                  // });
+
+                  modalWindow.show();
+                  modalWindow.load({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                     scripts: true,
-                     params: "section_id=" + section + "&form_id=' . $item->getId() . '"
+                     params: {
+                        form_id: ' . $item->getId() . ',
+                        section_id: section,
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     },
+                     timeout: 30,
+                     scripts: true
                   });
                }
 
@@ -348,7 +365,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                         url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php",
                         success: reloadTab,
                         params: {
-                           delete: 1,
+                           delete_section: 1,
                            id: section_id,
                            plugin_formcreator_forms_id: ' . $item->getId() . ',
                            _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
@@ -357,14 +374,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   }
                }
 
-               function moveSection(section_id, way) {
+               function moveSection(section_id, action) {
                   Ext.Ajax.request({
                      url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php",
                      success: reloadTab,
                      params: {
                         move: 1,
                         id: section_id,
-                        way: way,
+                        way: action,
                         _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
                      }
                   });

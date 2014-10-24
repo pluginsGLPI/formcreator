@@ -21,7 +21,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Delete a Section
-   } elseif(isset($_POST["delete"])) {
+   } elseif(isset($_POST["delete_section"])) {
       $section->check($_POST['id'], 'd');
       $section->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
