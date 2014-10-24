@@ -141,12 +141,7 @@ form.formcreator_form > .form_section > h2 {
 
 form.formcreator_form .form-group {
    padding: 5px 15px;
-}
-
-
-form.formcreator_form .form-group:nth-child(odd) {
-   background: #E0E0E0;  /*#E0E0E0;*/
-   background: rgba(216, 216, 216, .8);  /*#E0E0E0;*/
+   clear: both;
 }
 
 form.formcreator_form .form-group > label {

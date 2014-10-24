@@ -12,7 +12,7 @@ class fileField implements Field
       $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
 
       if (!$edit) {
-         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
          $doc = new Document();
          if($doc->getFromDB($datas['formcreator_field_' . $field['id']])) {
@@ -22,7 +22,7 @@ class fileField implements Field
          return;
       }
 
-      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
+      echo '<div class="form-group' . $required . ' line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
       echo '<label>';
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';

@@ -690,7 +690,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $validators[$user['id']] = getUserName($user['id']);
          }
 
-         echo '<div class="form-group required" id="form-validator">';
+         echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '" id="form-validator">';
          echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
          Dropdown::showFromArray('formcreator_validator', $validators);
          echo '</div>';

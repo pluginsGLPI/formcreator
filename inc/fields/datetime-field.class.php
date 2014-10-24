@@ -15,7 +15,7 @@ class datetimeField implements Field
       else $required = '';
 
       if (!$edit) {
-         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
+         echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
          echo (isset($datas['formcreator_field_' . $field['id']]))
             ? Html::convDateTime($datas['formcreator_field_' . $field['id']])
@@ -24,7 +24,7 @@ class datetimeField implements Field
          return;
       }
 
-      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+      echo '<div class="form-group' . $required . ' line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
       echo '<label>';
       echo  $field['name'];
       if($field['required'])  echo ' <span class="red">*</span>';
