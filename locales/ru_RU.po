@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-23 16:25+0100\n"
+"PO-Revision-Date: 2014-10-24 13:24+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/ru_RU/)\n"
@@ -268,7 +268,7 @@ msgstr "Личный доступ"
 
 #: inc/form.class.php:188 inc/form.class.php:244 inc/formprofiles.class.php:35
 msgid "Restricted access"
-msgstr ""
+msgstr "Доступ запрещен"
 
 #: inc/form.class.php:198 inc/form.class.php:251 inc/form.class.php:312
 msgid "All langages"
@@ -292,7 +292,7 @@ msgstr "Форма была успешно сохранена!"
 
 #: inc/form.class.php:652
 msgid "Form data"
-msgstr ""
+msgstr "Данные формы"
 
 #: inc/header.class.php:29 inc/header.class.php:45 inc/header.class.php:56
 msgid "Add an header"
@@ -399,16 +399,16 @@ msgstr "Вопрос успешно удален!"
 #: hook.php:56 inc/category.class.php:6
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Категория формы"
+msgstr[1] "Категории формы"
+msgstr[2] "Категории формы"
 
 #: ajax/homepage_forms.php:24 inc/form.class.php:38 setup.php:9 setup.php:90
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Форма"
+msgstr[1] "Формы"
+msgstr[2] "Формы"
 
 #: inc/formprofiles.class.php:12
 msgid "Target"
@@ -449,9 +449,9 @@ msgstr[2] "Назначения"
 #: inc/targetticket.class.php:26 inc/targetticket.class.php:59
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Целевая заявка"
+msgstr[1] "Целевые заявки"
+msgstr[2] "Целевые заявки"
 
 #: inc/form.class.php:316
 msgid "Need to be validate?"
@@ -479,7 +479,7 @@ msgstr "Все мои формы(утверждающий)"
 
 #: inc/form.class.php:479
 msgid "No form posted yet"
-msgstr ""
+msgstr "Еще не создано форм"
 
 #: inc/formanswer.class.php:140
 msgid "waiting"
@@ -515,7 +515,7 @@ msgstr "Отклонить"
 
 #: inc/formanswer.class.php:249
 msgid "Refused comment is required!"
-msgstr ""
+msgstr "Требуется комментарий для отклонения!"
 
 #: inc/notificationtargetformanswer.class.php:12
 #: inc/notificationtargetformanswer.class.php:84
@@ -548,9 +548,9 @@ msgstr "Название формы"
 #: inc/formanswer.class.php:35
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ответ в форме"
+msgstr[1] "Ответы в форме"
+msgstr[2] "Ответ в форме"
 
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
@@ -558,7 +558,7 @@ msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:51
 msgid "Refused comment"
-msgstr ""
+msgstr "Комментарий отклонения"
 
 #: inc/notificationtargetformanswer.class.php:52
 msgid "Validation link"
@@ -566,7 +566,7 @@ msgstr "Ссылка для утверждения"
 
 #: inc/notificationtargetformanswer.class.php:85
 msgid "A form from GLPI need to be validate"
-msgstr ""
+msgstr "Форма из GLPI, требующая утверждения"
 
 #: inc/notificationtargetformanswer.class.php:86
 msgid ""
@@ -576,10 +576,14 @@ msgid ""
 "You can access it by clicking onto this link:\n"
 "##formcreator.validation_link##"
 msgstr ""
+"Привет!\n"
+"Форма из GLPI требует вашего подтверждения и вы были выбраны утверждающим.\n"
+"Вы можете зайти в систему, нажав на эту ссылку:\n"
+"##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:91
 msgid "Your form have been refused by the validator"
-msgstr ""
+msgstr "Ваша форма была отклонена утверждающим"
 
 #: inc/notificationtargetformanswer.class.php:92
 msgid ""
@@ -591,10 +595,18 @@ msgid ""
 "You can still modify and resubmit it by clicking onto this link:\n"
 "##formcreator.validation_link##"
 msgstr ""
+"Привет!\n"
+"Мы вынуждены огорчить вас тем, что форма была отклонена утверждающим, текст "
+"отклонения:\n"
+"##formcreator.validation_comment##\n"
+"\n"
+"Но вы все еще можете изменить форму и повторно отправить ее на согласование, "
+"нажав на ссылку:\n"
+"##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:97
 msgid "Your form have been accepted by the validator"
-msgstr ""
+msgstr "Ваша форма была одобрена утверждающим лицом"
 
 #: inc/notificationtargetformanswer.class.php:98
 msgid ""
@@ -603,10 +615,13 @@ msgid ""
 "validator.\n"
 "Your request will be considered soon."
 msgstr ""
+"Привет!\n"
+"Мы рады сообщить, что ваша форма была одобрена утверждающим лицом.\n"
+"Ваш запрос будет рассмотрен в ближайшее время."
 
 #: inc/notificationtargetformanswer.class.php:103
 msgid "Your form have been deleted by an administrator"
-msgstr ""
+msgstr "Ваша форма была удалена администратором"
 
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
@@ -614,10 +629,13 @@ msgid ""
 "We are sorry to inform you that your request cannot be considered and have "
 "been deleted by an administrator."
 msgstr ""
+"Привет!\n"
+"Мы вынуждены огорчить вас тем, что форма не может быть рассмотрена и была "
+"удалена администратором."
 
 #: setup.php:90
 msgid "Forms waiting for validation"
-msgstr ""
+msgstr "Формы, ожидающие утверждения"
 
 #: inc/formanswer.class.php:220
 msgid "Comment"
