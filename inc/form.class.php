@@ -647,6 +647,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       // Get and display sections of the form
       $question      = new PluginFormcreatorQuestion();
+      $questions = array();
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
@@ -666,33 +667,37 @@ class PluginFormcreatorForm extends CommonDBTM
       if ($item->fields['validation_required']) {
          $validators  = array();
 
-         $query = "SELECT u.`id`
+         $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
+         $query = 'SELECT u.`id`
                    FROM `glpi_users` u
-                   LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
-                   WHERE fv.`forms_id` = '" . $this->getID(). "'";
-         $result = $GLOBALS['DB']->query($query);
-
-         if ($GLOBALS['DB']->numrows($result) == 0) {
-            $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-            $query = 'SELECT u.`id`
+                   INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+                   INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+                   WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
+                   AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
+                   OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
+                   AND u.`id` NOT IN (SELECT u.`id`
                       FROM `glpi_users` u
-                      INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                      INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                      WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
-                      AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
-                      OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
-                      GROUP BY u.`id`
-                      ORDER BY u.`name`';
-            $result = $GLOBALS['DB']->query($query);
-         }
-
+                      LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
+                      WHERE fv.`forms_id` = "' . $this->getID(). '")
+                   GROUP BY u.`id`';
+         $result = $GLOBALS['DB']->query($query);
+         $tab_users = array();
          while($user = $GLOBALS['DB']->fetch_assoc($result)) {
             $validators[$user['id']] = getUserName($user['id']);
+            $tab_users[] = $user['id'];
          }
 
-         echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '" id="form-validator">';
+         echo '<div class="form-group required liste line' . (count($questions) + 1) % 2 . '" id="form-validator">';
          echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-         Dropdown::showFromArray('formcreator_validator', $validators);
+         // Dropdown::showFromArray('formcreator_validator', $validators);
+
+         User::dropdown(array(
+            'name'                => 'formcreator_validator',
+            'right'               => array('validate_request', 'validate_incident'),
+            'display_emptychoice' => true,
+            'used'                => $tab_users,
+            'comments'            => false
+         ));
          echo '</div>';
       }
 
@@ -730,11 +735,21 @@ class PluginFormcreatorForm extends CommonDBTM
          return array();
       }
 
+      return $input;
+   }
+
+   /**
+    * Actions done after the ADD of the item in the database
+    *
+    * @return nothing
+   **/
+   public function post_addItem()
+   {
       // Save form validators
       $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators` WHERE `forms_id` = "' . $this->getID() . '"';
       $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-      if(($input['validation_required'] == '1') && (!empty($input['_validators']))) {
-         foreach ($input['_validators'] as $user) {
+      if(($this->fields['validation_required'] == '1') && (!empty($this->input['_validators']))) {
+         foreach ($this->input['_validators'] as $user) {
             $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
                       `forms_id` = "' . $this->getID() . '",
                       `users_id` = "' . $user . '"';
@@ -742,7 +757,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
-      return $input;
+      return true;
    }
 
    /**
@@ -757,6 +772,18 @@ class PluginFormcreatorForm extends CommonDBTM
       if (isset($input['access_rights']) || isset($_POST['massiveaction'])) {
          return $input;
       } else {
+         // Save form validators
+         $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators` WHERE `forms_id` = "' . $this->getID() . '"';
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         if(($input['validation_required'] == '1') && (!empty($input['_validators']))) {
+            foreach ($input['_validators'] as $user) {
+               $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
+                         `forms_id` = "' . $this->getID() . '",
+                         `users_id` = "' . $user . '"';
+               $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+            }
+         }
+
          return $this->prepareInputForAdd($input);
       }
    }
