@@ -684,7 +684,6 @@ class PluginFormcreatorForm extends CommonDBTM
                       OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . $this->fields["entities_id"].','.implode(',', $subentities). ')))
                       AND u.`id` NOT IN (' . $subquery . ')
                       GROUP BY u.`id`';
-                      echo $query;
             $result = $GLOBALS['DB']->query($query);
             while($user = $GLOBALS['DB']->fetch_assoc($result)) {
                $validators[$user['id']] = getUserName($user['id']);
