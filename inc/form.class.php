@@ -665,26 +665,31 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Show validator selector
       if ($item->fields['validation_required']) {
-         $validators  = array();
+         $validators = array();
+         $tab_users  = array();
 
-         $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-         $query = 'SELECT u.`id`
-                   FROM `glpi_users` u
-                   INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                   INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                   WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
-                   AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
-                   OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
-                   AND u.`id` NOT IN (SELECT u.`id`
+         $subquery = 'SELECT u.`id`
                       FROM `glpi_users` u
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
-                      WHERE fv.`forms_id` = "' . $this->getID(). '")
-                   GROUP BY u.`id`';
-         $result = $GLOBALS['DB']->query($query);
-         $tab_users = array();
-         while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-            $validators[$user['id']] = getUserName($user['id']);
-            $tab_users[] = $user['id'];
+                      WHERE fv.`forms_id` = "' . $this->getID(). '"';
+         $result = $GLOBALS['DB']->query($subquery);
+         if ($GLOBALS['DB']->numrows($result) != 0) {
+            $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
+            $query = 'SELECT u.`id`
+                      FROM `glpi_users` u
+                      INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+                      INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+                      WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
+                      AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
+                      OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . $this->fields["entities_id"].','.implode(',', $subentities). ')))
+                      AND u.`id` NOT IN (' . $subquery . ')
+                      GROUP BY u.`id`';
+                      echo $query;
+            $result = $GLOBALS['DB']->query($query);
+            while($user = $GLOBALS['DB']->fetch_assoc($result)) {
+               $validators[$user['id']] = getUserName($user['id']);
+               $tab_users[] = $user['id'];
+            }
          }
 
          echo '<div class="form-group required liste line' . (count($questions) + 1) % 2 . '" id="form-validator">';
