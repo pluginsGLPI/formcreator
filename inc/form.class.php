@@ -831,7 +831,6 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
-
       // If not valid back to form
       if (!$valid) {
          $_SESSION['formcreator']['datas'] = $datas;
