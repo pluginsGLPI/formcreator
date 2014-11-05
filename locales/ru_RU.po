@@ -294,6 +294,10 @@ msgstr "Форма была успешно сохранена!"
 msgid "Form data"
 msgstr "Данные формы"
 
+#: inc/form.class.php:829
+msgid "You must select validator !"
+msgstr ""
+
 #: inc/header.class.php:29 inc/header.class.php:45 inc/header.class.php:56
 msgid "Add an header"
 msgstr "Добавить заголовок"
