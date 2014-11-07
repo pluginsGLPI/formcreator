@@ -293,6 +293,10 @@ msgstr "The form have been successfully saved!"
 msgid "Form data"
 msgstr "Form data"
 
+#: inc/form.class.php:829
+msgid "You must select validator !"
+msgstr "You must select validator !"
+
 #: inc/header.class.php:29 inc/header.class.php:45 inc/header.class.php:56
 msgid "Add an header"
 msgstr "Add an header"
