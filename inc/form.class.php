@@ -824,11 +824,9 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Check required_validator
-      if (isset($datas['formcreator_validator'])) {
-         if (empty($datas['formcreator_validator']) || $datas['formcreator_validator'] == 0) {
-            Session::addMessageAfterRedirect(__('You must select validator !','formcreator'), false, ERROR);
-            $valid = false;
-         }
+      if ($this->fields['validation_required'] && empty($datas['formcreator_validator'])) {
+         Session::addMessageAfterRedirect(__('You must select validator !','formcreator'), false, ERROR);
+         $valid = false;
       }
 
       // If not valid back to form
