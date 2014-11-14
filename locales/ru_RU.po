@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-24 13:24+0100\n"
+"PO-Revision-Date: 2014-11-14 14:56+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/ru_RU/)\n"
@@ -209,7 +209,7 @@ msgstr "Выбор LDAP"
 #: inc/fields/ldapselect-field.class.php:50 inc/question.class.php:428
 #: inc/question.class.php:516
 msgid "Cannot recover LDAP informations!"
-msgstr ""
+msgstr "Невозможно получить информацию из LDAP!"
 
 #: inc/fields/multiselect-field.class.php:111
 msgid "Multiselect"
@@ -296,7 +296,7 @@ msgstr "Данные формы"
 
 #: inc/form.class.php:829
 msgid "You must select validator !"
-msgstr ""
+msgstr "Вы должны выбрать утверждающего!"
 
 #: inc/header.class.php:29 inc/header.class.php:45 inc/header.class.php:56
 msgid "Add an header"
@@ -558,7 +558,7 @@ msgstr[2] "Ответ в форме"
 
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
-msgstr ""
+msgstr "Полная форма ответа"
 
 #: inc/notificationtargetformanswer.class.php:51
 msgid "Refused comment"

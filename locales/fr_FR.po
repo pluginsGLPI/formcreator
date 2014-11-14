@@ -4,13 +4,14 @@
 #
 # Translators:
 # Translators:
+# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-23 16:25+0100\n"
+"PO-Revision-Date: 2014-11-14 14:55+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/fr_FR/)\n"

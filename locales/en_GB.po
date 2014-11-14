@@ -4,13 +4,14 @@
 #
 # Translators:
 # Translators:
+# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-10-23 16:25+0100\n"
+"PO-Revision-Date: 2014-11-14 14:55+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/"
 "glpi-project-plugin-formcreator/language/en_GB/)\n"
@@ -295,7 +296,7 @@ msgstr "Form data"
 
 #: inc/form.class.php:829
 msgid "You must select validator !"
-msgstr "You must select validator !"
+msgstr "You must select a validator!"
 
 #: inc/header.class.php:29 inc/header.class.php:45 inc/header.class.php:56
 msgid "Add an header"
