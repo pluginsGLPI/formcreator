@@ -32,7 +32,6 @@ class textField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
-      $value = htmlentities(stripslashes(strip_tags(html_entity_decode($value))));
       echo '<input type="text" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
                id="formcreator_field_' . $field['id'] . '"

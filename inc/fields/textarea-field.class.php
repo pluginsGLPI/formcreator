@@ -18,7 +18,7 @@ class textareaField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo '<div style="float:left">' . nl2br(strip_tags($datas['formcreator_field_' . $field['id']])) . '</div>';
+         echo '<div style="float:left">' . nl2br($datas['formcreator_field_' . $field['id']]) . '</div>';
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -29,7 +29,6 @@ class textareaField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
-      $value = htmlentities(stripslashes(strip_tags(html_entity_decode($value))));
       echo '<textarea class="form-control"
                rows="5"
                name="formcreator_field_' . $field['id'] . '"

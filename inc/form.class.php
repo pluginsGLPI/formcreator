@@ -586,7 +586,7 @@ class PluginFormcreatorForm extends CommonDBTM
                echo '&nbsp;';
                echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
                         . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
-                        title="' . htmlentities(strip_tags($form['description'])) . '">'
+                        title="' . htmlentities($form['description']) . '">'
                         . $form['name']
                         . '</a></td>';
                echo '</tr>';

@@ -423,8 +423,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
-      } else {
-         $input['name'] = htmlentities(strip_tags(html_entity_decode($input['name'])));
       }
 
       // - field type is required
@@ -439,11 +437,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return array();
       }
 
-      // - Escape tags and specials caracters from values
-      if(!empty($input['values'])) {
-         $input['values'] = htmlentities(strip_tags(html_entity_decode($input['values'])));
-      }
-
       // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
       $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
       if (empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
@@ -452,11 +445,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             false,
             ERROR);
          return array();
-      }
-
-      // - Escape tags and specials caracters from default values
-      if(!empty($input['default_values'])) {
-         $input['default_values'] = htmlentities(strip_tags(html_entity_decode($input['default_values'])));
       }
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones

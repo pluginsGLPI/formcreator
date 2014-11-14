@@ -223,11 +223,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
-         $value = htmlentities(stripslashes(strip_tags(html_entity_decode($this->fields['comment']))));
          echo '<textarea class="form-control"
                   rows="5"
                   name="comment"
-                  id="comment">' . $value . '</textarea>';
+                  id="comment">' . $this->fields['comment'] . '</textarea>';
          echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
          echo '</div>';
 
