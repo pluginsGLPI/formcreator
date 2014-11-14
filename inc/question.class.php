@@ -211,7 +211,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<tr class="line1">';
       echo '<th colspan="6" id="add_section_th">';
-      echo '<a href="javascript:addSection();" class="submit">
+      echo '<a href="javascript:addSection();">
                 <img src="'.$GLOBALS['CFG_GLPI']['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
                 '.__('Add a section', 'formcreator').'
             </a>';
