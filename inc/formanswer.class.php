@@ -187,6 +187,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Get and display sections of the form
       $question      = new PluginFormcreatorQuestion();
+      $questions     = array();
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $form->getID(), '`order` ASC');
