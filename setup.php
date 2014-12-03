@@ -113,4 +113,8 @@ function plugin_init_formcreator ()
    Plugin::registerClass('PluginFormcreatorFormanswer', array(
       'notificationtemplates_types' => true
    ));
+
+   if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE && isset($_SESSION['glpimenu'])) {
+      unset($_SESSION['glpimenu']);
+   }
 }
