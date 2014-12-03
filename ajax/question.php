@@ -118,10 +118,13 @@ $rand = mt_rand();
                      ? $line['name']
                      : substr($line['name'], 0, strrpos(substr($line['name'], 0, 30), ' ')) . '...';
                }
+               echo '<div id="div_show_condition_field">';
                Dropdown::showFromArray('show_field', $questions_tab, array(
                   'value' => $question->fields['show_field']
                ));
+               echo '</div>';
 
+               echo '<div id="div_show_condition_operator">';
                Dropdown::showFromArray('show_condition', array(
                   'equal'    => '=',
                   'notequal' => '&lt;&gt;',
@@ -131,10 +134,13 @@ $rand = mt_rand();
                   'value'    => $question->fields['show_condition'],
                   'rand'     => $rand,
                ));
+               echo '</div>';
                ?>
 
-               <input type="text" name="show_value" id="show_value" class="small_text"
-                  value="<?php echo $question->fields['show_value']; ?>" size="8">
+               <div id="div_show_condition_value">
+                  <input type="text" name="show_value" id="show_value" class="small_text"
+                     value="<?php echo $question->fields['show_value']; ?>" size="8">
+               </div>
             </div>
          </td>
       </tr>
@@ -158,11 +164,13 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <?php
-            dropdown::showYesNo('show_empty', $question->fields['show_empty'], -1, array(
-               'rand'  => $rand,
-            ));
-            ?>
+            <div id="show_empty">
+               <?php
+               dropdown::showYesNo('show_empty', $question->fields['show_empty'], -1, array(
+                  'rand'  => $rand,
+               ));
+               ?>
+            </div>
          </td>
       </tr>
 
@@ -311,8 +319,6 @@ $rand = mt_rand();
                'value' => (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : '',
             ));
             ?>
-            <!-- <input type="text" name="ldap_attribute" id="ldap_attribute" style="width:98%;"
-               value="<?php echo (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : ''; ?>" /> -->
          </td>
          <td colspan="2">&nbsp;</td>
       </tr>
@@ -425,17 +431,17 @@ $rand = mt_rand();
             document.getElementById('label_values').style.display                            = 'none';
          }
          if(dropdown_value) {
-            document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').style.display = 'inline';
+            document.getElementById('dropdown_values_field').style.display = 'inline';
             document.getElementById('label_dropdown_values').style.display                   = 'inline';
          } else {
-            document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').style.display = 'none';
+            document.getElementById('dropdown_values_field').style.display = 'none';
             document.getElementById('label_dropdown_values').style.display                   = 'none';
          }
          if(glpi_object) {
-            document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').style.display = 'inline';
+            document.getElementById('glpi_objects_field').style.display = 'inline';
             document.getElementById('label_glpi_objects').style.display                   = 'inline';
          } else {
-            document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').style.display = 'none';
+            document.getElementById('glpi_objects_field').style.display = 'none';
             document.getElementById('label_glpi_objects').style.display                   = 'none';
          }
          if (dropdown_value || glpi_object) {
@@ -461,10 +467,10 @@ $rand = mt_rand();
             document.getElementById('range_tr').style.display                                = 'none';
          }
          if(show_empty) {
-            document.getElementById('dropdown_show_empty<?php echo $rand; ?>').style.display = 'inline';
+            document.getElementById('show_empty').style.display = 'inline';
             document.getElementById('label_show_empty').style.display                        = 'inline';
          } else {
-            document.getElementById('dropdown_show_empty<?php echo $rand; ?>').style.display = 'none';
+            document.getElementById('show_empty').style.display = 'none';
             document.getElementById('label_show_empty').style.display                        = 'none';
          }
          if(regex) {
@@ -504,39 +510,47 @@ $rand = mt_rand();
       }
 
       function change_dropdown() {
-         dropdown_itemtype = document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').value;
+         dropdown_type = document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').value;
 
-         Ext.get("dropdown_default_value_field").load({
+         jQuery.ajax({
             url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
-            scripts: true,
-            params: "dropdown_itemtype=" + dropdown_itemtype + "&rand=<?php echo $rand; ?>"
+            type: "GET",
+            data: {
+               dropdown_itemtype: dropdown_type,
+               rand: "<?php echo $rand; ?>"
+            },
+         }).done(function(response){
+            jQuery("#dropdown_default_value_field").html(response);
          });
-
       }
 
       function change_glpi_objects() {
          glpi_object = document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').value;
 
-         Ext.get("dropdown_default_value_field").load({
+         jQuery.ajax({
             url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
-            scripts: true,
-            params: "dropdown_itemtype=" + glpi_object + "&rand=<?php echo $rand; ?>"
+            type: "GET",
+            data: {
+               dropdown_itemtype: glpi_object,
+               rand: "<?php echo $rand; ?>"
+            },
+         }).done(function(response){
+            jQuery("#dropdown_default_value_field").html(response);
          });
-
       }
 
       function change_LDAP(ldap) {
          var ldap_directory = ldap.value;
 
-         Ext.Ajax.request({
-            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/ldap_filter.php",
-            success: function(response){
-               document.getElementById('ldap_filter').value = response.responseText;
-            },
-            params: {
+         jQuery.ajax({
+           url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/ldap_filter.php",
+           type: "POST",
+           data: {
                value: ldap_directory,
                _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
-            }
+            },
+         }).done(function(response){
+            document.getElementById('ldap_filter').value = response;
          });
       }
    </script>

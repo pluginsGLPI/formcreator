@@ -160,6 +160,14 @@ form.formcreator_form .form-group.required > label {
    font-weight: bold;
 }
 
+form.formcreator_form .form-group .form_field {
+   width: 650px;
+   float: left;
+}
+form.formcreator_form .form-group .form_field .select2-container {
+   width: 100% !important;
+}
+
 form.formcreator_form .description_field {
    border-left: 4px solid #999;
    margin: 10px 15px;
@@ -262,4 +270,27 @@ form.formcreator_form .liste span > select {
    color: #333;
    font-style: italic;
    margin: 0 4px;
+}
+#div_show_condition_field, #div_show_condition_operator, #div_show_condition_value {
+   float: left;
+}
+#div_show_condition_field .select2-container,
+#div_show_condition_operator .select2-container {
+   width: 95% !important;
+   margin: 5px 0 0 !important;
+}
+#div_show_condition_value input {
+   width: 100% !important;
+   margin: 5px 0 0 5px !important;
+   padding: 2px 5px !important;
+}
+
+#div_show_condition_field {
+   width: 150px !important;
+}
+#div_show_condition_operator {
+   width: 50px !important;
+}
+#div_show_condition_value {
+   width: 58px !important;
 }

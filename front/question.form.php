@@ -10,7 +10,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new Question
    if(isset($_POST["add"])) {
-      $question->check(-1,'w',$_POST);
+      Session::checkRight("config", CREATE);
       if ($question->add($_POST)) {
          Session::addMessageAfterRedirect(__('The question have been successfully saved!', 'formcreator'), true, INFO);
       }
@@ -18,7 +18,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Edit an existinf Question
    } elseif(isset($_POST["update"])) {
-      $question->check($_POST['id'],'w');
+      Session::checkRight("config", UPDATE);
       if ($question->update($_POST)) {
          Session::addMessageAfterRedirect(__('The question have been successfully updated!', 'formcreator'), true, INFO);
       }
@@ -26,13 +26,13 @@ if ($plugin->isActivated("formcreator")) {
 
    // Delete a Question
    } elseif(isset($_POST["delete_question"])) {
-      $question->check($_POST['id'], 'd');
+      Session::checkRight("config", DELETE);
       $question->delete($_POST);
 
    // Set a Question required
    } elseif(isset($_POST["set_required"])) {
       global $DB;
-      $question->check($_POST['id'], 'w');
+      Session::checkRight("config", UPDATE);
       $table = getTableForItemtype('PluginFormcreatorQuestion');
       $DB->query("UPDATE $table SET `required` = " . $_POST['value'] . " WHERE id = " . $_POST['id']);
 
@@ -40,7 +40,7 @@ if ($plugin->isActivated("formcreator")) {
    } elseif(isset($_POST["move"])) {
       global $DB;
 
-      $question->check($_POST['id'], 'd');
+      Session::checkRight("config", UPDATE);
 
       $table  = getTableForItemtype('PluginFormcreatorQuestion');
       $result = $DB->query("SELECT `order`, `plugin_formcreator_sections_id` FROM $table WHERE id = " . $_POST['id']);

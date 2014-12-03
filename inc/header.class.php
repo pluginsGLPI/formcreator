@@ -88,7 +88,6 @@ class PluginFormcreatorHeader extends CommonDropdown
       }
       $options['colspan'] = 2;
       $options['target']  = Toolbox::getItemTypeFormURL(__CLASS__);
-      $this->showTabs($options);
       $this->showFormHeader($options);
       echo '<table class="tab_cadre_fixe">';
 
@@ -107,7 +106,6 @@ class PluginFormcreatorHeader extends CommonDropdown
 
 
       $this->showFormButtons($options);
-      $this->addDivForTabs();
 
       return true;
    }

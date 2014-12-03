@@ -8,7 +8,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new Form
    if(isset($_POST["add"])) {
-      $form->check(-1,'w',$_POST);
+      Session::checkRight("config", CREATE);
       $newID = $form->add($_POST);
 
       // $newTarget = $form->createDefaultTarget($newID);
@@ -18,25 +18,25 @@ if ($plugin->isActivated("formcreator")) {
 
    // Edit an existinf form
    } elseif(isset($_POST["update"])) {
-      $form->check($_POST['id'],'w');
+      Session::checkRight("config", UPDATE);
       $form->update($_POST);
       Html::back();
 
    // Delete a form (is_deleted = true)
    } elseif(isset($_POST["delete"])) {
-      $form->check($_POST['id'], 'd');
+      Session::checkRight("config", DELETE);
       $form->delete($_POST);
       $form->redirectToList();
 
    // Restore a deleteted form (is_deleted = false)
    } elseif(isset($_POST["restore"])) {
-      $form->check($_POST['id'], 'd');
+      Session::checkRight("config", DELETE);
       $form->restore($_POST);
       $form->redirectToList();
 
    // Delete defenitively a form from DB and all its datas
    } elseif(isset($_POST["purge"])) {
-      $form->check($_POST['id'], 'd');
+      Session::checkRight("config", PURGE);
       $form->delete($_POST,1);
       $form->redirectToList();
 
@@ -67,16 +67,16 @@ if ($plugin->isActivated("formcreator")) {
       Session::checkRight("entity", UPDATE);
 
       Html::header(
-         __('Form Creator', 'formcreator'),
+         PluginFormcreatorForm::getTypeName(2),
          $_SERVER['PHP_SELF'],
          'admin',
-         'formcreator',
+         'PluginFormcreatorForm',
+         'option'
       );
 
-      // $form->showForm(isset($_GET['id']) ? $_GET['id'] : 0);
+      $form->display($_GET);
 
-      // Html::footer();
-      echo 'coucou';
+      Html::footer();
    }
 
 // Or display a "Not found" error

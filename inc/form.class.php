@@ -279,14 +279,13 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showForm($ID, $options=array())
    {
       $this->initForm($ID, $options);
-      $this->showTabs($options);
       $this->showFormHeader($options);
 
       echo '<tr class="tab_bg_1">';
-      echo '<td><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
-      echo '<td><input type="text" name="name" value="' . $this->fields["name"] . '" size="54"/></td>';
-      echo '<td><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
-      echo '<td>';
+      echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
+      echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
+      echo '<td width="30%">';
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
       echo '</td>';
       echo '</tr>';
@@ -308,7 +307,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<tr class="tab_bg_1">';
       echo '<td>' . __('Description') . '</td>';
-      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="54" /></td>';
+      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="35" /></td>';
       echo '<td>' . __('Language') . '</td>';
       echo '<td>';
       Dropdown::showLanguages('language', array(
@@ -321,7 +320,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<tr class="tab_bg_1">';
       echo '<td>' . _n('Header', 'Headers', 1, 'formcreator') . '</td>';
-      echo '<td colspan="3"><textarea name="content" cols="115" rows="10">' . $this->fields["content"] . '</textarea></td>';
+      echo '<td colspan="3"><textarea name="content" cols="124" rows="10">' . $this->fields["content"] . '</textarea></td>';
       Html::initEditorSystem('content');
       echo '</tr>';
 
@@ -350,13 +349,18 @@ class PluginFormcreatorForm extends CommonDBTM
                 FROM `glpi_users` u
                 INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                 INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
+                INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+                WHERE pr.`name` = "ticketvalidation"
+                AND (
+                  pr.`rights` & ' . TicketValidation::VALIDATEREQUEST . ' = ' . TicketValidation::VALIDATEREQUEST . '
+                  OR pr.`rights` & ' . TicketValidation::VALIDATEINCIDENT . ' = ' . TicketValidation::VALIDATEINCIDENT . ')
                 AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
                 OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
                 GROUP BY u.`id`
                 ORDER BY u.`name`';
       $result = $GLOBALS['DB']->query($query);
-      echo '<select name="_validators[]" size="4" style="width: 100%" multiple id="validators">';
+
+      echo '<select name="_validators[]" size="4" style="width: 80%" multiple id="validators">';
       while($user = $GLOBALS['DB']->fetch_assoc($result)) {
          echo '<option value="' . $user['id'] . '"';
          if (in_array($user['id'], $validators)) echo ' selected="selected"';
@@ -382,7 +386,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</tr>';
 
       $this->showFormButtons($options);
-      $this->addDivForTabs();
    }
 
 
@@ -440,6 +443,7 @@ class PluginFormcreatorForm extends CommonDBTM
    public function defineTabs($options=array())
    {
       $ong = array();
+      $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
       $this->addStandardTab('PluginFormcreatorFormprofiles', $ong, $options);
       $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
@@ -692,7 +696,10 @@ class PluginFormcreatorForm extends CommonDBTM
                       FROM `glpi_users` u
                       INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                       INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                      WHERE (p.`validate_request` = 1 OR p.`validate_incident` = 1)
+                      INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+                      WHERE (
+                        pr.`rights` & ' . TicketValidation::VALIDATEREQUEST . ' = ' . TicketValidation::VALIDATEREQUEST . '
+                        OR pr.`rights` & ' . TicketValidation::VALIDATEINCIDENT . ' = ' . TicketValidation::VALIDATEINCIDENT . ')
                       AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
                       OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . $this->fields["entities_id"].','.implode(',', $subentities). ')))
                       AND u.`id` NOT IN (' . $subquery . ')
@@ -707,7 +714,7 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '<div class="form-group required liste line' . (count($questions) + 1) % 2 . '" id="form-validator">';
          echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
          // Dropdown::showFromArray('formcreator_validator', $validators);
-
+         echo '<div class="form_field">';
          User::dropdown(array(
             'name'                => 'formcreator_validator',
             'right'               => array('validate_request', 'validate_incident'),
@@ -715,6 +722,7 @@ class PluginFormcreatorForm extends CommonDBTM
             'used'                => $tab_users,
             'comments'            => false
          ));
+         echo '</div>';
          echo '</div>';
       }
 

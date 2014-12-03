@@ -232,176 +232,121 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       echo '<script type="text/javascript">
-               var modalWindow = new Ext.Window({
-                  layout: "fit",
-                  width: "964",
-                  height: "600",
-                  closeAction: "hide",
-                  modal: "true",
-                  autoScroll: true,
-                  y: 500
+               var modalWindow = $("<div></div>").dialog({
+                  width: 980,
+                  autoOpen: false,
+                  height: "auto",
+                  modal: true,
                });
 
-
                // === QUESTIONS ===
-               var tab_questions = [];
-               ' . $js_tab_questions . '
-               var line_questions = [];
-               ' . $js_line_questions . '
+               var urlQuestion      = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php";
+               var urlFrontQuestion = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php";
 
                function addQuestion(section) {
-                  modalWindow.show();
-                  modalWindow.load({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php",
-                     params: {
-                        section_id: section,
-                        form_id: ' . $item->getId() . ',
-                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     },
-                     timeout: 30,
-                     scripts: true
-                  });
+                  modalWindow.load(urlQuestion, {
+                     section_id: section,
+                     form_id: ' . $item->getId() . ',
+                     _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                  }).dialog("open");
                }
 
                function editQuestion(question, section) {
-                  modalWindow.show();
-                  modalWindow.load({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/question.php",
-                     params: {
-                        question_id: question,
-                        section_id: section,
-                        form_id: ' . $item->getId() . ',
-                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     },
-                     timeout: 30,
-                     scripts: true
-                  });
+                  modalWindow.load(urlQuestion, {
+                     question_id: question,
+                     section_id: section,
+                     form_id: ' . $item->getId() . ',
+                     _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                  }).dialog("open");
                }
 
-               function setRequired(question_id, value) {
-                  Ext.Ajax.request({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
-                     success: reloadTab,
-                     params: {
+               function setRequired(question_id, val) {
+                  jQuery.ajax({
+                    url: urlFrontQuestion,
+                    type: "POST",
+                    data: {
                         set_required: 1,
                         id: question_id,
-                        value: value,
+                        value: val,
                         _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     }
-                  });
+                     },
+                  }).done(reloadTab);
                }
 
                function moveQuestion(question_id, action) {
-                  Ext.Ajax.request({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
-                     success: reloadTab,
-                     params: {
+                  jQuery.ajax({
+                    url: urlFrontQuestion,
+                    type: "POST",
+                    data: {
                         move: 1,
                         id: question_id,
                         way: action,
                         _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     }
-                  });
+                     },
+                  }).done(reloadTab);
                }
 
                function deleteQuestion(question_id, question_name) {
                   if(confirm("' . __('Are you sure you want to delete this question:', 'formcreator') . ' " + question_name)) {
-                     Ext.Ajax.request({
-                        url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/question.form.php",
-                        success: reloadTab ,
-                        params: {
+                     jQuery.ajax({
+                       url: urlFrontQuestion,
+                       type: "POST",
+                       data: {
                            id: question_id,
                            delete_question: 1,
                            plugin_formcreator_forms_id: ' . $item->getId() . ',
                            _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                        }
-                     });
+                        },
+                     }).done(reloadTab);
                   }
                }
 
                // === SECTIONS ===
-               var add_section_link = document.getElementById("add_section_th").innerHTML;
-
-               var tab_sections = [];
-               ' . $js_tab_sections . '
+               var urlSection      = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php";
+               var urlFrontSection = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php";
 
                function addSection() {
-                  modalWindow.show();
-                  modalWindow.load({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                     params: {
-                        form_id: ' . $item->getId() . ',
-                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     },
-                     timeout: 30,
-                     scripts: true
-                  });
+                  modalWindow.load(urlSection, {
+                     form_id: ' . $item->getId() . ',
+                     _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                  }).dialog("open");
                }
 
                function editSection(section) {
-                  // document.getElementById("section_row_" + section).innerHTML = "<th colspan=\"6\"></th>";
-                  // Ext.get("section_row_" + section + "").child("th").load({
-                  //    url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                  //    scripts: true,
-                  //    params: "section_id=" + section + "&form_id=' . $item->getId() . '"
-                  // });
-
-                  modalWindow.show();
-                  modalWindow.load({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/section.php",
-                     params: {
-                        form_id: ' . $item->getId() . ',
-                        section_id: section,
-                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     },
-                     timeout: 30,
-                     scripts: true
-                  });
+                  modalWindow.load(urlSection, {
+                     section_id: section,
+                     form_id: ' . $item->getId() . ',
+                     _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                  }).dialog("open");
                }
 
                function deleteSection(section_id, section_name) {
                   if(confirm("' . __('Are you sure you want to delete this section:', 'formcreator') . ' " + section_name)) {
-                     Ext.Ajax.request({
-                        url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php",
-                        success: reloadTab,
-                        params: {
+                     jQuery.ajax({
+                       url: urlFrontSection,
+                       type: "POST",
+                       data: {
                            delete_section: 1,
                            id: section_id,
                            plugin_formcreator_forms_id: ' . $item->getId() . ',
                            _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                        }
-                     });
+                        },
+                     }).done(reloadTab);
                   }
                }
 
                function moveSection(section_id, action) {
-                  Ext.Ajax.request({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/section.form.php",
-                     success: reloadTab,
-                     params: {
+                  jQuery.ajax({
+                    url: urlFrontSection,
+                    type: "POST",
+                    data: {
                         move: 1,
                         id: section_id,
                         way: action,
                         _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                     }
-                  });
+                     },
+                  }).done(reloadTab);
                }
-
-               function resetAll() {
-                  document.getElementById("add_section_th").innerHTML = add_section_link;
-                  for (section_id in tab_sections) {
-                     if(parseInt(section_id)) {
-                        document.getElementById("section_row_" + section_id).innerHTML = tab_sections[section_id];
-                        document.getElementById("add_question_td_" + section_id).innerHTML = tab_questions[section_id];
-                     }
-                  }
-                  for (question_id in line_questions) {
-                     if(parseInt(question_id)) {
-                        document.getElementById("question_row_" + question_id).innerHTML = line_questions[question_id];
-                     }
-                  }
-               }
-
             </script>';
 
    }
