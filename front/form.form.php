@@ -64,19 +64,19 @@ if ($plugin->isActivated("formcreator")) {
 
    // Show forms form
    } else {
-      Session::checkRight("entity", "w");
+      Session::checkRight("entity", UPDATE);
 
       Html::header(
          __('Form Creator', 'formcreator'),
          $_SERVER['PHP_SELF'],
-         'plugins',
+         'admin',
          'formcreator',
-         'config'
       );
 
-      $form->showForm(isset($_GET['id']) ? $_GET['id'] : 0);
+      // $form->showForm(isset($_GET['id']) ? $_GET['id'] : 0);
 
-      Html::footer();
+      // Html::footer();
+      echo 'coucou';
    }
 
 // Or display a "Not found" error

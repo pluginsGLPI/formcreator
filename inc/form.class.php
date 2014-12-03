@@ -1,11 +1,11 @@
 <?php
 class PluginFormcreatorForm extends CommonDBTM
 {
-   public $dohistory       = true;
+   public $dohistory         = true;
 
-   const ACCESS_PUBLIC     = 0;
-   const ACCESS_PRIVATE    = 1;
-   const ACCESS_RESTRICTED = 2;
+   const ACCESS_PUBLIC       = 0;
+   const ACCESS_PRIVATE      = 1;
+   const ACCESS_RESTRICTED   = 2;
 
    /**
     * Check if current user have the right to create and modify requests

@@ -383,8 +383,8 @@ msgid "The description cannot be empty!"
 msgstr "La desciption ne doit pas être vide !"
 
 #: setup.php:26
-msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
-msgstr "Ce plugin nécessite GLPI >= 0.84 et GLPI < 0.85"
+msgid "This plugin requires GLPI >= 0.85 and GLPI < 0.86"
+msgstr "Ce plugin nécessite GLPI >= 0.85 et GLPI < 0.86"
 
 #: front/question.form.php:15
 msgid "The question have been successfully saved!"

@@ -2,7 +2,7 @@
 require_once ('../../../inc/includes.php');
 
 // Check if current user have config right
-Session::checkRight("entity", "w");
+Session::checkRight("entity", UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -12,11 +12,10 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
 
 if(PluginFormcreatorForm::canView()) {
    Html::header(
-      _n('Form', 'Forms', 2, 'formcreator'),
+      PluginFormcreatorForm::getTypeName(2),
       $_SERVER['PHP_SELF'],
-      'plugins',
-      'formcreator',
-      'config'
+      'admin',
+      'formcreator'
    );
 
    Search::show('PluginFormcreatorForm');

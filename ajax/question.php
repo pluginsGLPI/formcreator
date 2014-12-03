@@ -1,6 +1,6 @@
 <?php
 include ('../../../inc/includes.php');
-Session::checkRight("entity", "w");
+Session::checkRight("entity", UPDATE);
 
 $question = new PluginFormcreatorQuestion();
 if(empty($_REQUEST['question_id'])) {

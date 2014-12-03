@@ -7,12 +7,12 @@
 function plugin_version_formcreator ()
 {
    return array('name'       => _n('Form', 'Forms', 2, 'formcreator'),
-            'version'        => '0.84-2.1.1',
+            'version'        => '0.85-1.0',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
-            'homepage'       => 'http://www.teclib.com',
+            'homepage'       => 'https://github.com/TECLIB/formcreator',
             'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
-            'minGlpiVersion' => "0.84");
+            'minGlpiVersion' => "0.85");
 }
 
 /**
@@ -22,8 +22,8 @@ function plugin_version_formcreator ()
  */
 function plugin_formcreator_check_prerequisites ()
 {
-   if (version_compare(GLPI_VERSION,'0.84','lt') || version_compare(GLPI_VERSION,'0.85','ge')) {
-      echo __('This plugin requires GLPI >= 0.84 and GLPI < 0.85', 'formcreator');
+   if (version_compare(GLPI_VERSION,'0.85','lt') || version_compare(GLPI_VERSION,'0.86','ge')) {
+      echo __('This plugin requires GLPI >= 0.85 and GLPI < 0.86', 'formcreator');
    } else {
       return true;
    }
@@ -31,20 +31,14 @@ function plugin_formcreator_check_prerequisites ()
 }
 
 /**
- * Check plugin's config before activation
+ * Check plugin's config before activation (if needed)
  *
  * @param string $verbose Set true to show all messages (false by default)
  * @return boolean
  */
 function plugin_formcreator_check_config($verbose=false)
 {
-   if (true) { // Your configuration check
-      return true;
-   }
-   if ($verbose) {
-      echo _x('plugin', 'Installed / not configured');
-   }
-   return false;
+   return true;
 }
 
 /**
@@ -54,8 +48,14 @@ function plugin_init_formcreator ()
 {
    global $PLUGIN_HOOKS;
 
+   // Set the plugin CSRF compliance (required since GLPI 0.84)
+   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
+
    // Add specific CSS
-   $PLUGIN_HOOKS['add_css']['formcreator'][]="css/styles.css";
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
+
+   $PLUGIN_HOOKS['menu_toadd']['formcreator'] = array('admin' => 'PluginFormcreatorForm');
+
 
    if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
       $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk.js';
@@ -70,8 +70,6 @@ function plugin_init_formcreator ()
    }
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
 
-   // Set the plugin CSRF compliance (required in GLPI 0.84)
-   $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
 
 
    // Add a link in the main menu plugins for technician and admin panel
@@ -81,7 +79,7 @@ function plugin_init_formcreator ()
    // Config page
    $plugin = new Plugin();
    $links  = array();
-   if (Session::haveRight('entity','w') && $plugin->isActivated("formcreator")) {
+   if (Session::haveRight('entity', UPDATE) && $plugin->isActivated("formcreator")) {
       $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
       $links['config'] = '/plugins/formcreator/front/form.php';
       $links['add']    = '/plugins/formcreator/front/form.form.php';
