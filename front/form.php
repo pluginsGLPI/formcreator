@@ -13,9 +13,9 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
 if(PluginFormcreatorForm::canView()) {
    Html::header(
       PluginFormcreatorForm::getTypeName(2),
-      $_SERVER['PHP_SELF'],
+      '',
       'admin',
-      'formcreator'
+      'PluginFormcreatorForm'
    );
 
    Search::show('PluginFormcreatorForm');

@@ -1,6 +1,8 @@
 <?php
 class PluginFormcreatorForm extends CommonDBTM
 {
+   static $rightname = 'config';
+
    public $dohistory         = true;
 
    const ACCESS_PUBLIC       = 0;
@@ -36,6 +38,17 @@ class PluginFormcreatorForm extends CommonDBTM
    public static function getTypeName($nb = 0)
    {
       return _n('Form', 'Forms', $nb, 'formcreator');
+   }
+
+   static function getMenuContent() {
+      global $CFG_GLPI;
+
+      $menu = parent::getMenuContent();
+      $image = "<img src='".$CFG_GLPI["root_doc"].
+         "/plugins/formcreator/pics/check.png' title='TODO' alt='TODO'>";
+      $menu['links'][$image] = PluginFormcreatorFormanswer::getSearchURL(false);
+
+      return $menu;
    }
 
    /**
