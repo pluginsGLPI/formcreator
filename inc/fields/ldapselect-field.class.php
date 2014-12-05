@@ -219,7 +219,7 @@ class ldapselectField implements Field
 
    public static function displayValue($value, $values)
    {
-      if(!empty($values)) {
+      if(!empty($value)) {
          $ldap_values = json_decode($values);
 
          $ldap_dropdown = new RuleRightParameter();
@@ -240,9 +240,10 @@ class ldapselectField implements Field
                $tab_values[$id] = $attr[$attribute[0]][0];
             }
          }
-         sort($tab_values);
+
+         return $tab_values[$value];
       }
-      return ($value != '') ? $tab_values[$value] : '';
+      return '';
    }
 
    public static function isValid($field, $value, $datas)
