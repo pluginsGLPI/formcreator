@@ -17,9 +17,8 @@ if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
    Html::header(
       __('Form list', 'formcreator'),
       $_SERVER['PHP_SELF'],
-      'plugins',
-      'formcreator',
-      'options'
+      'admin',
+      'PluginFormcreatorForm'
    );
 }
 

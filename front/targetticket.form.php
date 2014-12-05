@@ -19,9 +19,8 @@ if ($plugin->isActivated("formcreator")) {
       Html::header(
          __('Form Creator', 'formcreator'),
          $_SERVER['PHP_SELF'],
-         'plugins',
-         'formcreator',
-         'options'
+         'admin',
+         'PluginFormcreatorForm'
       );
 
       $targetticket->display($_REQUEST);

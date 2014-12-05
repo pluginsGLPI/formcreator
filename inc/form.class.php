@@ -44,9 +44,26 @@ class PluginFormcreatorForm extends CommonDBTM
       global $CFG_GLPI;
 
       $menu = parent::getMenuContent();
-      $image = "<img src='".$CFG_GLPI["root_doc"].
-         "/plugins/formcreator/pics/check.png' title='TODO' alt='TODO'>";
+      $image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+                  title="' . __('Forms waiting for validation', 'formcreator') . '"
+                  alt="' . __('Forms waiting for validation', 'formcreator') . '">';
       $menu['links'][$image] = PluginFormcreatorFormanswer::getSearchURL(false);
+
+      $menu['options']['formanswer']['title']            = PluginFormcreatorFormanswer::getTypeName(2);
+      $menu['options']['formanswer']['page']             = PluginFormcreatorFormanswer::getSearchURL(false);
+      $menu['options']['formanswer']['links']['search']  = PluginFormcreatorForm::getSearchURL(false);
+      $menu['options']['formanswer']['links'][$image]    = PluginFormcreatorFormanswer::getSearchURL(false);
+      if (PluginFormcreatorForm::canCreate()) {
+         $menu['options']['formanswer']['links']['add']  = PluginFormcreatorForm::getFormURL(false);
+      }
+
+      $menu['options']['formlist']['title']            = PluginFormcreatorFormanswer::getTypeName(2);
+      $menu['options']['formlist']['page']             = PluginFormcreatorFormanswer::getSearchURL(false);
+      $menu['options']['formlist']['links']['search']  = PluginFormcreatorForm::getSearchURL(false);
+      $menu['options']['formlist']['links'][$image]    = PluginFormcreatorFormanswer::getSearchURL(false);
+      if (PluginFormcreatorForm::canCreate()) {
+         $menu['options']['formlist']['links']['add']  = PluginFormcreatorForm::getFormURL(false);
+      }
 
       return $menu;
    }

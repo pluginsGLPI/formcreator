@@ -1,6 +1,8 @@
 <?php
 class PluginFormcreatorFormanswer extends CommonDBChild
 {
+   static $rightname = 'config';
+
    static public $itemtype = "PluginFormcreatorForm";
    static public $items_id = "plugin_formcreator_forms_id";
 
@@ -179,7 +181,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          echo '<div class="refused_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
-      } elseif($this->fields['status'] == 'accepted') {
+      } elseif(($this->fields['status'] == 'accepted') && (!empty($this->fields['comment']))) {
          echo '<div class="accepted_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';

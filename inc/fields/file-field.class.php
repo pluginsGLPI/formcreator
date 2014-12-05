@@ -35,7 +35,7 @@ class fileField implements Field
 
       echo '<input type="file" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
-               id="formcreator_field_' . $field['id'] . '" />';
+               id="formcreator_field_' . $field['id'] . '"' . $required . ' />';
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
@@ -206,7 +206,7 @@ class fileField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && !$hidden && (empty($_FILES['formcreator_field_' . $field['id']]['tmp_name'])
+      if($field['required'] && (empty($_FILES['formcreator_field_' . $field['id']]['tmp_name'])
                                  || !is_file($_FILES['formcreator_field_' . $field['id']]['tmp_name']))) {
          Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;

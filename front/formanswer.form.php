@@ -49,13 +49,12 @@ if ($plugin->isActivated("formcreator")) {
          Html::header(
             __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF'],
-            'plugins',
-            'formcreator',
-            'options'
+            'admin',
+            'PluginFormcreatorAnswer'
          );
       }
 
-      $formanswer->display($_REQUEST);
+      $formanswer->showForm($_REQUEST);
 
       Html::footer();
    }

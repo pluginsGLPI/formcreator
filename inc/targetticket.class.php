@@ -36,10 +36,6 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
     */
    public function showForm($options=array())
    {
-      if(!$this->getFromDB($options['id'])) {
-         Html::displayNotFoundError();
-      }
-
       $obj = new PluginFormcreatorTarget();
       $founded = $obj->find('itemtype = "' . __CLASS__ . '" AND items_id = ' . $this->getID());
       $target = array_shift($founded);

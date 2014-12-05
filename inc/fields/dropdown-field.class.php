@@ -20,7 +20,9 @@ class dropdownField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo self::displayValue($datas['formcreator_field_' . $field['id']], $field['values']);
+         if (!empty($datas['formcreator_field_' . $field['id']])) {
+            echo self::displayValue($datas['formcreator_field_' . $field['id']], $field['values']);
+         }
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -31,6 +33,7 @@ class dropdownField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
+      echo '<div class="form_field">';
       if(!empty($field['values'])) {
          if ($field['values'] == 'User') {
             User::dropdown(array(
@@ -49,6 +52,7 @@ class dropdownField implements Field
             ));
          }
       }
+      echo '</div>' . PHP_EOL;
 
       echo PHP_EOL . '<div class="help-block">' . html_entity_decode($field['description']) . '</div>' . PHP_EOL;
 
@@ -223,7 +227,7 @@ class dropdownField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && empty($value) && !$hidden) {
+      if($field['required'] && empty($value)) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 

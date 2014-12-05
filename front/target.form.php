@@ -11,19 +11,8 @@ if ($plugin->isActivated("formcreator")) {
    // Add a new target
    if(isset($_POST["add"]) && !empty($_POST['plugin_formcreator_forms_id'])) {
       Session::checkRight("config", CREATE);
-      if($target->add($_POST)) {
-         switch ($_POST['itemtype']) {
-            case 'PluginFormcreatorTargetTicket':
-               Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/targetticket.form.php?id=' . $target->fields['items_id']);
-               break;
-
-            default :
-               Html::back();
-               break;
-         }
-      } else {
-         Html::back();
-      }
+      $target->add($_POST);
+      Html::back();
 
    // Delete a target
    } elseif(isset($_POST["delete"])) {

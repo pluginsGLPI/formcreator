@@ -63,12 +63,8 @@ function plugin_init_formcreator ()
       $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/homepage.js';
    }
 
-   if (isset($_SESSION['glpiactiveprofile'])) {
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk-menu.js';
-      }
-   }
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
+   $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
 
 
 

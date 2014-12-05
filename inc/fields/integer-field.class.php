@@ -18,7 +18,9 @@ class integerField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo $datas['formcreator_field_' . $field['id']];
+         if (!empty($datas['formcreator_field_' . $field['id']])) {
+            echo $datas['formcreator_field_' . $field['id']];
+         }
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -32,7 +34,7 @@ class integerField implements Field
       echo '<input type="text" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
                id="formcreator_field_' . $field['id'] . '"
-               value="' . $value . '" />';
+               value="' . $value . '"' . $required . ' />';
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
@@ -203,7 +205,7 @@ class integerField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && empty($value) && !$hidden) {
+      if($field['required'] && ($value == '')) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 

@@ -164,9 +164,13 @@ form.formcreator_form .form-group .form_field {
    width: 650px;
    float: left;
 }
+#bloc > form.formcreator_form .form-group .form_field {
+   width: 415px;
+}
 form.formcreator_form .form-group .form_field .select2-container {
    width: 100% !important;
 }
+
 
 form.formcreator_form .description_field {
    border-left: 4px solid #999;
@@ -177,17 +181,44 @@ form.formcreator_form .checkbox, form.formcreator_form .radio {
    margin-left: 250px;
 }
 
-form.formcreator_form .form-group > input, form.formcreator_form textarea, form.formcreator_form select {
+form.formcreator_form .form-group > input,
+form.formcreator_form textarea,
+form.formcreator_form select,
+form.formcreator_form .form-group input.hasDatepicker {
    background: #FFF;
    background: rgba(255, 255, 255, 0.7);
    border: 1px solid #999;
    border-radius: 3px;
    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.20);
    line-height: 18px;
-   min-height: 30px;
-   padding: 3px 10px;
+   min-height: 24px;
+   padding: 1px 10px;
    margin: 0;
    width: 660px;
+   color: #333;
+   font-size: 1.1em;
+}
+form.formcreator_form .form-group input.hasDatepicker {
+   width: 115px;
+}
+form.formcreator_form .form-group img {
+   vertical-align: middle;
+   width: 18px;
+   height: 18px;
+   margin: 4px;
+}
+form.formcreator_form .select2-container .select2-choice {
+   height: 24px;
+   padding: 1px 10px;
+   line-height: 24px;
+   width: 638px;
+}
+#bloc > form.formcreator_form .select2-container .select2-choice {
+   width: 395px;
+}
+form.formcreator_form .select2-container .select2-choice > .select2-chosen {
+   margin: 1px 0;
+   line-height: 24px;
    color: #333;
    font-size: 1.1em;
 }
@@ -210,9 +241,21 @@ form.formcreator_form input[type = file]:focus {
    border-bottom: rgba(102,175,233,.8) dotted 1px !important;
 }
 
-form.formcreator_form .form-group > input, form.formcreator_form textarea {
+form.formcreator_form .form-group > input,
+form.formcreator_form textarea {
    width: 638px;
    min-height: 24px;
+}
+form.formcreator_form .select2-container-multi .select2-choices  {
+   width: 658px;
+   min-height: 24px;
+   background: #FFF;
+   background: rgba(255, 255, 255, 0.7);
+   border: 1px solid #999;
+   border-radius: 3px;
+}
+#bloc > form.formcreator_form .select2-container-multi .select2-choices  {
+   width: 415px;
 }
 
 form.formcreator_form .form-group option {
@@ -294,3 +337,4 @@ form.formcreator_form .liste span > select {
 #div_show_condition_value {
    width: 58px !important;
 }
+

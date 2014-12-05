@@ -20,7 +20,9 @@ class selectField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo $datas['formcreator_field_' . $field['id']];
+         if (!empty($datas['formcreator_field_' . $field['id']])) {
+            echo $datas['formcreator_field_' . $field['id']];
+         }
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -31,6 +33,7 @@ class selectField implements Field
       if($field['required'])  echo ' <span class="red">*</span>';
       echo '</label>';
 
+      echo '<div class="form_field">';
       if(!empty($field['values'])) {
          $values         = explode("\r\n", $field['values']);
          $tab_values     = array();
@@ -45,8 +48,8 @@ class selectField implements Field
          Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values, array(
             'value'      => $default_value,
          ));
-
       }
+      echo '</div>' . PHP_EOL;
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
@@ -217,7 +220,7 @@ class selectField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && empty($value) && !$hidden) {
+      if($field['required'] && empty($value)) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 

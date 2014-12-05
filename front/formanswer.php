@@ -17,9 +17,9 @@ if(PluginFormcreatorFormanswer::canView()) {
       Html::header(
          __('Form Creator', 'formcreator'),
          $_SERVER['PHP_SELF'],
-         'plugins',
-         'formcreator',
-         'options'
+         'admin',
+         'PluginFormcreatorForm',
+         'formanswer'
       );
    }
 

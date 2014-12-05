@@ -68,12 +68,14 @@ class ldapselectField implements Field
 
             if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
             sort($tab_values);
+            echo '<div class="form_field">';
             Dropdown::showFromArray('formcreator_field_' . $field['id'],
                                     $tab_values,
                                     array(
                                        'value'               => $default_value,
                                     )
             );
+            echo '</div>' . PHP_EOL;
          } catch(Exception $e) {
             echo '<b><i class="red">';
             echo __('Cannot recover LDAP informations!', 'formcreator');
@@ -275,7 +277,7 @@ class ldapselectField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && empty($value) && !$hidden) {
+      if($field['required'] && empty($value)) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 

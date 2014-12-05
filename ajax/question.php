@@ -38,7 +38,7 @@ $rand = mt_rand();
             </label>
          </td>
          <td width="33%">
-            <input type="text" name="name" id="name" style="width:90%;"
+            <input type="text" name="name" id="name" style="width:90%;" autofocus
                value="<?php echo $question->fields['name']; ?>" class="required">
          </td>
          <td width="17%">

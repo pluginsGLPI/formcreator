@@ -21,8 +21,6 @@ echo '</tr>';
 
 echo '<tr class="line0">';
 echo '<td colspan="4" class="center">';
-echo '<input type="reset" name="reset" class="submit_button" onclick="cancelAddTarget()"
-         value="' . __('Cancel', 'formcreator') . '" /> &nbsp; ';
 echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . (int) $_REQUEST['form_id'] . '" />';
 echo '<input type="submit" name="add" class="submit_button" value="' . __('Add') . '" />';
 echo '</td>';

@@ -6,9 +6,6 @@ class textField implements Field
 {
 	public static function show($field, $datas, $edit = true)
    {
-
-
-
       $value = (!empty($datas['formcreator_field_' . $field['id']]))
                ? $datas['formcreator_field_' . $field['id']]
                : $field['default_values'];
@@ -21,7 +18,9 @@ class textField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo $value;
+         if (!empty($datas['formcreator_field_' . $field['id']])) {
+            echo $datas['formcreator_field_' . $field['id']];
+         }
          echo '&nbsp;</div>' . PHP_EOL;
          return;
       }
@@ -35,7 +34,7 @@ class textField implements Field
       echo '<input type="text" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
                id="formcreator_field_' . $field['id'] . '"
-               value="' . $value . '" />';
+               value="' . $value . '"' . $required . ' />';
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
@@ -206,17 +205,17 @@ class textField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && empty($value) && !$hidden) {
+      if($field['required'] && empty($value)) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Min range not set or text length longer than min length
-      } elseif(!empty($field['range_min']) && strlen($value) < $field['range_min']) {
+      } elseif(!empty($field['range_min']) && strlen(utf8_decode($value)) < $field['range_min']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $field['range_min']) . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Max range not set or text length shorter than max length
-      } elseif(!empty($field['range_max']) && strlen($value) > $field['range_max']) {
+      } elseif(!empty($field['range_max']) && strlen(utf8_decode($value)) > $field['range_max']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $field['range_max']) . ' ' . $field['name'], false, ERROR);
          return false;
 

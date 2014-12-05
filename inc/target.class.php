@@ -49,6 +49,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       $target_class    = new PluginFormcreatorTarget();
       $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $item->getID());
       $target_number   = count($founded_targets);
+      $token           = Session::getNewCSRFToken();
       $i = 0;
       foreach ($founded_targets as $target) {
          $i++;
@@ -67,7 +68,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          echo '<td align="center" width="32">';
          echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/delete.png"
                   alt="*" title="' . __('Delete', 'formcreator') . '"
-                  onclick="deleteTarget(' . $target['id'] . ', \'' . addslashes($target['name']) . '\')" align="absmiddle" style="cursor: pointer" /> ';
+                  onclick="deleteTarget(' . $item->getID() . ', \'' . $token . '\', ' . $target['id'] . ', \'' . addslashes($target['name']) . '\')" align="absmiddle" style="cursor: pointer" /> ';
          echo '</td>';
 
          echo '</tr>';
@@ -77,7 +78,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       // Display add target link...
       echo '<tr class="line' . (($i + 1) % 2) . '" id="add_target_row">';
       echo '<td colspan="3">';
-      echo '<a href="javascript:addTarget(' . $item->fields['id'] . ');">
+      echo '<a href="javascript:addTarget(' . $item->getID() . ', \'' . $token . '\');">
                 <img src="'.$GLOBALS['CFG_GLPI']['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
                 '.__('Add a destination', 'formcreator').'
             </a>';
@@ -90,39 +91,6 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '</tr>';
 
       echo "</table>";
-
-
-      echo '<script type="text/javascript">
-               function addTarget(form) {
-                  document.getElementById("add_target_form").style.display = "table-row";
-                  document.getElementById("add_target_row").style.display = "none";
-                  Ext.get("add_target_form_td").load({
-                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/target.php",
-                     scripts: true,
-                     params: "form_id=" + ' . $item->getId() . '
-                  });
-               }
-
-               function cancelAddTarget() {
-                  document.getElementById("add_target_row").style.display = "table-row";
-                  document.getElementById("add_target_form").style.display = "none";
-               }
-
-               function deleteTarget(target_id, target_name) {
-                  if(confirm("' . __('Are you sure you want to delete this destination:', 'formcreator') . ' " + target_name)) {
-                     Ext.Ajax.request({
-                        url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/target.form.php",
-                        success: reloadTab,
-                        params: {
-                           delete: 1,
-                           id: target_id,
-                           plugin_formcreator_forms_id: ' . $item->getId() . ',
-                           _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
-                        }
-                     });
-                  }
-               }
-            </script>';
    }
 
    /**

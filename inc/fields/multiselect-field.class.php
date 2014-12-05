@@ -21,7 +21,9 @@ class multiSelectField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo str_replace(',', ', ', trim($datas['formcreator_field_' . $field['id']], ','));
+         if (!empty($datas['formcreator_field_' . $field['id']])) {
+            echo str_replace(',', ', ', trim($datas['formcreator_field_' . $field['id']], ','));
+         }
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -33,6 +35,7 @@ class multiSelectField implements Field
       echo '</label>';
       echo '<input type="hidden" name="formcreator_field_' . $field['id'] . '[]" value="" />';
 
+      echo '<div class="form_field">';
       if(!empty($field['values'])) {
          $values         = explode("\r\n", $field['values']);
          $tab_values     = array();
@@ -48,8 +51,8 @@ class multiSelectField implements Field
             'multiple' => true,
             'size'     => 5,
          ));
-
       }
+      echo '</div>' . PHP_EOL;
 
       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
 
@@ -220,7 +223,7 @@ class multiSelectField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && (count($value) - 1 == 0) && !$hidden) {
+      if($field['required'] && (count($value) - 1 == 0)) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 

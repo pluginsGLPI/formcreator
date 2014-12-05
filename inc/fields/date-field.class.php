@@ -17,9 +17,9 @@ class dateField implements Field
       if (!$edit) {
          echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
-         echo (isset($datas['formcreator_field_' . $field['id']]))
-            ? Html::convDate($datas['formcreator_field_' . $field['id']])
-            : '';
+         if (!empty($datas['formcreator_field_' . $field['id']])) {
+            echo Html::convDate($datas['formcreator_field_' . $field['id']]);
+         }
          echo '</div>' . PHP_EOL;
          return;
       }
@@ -33,7 +33,6 @@ class dateField implements Field
       echo '<div>';
       Html::showDateField('formcreator_field_' . $field['id'], array(
          'value' => $value,
-         'onchange' => 'alert("OK")',
       ));
       echo '</div>';
 
@@ -201,7 +200,7 @@ class dateField implements Field
       }
 
       // Not required or not empty
-      if($field['required'] && ($value == 'NULL') && !$hidden) {
+      if($field['required'] && empty($value)) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
