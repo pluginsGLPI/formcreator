@@ -10,19 +10,19 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new Section
    if(isset($_POST["add"])) {
-      Session::checkRight("config", CREATE);
+      Session::checkRight("entity", CREATE);
       $section->add($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Edit an existing Section
    } elseif(isset($_POST["update"])) {
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
       $section->update($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
    // Delete a Section
    } elseif(isset($_POST["delete_section"])) {
-      Session::checkRight("config", DELETE);
+      Session::checkRight("entity", DELETE);
       $section->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
@@ -30,7 +30,7 @@ if ($plugin->isActivated("formcreator")) {
    } elseif(isset($_POST["move"])) {
       global $DB;
 
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
 
       $table  = getTableForItemtype('PluginFormcreatorSection');
       $result = $DB->query("SELECT `order`, `plugin_formcreator_forms_id` FROM $table WHERE id = " . $_POST['id']);

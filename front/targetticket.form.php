@@ -10,7 +10,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Edit an existing target ticket
    if(isset($_POST["update"])) {
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
       $targetticket->update($_POST);
       Html::back();
 

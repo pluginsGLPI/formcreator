@@ -8,7 +8,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new Form
    if(isset($_POST["add"])) {
-      Session::checkRight("config", CREATE);
+      Session::checkRight("entity", CREATE);
       $newID = $form->add($_POST);
 
       // $newTarget = $form->createDefaultTarget($newID);
@@ -18,25 +18,25 @@ if ($plugin->isActivated("formcreator")) {
 
    // Edit an existinf form
    } elseif(isset($_POST["update"])) {
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
       $form->update($_POST);
       Html::back();
 
    // Delete a form (is_deleted = true)
    } elseif(isset($_POST["delete"])) {
-      Session::checkRight("config", DELETE);
+      Session::checkRight("entity", DELETE);
       $form->delete($_POST);
       $form->redirectToList();
 
    // Restore a deleteted form (is_deleted = false)
    } elseif(isset($_POST["restore"])) {
-      Session::checkRight("config", DELETE);
+      Session::checkRight("entity", DELETE);
       $form->restore($_POST);
       $form->redirectToList();
 
    // Delete defenitively a form from DB and all its datas
    } elseif(isset($_POST["purge"])) {
-      Session::checkRight("config", PURGE);
+      Session::checkRight("entity", PURGE);
       $form->delete($_POST,1);
       $form->redirectToList();
 

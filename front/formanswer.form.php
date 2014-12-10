@@ -8,12 +8,12 @@ if ($plugin->isActivated("formcreator")) {
 
    // Edit an existing target ticket
    if(isset($_POST['update'])) {
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
       $formanswer->update($_POST);
       Html::back();
 
    } elseif(isset($_POST['refuse_formanswer'])) {
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
 
       $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
       $_POST['status']                      = 'refused';
@@ -23,7 +23,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
 
    } elseif(isset($_POST['accept_formanswer'])) {
-      Session::checkRight("config", UPDATE);
+      Session::checkRight("entity", UPDATE);
 
       $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
       $_POST['status']                      = 'accepted';
