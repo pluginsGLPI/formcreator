@@ -4,16 +4,6 @@ class PluginFormcreatorCategory extends CommonDropdown
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
 
-   static function canCreate()
-   {
-      return Session::haveRight('entity', UPDATE);
-   }
-
-   static function canView()
-   {
-      return Session::haveRight('entity', READ);
-   }
-
    public static function getTypeName($nb = 1)
    {
       return _n('Form category', 'Form categories', $nb, 'formcreator');

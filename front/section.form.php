@@ -10,7 +10,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new Section
    if(isset($_POST["add"])) {
-      Session::checkRight("entity", CREATE);
+      Session::checkRight("entity", UPDATE);
       $section->add($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
@@ -22,7 +22,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Delete a Section
    } elseif(isset($_POST["delete_section"])) {
-      Session::checkRight("entity", DELETE);
+      Session::checkRight("entity", UPDATE);
       $section->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 

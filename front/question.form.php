@@ -10,7 +10,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new Question
    if(isset($_POST["add"])) {
-      Session::checkRight("entity", CREATE);
+      Session::checkRight("entity", UPDATE);
       if ($question->add($_POST)) {
          Session::addMessageAfterRedirect(__('The question have been successfully saved!', 'formcreator'), true, INFO);
       }
@@ -26,7 +26,7 @@ if ($plugin->isActivated("formcreator")) {
 
    // Delete a Question
    } elseif(isset($_POST["delete_question"])) {
-      Session::checkRight("entity", DELETE);
+      Session::checkRight("entity", UPDATE);
       $question->delete($_POST);
 
    // Set a Question required
