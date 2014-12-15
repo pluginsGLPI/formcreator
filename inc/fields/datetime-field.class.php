@@ -117,7 +117,7 @@ class datetimeField implements Field
                   var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
 
                   for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements.addEventListener) {
+                     if (inputElements[i].addEventListener) {
                         inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
                      } else {
                         inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
