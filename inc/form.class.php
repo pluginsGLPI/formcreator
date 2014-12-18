@@ -361,29 +361,62 @@ class PluginFormcreatorForm extends CommonDBTM
          $validators[] = $id;
       }
 
-      $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-      $query = 'SELECT u.`id`, u.`name`, u.`realname`
+      // $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
+      // $query = 'SELECT u.`id`, u.`name`, u.`realname`
+      //           FROM `glpi_users` u
+      //           INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+      //           INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+      //           INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+      //           WHERE pr.`name` = "ticketvalidation"
+      //           AND (
+      //             pr.`rights` & ' . TicketValidation::VALIDATEREQUEST . ' = ' . TicketValidation::VALIDATEREQUEST . '
+      //             OR pr.`rights` & ' . TicketValidation::VALIDATEINCIDENT . ' = ' . TicketValidation::VALIDATEINCIDENT . ')
+      //           AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
+      //           OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
+      //           GROUP BY u.`id`
+      //           ORDER BY u.`name`';
+      // $result = $GLOBALS['DB']->query($query);
+
+      // echo '<select name="_validators[]" size="4" style="width: 80%" multiple id="validators">';
+      // while($user = $GLOBALS['DB']->fetch_assoc($result)) {
+      //    echo '<option value="' . $user['id'] . '"';
+      //    if (in_array($user['id'], $validators)) echo ' selected="selected"';
+      //    echo '>' . $user['name'] . '</option>';
+      // }
+      // echo '</select>';
+
+
+      // Si le formulaire est récursif, on authorise les validateurs des sous-entités
+      // Sinon uniquement les validateurs de l'entité du formulaire
+      if ($this->isRecursive()) {
+         $entites = getSonsOf('glpi_entities', $this->getEntityID());
+      } else {
+         $entites = $this->getEntityID();
+      }
+      $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
+      $query = "SELECT u.`id`, u.`name`, u.`realname`
                 FROM `glpi_users` u
                 INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                 INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
                 INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
-                WHERE pr.`name` = "ticketvalidation"
+                WHERE pr.`name` = 'ticketvalidation'
                 AND (
-                  pr.`rights` & ' . TicketValidation::VALIDATEREQUEST . ' = ' . TicketValidation::VALIDATEREQUEST . '
-                  OR pr.`rights` & ' . TicketValidation::VALIDATEINCIDENT . ' = ' . TicketValidation::VALIDATEINCIDENT . ')
-                AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
-                OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
+                  pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
+                  OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
+                AND $subentities
                 GROUP BY u.`id`
-                ORDER BY u.`name`';
+                ORDER BY u.`name`";
       $result = $GLOBALS['DB']->query($query);
 
-      echo '<select name="_validators[]" size="4" style="width: 80%" multiple id="validators">';
+      echo '<select name="_validators[]" size="4" style="width: 100%" multiple id="validators">';
       while($user = $GLOBALS['DB']->fetch_assoc($result)) {
          echo '<option value="' . $user['id'] . '"';
          if (in_array($user['id'], $validators)) echo ' selected="selected"';
          echo '>' . $user['name'] . '</option>';
       }
       echo '</select>';
+
+
       echo '<script type="text/javascript">
                function changeValidators(value) {
                   if (value == 1) {
@@ -708,22 +741,12 @@ class PluginFormcreatorForm extends CommonDBTM
                       WHERE fv.`forms_id` = "' . $this->getID(). '"';
          $result = $GLOBALS['DB']->query($subquery);
          if ($GLOBALS['DB']->numrows($result) != 0) {
-            $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-            $query = 'SELECT u.`id`
-                      FROM `glpi_users` u
-                      INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                      INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                      INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
-                      WHERE (
-                        pr.`rights` & ' . TicketValidation::VALIDATEREQUEST . ' = ' . TicketValidation::VALIDATEREQUEST . '
-                        OR pr.`rights` & ' . TicketValidation::VALIDATEINCIDENT . ' = ' . TicketValidation::VALIDATEINCIDENT . ')
-                      AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
-                      OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . $this->fields["entities_id"].','.implode(',', $subentities). ')))
-                      AND u.`id` NOT IN (' . $subquery . ')
-                      GROUP BY u.`id`';
+            $query = 'SELECT u2.`id`
+                      FROM `glpi_users` u2
+                      WHERE u2.`id` NOT IN (' . $subquery . ')
+                      GROUP BY u2.`id`';
             $result = $GLOBALS['DB']->query($query);
             while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-               $validators[$user['id']] = getUserName($user['id']);
                $tab_users[] = $user['id'];
             }
          }
