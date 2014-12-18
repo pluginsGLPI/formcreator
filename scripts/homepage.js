@@ -6,8 +6,8 @@ Ext.Ajax.on('requestcomplete', function(ajax, xhr, option){
                Ext.Ajax.request({
                   url: "../plugins/formcreator/ajax/homepage_forms.php",
                   success: function(data) {
-                     Ext.select('.tab_cadre_central .tab_cadrehov:has(a[href*=front/planning.php])')
-                        .insertHtml('beforeBegin', data.responseText);
+                     Ext.select('.tab_cadre_central td:nth-child(2) .central td:first-child br')
+                        .insertHtml('afterEnd', data.responseText);
                   }
                });
             }
