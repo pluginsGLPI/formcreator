@@ -159,12 +159,16 @@ jQuery(document).ready(function($) {
 
    $('#c_menu #menu1').after(link);
 
-   $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
-      type: "GET",
-   }).done(function(response){
-      setTimeout(function() {
-         $('.central td').first().prepend(response);
-      }, 200);
-   });
+   var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
+
+   if (NomDuFichier == "central.php" || NomDuFichier == "helpdesk.public.php") {
+      $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
+         type: "GET",
+      }).done(function(response){
+         setTimeout(function() {
+            $('.central td').first().prepend(response);
+         }, 200);
+      });
+   }
 });
