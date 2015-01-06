@@ -99,21 +99,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       return $tab;
    }
 
-   // /**
-   //  * Define default search request
-   //  *
-   //  * @return Array Array of search options : [field, searchtype, contains, sort, order]
-   //  */
-   // public static function getDefaultSearchRequest()
-   // {
-   //    $search = array('field'      => array(0 => 30),
-   //                    'searchtype' => array(0 => 'equals'),
-   //                    'contains'   => array(0 => 30),
-   //                    'sort'       => 2,
-   //                    'order'      => 'ASC');
-   //    return $search;
-   // }
-
    /**
     * Define how to display search field for a specific type
     *
@@ -541,30 +526,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $value = '';
                }
                $value   = PluginFormcreatorFields::getValue($question_line, $value);
-
-
-
-               // if ($question_line['show_type'] == 'hide' ) {
-               //    switch ($field['show_condition']) {
-               //       case 'notequal':
-               //          $condition = '!=';
-               //          break;
-               //       case 'lower':
-               //          $condition = '<';
-               //          break;
-               //       case 'greater':
-               //          $condition = '>';
-               //          break;
-
-               //       default:
-               //          $condition = '==';
-               //          break;
-               //    }
-               //    $hidden = eval($question_line['show_value'] . ' ' . $condition . ' ' . $question_line['show_field'])
-               // }
-
-
-
 
                $output .= $question_no . ') ' . $question_line['name'] . ' : ';
                $output .= $value . PHP_EOL . PHP_EOL;

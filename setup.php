@@ -63,7 +63,6 @@ function plugin_init_formcreator ()
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
-
    // Config page
    $plugin = new Plugin();
    $links  = array();
@@ -87,12 +86,7 @@ function plugin_init_formcreator ()
                               'links'  => $links),
    );
 
-   //CFG_GLPI['root_doc']."/front/central.php?redirect=plugin_formcreator_".$id
    $PLUGIN_HOOKS['redirect_page']['formcreator'] = 'front/formanswer.form.php';
-   //redirect=plugin_formcreator_formanswer_#id
-   // $PLUGIN_HOOKS['redirect_page']['formcreator'] = array('formanswer' => 'front/formanswer.form.php');
-
-
 
    // Load field class and all its method to manage fields
    Plugin::registerClass('PluginFormcreatorFields');

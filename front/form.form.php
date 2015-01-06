@@ -11,9 +11,6 @@ if ($plugin->isActivated("formcreator")) {
       Session::checkRight("entity", UPDATE);
       $newID = $form->add($_POST);
 
-      // $newTarget = $form->createDefaultTarget($newID);
-      // $newSection = $form->createDefaultSection($newID,$newTarget);
-
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
    // Edit an existinf form

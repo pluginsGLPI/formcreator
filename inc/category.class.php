@@ -35,7 +35,6 @@ class PluginFormcreatorCategory extends CommonDropdown
                            ? $_POST['order'] : 'ASC';
       $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
       Search::manageGetValues(__CLASS__);
-      //Search::showGenericSearch(__CLASS__, $_GET);
       Search::showList(__CLASS__, $params);
    }
 

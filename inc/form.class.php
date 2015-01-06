@@ -154,21 +154,6 @@ class PluginFormcreatorForm extends CommonDBTM
       return $tab;
    }
 
-   // /**
-   //  * Define default search request
-   //  *
-   //  * @return Array Array of search options : [field, searchtype, contains, sort, order]
-   //  */
-   // public static function getDefaultSearchRequest()
-   // {
-   //    $search = array('field'      => array(0 => 30),
-   //                    'searchtype' => array(0 => 'equals'),
-   //                    'contains'   => array(0 => 30),
-   //                    'sort'       => 2,
-   //                    'order'      => 'ASC');
-   //    return $search;
-   // }
-
    /**
     * Define how to display search field for a specific type
     *
@@ -360,31 +345,6 @@ class PluginFormcreatorForm extends CommonDBTM
       while(list($id) = $GLOBALS['DB']->fetch_array($result)) {
          $validators[] = $id;
       }
-
-      // $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
-      // $query = 'SELECT u.`id`, u.`name`, u.`realname`
-      //           FROM `glpi_users` u
-      //           INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-      //           INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-      //           INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
-      //           WHERE pr.`name` = "ticketvalidation"
-      //           AND (
-      //             pr.`rights` & ' . TicketValidation::VALIDATEREQUEST . ' = ' . TicketValidation::VALIDATEREQUEST . '
-      //             OR pr.`rights` & ' . TicketValidation::VALIDATEINCIDENT . ' = ' . TicketValidation::VALIDATEINCIDENT . ')
-      //           AND (pu.`entities_id` = ' . $this->fields["entities_id"] . '
-      //           OR (pu.`is_recursive` = 1 AND pu.entities_id IN (' . implode(',', $subentities). ')))
-      //           GROUP BY u.`id`
-      //           ORDER BY u.`name`';
-      // $result = $GLOBALS['DB']->query($query);
-
-      // echo '<select name="_validators[]" size="4" style="width: 80%" multiple id="validators">';
-      // while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-      //    echo '<option value="' . $user['id'] . '"';
-      //    if (in_array($user['id'], $validators)) echo ' selected="selected"';
-      //    echo '>' . $user['name'] . '</option>';
-      // }
-      // echo '</select>';
-
 
       // Si le formulaire est récursif, on authorise les validateurs des sous-entités
       // Sinon uniquement les validateurs de l'entité du formulaire
