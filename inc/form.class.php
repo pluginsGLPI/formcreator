@@ -1,7 +1,7 @@
 <?php
 class PluginFormcreatorForm extends CommonDBTM
 {
-   static $rightname = 'config';
+   static $rightname = 'entity';
 
    public $dohistory         = true;
 
@@ -16,7 +16,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function canCreate()
    {
-      return true;
+      return Session::haveRight("entity", UPDATE);
    }
 
    /**
@@ -26,7 +26,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function canView()
    {
-      return true;
+      return Session::haveRight("entity", UPDATE);
    }
 
    /**
@@ -51,18 +51,18 @@ class PluginFormcreatorForm extends CommonDBTM
 
       $menu['options']['formanswer']['title']            = PluginFormcreatorFormanswer::getTypeName(2);
       $menu['options']['formanswer']['page']             = PluginFormcreatorFormanswer::getSearchURL(false);
-      $menu['options']['formanswer']['links']['search']  = PluginFormcreatorForm::getSearchURL(false);
       $menu['options']['formanswer']['links'][$image]    = PluginFormcreatorFormanswer::getSearchURL(false);
       if (PluginFormcreatorForm::canCreate()) {
          $menu['options']['formanswer']['links']['add']  = PluginFormcreatorForm::getFormURL(false);
+         $menu['options']['formanswer']['links']['search']  = PluginFormcreatorForm::getSearchURL(false);
       }
 
       $menu['options']['formlist']['title']            = PluginFormcreatorFormanswer::getTypeName(2);
       $menu['options']['formlist']['page']             = PluginFormcreatorFormanswer::getSearchURL(false);
-      $menu['options']['formlist']['links']['search']  = PluginFormcreatorForm::getSearchURL(false);
       $menu['options']['formlist']['links'][$image]    = PluginFormcreatorFormanswer::getSearchURL(false);
       if (PluginFormcreatorForm::canCreate()) {
          $menu['options']['formlist']['links']['add']  = PluginFormcreatorForm::getFormURL(false);
+         $menu['options']['formlist']['links']['search']  = PluginFormcreatorForm::getSearchURL(false);
       }
 
       return $menu;
