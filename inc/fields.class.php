@@ -47,6 +47,8 @@ class PluginFormcreatorFields
          }
       }
 
+      asort($tab_field_types_name);
+
       return $tab_field_types_name;
    }
 
