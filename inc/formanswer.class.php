@@ -208,10 +208,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Display validation form
       } elseif(($this->fields['status'] == 'waiting') && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
-         if ((isset($_SESSION['glpiactiveprofile']['validate_request'])
-               && ($_SESSION['glpiactiveprofile']['validate_request'] == 1))
-            || (isset($_SESSION['glpiactiveprofile']['validate_incident'])
-               && ($_SESSION['glpiactiveprofile']['validate_incident'] == 1))) {
+         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '">';
             echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
             echo '<textarea class="form-control"
