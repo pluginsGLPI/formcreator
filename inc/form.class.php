@@ -521,10 +521,8 @@ class PluginFormcreatorForm extends CommonDBTM
 
          echo '<br />';
 
-         if ((isset($_SESSION['glpiactiveprofile']['validate_request'])
-               && ($_SESSION['glpiactiveprofile']['validate_request'] == 1))
-            || (isset($_SESSION['glpiactiveprofile']['validate_incident'])
-               && ($_SESSION['glpiactiveprofile']['validate_incident'] == 1))) {
+         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<table class="tab_cadrehov" style="width: 375px">';
             echo '<tr><th colspan="2">' . __('My last forms (validator)', 'formcreator') . '</t></tr>';
             $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`

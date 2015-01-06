@@ -68,10 +68,8 @@ function plugin_formcreator_addDefaultWhere($type)
 {
    switch ($type) {
       case "PluginFormcreatorFormanswer" :
-         if ((!isset($_SESSION['glpiactiveprofile']['validate_request'])
-                  || !$_SESSION['glpiactiveprofile']['validate_request'])
-                && (!isset($_SESSION['glpiactiveprofile']['validate_incident'])
-                  || !$_SESSION['glpiactiveprofile']['validate_incident'])) {
+         if (!Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+            && !Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             return " `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
          }
          break;
