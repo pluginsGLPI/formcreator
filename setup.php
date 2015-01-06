@@ -56,17 +56,9 @@ function plugin_init_formcreator ()
 
    $PLUGIN_HOOKS['menu_toadd']['formcreator'] = array('admin' => 'PluginFormcreatorForm');
 
-
-   if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/helpdesk.js';
-   } elseif(strpos($_SERVER['REQUEST_URI'], "front/central.php") !== false) {
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/homepage.js';
-   }
-
+   // Add specific JavaScript
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
-
-
 
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
