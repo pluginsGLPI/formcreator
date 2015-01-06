@@ -198,7 +198,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       }
 
-
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
          echo '<div class="form-group line' . (count($questions) + 1) % 2 . '">';
@@ -206,26 +205,32 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="' . __('Save') . '" />';
          echo '</div>';
          echo '</div>';
+
+      // Display validation form
       } elseif(($this->fields['status'] == 'waiting') && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
+         if ((isset($_SESSION['glpiactiveprofile']['validate_request'])
+               && ($_SESSION['glpiactiveprofile']['validate_request'] == 1))
+            || (isset($_SESSION['glpiactiveprofile']['validate_incident'])
+               && ($_SESSION['glpiactiveprofile']['validate_incident'] == 1))) {
+            echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '">';
+            echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
+            echo '<textarea class="form-control"
+                     rows="5"
+                     name="comment"
+                     id="comment">' . $this->fields['comment'] . '</textarea>';
+            echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
+            echo '</div>';
 
-         echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '">';
-         echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
-         echo '<textarea class="form-control"
-                  rows="5"
-                  name="comment"
-                  id="comment">' . $this->fields['comment'] . '</textarea>';
-         echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
-         echo '</div>';
-
-         echo '<div class="form-group line' . count($questions) % 2 . '">';
-         echo '<div class="center" style="float: left; width: 50%;">';
-         echo '<input type="submit" name="refuse_formanswer" class="submit_button"
-                  value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
-         echo '</div>';
-         echo '<div class="center">';
-         echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
-         echo '</div>';
-         echo '</div>';
+            echo '<div class="form-group line' . count($questions) % 2 . '">';
+            echo '<div class="center" style="float: left; width: 50%;">';
+            echo '<input type="submit" name="refuse_formanswer" class="submit_button"
+                     value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
+            echo '</div>';
+            echo '<div class="center">';
+            echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
+            echo '</div>';
+            echo '</div>';
+         }
       }
 
       echo '<input type="hidden" name="formcreator_form" value="' . $form->getID() . '">';
