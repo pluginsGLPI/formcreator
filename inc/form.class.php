@@ -663,7 +663,8 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       echo '<form name="formcreator_form' . $item->getID() . '" method="post" role="form" enctype="multipart/form-data"
-               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/form.form.php" class="formcreator_form form_horizontal">';
+               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/form.form.php"
+               class="formcreator_form form_horizontal" onsubmit="return validateForm(this);">';
       echo '<h1 class="form-title">' . $item->fields['name'] . '</h1>';
 
       // Form Header
@@ -700,29 +701,37 @@ class PluginFormcreatorForm extends CommonDBTM
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
                       WHERE fv.`forms_id` = "' . $this->getID(). '"';
          $result = $GLOBALS['DB']->query($subquery);
-         if ($GLOBALS['DB']->numrows($result) != 0) {
-            $query = 'SELECT u2.`id`
-                      FROM `glpi_users` u2
-                      WHERE u2.`id` NOT IN (' . $subquery . ')
-                      GROUP BY u2.`id`';
+         if ($GLOBALS['DB']->numrows($result) == 0) {
+            $subentities = getSonsOf('glpi_entities', $this->fields["entities_id"]);
+            $subentities = implode(',', $subentities);
+            $query = "SELECT u.`id`
+                      FROM `glpi_users` u
+                      INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+                      INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+                      INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+                      WHERE pr.`name` = 'ticketvalidation'
+                      AND (pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
+                        OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
+                      AND (pu.`entities_id` = {$this->fields["entities_id"]}
+                      OR (pu.`is_recursive` = 1 AND pu.entities_id IN ($subentities)))
+                      GROUP BY u.`id`
+                      ORDER BY u.`name`";
             $result = $GLOBALS['DB']->query($query);
-            while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-               $tab_users[] = $user['id'];
-            }
          }
 
          echo '<div class="form-group required liste line' . (count($questions) + 1) % 2 . '" id="form-validator">';
          echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-         // Dropdown::showFromArray('formcreator_validator', $validators);
-         echo '<div class="form_field">';
-         User::dropdown(array(
-            'name'                => 'formcreator_validator',
-            'right'               => array('validate_request', 'validate_incident'),
-            'display_emptychoice' => true,
-            'used'                => $tab_users,
-            'comments'            => false
-         ));
-         echo '</div>';
+
+         echo '<select name="formcreator_validator" id="formcreator_validator" class="required">';
+         echo '<option value="">---</option>';
+         while($user = $GLOBALS['DB']->fetch_assoc($result)) {
+            $userItem = new User();
+            $userItem->getFromDB($user['id']);
+            echo '<option value="' . $user['id'] . '">' . $userItem->getname() . '</option>';
+         }
+         echo '</select>';
+         echo '<script type="text/javascript" src="../scripts/combobox.js.php"></script>';
+         echo '<script type="text/javascript" src="../scripts/form-validation.js.php"></script>';
          echo '</div>';
       }
 

@@ -593,3 +593,11 @@ msgstr ""
 #: inc/form.class.php:511
 msgid "No form waiting for validation"
 msgstr ""
+
+#: scripts/combobox.js.php:54
+msgid "Show All Items"
+msgstr ""
+
+#: scripts/combobox.js.php:120
+msgid "didn't match any item"
+msgstr ""
