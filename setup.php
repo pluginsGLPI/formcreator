@@ -86,8 +86,6 @@ function plugin_init_formcreator ()
                               'links'  => $links),
    );
 
-   $PLUGIN_HOOKS['redirect_page']['formcreator'] = 'front/formanswer.form.php';
-
    // Load field class and all its method to manage fields
    Plugin::registerClass('PluginFormcreatorFields');
 

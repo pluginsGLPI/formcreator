@@ -22,7 +22,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
       $link = 'http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['CFG_GLPI']['root_doc'];
-      $link .= '/index.php?redirect=plugin_formcreator_' . $this->obj->getID();
+      $link .= '/plugins/formcreator/front/formanswer.form.php?id=' . $this->obj->getID();
 
       $requester = new User();
       $requester->getFromDB($this->obj->fields['requester_id']);
