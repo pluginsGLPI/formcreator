@@ -6,6 +6,8 @@ class ldapselectField implements Field
 {
    public static function show($field, $datas, $edit = true)
    {
+      $rand = mt_rand();
+
       $default_values = explode("\r\n", $field['default_values']);
       $default_value  = array_shift($default_values);
       $default_value = (!empty($datas['formcreator_field_' . $field['id']]))
@@ -15,31 +17,63 @@ class ldapselectField implements Field
       if($field['required'])  $required = ' required';
       else $required = '';
 
-      $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
-
       if (!$edit) {
-         echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
          if (isset($datas['formcreator_field_' . $field['id']])) {
-            echo $datas['formcreator_field_' . $field['id']];
+            $values = self::getValues($field['values'], $field['show_empty']);
+            echo $values[$datas['formcreator_field_' . $field['id']]];
          } else {
             echo '&nbsp;';
          }
          echo '</div>' . PHP_EOL;
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . $datas['formcreator_field_' . $field['id']] . '");</script>';
          return;
       }
 
-      echo '<div class="form-group' . $required . ' line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
-      echo '<label>';
-      echo  $field['name'];
-      if($field['required'])  echo ' <span class="red">*</span>';
-      echo '</label>';
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+         echo '<label>';
+         echo  $field['name'];
+         if($field['required'])  echo ' <span class="red">*</span>';
+         echo '</label>';
 
-      if (!empty($field['values'])) {
-         $ldap_values = json_decode($field['values']);
+         $tab_values = self::getValues($field['values'], $field['show_empty']);
+
+         if (!empty($tab_values)) {
+            echo '<div class="form_field">';
+            Dropdown::showFromArray('formcreator_field_' . $field['id'],
+                                    $tab_values,
+                                    array(
+                                       'value' => $default_value,
+                                       'rand'  => $rand
+                                    )
+            );
+            echo '</div>' . PHP_EOL;
+         } else {
+            echo '<b><i class="red">';
+            echo __('Cannot recover LDAP informations!', 'formcreator');
+            echo '</i></b>';
+         }
+
+         echo '<script type="text/javascript">
+                  jQuery(document).ready(function($) {
+                     jQuery("#dropdown_formcreator_field_' . $field['id'] . $rand . '").on("select2-selecting", function(e) {
+                        formcreatorChangeValueOf (' . $field['id']. ', e.val);
+                     });
+                  });
+               </script>';
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . $default_value . '");</script>';
+
+         echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
+      echo '</div>' . PHP_EOL;
+   }
+
+   public static function getValues($ldap_datas, $show_empty) {
+      if (!empty($ldap_datas)) {
+         $ldap_values   = json_decode($ldap_datas);
          $ldap_dropdown = new RuleRightParameter();
          $ldap_dropdown->getFromDB($ldap_values->ldap_attribute);
-         $attribute = array($ldap_dropdown->fields['value']);
+         $attribute     = array($ldap_dropdown->fields['value']);
 
          $config_ldap = new AuthLDAP();
          $config_ldap->getFromDB($ldap_values->ldap_auth);
@@ -66,185 +100,45 @@ class ldapselectField implements Field
                }
             }
 
-            if($field['show_empty']) $tab_values = array('' => '-----') + $tab_values;
+            if($show_empty) $tab_values = array('' => '-----') + $tab_values;
             sort($tab_values);
-            echo '<div class="form_field">';
-            Dropdown::showFromArray('formcreator_field_' . $field['id'],
-                                    $tab_values,
-                                    array(
-                                       'value'               => $default_value,
-                                    )
-            );
-            echo '</div>' . PHP_EOL;
+            return $tab_values;
          } catch(Exception $e) {
-            echo '<b><i class="red">';
-            echo __('Cannot recover LDAP informations!', 'formcreator');
-            echo '</i></b>';
+            return array();
          }
 
          restore_error_handler();
+      } else {
+         return array();
       }
-
-      echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
-
-      switch ($field['show_condition']) {
-         case 'notequal':
-            $condition = '!=';
-            break;
-         case 'lower':
-            $condition = '<';
-            break;
-         case 'greater':
-            $condition = '>';
-            break;
-
-         default:
-            $condition = '==';
-            break;
-      }
-
-      if ($field['show_type'] == 'hide') {
-         $conditionnalField = new PluginFormcreatorQuestion();
-         $conditionnalField->getFromDB($field['show_field']);
-
-         switch ($conditionnalField->fields['fieldtype']) {
-            case 'checkboxes' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
-
-                  for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements[i].addEventListener) {
-                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-               break;
-            case 'multiselect' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
-                  if (inputElements.addEventListener) {
-                     inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                  } else {
-                     inputElements.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-               break;
-            case 'radios' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
-
-                  for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements[i].addEventListener) {
-                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-               break;
-            default :
-               echo '<script type="text/javascript">
-                  var element = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0];
-                  if (element.addEventListener) {
-                     element.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                  } else {
-                     element.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                  }
-                  function showFormGroup' . $field['id'] . '() {
-                     var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
-                     if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-         }
-      }
-
-      echo '</div>' . PHP_EOL;
    }
 
    public static function displayValue($value, $values)
    {
-      if(!empty($value)) {
-         $ldap_values = json_decode($values);
+      if(!empty($values[$value])) {
+         // $ldap_values = json_decode($values);
 
-         $ldap_dropdown = new RuleRightParameter();
-         $ldap_dropdown->getFromDB($ldap_values->ldap_attribute);
-         $attribute = array($ldap_dropdown->fields['value']);
+         // $ldap_dropdown = new RuleRightParameter();
+         // $ldap_dropdown->getFromDB($ldap_values->ldap_attribute);
+         // $attribute = array($ldap_dropdown->fields['value']);
 
-         $config_ldap = new AuthLDAP();
-         $config_ldap->getFromDB($ldap_values->ldap_auth);
-         $ds      = $config_ldap->connect();
-         $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-         $entries = ldap_get_entries($ds, $sn);
-         array_shift($entries);
+         // $config_ldap = new AuthLDAP();
+         // $config_ldap->getFromDB($ldap_values->ldap_auth);
+         // $ds      = $config_ldap->connect();
+         // $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
+         // $entries = ldap_get_entries($ds, $sn);
+         // array_shift($entries);
 
-         $tab_values = array();
-         foreach($entries as $id => $attr) {
-            if(isset($attr[$attribute[0]])
-               && !in_array($attr[$attribute[0]][0], $tab_values)) {
-               $tab_values[$id] = $attr[$attribute[0]][0];
-            }
-         }
-         sort($tab_values);
+         // $tab_values = array();
+         // foreach($entries as $id => $attr) {
+         //    if(isset($attr[$attribute[0]])
+         //       && !in_array($attr[$attribute[0]][0], $tab_values)) {
+         //       $tab_values[$id] = $attr[$attribute[0]][0];
+         //    }
+         // }
+         // sort($tab_values);
 
-         return $tab_values[$value];
+         return $values[$value];
       }
       return '';
    }

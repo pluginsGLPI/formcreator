@@ -197,6 +197,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
 
       }
+      echo '<script type="text/javascript">formcreatorShowFields();</script>';
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {

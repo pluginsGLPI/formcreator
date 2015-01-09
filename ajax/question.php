@@ -91,15 +91,16 @@ $rand = mt_rand();
          <td width="33%">
             <?php
             Dropdown::showFromArray('show_type', array(
-               'show'        => __('Always'),
-               'hide'        => __('Only if field', 'formcreator'),
+               'always'    => __('Always displayed'),
+               'hidden'    => __('Hidden unless', 'formcreator'),
+               'shown'     => __('Displayed unless', 'formcreator'),
             ), array(
-               'value'       => $question->fields['show_type'],
-               'on_change'   => 'toggleCondition(this);',
-               'rand'        => $rand,
+               'value'     => $question->fields['show_rule'],
+               'on_change' => 'toggleCondition(this);',
+               'rand'      => $rand,
             ));
 
-            $hide = ($question->fields['show_type'] != 'hide') ? ' style="display:none"' : '';
+            $hide = ($question->fields['show_rule'] == 'always') ? ' style="display:none"' : '';
             ?>
             <div id="div_show_condition"<?php echo $hide; ?>>
                <?php
@@ -126,13 +127,15 @@ $rand = mt_rand();
 
                echo '<div id="div_show_condition_operator">';
                Dropdown::showFromArray('show_condition', array(
-                  'equal'    => '=',
-                  'notequal' => '&lt;&gt;',
-                  'lower'    => '&lt;',
-                  'greater'  => '&gt;',
+                  '=='    => '=',
+                  '!='    => '&ne;',
+                  '<'     => '&lt;',
+                  '>'     => '&gt;',
+                  '<='    => '&le;',
+                  '>='    => '&ge;',
                ), array(
-                  'value'    => $question->fields['show_condition'],
-                  'rand'     => $rand,
+                  'value' => $question->fields['show_condition'],
+                  'rand'  => $rand,
                ));
                echo '</div>';
                ?>

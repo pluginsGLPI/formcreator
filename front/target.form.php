@@ -15,7 +15,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::back();
 
    // Delete a target
-   } elseif(isset($_POST["delete"])) {
+   } elseif(isset($_POST["delete_target"])) {
       Session::checkRight("entity", UPDATE);
       $target->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);

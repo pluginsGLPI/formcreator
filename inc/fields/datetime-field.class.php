@@ -6,6 +6,8 @@ class datetimeField implements Field
 {
    public static function show($field, $datas, $edit = true)
    {
+      $rand = mt_rand();
+
       $value = (isset($datas['formcreator_field_' . $field['id']])
                    && ($datas['formcreator_field_' . $field['id']] != 'NULL'))
                ? $datas['formcreator_field_' . $field['id']]
@@ -15,153 +17,40 @@ class datetimeField implements Field
       else $required = '';
 
       if (!$edit) {
-         echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
          if (!empty($datas['formcreator_field_' . $field['id']])) {
             echo Html::convDateTime($datas['formcreator_field_' . $field['id']]);
          }
-         echo '</div>' . PHP_EOL;
+         echo '</div>' . PHP_EOL;echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . Html::convDateTime($datas['formcreator_field_' . $field['id']]) . '");</script>';
          return;
       }
 
-      echo '<div class="form-group' . $required . ' line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
-      echo '<label>';
-      echo  $field['name'];
-      if($field['required'])  echo ' <span class="red">*</span>';
-      echo '</label>';
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+         echo '<label>';
+         echo  $field['name'];
+         if($field['required'])  echo ' <span class="red">*</span>';
+         echo '</label>';
 
-      echo '<div>';
-      Html::showDateTimeField('formcreator_field_' . $field['id'], array(
-         'value' => $value
-      ));
-      echo '</div>';
-
-      echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
-
-      switch ($field['show_condition']) {
-         case 'notequal':
-            $condition = '!=';
-            break;
-         case 'lower':
-            $condition = '<';
-            break;
-         case 'greater':
-            $condition = '>';
-            break;
-
-         default:
-            $condition = '==';
-            break;
-      }
-
-      if ($field['show_type'] == 'hide') {
-         $conditionnalField = new PluginFormcreatorQuestion();
-         $conditionnalField->getFromDB($field['show_field']);
-
-         switch ($conditionnalField->fields['fieldtype']) {
-            case 'checkboxes' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
-
-                  for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements.addEventListener) {
-                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }';
-               break;
-            case 'multiselect' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
-                     if (inputElements.addEventListener) {
-                        inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }';
-               break;
-            case 'radios' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
-
-                  for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements[i].addEventListener) {
-                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }';
-               break;
-            default :
-               echo '<script type="text/javascript">
-                  var element = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0];
-                  if (element.addEventListener) {
-                     element.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                  } else {
-                     element.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                  }
-                  function showFormGroup' . $field['id'] . '() {
-                     var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
-                     if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }';
-         }
-         echo '
-                  Ext.onReady(function() {showFormGroup' . $field['id'] . '()});
+         echo '<div>';
+         Html::showDateTimeField('formcreator_field_' . $field['id'], array(
+            'value' => $value,
+            'rand'  => $rand,
+         ));
+         echo '</div>';
+         echo '<script type="text/javascript">
+                  jQuery(document).ready(function($) {
+                     $( "#showdate' . $rand . '" ).on("change", function() {
+                        formcreatorChangeValueOf(' . $field['id'] . ', this.value);
+                     });
+                     $( "#resetdate' . $rand . '" ).on("click", function() {
+                        formcreatorChangeValueOf(' . $field['id'] . ', "");
+                     });
+                  });
                </script>';
-      }
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' .$value . '");</script>';
 
+         echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
       echo '</div>' . PHP_EOL;
    }
 

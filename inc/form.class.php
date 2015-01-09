@@ -686,8 +686,8 @@ class PluginFormcreatorForm extends CommonDBTM
          foreach ($questions as $question_line) {
             PluginFormcreatorFields::showField($question_line, $datas);
          }
-
       }
+      echo '<script type="text/javascript">formcreatorShowFields();</script>';
 
       // Show validator selector
       if ($item->fields['validation_required']) {

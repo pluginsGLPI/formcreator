@@ -36,7 +36,7 @@ function setRequired(token, question_id, val) {
          id: question_id,
          value: val,
          _glpi_csrf_token: token
-      },
+      }
    }).done(reloadTab);
 }
 
@@ -49,7 +49,7 @@ function moveQuestion(token, question_id, action) {
          id: question_id,
          way: action,
          _glpi_csrf_token: token
-      },
+      }
    }).done(reloadTab);
 }
 
@@ -63,7 +63,7 @@ function deleteQuestion(items_id, token, question_id, question_name) {
             delete_question: 1,
             plugin_formcreator_forms_id: items_id,
             _glpi_csrf_token: token
-         },
+         }
       }).done(reloadTab);
    }
 }
@@ -98,7 +98,7 @@ function deleteSection(items_id, token, section_id, section_name) {
             id: section_id,
             plugin_formcreator_forms_id: items_id,
             _glpi_csrf_token: token
-         },
+         }
       }).done(reloadTab);
    }
 }
@@ -112,7 +112,7 @@ function moveSection(token, section_id, action) {
          id: section_id,
          way: action,
          _glpi_csrf_token: token
-      },
+      }
    }).done(reloadTab);
 }
 
@@ -131,11 +131,11 @@ function deleteTarget(items_id, token, target_id, target_name) {
         url: rootDoc + '/plugins/formcreator/front/target.form.php',
         type: "POST",
         data: {
-            delete: 1,
+            delete_target: 1,
             id: target_id,
             plugin_formcreator_forms_id: items_id,
             _glpi_csrf_token: token
-         },
+         }
       }).done(reloadTab);
 
    }
@@ -154,7 +154,7 @@ jQuery(document).ready(function($) {
       width: 980,
       autoOpen: false,
       height: "auto",
-      modal: true,
+      modal: true
    });
 
    $('#c_menu #menu1').after(link);
@@ -164,7 +164,7 @@ jQuery(document).ready(function($) {
    if (NomDuFichier == "central.php" || NomDuFichier == "helpdesk.public.php") {
       $.ajax({
          url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
-         type: "GET",
+         type: "GET"
       }).done(function(response){
          setTimeout(function() {
             $('.central td').first().prepend(response);
@@ -172,3 +172,40 @@ jQuery(document).ready(function($) {
       });
    }
 });
+
+
+// SHOW OR HIDE FORM FIELDS
+var formcreatorQuestions = new Object();
+
+function formcreatorChangeValueOf(field_id, value) {
+   formcreatorQuestions[field_id] = value;
+   formcreatorShowFields();
+}
+function formcreatorAddValueOf(field_id, value) {
+   formcreatorQuestions[field_id] = value;
+}
+
+function formcreatorShowFields() {
+   $.ajax({
+      url: '../ajax/showfields.php',
+      type: "POST",
+      data: {
+         values: JSON.stringify(formcreatorQuestions)
+      }
+   }).done(function(response){
+      var questionToShow = JSON.parse(response);
+      var i = 0;
+      for (question in formcreatorQuestions) {
+         if (questionToShow[question]) {
+            $('#form-group-field' + question).show();
+            i++;
+            $('#form-group-field' + question).removeClass('line' + (i+1) % 2);
+            $('#form-group-field' + question).addClass('line' + i%2);
+         } else {
+            $('#form-group-field' + question).hide();
+            $('#form-group-field' + question).removeClass('line0');
+            $('#form-group-field' + question).removeClass('line1');
+         }
+      }
+   });
+}

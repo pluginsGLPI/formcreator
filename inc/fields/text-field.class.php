@@ -2,8 +2,9 @@
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
 require_once('field.interface.php');
 
-class textField implements Field
+class textField extends PluginFormcreatorField
 {
+
 	public static function show($field, $datas, $edit = true)
    {
       $value = (!empty($datas['formcreator_field_' . $field['id']]))
@@ -13,160 +14,31 @@ class textField implements Field
       if($field['required'])  $required = ' required';
       else $required = '';
 
-      $hide = ($field['show_type'] == 'hide') ? ' style="display: none"' : '';
-
       if (!$edit) {
-         echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
+         echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
          echo '<label>' . $field['name'] . '</label>';
          if (!empty($datas['formcreator_field_' . $field['id']])) {
             echo $datas['formcreator_field_' . $field['id']];
          }
          echo '&nbsp;</div>' . PHP_EOL;
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . addslashes($datas['formcreator_field_' . $field['id']]) . '");</script>';
          return;
       }
 
-      echo '<div class="form-group' . $required . ' line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '"' . $hide . '>';
-      echo '<label>';
-      echo  $field['name'];
-      if($field['required'])  echo ' <span class="red">*</span>';
-      echo '</label>';
+      echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
+         echo '<label>';
+         echo  $field['name'];
+         if($field['required'])  echo ' <span class="red">*</span>';
+         echo '</label>';
 
-      echo '<input type="text" class="form-control"
-               name="formcreator_field_' . $field['id'] . '"
-               id="formcreator_field_' . $field['id'] . '"
-               value="' . $value . '"' . $required . ' />';
+         echo '<input type="text" class="form-control"
+                  name="formcreator_field_' . $field['id'] . '"
+                  id="formcreator_field_' . $field['id'] . '"
+                  value="' . $value . '"' . $required . '
+                  onchange="formcreatorChangeValueOf(' . $field['id'] . ', this.value);" />';
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . $value . '");</script>';
 
-      echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
-
-      switch ($field['show_condition']) {
-         case 'notequal':
-            $condition = '!=';
-            break;
-         case 'lower':
-            $condition = '<';
-            break;
-         case 'greater':
-            $condition = '>';
-            break;
-
-         default:
-            $condition = '==';
-            break;
-      }
-
-      if ($field['show_type'] == 'hide') {
-         $conditionnalField = new PluginFormcreatorQuestion();
-         $conditionnalField->getFromDB($field['show_field']);
-
-         switch ($conditionnalField->fields['fieldtype']) {
-            case 'checkboxes' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
-
-                  for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements[i].addEventListener) {
-                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-               break;
-            case 'multiselect' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
-                  if (inputElements.addEventListener) {
-                     inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                  } else {
-                     inputElements.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-               break;
-            case 'radios' :
-               echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
-
-                  for(var i=0; inputElements[i]; ++i) {
-                     if (inputElements[i].addEventListener) {
-                        inputElements[i].addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                     } else {
-                        inputElements[i].attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                     }
-                  }
-
-                  function showFormGroup' . $field['id'] . '() {
-                     var checkedValue = false;
-
-                     for(var i=0; inputElements[i]; ++i) {
-                        if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
-                           checkedValue = true;
-                        }
-                     }
-
-                     if(checkedValue) {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-               break;
-            default :
-               echo '<script type="text/javascript">
-                  var element = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0];
-                  if (element.addEventListener) {
-                     element.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
-                  } else {
-                     element.attachEvent("onchange", function(){showFormGroup' . $field['id'] . '()});
-                  }
-                  function showFormGroup' . $field['id'] . '() {
-                     var field_value = document.getElementsByName("formcreator_field_' . $field['show_field'] . '")[0].value;
-                     if(field_value ' . $condition . ' "' . $field['show_value'] . '") {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "block";
-                     } else {
-                        document.getElementById("form-group-field' . $field['id'] . '").style.display = "none";
-                     }
-                  }
-                  showFormGroup' . $field['id'] . '();
-               </script>';
-         }
-      }
-
+         echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
       echo '</div>' . PHP_EOL;
 	}
 
@@ -175,59 +47,64 @@ class textField implements Field
       return $value;
    }
 
-	public static function isValid($field, $value, $datas)
+	public function isValid($value)
    {
-      // If the field are hidden, don't test it
-      if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
-         $hidden = true;
+      if (!parent::isValid($value)) return false;
 
-         switch ($field['show_condition']) {
-            case 'notequal':
-               if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
-                  $hidden = false;
-               break;
-            case 'lower':
-               if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
-                  $hidden = false;
-               break;
-            case 'greater':
-               if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
-                  $hidden = false;
-               break;
+  //     // If the field are hidden, don't test it
+  //     if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
+  //        $hidden = true;
 
-            default:
-               if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
-                  $hidden = false;
-               break;
-         }
+  //        switch ($field['show_condition']) {
+  //           case 'notequal':
+  //              if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
+  //                 $hidden = false;
+  //              break;
+  //           case 'lower':
+  //              if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
+  //                 $hidden = false;
+  //              break;
+  //           case 'greater':
+  //              if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
+  //                 $hidden = false;
+  //              break;
 
-         if ($hidden) return true;
-      }
+  //           default:
+  //              if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
+  //                 $hidden = false;
+  //              break;
+  //        }
 
-      // Not required or not empty
-      if($field['required'] && empty($value)) {
-         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-         return false;
+  //        if ($hidden) return true;
+  //     }
+
+  //     // Not required or not empty
+  //     if($field['required'] && empty($value)) {
+  //        Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+  //        return false;
+
+      // } else
+
 
       // Min range not set or text length longer than min length
-      } elseif(!empty($field['range_min']) && strlen(utf8_decode($value)) < $field['range_min']) {
+      if(!empty($this->fields['range_min']) && strlen(utf8_decode($value)) < $this->fields['range_min']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $field['range_min']) . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Max range not set or text length shorter than max length
-      } elseif(!empty($field['range_max']) && strlen(utf8_decode($value)) > $field['range_max']) {
+      } elseif(!empty($this->fields['range_max']) && strlen(utf8_decode($value)) > $this->fields['range_max']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $field['range_max']) . ' ' . $field['name'], false, ERROR);
          return false;
 
       // Specific format not set or well match
-      } elseif(!empty($field['regex']) && !preg_match($field['regex'], $value)) {
+      } elseif(!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
          Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
 
-      // All is OK
-		} else {
-			return true;
 		}
+
+      // All is OK
+		return true;
 	}
 
    public static function getName()

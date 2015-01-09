@@ -457,13 +457,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `plugin_formcreator_sections_id` tinyint(1) NOT NULL,
+                     `plugin_formcreator_sections_id` int(11) NOT NULL,
                      `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
-                     `show_field` int(11) NULL DEFAULT NULL,
-                     `show_condition` enum('equal', 'notequal', 'lower', 'greater') NULL DEFAULT NULL,
-                     `show_value` varchar(255) NULL DEFAULT NULL,
                      `required` boolean NOT NULL DEFAULT FALSE,
                      `show_empty` boolean NOT NULL DEFAULT FALSE,
                      `default_values` text NULL,
@@ -472,145 +468,239 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      `range_max` varchar(10) NULL DEFAULT NULL,
                      `description` text NOT NULL,
                      `regex` varchar(255) NULL DEFAULT NULL,
-                     `order` int(11) NOT NULL DEFAULT '0'
+                     `order` int(11) NOT NULL DEFAULT '0',
+                     `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-      } elseif(!FieldExists($table, 'fieldtype', false)) {
-         // Migration from previous version
-         $query = "ALTER TABLE `$table`
-                   ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
-                   ADD `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
-                   ADD `show_field` int(11) DEFAULT NULL,
-                   ADD `show_condition` enum('equal','notequal','lower','greater') COLLATE utf8_unicode_ci DEFAULT NULL,
-                   ADD `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-                   ADD `required` tinyint(1) NOT NULL DEFAULT '0',
-                   ADD `show_empty` tinyint(1) NOT NULL DEFAULT '0',
-                   ADD `default_values` text COLLATE utf8_unicode_ci,
-                   ADD `values` text COLLATE utf8_unicode_ci,
-                   ADD `range_min` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-                   ADD `range_max` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-                   ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-                   CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
-                   CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
+
+         // Create questions conditions table (since 0.85-1.1)
+         $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
+                    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    `plugin_formcreator_questions_id` int(11) NOT NULL,
+                    `show_field` int(11) DEFAULT NULL,
+                    `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
+                    `show_value` varchar(255) DEFAULT NULL,
+                    `show_logic` enum('AND','OR','XOR') DEFAULT NULL
+                  )
+                  ENGINE = MyISAM
+                  DEFAULT CHARACTER SET = utf8
+                  COLLATE = utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
 
-         // order start from 1 instead of 0
-         $GLOBALS['DB']->query("UPDATE `$table` SET `order` = `order` + 1;") or die ($GLOBALS['DB']->error());
+      } else {
+         // Migration 0.83-1.0 => 0.85-1.0
+         if(!FieldExists($table, 'fieldtype', false)) {
+            // Migration from previous version
+            $query = "ALTER TABLE `$table`
+                      ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
+                      ADD `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
+                      ADD `show_field` int(11) DEFAULT NULL,
+                      ADD `show_condition` enum('equal','notequal','lower','greater') COLLATE utf8_unicode_ci DEFAULT NULL,
+                      ADD `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                      ADD `required` tinyint(1) NOT NULL DEFAULT '0',
+                      ADD `show_empty` tinyint(1) NOT NULL DEFAULT '0',
+                      ADD `default_values` text COLLATE utf8_unicode_ci,
+                      ADD `values` text COLLATE utf8_unicode_ci,
+                      ADD `range_min` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+                      ADD `range_max` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+                      ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                      CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
+                      CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
 
-         // Match new type
-         $query  = "SELECT `id`, `type`, `data`, `option`
-                    FROM $table";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $datas    = json_decode($line['data']);
-            $options  = json_decode($line['option']);
+            // order start from 1 instead of 0
+            $GLOBALS['DB']->query("UPDATE `$table` SET `order` = `order` + 1;") or die ($GLOBALS['DB']->error());
 
-            $fieldtype = 'text';
-            $values    = '';
-            $default   = '';
-            $regex     = '';
-            $required  = 0;
+            // Match new type
+            $query  = "SELECT `id`, `type`, `data`, `option`
+                       FROM $table";
+            $result = $GLOBALS['DB']->query($query);
+            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+               $datas    = json_decode($line['data']);
+               $options  = json_decode($line['option']);
 
-            if (isset($datas->value) && !empty($datas->value)) {
-               if(is_object($datas->value)) {
-                  foreach($datas->value as $value) {
-                     if (!empty($value)) $values .= urldecode($value) . "\r\n";
-                  }
-               } else {
-                  $values .= urldecode($datas->value);
-               }
-            }
+               $fieldtype = 'text';
+               $values    = '';
+               $default   = '';
+               $regex     = '';
+               $required  = 0;
 
-            switch ($line['type']) {
-               case '1':
-                  $fieldtype = 'text';
-
-                  if (isset($options->type)) {
-                     switch ($options->type) {
-                        case '2':
-                           $required  = 1;
-                           break;
-                        case '3':
-                           $regex = '[[:alpha:]]';
-                           break;
-                        case '4':
-                           $fieldtype = 'float';
-                           break;
-                        case '5':
-                           $regex = urldecode($options->value);
-                           // Add leading and trailing regex marker (automaticaly added in V1)
-                           if (substr($regex, 0, 1)  != '/') $regex = '/' . $regex;
-                           if (substr($regex, -1, 1) != '/') $regex = $regex . '/';
-                           break;
-                        case '6':
-                           $fieldtype = 'email';
-                           break;
-                        case '7':
-                           $fieldtype = 'date';
-                           break;
+               if (isset($datas->value) && !empty($datas->value)) {
+                  if(is_object($datas->value)) {
+                     foreach($datas->value as $value) {
+                        if (!empty($value)) $values .= urldecode($value) . "\r\n";
                      }
+                  } else {
+                     $values .= urldecode($datas->value);
                   }
-                  $default_values = $values;
-                  $values = '';
-                  break;
+               }
 
-               case '2':
-                  $fieldtype = 'select';
-                  break;
+               switch ($line['type']) {
+                  case '1':
+                     $fieldtype = 'text';
 
-               case '3':
-                  $fieldtype = 'checkboxes';
-                  break;
+                     if (isset($options->type)) {
+                        switch ($options->type) {
+                           case '2':
+                              $required  = 1;
+                              break;
+                           case '3':
+                              $regex = '[[:alpha:]]';
+                              break;
+                           case '4':
+                              $fieldtype = 'float';
+                              break;
+                           case '5':
+                              $regex = urldecode($options->value);
+                              // Add leading and trailing regex marker (automaticaly added in V1)
+                              if (substr($regex, 0, 1)  != '/') $regex = '/' . $regex;
+                              if (substr($regex, -1, 1) != '/') $regex = $regex . '/';
+                              break;
+                           case '6':
+                              $fieldtype = 'email';
+                              break;
+                           case '7':
+                              $fieldtype = 'date';
+                              break;
+                        }
+                     }
+                     $default_values = $values;
+                     $values = '';
+                     break;
 
-               case '4':
-                  $fieldtype = 'textarea';
-                  if (isset($options->type) && ($options->type == 2)) {
-                     $required = 1;
-                  }
-                  $default_values = $values;
-                  $values = '';
-                  break;
+                  case '2':
+                     $fieldtype = 'select';
+                     break;
 
-               case '5':
-                  $fieldtype = 'file';
-                  break;
+                  case '3':
+                     $fieldtype = 'checkboxes';
+                     break;
 
-               case '8':
-                  $fieldtype = 'select';
-                  break;
+                  case '4':
+                     $fieldtype = 'textarea';
+                     if (isset($options->type) && ($options->type == 2)) {
+                        $required = 1;
+                     }
+                     $default_values = $values;
+                     $values = '';
+                     break;
 
-               case '9':
-                  $fieldtype = 'select';
-                  break;
+                  case '5':
+                     $fieldtype = 'file';
+                     break;
 
-               case '10':
-                  $fieldtype = 'dropdown';
-                  break;
+                  case '8':
+                     $fieldtype = 'select';
+                     break;
 
-               default :
-                  $data = null;
-                  break;
+                  case '9':
+                     $fieldtype = 'select';
+                     break;
+
+                  case '10':
+                     $fieldtype = 'dropdown';
+                     break;
+
+                  default :
+                     $data = null;
+                     break;
+               }
+
+               $query_udate = 'UPDATE ' . $table . ' SET
+                                  `fieldtype`      = "' . $fieldtype . '",
+                                  `values`         = "' . htmlspecialchars($values) . '",
+                                  `default_values` = "' . htmlspecialchars($default) . '",
+                                  `regex`          = "' . $regex . '",
+                                  `required`       = "' . $required .' "
+                               WHERE `id` = ' . $line['id'];
+               $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
             }
 
-            $query_udate = 'UPDATE ' . $table . ' SET
-                               `fieldtype`      = "' . $fieldtype . '",
-                               `values`         = "' . htmlspecialchars($values) . '",
-                               `default_values` = "' . htmlspecialchars($default) . '",
-                               `regex`          = "' . $regex . '",
-                               `required`       = "' . $required .' "
-                            WHERE `id` = ' . $line['id'];
-            $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
+            $query = "ALTER TABLE `$table`
+                      DROP `type`,
+                      DROP `data`,
+                      DROP `option`,
+                      DROP `plugin_formcreator_forms_id`;";
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
          }
 
-         $query = "ALTER TABLE `$table`
-                   DROP `type`,
-                   DROP `data`,
-                   DROP `option`,
-                   DROP `plugin_formcreator_forms_id`;";
-         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         // Migration 0.85-1.0 => 0.85-1.1
+         if (FieldExists($table, 'show_type', false)) {
+
+            // Fix type of section ID
+            $query = "ALTER TABLE  `glpi_plugin_formcreator_questions`
+                      CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
+                      ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+            // Create new table for conditionnal show of questions
+            $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
+                       `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                       `plugin_formcreator_questions_id` int(11) NOT NULL,
+                       `show_field` int(11) DEFAULT NULL,
+                       `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
+                       `show_value` varchar(255) DEFAULT NULL,
+                       `show_logic` enum('AND','OR','XOR') DEFAULT NULL
+                     )
+                     ENGINE = MyISAM
+                     DEFAULT CHARACTER SET = utf8
+                     COLLATE = utf8_unicode_ci";
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+            // Migrate date from "questions" table to "questions_conditions" table
+            $query  = "SELECT `id`, `show_type`, `show_field`, `show_condition`, `show_value`
+                       FROM $table";
+            $result = $GLOBALS['DB']->query($query);
+            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+               switch ($line['show_type']) {
+                  case 'hide' :
+                     $show_rule = 'hidden';
+                     break;
+                  default:
+                     $show_rule = 'always';
+               }
+               switch ($line['show_condition']) {
+                  case 'notequal' :
+                     $show_condition = '!=';
+                     break;
+                  case 'lower' :
+                     $show_condition = '<';
+                     break;
+                  case 'greater' :
+                     $show_condition = '>';
+                     break;
+                  default:
+                     $show_condition = '==';
+               }
+
+               $line['show_value'] = addslashes($line['show_value']);
+
+               $query_udate = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
+                               `show_rule` = '$show_rule'
+                               WHERE `id` = {$line['id']}";
+               $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
+
+               $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
+                                  `plugin_formcreator_questions_id` = {$line['id']},
+                                  `show_field`     = '{$line['show_field']}',
+                                  `show_condition` = '{$show_condition}',
+                                  `show_value`     = '{$line['show_value']}'";
+               $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
+            }
+
+            // Delete old fields
+            $query = "ALTER TABLE `$table`
+                      DROP `show_type`,
+                      DROP `show_field`,
+                      DROP `show_condition`,
+                      DROP `show_value`;";
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+
+         }
       }
 
       return true;
