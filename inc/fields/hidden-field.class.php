@@ -2,9 +2,9 @@
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
 require_once('field.interface.php');
 
-class hiddenField implements Field
+class hiddenField extends PluginFormcreatorField
 {
-   public static function show($field, $datas, $edit = true)
+   public function show($canEdit = true)
    {
       echo '<input type="hidden" class="form-control"
                name="formcreator_field_' . $field['id'] . '"
@@ -12,12 +12,7 @@ class hiddenField implements Field
                value="' . $field['default_values'] . '" />' . PHP_EOL;
    }
 
-   public static function displayValue($value, $values)
-   {
-      return $value;
-   }
-
-   public static function isValid($field, $value, $datas)
+   public function isValid($value)
    {
       return true;
    }

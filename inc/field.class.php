@@ -1,23 +1,48 @@
 <?php
-abstract class PluginFormcreatorField
+abstract class PluginFormcreatorField implements Field
 {
-   const IS_MULTIPLE = false;
+   const IS_MULTIPLE    = false;
 
-   private $fields = array();
+   private $fields      = array();
+   private $form_values = array();
 
-   public function __construct($question_fields)
+   public function __construct($fields, $datas = array())
    {
-      $this->fields = $question_fields;
+      $this->fields                = $fields;
+      $this->fields['form_values'] = $datas;
    }
 
-   // public function show()
-   // {
-
-   // }
-
-   public function displayField()
+   public function show($canEdit = true)
    {
+      if($canEdit && $this->isRequired())    $required = ' required';
+      else                                   $required = '';
 
+      echo '<div class="form-group ' . $required . '" id="form-group-field' . $this->fields['id'] . '">';
+      echo '<label>';
+      echo $this->getLabel();
+      if($canEdit && $this->isRequired()) {
+         echo ' <span class="red">*</span>';
+      }
+      echo '</label>';
+      $this->displayField($canEdit);
+      echo '</div>';
+      echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "' . addslashes(json_encode(explode("\r\n", $this->getValue()))) . '");</script>';
+   }
+
+   public function displayField($canEdit = true)
+   {
+      if ($canEdit) {
+         if($canEdit && $this->isRequired()) $required = ' required';
+         else                                $required = '';
+
+         echo '<input type="text" class="form-control"
+                  name="formcreator_field_' . $this->fields['id'] . '"
+                  id="formcreator_field_' . $this->fields['id'] . '"
+                  value="' . $this->getValue() . '"' . $required . '
+                  onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
+      } else {
+         echo $this->getAnswer();
+      }
    }
 
    public function getLabel()
@@ -30,17 +55,12 @@ abstract class PluginFormcreatorField
 
    }
 
-   public function getDefaultValues()
-   {
-      return $this->fields['name'];
-   }
-
-   public function getSelectedValues()
+   public function getValue()
    {
       if (isset($this->fields['answer'])) {
          return $this->fields['answer'];
       } else {
-         return '';
+         return $this->fields['default_values'];
       }
    }
 
@@ -51,13 +71,13 @@ abstract class PluginFormcreatorField
 
    public function getAvailableValues()
    {
-
+      return $this->fields['values'];
    }
 
    public function isValid($value)
    {
       // If the field is not visible, don't check it's value
-      if (!$this->isVisible()) return true;
+      if (!PluginFormcreatorFields::isVisible($this->fields, $this->fields['form_values'])) return true;
 
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
@@ -71,75 +91,7 @@ abstract class PluginFormcreatorField
 
    public function isRequired()
    {
-      return ($this->isVisible() && $this->fields['required']);
-   }
-
-   /**
-    * Check if a field should be shown or not
-    *
-    * @param   Integer     $id         ID of the current question
-    * @param   Array       $values     Array of current fields values (id => value)
-    * @return  boolean                 Should be shown or not
-    */
-   public function isVisible() {
-      $conditions = array();
-
-      // If the field is always shown
-      if ($this->fields['show_rule'] == 'always') return true;
-
-      // Get conditions to show or hide field
-      $query = "SELECT `show_logic`, `show_field`, `show_condition`, `show_value`
-                FROM glpi_plugin_formcreator_questions_conditions
-                WHERE `plugin_formcreator_questions_id` = {$this->fields['id']}";
-      $result = $GLOBALS['DB']->query($query);
-      while ($line = $GLOBALS['DB']->fetch_array($result)) {
-         $conditions[] = array(
-               'multiple' => in_array($this->fields['fieldtype'], array('checkboxes', 'multiselect')),
-               'logic'    => $line['show_logic'],
-               'field'    => $line['show_field'],
-               'operator' => $line['show_condition'],
-               'value'    => $line['show_value']
-            );
-      }
-
-      foreach ($conditions as $id => $condition) {
-         if (!isset($values[$condition['field']])) return false;
-         if (!isVisible($condition['field'], $values)) return false;
-
-         if ($condition['multiple']) {
-            switch ($condition['operator']) {
-               case '!=' :
-                  $value = is_array($values[$condition['field']])
-                           ? !in_array($condition['value'], $values[$condition['field']])
-                           : !in_array($condition['value'], json_decode($values[$condition['field']]));
-                  break;
-               case '==' :
-                  $value = is_array($values[$condition['field']])
-                           ? in_array($condition['value'], $values[$condition['field']])
-                           : in_array($condition['value'], json_decode($values[$condition['field']]));
-                   break;
-               default:
-                  eval('$value = "' . $condition['value'] . '" ' . $condition['operator'] . ' Array(' . $values[$condition['field']] . ');');
-            }
-         } else {
-            eval('$value = "' . addslashes($values[$condition['field']]) . '" ' . $condition['operator'] . ' "' . addslashes($condition['value']) . '";');
-         }
-         switch ($condition['logic']) {
-            case 'AND' :   $return &= $value; break;
-            case 'OR'  :   $return |= $value; break;
-            case 'XOR' :   $return ^= $value; break;
-            default :      $return = $value;
-         }
-      }
-
-      // If the field is hidden by default, show it if condition is true
-      if ($question->fields['show_rule'] == 'hidden') {
-         return $return;
-
-      // else show it if condition is false
-      } else {
-         return !$return;
-      }
+      return (PluginFormcreatorFields::isVisible($this->fields, $this->fields['form_values']) && $this->fields['required']);
    }
 
 }

@@ -2,9 +2,9 @@
 require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
 require_once('field.interface.php');
 
-class descriptionField implements Field
+class descriptionField extends PluginFormcreatorField
 {
-   public static function show($field, $datas, $edit = true)
+   public function show($canEdit = true)
    {
       echo '<div class="description_field form-group" id="form-group-field' . $field['id'] . '">';
       echo html_entity_decode($field['description']);
@@ -12,12 +12,7 @@ class descriptionField implements Field
       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "");</script>';
    }
 
-   public static function displayValue($value, $values)
-   {
-      return '';
-   }
-
-   public static function isValid($field, $value, $datas)
+   public function isValid($value)
    {
       return true;
    }
