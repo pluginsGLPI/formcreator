@@ -189,10 +189,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $found = $answer->find('plugin_formcreator_formanwers_id = "' . $this->getID() . '"
                             AND plugin_formcreator_question_id = "' . $question_line['id'] . '"');
             $found = array_shift($found);
-            $datas = array('formcreator_field_' . $found['plugin_formcreator_question_id'] => $found['answer']);
+            if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
+               $found['answer'] = json_decode($found['answer']);
+            }
             $canEdit = $this->fields['status'] == 'refused' && $_SESSION['glpiID'] == $this->fields['requester_id'];
             if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               PluginFormcreatorFields::showField($question_line, $datas, $canEdit);
+               PluginFormcreatorFields::showField($question_line, $found['answer'], $canEdit);
             }
          }
 
@@ -332,7 +334,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      'id'     => $found['id'],
                      'answer' => isset($datas['formcreator_field_' . $question['id']])
                                  ? is_array($datas['formcreator_field_' . $question['id']])
-                                    ? implode(',', $datas['formcreator_field_' . $question['id']])
+                                    ? implode("\r\n", $datas['formcreator_field_' . $question['id']])
                                     : $datas['formcreator_field_' . $question['id']]
                                  : '',
                   ));
@@ -402,11 +404,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          // Save questions answers
          while ($question = $GLOBALS['DB']->fetch_assoc($result)) {
             // If the answer is set, check if it is an array (then implode id).
-            if (isset($datas['formcreator_field_' . $question['id']])) {
-               if (is_array($datas['formcreator_field_' . $question['id']])) {
-                  $question_answer = implode(',', $datas['formcreator_field_' . $question['id']]);
+            if (isset($datas[$question['id']])) {
+               if (is_array($datas[$question['id']])) {
+                  $question_answer = json_encode($datas[$question['id']]);
                } else {
-                  $question_answer = $datas['formcreator_field_' . $question['id']];
+                  $question_answer = $datas[$question['id']];
                }
             } else {
                $question_answer = '';
@@ -515,14 +517,16 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $question  = new PluginFormcreatorQuestion();
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
+            $id     = $question_line['id'];
+            $name   = $question_line['name'];
+            $answer = new PluginFormcreatorAnswer();
+            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID()
+                                    . ' AND `plugin_formcreator_question_id` = ' . $id);
+            if (!PluginFormcreatorFields::isVisible($question_line['id'], $found)) continue;
+
             if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
                $question_no ++;
 
-               $id     = $question_line['id'];
-               $name   = $question_line['name'];
-               $answer = new PluginFormcreatorAnswer();
-               $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID()
-                                       . ' AND `plugin_formcreator_question_id` = ' . $id);
                if (count($found)) {
                   $datas = array_shift($found);
                   $value = $datas['answer'];
@@ -530,6 +534,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $value = '';
                }
                $value   = PluginFormcreatorFields::getValue($question_line, $value);
+
+               if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
+                  $value = "\r\n - " . implode("\r\n - ", json_decode($value));
+               }
 
                $output .= $question_no . ') ' . $question_line['name'] . ' : ';
                $output .= $value . PHP_EOL . PHP_EOL;

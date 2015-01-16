@@ -1,131 +1,57 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
+require_once('select-field.class.php');
 
-class multiSelectField extends PluginFormcreatorField
+class multiSelectField extends selectField
 {
-   // public static function show($field, $datas, $edit = true)
-   // {
-   //    $rand = mt_rand();
+   const IS_MULTIPLE    = true;
 
-   //    $default_values = explode("\r\n", $field['default_values']);
-   //    $default_values = (!empty($datas['formcreator_field_' . $field['id']]))
-   //             ? is_array($datas['formcreator_field_' . $field['id']])
-   //                ? $datas['formcreator_field_' . $field['id']]
-   //                : explode(',', $datas['formcreator_field_' . $field['id']])
-   //             : $default_values;
+   public function isValid($value)
+   {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && empty($value)) {
+         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         return false;
 
-   //    if($field['required'])  $required = ' required';
-   //    else $required = '';
+      // Min range not set or number of selected item lower than min
+      } elseif (!empty($this->fields['range_min']) && (count($value) - 1 < $this->fields['range_min'])) {
+         $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $this->fields['range_min']);
+         Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+         return false;
 
-   //    if (!$edit) {
-   //       echo '<div class="form-group line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>' . $field['name'] . '</label>';
-   //       if (!empty($datas['formcreator_field_' . $field['id']])) {
-   //          echo str_replace(',', ', ', trim($datas['formcreator_field_' . $field['id']], ','));
-   //       }
-   //       echo '</div>' . PHP_EOL;
-   //       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . addslashes(json_encode(explode(',', $datas['formcreator_field_' . $field['id']]))) . '");</script>';
-   //       return;
-   //    }
+      // Max range not set or number of selected item greater than max
+      } elseif (!empty($this->fields['range_max']) && (count($value) - 1 > $this->fields['range_max'])) {
+         $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
+         Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+         return false;
+      }
 
-   //    echo '<div class="form-group' . $required . ' line' . ($field['order'] % 2) . '" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>';
-   //       echo  $field['name'];
-   //       if($field['required'])  echo ' <span class="red">*</span>';
-   //       echo '</label>';
-   //       echo '<input type="hidden" name="formcreator_field_' . $field['id'] . '[]" value="" />';
+      // All is OK
+      return true;
+   }
 
-   //       echo '<div class="form_field">';
-   //       if(!empty($field['values'])) {
-   //          $values         = explode("\r\n", $field['values']);
-   //          $tab_values     = array();
-   //          foreach ($values as $value) {
-   //             if ((trim($value) != '')) $tab_values[$value] = $value;
-   //          }
+   public function displayField($canEdit = true)
+   {
+      if ($canEdit) {
+         parent::displayField($canEdit);
+      } else {
+         echo empty($this->getAnswer()) ? '' :  implode(', ', json_decode($this->getAnswer()));
+      }
+   }
 
-   //          if($field['show_empty'])
-   //             array_unshift($values, array('' => '---'));
+   public function getAnswer()
+   {
+      $return = array();
+      $values = $this->getAvailableValues();
 
-   //          Dropdown::showFromArray('formcreator_field_' . $field['id'], $tab_values, array(
-   //             'values'   => $default_values,
-   //             'multiple' => true,
-   //             'size'     => 5,
-   //             'rand'     => $rand,
-   //          ));
-   //       }
-   //       echo '</div>' . PHP_EOL;
-   //       $values = json_encode($default_values);
-   //       echo '<script type="text/javascript">
-   //                jQuery(document).ready(function($) {
-   //                   jQuery("#dropdown_formcreator_field_' . $field['id'] . $rand . '").on("change", function(e) {
-   //                      var selectedValues = jQuery("#dropdown_formcreator_field_' . $field['id'] . $rand . '").val();
-   //                      formcreatorChangeValueOf (' . $field['id']. ', selectedValues);
-   //                   });
-   //                });
-   //             </script>';
-   //       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . addslashes($values) . '");</script>';
+      if (empty($this->getValue())) return '';
 
-   //       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
-   //    echo '</div>' . PHP_EOL;
-   // }
+      $tab_values = is_array($this->getValue()) ? $this->getValue() : json_decode($this->getValue());
 
-   // public static function displayValue($value, $values)
-   // {
-   //    return ($value != '') ? str_replace(',', ', ', trim($value, ',')) : '';
-   // }
-
-   // public static function isValid($field, $value, $datas)
-   // {
-   //    // If the field are hidden, don't test it
-   //    if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
-   //       $hidden = true;
-
-   //       switch ($field['show_condition']) {
-   //          case 'notequal':
-   //             if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'lower':
-   //             if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'greater':
-   //             if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-
-   //          default:
-   //             if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //       }
-
-   //       if ($hidden) return true;
-   //    }
-
-   //    // Not required or not empty
-   //    if($field['required'] && (count($value) - 1 == 0)) {
-   //       Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-   //       return false;
-
-   //    // Min range not set or number of selected item lower than min
-   //    } elseif (!empty($field['range_min']) && (count($value) - 1 < $field['range_min'])) {
-   //       $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $field['range_min']);
-   //       Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
-   //       return false;
-
-   //    // Max range not set or number of selected item greater than max
-   //    } elseif (!empty($field['range_max']) && (count($value) - 1 > $field['range_max'])) {
-   //       $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $field['range_max']);
-   //       Session::addMessageAfterRedirect($message . ' ' . $field['name'], false, ERROR);
-   //       return false;
-
-   //    // All is OK
-   //    } else {
-   //       return true;
-   //    }
-   // }
+      foreach ($tab_values as $value) {
+         if (isset($values[$value])) $return[] = $value;
+      }
+      return json_encode($return);
+   }
 
    public static function getName()
    {

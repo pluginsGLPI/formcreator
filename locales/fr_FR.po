@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-01-06 14:29+0100\n"
+"PO-Revision-Date: 2015-01-16 16:53+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/fr_FR/)\n"
@@ -651,3 +651,15 @@ msgstr "Afficher tous les éléments"
 #: scripts/combobox.js.php:120
 msgid "didn't match any item"
 msgstr "ne correspond à aucun élément"
+
+#: ajax/question.php:94
+msgid "Always displayed"
+msgstr "Toujours visible"
+
+#: ajax/question.php:95
+msgid "Hidden unless"
+msgstr "Masqué, sauf si"
+
+#: ajax/question.php:96
+msgid "Displayed unless"
+msgstr "Affiché, sauf si"

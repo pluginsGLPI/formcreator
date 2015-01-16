@@ -16,11 +16,12 @@ if ($plugin->isActivated("formcreator")) {
       }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Edit an existinf Question
+   // Edit an existing Question
    } elseif(isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
       if ($question->update($_POST)) {
          Session::addMessageAfterRedirect(__('The question have been successfully updated!', 'formcreator'), true, INFO);
+         $question->updateConditions($_POST);
       }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 

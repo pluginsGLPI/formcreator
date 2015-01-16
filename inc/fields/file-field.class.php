@@ -1,90 +1,40 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-
 class fileField extends PluginFormcreatorField
 {
-   // public static function show($field, $datas, $edit = true)
-   // {
-   //    if($field['required'])  $required = ' required';
-   //    else $required = '';
+   public function displayField($canEdit = true)
+   {
+      if ($canEdit) {
+         $required = $this->isRequired() ? ' required' : '';
 
-   //    if (!$edit) {
-   //       echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>' . $field['name'] . '</label>';
-   //       $doc = new Document();
-   //       if($doc->getFromDB($datas['formcreator_field_' . $field['id']])) {
-   //          echo $doc->getDownloadLink();
-   //       }
-   //       echo '</div>' . PHP_EOL;
-   //       return;
-   //    }
+         echo '<input type="hidden" class="form-control"
+                  name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
-   //    echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>';
-   //       echo  $field['name'];
-   //       if($field['required'])  echo ' <span class="red">*</span>';
-   //       echo '<br /><small>(' . __('File size:', 'formcreator') . ' ' . Document::getMaxUploadSize() . ')</small>';
-   //       echo '</label>';
+         echo '<input type="file" class="form-control"
+                  name="formcreator_field_' . $this->fields['id'] . '"
+                  id="formcreator_field_' . $this->fields['id'] . '" />';
+      } else {
+         $doc = new Document();
+         if($doc->getFromDB($this->getAnswer())) {
+            echo $doc->getDownloadLink();
+         }
+      }
+   }
 
+   public function isValid($value)
+   {
+      // If the field is not visible, don't check it's value
+      if (!PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer'])) return true;
 
-   //       echo '<input type="hidden" class="form-control"
-   //                name="formcreator_field_' . $field['id'] . '" value="" />' . PHP_EOL;
+      // If the field is required it can't be empty
+      if ($this->isRequired() && (empty($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name'])
+                                 || !is_file($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name']))) {
+         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+         return false;
+      }
 
-   //       echo '<input type="file" class="form-control"
-   //                name="formcreator_field_' . $field['id'] . '"
-   //                id="formcreator_field_' . $field['id'] . '"' . $required . ' />';
-   //       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "");</script>';
-
-   //       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
-   //    echo '</div>' . PHP_EOL;
-   // }
-
-   // public static function displayValue($value, $values)
-   // {
-   //    return '';
-   // }
-
-   // public static function isValid($field, $value, $datas)
-   // {
-   //    // If the field are hidden, don't test it
-   //    if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
-   //       $hidden = true;
-
-   //       switch ($field['show_condition']) {
-   //          case 'notequal':
-   //             if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'lower':
-   //             if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'greater':
-   //             if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-
-   //          default:
-   //             if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //       }
-
-   //       if ($hidden) return true;
-   //    }
-
-   //    // Not required or not empty
-   //    if($field['required'] && (empty($_FILES['formcreator_field_' . $field['id']]['tmp_name'])
-   //                               || !is_file($_FILES['formcreator_field_' . $field['id']]['tmp_name']))) {
-   //       Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-   //       return false;
-
-   //    // All is OK
-   //    } else {
-   //       return true;
-   //    }
-   // }
+      // All is OK
+      return true;
+   }
 
    public static function getName()
    {

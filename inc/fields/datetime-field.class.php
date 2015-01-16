@@ -1,103 +1,65 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-
 class datetimeField extends PluginFormcreatorField
 {
-   // public static function show($field, $datas, $edit = true)
-   // {
-   //    $rand = mt_rand();
+   public function displayField($canEdit = true)
+   {
+      if ($canEdit) {
+         $required = ($canEdit && $this->fields['required']) ? ' required' : '';
+         $rand     = mt_rand();
 
-   //    $value = (isset($datas['formcreator_field_' . $field['id']])
-   //                 && ($datas['formcreator_field_' . $field['id']] != 'NULL'))
-   //             ? $datas['formcreator_field_' . $field['id']]
-   //             : $field['default_values'];
+         Html::showDateTimeField('formcreator_field_' . $this->fields['id'], array(
+            'value' => $this->getValue(),
+            'rand'  => $rand,
+         ));
+         echo '<script type="text/javascript">
+                  jQuery(document).ready(function($) {
+                     $( "#showdate' . $rand . '" ).on("change", function() {
+                        formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);
+                     });
+                     $( "#resetdate' . $rand . '" ).on("click", function() {
+                        formcreatorChangeValueOf(' . $this->fields['id'] . ', "");
+                     });
+                  });
+               </script>';
 
-   //    if($field['required'])  $required = ' required';
-   //    else $required = '';
+      } else {
+         echo $this->getAnswer();
+      }
+   }
 
-   //    if (!$edit) {
-   //       echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>' . $field['name'] . '</label>';
-   //       if (!empty($datas['formcreator_field_' . $field['id']])) {
-   //          echo Html::convDateTime($datas['formcreator_field_' . $field['id']]);
-   //       }
-   //       echo '</div>' . PHP_EOL;echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . Html::convDateTime($datas['formcreator_field_' . $field['id']]) . '");</script>';
-   //       return;
-   //    }
+   public function getValue()
+   {
+      if (isset($this->fields['answer'])) {
+         $date = $this->fields['answer'];
+      } else {
+         $date = $this->fields['default_values'];
+      }
+      return (strtotime($date) != '') ? $date : null;
+   }
 
-   //    echo '<div class="form-group' . $required . '" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>';
-   //       echo  $field['name'];
-   //       if($field['required'])  echo ' <span class="red">*</span>';
-   //       echo '</label>';
+   public function getAnswer()
+   {
+      return Html::convDateTime($this->getValue());
+   }
 
-   //       echo '<div>';
-   //       Html::showDateTimeField('formcreator_field_' . $field['id'], array(
-   //          'value' => $value,
-   //          'rand'  => $rand,
-   //       ));
-   //       echo '</div>';
-   //       echo '<script type="text/javascript">
-   //                jQuery(document).ready(function($) {
-   //                   $( "#showdate' . $rand . '" ).on("change", function() {
-   //                      formcreatorChangeValueOf(' . $field['id'] . ', this.value);
-   //                   });
-   //                   $( "#resetdate' . $rand . '" ).on("click", function() {
-   //                      formcreatorChangeValueOf(' . $field['id'] . ', "");
-   //                   });
-   //                });
-   //             </script>';
-   //       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' .$value . '");</script>';
+   public function isValid($value)
+   {
+      // If the field is not visible, don't check it's value
+      if (!PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']))
+         return true;
 
-   //       echo '<div class="help-block">' . html_entity_decode($field['description']) . '</div>';
-   //    echo '</div>' . PHP_EOL;
-   // }
+      // If the field is required it can't be empty
+      if ($this->isRequired() && (strtotime($value) == '')) {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
 
-   // public static function displayValue($value, $values)
-   // {
-   //    return Html::convDateTime($value);
-   // }
-
-   // public static function isValid($field, $value, $datas)
-   // {
-   //    // If the field are hidden, don't test it
-   //    if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
-   //       $hidden = true;
-
-   //       switch ($field['show_condition']) {
-   //          case 'notequal':
-   //             if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'lower':
-   //             if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'greater':
-   //             if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-
-   //          default:
-   //             if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //       }
-
-   //       if ($hidden) return true;
-   //    }
-
-   //    // Not required or not empty
-   //    if($field['required'] && empty($value)) {
-   //       Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-   //       return false;
-
-   //    // All is OK
-   //    } else {
-   //       return true;
-   //    }
-   // }
+      // All is OK
+      return true;
+   }
 
    public static function getName()
    {

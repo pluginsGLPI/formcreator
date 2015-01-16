@@ -673,7 +673,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       // Get and display sections of the form
       $question      = new PluginFormcreatorQuestion();
-      $questions = array();
+      $questions     = array();
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
@@ -684,7 +684,15 @@ class PluginFormcreatorForm extends CommonDBTM
          // Display all fields of the section
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            PluginFormcreatorFields::showField($question_line, $datas);
+            if (isset($datas[$question_line['id']])) {
+               // multiple choice question are saved as JSON and needs to be decoded
+               $answer = (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect')))
+                           ? json_decode($datas[$question_line['id']])
+                           : $datas[$question_line['id']];
+            } else {
+               $answer = null;
+            }
+            PluginFormcreatorFields::showField($question_line, $answer);
          }
       }
       echo '<script type="text/javascript">formcreatorShowFields();</script>';
@@ -729,7 +737,6 @@ class PluginFormcreatorForm extends CommonDBTM
          }
          echo '</select>';
          echo '<script type="text/javascript" src="../scripts/combobox.js.php"></script>';
-         echo '<script type="text/javascript" src="../scripts/form-validation.js.php"></script>';
          echo '</div>';
       }
 
@@ -820,36 +827,52 @@ class PluginFormcreatorForm extends CommonDBTM
       }
    }
 
-   public function saveForm($datas)
+   public function saveForm()
    {
       $valid = true;
 
+      $tab_section       = array();
+      $sections          = new PluginFormcreatorSection();
+      $founded_sections  = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
+      foreach ($founded_sections as $id => $fields) $tab_section[] = $id;
+
+      $questions         = new PluginFormcreatorQuestion();
+      $founded_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
+
       // Validate form fields
-      foreach ($_POST as $key => $value) {
-         if (substr($key, 0, 18) == 'formcreator_field_') {
-            $question_id = (int) substr($key, 18);
-            $question    = new PluginFormcreatorQuestion();
-            $question->getFromDB($question_id);
-            $className   = $question->fields['fieldtype'] . 'Field';
-            $filePath    = dirname(__FILE__) . '/fields/' . $question->fields['fieldtype'] . '-field.class.php';
+      foreach ($founded_questions as $id => $fields) {
+         // If field was not post, it's value is empty
+         if (isset($_POST['formcreator_field_' . $id])) {
+            $datas[$id] = is_array($_POST['formcreator_field_' . $id])
+                           ? json_encode($_POST['formcreator_field_' . $id])
+                           : $_POST['formcreator_field_' . $id];
 
-            if ($question->fields['fieldtype'] == 'float') {
-               $value = str_replace(',', '.', $datas['formcreator_field_' . $question_id]);
-               $datas['formcreator_field_' . $question_id] = $value;
+            // Replace "," by "." if field is a float field and remove spaces
+            if ($fields['fieldtype'] == 'float') {
+               $datas[$id] = str_replace(',', '.', $datas[$id]);
+               $datas[$id] = str_replace(' ', '', $datas[$id]);
             }
+            unset($_POST['formcreator_field_' . $id]);
+         } else {
+            $datas[$id] = '';
+         }
 
-            if(is_file($filePath)) {
-               include_once ($filePath);
-               if (class_exists($className)) {
-                  if (!$className::isValid($question->fields, $value, $datas)) {
-                     $valid = false;
-                  }
+         $className = $fields['fieldtype'] . 'Field';
+         $filePath  = dirname(__FILE__) . '/fields/' . $fields['fieldtype'] . '-field.class.php';
+
+         if(is_file($filePath)) {
+            include_once ($filePath);
+            if (class_exists($className)) {
+               $obj = new $className($fields, $datas);
+               if (!$obj->isValid($datas[$id])) {
+                  $valid = false;
                }
-            } else {
-               $valid = false;
             }
+         } else {
+            $valid = false;
          }
       }
+      $datas = $datas + $_POST;
 
       // Check required_validator
       if ($this->fields['validation_required'] && empty($datas['formcreator_validator'])) {

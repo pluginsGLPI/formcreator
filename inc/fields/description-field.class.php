@@ -1,15 +1,12 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-
 class descriptionField extends PluginFormcreatorField
 {
    public function show($canEdit = true)
    {
-      echo '<div class="description_field form-group" id="form-group-field' . $field['id'] . '">';
-      echo html_entity_decode($field['description']);
+      echo '<div class="description_field form-group" id="form-group-field' . $this->fields['id'] . '">';
+      echo nl2br(html_entity_decode($this->fields['description']));
       echo '</div>' . PHP_EOL;
-      echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "");</script>';
+      echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "");</script>';
    }
 
    public function isValid($value)

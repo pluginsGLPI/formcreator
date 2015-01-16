@@ -1,15 +1,12 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-
 class hiddenField extends PluginFormcreatorField
 {
    public function show($canEdit = true)
    {
       echo '<input type="hidden" class="form-control"
-               name="formcreator_field_' . $field['id'] . '"
-               id="formcreator_field_' . $field['id'] . '"
-               value="' . $field['default_values'] . '" />' . PHP_EOL;
+               name="formcreator_field_' . $this->fields['id'] . '"
+               id="formcreator_field_' . $this->fields['id'] . '"
+               value="' . $this->fields['default_values'] . '" />' . PHP_EOL;
    }
 
    public function isValid($value)

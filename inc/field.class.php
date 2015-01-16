@@ -1,44 +1,45 @@
 <?php
+require_once(realpath(dirname(__FILE__ ) . '/../../../inc/includes.php'));
+require_once('field.interface.php');
+
 abstract class PluginFormcreatorField implements Field
 {
-   const IS_MULTIPLE    = false;
+   const IS_MULTIPLE = false;
 
-   private $fields      = array();
-   private $form_values = array();
+   protected $fields = array();
 
    public function __construct($fields, $datas = array())
    {
-      $this->fields                = $fields;
-      $this->fields['form_values'] = $datas;
+      $this->fields           = $fields;
+      $this->fields['answer'] = $datas;
    }
 
    public function show($canEdit = true)
    {
-      if($canEdit && $this->isRequired())    $required = ' required';
-      else                                   $required = '';
+      $required = ($canEdit && $this->fields['required']) ? ' required' : '';
 
       echo '<div class="form-group ' . $required . '" id="form-group-field' . $this->fields['id'] . '">';
-      echo '<label>';
+      echo '<label for="formcreator_field_' . $this->fields['id'] . '">';
       echo $this->getLabel();
-      if($canEdit && $this->isRequired()) {
+      if($canEdit && $this->fields['required']) {
          echo ' <span class="red">*</span>';
       }
       echo '</label>';
       $this->displayField($canEdit);
+      echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
       echo '</div>';
-      echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "' . addslashes(json_encode(explode("\r\n", $this->getValue()))) . '");</script>';
+      $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
+      echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "'
+         . addslashes($value) . '");</script>';
    }
 
    public function displayField($canEdit = true)
    {
       if ($canEdit) {
-         if($canEdit && $this->isRequired()) $required = ' required';
-         else                                $required = '';
-
          echo '<input type="text" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '"
                   id="formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getValue() . '"' . $required . '
+                  value="' . $this->getAnswer() . '"
                   onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
       } else {
          echo $this->getAnswer();
@@ -60,28 +61,38 @@ abstract class PluginFormcreatorField implements Field
       if (isset($this->fields['answer'])) {
          return $this->fields['answer'];
       } else {
-         return $this->fields['default_values'];
+         return static::IS_MULTIPLE
+                  ? explode("\r\n", $this->fields['default_values'])
+                  : $this->fields['default_values'];
       }
    }
 
    public function getAnswer()
    {
-      return $this->getSelectedValues();
+      return $this->getValue();
    }
 
    public function getAvailableValues()
    {
-      return $this->fields['values'];
+      $tab_values = array();
+      foreach (explode("\r\n", $this->fields['values']) as $value) {
+         $tab_values[$value] = $value;
+      }
+      return $tab_values;
    }
 
    public function isValid($value)
    {
       // If the field is not visible, don't check it's value
-      if (!PluginFormcreatorFields::isVisible($this->fields, $this->fields['form_values'])) return true;
+      if (!PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']))
+         return true;
 
       // If the field is required it can't be empty
-      if ($this->isRequired() && empty($value)) {
-         Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+      if ($this->isRequired() && ($value == '')) {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
          return false;
       }
 
@@ -91,7 +102,8 @@ abstract class PluginFormcreatorField implements Field
 
    public function isRequired()
    {
-      return (PluginFormcreatorFields::isVisible($this->fields, $this->fields['form_values']) && $this->fields['required']);
+      $is_visible = PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']);
+      return ($is_visible && $this->fields['required']);
    }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 class PluginFormcreatorFields
 {
    /**
@@ -40,12 +41,8 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname = $field_type . 'Field';
-         $obj       = new $classname();
-
-         if(method_exists($classname, 'getLabel')) {
-            $tab_field_types_name[$field_type] = $obj->getLabel();
-         }
+         $classname                         = $field_type . 'Field';
+         $tab_field_types_name[$field_type] = $classname::getName();
       }
 
       asort($tab_field_types_name);
@@ -68,7 +65,8 @@ class PluginFormcreatorFields
 
          $classname = $field['fieldtype'] . 'Field';
          if(class_exists($classname)) {
-            return $classname::displayValue($value, $field['values']);
+            $obj = new $classname($field, $value);
+            return $obj->getAnswer();
          }
       }
       return $value;
@@ -99,7 +97,6 @@ class PluginFormcreatorFields
          $fieldClass = $field['fieldtype'] . 'Field';
          $obj = new $fieldClass($field, $datas);
          $obj->show($edit);
-         // $fieldClass::show($field, $datas, $edit);
       }
    }
 
@@ -110,7 +107,11 @@ class PluginFormcreatorFields
     * @param   Array       $values     Array of current fields values (id => value)
     * @return  boolean                 Should be shown or not
     */
-   public static function isVisible($fields, $values) {
+   public static function isVisible($id, $values)
+   {
+      $question   = new PluginFormcreatorQuestion();
+      $question->getFromDB($id);
+      $fields     = $question->fields;
       $conditions = array();
 
       // If the field is always shown
@@ -131,27 +132,37 @@ class PluginFormcreatorFields
             );
       }
 
-      foreach ($conditions as $id => $condition) {
-         if (!isset($values[$condition['field']])) return false;
-         if (!isVisible($condition['field'], $values)) return false;
+      foreach ($conditions as $condition) {
+         if (!isset($values[$condition['field']]))             return false;
+         if (!self::isVisible($condition['field'], $values))   return false;
 
          if ($condition['multiple']) {
             switch ($condition['operator']) {
                case '!=' :
-                  $value = is_array($values[$condition['field']])
-                           ? !in_array($condition['value'], $values[$condition['field']])
-                           : !in_array($condition['value'], json_decode($values[$condition['field']]));
+                  if (empty($values[$condition['field']])) {
+                     $value = true;
+                  } else {
+                     $value = is_array($values[$condition['field']])
+                              ? !in_array($condition['value'], $values[$condition['field']])
+                              : !in_array($condition['value'], json_decode($values[$condition['field']]));
+                  }
                   break;
                case '==' :
-                  $value = is_array($values[$condition['field']])
-                           ? in_array($condition['value'], $values[$condition['field']])
-                           : in_array($condition['value'], json_decode($values[$condition['field']]));
-                   break;
+                  if (empty($condition['value'])) {
+                     $value = false;
+                  } else {
+                     $value = is_array($values[$condition['field']])
+                              ? in_array($condition['value'], $values[$condition['field']])
+                              : in_array($condition['value'], json_decode($values[$condition['field']]));
+                  }
+                  break;
                default:
-                  eval('$value = "' . $condition['value'] . '" ' . $condition['operator'] . ' Array(' . $values[$condition['field']] . ');');
+                  eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
+                     . ' Array(' . $values[$condition['field']] . ');');
             }
          } else {
-            eval('$value = "' . addslashes($values[$condition['field']]) . '" ' . $condition['operator'] . ' "' . addslashes($condition['value']) . '";');
+            eval('$value = "' . addslashes($values[$condition['field']]) . '" '
+               . $condition['operator'] . ' "' . addslashes($condition['value']) . '";');
          }
          switch ($condition['logic']) {
             case 'AND' :   $return &= $value; break;

@@ -1,8 +1,4 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-require_once('dropdown-field.class.php');
-
 class glpiselectField extends dropdownField
 {
    public static function getName()

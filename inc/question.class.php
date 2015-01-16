@@ -425,6 +425,27 @@ class PluginFormcreatorQuestion extends CommonDBChild
       return $input;
    }
 
+   public function updateConditions($input) {
+      Toolbox::logDebug('=== EDIT la question ===');
+      Toolbox::logDebug($input);
+      Toolbox::logDebug(PHP_EOL.PHP_EOL.PHP_EOL.PHP_EOL);
+
+      $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
+                WHERE `plugin_formcreator_questions_id` = {$input['id']}";
+      $GLOBALS['DB']->query($query);
+
+      // ===============================================================
+      // TODO : Mettre en place l'interface multi-conditions
+      // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
+      $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
+                  `plugin_formcreator_questions_id` = {$input['id']},
+                  `show_field`     = {$input['show_field']},
+                  `show_condition` = \"{$input['show_condition']}\",
+                  `show_value`     = \"{$input['show_value']}\"";
+      $GLOBALS['DB']->query($query);
+      // ===============================================================
+   }
+
    /**
     * Actions done after the PURGE of the item in the database
     * Reorder other questions

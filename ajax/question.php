@@ -91,7 +91,7 @@ $rand = mt_rand();
          <td width="33%">
             <?php
             Dropdown::showFromArray('show_type', array(
-               'always'    => __('Always displayed'),
+               'always'    => __('Always displayed', 'formcreator'),
                'hidden'    => __('Hidden unless', 'formcreator'),
                'shown'     => __('Displayed unless', 'formcreator'),
             ), array(
@@ -104,6 +104,17 @@ $rand = mt_rand();
             ?>
             <div id="div_show_condition"<?php echo $hide; ?>>
                <?php
+               // ===============================================================
+               // TODO : Mettre en place l'interface multi-conditions
+               // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
+               $sql = "SELECT `show_field`, `show_condition`, `show_value`
+                       FROM glpi_plugin_formcreator_questions_conditions
+                       WHERE `plugin_formcreator_questions_id` = $question_id
+                       LIMIT 0, 1";
+               $result = $GLOBALS['DB']->query($sql);
+               list($show_field, $show_condition, $show_value) = $GLOBALS['DB']->fetch_array($result);
+               // ===============================================================
+
                $table_question = getTableForItemtype('PluginFormcreatorQuestion');
                $table_section  = getTableForItemtype('PluginFormcreatorSection');
                $questions_tab  = array();
@@ -121,7 +132,7 @@ $rand = mt_rand();
                }
                echo '<div id="div_show_condition_field">';
                Dropdown::showFromArray('show_field', $questions_tab, array(
-                  'value' => $question->fields['show_field']
+                  'value' => $show_field
                ));
                echo '</div>';
 
@@ -134,7 +145,7 @@ $rand = mt_rand();
                   '<='    => '&le;',
                   '>='    => '&ge;',
                ), array(
-                  'value' => $question->fields['show_condition'],
+                  'value' => $show_condition,
                   'rand'  => $rand,
                ));
                echo '</div>';
@@ -142,7 +153,7 @@ $rand = mt_rand();
 
                <div id="div_show_condition_value">
                   <input type="text" name="show_value" id="show_value" class="small_text"
-                     value="<?php echo $question->fields['show_value']; ?>" size="8">
+                     value="<?php echo $show_value; ?>" size="8">
                </div>
             </div>
          </td>

@@ -1,122 +1,54 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-
 class dropdownField extends PluginFormcreatorField
 {
-   // public static function show($field, $datas, $edit = true)
-   // {
-   //    $rand = mt_rand();
+   public function displayField($canEdit = true)
+   {
+      if ($canEdit) {
+         $rand     = mt_rand();
+         $required = $this->fields['required'] ? ' required' : '';
 
-   //    $default_values = explode("\r\n", $field['default_values']);
-   //    $default_value  = array_shift($default_values);
-   //    $default_value = (!empty($datas['formcreator_field_' . $field['id']]))
-   //             ? $datas['formcreator_field_' . $field['id']]
-   //             : $default_value;
+         echo '<div class="form_field">';
+         if(!empty($this->fields['values'])) {
+            if ($this->fields['values'] == 'User') {
+               User::dropdown(array(
+                  'name'                => 'formcreator_field_' . $this->fields['id'],
+                  'value'               => $this->getValue(),
+                  'comments'            => false,
+                  'right'               => 'all',
+                  'display_emptychoice' => $this->fields['show_empty'],
+                  'rand'                => $rand,
+               ));
+            } else {
+               Dropdown::show($this->fields['values'], array(
+                  'name'                => 'formcreator_field_' . $this->fields['id'],
+                  'value'               => $this->getValue(),
+                  'comments'            => false,
+                  'display_emptychoice' => $this->fields['show_empty'],
+                  'rand'                => $rand,
+               ));
+            }
+         }
+         echo '</div>' . PHP_EOL;
+         echo '<script type="text/javascript">
+                  jQuery(document).ready(function($) {
+                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
+                        formcreatorChangeValueOf (' . $this->fields['id']. ', e.val);
+                     });
+                  });
+               </script>';
+      } else {
+         echo $this->getAnswer();
+      }
+   }
 
-   //    if($field['required'])  $required = ' required';
-   //    else $required = '';
-
-   //    if (!$edit) {
-   //       echo '<div class="form-group" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>' . $field['name'] . '</label>';
-   //       if (!empty($datas['formcreator_field_' . $field['id']])) {
-   //          echo self::displayValue($datas['formcreator_field_' . $field['id']], $field['values']);
-   //       }
-   //       echo '</div>' . PHP_EOL;
-   //       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . $datas['formcreator_field_' . $field['id']] . '");</script>';
-   //       return;
-   //    }
-
-   //    echo '<div class="form-group liste' . $required . '" id="form-group-field' . $field['id'] . '">';
-   //       echo '<label>';
-   //       echo  $field['name'];
-   //       if($field['required'])  echo ' <span class="red">*</span>';
-   //       echo '</label>';
-
-   //       echo '<div class="form_field">';
-   //       if(!empty($field['values'])) {
-   //          if ($field['values'] == 'User') {
-   //             User::dropdown(array(
-   //                'name'                => 'formcreator_field_' . $field['id'],
-   //                'value'               => $default_value,
-   //                'comments'            => false,
-   //                'right'               => 'all',
-   //                'display_emptychoice' => $field['show_empty'],
-   //                'rand'                => $rand,
-   //             ));
-   //          } else {
-   //             Dropdown::show($field['values'], array(
-   //                'name'                => 'formcreator_field_' . $field['id'],
-   //                'value'               => $default_value,
-   //                'comments'            => false,
-   //                'display_emptychoice' => $field['show_empty'],
-   //                'rand'                => $rand,
-   //             ));
-   //          }
-   //       }
-   //       echo '</div>' . PHP_EOL;
-   //       echo '<script type="text/javascript">
-   //                jQuery(document).ready(function($) {
-   //                   jQuery("#dropdown_formcreator_field_' . $field['id'] . $rand . '").on("select2-selecting", function(e) {
-   //                      formcreatorChangeValueOf (' . $field['id']. ', e.val);
-   //                   });
-   //                });
-   //             </script>';
-   //       echo '<script type="text/javascript">formcreatorAddValueOf(' . $field['id'] . ', "' . $default_value . '");</script>';
-
-   //       echo PHP_EOL . '<div class="help-block">' . html_entity_decode($field['description']) . '</div>' . PHP_EOL;
-   //    echo '</div>' . PHP_EOL;
-   // }
-
-   // public static function displayValue($value, $values)
-   // {
-   //    if ($values == 'User') {
-   //       return getUserName($value);
-   //    } else {
-   //       return Dropdown::getDropdownName(getTableForItemType($values), $value);
-   //    }
-   // }
-
-   // public static function isValid($field, $value, $datas)
-   // {
-   //    // If the field are hidden, don't test it
-   //    if (($field['show_type'] == 'hide') && isset($datas['formcreator_field_' . $field['show_field']])) {
-   //       $hidden = true;
-
-   //       switch ($field['show_condition']) {
-   //          case 'notequal':
-   //             if ($field['show_value'] != $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'lower':
-   //             if ($field['show_value'] < $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //          case 'greater':
-   //             if ($field['show_value'] > $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-
-   //          default:
-   //             if ($field['show_value'] == $datas['formcreator_field_' . $field['show_field']])
-   //                $hidden = false;
-   //             break;
-   //       }
-
-   //       if ($hidden) return true;
-   //    }
-
-   //    // Not required or not empty
-   //    if($field['required'] && empty($value)) {
-   //       Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $field['name'], false, ERROR);
-   //       return false;
-
-   //    // All is OK
-   //    } else {
-   //       return true;
-   //    }
-   // }
+   public function getAnswer()
+   {
+      if ($this->fields['values'] == 'User') {
+          return getUserName($this->getValue());
+       } else {
+          return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $this->getValue());
+       }
+   }
 
    public static function getName()
    {

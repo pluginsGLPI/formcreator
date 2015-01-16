@@ -4,6 +4,7 @@ header('Content-type: text/javascript');
 ?>
 
 function validateForm(form) {
+/*
    var requiredFields = document.getElementsByClassName('required');
    for (i = 0; i < requiredFields.length; i++) {
       if (requiredFields[i].value == "") {
@@ -12,6 +13,6 @@ function validateForm(form) {
          return false;
       }
    }
-
+*/
    return true;
 }

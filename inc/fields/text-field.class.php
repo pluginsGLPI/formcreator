@@ -1,7 +1,4 @@
 <?php
-require_once(realpath(dirname(__FILE__ ) . '/../../../../inc/includes.php'));
-require_once('field.interface.php');
-
 class textField extends PluginFormcreatorField
 {
 	public function isValid($value)
@@ -22,7 +19,6 @@ class textField extends PluginFormcreatorField
       } elseif(!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
          Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
          return false;
-
 		}
 
       // All is OK

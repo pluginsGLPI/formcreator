@@ -601,3 +601,15 @@ msgstr ""
 #: scripts/combobox.js.php:120
 msgid "didn't match any item"
 msgstr ""
+
+#: ajax/question.php:94
+msgid "Always displayed"
+msgstr ""
+
+#: ajax/question.php:95
+msgid "Hidden unless"
+msgstr ""
+
+#: ajax/question.php:96
+msgid "Displayed unless"
+msgstr ""
