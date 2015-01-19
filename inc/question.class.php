@@ -426,6 +426,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    public function updateConditions($input) {
+      Toolbox::logDebug($input);
       $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
                 WHERE `plugin_formcreator_questions_id` = {$input['id']}";
       $GLOBALS['DB']->query($query);
@@ -433,9 +434,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // ===============================================================
       // TODO : Mettre en place l'interface multi-conditions
       // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
+      $show_field = isset($input['show_field']) ? $input['show_field'] : 'NULL';
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
-                  `show_field`     = {$input['show_field']},
+                  `show_field`     = $show_field,
                   `show_condition` = \"{$input['show_condition']}\",
                   `show_value`     = \"{$input['show_value']}\"";
       $GLOBALS['DB']->query($query);

@@ -82,11 +82,15 @@ class PluginFormcreatorAnswer extends CommonDBChild
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                      `plugin_formcreator_formanwers_id` int(11) NOT NULL,
                      `plugin_formcreator_question_id` int(11) NOT NULL,
-                     `answer` varchar(255) NOT NULL DEFAULT ''
+                     `answer` text NOT NULL
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      } else {
+         // Update field type from previous version (Need answer to be text since text can be WYSIWING).
+         $query = "ALTER TABLE  `$table` CHANGE  `answer`  `answer` text;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
 

@@ -508,18 +508,27 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    public function getFullForm()
    {
       $question_no = 0;
+      $output      = '';
 
-      $output = mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . PHP_EOL;
-      $output .= '=================';
-      $output .= PHP_EOL . PHP_EOL;
+      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+         $output .= '<h1>' . mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . '</h1>';
+      } else {
+         $output .= mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . PHP_EOL;
+         $output .= '=================';
+         $output .= PHP_EOL . PHP_EOL;
+      }
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = '
                                              . $this->fields['plugin_formcreator_forms_id'], '`order` ASC');
       foreach ($find_sections as $section_line) {
-         $output .= $section_line['name'] . PHP_EOL;
-         $output .= '---------------------------------';
-         $output .= PHP_EOL . PHP_EOL;
+         if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+            $output = '<h2>' . $section_line['name'] . '</h2>';
+         } else {
+            $output .= $section_line['name'] . PHP_EOL;
+            $output .= '---------------------------------';
+            $output .= PHP_EOL . PHP_EOL;
+         }
 
          // Display all fields of the section
          $question  = new PluginFormcreatorQuestion();
@@ -545,20 +554,28 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
                if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
                   if (is_array($value)) {
-                     $output_value = "\r\n - " . implode("\r\n - ", $value);
+                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
                   } elseif (is_array(json_decode($value))) {
-                     $output_value = "\r\n - " . implode("\r\n - ", json_decode($value));
+                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
                   } else {
                      $output_value = $value;
                   }
                }
 
-               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
-               $output .= $output_value . PHP_EOL . PHP_EOL;
+               if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                  $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
+                  $output .= $output_value . '<br />';
+               } else {
+                  $output .= $question_no . ') ' . $question_line['name'] . ' : ';
+                  $output .= $output_value . PHP_EOL . PHP_EOL;
+               }
             }
          }
       }
 
+      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+         $output = nl2br($output);
+      }
       return $output;
    }
 

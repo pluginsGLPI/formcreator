@@ -12,6 +12,9 @@ class textareaField extends PluginFormcreatorField
                   id="formcreator_field_' . $this->fields['id'] . '"
                   onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);">'
                   . str_replace('\r\n', PHP_EOL, $this->getValue()) . '</textarea>';
+         if ($GLOBALS['CFG_GLPI']["use_rich_text"]) {
+            Html::initEditorSystem('formcreator_field_' . $this->fields['id'], mt_rand());
+         }
       } else {
          echo '<div style="float:left">' . nl2br($this->getAnswer()) . '</div>';
       }

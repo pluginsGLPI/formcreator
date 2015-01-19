@@ -36,6 +36,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
     */
    public function showForm($options=array())
    {
+      $rand = mt_rand();
+
       $obj = new PluginFormcreatorTarget();
       $founded = $obj->find('itemtype = "' . __CLASS__ . '" AND items_id = ' . $this->getID());
       $target = array_shift($founded);
@@ -61,7 +63,12 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       echo '<tr class="line0">';
       echo '<td width="20%"><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="70%" colspan="4"><textarea name="comment" style="width:646px;" rows="15">' . $this->fields['comment'] . '</textarea></td>';
+      echo '<td width="70%" colspan="4">';
+      echo '<textarea name="comment" id="comment' . $rand . '" style="width:646px;" rows="15">' . $this->fields['comment'] . '</textarea>';
+      if ($GLOBALS['CFG_GLPI']["use_rich_text"]) {
+         Html::initEditorSystem('comment', $rand);
+      }
+      echo '</td>';
       echo '</tr>';
 
       echo '<tr class="line1">';
@@ -74,7 +81,15 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr><td colspan="5">&nbsp;</td></tr>';
+      echo '<tr class="line0">';
+      echo '<td colspan="5" class="center">';
+      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
+               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
+      echo '</td>';
+      echo '</tr>';
+      echo '<tr class="line1"><td colspan="5">&nbsp;</td></tr>';
 
       echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
       echo '<tr>';
@@ -111,17 +126,6 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          echo '</tr>';
       }
 
-      echo '<tr class="line' . (++$i % 2) . '"><td colspan="5">&nbsp;</td></tr>';
-
-      echo '<tr class="line' . (++$i % 2) . '">';
-      echo '<td colspan="5" class="center">';
-      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
-      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
-      echo '</td>';
-      echo '</tr>';
-
       echo '</table>';
       Html::closeForm();
    }
@@ -147,7 +151,11 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
-      $input['name'] = htmlentities($input['title']);
+      $input['name']    = htmlentities($input['title']);
+
+      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+         $input['comment'] = Html::entity_decode_deep($input['comment']);
+      }
 
       return $input;
    }
