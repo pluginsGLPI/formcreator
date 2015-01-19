@@ -54,7 +54,10 @@ function plugin_init_formcreator ()
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
-   $PLUGIN_HOOKS['menu_toadd']['formcreator'] = array('admin' => 'PluginFormcreatorForm');
+   $PLUGIN_HOOKS['menu_toadd']['formcreator'] = array(
+      'admin'    => 'PluginFormcreatorForm',
+      'helpdesk' => 'PluginFormcreatorFormlist',
+   );
 
    // Add specific JavaScript
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';

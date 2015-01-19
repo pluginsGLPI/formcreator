@@ -45,8 +45,8 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          Html::header(
             __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF'],
-            'admin',
-            'PluginFormcreatorForm'
+            'helpdesk',
+            'PluginFormcreatorFormlist'
          );
 
          $form->displayUserForm($form);

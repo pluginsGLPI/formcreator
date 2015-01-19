@@ -12,8 +12,8 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
 
 if(PluginFormcreatorForm::canView()) {
    Html::header(
-      PluginFormcreatorForm::getTypeName(2),
-      '',
+      __('Form Creator', 'formcreator'),
+      $_SERVER['PHP_SELF'],
       'admin',
       'PluginFormcreatorForm'
    );

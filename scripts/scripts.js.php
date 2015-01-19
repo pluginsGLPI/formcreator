@@ -141,37 +141,37 @@ function deleteTarget(items_id, token, target_id, target_name) {
    }
 }
 
-// === MENU ===
-var link = '';
-link += '<li id="menu7">';
-link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
-link += "<?php echo _n('Form','Forms', 2, 'formcreator'); ?>";
-link += '</a>';
-link += '</li>';
+// // === MENU ===
+// var link = '';
+// link += '<li>';
+// link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php">';
+// link += "<?php echo _n('Form','Forms', 2, 'formcreator'); ?>";
+// link += '</a>';
+// link += '</li>';
 
-jQuery(document).ready(function($) {
-   modalWindow = $("<div></div>").dialog({
-      width: 980,
-      autoOpen: false,
-      height: "auto",
-      modal: true
-   });
+// jQuery(document).ready(function($) {
+//    modalWindow = $("<div></div>").dialog({
+//       width: 980,
+//       autoOpen: false,
+//       height: "auto",
+//       modal: true
+//    });
 
-   $('#c_menu #menu1').after(link);
+//    $('#c_menu #menu2 ul.ssmenu').append(link);
 
-   var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
+//    var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
 
-   if (NomDuFichier == "central.php" || NomDuFichier == "helpdesk.public.php") {
-      $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
-         type: "GET"
-      }).done(function(response){
-         setTimeout(function() {
-            $('.central td').first().prepend(response);
-         }, 200);
-      });
-   }
-});
+//    if (NomDuFichier == "central.php" || NomDuFichier == "helpdesk.public.php") {
+//       $.ajax({
+//          url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
+//          type: "GET"
+//       }).done(function(response){
+//          setTimeout(function() {
+//             $('.central td').first().prepend(response);
+//          }, 200);
+//       });
+//    }
+// });
 
 
 // SHOW OR HIDE FORM FIELDS
