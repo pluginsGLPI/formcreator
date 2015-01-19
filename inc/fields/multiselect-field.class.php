@@ -48,7 +48,13 @@ class multiSelectField extends selectField
 
       if (empty($this->getValue())) return '';
 
-      $tab_values = is_array($this->getValue()) ? $this->getValue() : json_decode($this->getValue());
+      if (is_array($this->getValue())) {
+        $tab_values = $this->getValue();
+      } elseif (is_array(json_decode($this->getValue()))) {
+         $tab_values = json_decode($this->getValue());
+      } else {
+         $tab_values = array($this->getValue());
+      }
 
       foreach ($tab_values as $value) {
          if (isset($values[$value])) $return[] = $value;
