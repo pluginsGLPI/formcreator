@@ -159,16 +159,24 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       if (!empty($form->fields['content'])) {
          echo '<div class="form_header">';
          echo html_entity_decode($form->fields['content']);
-
          echo '</div>';
       }
-      if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+
+      if ($this->fields['status'] == 'refused') {
          echo '<div class="refused_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
-      } elseif(($this->fields['status'] == 'accepted') && (!empty($this->fields['comment']))) {
+      } elseif($this->fields['status'] == 'accepted') {
          echo '<div class="accepted_header">';
-         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
+         echo '<div>';
+         if (!empty($this->fields['comment'])) {
+            echo nl2br($this->fields['comment']);
+         } elseif($form->fields['validation_required']) {
+            echo __('Form accepted by validator.', 'formcreator');
+         } else {
+            echo __('Form successfully saved.', 'formcreator');
+         }
+         echo '</div>';
          echo '</div>';
       }
 
@@ -533,14 +541,20 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                } else {
                   $value = '';
                }
-               $value   = PluginFormcreatorFields::getValue($question_line, $value);
+               $output_value = PluginFormcreatorFields::getValue($question_line, $value);
 
                if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
-                  $value = "\r\n - " . implode("\r\n - ", json_decode($value));
+                  if (is_array($value)) {
+                     $output_value = "\r\n - " . implode("\r\n - ", $value);
+                  } elseif (is_array(json_decode($value))) {
+                     $output_value = "\r\n - " . implode("\r\n - ", json_decode($value));
+                  } else {
+                     $output_value = $value;
+                  }
                }
 
                $output .= $question_no . ') ' . $question_line['name'] . ' : ';
-               $output .= $value . PHP_EOL . PHP_EOL;
+               $output .= $output_value . PHP_EOL . PHP_EOL;
             }
          }
       }

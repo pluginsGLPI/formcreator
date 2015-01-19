@@ -671,3 +671,11 @@ msgid ""
 msgstr ""
 "Specify the additional validation conditions in the description of the "
 "question to help users."
+
+#: inc/formanswer.class.php:175
+msgid "Form accepted by validator."
+msgstr "Form accepted by validator."
+
+#: inc/formanswer.class.php:177
+msgid "Form successfully saved."
+msgstr "Form successfully saved."
