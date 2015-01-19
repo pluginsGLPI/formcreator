@@ -175,13 +175,22 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          echo '</div>';
       }
-      if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+
+      if ($this->fields['status'] == 'refused') {
          echo '<div class="refused_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
       } elseif($this->fields['status'] == 'accepted') {
          echo '<div class="accepted_header">';
-         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
+         echo '<div>';
+         if (!empty($this->fields['comment'])) {
+            echo nl2br($this->fields['comment']);
+         } elseif($form->fields['validation_required']) {
+            echo __('Form accepted by validator.', 'formcreator');
+         } else {
+            echo __('Form successfully saved.', 'formcreator');
+         }
+         echo '</div>';
          echo '</div>';
       }
 
