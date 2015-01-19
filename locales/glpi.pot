@@ -613,3 +613,7 @@ msgstr ""
 #: ajax/question.php:96
 msgid "Displayed unless"
 msgstr ""
+
+#:  ajax/question.php:386
+msgid "Specify the additional validation conditions in the description of the question to help users."
+msgstr ""

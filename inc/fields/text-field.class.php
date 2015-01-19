@@ -7,17 +7,17 @@ class textField extends PluginFormcreatorField
 
       // Min range not set or text length longer than min length
       if(!empty($this->fields['range_min']) && strlen(utf8_decode($value)) < $this->fields['range_min']) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $field['range_min']) . ' ' . $field['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $this->fields['range_min']) . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
       // Max range not set or text length shorter than max length
       } elseif(!empty($this->fields['range_max']) && strlen(utf8_decode($value)) > $this->fields['range_max']) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $field['range_max']) . ' ' . $field['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $this->fields['range_max']) . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
       // Specific format not set or well match
       } elseif(!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
-         Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $field['name'], false, ERROR);
+         Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
          return false;
 		}
 

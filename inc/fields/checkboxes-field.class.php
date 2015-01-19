@@ -54,6 +54,9 @@ class checkboxesField extends PluginFormcreatorField
 
 	public function isValid($value)
    {
+      $value = json_decode($value);
+      if (is_null($value)) $value = array();
+
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
          Session::addMessageAfterRedirect(
@@ -63,14 +66,14 @@ class checkboxesField extends PluginFormcreatorField
          return false;
 
       // Min range not set or number of selected item lower than min
-      } elseif (!empty($field['range_min']) && (count($value) < $field['range_min'])) {
-         $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $field['range_min']);
+      } elseif (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
+         $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $this->fields['range_min']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
       // Max range not set or number of selected item greater than max
-      } elseif (!empty($field['range_max']) && (count($value) > $field['range_max'])) {
-         $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $field['range_max']);
+      } elseif (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
+         $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
 

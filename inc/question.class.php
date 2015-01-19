@@ -426,10 +426,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    public function updateConditions($input) {
-      Toolbox::logDebug('=== EDIT la question ===');
-      Toolbox::logDebug($input);
-      Toolbox::logDebug(PHP_EOL.PHP_EOL.PHP_EOL.PHP_EOL);
-
       $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
                 WHERE `plugin_formcreator_questions_id` = {$input['id']}";
       $GLOBALS['DB']->query($query);

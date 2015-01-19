@@ -383,6 +383,7 @@ $rand = mt_rand();
          <td width="80%" colspan="3">
             <input type="text" name="regex" id="regex" style="width:98%;"
                value="<?php echo $question->fields['regex']; ?>" />
+               <em><?php echo __('Specify the additional validation conditions in the description of the question to help users.', 'formcreator'); ?></em>
          </td>
       </tr>
 

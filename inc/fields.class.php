@@ -142,18 +142,26 @@ class PluginFormcreatorFields
                   if (empty($values[$condition['field']])) {
                      $value = true;
                   } else {
-                     $value = is_array($values[$condition['field']])
-                              ? !in_array($condition['value'], $values[$condition['field']])
-                              : !in_array($condition['value'], json_decode($values[$condition['field']]));
+                     if (is_array($values[$condition['field']])) {
+                        $value = !in_array($condition['value'], $values[$condition['field']]);
+                     } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                        $value = !in_array($condition['value'], json_decode($values[$condition['field']]));
+                     } else {
+                        $value = $condition['value'] != $values[$condition['field']];
+                     }
                   }
                   break;
                case '==' :
                   if (empty($condition['value'])) {
                      $value = false;
                   } else {
-                     $value = is_array($values[$condition['field']])
-                              ? in_array($condition['value'], $values[$condition['field']])
-                              : in_array($condition['value'], json_decode($values[$condition['field']]));
+                     if (is_array($values[$condition['field']])) {
+                        $value = in_array($condition['value'], $values[$condition['field']]);
+                     } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                        $value = in_array($condition['value'], json_decode($values[$condition['field']]));
+                     } else {
+                        $value = $condition['value'] == $values[$condition['field']];
+                     }
                   }
                   break;
                default:
