@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2014-11-14 14:55+0100\n"
+"PO-Revision-Date: 2015-01-19 11:04+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/"
 "glpi-project-plugin-formcreator/language/en_GB/)\n"
@@ -384,8 +384,8 @@ msgid "The description cannot be empty!"
 msgstr "The description cannot be empty!"
 
 #: setup.php:26
-msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
-msgstr "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
+msgid "This plugin requires GLPI >= 0.85 and GLPI < 0.86"
+msgstr "This plugin requires GLPI >= 0.85 and GLPI < 0.86"
 
 #: front/question.form.php:15
 msgid "The question have been successfully saved!"
@@ -643,3 +643,39 @@ msgstr "Accept"
 #: inc/form.class.php:511
 msgid "No form waiting for validation"
 msgstr "No form waiting for validation"
+
+#: scripts/combobox.js.php:54
+msgid "Show All Items"
+msgstr "Show All Items"
+
+#: scripts/combobox.js.php:120
+msgid "didn't match any item"
+msgstr "didn't match any item"
+
+#: ajax/question.php:94
+msgid "Always displayed"
+msgstr "Always displayed"
+
+#: ajax/question.php:95
+msgid "Hidden unless"
+msgstr "Hidden unless"
+
+#: ajax/question.php:96
+msgid "Displayed unless"
+msgstr "Displayed unless"
+
+#: ajax/question.php:386
+msgid ""
+"Specify the additional validation conditions in the description of the "
+"question to help users."
+msgstr ""
+"Specify the additional validation conditions in the description of the "
+"question to help users."
+
+#: inc/formanswer.class.php:175
+msgid "Form accepted by validator."
+msgstr "Form accepted by validator."
+
+#: inc/formanswer.class.php:177
+msgid "Form successfully saved."
+msgstr "Form successfully saved."

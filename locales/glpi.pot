@@ -363,7 +363,7 @@ msgid "The description cannot be empty!"
 msgstr ""
 
 #: setup.php:26
-msgid "This plugin requires GLPI >= 0.84 and GLPI < 0.85"
+msgid "This plugin requires GLPI >= 0.85 and GLPI < 0.86"
 msgstr ""
 
 #: front/question.form.php:15
@@ -592,4 +592,36 @@ msgstr ""
 
 #: inc/form.class.php:511
 msgid "No form waiting for validation"
+msgstr ""
+
+#: scripts/combobox.js.php:54
+msgid "Show All Items"
+msgstr ""
+
+#: scripts/combobox.js.php:120
+msgid "didn't match any item"
+msgstr ""
+
+#: ajax/question.php:94
+msgid "Always displayed"
+msgstr ""
+
+#: ajax/question.php:95
+msgid "Hidden unless"
+msgstr ""
+
+#: ajax/question.php:96
+msgid "Displayed unless"
+msgstr ""
+
+#:  ajax/question.php:386
+msgid "Specify the additional validation conditions in the description of the question to help users."
+msgstr ""
+
+#: inc/formanswer.class.php:175
+msgid "Form accepted by validator."
+msgstr ""
+
+#: inc/formanswer.class.php:177
+msgid "Form successfully saved."
 msgstr ""
