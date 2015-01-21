@@ -650,10 +650,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
          if (FieldExists($table, 'show_type', false)) {
 
             // Fix type of section ID
-            $query = "ALTER TABLE  `glpi_plugin_formcreator_questions`
-                      CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
-                      ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
-            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+            if (!FieldExists('glpi_plugin_formcreator_questions', 'show_rule')) {
+               $query = "ALTER TABLE  `glpi_plugin_formcreator_questions`
+                         CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
+                         ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
+               $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+            }
 
             // Create new table for conditionnal show of questions
             $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
@@ -697,8 +699,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
                $line['show_value'] = addslashes($line['show_value']);
 
-               $query_udate = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
-                               `show_rule` = '$show_rule'
+               $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
+                                 `show_rule` = '$show_rule'
                                WHERE `id` = {$line['id']}";
                $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
 
@@ -717,8 +719,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
                       DROP `show_condition`,
                       DROP `show_value`;";
             $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-
-
          }
       }
 
