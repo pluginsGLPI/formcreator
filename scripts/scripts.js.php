@@ -6,6 +6,14 @@ header('Content-Type: text/javascript');
 var modalWindow;
 var rootDoc          = "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>";
 
+// === MENU ===
+var link = '';
+link += '<li id="menu7">';
+link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
+link += "<?php echo _n('Form','Forms', 2, 'formcreator'); ?>";
+link += '</a>';
+link += '</li>';
+
 jQuery(document).ready(function($) {
    modalWindow = $("<div></div>").dialog({
       width: 980,
@@ -13,6 +21,11 @@ jQuery(document).ready(function($) {
       height: "auto",
       modal: true
    });
+
+   <?php
+      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')
+         echo "$('#c_menu #menu1').after(link);";
+   ?>
 
    var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
 
