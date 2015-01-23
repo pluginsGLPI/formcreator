@@ -426,7 +426,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    public function updateConditions($input) {
-      Toolbox::logDebug($input);
       $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
                 WHERE `plugin_formcreator_questions_id` = {$input['id']}";
       $GLOBALS['DB']->query($query);
