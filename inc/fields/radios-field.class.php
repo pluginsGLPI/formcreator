@@ -29,9 +29,9 @@ class radiosField extends PluginFormcreatorField
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").on("change", function() {
-                        jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").each(function(value) {
+                        jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").each(function() {
                            if (this.checked == true) {
-                              formcreatorChangeValueOf (' . $this->fields['id'] . ', value);
+                              formcreatorChangeValueOf (' . $this->fields['id'] . ', this.value);
                            }
                         });
                      });
