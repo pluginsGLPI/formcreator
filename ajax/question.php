@@ -84,13 +84,13 @@ $rand = mt_rand();
             ?>
          </td>
          <td width="17%">
-            <label for="dropdown_show_type<?php echo $rand; ?>" id="label_show_type">
+            <label for="dropdown_show_rule<?php echo $rand; ?>" id="label_show_type">
                <?php echo __('Show field', 'formcreator'); ?>
             </label>
          </td>
          <td width="33%">
             <?php
-            Dropdown::showFromArray('show_type', array(
+            Dropdown::showFromArray('show_rule', array(
                'always'    => __('Always displayed', 'formcreator'),
                'hidden'    => __('Hidden unless', 'formcreator'),
                'shown'     => __('Displayed unless', 'formcreator'),
