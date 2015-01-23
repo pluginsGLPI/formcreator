@@ -1,4 +1,5 @@
 <?php
+require_once ('dropdown-field.class.php');
 class glpiselectField extends dropdownField
 {
    public static function getName()
