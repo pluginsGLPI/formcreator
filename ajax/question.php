@@ -432,10 +432,10 @@ $rand = mt_rand();
             document.getElementById('label_default_values').style.display                    = 'none';
          }
          if(show_type) {
-            document.getElementById('dropdown_show_type<?php echo $rand; ?>').style.display  = 'inline';
+            document.getElementById('dropdown_show_rule<?php echo $rand; ?>').style.display  = 'inline';
             document.getElementById('label_show_type').style.display                         = 'inline';
          } else {
-            document.getElementById('dropdown_show_type<?php echo $rand; ?>').style.display  = 'none';
+            document.getElementById('dropdown_show_rule<?php echo $rand; ?>').style.display  = 'none';
             document.getElementById('label_show_type').style.display                         = 'none';
          }
          if(values) {
