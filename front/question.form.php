@@ -11,8 +11,10 @@ if ($plugin->isActivated("formcreator")) {
    // Add a new Question
    if(isset($_POST["add"])) {
       Session::checkRight("entity", UPDATE);
-      if ($question->add($_POST)) {
+      if ($newid = $question->add($_POST)) {
          Session::addMessageAfterRedirect(__('The question have been successfully saved!', 'formcreator'), true, INFO);
+         $_POST['id'] = $newid;
+         $question->updateConditions($_POST);
       }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
