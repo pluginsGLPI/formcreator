@@ -23,6 +23,17 @@ if ($plugin->isActivated("formcreator")) {
          'PluginFormcreatorForm'
       );
 
+      $itemtype = "PluginFormcreatorTargetTicket";
+      $target   = new PluginFormcreatorTarget;
+      $found    = $target->find("itemtype = '$itemtype' AND items_id = '" . $_REQUEST['id'] . "'");
+      $first    = array_shift($found);
+      $form     = new PluginFormcreatorForm;
+      $form->getFromDB($first['plugin_formcreator_forms_id']);
+
+      $_SESSION['glpilisttitle'][$itemtype] = sprintf(__('%1$s = %2$s'),
+                                                      $form->getTypeName(1), $form->getName());
+      $_SESSION['glpilisturl'][$itemtype]   = $form->getFormURL()."?id=".$form->getID();
+
       $targetticket->display($_REQUEST);
 
       Html::footer();
