@@ -31,23 +31,23 @@ $rand = mt_rand();
       </tr>
 
       <tr class="line0">
-         <td width="17%">
+         <td width="20%">
             <label for="name" id="label_name">
                <?php echo  __('Title'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
-         <td width="33%">
+         <td width="30%">
             <input type="text" name="name" id="name" style="width:90%;" autofocus
                value="<?php echo $question->fields['name']; ?>" class="required">
          </td>
-         <td width="17%">
+         <td width="20%">
             <label for="dropdown_fieldtype<?php echo $rand; ?>" id="label_fieldtype">
                <?php echo _n('Type', 'Types', 1); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
-         <td width="33%">
+         <td width="30%">
             <?php
             $fieldtypes = PluginFormcreatorFields::getNames();
             Dropdown::showFromArray('fieldtype', $fieldtypes, array(
@@ -59,13 +59,13 @@ $rand = mt_rand();
          </td>
       </tr>
       <tr class="line1">
-         <td width="17%">
+         <td>
             <label for="dropdown_plugin_formcreator_sections_id<?php echo $rand; ?>" id="label_name">
                <?php echo  _n('Section', 'Sections', 1, 'formcreator'); ?>&nbsp;
                <span style="color:red;">*</span>
             </label>
          </td>
-         <td width="33%">
+         <td>
             <?php
             $table = getTableForItemtype('PluginFormcreatorSection');
             $sections = array();
@@ -83,12 +83,252 @@ $rand = mt_rand();
             ));
             ?>
          </td>
-         <td width="17%">
+         <td>
+            <label for="dropdown_dropdown_values<?php echo $rand; ?>" id="label_dropdown_values">
+               <?php echo _n('Dropdown', 'Dropdowns', 1); ?>
+            </label>
+            <label for="dropdown_glpi_objects<?php echo $rand; ?>" id="label_glpi_objects">
+               <?php echo _n('GLPI object', 'GLPI objects', 1, 'formcreator'); ?>
+            </label>
+            <label for="dropdown_ldap_auth<?php echo $rand; ?>" id="label_glpi_ldap">
+               <?php echo _n('LDAP directory', 'LDAP directories', 1); ?>
+            </label>
+         </td>
+         <td>
+            <div id="dropdown_values_field">
+               <?php
+                  $optgroup = Dropdown::getStandardDropdownItemTypes();
+                  array_unshift($optgroup, '---');
+                  Dropdown::showFromArray('dropdown_values', $optgroup, array(
+                     'value'     => $question->fields['values'],
+                     'rand'      => $rand,
+                     'on_change' => 'change_dropdown();',
+                  ));
+               ?>
+            </div>
+            <div id="glpi_objects_field">
+               <?php
+                  $optgroup = array(
+                                 __("Assets") => array(
+                                    'Computer'           => _n("Computer", "Computers", 2),
+                                    'Monitor'            => _n("Monitor", "Monitors", 2),
+                                    'Software'           => _n("Software", "Software", 2),
+                                    'Networkequipment'   => _n("Network", "Networks", 2),
+                                    'Peripheral'         => _n("Device", "Devices", 2),
+                                    'Printer'            => _n("Printer", "Printers", 2),
+                                    'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
+                                    'Consumableitem'     => _n("Consumable", "Consumables", 2),
+                                    'Phone'              => _n("Phone", "Phones", 2)),
+                                 __("Assistance") => array(
+                                    'Ticket'             => _n("Ticket", "Tickets", 2),
+                                    'Problem'            => _n("Problem", "Problems", 2),
+                                    'TicketRecurrent'    => __("Recurrent tickets")),
+                                 __("Management") => array(
+                                    'Budget'             => _n("Budget", "Budgets", 2),
+                                    'Supplier'           => _n("Supplier", "Suppliers", 2),
+                                    'Contact'            => _n("Contact", "Contacts", 2),
+                                    'Contract'           => _n("Contract", "Contracts", 2),
+                                    'Document'           => _n("Document", "Documents", 2)),
+                                 __("Tools") => array(
+                                    'Notes'              => __("Notes"),
+                                    'RSSFeed'            => __("RSS feed")),
+                                 __("Administration") => array(
+                                    'User'               => _n("User", "Users", 2),
+                                    'Group'              => _n("Group", "Groups", 2),
+                                    'Entity'             => _n("Entity", "Entities", 2),
+                                    'Profile'            => _n("Profile", "Profiles", 2))
+                              );;
+                  array_unshift($optgroup, '---');
+                  Dropdown::showFromArray('glpi_objects', $optgroup, array(
+                     'value'     => $question->fields['values'],
+                     'rand'      => $rand,
+                     'on_change' => 'change_glpi_objects();',
+                  ));
+               ?>
+            </div>
+            <div id="glpi_ldap_field">
+            <?php
+            Dropdown::show('AuthLDAP', array(
+               'name'      => 'ldap_auth',
+               'rand'      => $rand,
+               'value'     => (isset($ldap_values->ldap_auth)) ? $ldap_values->ldap_auth : '',
+               'on_change' => 'change_LDAP(this)',
+            ));
+            ?>
+            </div>
+         </td>
+      </tr>
+
+      <tr class="line0" id="required_tr">
+         <td>
+            <label for="dropdown_required<?php echo $rand; ?>" id="label_required">
+               <?php echo __('Required', 'formcreator'); ?>
+            </label>
+         </td>
+         <td>
+            <?php
+            dropdown::showYesNo('required', $question->fields['required'], -1, array(
+               'rand'  => $rand,
+            ));
+            ?>
+         </td>
+         <td>
+            <label for="dropdown_show_empty<?php echo $rand; ?>" id="label_show_empty">
+               <?php echo __('Show empty', 'formcreator'); ?>
+            </label>
+         </td>
+         <td>
+            <div id="show_empty">
+               <?php
+               dropdown::showYesNo('show_empty', $question->fields['show_empty'], -1, array(
+                  'rand'  => $rand,
+               ));
+               ?>
+            </div>
+         </td>
+      </tr>
+
+      <tr class="line1" id="values_tr">
+         <td>
+            <label for="dropdown_default_values<?php echo $rand; ?>" id="label_default_values">
+               <?php echo __('Default values'); ?><br />
+               <small>(<?php echo __('One per line for lists', 'formcreator'); ?>)</small>
+            </label>
+            <label for="dropdown_dropdown_default_value<?php echo $rand; ?>" id="label_dropdown_default_value">
+               <?php echo __('Default value'); ?>
+            </label>
+         </td>
+         <td>
+            <textarea name="default_values" id="default_values" rows="4" cols="40"
+               style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
+            <div id="dropdown_default_value_field">
+               <?php
+               if((($question->fields['fieldtype'] == 'dropdown')
+                     || ($question->fields['fieldtype'] == 'glpiselect'))
+                   && !empty($question->fields['values'])
+                   && class_exists($question->fields['values'])) {
+                  Dropdown::show($question->fields['values'], array(
+                     'name'  => 'dropdown_default_value',
+                     'value' => $question->fields['default_values'],
+                     'rand'  => $rand,
+                  ));
+               } else {
+                  echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>"
+                           id="dropdown_dropdown_default_value' . $rand . '">
+                           <option value="">---</option>
+                        </select>';
+               }
+               ?>
+
+            </div>
+         </td>
+         <td>
+            <label for="values" id="label_values">
+               <?php echo __('Values', 'formcreator'); ?><br />
+               <small>(<?php echo __('One per line', 'formcreator'); ?>)</small>
+            </label>
+         </td>
+         <td>
+            <textarea name="values" id="values" rows="4" cols="40"
+               style="width: 90%"><?php echo $question->fields['values']; ?></textarea>
+         </td>
+      </tr>
+
+      <?php $ldap_values = json_decode($question->fields['values']); ?>
+      <tr class="line1" id="ldap_tr">
+         <td>
+            <label for="ldap_filter">
+               <?php echo __('Filter', 'formcreator'); ?>
+            </label>
+         </td>
+         <td>
+            <input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"
+               value="<?php echo (isset($ldap_values->ldap_filter)) ? $ldap_values->ldap_filter : ''; ?>" />
+         </td>
+         <td>
+            <label for="ldap_attribute">
+               <?php echo __('Attribute', 'formcreator'); ?>
+            </label>
+         </td>
+         <td>
+            <?php
+            $rand2 = mt_rand();
+            Dropdown::show('RuleRightParameter', array(
+               'name'  => 'ldap_attribute',
+               'rand'  => $rand2,
+               'value' => (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : '',
+            ));
+            ?>
+         </td>
+      </tr>
+      <tr class="line0" id="ldap_tr2">
+         <td>
+         </td>
+         <td>
+         </td>
+         <td colspan="2">&nbsp;</td>
+      </tr>
+
+      <tr class="line0" id="range_tr">
+         <td>
+            <span id="label_range"><?php echo __('Range', 'formcreator'); ?></span>
+         </td>
+         <td>
+            <label for="range_min" id="label_range_min">
+               <?php echo __('Min', 'formcreator'); ?>
+            </label>
+            <input type="text" name="range_min" id="range_min" class="small_text"
+               style="width: 90px" value="<?php echo $question->fields['range_min']; ?>" />
+            &nbsp;
+            <label for="range_max" id="label_range_max">
+               <?php echo __('Max', 'formcreator'); ?>
+            </label>
+            <input type="text" name="range_max" id="range_max" class="small_text"
+               style="width: 90px" value="<?php echo $question->fields['range_max']; ?>" />
+         </td>
+         <td colspan="2">&nbsp;</td>
+      </tr>
+
+      <tr class="line1" id="description_tr">
+         <td>
+            <label for="description" id="label_description">
+               <?php echo __('Description'); ?>
+            </label>
+         </td>
+         <td width="80%" colspan="3">
+            <textarea name="description" id="description" rows="6" cols="108"
+               style="width: 97%"><?php echo $question->fields['description']; ?></textarea>
+            <?php Html::initEditorSystem('description'); ?>
+         </td>
+      </tr>
+
+      <tr class="line0" id="regex_tr">
+         <td>
+            <label for="regex" id="label_regex">
+               <?php echo __('Additional validation', 'formcreator'); ?><br />
+               <small>
+                  <a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">
+                     (<?php echo __('Regular expression', 'formcreator'); ?>)</a>
+               </small>
+            </label>
+         </td>
+         <td width="80%" colspan="3">
+            <input type="text" name="regex" id="regex" style="width:98%;"
+               value="<?php echo $question->fields['regex']; ?>" />
+               <em><?php echo __('Specify the additional validation conditions in the description of the question to help users.', 'formcreator'); ?></em>
+         </td>
+      </tr>
+
+      <tr>
+         <th colspan="4">
             <label for="dropdown_show_rule<?php echo $rand; ?>" id="label_show_type">
                <?php echo __('Show field', 'formcreator'); ?>
             </label>
-         </td>
-         <td width="33%">
+         </th>
+      </tr>
+
+      <tr>
+         <td>
             <?php
             Dropdown::showFromArray('show_rule', array(
                'always'    => __('Always displayed', 'formcreator'),
@@ -102,6 +342,8 @@ $rand = mt_rand();
 
             $hide = ($question->fields['show_rule'] == 'always') ? ' style="display:none"' : '';
             ?>
+         </td>
+         <td colspan="3">
             <div id="div_show_condition"<?php echo $hide; ?>>
                <?php
                // ===============================================================
@@ -157,235 +399,8 @@ $rand = mt_rand();
                </div>
             </div>
          </td>
-      </tr>
+</tr>
 
-      <tr class="line0" id="required_tr">
-         <td width="17%">
-            <label for="dropdown_required<?php echo $rand; ?>" id="label_required">
-               <?php echo __('Required', 'formcreator'); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <?php
-            dropdown::showYesNo('required', $question->fields['required'], -1, array(
-               'rand'  => $rand,
-            ));
-            ?>
-         </td>
-         <td width="17%">
-            <label for="dropdown_show_empty<?php echo $rand; ?>" id="label_show_empty">
-               <?php echo __('Show empty', 'formcreator'); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <div id="show_empty">
-               <?php
-               dropdown::showYesNo('show_empty', $question->fields['show_empty'], -1, array(
-                  'rand'  => $rand,
-               ));
-               ?>
-            </div>
-         </td>
-      </tr>
-
-      <tr class="line1" id="values_tr">
-         <td width="17%">
-            <label for="dropdown_default_values<?php echo $rand; ?>" id="label_default_values">
-               <?php echo __('Default values'); ?><br />
-               <small>(<?php echo __('One per line for lists', 'formcreator'); ?>)</small>
-            </label>
-            <label for="dropdown_dropdown_default_value<?php echo $rand; ?>" id="label_dropdown_default_value">
-               <?php echo __('Default value'); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <textarea name="default_values" id="default_values" rows="4" cols="40"
-               style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
-            <div id="dropdown_default_value_field">
-               <?php
-               if((($question->fields['fieldtype'] == 'dropdown')
-                     || ($question->fields['fieldtype'] == 'glpiselect'))
-                   && !empty($question->fields['values'])
-                   && class_exists($question->fields['values'])) {
-                  Dropdown::show($question->fields['values'], array(
-                     'name'  => 'dropdown_default_value',
-                     'value' => $question->fields['default_values'],
-                     'rand'  => $rand,
-                  ));
-               } else {
-                  echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>"
-                           id="dropdown_dropdown_default_value' . $rand . '">
-                           <option value="">---</option>
-                        </select>';
-               }
-               ?>
-
-            </div>
-         </td>
-         <td width="17%">
-            <label for="values" id="label_values">
-               <?php echo __('Values', 'formcreator'); ?><br />
-               <small>(<?php echo __('One per line', 'formcreator'); ?>)</small>
-            </label>
-            <label for="dropdown_dropdown_values<?php echo $rand; ?>" id="label_dropdown_values">
-               <?php echo _n('Dropdown', 'Dropdowns', 1); ?>
-            </label>
-            <label for="dropdown_glpi_objects<?php echo $rand; ?>" id="label_glpi_objects">
-               <?php echo _n('GLPI object', 'GLPI objects', 1, 'formcreator'); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <textarea name="values" id="values" rows="4" cols="40"
-               style="width: 90%"><?php echo $question->fields['values']; ?></textarea>
-            <div id="dropdown_values_field">
-               <?php
-                  $optgroup = Dropdown::getStandardDropdownItemTypes();
-                  array_unshift($optgroup, '---');
-                  Dropdown::showFromArray('dropdown_values', $optgroup, array(
-                     'value'     => $question->fields['values'],
-                     'rand'      => $rand,
-                     'on_change' => 'change_dropdown();',
-                  ));
-               ?>
-            </div>
-            <div id="glpi_objects_field">
-               <?php
-                  $optgroup = array(
-                                 __("Assets") => array(
-                                    'Computer'           => _n("Computer", "Computers", 2),
-                                    'Monitor'            => _n("Monitor", "Monitors", 2),
-                                    'Software'           => _n("Software", "Software", 2),
-                                    'Networkequipment'   => _n("Network", "Networks", 2),
-                                    'Peripheral'         => _n("Device", "Devices", 2),
-                                    'Printer'            => _n("Printer", "Printers", 2),
-                                    'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
-                                    'Consumableitem'     => _n("Consumable", "Consumables", 2),
-                                    'Phone'              => _n("Phone", "Phones", 2)),
-                                 __("Assistance") => array(
-                                    'Ticket'             => _n("Ticket", "Tickets", 2),
-                                    'Problem'            => _n("Problem", "Problems", 2),
-                                    'TicketRecurrent'    => __("Recurrent tickets")),
-                                 __("Management") => array(
-                                    'Budget'             => _n("Budget", "Budgets", 2),
-                                    'Supplier'           => _n("Supplier", "Suppliers", 2),
-                                    'Contact'            => _n("Contact", "Contacts", 2),
-                                    'Contract'           => _n("Contract", "Contracts", 2),
-                                    'Document'           => _n("Document", "Documents", 2)),
-                                 __("Tools") => array(
-                                    'Notes'              => __("Notes"),
-                                    'RSSFeed'            => __("RSS feed")),
-                                 __("Administration") => array(
-                                    'User'               => _n("User", "Users", 2),
-                                    'Group'              => _n("Group", "Groups", 2),
-                                    'Entity'             => _n("Entity", "Entities", 2),
-                                    'Profile'            => _n("Profile", "Profiles", 2))
-                              );;
-                  array_unshift($optgroup, '---');
-                  Dropdown::showFromArray('glpi_objects', $optgroup, array(
-                     'value'     => $question->fields['values'],
-                     'rand'      => $rand,
-                     'on_change' => 'change_glpi_objects();',
-                  ));
-               ?>
-            </div>
-         </td>
-      </tr>
-
-      <?php $ldap_values = json_decode($question->fields['values']); ?>
-      <tr class="line1" id="ldap_tr">
-         <td width="17%">
-            <label for="ldap_filter">
-               <?php echo __('Filter', 'formcreator'); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"
-               value="<?php echo (isset($ldap_values->ldap_filter)) ? $ldap_values->ldap_filter : ''; ?>" />
-         </td>
-         <td width="17%">
-            <label for="dropdown_ldap_auth<?php echo $rand; ?>">
-               <?php echo _n('LDAP directory', 'LDAP directories', 1); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <?php
-            Dropdown::show('AuthLDAP', array(
-               'name'      => 'ldap_auth',
-               'rand'      => $rand,
-               'value'     => (isset($ldap_values->ldap_auth)) ? $ldap_values->ldap_auth : '',
-               'on_change' => 'change_LDAP(this)',
-            ));
-            ?>
-         </td>
-      </tr>
-      <tr class="line0" id="ldap_tr2">
-         <td width="17%">
-            <label for="ldap_attribute">
-               <?php echo __('Attribute', 'formcreator'); ?>
-            </label>
-         </td>
-         <td width="33%">
-            <?php
-            $rand2 = mt_rand();
-            Dropdown::show('RuleRightParameter', array(
-               'name'  => 'ldap_attribute',
-               'rand'  => $rand2,
-               'value' => (isset($ldap_values->ldap_attribute)) ? $ldap_values->ldap_attribute : '',
-            ));
-            ?>
-         </td>
-         <td colspan="2">&nbsp;</td>
-      </tr>
-
-      <tr class="line0" id="range_tr">
-         <td width="17%">
-            <span id="label_range"><?php echo __('Range', 'formcreator'); ?></span>
-         </td>
-         <td width="33%">
-            <label for="range_min" id="label_range_min">
-               <?php echo __('Min', 'formcreator'); ?>
-            </label>
-            <input type="text" name="range_min" id="range_min" class="small_text"
-               style="width: 90px" value="<?php echo $question->fields['range_min']; ?>" />
-            &nbsp;
-            <label for="range_max" id="label_range_max">
-               <?php echo __('Max', 'formcreator'); ?>
-            </label>
-            <input type="text" name="range_max" id="range_max" class="small_text"
-               style="width: 90px" value="<?php echo $question->fields['range_max']; ?>" />
-         </td>
-         <td colspan="2">&nbsp;</td>
-      </tr>
-
-      <tr class="line1" id="description_tr">
-         <td width="17%">
-            <label for="description" id="label_description">
-               <?php echo __('Description'); ?>
-            </label>
-         </td>
-         <td width="80%" colspan="3">
-            <textarea name="description" id="description" rows="6" cols="108"
-               style="width: 97%"><?php echo $question->fields['description']; ?></textarea>
-            <?php Html::initEditorSystem('description'); ?>
-         </td>
-      </tr>
-
-      <tr class="line0" id="regex_tr">
-         <td width="17%">
-            <label for="regex" id="label_regex">
-               <?php echo __('Additional validation', 'formcreator'); ?><br />
-               <small>
-                  <a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">
-                     (<?php echo __('Regular expression', 'formcreator'); ?>)</a>
-               </small>
-            </label>
-         </td>
-         <td width="80%" colspan="3">
-            <input type="text" name="regex" id="regex" style="width:98%;"
-               value="<?php echo $question->fields['regex']; ?>" />
-               <em><?php echo __('Specify the additional validation conditions in the description of the question to help users.', 'formcreator'); ?></em>
-         </td>
-      </tr>
 
       <tr class="line1">
          <td colspan="4" class="center">
@@ -460,10 +475,10 @@ $rand = mt_rand();
             document.getElementById('label_glpi_objects').style.display                   = 'none';
          }
          if (dropdown_value || glpi_object) {
-            document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'inline';
+            document.getElementById('dropdown_default_value_field').style.display = 'inline';
             document.getElementById('label_dropdown_default_value').style.display            = 'inline';
          } else {
-            document.getElementById('dropdown_dropdown_default_value<?php echo $rand; ?>').style.display = 'none';
+            document.getElementById('dropdown_default_value_field').style.display = 'none';
             document.getElementById('label_dropdown_default_value').style.display            = 'none';
          }
          if(range) {
@@ -508,11 +523,13 @@ $rand = mt_rand();
             document.getElementById('required_tr').style.display                             = 'none';
          }
          if(ldap_values) {
+            document.getElementById('glpi_ldap_field').style.display                         = 'inline';
+            document.getElementById('label_glpi_ldap').style.display                         = 'inline';
             document.getElementById('ldap_tr').style.display                                 = 'table-row';
-            document.getElementById('ldap_tr2').style.display                                = 'table-row';
          } else {
+            document.getElementById('glpi_ldap_field').style.display                         = 'none';
+            document.getElementById('label_glpi_ldap').style.display                         = 'none';
             document.getElementById('ldap_tr').style.display                                 = 'none';
-            document.getElementById('ldap_tr2').style.display                                = 'none';
          }
       }
 
