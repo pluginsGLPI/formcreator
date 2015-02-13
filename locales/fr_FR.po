@@ -4,14 +4,14 @@
 #
 # Translators:
 # Translators:
-# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014
+# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014-2015
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-01-19 11:04+0100\n"
+"PO-Revision-Date: 2015-02-13 12:49+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/fr_FR/)\n"
@@ -658,11 +658,11 @@ msgstr "Toujours visible"
 
 #: ajax/question.php:95
 msgid "Hidden unless"
-msgstr "Masqué, sauf si"
+msgstr "Masqué par défaut, sauf si"
 
 #: ajax/question.php:96
 msgid "Displayed unless"
-msgstr "Affiché, sauf si"
+msgstr "Affiché par défaut, sauf si"
 
 #: ajax/question.php:386
 msgid ""
@@ -674,7 +674,7 @@ msgstr ""
 
 #: inc/formanswer.class.php:175
 msgid "Form accepted by validator."
-msgstr "Formulaire accepté par le valideur"
+msgstr "Formulaire accepté par le valideur."
 
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
