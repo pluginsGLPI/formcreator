@@ -43,11 +43,12 @@ class dropdownField extends PluginFormcreatorField
 
    public function getAnswer()
    {
+      $value = $this->getValue();
       if ($this->fields['values'] == 'User') {
-          return getUserName($this->getValue());
-       } else {
-          return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $this->getValue());
-       }
+         return getUserName($value);
+      } else {
+         return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+      }
    }
 
    public static function getName()

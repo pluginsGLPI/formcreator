@@ -8,13 +8,17 @@ class checkboxesField extends PluginFormcreatorField
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
-         if(!empty($this->getAvailableValues())) {
+         $values = array();
+         $values = $this->getAvailableValues();
+         if(!empty($values)) {
             echo '<div class="checkbox">';
             $i = 0;
-            foreach ($this->getAvailableValues() as $value) {
+            foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
-                  $checked = (!empty($this->getValue()) && in_array($value, $this->getValue())) ? ' checked' : '';
+                  $current_value = null;
+                  $current_value = $this->getValue();
+                  $checked = (!empty($current_value) && in_array($value, $current_value)) ? ' checked' : '';
                   echo '<input type="checkbox" class="form-control"
                         name="formcreator_field_' . $this->fields['id'] . '[]"
                         id="formcreator_field_' . $this->fields['id'] . '_' . $i . '"
@@ -22,7 +26,7 @@ class checkboxesField extends PluginFormcreatorField
                   echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
-                  if($i != count($this->getAvailableValues())) echo '<br />';
+                  if($i != count($values)) echo '<br />';
                }
             }
             echo '</div>';
@@ -42,11 +46,13 @@ class checkboxesField extends PluginFormcreatorField
                </script>';
 
       } else {
-         if (!empty($this->getAnswer())) {
-            if (is_array($this->getAnswer())) {
-               echo implode(', ', $this->getAnswer());
-            } elseif (is_array(json_decode($this->getAnswer()))) {
-               echo implode(', ', json_decode($this->getAnswer()));
+         $answer = null;
+         $answer = $this->getAnswer();
+         if (!empty($answer)) {
+            if (is_array($answer)) {
+               echo implode(', ', $answer);
+            } elseif (is_array(json_decode($answer))) {
+               echo implode(', ', json_decode($answer));
             } else {
                echo $this->getAnswer();
             }

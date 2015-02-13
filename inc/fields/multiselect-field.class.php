@@ -37,7 +37,8 @@ class multiSelectField extends selectField
       if ($canEdit) {
          parent::displayField($canEdit);
       } else {
-         echo empty($this->getAnswer()) ? '' :  implode(', ', json_decode($this->getAnswer()));
+         $answer = $this->getAnswer();
+         echo empty($answer) ? '' :  implode(', ', json_decode($answer));
       }
    }
 
@@ -45,15 +46,16 @@ class multiSelectField extends selectField
    {
       $return = array();
       $values = $this->getAvailableValues();
+      $value = $this->getValue();
 
-      if (empty($this->getValue())) return '';
+      if (empty($value)) return '';
 
-      if (is_array($this->getValue())) {
-        $tab_values = $this->getValue();
-      } elseif (is_array(json_decode($this->getValue()))) {
-         $tab_values = json_decode($this->getValue());
+      if (is_array($value)) {
+         $tab_values = $value;
+      } elseif (is_array(json_decode($value))) {
+         $tab_values = json_decode($value);
       } else {
-         $tab_values = array($this->getValue());
+         $tab_values = array($value);
       }
 
       foreach ($tab_values as $value) {

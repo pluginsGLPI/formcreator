@@ -7,10 +7,11 @@ class selectField extends PluginFormcreatorField
          $rand       = mt_rand();
          $tab_values = array();
          $required   = $this->fields['required'] ? ' required' : '';
+         $values     = $this->getAvailableValues();
 
          echo '<div class="form_field">';
          if(!empty($this->fields['values'])) {
-            foreach ($this->getAvailableValues() as $key => $value) {
+            foreach ($values as $key => $value) {
                if ((trim($value) != '')) $tab_values[$key] = $value;
             }
 
@@ -32,7 +33,7 @@ class selectField extends PluginFormcreatorField
                   });
                </script>';
       } else {
-         $values = $this->getAvailableValues();
+         $values = $values;
          echo '<div class="form_field">';
          echo nl2br($this->getAnswer());
          echo '</div>' . PHP_EOL;
@@ -42,7 +43,8 @@ class selectField extends PluginFormcreatorField
    public function getAnswer()
    {
       $values = $this->getAvailableValues();
-      return isset($values[$this->getValue()]) ? $values[$this->getValue()] : $this->getValue();
+      $value  = $this->getValue();
+      return isset($values[$value]) ? $values[$value] : $value;
    }
 
    public static function getName()

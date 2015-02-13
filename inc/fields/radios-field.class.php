@@ -7,10 +7,11 @@ class radiosField extends PluginFormcreatorField
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
-         if(!empty($this->getAvailableValues())) {
+         $values = $this->getAvailableValues();
+         if(!empty($values)) {
             echo '<div class="checkbox">';
             $i = 0;
-            foreach ($this->getAvailableValues() as $value) {
+            foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
                   $checked = ($this->getValue() == $value) ? ' checked' : '';
@@ -21,7 +22,7 @@ class radiosField extends PluginFormcreatorField
                   echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
-                  if($i != count($this->getAvailableValues())) echo '<br />';
+                  if($i != count($values)) echo '<br />';
                }
             }
             echo '</div>';

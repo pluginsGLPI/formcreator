@@ -14,7 +14,8 @@ class fileField extends PluginFormcreatorField
                   id="formcreator_field_' . $this->fields['id'] . '" />';
       } else {
          $doc = new Document();
-         if($doc->getFromDB($this->getAnswer())) {
+         $answer = $this->getAnswer();
+         if($doc->getFromDB($answer)) {
             echo $doc->getDownloadLink();
          }
       }
