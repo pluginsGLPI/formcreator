@@ -39,8 +39,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $rand = mt_rand();
 
       $obj = new PluginFormcreatorTarget();
-      $founded = $obj->find('itemtype = "' . __CLASS__ . '" AND items_id = ' . $this->getID());
-      $target = array_shift($founded);
+      $found = $obj->find('itemtype = "' . __CLASS__ . '" AND items_id = ' . $this->getID());
+      $target = array_shift($found);
 
       echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
       echo '<table class="tab_cadre_fixe">';
@@ -195,11 +195,11 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       // Create the target ticket
       $ticketID = $ticket->add($datas);
-      $founded  = $docItem->find('itemtype = "PluginFormcreatorFormanswer" AND items_id = ' . $formanswer->getID());
+      $found  = $docItem->find('itemtype = "PluginFormcreatorFormanswer" AND items_id = ' . $formanswer->getID());
 
       // Attach documents to ticket
-      if(count($founded) > 0) {
-         foreach ($founded as $document) {
+      if(count($found) > 0) {
+         foreach ($found as $document) {
             $docItem->add(array(
                'documents_id' => $document['documents_id'],
                'itemtype'     => 'Ticket',
@@ -220,17 +220,17 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
 
       $section     = new PluginFormcreatorSection();
-      $founded     = $section->find('plugin_formcreator_forms_id = '
+      $found     = $section->find('plugin_formcreator_forms_id = '
                                     . $formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
       $tab_section = array();
-      foreach($founded as $section_item) {
+      foreach($found as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if(!empty($tab_section)) {
          $question  = new PluginFormcreatorQuestion();
-         $founded = $question->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')', '`order` ASC');
-         foreach($founded as $question_line) {
+         $found = $question->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')', '`order` ASC');
+         foreach($found as $question_line) {
             $id     = $question_line['id'];
             $name   = $question_line['name'];
 

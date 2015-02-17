@@ -398,8 +398,8 @@ class PluginFormcreatorForm extends CommonDBTM
       switch ($item->getType()) {
          case "PluginFormcreatorConfig":
             $object  = new self;
-            $founded = $object->find();
-            $number  = count($founded);
+            $found = $object->find();
+            $number  = count($found);
             return self::createTabEntry(self::getTypeName($number), $number);
             break;
          case "PluginFormcreatorForm":
@@ -819,14 +819,14 @@ class PluginFormcreatorForm extends CommonDBTM
 
       $tab_section       = array();
       $sections          = new PluginFormcreatorSection();
-      $founded_sections  = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
-      foreach ($founded_sections as $id => $fields) $tab_section[] = $id;
+      $found_sections  = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
+      foreach ($found_sections as $id => $fields) $tab_section[] = $id;
 
       $questions         = new PluginFormcreatorQuestion();
-      $founded_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
+      $found_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
 
       // Validate form fields
-      foreach ($founded_questions as $id => $fields) {
+      foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
          if (isset($_POST['formcreator_field_' . $id])) {
             $datas[$id] = is_array($_POST['formcreator_field_' . $id])

@@ -47,11 +47,11 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '</tr>';
 
       $target_class    = new PluginFormcreatorTarget();
-      $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $item->getID());
-      $target_number   = count($founded_targets);
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $item->getID());
+      $target_number   = count($found_targets);
       $token           = Session::getNewCSRFToken();
       $i = 0;
-      foreach ($founded_targets as $target) {
+      foreach ($found_targets as $target) {
          $i++;
          echo '<tr class="line' . ($i % 2) . '">';
 

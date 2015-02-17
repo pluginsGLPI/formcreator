@@ -55,16 +55,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
          case "PluginFormcreatorForm":
             $number      = 0;
             $section     = new PluginFormcreatorSection();
-            $founded     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
+            $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
             $tab_section = array();
-            foreach($founded as $section_item) {
+            foreach($found as $section_item) {
                $tab_section[] = $section_item['id'];
             }
 
             if(!empty($tab_section)) {
                $object  = new self;
-               $founded = $object->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')');
-               $number  = count($founded);
+               $found = $object->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')');
+               $number  = count($found);
             }
             return self::createTabEntry(self::getTypeName($number), $number);
       }
@@ -88,12 +88,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Get sections
       $section          = new PluginFormcreatorSection();
-      $founded_sections = $section->find('plugin_formcreator_forms_id = ' . $item->getId(), '`order`');
-      $section_number   = count($founded_sections);
+      $found_sections = $section->find('plugin_formcreator_forms_id = ' . $item->getId(), '`order`');
+      $section_number   = count($found_sections);
       $tab_sections     = array();
       $tab_questions    = array();
       $token            = Session::getNewCSRFToken();
-      foreach ($founded_sections as $section) {
+      foreach ($found_sections as $section) {
          $tab_sections[] = $section['id'];
          echo '<tr id="section_row_' . $section['id'] . '">';
          echo '<th>' . $section['name'] . '</th>';
@@ -135,10 +135,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // Get questions
          $question          = new PluginFormcreatorQuestion();
-         $founded_questions = $question->find('plugin_formcreator_sections_id = ' . $section['id'], '`order`');
-         $question_number   = count($founded_questions);
+         $found_questions = $question->find('plugin_formcreator_sections_id = ' . $section['id'], '`order`');
+         $question_number   = count($found_questions);
          $i = 0;
-         foreach ($founded_questions as $question) {
+         foreach ($found_questions as $question) {
             $i++;
             $tab_questions[] = $question['id'];
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';

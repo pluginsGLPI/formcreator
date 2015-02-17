@@ -490,10 +490,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
-      $founded_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       // Generate targets
-      foreach($founded_targets as $target) {
+      foreach($found_targets as $target) {
          $obj = new $target['itemtype'];
          $obj->getFromDB($target['items_id']);
          $obj->save($this);
