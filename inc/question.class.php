@@ -311,9 +311,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // format values for numbers
       if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
-         $input['default_values'] = (float) str_replace(',', '.', $input['default_values']);
+         $input['default_values'] =  str_replace(',', '.', $input['default_values']);
          $input['range_min']      = (float) str_replace(',', '.', $input['range_min']);
          $input['range_max']      = (float) str_replace(',', '.', $input['range_max']);
+         
+         //cast only on non_null value
+         if ($input['default_values'] !== NULL) {
+            $input['default_values'] = floatval($input['default_values']);
+         }
       }
 
       // LDAP fields validation
