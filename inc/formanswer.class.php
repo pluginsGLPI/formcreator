@@ -521,6 +521,15 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = '
                                              . $this->fields['plugin_formcreator_forms_id'], '`order` ASC');
+
+      $answer = new PluginFormcreatorAnswer();
+      $answers = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID());
+      $answers_values = array();
+      foreach ($answers as $found_answer) {
+         $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
+      }
+            
+
       foreach ($find_sections as $section_line) {
          if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
             $output = '<h2>' . $section_line['name'] . '</h2>';
@@ -536,10 +545,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          foreach ($questions as $question_line) {
             $id     = $question_line['id'];
             $name   = $question_line['name'];
-            $answer = new PluginFormcreatorAnswer();
             $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID()
                                     . ' AND `plugin_formcreator_question_id` = ' . $id);
-            if (!PluginFormcreatorFields::isVisible($question_line['id'], $found)) continue;
+            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
 
             if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
                $question_no ++;
