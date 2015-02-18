@@ -13,7 +13,8 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                    SELECT plugin_formcreator_forms_id
                    FROM $table_fp
                    WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
-                AND helpdesk_home = 1
+                AND $form_table.`helpdesk_home` = 1
+                AND $form_table.`is_deleted` = 0
                 ORDER BY $form_table.name ASC";
 $result_forms = $GLOBALS['DB']->query($query_forms) or die($GLOBALS['DB']->error());
 $nb_forms = $GLOBALS['DB']->numrows($result_forms);
