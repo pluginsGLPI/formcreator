@@ -11,8 +11,8 @@ class selectField extends PluginFormcreatorField
 
          echo '<div class="form_field">';
          if(!empty($this->fields['values'])) {
-            foreach ($values as $key => $value) {
-               if ((trim($value) != '')) $tab_values[$key] = $value;
+            foreach ($values as $value) {
+               if ((trim($value) != '')) $tab_values[$value] = $value;
             }
 
             if($this->fields['show_empty']) $tab_values = array('' => '-----') + $tab_values;

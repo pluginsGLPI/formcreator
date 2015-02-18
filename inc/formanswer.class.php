@@ -197,9 +197,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $found = $answer->find('plugin_formcreator_formanwers_id = "' . $this->getID() . '"
                             AND plugin_formcreator_question_id = "' . $question_line['id'] . '"');
             $found = array_shift($found);
-            if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
-               $found['answer'] = json_decode($found['answer']);
-            }
+
+            // if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
+            //    $found['answer'] = json_decode($found['answer']);
+            // }
             $canEdit = $this->fields['status'] == 'refused' && $_SESSION['glpiID'] == $this->fields['requester_id'];
             if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
                PluginFormcreatorFields::showField($question_line, $found['answer'], $canEdit);
@@ -338,13 +339,24 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
                                           AND `plugin_formcreator_question_id` = ' . $question['id']);
                   $found = array_shift($found);
+
+                  $data_value = $datas['formcreator_field_' . $question['id']];
+                  if (isset($data_value)) {
+                     if (is_array($data_value)) {
+                        foreach ($data_value as $key => $value) {
+                           $data_value[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+                        }
+                        $answer_value = json_encode($data_value);
+                     } else {
+                        $answer_value = $data_value;
+                     }
+                  } else {
+                     $answer_value = '';
+                  }
+
                   $answer->update(array(
                      'id'     => $found['id'],
-                     'answer' => isset($datas['formcreator_field_' . $question['id']])
-                                 ? is_array($datas['formcreator_field_' . $question['id']])
-                                    ? implode("\r\n", $datas['formcreator_field_' . $question['id']])
-                                    : $datas['formcreator_field_' . $question['id']]
-                                 : '',
+                     'answer' => $answer_value,
                   ));
                } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
                      && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
@@ -413,10 +425,16 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          while ($question = $GLOBALS['DB']->fetch_assoc($result)) {
             // If the answer is set, check if it is an array (then implode id).
             if (isset($datas[$question['id']])) {
-               if (is_array($datas[$question['id']])) {
-                  $question_answer = json_encode($datas[$question['id']]);
+               $question_answer = $datas[$question['id']];
+               if (is_array(json_decode($question_answer))) {
+                  // $question_answer = "\r\n" . implode("\r\n", json_decode($question_answer));
+                  $question_answer = json_decode($question_answer);
+                  foreach ($question_answer as $key => $value) {
+                     $question_answer[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+                  }
+                  $question_answer = json_encode($question_answer);
                } else {
-                  $question_answer = $datas[$question['id']];
+                  $question_answer = str_replace("'", "&apos;", htmlentities(stripcslashes($question_answer)));
                }
             } else {
                $question_answer = '';
@@ -528,7 +546,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
       }
-            
 
       foreach ($find_sections as $section_line) {
          if ($GLOBALS['CFG_GLPI']['use_rich_text']) {

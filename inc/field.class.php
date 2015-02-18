@@ -59,11 +59,25 @@ abstract class PluginFormcreatorField implements Field
    public function getValue()
    {
       if (isset($this->fields['answer'])) {
-         return $this->fields['answer'];
+         $answer = $this->fields['answer'];
+         if (is_array($answer)) {
+            foreach ($answer as $key => $value) {
+               $answer[$key] = str_replace("'", "&apos;", htmlentities(stripslashes($value)));
+            }
+            return $answer;
+         } elseif(is_array(json_decode($answer))) {
+            return json_decode($answer);
+         }
+         return str_replace("'", "&apos;", htmlentities(stripslashes($answer)));
       } else {
-         return static::IS_MULTIPLE
-                  ? explode("\r\n", $this->fields['default_values'])
-                  : $this->fields['default_values'];
+         if (static::IS_MULTIPLE) {
+            $default_value = explode("\r\n", $this->fields['default_values']);
+            foreach ($default_value as $key => $value) {
+               $default_value[$key] = str_replace("'", "&apos;", htmlentities(stripslashes($value)));
+            }
+            return $default_value;
+         }
+         return str_replace("'", "&apos;", htmlentities(stripslashes($this->fields['default_values'])));
       }
    }
 
@@ -76,6 +90,8 @@ abstract class PluginFormcreatorField implements Field
    {
       $tab_values = array();
       foreach (explode("\r\n", $this->fields['values']) as $value) {
+         $value = htmlentities($value);
+         $value = str_replace("'", "&apos;", $value);
          $tab_values[$value] = $value;
       }
       return $tab_values;

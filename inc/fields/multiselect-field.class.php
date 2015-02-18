@@ -38,7 +38,9 @@ class multiSelectField extends selectField
          parent::displayField($canEdit);
       } else {
          $answer = $this->getAnswer();
-         echo empty($answer) ? '' :  implode(', ', json_decode($answer));
+         echo '<div class="form_field">';
+         echo empty($answer) ? '' : implode('<br />', json_decode($answer));
+         echo '</div>';
       }
    }
 
@@ -46,7 +48,7 @@ class multiSelectField extends selectField
    {
       $return = array();
       $values = $this->getAvailableValues();
-      $value = $this->getValue();
+      $value  = $this->getValue();
 
       if (empty($value)) return '';
 
