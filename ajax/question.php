@@ -148,6 +148,7 @@ $rand = mt_rand();
             </div>
             <div id="glpi_ldap_field">
             <?php
+            $ldap_values = json_decode($question->fields['values']);
             Dropdown::show('AuthLDAP', array(
                'name'      => 'ldap_auth',
                'rand'      => $rand,
@@ -234,7 +235,6 @@ $rand = mt_rand();
          </td>
       </tr>
 
-      <?php $ldap_values = json_decode($question->fields['values']); ?>
       <tr class="line1" id="ldap_tr">
          <td>
             <label for="ldap_filter">
