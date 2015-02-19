@@ -223,7 +223,7 @@ function formcreatorChangeDueDate(value) {
       case 'ticket' :
          $('#due_date_time').show();
          break;
-      case 'calculated' :
+      case 'calcul' :
          $('#due_date_questions').show();
          $('#due_date_time').show();
          break;

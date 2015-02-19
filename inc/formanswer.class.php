@@ -547,7 +547,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
       }
 
-            Toolbox::logDebug($answers_values);
       foreach ($find_sections as $section_line) {
          if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
             $output = '<h2>' . $section_line['name'] . '</h2>';
@@ -565,9 +564,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $name   = $question_line['name'];
             $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID()
                                     . ' AND `plugin_formcreator_question_id` = ' . $id);
-
-            Toolbox::logDebug($question_line['id']);
-            Toolbox::logDebug(PluginFormcreatorFields::isVisible($question_line['id'], $answers_values));
 
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
 

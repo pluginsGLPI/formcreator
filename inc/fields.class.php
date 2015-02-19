@@ -175,11 +175,6 @@ class PluginFormcreatorFields
                      . ' Array(' . $values[$condition['field']] . ');');
             }
          } else {
-            Toolbox::logDebug(PHP_EOL . PHP_EOL);
-            Toolbox::logDebug('===========================');
-            Toolbox::logDebug($values);
-            Toolbox::logDebug('===========================');
-            Toolbox::logDebug(PHP_EOL . PHP_EOL);
             eval('$value = "' . $values[$condition['field']] . '" '
                . $condition['operator'] . ' "' . $condition['value'] . '";');
          }

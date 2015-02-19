@@ -72,12 +72,82 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="line1">';
-      echo '<td width="20%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
-      echo '<td width="70%" colspan="4">';
+      echo '<td>' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
+      echo '<td>';
       Dropdown::show('TicketTemplate', array(
          'name'  => 'tickettemplates_id',
          'value' => $this->fields['tickettemplates_id']
       ));
+      echo '</td>';
+      echo '<td>' . __('Due date') . '</td>';
+      echo '<td colspan="2">';
+
+      Dropdown::showFromArray('due_date_rule', array(
+         ''          => Dropdown::EMPTY_VALUE,
+         'answer'    => 'equals to the answer to the question',
+         'ticket'    => 'calculated from the ticket creation date',
+         'calcul'    => 'calculated from the answer to the question',
+      ), array(
+         'value'     => $this->fields['due_date_rule'],
+         'on_change' => 'formcreatorChangeDueDate(this.value)',
+      ));
+
+      // for each section ...
+      $questions_list = array(Dropdown::EMPTY_VALUE);
+      $query = "SELECT s.id, s.name
+                FROM glpi_plugin_formcreator_targets t
+                LEFT JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = " . (int) $this->getID() . "
+                ORDER BY s.order";
+      $result = $GLOBALS['DB']->query($query);
+      while ($section = $GLOBALS['DB']->fetch_array($result)) {
+         // select all date and datetime questions
+         $query2 = "SELECT q.id, q.name
+                   FROM glpi_plugin_formcreator_questions q
+                   LEFT JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                   WHERE s.id = {$section['id']}
+                   AND q.fieldtype IN ('date', 'datetime')";
+         $result2 = $GLOBALS['DB']->query($query2);
+         $section_questions = array();
+         while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+            $section_questions[$question['id']] = $question['name'];
+         }
+         if (count($section_questions > 0)) {
+            $questions_list[$section['name']] = $section_questions;
+         }
+      }
+      // List questions
+      if ($this->fields['due_date_rule'] != 'answer' && $this->fields['due_date_rule'] != 'calcul') {
+         echo '<div id="due_date_questions" style="display:none">';
+      } else {
+         echo '<div id="due_date_questions">';
+      }
+      Dropdown::showFromArray('due_date_question', $questions_list, array(
+         'value' => $this->fields['due_date_question']
+      ));
+      echo '</div>';
+
+      if ($this->fields['due_date_rule'] != 'ticket' && $this->fields['due_date_rule'] != 'calcul') {
+         echo '<div id="due_date_time" style="display:none">';
+      } else {
+         echo '<div id="due_date_time">';
+      }
+      Dropdown::showNumber("due_date_value", array(
+         'value' => 1,
+         'min'   => -30,
+         'max'   => 30
+      ), array(
+         'value' => $this->fields['due_date_period']
+      ));
+      Dropdown::showFromArray('due_date_period', array(
+         'minute' => _n('Minute', 'Minutes', Session::getPluralNumber()),
+         'hour'   => _n('Hour', 'Hours', Session::getPluralNumber()),
+         'day'    => _n('Day', 'Days', Session::getPluralNumber()),
+         'month'  => _n('Month', 'Month', Session::getPluralNumber()),
+      ), array(
+         'value' => $this->fields['due_date_period']
+      ));
+      echo '</div>';
       echo '</td>';
       echo '</tr>';
 
@@ -193,6 +263,31 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $datas['_users_id_recipient']   = $formanswer->fields['requester_id'];
       $datas['_users_id_lastupdater'] = Session::getLoginUserID();
 
+      // Define due date
+      $answer = new PluginFormcreatorAnswer();
+      $found  = $answer->find('plugin_formcreator_formanwers_id = ' . $formanswer->fields['id']
+                  . ' AND plugin_formcreator_question_id = ' . $this->fields['due_date_question']);
+      $date   = array_shift($found);
+      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+
+      switch ($this->fields['due_date_rule']) {
+         case 'answer':
+            $due_date = $date['answer'];
+            break;
+         case 'ticket':
+            $due_date = date('Y-m-d H:i:s', strtotime($str));
+            break;
+         case 'calcul':
+            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
+            break;
+         default:
+            $due_date = null;
+            break;
+      }
+      if (!is_null($due_date)) {
+         $datas['due_date'] = $due_date;
+      }
+
       // Create the target ticket
       $ticketID = $ticket->add($datas);
       $found  = $docItem->find('itemtype = "PluginFormcreatorFormanswer" AND items_id = ' . $formanswer->getID());
@@ -244,6 +339,13 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                $value = '';
             }
             $value   = PluginFormcreatorFields::getValue($question_line, $value);
+            if (is_array($value)) {
+               if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                  $value = '<br />' . implode('<br />', $value);
+               } else {
+                  $value = "\r\n" . implode("\r\n", $value);
+               }
+            }
 
             $content = str_replace('##question_' . $id . '##', $name, $content);
             $content = str_replace('##answer_' . $id . '##', $value, $content);
@@ -261,8 +363,19 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `tickettemplates_id` int(11) NULL DEFAULT NULL,
-                     `comment` text collate utf8_unicode_ci
+                     `comment` text collate utf8_unicode_ci,
+                     `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
+                     `due_date_question` INT NULL DEFAULT NULL,
+                     `due_date_value` TINYINT NULL DEFAULT NULL,
+                     `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      } elseif(!FieldExists($table, 'due_date_rule', false)) {
+         $query = "ALTER TABLE `$table`
+                     ADD `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
+                     ADD `due_date_question` INT NULL DEFAULT NULL,
+                     ADD `due_date_value` TINYINT NULL DEFAULT NULL,
+                     ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL;";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       }
 
