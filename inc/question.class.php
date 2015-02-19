@@ -387,6 +387,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       $input = $this->checkBeforeSave($input);
 
+      foreach ($input as $key => $value) {
+         $input[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+      }
+
       if (!empty($input)) {
          // Get next order
          $obj    = new self();
@@ -411,6 +415,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
    public function prepareInputForUpdate($input)
    {
       $input = $this->checkBeforeSave($input);
+
+      foreach ($input as $key => $value) {
+         $input[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+      }
 
       if (!empty($input)) {
          // If change section, reorder questions
@@ -445,11 +453,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // TODO : Mettre en place l'interface multi-conditions
       // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
       $show_field = isset($input['show_field']) ? $input['show_field'] : 'NULL';
+      $value = htmlentities(stripslashes($input['show_value']), ENT_QUOTES | ENT_HTML5);
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
                   `show_field`     = $show_field,
                   `show_condition` = \"{$input['show_condition']}\",
-                  `show_value`     = \"{$input['show_value']}\"";
+                  `show_value`     = \"{$value}\"";
       $GLOBALS['DB']->query($query);
       // ===============================================================
    }

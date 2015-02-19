@@ -211,3 +211,21 @@ function formcreatorShowFields() {
       }
    });
 }
+
+// DESTINATION
+function formcreatorChangeDueDate(value) {
+   $('#due_date_questions').hide();
+   $('#due_date_time').hide();
+   switch (value) {
+      case 'answer' :
+         $('#due_date_questions').show();
+         break;
+      case 'ticket' :
+         $('#due_date_time').show();
+         break;
+      case 'calculated' :
+         $('#due_date_questions').show();
+         $('#due_date_time').show();
+         break;
+   }
+}

@@ -71,13 +71,9 @@ abstract class PluginFormcreatorField implements Field
          return str_replace("'", "&apos;", htmlentities(stripslashes($answer)));
       } else {
          if (static::IS_MULTIPLE) {
-            $default_value = explode("\r\n", $this->fields['default_values']);
-            foreach ($default_value as $key => $value) {
-               $default_value[$key] = str_replace("'", "&apos;", htmlentities(stripslashes($value)));
-            }
-            return $default_value;
+            return explode("\r\n", $this->fields['default_values']);
          }
-         return str_replace("'", "&apos;", htmlentities(stripslashes($this->fields['default_values'])));
+         return $this->fields['default_values'];
       }
    }
 
@@ -88,13 +84,7 @@ abstract class PluginFormcreatorField implements Field
 
    public function getAvailableValues()
    {
-      $tab_values = array();
-      foreach (explode("\r\n", $this->fields['values']) as $value) {
-         $value = htmlentities($value);
-         $value = str_replace("'", "&apos;", $value);
-         $tab_values[$value] = $value;
-      }
-      return $tab_values;
+      return explode("\r\n", $this->fields['values']);
    }
 
    public function isValid($value)

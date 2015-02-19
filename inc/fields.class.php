@@ -114,6 +114,12 @@ class PluginFormcreatorFields
       $fields     = $question->fields;
       $conditions = array();
 
+      // Decode and encode values to avoid problem with quotes
+      foreach ($values as $key => $value) {
+         $value = str_replace("&apos;", "'", html_entity_decode($value));
+         $values[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+      }
+
       // If the field is always shown
       if ($fields['show_rule'] == 'always') return true;
 
@@ -169,8 +175,13 @@ class PluginFormcreatorFields
                      . ' Array(' . $values[$condition['field']] . ');');
             }
          } else {
-            eval('$value = "' . addslashes($values[$condition['field']]) . '" '
-               . $condition['operator'] . ' "' . addslashes($condition['value']) . '";');
+            Toolbox::logDebug(PHP_EOL . PHP_EOL);
+            Toolbox::logDebug('===========================');
+            Toolbox::logDebug($values);
+            Toolbox::logDebug('===========================');
+            Toolbox::logDebug(PHP_EOL . PHP_EOL);
+            eval('$value = "' . $values[$condition['field']] . '" '
+               . $condition['operator'] . ' "' . $condition['value'] . '";');
          }
          switch ($condition['logic']) {
             case 'AND' :   $return &= $value; break;
