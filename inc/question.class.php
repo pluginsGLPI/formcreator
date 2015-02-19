@@ -329,6 +329,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             $config_ldap = new AuthLDAP();
             $config_ldap->getFromDB($input['ldap_auth']);
+            $ldap_dropdown = new RuleRightParameter();
+            $ldap_dropdown->getFromDB($input['ldap_attribute']);
+            $attribute     = array($ldap_dropdown->fields['value']);
 
             // Set specific error handler too catch LDAP errors
             if (!function_exists('warning_handler')) {
@@ -340,9 +343,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
             set_error_handler("warning_handler", E_WARNING);
 
             try {
-               $ds      = $config_ldap->connect();
-               $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], array(strtolower($input['ldap_attribute'])));
-               $entries = ldap_get_entries($ds, $sn);
+               $ds            = $config_ldap->connect();
+               ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+               ldap_control_paged_result($ds, 1);
+               $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
+               $entries       = ldap_get_entries($ds, $sn);
             } catch(Exception $e) {
                Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
             }

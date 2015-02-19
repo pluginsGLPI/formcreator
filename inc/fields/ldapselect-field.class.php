@@ -23,18 +23,33 @@ class ldapselectField extends selectField
          set_error_handler("warning_handler", E_WARNING);
 
          try {
-            $ds      = $config_ldap->connect();
-            $sn      = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
-            $entries = ldap_get_entries($ds, $sn);
-            array_shift($entries);
-
             $tab_values = array();
-            foreach($entries as $id => $attr) {
-               if(isset($attr[$attribute[0]])
-                  && !in_array($attr[$attribute[0]][0], $tab_values)) {
-                  $tab_values[$id] = $attr[$attribute[0]][0];
+
+            $ds      = $config_ldap->connect();
+            ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+
+            $cookie = '';
+            do {
+               if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
+                  ldap_control_paged_result($ds, $config_ldap->fields['pagesize'], true, $cookie);
                }
-            }
+
+               $result  = ldap_search($ds, $config_ldap->fields['basedn'], $ldap_values->ldap_filter, $attribute);
+               $entries = ldap_get_entries($ds, $result);
+               array_shift($entries);
+
+               foreach($entries as $id => $attr) {
+                  if(isset($attr[$attribute[0]])
+                     && !in_array($attr[$attribute[0]][0], $tab_values)) {
+                     $tab_values[$id] = $attr[$attribute[0]][0];
+                  }
+               }
+
+               if (AuthLDAP::isLdapPageSizeAvailable($config_ldap)) {
+                  ldap_control_paged_result_response($ds, $result, $cookie);
+               }
+
+           } while($cookie !== null && $cookie != '');
 
             if($this->fields['show_empty']) $tab_values = array('' => '-----') + $tab_values;
             asort($tab_values);
