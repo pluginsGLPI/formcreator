@@ -625,3 +625,15 @@ msgstr ""
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
 msgstr ""
+
+#: inc/targetticket.class.php:87
+msgid "equals to the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:88
+msgid "calculated from the ticket creation date"
+msgstr ""
+
+#: inc/targetticket.class.php:89
+msgid "calculated from the answer to the question"
+msgstr ""

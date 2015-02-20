@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-13 12:49+0100\n"
+"PO-Revision-Date: 2015-02-19 17:49+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/fr_FR/)\n"
@@ -679,3 +679,15 @@ msgstr "Formulaire accepté par le valideur."
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
 msgstr "Formulaire sauvegardé avec succès"
+
+#: inc/targetticket.class.php:87
+msgid "equals to the answer to the question"
+msgstr "égale à la réponse à la question"
+
+#: inc/targetticket.class.php:88
+msgid "calculated from the ticket creation date"
+msgstr "calculée à partir de la date de création du ticket"
+
+#: inc/targetticket.class.php:89
+msgid "calculated from the answer to the question"
+msgstr "calculée à partir de la réponse à la question"

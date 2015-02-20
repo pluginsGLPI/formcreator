@@ -84,9 +84,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       Dropdown::showFromArray('due_date_rule', array(
          ''          => Dropdown::EMPTY_VALUE,
-         'answer'    => 'equals to the answer to the question',
-         'ticket'    => 'calculated from the ticket creation date',
-         'calcul'    => 'calculated from the answer to the question',
+         'answer'    => __('equals to the answer to the question', 'formcreator'),
+         'ticket'    => __('calculated from the ticket creation date', 'formcreator'),
+         'calcul'    => __('calculated from the answer to the question', 'formcreator'),
       ), array(
          'value'     => $this->fields['due_date_rule'],
          'on_change' => 'formcreatorChangeDueDate(this.value)',
