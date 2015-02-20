@@ -162,6 +162,8 @@ form.formcreator_form .form-group.required > label {
 form.formcreator_form .form-group .form_field {
    width: 650px;
    float: left;
+   text-align: justify;
+   word-wrap: break-word;
 }
 #bloc > form.formcreator_form .form-group .form_field {
    width: 415px;
