@@ -61,7 +61,7 @@ class multiSelectField extends selectField
       }
 
       foreach ($tab_values as $value) {
-         if (isset($values[$value])) $return[] = $value;
+         if (in_array($value, $values)) $return[] = $value;
       }
       return json_encode($return);
    }

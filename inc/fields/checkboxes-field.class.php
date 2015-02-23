@@ -50,9 +50,9 @@ class checkboxesField extends PluginFormcreatorField
          $answer = $this->getAnswer();
          if (!empty($answer)) {
             if (is_array($answer)) {
-               echo implode(', ', $answer);
+               echo implode("<br />", $answer);
             } elseif (is_array(json_decode($answer))) {
-               echo implode(', ', json_decode($answer));
+               echo implode("<br />", json_decode($answer));
             } else {
                echo $this->getAnswer();
             }

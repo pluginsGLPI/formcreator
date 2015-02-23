@@ -33,7 +33,6 @@ class selectField extends PluginFormcreatorField
                   });
                </script>';
       } else {
-         $values = $values;
          echo '<div class="form_field">';
          echo nl2br($this->getAnswer());
          echo '</div>' . PHP_EOL;

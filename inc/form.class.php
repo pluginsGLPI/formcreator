@@ -872,6 +872,23 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // If not valid back to form
       if (!$valid) {
+         foreach($datas as $key => $value) {
+            if (is_array($value)) {
+               foreach($value as $key2 => $value2) {
+                  $datas[$key][$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
+               }
+            } elseif(is_array(json_decode($value))) {
+               $value = json_decode($value);
+               foreach($value as $key2 => $value2) {
+                  $value[$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
+               }
+               $datas[$key] = json_encode($value);
+            } else {
+               $datas[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value))));
+            }
+         }
+
+         // $datas = str_replace("'", "&apos;", htmlentities(stripslashes($datas)));
          $_SESSION['formcreator']['datas'] = $datas;
          Html::back();
 

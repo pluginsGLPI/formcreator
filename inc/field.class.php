@@ -25,7 +25,11 @@ abstract class PluginFormcreatorField implements Field
          echo ' <span class="red">*</span>';
       }
       echo '</label>';
+
+      echo '<div class="form_field">';
       $this->displayField($canEdit);
+      echo '</div>';
+
       echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
       echo '</div>';
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
@@ -59,16 +63,10 @@ abstract class PluginFormcreatorField implements Field
    public function getValue()
    {
       if (isset($this->fields['answer'])) {
-         $answer = $this->fields['answer'];
-         if (is_array($answer)) {
-            foreach ($answer as $key => $value) {
-               $answer[$key] = str_replace("'", "&apos;", htmlentities(stripslashes($value)));
-            }
-            return $answer;
-         } elseif(is_array(json_decode($answer))) {
-            return json_decode($answer);
+         if(!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
+            return json_decode($this->fields['answer']);
          }
-         return str_replace("'", "&apos;", htmlentities(stripslashes($answer)));
+         return $this->fields['answer'];
       } else {
          if (static::IS_MULTIPLE) {
             return explode("\r\n", $this->fields['default_values']);
