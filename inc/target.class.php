@@ -123,6 +123,15 @@ class PluginFormcreatorTarget extends CommonDBTM
                'comment' => '##FULLFORM##'
             ));
             $input['items_id'] = $id_targetticket;
+
+            $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
+                      (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`)
+                      VALUES (
+                         $id_targetticket, \"requester\", \"creator\"
+                      ), (
+                         $id_targetticket, \"observer\", \"validator\"
+                      );";
+            $GLOBALS['DB']->query($query);
             break;
       }
 

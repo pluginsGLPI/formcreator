@@ -11,7 +11,35 @@ if ($plugin->isActivated("formcreator")) {
    // Edit an existing target ticket
    if(isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
+
+      $target = new PluginFormcreatorTarget();
+      $found  = $target->find('items_id = ' . (int) $_POST['id']);
+      $found  = array_shift($found);
+      $name   = str_replace("'", "&apos;", htmlentities(stripcslashes($_POST['name'])));
+      $target->update(array('id' => $found['id'], 'name' => $name));
       $targetticket->update($_POST);
+      Html::back();
+
+   } elseif (isset($_POST['actor_role'])) {
+      Session::checkRight("entity", UPDATE);
+      $id          = (int) $_POST['id'];
+      $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
+                     ? $_POST['actor_value_' . $_POST['actor_type']]
+                     : '';
+      $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
+      $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors SET
+                  `plugin_formcreator_targettickets_id` = $id,
+                  `actor_role`                          = \"{$_POST['actor_role']}\",
+                  `actor_type`                          = \"{$_POST['actor_type']}\",
+                  `actor_value`                         = \"$actor_value\",
+                  `use_notification`                    = \"$use_notification\"";
+      $DB->query($query);
+      Html::back();
+
+   } elseif (isset($_GET['delete_actor'])) {
+      $query = "DELETE FROM glpi_plugin_formcreator_targettickets_actors
+                WHERE id = " . (int) $_GET['delete_actor'];
+      $DB->query($query);
       Html::back();
 
    // Show target ticket form

@@ -529,9 +529,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $output      = '';
 
       if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-         $output .= '<h1>' . mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . '</h1>';
+         $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
-         $output .= mb_strtoupper(__('Form data', 'formcreator'), 'UTF-8') . PHP_EOL;
+         $output .= __('Form data', 'formcreator') . PHP_EOL;
          $output .= '=================';
          $output .= PHP_EOL . PHP_EOL;
       }

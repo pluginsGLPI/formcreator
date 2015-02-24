@@ -229,3 +229,85 @@ function formcreatorChangeDueDate(value) {
          break;
    }
 }
+
+function displayRequesterForm() {
+   $('#form_add_requester').show();
+   $('#btn_add_requester').hide();
+   $('#btn_cancel_requester').show();
+}
+
+function hideRequesterForm() {
+   $('#form_add_requester').hide();
+   $('#btn_add_requester').show();
+   $('#btn_cancel_requester').hide();
+}
+
+function displayWatcherForm() {
+   $('#form_add_watcher').show();
+   $('#btn_add_watcher').hide();
+   $('#btn_cancel_watcher').show();
+}
+
+function hideWatcherForm() {
+   $('#form_add_watcher').hide();
+   $('#btn_add_watcher').show();
+   $('#btn_cancel_watcher').hide();
+}
+
+function displayAssignedForm() {
+   $('#form_add_assigned').show();
+   $('#btn_add_assigned').hide();
+   $('#btn_cancel_assigned').show();
+}
+
+function hideAssignedForm() {
+   $('#form_add_assigned').hide();
+   $('#btn_add_assigned').show();
+   $('#btn_cancel_assigned').hide();
+}
+
+function formcreatorChangeActorRequester(value) {
+   $('#block_requester_user').hide();
+   $('#block_requester_group').hide();
+   $('#block_requester_question_user').hide();
+   $('#block_requester_question_group').hide();
+
+   switch (value) {
+      case 'person' :            $('#block_requester_user').show();           break;
+      case 'question_person' :   $('#block_requester_question_user').show();  break;
+      case 'group' :             $('#block_requester_group').show();          break;
+      case 'question_group' :    $('#block_requester_question_group').show(); break;
+   }
+}
+
+function formcreatorChangeActorWatcher(value) {
+   $('#block_watcher_user').hide();
+   $('#block_watcher_group').hide();
+   $('#block_watcher_question_user').hide();
+   $('#block_watcher_question_group').hide();
+
+   switch (value) {
+      case 'person' :            $('#block_watcher_user').show();             break;
+      case 'question_person' :   $('#block_watcher_question_user').show();    break;
+      case 'group' :             $('#block_watcher_group').show();            break;
+      case 'question_group' :    $('#block_watcher_question_group').show();   break;
+   }
+}
+
+function formcreatorChangeActorAssigned(value) {
+   $('#block_assigned_user').hide();
+   $('#block_assigned_group').hide();
+   $('#block_assigned_question_user').hide();
+   $('#block_assigned_question_group').hide();
+   $('#block_assigned_supplier').hide();
+   $('#block_assigned_question_supplier').hide();
+
+   switch (value) {
+      case 'person' :            $('#block_assigned_user').show();               break;
+      case 'question_person' :   $('#block_assigned_question_user').show();      break;
+      case 'group' :             $('#block_assigned_group').show();              break;
+      case 'question_group' :    $('#block_assigned_question_group').show();     break;
+      case 'supplier' :          $('#block_assigned_supplier').show();           break;
+      case 'question_supplier' : $('#block_assigned_question_supplier').show();  break;
+   }
+}

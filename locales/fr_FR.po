@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-19 17:49+0100\n"
+"PO-Revision-Date: 2015-02-24 16:39+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/fr_FR/)\n"
@@ -291,7 +291,7 @@ msgstr "Le formulaire a été sauvegardé avec succès !"
 
 #: inc/form.class.php:652
 msgid "Form data"
-msgstr "Données du formulaire"
+msgstr "DONNÉES DU FORMULAIRE"
 
 #: inc/form.class.php:829
 msgid "You must select validator !"
@@ -691,3 +691,45 @@ msgstr "calculée à partir de la date de création du ticket"
 #: inc/targetticket.class.php:89
 msgid "calculated from the answer to the question"
 msgstr "calculée à partir de la réponse à la question"
+
+#: inc/targetticket.class.php:217
+msgid "Ticket actors"
+msgstr "Acteurs du ticket"
+
+#: inc/targetticket.class.php:256 inc/targetticket.class.php:311
+#: inc/targetticket.class.php:366
+msgid "Form requester"
+msgstr "Demandeur du formulaire"
+
+#: inc/targetticket.class.php:257 inc/targetticket.class.php:312
+#: inc/targetticket.class.php:367
+msgid "Form validator"
+msgstr "Valideur du formulaire"
+
+#: inc/targetticket.class.php:258 inc/targetticket.class.php:313
+#: inc/targetticket.class.php:368
+msgid "Specific person"
+msgstr "Personne spécifique"
+
+#: inc/targetticket.class.php:259 inc/targetticket.class.php:314
+#: inc/targetticket.class.php:369
+msgid "Person from the question"
+msgstr "Personne depuis la question"
+
+#: inc/targetticket.class.php:260 inc/targetticket.class.php:315
+#: inc/targetticket.class.php:370
+msgid "Specific group"
+msgstr "Groupe spécifique"
+
+#: inc/targetticket.class.php:261 inc/targetticket.class.php:316
+#: inc/targetticket.class.php:371
+msgid "Group from the question"
+msgstr "Groupe depuis la question"
+
+#: inc/targetticket.class.php:372
+msgid "Specific supplier"
+msgstr "Fournisseur spécifique"
+
+#: inc/targetticket.class.php:373
+msgid "Supplier from the question"
+msgstr "Fournisseur depuis la question"

@@ -637,3 +637,39 @@ msgstr ""
 #: inc/targetticket.class.php:89
 msgid "calculated from the answer to the question"
 msgstr ""
+
+#: inc/targetticket.class.php:217
+msgid "Ticket actors"
+msgstr ""
+
+#: inc/targetticket.class.php:256 inc/targetticket.class.php:311  inc/targetticket.class.php:366
+msgid "Form requester"
+msgstr ""
+
+#: inc/targetticket.class.php:257 inc/targetticket.class.php:312  inc/targetticket.class.php:367
+msgid "Form validator"
+msgstr ""
+
+#: inc/targetticket.class.php:258 inc/targetticket.class.php:313  inc/targetticket.class.php:368
+msgid "Specific person"
+msgstr ""
+
+#: inc/targetticket.class.php:259 inc/targetticket.class.php:314  inc/targetticket.class.php:369
+msgid "Person from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:260 inc/targetticket.class.php:315  inc/targetticket.class.php:370
+msgid "Specific group"
+msgstr ""
+
+#: inc/targetticket.class.php:261 inc/targetticket.class.php:316  inc/targetticket.class.php:371
+msgid "Group from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:372
+msgid "Specific supplier"
+msgstr ""
+
+#: inc/targetticket.class.php:373
+msgid "Supplier from the question"
+msgstr ""
