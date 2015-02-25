@@ -882,8 +882,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
                      `due_date_question` INT NULL DEFAULT NULL,
                      `due_date_value` TINYINT NULL DEFAULT NULL,
-                     `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-                     `use_notification` BOOLEAN NOT NULL DEFAULT TRUE
+                     `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       } elseif(!FieldExists($table, 'due_date_rule', false)) {
@@ -902,7 +901,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                     `plugin_formcreator_targettickets_id` int(11) NOT NULL,
                     `actor_role` enum('requester','observer','assigned') NOT NULL,
                     `actor_type` enum('creator','validator','person','question_person','group','question_group','supplier','question_supplier') NOT NULL,
-                    `actor_value` int(11) DEFAULT NULL,
+                    `actor_value` int(11) DEFAULT NULL,,
+                    `use_notification` BOOLEAN NOT NULL DEFAULT TRUE
                     KEY `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
                   ) ENGINE=MyISAM DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
