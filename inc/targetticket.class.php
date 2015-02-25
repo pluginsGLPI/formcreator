@@ -101,7 +101,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $questions_list = array(Dropdown::EMPTY_VALUE);
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
-                LEFT JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
                 WHERE t.items_id = " . (int) $this->getID() . "
                 ORDER BY s.order";
       $result = $GLOBALS['DB']->query($query);
@@ -109,7 +109,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          // select all date and datetime questions
          $query2 = "SELECT q.id, q.name
                    FROM glpi_plugin_formcreator_questions q
-                   LEFT JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
                    AND q.fieldtype IN ('date', 'datetime')";
          $result2 = $GLOBALS['DB']->query($query2);
@@ -179,7 +179,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $questions_supplier_list = array(Dropdown::EMPTY_VALUE);
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
-                LEFT JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
                 WHERE t.items_id = " . (int) $this->getID() . "
                 ORDER BY s.order";
       $result = $GLOBALS['DB']->query($query);
@@ -187,7 +187,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          // select all user, group or supplier questions (GLPI Object)
          $query2 = "SELECT q.id, q.name, q.values
                    FROM glpi_plugin_formcreator_questions q
-                   LEFT JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
                    AND q.fieldtype = 'glpiselect'
                    AND q.values IN ('User', 'Group', 'Supplier')";
