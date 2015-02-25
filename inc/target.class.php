@@ -125,7 +125,7 @@ class PluginFormcreatorTarget extends CommonDBTM
             $input['items_id'] = $id_targetticket;
 
             $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
-                      (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`, )
+                      (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`)
                       VALUES (
                          $id_targetticket, \"requester\", \"creator\", 1
                       ), (
