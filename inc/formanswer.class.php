@@ -550,9 +550,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
             $output = '<h2>' . $section_line['name'] . '</h2>';
          } else {
-            $output .= $section_line['name'] . PHP_EOL;
+            $output .= PHP_EOL . $section_line['name'] . PHP_EOL;
             $output .= '---------------------------------';
-            $output .= PHP_EOL . PHP_EOL;
+            $output .= PHP_EOL;
          }
 
          // Display all fields of the section
