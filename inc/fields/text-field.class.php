@@ -5,13 +5,15 @@ class textField extends PluginFormcreatorField
    {
       if (!parent::isValid($value)) return false;
 
+      $value = utf8_decode(stripcslashes($value));
+
       // Min range not set or text length longer than min length
-      if(!empty($this->fields['range_min']) && strlen(utf8_decode($value)) < $this->fields['range_min']) {
+      if(!empty($this->fields['range_min']) && strlen($value) < $this->fields['range_min']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $this->fields['range_min']) . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
       // Max range not set or text length shorter than max length
-      } elseif(!empty($this->fields['range_max']) && strlen(utf8_decode($value)) > $this->fields['range_max']) {
+      } elseif(!empty($this->fields['range_max']) && strlen($value) > $this->fields['range_max']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $this->fields['range_max']) . ' ' . $this->fields['name'], false, ERROR);
          return false;
 

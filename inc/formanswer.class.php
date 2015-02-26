@@ -344,7 +344,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   if (isset($data_value)) {
                      if (is_array($data_value)) {
                         foreach ($data_value as $key => $value) {
-                           $data_value[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+                           $data_value[$key] = $value;
                         }
                         $answer_value = json_encode($data_value);
                      } else {
@@ -427,14 +427,13 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             if (isset($datas[$question['id']])) {
                $question_answer = $datas[$question['id']];
                if (is_array(json_decode($question_answer))) {
-                  // $question_answer = "\r\n" . implode("\r\n", json_decode($question_answer));
                   $question_answer = json_decode($question_answer);
                   foreach ($question_answer as $key => $value) {
-                     $question_answer[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+                     $question_answer[$key] = $value;
                   }
                   $question_answer = json_encode($question_answer);
                } else {
-                  $question_answer = str_replace("'", "&apos;", htmlentities(stripcslashes($question_answer)));
+                  $question_answer = $question_answer;
                }
             } else {
                $question_answer = '';

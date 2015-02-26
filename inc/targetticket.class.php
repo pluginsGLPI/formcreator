@@ -117,7 +117,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          while ($question = $GLOBALS['DB']->fetch_array($result2)) {
             $section_questions[$question['id']] = $question['name'];
          }
-         if (count($section_questions > 0)) {
+         if (count($section_questions) > 0) {
             $questions_list[$section['name']] = $section_questions;
          }
       }
@@ -145,10 +145,10 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          'value' => $this->fields['due_date_period']
       ));
       Dropdown::showFromArray('due_date_period', array(
-         'minute' => _n('Minute', 'Minutes', Session::getPluralNumber()),
-         'hour'   => _n('Hour', 'Hours', Session::getPluralNumber()),
-         'day'    => _n('Day', 'Days', Session::getPluralNumber()),
-         'month'  => _n('Month', 'Month', Session::getPluralNumber()),
+         'minute' => _n('Minute', 'Minutes', 2),
+         'hour'   => _n('Hour', 'Hours', 2),
+         'day'    => _n('Day', 'Days', 2),
+         'month'  => _n('Month', 'Month', 2),
       ), array(
          'value' => $this->fields['due_date_period']
       ));
@@ -692,8 +692,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $datas                = array_merge($datas, $predefined_fields);
 
       // Parse datas and tags
-      $datas['name']                  = $this->parseTags($this->fields['name'], $formanswer);
-      $datas['content']               = $this->parseTags($this->fields['comment'], $formanswer);
+      $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
+      $datas['content']               = addslashes($this->parseTags($this->fields['comment'], $formanswer));
       $datas['entities_id']           = (isset($_SESSION['glpiactive_entity']))
                                           ? $_SESSION['glpiactive_entity']
                                           : $form->fields['entities_id'];
@@ -726,6 +726,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       // Create the target ticket
+      Toolbox::logDebug($datas);
       $ticketID = $ticket->add($datas);
 
       // Ajout des acteurs du ticket

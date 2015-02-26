@@ -387,8 +387,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       $input = $this->checkBeforeSave($input);
 
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
       }
 
       if (!empty($input)) {
@@ -416,8 +417,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       $input = $this->checkBeforeSave($input);
 
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes($value)));
+         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
       }
 
       if (!empty($input)) {

@@ -15,7 +15,6 @@ if ($plugin->isActivated("formcreator")) {
       $target = new PluginFormcreatorTarget();
       $found  = $target->find('items_id = ' . (int) $_POST['id']);
       $found  = array_shift($found);
-      $name   = str_replace("'", "&apos;", htmlentities(stripcslashes($_POST['name'])));
       $target->update(array('id' => $found['id'], 'name' => $name));
       $targetticket->update($_POST);
       Html::back();
