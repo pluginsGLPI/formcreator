@@ -1026,4 +1026,134 @@ class PluginFormcreatorForm extends CommonDBTM
 
       return true;
    }
+
+   public function Duplicate()
+   {
+      $section       = new PluginFormcreatorSection();
+      $question      = new PluginFormcreatorQuestion();
+      $target        = new PluginFormcreatorTarget();
+      $target_ticket = new PluginFormcreatorTargetTicket();
+
+      // From datas
+      $form_datas              = $this->fields;
+      $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
+      $form_datas['is_active'] = 0;
+
+      unset($form_datas['id']);
+
+      $old_form_id             = $this->getID();
+      $new_form_id             = $this->add($form_datas);
+      if ($new_form_id === false) return false;
+
+      // Form profiles
+      $query = "INSERT INTO glpi_plugin_formcreator_formprofiles
+                (plugin_formcreator_forms_id, plugin_formcreator_profiles_id)
+                (SELECT $new_form_id, plugin_formcreator_profiles_id
+                  FROM glpi_plugin_formcreator_formprofiles
+                  WHERE plugin_formcreator_forms_id = $old_form_id)";
+      if (!$GLOBALS['DB']->query($query)) return false;
+
+      // Form validators
+      $query = "INSERT INTO glpi_plugin_formcreator_formvalidators
+                (forms_id, users_id)
+                (SELECT $new_form_id, users_id
+                  FROM glpi_plugin_formcreator_formvalidators
+                  WHERE forms_id = $old_form_id)";
+      if (!$GLOBALS['DB']->query($query)) return false;
+
+      // Form sections
+      $query = "SELECT $new_form_id, users_id
+                FROM glpi_plugin_formcreator_sections
+                WHERE plugin_formcreator_forms_id = $old_form_id";
+      if (!$result = $GLOBALS['DB']->query($query)) return false;
+      while ($section = $GLOBALS['DB']->fetch_array($result)) {
+         // === TODO ===
+      }
+
+      if (!empty($found_sections)) {
+         foreach ($found_sections as $section_id => $section_values) {
+            $section_values['plugin_formcreator_forms_id'] = $new_form_id;
+            unset($section_values['id']);
+            $new_section_id = $section->add($section_values);
+            if ($new_section_id === false) return false;
+
+            // Form questions
+            $found_questions = $question->find('plugin_formcreator_sections_id = ' . $section_id);
+            if (!empty($found_questions)) {
+               foreach ($found_questions as $question_id => $question_values) {
+                  $question_values['plugin_formcreator_sections_id'] = $new_section_id;
+                  unset($question_values['id']);
+                  $new_question_id = $question->add($question_values);
+                  if ($new_question_id === false) return false;
+
+                  // Form questions conditions
+                  $query = "INSERT INTO glpi_plugin_formcreator_questions_conditions
+                            (plugin_formcreator_questions_id, show_field, show_condition, show_value, show_logic)
+                            (SELECT $new_question_id, show_field, show_condition, show_value, show_logic
+                              FROM glpi_plugin_formcreator_questions_conditions
+                              WHERE plugin_formcreator_questions_id = $question_id)";
+                  if (!$GLOBALS['DB']->query($query)) return false;
+               }
+            }
+         }
+      }
+
+      // Form targets
+      $found_targets = $target->find('plugin_formcreator_forms_id = ' . $old_form_id);
+      if (!empty($found_targets)) {
+         foreach ($found_targets as $target_id => $target_values) {
+            $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+            unset($target_values['id']);
+            $new_target_id = $target->add($target_values);
+            if ($new_target_id === false) return false;
+
+            // Form target tickets
+            $found_target_tickets = $target_ticket->find('plugin_formcreator_targets_id = ' . $target_id);
+            if (!empty($found_target_tickets)) {
+               foreach ($found_target_tickets as $target_ticket_id => $target_ticket_values) {
+                  $target_ticket_values['plugins_formcreator_targets_id'] = $new_target_id;
+                  unset($target_ticket_values['id']);
+                  $new_target_ticket_id = $target_ticket->add($target_ticket_values);
+                  if ($new_target_ticket_id === false) return false;
+
+                  // Form target tickets actors
+                  $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
+                            (plugin_formcreator_targettickets_id, actor_role, actor_type, actor_value, use_notification)
+                            (SELECT $new_target_ticket_id, actor_role, actor_type, actor_value, use_notification
+                              FROM glpi_plugin_formcreator_targettickets_actors
+                              WHERE plugin_formcreator_targettickets_id = $target_ticket_id)";
+                  $GLOBALS['DB']->query($query);
+               }
+            }
+         }
+      }
+
+      return true;
+   }
+
+   /**
+    * @since version 0.85
+    *
+    * @see CommonDBTM::processMassiveActionsForOneItemtype()
+   **/
+   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,  array $ids)
+   {
+      global $DB;
+
+      switch ($ma->getAction()) {
+         case 'Duplicate' :
+            foreach ($ids as $id) {
+               if ($item->getFromDB($id) && $item->Duplicate()) {
+                  Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+               } else {
+                  // Example of ko count
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+               }
+            }
+            return;
+      }
+      parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
+   }
+
 }

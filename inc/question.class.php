@@ -289,6 +289,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Fields are differents for GLPI object lists, so we need to replace these values into the good ones
       if ($input['fieldtype'] == 'glpiselect') {
+         Toolbox::logDebug($input);
          if (empty($input['glpi_objects'])) {
             Session::addMessageAfterRedirect(
                __('The field value is required:', 'formcreator') . ' ' . $input['name'],

@@ -673,3 +673,11 @@ msgstr ""
 #: inc/targetticket.class.php:373
 msgid "Supplier from the question"
 msgstr ""
+
+#: inc/form.class/php:1033
+msgid "Duplicate"
+msgstr ""
+
+#: inc/form.class/php:1054
+msgid "Form duplicated: %s"
+msgstr ""
