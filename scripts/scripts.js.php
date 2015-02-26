@@ -15,30 +15,32 @@ link += '</a>';
 link += '</li>';
 
 jQuery(document).ready(function($) {
-   modalWindow = $("<div></div>").dialog({
-      width: 980,
-      autoOpen: false,
-      height: "auto",
-      modal: true
-   });
-
-   <?php
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')
-         echo "$('#c_menu #menu1').after(link);";
-   ?>
-
-   var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
-
-   if (NomDuFichier == "central.php" || NomDuFichier == "helpdesk.public.php") {
-      $.ajax({
-         url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
-         type: "GET"
-      }).done(function(response){
-         setTimeout(function() {
-            $('.central td').first().prepend(response);
-         }, 200);
+   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+      modalWindow = $("<div></div>").dialog({
+         width: 980,
+         autoOpen: false,
+         height: "auto",
+         modal: true
       });
-   }
+
+      <?php
+         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')
+            echo "$('#c_menu #menu1').after(link);";
+      ?>
+
+      var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
+
+      if (NomDuFichier == "central.php" || NomDuFichier == "helpdesk.public.php") {
+         $.ajax({
+            url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
+            type: "GET"
+         }).done(function(response){
+            setTimeout(function() {
+               $('.central td').first().prepend(response);
+            }, 200);
+         });
+      }
+   });
 });
 
 // === QUESTIONS ===
