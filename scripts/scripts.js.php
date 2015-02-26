@@ -15,11 +15,13 @@ link += '</a>';
 link += '</li>';
 
 jQuery(document).ready(function($) {
+   var target = $('body');
    modalWindow = $("<div></div>").dialog({
       width: 980,
       autoOpen: false,
       height: "auto",
-      modal: true
+      modal: true,
+    position: ['center', 50]
    });
 
    <?php
