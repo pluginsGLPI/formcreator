@@ -585,6 +585,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   } else {
                      $output_value = $value;
                   }
+               } elseif ($question_line['fieldtype'] == 'textarea') {
+                  if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                     $output_value = '<br />' . $value;
+                  } else {
+                     $output_value = PHP_EOL . $value;
+                  }
                }
 
                if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
