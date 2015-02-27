@@ -283,7 +283,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<td>';
       PluginFormcreatorCategory::dropdown(array(
          'name'  => 'plugin_formcreator_categories_id',
-         'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 1,
+         'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
       ));
       echo '</td>';
       echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
