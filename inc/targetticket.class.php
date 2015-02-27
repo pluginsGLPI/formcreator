@@ -930,7 +930,6 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      ADD `due_date_question` INT NULL DEFAULT NULL,
                      ADD `due_date_value` TINYINT NULL DEFAULT NULL,
                      ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-                     ADD `use_notification` BOOLEAN NOT NULL DEFAULT TRUE
                      ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       }
