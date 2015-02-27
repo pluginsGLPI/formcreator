@@ -217,7 +217,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $actors = array('requester' => array(), 'observer' => array(), 'assigned' => array());
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
-                WHERE plugin_formcreator_targettickets_id = " . $target['id'];
+                WHERE plugin_formcreator_targettickets_id = " . $this->getID();
       $result = $GLOBALS['DB']->query($query);
       while ($actor = $GLOBALS['DB']->fetch_array($result)) {
          $actors[$actor['actor_role']][$actor['id']] = array(

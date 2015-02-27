@@ -1033,6 +1033,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $question      = new PluginFormcreatorQuestion();
       $target        = new PluginFormcreatorTarget();
       $target_ticket = new PluginFormcreatorTargetTicket();
+      $tab_questions = array();
 
       // From datas
       $form_datas              = $this->fields;
@@ -1062,70 +1063,122 @@ class PluginFormcreatorForm extends CommonDBTM
       if (!$GLOBALS['DB']->query($query)) return false;
 
       // Form sections
-      $query = "SELECT $new_form_id, users_id
-                FROM glpi_plugin_formcreator_sections
-                WHERE plugin_formcreator_forms_id = $old_form_id";
-      if (!$result = $GLOBALS['DB']->query($query)) return false;
-      while ($section = $GLOBALS['DB']->fetch_array($result)) {
-         // === TODO ===
-      }
+      $query_sections = "SELECT `id`, `plugin_formcreator_forms_id`, `name`, `order`
+                         FROM glpi_plugin_formcreator_sections
+                         WHERE plugin_formcreator_forms_id = $old_form_id";
+      $result_sections = $GLOBALS['DB']->query($query_sections);
+      if (!$result_sections) return false;
 
-      if (!empty($found_sections)) {
-         foreach ($found_sections as $section_id => $section_values) {
-            $section_values['plugin_formcreator_forms_id'] = $new_form_id;
-            unset($section_values['id']);
-            $new_section_id = $section->add($section_values);
-            if ($new_section_id === false) return false;
+      while ($section_values = $GLOBALS['DB']->fetch_array($result_sections)) {
+         $section_id = $section_values['id'];
 
-            // Form questions
-            $found_questions = $question->find('plugin_formcreator_sections_id = ' . $section_id);
-            if (!empty($found_questions)) {
-               foreach ($found_questions as $question_id => $question_values) {
-                  $question_values['plugin_formcreator_sections_id'] = $new_section_id;
-                  unset($question_values['id']);
-                  $new_question_id = $question->add($question_values);
-                  if ($new_question_id === false) return false;
+         $insert_section = "INSERT INTO `glpi_plugin_formcreator_sections` SET
+                      `plugin_formcreator_forms_id` = $new_form_id,
+                      `name`                        = \"{$section_values['name']}\",
+                      `order`                       = {$section_values['order']}";
+         $GLOBALS['DB']->query($insert_section);
+         $new_section_id = $GLOBALS['DB']->insert_id();
+         if ($new_section_id === false) return false;
 
-                  // Form questions conditions
-                  $query = "INSERT INTO glpi_plugin_formcreator_questions_conditions
-                            (plugin_formcreator_questions_id, show_field, show_condition, show_value, show_logic)
-                            (SELECT $new_question_id, show_field, show_condition, show_value, show_logic
-                              FROM glpi_plugin_formcreator_questions_conditions
-                              WHERE plugin_formcreator_questions_id = $question_id)";
-                  if (!$GLOBALS['DB']->query($query)) return false;
-               }
-            }
+         // Form questions
+         $query_questions = "SELECT `id`, `plugin_formcreator_sections_id`, `fieldtype`, `name`, `required`,
+                              `show_empty`, `default_values`, `values`, `range_min`, `range_max`,
+                              `description`, `regex`, `order`, `show_rule`
+                            FROM glpi_plugin_formcreator_questions
+                            WHERE plugin_formcreator_sections_id = $section_id";
+         $result_questions = $GLOBALS['DB']->query($query_questions);
+         if (!$result_questions) return false;
+
+         while ($question_values = $GLOBALS['DB']->fetch_array($result_questions)) {
+            $question_id = $question_values['id'];
+
+            $insert_question = 'INSERT INTO `glpi_plugin_formcreator_questions` SET
+                         `plugin_formcreator_sections_id` = ' . (int) $new_section_id . ',
+                         `fieldtype`                      = "' . addslashes($question_values['fieldtype']) . '",
+                         `name`                           = "' . addslashes($question_values['name']) . '",
+                         `required`                       = ' . (int) $question_values['required'] . ',
+                         `show_empty`                     = ' . (int) $question_values['show_empty'] . ',
+                         `default_values`                 = "' . addslashes($question_values['default_values']) . '",
+                         `values`                         = "' . addslashes($question_values['values']) . '",
+                         `range_min`                      = "' . addslashes($question_values['range_min']) . '",
+                         `range_max`                      = "' . addslashes($question_values['range_max']) . '",
+                         `description`                    = "' . addslashes($question_values['description']) . '",
+                         `regex`                          = "' . addslashes($question_values['regex']) . '",
+                         `order`                          = ' . (int) $question_values['order'] . ',
+                         `show_rule`                      = "' . addslashes($question_values['show_rule']) . '"';
+            $GLOBALS['DB']->query($insert_question);
+            $new_question_id = $GLOBALS['DB']->insert_id();
+            if ($new_question_id === false) return false;
+            $tab_questions[$question_id] = $new_question_id;
+
+            // Form questions conditions
+            $insert_condition = "INSERT INTO glpi_plugin_formcreator_questions_conditions
+                      (plugin_formcreator_questions_id, show_field, show_condition, show_value, show_logic)
+                      (SELECT $new_question_id, show_field, show_condition, show_value, show_logic
+                        FROM glpi_plugin_formcreator_questions_conditions
+                        WHERE plugin_formcreator_questions_id = $question_id)";
+            if (!$GLOBALS['DB']->query($insert_condition)) return false;
          }
       }
 
       // Form targets
-      $found_targets = $target->find('plugin_formcreator_forms_id = ' . $old_form_id);
-      if (!empty($found_targets)) {
-         foreach ($found_targets as $target_id => $target_values) {
-            $target_values['plugin_formcreator_forms_id'] = $new_form_id;
-            unset($target_values['id']);
-            $new_target_id = $target->add($target_values);
-            if ($new_target_id === false) return false;
+      $query_targets = "SELECT `id`, `plugin_formcreator_forms_id`, `itemtype`, `items_id`, `name`
+                         FROM glpi_plugin_formcreator_targets
+                         WHERE plugin_formcreator_forms_id = $old_form_id";
+      $result_targets = $GLOBALS['DB']->query($query_targets);
+      if (!$result_targets) return false;
 
-            // Form target tickets
-            $found_target_tickets = $target_ticket->find('plugin_formcreator_targets_id = ' . $target_id);
-            if (!empty($found_target_tickets)) {
-               foreach ($found_target_tickets as $target_ticket_id => $target_ticket_values) {
-                  $target_ticket_values['plugins_formcreator_targets_id'] = $new_target_id;
-                  unset($target_ticket_values['id']);
-                  $new_target_ticket_id = $target_ticket->add($target_ticket_values);
-                  if ($new_target_ticket_id === false) return false;
+      while ($target_values = $GLOBALS['DB']->fetch_array($result_targets)) {
+         $target_id = $target_values['id'];
 
-                  // Form target tickets actors
-                  $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
-                            (plugin_formcreator_targettickets_id, actor_role, actor_type, actor_value, use_notification)
-                            (SELECT $new_target_ticket_id, actor_role, actor_type, actor_value, use_notification
-                              FROM glpi_plugin_formcreator_targettickets_actors
-                              WHERE plugin_formcreator_targettickets_id = $target_ticket_id)";
-                  $GLOBALS['DB']->query($query);
-               }
-            }
+         $insert_target = 'INSERT INTO `glpi_plugin_formcreator_targets` SET
+                            `plugin_formcreator_forms_id` = ' . (int) $new_form_id . ',
+                            `itemtype`                    = "' . addslashes($target_values['itemtype']) . '",
+                            `items_id`                    = ' . (int) $target_values['items_id'] . ',
+                            `name`                        = "' . addslashes($target_values['name']) . '"';
+         $GLOBALS['DB']->query($insert_target);
+         $new_target_id = $GLOBALS['DB']->insert_id();
+         if ($new_target_id === false) return false;
+
+         $query_ttickets = "SELECT `id`, `name`, `tickettemplates_id`, `comment`, `due_date_rule`,
+                               `due_date_question`, `due_date_value`, `due_date_period`
+                            FROM `glpi_plugin_formcreator_targettickets`
+                            WHERE `id` = {$target_values['items_id']}";
+         $result_ttickets = $GLOBALS['DB']->query($query_ttickets);
+         $result_ttickets = $GLOBALS['DB']->fetch_array($result_ttickets);
+         if (!$result_ttickets) return false;
+
+         foreach ($tab_questions as $id => $value) {
+            $result_ttickets['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['name']);
+            $result_ttickets['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['name']);
+            $result_ttickets['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['comment']);
+            $result_ttickets['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['comment']);
          }
+
+         $insert_ttickets = 'INSERT INTO `glpi_plugin_formcreator_targettickets` SET
+                               `name`               = "' . addslashes($result_ttickets['name']) . '",
+                               `tickettemplates_id` = ' . (int) $result_ttickets['tickettemplates_id'] . ',
+                               `comment`            = "' . addslashes($result_ttickets['comment']) . '",
+                               `due_date_rule`      = "' . addslashes($result_ttickets['due_date_rule']) . '",
+                               `due_date_question`  = ' . (int) $result_ttickets['due_date_question'] . ',
+                               `due_date_value`     = ' . (int) $result_ttickets['due_date_value'] . ',
+                               `due_date_period`    = "' . addslashes($result_ttickets['due_date_period']) . '"';
+         $GLOBALS['DB']->query($insert_ttickets);
+         $new_target_ticket_id = $GLOBALS['DB']->insert_id();
+         if (!$new_target_ticket_id) return false;
+
+         $update_target = 'UPDATE `glpi_plugin_formcreator_targets` SET
+                              `items_id` = ' . $new_target_ticket_id . '
+                           WHERE `id` = ' . $new_target_id;
+         $GLOBALS['DB']->query($update_target);
+
+         // Form target tickets actors
+         $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
+                   (plugin_formcreator_targettickets_id, actor_role, actor_type, actor_value, use_notification)
+                   (SELECT $new_target_ticket_id, actor_role, actor_type, actor_value, use_notification
+                     FROM glpi_plugin_formcreator_targettickets_actors
+                     WHERE plugin_formcreator_targettickets_id = {$target_values['items_id']})";
+         $GLOBALS['DB']->query($query);
       }
 
       return true;
