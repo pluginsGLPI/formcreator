@@ -8,11 +8,15 @@ class ldapselectField extends selectField
       if (!empty($this->fields['values'])) {
          $ldap_values   = json_decode($this->fields['values']);
          $ldap_dropdown = new RuleRightParameter();
-         $ldap_dropdown->getFromDB($ldap_values->ldap_attribute);
+         if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
+            return array();
+         }
          $attribute     = array($ldap_dropdown->fields['value']);
 
          $config_ldap = new AuthLDAP();
-         $config_ldap->getFromDB($ldap_values->ldap_auth);
+         if (!$config_ldap->getFromDB($ldap_values->ldap_auth)) {
+            return array();
+         }
 
          if (!function_exists('warning_handler')) {
             function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
