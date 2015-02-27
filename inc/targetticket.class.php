@@ -42,6 +42,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $found = $obj->find('itemtype = "' . __CLASS__ . '" AND items_id = ' . $this->getID());
       $target = array_shift($found);
 
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($target['plugin_formcreator_forms_id']);
+
       echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       // General information : name
@@ -156,12 +159,28 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</td>';
       echo '</tr>';
 
+      if ($form->fields['validation_required']) {
+         echo '<tr class="line0">';
+         echo '<td colspan="4">';
+         echo '<input type="hidden" name="validation_followup" value="0" />';
+         echo '<input type="checkbox" name="validation_followup" id="validation_followup" value="1" ';
+         if (!isset($this->fields['validation_followup']) || ($this->fields['validation_followup'] == 1)) {
+            echo ' checked="checked"';
+         }
+         echo '/>';
+         echo ' <label for="validation_followup">';
+         echo __('Add validation message as first ticket followup', 'formcreator');
+         echo '</label>';
+         echo '</td>';
+         echo '</tr>';
+      }
+
       echo '</table>';
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr class="line0">';
+      echo '<tr class="line1">';
       echo '<td colspan="5" class="center">';
       echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
                onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
@@ -726,7 +745,6 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       // Create the target ticket
-      Toolbox::logDebug($datas);
       $ticketID = $ticket->add($datas);
 
       // Ajout des acteurs du ticket
@@ -818,6 +836,25 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
             ));
          }
       }
+
+      // Attach validation message as first ticket followup if validation is required and
+      // if is set in ticket target configuration
+      // /!\ Followup is directly saved to the database to avoid double notification on ticket
+      //     creation and add followup
+      if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
+         if (!empty($formanswer->fields['comment'])) {
+            $message = addslashes($formanswer->fields['comment']);
+         } else {
+            $message = addslashes(__('Your form have been accepted by the validator', 'formcreator'));
+         }
+
+        $query = "INSERT INTO `glpi_ticketfollowups` SET
+                     `tickets_id` = $ticketID,
+                     `date`       = NOW(),
+                     `users_id`   = {$_SESSION['glpiID']},
+                     `content`    = \"$message\"";
+         $GLOBALS['DB']->query($query);
+      }
    }
 
    /**
@@ -883,7 +920,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
                      `due_date_question` INT NULL DEFAULT NULL,
                      `due_date_value` TINYINT NULL DEFAULT NULL,
-                     `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL
+                     `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
+                     `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       } elseif(!FieldExists($table, 'due_date_rule', false)) {
@@ -892,7 +930,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      ADD `due_date_question` INT NULL DEFAULT NULL,
                      ADD `due_date_value` TINYINT NULL DEFAULT NULL,
                      ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-                     ADD `use_notification` BOOLEAN NOT NULL DEFAULT TRUE;";
+                     ADD `use_notification` BOOLEAN NOT NULL DEFAULT TRUE
+                     ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       }
 

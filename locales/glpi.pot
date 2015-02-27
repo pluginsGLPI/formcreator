@@ -557,7 +557,7 @@ msgid ""
 "##formcreator.validation_link##"
 msgstr ""
 
-#: inc/notificationtargetformanswer.class.php:97
+#: inc/notificationtargetformanswer.class.php:97 inc/targetticket.class.php:848
 msgid "Your form have been accepted by the validator"
 msgstr ""
 
@@ -680,4 +680,8 @@ msgstr ""
 
 #: inc/form.class/php:1054
 msgid "Form duplicated: %s"
+msgstr ""
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
 msgstr ""
