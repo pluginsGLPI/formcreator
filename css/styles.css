@@ -178,14 +178,10 @@ form.formcreator_form .description_field {
    margin: 10px 15px;
 }
 
-form.formcreator_form .checkbox, form.formcreator_form .radio {
-   margin-left: 250px;
-}
-
 form.formcreator_form .form-group .form_field > input,
 form.formcreator_form textarea,
 form.formcreator_form select,
-form.formcreator_form .form-group input.hasDatepicker {
+form.formcreator_form .form-group .form_field > input.hasDatepicker {
    background: #FFF;
    background: rgba(255, 255, 255, 0.7);
    border: 1px solid #999;
@@ -199,7 +195,7 @@ form.formcreator_form .form-group input.hasDatepicker {
    color: #333;
    font-size: 1.1em;
 }
-form.formcreator_form .form-group input.hasDatepicker {
+form.formcreator_form .form-group .form_field > input.hasDatepicker {
    width: 115px;
 }
 form.formcreator_form .form-group img {
@@ -272,8 +268,13 @@ form.formcreator_form .form-group > .help-block {
    margin-left: 250px;
    font-size: 0.8em;
    color: #333;
-   padding: 5px 0;
+   padding: 3px 0;
    font-style: italic;
+   clear: both;
+}
+form.formcreator_form .form-group > .help-block p {
+   margin: 0;
+   padding: 3px 0;
 }
 
 #bloc > form.formcreator_form .form-group .form_field > input, #bloc > form.formcreator_form textarea {

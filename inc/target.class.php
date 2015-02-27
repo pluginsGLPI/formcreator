@@ -103,6 +103,11 @@ class PluginFormcreatorTarget extends CommonDBTM
    **/
    public function prepareInputForAdd($input)
    {
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
+      foreach ($input as $key => $value) {
+         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+      }
+
       // Control fields values :
       // - name is required
       if(empty($input['name'])) {
@@ -136,6 +141,21 @@ class PluginFormcreatorTarget extends CommonDBTM
       }
 
       return $input;
+   }
+
+   /**
+    * Prepare input datas for updating the form
+    *
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForUpdate($input)
+   {
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
+      foreach ($input as $key => $value) {
+         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+      }
    }
 
    public static function install(Migration $migration)

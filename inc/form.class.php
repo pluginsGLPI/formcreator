@@ -751,6 +751,11 @@ class PluginFormcreatorForm extends CommonDBTM
    **/
    public function prepareInputForAdd($input)
    {
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
+      foreach ($input as $key => $value) {
+         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+      }
+
       // Control fields values :
       // - name is required
       if(empty($input['name'])) {
@@ -888,7 +893,6 @@ class PluginFormcreatorForm extends CommonDBTM
             }
          }
 
-         // $datas = str_replace("'", "&apos;", htmlentities(stripslashes($datas)));
          $_SESSION['formcreator']['datas'] = $datas;
          Html::back();
 
