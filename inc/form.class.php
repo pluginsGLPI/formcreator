@@ -1029,6 +1029,13 @@ class PluginFormcreatorForm extends CommonDBTM
       return true;
    }
 
+   /**
+    * Duplicate a from. Execute duplicate action for massive action.
+    *
+    * NB: Queries are made directly in SQL without GLPI's API to avoid controls made by Add(), prepareInputForAdd(), etc.
+    *
+    * @return Boolean true if success, false toherwize.
+    */
    public function Duplicate()
    {
       $section       = new PluginFormcreatorSection();
@@ -1187,6 +1194,8 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
+    * Execute massive action for PluginFormcreatorFrom
+    *
     * @since version 0.85
     *
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
