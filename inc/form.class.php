@@ -753,7 +753,9 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+         if (!is_array($value)) {
+            $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+         }
       }
 
       // Control fields values :
