@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-26 12:30+0100\n"
+"PO-Revision-Date: 2015-02-27 15:34+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/"
 "glpi-project-plugin-formcreator/language/en_GB/)\n"
@@ -599,6 +599,7 @@ msgstr ""
 "##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:97
+#: inc/targetticket.class.php:848
 msgid "Your form have been accepted by the validator"
 msgstr "Your form have been accepted by the validator"
 
@@ -733,3 +734,15 @@ msgstr "Specific supplier"
 #: inc/targetticket.class.php:373
 msgid "Supplier from the question"
 msgstr "Supplier from the question"
+
+#: inc/form.class/php:1033
+msgid "Duplicate"
+msgstr "DUPLICATE"
+
+#: inc/form.class/php:1054
+msgid "Form duplicated: %s"
+msgstr "Form duplicated: %s"
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
+msgstr "Add validation message as first ticket followup"

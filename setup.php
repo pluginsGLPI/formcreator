@@ -51,6 +51,9 @@ function plugin_init_formcreator ()
    // Set the plugin CSRF compliance (required since GLPI 0.84)
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
 
+   // Massive Action definition
+   $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
+
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
