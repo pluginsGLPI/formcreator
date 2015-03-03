@@ -717,7 +717,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                                           ? $_SESSION['glpiactive_entity']
                                           : $form->fields['entities_id'];
       $datas['_users_id_requester']   = 0;
-      $datas['_users_id_recipient']   = 0;
+      $datas['_users_id_recipient']   = $_SESSION['glpiID'];
+      $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
       // Define due date
       $answer = new PluginFormcreatorAnswer();
