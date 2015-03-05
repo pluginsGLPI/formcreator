@@ -92,7 +92,7 @@ abstract class PluginFormcreatorField implements Field
          return true;
 
       // If the field is required it can't be empty
-      if ($this->isRequired() && ($value == '')) {
+      if ($this->isRequired() && empty($value)) {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
