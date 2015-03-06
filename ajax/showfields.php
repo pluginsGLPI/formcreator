@@ -1,9 +1,7 @@
 <?php
 include ('../../../inc/includes.php');
 
-Toolbox::logDebug($_POST['values']);
 $currentValues  = json_decode(stripslashes($_POST['values']), true);
-Toolbox::logDebug($currentValues);
 foreach ($currentValues as &$value) {
    if (is_array($value)) {
       foreach ($value as &$sub_value) {
@@ -20,7 +18,6 @@ foreach ($currentValues as &$value) {
    }
 }
 $questionToShow = array();
-Toolbox::logDebug($currentValues);
 foreach ($currentValues as $id => $value) {
    $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
 }
