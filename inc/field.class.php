@@ -33,8 +33,9 @@ abstract class PluginFormcreatorField implements Field
       echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
       echo '</div>';
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
+      // $value = json_encode($this->getAnswer());
       echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-         . addslashes($value) . '");</script>';
+         . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");</script>';
    }
 
    public function displayField($canEdit = true)

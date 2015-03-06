@@ -136,41 +136,44 @@ class PluginFormcreatorFields
          if (!isset($values[$condition['field']]))             return false;
          if (!self::isVisible($condition['field'], $values))   return false;
 
-         if ($condition['multiple']) {
-            switch ($condition['operator']) {
-               case '!=' :
-                  if (empty($values[$condition['field']])) {
-                     $value = true;
+         switch ($condition['operator']) {
+            case '!=' :
+               if (empty($values[$condition['field']])) {
+                  $value = true;
+               } else {
+                  if (is_array($values[$condition['field']])) {
+                     $value = !in_array($condition['value'], $values[$condition['field']]);
+                  } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                     $value = !in_array($condition['value'], json_decode($values[$condition['field']]));
                   } else {
-                     if (is_array($values[$condition['field']])) {
-                        $value = !in_array($condition['value'], $values[$condition['field']]);
-                     } elseif (!is_null(json_decode($values[$condition['field']]))) {
-                        $value = !in_array($condition['value'], json_decode($values[$condition['field']]));
-                     } else {
-                        $value = $condition['value'] != $values[$condition['field']];
-                     }
+                     $value = $condition['value'] != $values[$condition['field']];
                   }
-                  break;
-               case '==' :
-                  if (empty($condition['value'])) {
-                     $value = false;
+               }
+               break;
+            case '==' :
+               if (empty($condition['value'])) {
+                  $value = false;
+               } else {
+                  if (is_array($values[$condition['field']])) {
+                     $value = in_array($condition['value'], $values[$condition['field']]);
+                  } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                     $value = in_array($condition['value'], json_decode($values[$condition['field']]));
                   } else {
-                     if (is_array($values[$condition['field']])) {
-                        $value = in_array($condition['value'], $values[$condition['field']]);
-                     } elseif (!is_null(json_decode($values[$condition['field']]))) {
-                        $value = in_array($condition['value'], json_decode($values[$condition['field']]));
-                     } else {
-                        $value = $condition['value'] == $values[$condition['field']];
-                     }
+                     $value = $condition['value'] == $values[$condition['field']];
                   }
-                  break;
-               default:
+               }
+               break;
+            default:
+               if (is_array($values[$condition['field']])) {
                   eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
-                     . ' Array(' . $values[$condition['field']] . ');');
-            }
-         } else {
-            eval('$value = "' . $values[$condition['field']] . '" '
-               . $condition['operator'] . ' "' . $condition['value'] . '";');
+                     . ' Array(' . implode(',', $values[$condition['field']]) . ');');
+               } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                  eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
+                     . ' Array(' .implode(',', json_decode($values[$condition['field']])) . ');');
+               } else {
+                  eval('$value = "' . $values[$condition['field']] . '" '
+                     . $condition['operator'] . ' "' . $condition['value'] . '";');
+               }
          }
          switch ($condition['logic']) {
             case 'AND' :   $return &= $value; break;
