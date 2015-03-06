@@ -497,9 +497,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             break;
       }
 
-      // If form is accepted, generate targets
-      if ($status == 'accepted') {
-      }
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
    }
 
