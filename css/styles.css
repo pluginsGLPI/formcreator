@@ -330,13 +330,13 @@ form.formcreator_form .liste span > select {
 }
 
 #div_show_condition_field {
-   width: 150px !important;
+   width: 250px !important;
 }
 #div_show_condition_operator {
    width: 50px !important;
 }
 #div_show_condition_value {
-   width: 58px !important;
+   width:  400px !important;
 }
 
 /* jQuery UI Combobox*/
