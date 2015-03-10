@@ -7,7 +7,7 @@
 function plugin_version_formcreator ()
 {
    return array('name'       => _n('Form', 'Forms', 2, 'formcreator'),
-            'version'        => '0.85-1.2',
+            'version'        => '0.85-1.2.1',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
             'homepage'       => 'https://github.com/TECLIB/formcreator',
