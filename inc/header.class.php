@@ -73,9 +73,9 @@ class PluginFormcreatorHeader extends CommonDropdown
    public function showForm($ID, $options = array())
    {
       if (!$this->isNewID($ID)) {
-         $this->check($ID, 'r');
+         $this->check($ID, READ);
       } else {
-         $this->check(-1, 'w');
+         $this->check(-1, UPDATE);
       }
       $options['colspan'] = 2;
       $options['target']  = Toolbox::getItemTypeFormURL(__CLASS__);
