@@ -25,8 +25,10 @@ jQuery(document).ready(function($) {
    });
 
    <?php
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')
+      if (isset($_SESSION['glpiactiveprofile']['interface'])
+            && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
          echo "$('#c_menu #menu1').after(link);";
+      }
    ?>
 
    var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
