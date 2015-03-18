@@ -105,6 +105,7 @@ class PluginFormcreatorTarget extends CommonDBTM
    {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
+         if (Toolbox::seems_utf8($value)) $value = Toolbox::decodeFromUtf8($value);
          $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
       }
 
@@ -154,6 +155,7 @@ class PluginFormcreatorTarget extends CommonDBTM
    {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
+         if (Toolbox::seems_utf8($value)) $value = Toolbox::decodeFromUtf8($value);
          $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
       }
    }

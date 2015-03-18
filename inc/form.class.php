@@ -599,6 +599,7 @@ class PluginFormcreatorForm extends CommonDBTM
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png" alt="+" title=""
                          onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
                echo '&nbsp;';
+               if (Toolbox::seems_utf8($form['description'])) $form['description'] = Toolbox::decodeFromUtf8($form['description']);
                echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
                         . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
                         title="' . htmlentities($form['description']) . '">'
@@ -606,7 +607,7 @@ class PluginFormcreatorForm extends CommonDBTM
                         . '</a></td>';
                echo '</tr>';
                echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
-               echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
+               echo '<td><div>' . htmlentities($form['description']) . '&nbsp;</div></td>';
                echo '</tr>';
             }
 
@@ -754,6 +755,7 @@ class PluginFormcreatorForm extends CommonDBTM
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          if (!is_array($value)) {
+            if (Toolbox::seems_utf8($value)) $value = Toolbox::decodeFromUtf8($value);
             $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
          }
       }
@@ -882,15 +884,18 @@ class PluginFormcreatorForm extends CommonDBTM
          foreach($datas as $key => $value) {
             if (is_array($value)) {
                foreach($value as $key2 => $value2) {
+                  if (Toolbox::seems_utf8($value2)) $value2 = Toolbox::decodeFromUtf8($value2);
                   $datas[$key][$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
                }
             } elseif(is_array(json_decode($value))) {
                $value = json_decode($value);
                foreach($value as $key2 => $value2) {
+                  if (Toolbox::seems_utf8($value2)) $value2 = Toolbox::decodeFromUtf8($value2);
                   $value[$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
                }
                $datas[$key] = json_encode($value);
             } else {
+               if (Toolbox::seems_utf8($value)) $value = Toolbox::decodeFromUtf8($value);
                $datas[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value))));
             }
          }
