@@ -1,0 +1,13 @@
+Version 1.1.0 (03/09/2015)
+==========================
+
+New: Edge detection.
+option: edgeDetect
+
+Fix: strange blue box at bottom when search is false.
+
+
+Version 1.0.1 (02/22/2015)
+==========================
+
+Fix: Radio button & Checkbox in popup menu not checked/unchecked when click directly.

@@ -1,0 +1,9 @@
+/*!
+ * ParamQuery Select v1.1.0
+ *
+ * Copyright (c) 2015 Paramvir Dhindsa (http://paramquery.com)
+ * Released under GNU General Public License v3
+ * http://paramquery.com/license
+ *
+ */
+.pq-select-optgroup{font-weight:700;margin:0 3px}div.pq-select-button{display:inline-block;min-height:16px;line-height:20px;text-align:left;padding:1px 3px 0;cursor:pointer;position:relative;box-shadow:0 1px 1px 0 rgba(0,0,0,.1)}.pq-select-button>.ui-icon{float:right}.pq-select-single .pq-select-item-text,.pq-select-single .pq-select-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pq-select-single .pq-select-item-text{display:inline-block;margin-bottom:-5px}.pq-select-popup-cont{position:absolute;z-index:10000;overflow:visible;display:none;outline:0}.pq-select-popup{padding:1px;overflow:visible;box-shadow:0 3px 5px 1px rgba(0,0,0,.1);outline:0}.pq-select-shadow-fix{height:8px;width:120%;margin-left:-10%}.pq-select-popup *{outline:0}.pq-select-all{position:relative;margin-bottom:1px;display:block;cursor:pointer}.pq-select-all>.ui-icon-close{float:right}.pq-select-search-div{position:relative;left:1px;padding-left:2px;border:1px solid #ccc;margin-bottom:1px}.pq-select-search-div>.ui-icon{position:absolute;right:0;top:0}.pq-select-search-highlight{text-decoration:underline;margin:0;padding:0}.pq-select-menu{max-height:240px;overflow:auto;position:relative}div.pq-select-menu>.pq-select-option-label{display:block;min-height:18px;border:1px solid transparent;position:relative}.pq-select-option-label>span{margin-left:2px;padding:2px 0}.pq-select-option-label>span.pq-left-group{margin-left:13px}.pq-select-all>input,.pq-select-option-label>input{position:relative;top:1px;margin:2px 2px 0}.pq-select-search-input{padding:1px 2px;border-width:0}.pq-select-item{padding:2px 0 2px 3px;margin:0;line-height:16px;display:inline-block}.pq-select-item>.ui-icon-close{float:right}.pq-select-popup label.pq-state-hover{border:1px dotted #00008b}

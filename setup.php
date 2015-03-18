@@ -62,9 +62,15 @@ function plugin_init_formcreator ()
       'helpdesk' => 'PluginFormcreatorFormlist',
    );
 
+
+   $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
+   $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
+
    // Add specific JavaScript
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
    $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
+
+
 
    // Add a link in the main menu plugins for technician and admin panel
    $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';

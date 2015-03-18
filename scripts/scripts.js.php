@@ -40,6 +40,16 @@ jQuery(document).ready(function($) {
    } else if (NomDuFichier == "helpdesk.public.php") {
       showFormList()
    }
+
+
+   // === Add better multi-select on form configuration validators ===
+   // initialize the pqSelect widget.
+   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+      $("#validators").pqSelect({
+          multiplePlaceholder: '----',
+          checkbox: true //adds checkbox to options
+      });
+   });
 });
 
 function showFormList() {
@@ -321,3 +331,4 @@ function formcreatorChangeActorAssigned(value) {
       case 'question_supplier' : $('#block_assigned_question_supplier').show();  break;
    }
 }
+
