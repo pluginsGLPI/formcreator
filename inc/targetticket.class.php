@@ -676,7 +676,6 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          return array();
       }
 
-      if (Toolbox::seems_utf8($input['title'])) $input['title'] = Toolbox::decodeFromUtf8($input['title']);
       $input['name']    = htmlentities($input['title']);
 
       if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
