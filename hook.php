@@ -48,20 +48,6 @@ function plugin_formcreator_uninstall()
 }
 
 /**
- * Encode special chars
- *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
- */
-function plugin_formcreator_encode($string)
-{
-   $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
-   $string = str_replace('$apos;', "'", $string);
-   $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
-   return $string;
-}
-
-/**
  * Define Dropdown tables to be manage in GLPI :
  */
 function plugin_formcreator_getDropdown()
