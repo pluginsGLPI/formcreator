@@ -49,16 +49,16 @@ class PluginFormcreatorAnswer extends CommonDBChild
       foreach ($input as $key => $value) {
          if (is_array($value)) {
             foreach($value as $key2 => $value2) {
-               $input[$key][$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
+               $input[$key][$key2] = plugin_formcreator_encode($value2);
             }
          } elseif(is_array(json_decode($value))) {
             $value = json_decode($value);
             foreach($value as $key2 => $value2) {
-               $value[$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
+               $value[$key2] = plugin_formcreator_encode($value2);
             }
             $input[$key] = json_encode($value);
          } else {
-            $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+            $input[$key] = plugin_formcreator_encode($value);
          }
       }
 

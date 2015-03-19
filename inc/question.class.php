@@ -389,7 +389,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+         $input[$key] = plugin_formcreator_encode($value);
       }
 
       if (!empty($input)) {
@@ -419,7 +419,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+         $input[$key] = plugin_formcreator_encode($value);
       }
 
       if (!empty($input)) {
@@ -455,7 +455,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // TODO : Mettre en place l'interface multi-conditions
       // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
       $show_field = isset($input['show_field']) ? $input['show_field'] : 'NULL';
-      $value = str_replace("'", "&apos;", htmlentities(stripslashes(html_entity_decode($input['show_value']))));
+      $value = plugin_formcreator_encode($input['show_value']);
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
                   `show_field`     = $show_field,

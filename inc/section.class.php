@@ -133,7 +133,7 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+         $input[$key] = plugin_formcreator_encode($value);
       }
 
       // Control fields values :

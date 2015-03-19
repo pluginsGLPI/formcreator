@@ -601,7 +601,7 @@ class PluginFormcreatorForm extends CommonDBTM
                echo '&nbsp;';
                echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
                         . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
-                        title="' . htmlentities($form['description']) . '">'
+                        title="' . plugin_formcreator_encode($form['description']) . '">'
                         . $form['name']
                         . '</a></td>';
                echo '</tr>';
@@ -754,7 +754,7 @@ class PluginFormcreatorForm extends CommonDBTM
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          if (!is_array($value)) {
-            $input[$key] = str_replace("'", "&apos;", htmlentities(html_entity_decode($value)));
+            $input[$key] = plugin_formcreator_encode($value);
          }
       }
 
@@ -882,16 +882,16 @@ class PluginFormcreatorForm extends CommonDBTM
          foreach($datas as $key => $value) {
             if (is_array($value)) {
                foreach($value as $key2 => $value2) {
-                  $datas[$key][$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
+                  $datas[$key][$key2] = plugin_formcreator_encode($value2);
                }
             } elseif(is_array(json_decode($value))) {
                $value = json_decode($value);
                foreach($value as $key2 => $value2) {
-                  $value[$key2] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value2))));
+                  $value[$key2] = plugin_formcreator_encode($value2);
                }
                $datas[$key] = json_encode($value);
             } else {
-               $datas[$key] = str_replace("'", "&apos;", htmlentities(stripcslashes(html_entity_decode($value))));
+               $datas[$key] = plugin_formcreator_encode($value);
             }
          }
 
