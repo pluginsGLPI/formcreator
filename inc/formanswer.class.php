@@ -481,6 +481,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
+      NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+
       switch ($status) {
          case 'waiting' :
             // Notify the validator
