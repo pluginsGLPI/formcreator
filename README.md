@@ -18,31 +18,6 @@ Features
 12. Formatting the ticket set: answers to questions displayed, tickets templates.
 13. Preview form created directly in the configuration.
 
-New in version 2.0
----------------------------
-- Source code completly refactor
-- Change form display
-- Added fields lists supplied by LDAP
-- Added fields lists of objects from GLPI (Users, Computers, profiles, etc.)
-- Targeting forms by profiles
-- Public Forms available without connection to GLPI
-- Use tickets templates for more flexibility and features
-- Previewing forms directly from the configuration
-- Multiple Controls on the answers to questions (eg E-mail + mandatory, Number + greater than X + less than Y, etc.)
-- New types of fields:
-    - Date
-    - Date & Time
-    - Description
-    - GLPI dropdowns
-    - LDAP list
-    - List of objects from GLPI
-    - E-mail
-    - Integers
-    - Floating numbers
-    - Hidden Fields
-    - List of radio buttons
-    - Multiple choice lists
-
 For more informations, see the [WIKI](https://github.com/TECLIB/formcreator/wiki)
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -68,31 +43,6 @@ Fonctionnalités
 11. Ajout de description par champs, par section de questions, par formulaires, par entités et langues.
 12. Formatage du/des ticket(s) créé(s) : réponses aux questions à afficher, gabarits de tickets.
 13. Prévisualisation du formulaire créé directement dans la configuration.
-
-Nouveauté de la version 2.0
----------------------------
-- Refonte complete du code source
-- Modification de la présentation
-- Ajout de champs listes alimentées par annuaire LDAP
-- Ajout de champs listes des objets du coeur de GLPI (Utilisateurs, Ordinateurs, Profils, etc.)
-- Ciblage des formulaires par profils
-- Formulaires publics disponibles sans être connecté à GLPI
-- Utilisation des gabarits de tickets pour plus de souplesse et de possibilités
-- Prévisualisation des formulaires directement depuis la configuration
-- Contrôles multiples sur les réponses aux questions (Ex. : E-mail + obligatoire, Nombre + supérieur à X + inférieur à Y, etc.)
-- Nouveaux types de champs :
-    - date
-    - date & heure
-    - description
-    - intitulé GLPI
-    - liste LDAP
-    - objets GLPI
-    - e-mail
-    - nombres entiers
-    - nombres décimaux
-    - champs caché
-    - liste de boutons radios
-    - liste à choix multiple
 
 Pour plus d'informations, visitez [la page WIKI](https://github.com/TECLIB/formcreator/wiki)
 
