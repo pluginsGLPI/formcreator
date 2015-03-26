@@ -472,6 +472,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
+      NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+
       switch ($status) {
          case 'waiting' :
             // Notify the validator
@@ -488,9 +490,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             break;
       }
 
-      // If form is accepted, generate targets
-      if ($status == 'accepted') {
-      }
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
    }
 

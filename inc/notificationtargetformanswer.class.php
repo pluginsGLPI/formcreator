@@ -9,6 +9,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
    public function getEvents()
    {
       $events = array (
+         'plugin_formcreator_form_created'    => __('The form as been saved', 'formcreator'),
          'plugin_formcreator_need_validation' => __('A form need to be validate', 'formcreator'),
          'plugin_formcreator_refused'         => __('The form is refused', 'formcreator'),
          'plugin_formcreator_accepted'        => __('The form is accepted', 'formcreator'),
@@ -37,6 +38,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       $this->datas['##formcreator.form_full_answers##']  = $this->obj->getFullForm();
       $this->datas['##formcreator.validation_comment##'] = $this->obj->fields['comment'];
       $this->datas['##formcreator.validation_link##']    = $link;
+      $this->datas['##formcreator.request_id##']         = $this->obj->fields['id'];
    }
 
    public function getTags()
@@ -50,6 +52,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
          'formcreator.form_full_answers'  => __('Full form answers', 'formcreator'),
          'formcreator.validation_comment' => __('Refused comment', 'formcreator'),
          'formcreator.validation_link'    => __('Validation link', 'formcreator'),
+         'formcreator.request_id'         => __('Request #', 'formcreator'),
       );
 
       foreach ($tags as $tag => $label) {
@@ -81,6 +84,12 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
    public static function install()
    {
       $notifications = array(
+         'plugin_formcreator_form_created' => array(
+               'name'     => __('A form has been created', 'formcreator'),
+               'subject'  => __('Your request have been saved', 'formcreator'),
+               'content'  => __('Hi,\nYour request from GLPI have been successfully saved with number ##formcreator.request_id## and transmetted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
+               'notified' => self::AUTHOR,
+            ),
          'plugin_formcreator_need_validation' => array(
                'name'     => __('A form need to be validate', 'formcreator'),
                'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
@@ -108,31 +117,35 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       );
 
       // Create the notification template
-      $template  = new NotificationTemplate();
-      $found_tpl = $template->find("itemtype = 'PluginFormcreatorFormanswer'");
-      if (count($found_tpl) == 0) {
-         foreach ($notifications as $event => $datas)
-         {
+      $notification        = new Notification();
+      $notification_target = new NotificationTarget();
+      $template            = new NotificationTemplate();
+      $translation         = new NotificationTemplateTranslation();
+      foreach ($notifications as $event => $datas)
+      {
+         // Check if notification allready exists
+         $exists = $notification->find("itemtype = 'PluginFormcreatorFormanswer' AND event = '$event'");
+
+         // If it doesn't exists, create it
+         if (count($exists) == 0) {
             $template_id = $template->add(array(
-               'name'     => $datas['name'],
+               'name'     => addslashes($datas['name']),
                'comment'  => '',
                'itemtype' => 'PluginFormcreatorFormanswer',
             ));
 
             // Add a default translation for the template
-            $translation = new NotificationTemplateTranslation();
             $translation->add(array(
                'notificationtemplates_id' => $template_id,
                'language'                 => '',
-               'subject'                  => $datas['subject'],
-               'content_text'             => $datas['content'],
+               'subject'                  => addslashes($datas['subject']),
+               'content_text'             => addslashes($datas['content']),
                'content_html'             => '<p>'.str_replace('\n', '<br />', $datas['content']).'</p>',
             ));
 
             // Create the notification
-            $notification = new Notification();
             $notification_id = $notification->add(array(
-               'name'                     => $datas['name'],
+               'name'                     => addslashes($datas['name']),
                'comment'                  => '',
                'entities_id'              => 0,
                'is_recursive'             => 1,
@@ -144,7 +157,6 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
             ));
 
             // Add default notification targets
-            $notification_target = new NotificationTarget();
             $notification_target->add(array(
                "items_id"         => $datas['notified'],
                "type"             => Notification::USER_TYPE,
