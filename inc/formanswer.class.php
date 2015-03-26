@@ -656,6 +656,21 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      } else {
+         /**
+          * Migration of special chars from previous versions
+          *
+          * @since 0.85-1.2.3
+          */
+         $query  = "SELECT `id`, `comment`
+                    FROM `$table`";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $query_update = 'UPDATE `' . $table . '` SET
+                               `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
+                             WHERE `id` = ' . $line['id'];
+            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+         }
       }
 
       // Create standard search options

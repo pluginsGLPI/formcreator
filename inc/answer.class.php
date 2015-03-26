@@ -107,6 +107,21 @@ class PluginFormcreatorAnswer extends CommonDBChild
          // Update field type from previous version (Need answer to be text since text can be WYSIWING).
          $query = "ALTER TABLE  `$table` CHANGE  `answer`  `answer` text;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+         /**
+          * Migration of special chars from previous versions
+          *
+          * @since 0.85-1.2.3
+          */
+         $query  = "SELECT `id`, `answer`
+                    FROM `$table`";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $query_update = 'UPDATE `' . $table . '` SET
+                               `answer` = "' . plugin_formcreator_encode($line['answer']) . '"
+                             WHERE `id` = ' . $line['id'];
+            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+         }
       }
 
       return true;

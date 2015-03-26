@@ -741,6 +741,36 @@ class PluginFormcreatorQuestion extends CommonDBChild
                       DROP `show_value`;";
             $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
          }
+
+         /**
+          * Migration of special chars from previous versions
+          *
+          * @since 0.85-1.2.3
+          */
+         // Migrate "questions" table
+         $query  = "SELECT `id`, `name`, `values`, `default_values`, `description`
+                    FROM `glpi_plugin_formcreator_questions`";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $query_update = 'UPDATE `glpi_plugin_formcreator_questions` SET
+                               `name`           = "' . plugin_formcreator_encode($line['name']) . '",
+                               `values`         = "' . plugin_formcreator_encode($line['values']) . '",
+                               `default_values` = "' . plugin_formcreator_encode($line['default_values']) . '",
+                               `description`    = "' . plugin_formcreator_encode($line['description']) . '"
+                             WHERE `id` = ' . $line['id'];
+            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+         }
+
+         // Migrate "question_conditions" table
+         $query  = "SELECT `id`, `show_value`
+                    FROM `glpi_plugin_formcreator_questions_conditions`";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $query_update = 'UPDATE `glpi_plugin_formcreator_questions_conditions` SET
+                               `show_value` = "' . plugin_formcreator_encode($line['show_value']) . '"
+                             WHERE `id` = ' . $line['id'];
+            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+         }
       }
 
       return true;

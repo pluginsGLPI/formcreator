@@ -983,6 +983,23 @@ class PluginFormcreatorForm extends CommonDBTM
                       ADD `is_deleted` tinyint(1) NOT NULL DEFAULT '0';";
             $GLOBALS['DB']->query($query);
          }
+
+         /**
+          * Migration of special chars from previous versions
+          *
+          * @since 0.85-1.2.3
+          */
+         $query  = "SELECT `id`, `name`, `description`, `content`
+                    FROM `$table`";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $query_update = 'UPDATE `' . $table . '` SET
+                               `name`        = "' . plugin_formcreator_encode($line['name']) . '",
+                               `description` = "' . plugin_formcreator_encode($line['description']) . '",
+                               `content`     = "' . plugin_formcreator_encode($line['content']) . '"
+                             WHERE `id` = ' . $line['id'];
+            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+         }
       }
 
       if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
