@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-27 15:35+0100\n"
+"PO-Revision-Date: 2015-03-26 14:45+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
@@ -544,6 +544,33 @@ msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Formulaire saisi"
 msgstr[1] "Formulaires saisis"
+
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr "Le formulaire a été sauvegardé"
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr "Une demande a été faite à partir d'un formulaire"
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr "Votre demande a été sauvegardée avec succès !"
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number "
+"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+"Bonjour,\n"
+"Votre demande déposée sur GLPI a été sauvegardée avec succès sous le numéro "
+"##formcreator.request_id## et transmise à notre équipe de support.\n"
+"Vous pouvez visualiser vos réponses à ce formulaire en cliquant sur le lien "
+"ci-dessous :\n"
+"##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"

@@ -520,6 +520,26 @@ msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number ##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
 msgstr ""
