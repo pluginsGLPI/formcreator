@@ -6,7 +6,7 @@ class floatField extends PluginFormcreatorField
       if (!parent::isValid($value)) return false;
 
       // Not a number
-      if (!is_numeric($value)) {
+      if (!empty($value) && !is_numeric($value)) {
          Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
          return false;
 

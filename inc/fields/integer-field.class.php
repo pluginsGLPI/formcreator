@@ -6,7 +6,7 @@ class integerField extends PluginFormcreatorField
       if (!parent::isValid($value)) return false;
 
       // Not a number
-      if (!ctype_digit($value)) {
+      if (!empty($value) && !ctype_digit($value)) {
          Session::addMessageAfterRedirect(__('This is not an integer:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
