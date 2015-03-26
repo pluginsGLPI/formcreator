@@ -470,6 +470,30 @@ msgstr ""
 msgid "Choose a validator"
 msgstr ""
 
+#: inc/notificationtargetformanswer.class.php:56
+msgid "Request #"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number ##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
 #: inc/formanswer.class.php:73 inc/notificationtargetformanswer.class.php:47
 msgid "Requester"
 msgstr ""
