@@ -45,6 +45,7 @@ class descriptionField implements Field
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
 
                      for(var i=0; inputElements[i]; ++i) {
                         if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
@@ -72,6 +73,7 @@ class descriptionField implements Field
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
 
                      for(var i=0; inputElements[i]; ++i) {
                         if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
@@ -102,6 +104,7 @@ class descriptionField implements Field
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
 
                      for(var i=0; inputElements[i]; ++i) {
                         if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {

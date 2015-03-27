@@ -71,6 +71,7 @@ class textareaField implements Field
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]");
 
                      for(var i=0; inputElements[i]; ++i) {
                         if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
@@ -89,7 +90,7 @@ class textareaField implements Field
                break;
             case 'multiselect' :
                echo '<script type="text/javascript">
-                  var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
                      if (inputElements.addEventListener) {
                         inputElements.addEventListener("change", function(){showFormGroup' . $field['id'] . '()});
                      } else {
@@ -98,6 +99,7 @@ class textareaField implements Field
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '[]")[1];
 
                      for(var i=0; inputElements[i]; ++i) {
                         if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].selected) {
@@ -128,6 +130,7 @@ class textareaField implements Field
 
                   function showFormGroup' . $field['id'] . '() {
                      var checkedValue = false;
+                     var inputElements = document.getElementsByName("formcreator_field_' . $field['show_field'] . '");
 
                      for(var i=0; inputElements[i]; ++i) {
                         if (inputElements[i].value ' . $condition . ' "' . $field['show_value'] . '" && inputElements[i].checked) {
