@@ -145,7 +145,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          'min'   => -30,
          'max'   => 30
       ), array(
-         'value' => $this->fields['due_date_period']
+         'value' => $this->fields['due_date_value']
       ));
       Dropdown::showFromArray('due_date_period', array(
          'minute' => _n('Minute', 'Minutes', 2),
