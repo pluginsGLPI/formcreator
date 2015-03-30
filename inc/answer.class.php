@@ -56,7 +56,13 @@ class PluginFormcreatorAnswer extends CommonDBChild
             foreach($value as $key2 => $value2) {
                $value[$key2] = plugin_formcreator_encode($value2);
             }
-            $input[$key] = json_encode($value);
+            // Verify the constant exits (included in PHP 5.4+)
+            if (defined('JSON_UNESCAPED_UNICODE')) {
+               $input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
+            // If PHP 5.3, don't use the constant, but bug with UTF-8 languages like Russian...
+            } else {
+               $input[$key] = json_encode($value);
+            }
          } else {
             $input[$key] = plugin_formcreator_encode($value);
          }
