@@ -474,20 +474,22 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
 
-      switch ($status) {
-         case 'waiting' :
-            // Notify the validator
-            NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
-            break;
-         case 'refused' :
-            // Notify the requester
-            NotificationEvent::raiseEvent('plugin_formcreator_refused', $this);
-            break;
-         case 'accepted' :
-            // Notify the requester
-            NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
-            $this->generateTarget();
-            break;
+      if ($form->fields['validation_required']) {
+         switch ($status) {
+            case 'waiting' :
+               // Notify the validator
+               NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
+               break;
+            case 'refused' :
+               // Notify the requester
+               NotificationEvent::raiseEvent('plugin_formcreator_refused', $this);
+               break;
+            case 'accepted' :
+               // Notify the requester
+               NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               $this->generateTarget();
+               break;
+         }
       }
 
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
@@ -547,30 +549,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $value = '';
                }
                $value   = PluginFormcreatorFields::getValue($question_line, $value);
-
-
-
-               // if ($question_line['show_type'] == 'hide' ) {
-               //    switch ($field['show_condition']) {
-               //       case 'notequal':
-               //          $condition = '!=';
-               //          break;
-               //       case 'lower':
-               //          $condition = '<';
-               //          break;
-               //       case 'greater':
-               //          $condition = '>';
-               //          break;
-
-               //       default:
-               //          $condition = '==';
-               //          break;
-               //    }
-               //    $hidden = eval($question_line['show_value'] . ' ' . $condition . ' ' . $question_line['show_field'])
-               // }
-
-
-
 
                $output .= $question_no . ') ' . $question_line['name'] . ' : ';
                $output .= $value . PHP_EOL . PHP_EOL;
