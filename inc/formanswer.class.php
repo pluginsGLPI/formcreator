@@ -483,20 +483,22 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
 
-      switch ($status) {
-         case 'waiting' :
-            // Notify the validator
-            NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
-            break;
-         case 'refused' :
-            // Notify the requester
-            NotificationEvent::raiseEvent('plugin_formcreator_refused', $this);
-            break;
-         case 'accepted' :
-            // Notify the requester
-            NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
-            $this->generateTarget();
-            break;
+      if ($form->fields['validation_required']) {
+         switch ($status) {
+            case 'waiting' :
+               // Notify the validator
+               NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
+               break;
+            case 'refused' :
+               // Notify the requester
+               NotificationEvent::raiseEvent('plugin_formcreator_refused', $this);
+               break;
+            case 'accepted' :
+               // Notify the requester
+               NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               $this->generateTarget();
+               break;
+         }
       }
 
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
