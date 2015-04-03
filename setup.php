@@ -119,6 +119,7 @@ function plugin_init_formcreator ()
  */
 function plugin_formcreator_encode($string)
 {
+   $string = stripcslashes($string);
    $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
    $string = str_replace('&apos;', "'", $string);
    $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
