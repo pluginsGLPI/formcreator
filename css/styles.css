@@ -363,3 +363,6 @@ form.formcreator_form .liste span > select {
    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
    background-image: linear-gradient(top, #fff 0%, #eee 50%);
 }
+.pq-select-multiple {
+   width: 95% !important;
+}

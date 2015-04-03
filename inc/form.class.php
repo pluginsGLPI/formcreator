@@ -354,6 +354,7 @@ class PluginFormcreatorForm extends CommonDBTM
                 ORDER BY u.`name`";
       $result = $GLOBALS['DB']->query($query);
 
+      echo '<div id="validators_block" style="width: 100%">';
       echo '<select name="_validators[]" size="4" style="width: 100%" multiple id="validators">';
       while($user = $GLOBALS['DB']->fetch_assoc($result)) {
          echo '<option value="' . $user['id'] . '"';
@@ -361,16 +362,17 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '>' . $user['name'] . '</option>';
       }
       echo '</select>';
+      echo '</div>';
 
 
       echo '<script type="text/javascript">
                function changeValidators(value) {
                   if (value == 1) {
                      document.getElementById("label_validators").style.display = "inline";
-                     document.getElementById("validators").style.display       = "inline";
+                     document.getElementById("validators_block").style.display = "block";
                   } else {
                      document.getElementById("label_validators").style.display = "none";
-                     document.getElementById("validators").style.display       = "none";
+                     document.getElementById("validators_block").style.display = "none";
                   }
                }
                changeValidators(' . $this->fields["validation_required"] . ');
