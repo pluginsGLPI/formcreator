@@ -1,6 +1,8 @@
 <?php
 include ("../../../inc/includes.php");
 
+Session::redirectIfNotLoggedIn();
+
 // Check if plugin is activated...
 $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
