@@ -156,6 +156,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $classname = $question['fieldtype'] . 'Field';
             $fields = $classname::getPrefs();
 
+            // avoid quote js error
+            $question['name'] = htmlspecialchars_decode($question['name'], ENT_QUOTES);
+
             if ($fields['required'] == 0) {
                echo '&nbsp;';
             } elseif($question['required']) {
