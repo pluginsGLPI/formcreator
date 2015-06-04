@@ -7,7 +7,7 @@
 function plugin_version_formcreator ()
 {
    return array('name'       => _n('Form', 'Forms', 2, 'formcreator'),
-            'version'        => '0.85-1.2.3',
+            'version'        => '0.85-1.2.4',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
             'homepage'       => 'https://github.com/TECLIB/formcreator',
@@ -52,12 +52,12 @@ function plugin_init_formcreator ()
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
 
    $plugin = new Plugin();
-   if (isset($_SESSION['glpiID']) 
+   if (isset($_SESSION['glpiID'])
       && $plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
       // Massive Action definition
       $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
-     
+
       $PLUGIN_HOOKS['menu_toadd']['formcreator'] = array(
          'admin'    => 'PluginFormcreatorForm',
          'helpdesk' => 'PluginFormcreatorFormlist',
@@ -66,7 +66,7 @@ function plugin_init_formcreator ()
 
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
           || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
-          || isset($_SESSION['glpiactiveprofile']) && 
+          || isset($_SESSION['glpiactiveprofile']) &&
              $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
 
           // Add specific CSS
