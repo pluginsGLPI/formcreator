@@ -483,7 +483,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
 
-      if ($form->fields['validation_required']) {
+      if ($form->fields['validation_required'] || ($status == 'accepted')) {
          switch ($status) {
             case 'waiting' :
                // Notify the validator
