@@ -4,12 +4,13 @@
 #
 # Translators:
 # Translators:
+# Rafael Viana <rafaelvian@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-13 12:49+0100\n"
+"PO-Revision-Date: 2015-06-04 11:48+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/pt_BR/)\n"
@@ -22,116 +23,116 @@ msgstr ""
 
 #: ajax/question.php:27 inc/question.class.php:200
 msgid "Add a question"
-msgstr ""
+msgstr "Incluir questão"
 
 #: ajax/question.php:20
 msgid "Edit a question"
-msgstr ""
+msgstr "Editar questão"
 
 #: ajax/question.php:88
 msgid "Show field"
-msgstr ""
+msgstr "Exibir campo"
 
 #: ajax/question.php:95
 msgid "Only if field"
-msgstr ""
+msgstr "Somente se o campo"
 
 #: ajax/question.php:145 inc/question.class.php:156 inc/question.class.php:160
 msgid "Required"
-msgstr ""
+msgstr "Obrigatório"
 
 #: ajax/question.php:157
 msgid "Show empty"
-msgstr ""
+msgstr "Mostrar vazio"
 
 #: ajax/question.php:203
 msgid "Values"
-msgstr ""
+msgstr "Valores"
 
 #: ajax/question.php:173
 msgid "One per line for lists"
-msgstr ""
+msgstr "Listas, um por linha"
 
 #: ajax/question.php:204
 msgid "One per line"
-msgstr ""
+msgstr "Um por linha"
 
 #: ajax/question.php:231
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #: ajax/question.php:256
 msgid "Attribute"
-msgstr ""
+msgstr "Atributos"
 
 #: ajax/question.php:268
 msgid "Range"
-msgstr ""
+msgstr "Range"
 
 #: ajax/question.php:272
 msgid "Min"
-msgstr ""
+msgstr "Mínimo"
 
 #: ajax/question.php:278
 msgid "Max"
-msgstr ""
+msgstr "Máximo"
 
 #: ajax/question.php:302
 msgid "Additional validation"
-msgstr ""
+msgstr "Validação adicional"
 
 #: ajax/question.php:305
 msgid "Regular expression"
-msgstr ""
+msgstr "Expressão regular"
 
 #: ajax/section.php:21 inc/question.class.php:210
 msgid "Add a section"
-msgstr ""
+msgstr "Adicionar seção"
 
 #: ajax/section.php:23
 msgid "Edit a section"
-msgstr ""
+msgstr "Editar seção"
 
 #: ajax/target.php:8 inc/target.class.php:82
 msgid "Add a destination"
-msgstr ""
+msgstr "Adicionar um destino"
 
 #: front/category.form.php:13
 msgid "A category already exists with the same name! Category creation failed."
-msgstr ""
+msgstr "Falha na criação da categoria! Já existe uma categoria com este nome"
 
 #: front/config.form.php:21 front/form.form.php:70 front/showform.php:45
 #: front/showform.php:58 front/targetticket.form.php:20
 msgid "Form Creator"
-msgstr ""
+msgstr "Form creator"
 
 #: inc/config.class.php:11
 msgid "Formcreator settings"
-msgstr ""
+msgstr "Configurações do formcreator"
 
 #: front/formlist.php:13 front/formlist.php:18 front/showform.php:35
 msgid "Form list"
-msgstr ""
+msgstr "Lista de formulários"
 
 #: inc/category.class.php:25
 msgid "Add a form category"
-msgstr ""
+msgstr "Adicionar categoria de formulário"
 
 #: inc/fields/float-field.class.php:84 inc/fields/integer-field.class.php:84
 #, php-format
 msgid "The following number must be greater than %d:"
-msgstr ""
+msgstr "O número deve ser maior que %d:"
 
 #: inc/fields/float-field.class.php:90 inc/fields/integer-field.class.php:90
 #, php-format
 msgid "The following number must be lower than %d:"
-msgstr ""
+msgstr "O número deve ser menor que %d:"
 
 #: inc/fields/checkboxes-field.class.php:105
 #: inc/fields/multiselect-field.class.php:94
 #, php-format
 msgid "The following question needs of at least %d answers"
-msgstr ""
+msgstr "A questão precisa ter no mínimo %d respostas"
 
 #: inc/fields/checkboxes-field.class.php:110
 #: inc/fields/multiselect-field.class.php:100
@@ -539,6 +540,27 @@ msgid_plural "Form answers"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number "
+"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
 msgstr ""
@@ -580,6 +602,7 @@ msgid ""
 msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:97
+#: inc/targetticket.class.php:848
 msgid "Your form have been accepted by the validator"
 msgstr ""
 
@@ -616,4 +639,104 @@ msgstr ""
 
 #: inc/form.class.php:511
 msgid "No form waiting for validation"
+msgstr ""
+
+#: scripts/combobox.js.php:54
+msgid "Show All Items"
+msgstr ""
+
+#: scripts/combobox.js.php:120
+msgid "didn't match any item"
+msgstr ""
+
+#: ajax/question.php:94
+msgid "Always displayed"
+msgstr ""
+
+#: ajax/question.php:95
+msgid "Hidden unless"
+msgstr ""
+
+#: ajax/question.php:96
+msgid "Displayed unless"
+msgstr ""
+
+#: ajax/question.php:386
+msgid ""
+"Specify the additional validation conditions in the description of the "
+"question to help users."
+msgstr ""
+
+#: inc/formanswer.class.php:175
+msgid "Form accepted by validator."
+msgstr ""
+
+#: inc/formanswer.class.php:177
+msgid "Form successfully saved."
+msgstr ""
+
+#: inc/targetticket.class.php:87
+msgid "equals to the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:88
+msgid "calculated from the ticket creation date"
+msgstr ""
+
+#: inc/targetticket.class.php:89
+msgid "calculated from the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:217
+msgid "Ticket actors"
+msgstr ""
+
+#: inc/targetticket.class.php:256 inc/targetticket.class.php:311
+#: inc/targetticket.class.php:366
+msgid "Form requester"
+msgstr ""
+
+#: inc/targetticket.class.php:257 inc/targetticket.class.php:312
+#: inc/targetticket.class.php:367
+msgid "Form validator"
+msgstr ""
+
+#: inc/targetticket.class.php:258 inc/targetticket.class.php:313
+#: inc/targetticket.class.php:368
+msgid "Specific person"
+msgstr ""
+
+#: inc/targetticket.class.php:259 inc/targetticket.class.php:314
+#: inc/targetticket.class.php:369
+msgid "Person from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:260 inc/targetticket.class.php:315
+#: inc/targetticket.class.php:370
+msgid "Specific group"
+msgstr ""
+
+#: inc/targetticket.class.php:261 inc/targetticket.class.php:316
+#: inc/targetticket.class.php:371
+msgid "Group from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:372
+msgid "Specific supplier"
+msgstr ""
+
+#: inc/targetticket.class.php:373
+msgid "Supplier from the question"
+msgstr ""
+
+#: inc/form.class/php:1033
+msgid "Duplicate"
+msgstr ""
+
+#: inc/form.class/php:1054
+msgid "Form duplicated: %s"
+msgstr ""
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
 msgstr ""

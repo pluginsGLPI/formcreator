@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-13 12:49+0100\n"
+"PO-Revision-Date: 2015-06-04 11:48+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/hu_HU/)\n"
@@ -547,6 +547,27 @@ msgid_plural "Form answers"
 msgstr[0] "Űrlap válasz"
 msgstr[1] "Űrlap válaszok"
 
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number "
+"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
 msgstr "A teljes űrlap válaszai"
@@ -600,6 +621,7 @@ msgstr ""
 "##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:97
+#: inc/targetticket.class.php:848
 msgid "Your form have been accepted by the validator"
 msgstr "Az űrlapját elfogadta a jóváhagyó"
 
@@ -676,4 +698,70 @@ msgstr ""
 
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
+msgstr ""
+
+#: inc/targetticket.class.php:87
+msgid "equals to the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:88
+msgid "calculated from the ticket creation date"
+msgstr ""
+
+#: inc/targetticket.class.php:89
+msgid "calculated from the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:217
+msgid "Ticket actors"
+msgstr ""
+
+#: inc/targetticket.class.php:256 inc/targetticket.class.php:311
+#: inc/targetticket.class.php:366
+msgid "Form requester"
+msgstr ""
+
+#: inc/targetticket.class.php:257 inc/targetticket.class.php:312
+#: inc/targetticket.class.php:367
+msgid "Form validator"
+msgstr ""
+
+#: inc/targetticket.class.php:258 inc/targetticket.class.php:313
+#: inc/targetticket.class.php:368
+msgid "Specific person"
+msgstr ""
+
+#: inc/targetticket.class.php:259 inc/targetticket.class.php:314
+#: inc/targetticket.class.php:369
+msgid "Person from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:260 inc/targetticket.class.php:315
+#: inc/targetticket.class.php:370
+msgid "Specific group"
+msgstr ""
+
+#: inc/targetticket.class.php:261 inc/targetticket.class.php:316
+#: inc/targetticket.class.php:371
+msgid "Group from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:372
+msgid "Specific supplier"
+msgstr ""
+
+#: inc/targetticket.class.php:373
+msgid "Supplier from the question"
+msgstr ""
+
+#: inc/form.class/php:1033
+msgid "Duplicate"
+msgstr ""
+
+#: inc/form.class/php:1054
+msgid "Form duplicated: %s"
+msgstr ""
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
 msgstr ""

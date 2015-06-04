@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-13 12:50+0100\n"
+"PO-Revision-Date: 2015-06-04 11:47+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/ru_RU/)\n"
@@ -19,8 +19,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Poedit 1.5.4\n"
 
 #: ajax/question.php:27 inc/question.class.php:200
@@ -234,6 +235,7 @@ msgid_plural "GLPI objects"
 msgstr[0] "Объект GLPI"
 msgstr[1] "Объекты GLPI"
 msgstr[2] "Объекты GLPI"
+msgstr[3] "Объекты GLPI"
 
 #: inc/fields/text-field.class.php:79 inc/fields/textarea-field.class.php:79
 msgid "The text is too short (minimum %d characters):"
@@ -372,6 +374,7 @@ msgid_plural "Answers"
 msgstr[0] "Ответ"
 msgstr[1] "Ответы"
 msgstr[2] "Ответы"
+msgstr[3] "Ответы"
 
 #: inc/targetticket.class.php:92
 msgid "Full form"
@@ -407,6 +410,7 @@ msgid_plural "Form categories"
 msgstr[0] "Категория формы"
 msgstr[1] "Категории формы"
 msgstr[2] "Категории формы"
+msgstr[3] "Категории формы"
 
 #: ajax/homepage_forms.php:24 inc/form.class.php:38 setup.php:9 setup.php:90
 msgid "Form"
@@ -414,6 +418,7 @@ msgid_plural "Forms"
 msgstr[0] "Форма"
 msgstr[1] "Формы"
 msgstr[2] "Формы"
+msgstr[3] "Формы"
 
 #: inc/formprofiles.class.php:12
 msgid "Target"
@@ -421,6 +426,7 @@ msgid_plural "Targets"
 msgstr[0] "Цель"
 msgstr[1] "Цели"
 msgstr[2] "Цели"
+msgstr[3] "Цели"
 
 #: inc/form.class.php:318 inc/header.class.php:5
 msgid "Header"
@@ -428,6 +434,7 @@ msgid_plural "Headers"
 msgstr[0] "Заголовок"
 msgstr[1] "Заголовки"
 msgstr[2] "Заголовки"
+msgstr[3] "Заголовки"
 
 #: inc/question.class.php:35 inc/section.class.php:35
 #: inc/targetticket.class.php:85
@@ -436,6 +443,7 @@ msgid_plural "Questions"
 msgstr[0] "Вопрос"
 msgstr[1] "Вопросы"
 msgstr[2] "Вопросы"
+msgstr[3] "Вопросы"
 
 #: inc/section.class.php:35
 msgid "Section"
@@ -443,6 +451,7 @@ msgid_plural "Sections"
 msgstr[0] "Секция"
 msgstr[1] "Секции"
 msgstr[2] "Секции"
+msgstr[3] "Секции"
 
 #: inc/target.class.php:26 inc/target.class.php:46
 msgid "Destination"
@@ -450,6 +459,7 @@ msgid_plural "Destinations"
 msgstr[0] "Назначение"
 msgstr[1] "Назначения"
 msgstr[2] "Назначения"
+msgstr[3] "Назначения"
 
 #: inc/targetticket.class.php:26 inc/targetticket.class.php:59
 msgid "Target ticket"
@@ -457,6 +467,7 @@ msgid_plural "Target tickets"
 msgstr[0] "Целевая заявка"
 msgstr[1] "Целевые заявки"
 msgstr[2] "Целевые заявки"
+msgstr[3] "Целевые заявки"
 
 #: inc/form.class.php:316
 msgid "Need to be validate?"
@@ -556,6 +567,28 @@ msgid_plural "Form answers"
 msgstr[0] "Ответ в форме"
 msgstr[1] "Ответы в форме"
 msgstr[2] "Ответ в форме"
+msgstr[3] "Ответ в форме"
+
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number "
+"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
@@ -610,6 +643,7 @@ msgstr ""
 "##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:97
+#: inc/targetticket.class.php:848
 msgid "Your form have been accepted by the validator"
 msgstr "Ваша форма была одобрена утверждающим лицом"
 
@@ -689,3 +723,69 @@ msgstr "Форма принята утверждающим."
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
 msgstr "Форма успешно сохранена."
+
+#: inc/targetticket.class.php:87
+msgid "equals to the answer to the question"
+msgstr "Аналогично ответу на вопрос"
+
+#: inc/targetticket.class.php:88
+msgid "calculated from the ticket creation date"
+msgstr "Получено из даты создания заявки"
+
+#: inc/targetticket.class.php:89
+msgid "calculated from the answer to the question"
+msgstr "Получено из ответов на вопрос"
+
+#: inc/targetticket.class.php:217
+msgid "Ticket actors"
+msgstr ""
+
+#: inc/targetticket.class.php:256 inc/targetticket.class.php:311
+#: inc/targetticket.class.php:366
+msgid "Form requester"
+msgstr "Запрашивающий форму"
+
+#: inc/targetticket.class.php:257 inc/targetticket.class.php:312
+#: inc/targetticket.class.php:367
+msgid "Form validator"
+msgstr "Утверждающий форму"
+
+#: inc/targetticket.class.php:258 inc/targetticket.class.php:313
+#: inc/targetticket.class.php:368
+msgid "Specific person"
+msgstr "Указанная персона"
+
+#: inc/targetticket.class.php:259 inc/targetticket.class.php:314
+#: inc/targetticket.class.php:369
+msgid "Person from the question"
+msgstr "Персона из вопроса"
+
+#: inc/targetticket.class.php:260 inc/targetticket.class.php:315
+#: inc/targetticket.class.php:370
+msgid "Specific group"
+msgstr "Указанная группа"
+
+#: inc/targetticket.class.php:261 inc/targetticket.class.php:316
+#: inc/targetticket.class.php:371
+msgid "Group from the question"
+msgstr "Группа из вопроса"
+
+#: inc/targetticket.class.php:372
+msgid "Specific supplier"
+msgstr "Указанный поставщик"
+
+#: inc/targetticket.class.php:373
+msgid "Supplier from the question"
+msgstr "Поставщик из вопроса"
+
+#: inc/form.class/php:1033
+msgid "Duplicate"
+msgstr "Дублировать"
+
+#: inc/form.class/php:1054
+msgid "Form duplicated: %s"
+msgstr "Форма дублирована: %s"
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
+msgstr "Добавить подтверждение в качестве первой заметки"

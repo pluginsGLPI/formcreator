@@ -4,13 +4,13 @@
 #
 # Translators:
 # Translators:
-# Doru  DEACONU <dumitrudeaconu@yahoo.com>, 2014
+# Doru  DEACONU <dumitrudeaconu@yahoo.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-02-13 12:49+0100\n"
+"PO-Revision-Date: 2015-06-04 11:48+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/projects/p/glpi-"
 "project-plugin-formcreator/language/ro_RO/)\n"
@@ -148,11 +148,11 @@ msgstr ""
 
 #: inc/fields/checkboxes-field.class.php:122
 msgid "Checkboxes"
-msgstr ""
+msgstr "Checkboxes"
 
 #: inc/fields/datetime-field.class.php:84
 msgid "Datetime"
-msgstr ""
+msgstr "Datetime"
 
 #: inc/fields/email-field.class.php:79
 msgid "This is not a valid e-mail:"
@@ -248,7 +248,7 @@ msgstr "Textarea"
 
 #: inc/form.class.php:103
 msgid "Homepage"
-msgstr ""
+msgstr "Homepage"
 
 #: inc/form.class.php:111 inc/formprofiles.class.php:28
 msgid "Access"
@@ -292,7 +292,7 @@ msgstr ""
 
 #: inc/form.class.php:652
 msgid "Form data"
-msgstr ""
+msgstr "Data Formular"
 
 #: inc/form.class.php:829
 msgid "You must select validator !"
@@ -370,7 +370,7 @@ msgstr[2] "Răspunsuri"
 
 #: inc/targetticket.class.php:92
 msgid "Full form"
-msgstr ""
+msgstr "Formular complet"
 
 #: inc/targetticket.class.php:145
 msgid "The title cannot be empty!"
@@ -552,6 +552,27 @@ msgstr[0] "Răspuns formular"
 msgstr[1] "Răspunsuri formular"
 msgstr[2] "Răspunsuri formular"
 
+#: inc/notificationtargetformanswer.class.php:12
+msgid "The form as been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:89
+msgid "A form has been created"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:90
+msgid "Your request have been saved"
+msgstr ""
+
+#: inc/notificationtargetformanswer.class.php:91
+msgid ""
+"Hi,\n"
+"Your request from GLPI have been successfully saved with number "
+"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"You can see your answers onto the following link:\n"
+"##formcreator.validation_link##"
+msgstr ""
+
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Full form answers"
 msgstr "Raspunsuri formular complet"
@@ -593,6 +614,7 @@ msgid ""
 msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:97
+#: inc/targetticket.class.php:848
 msgid "Your form have been accepted by the validator"
 msgstr ""
 
@@ -633,7 +655,7 @@ msgstr "Niciun Formular în aşteptarea validării"
 
 #: scripts/combobox.js.php:54
 msgid "Show All Items"
-msgstr ""
+msgstr "Afiseaza toate elementrele"
 
 #: scripts/combobox.js.php:120
 msgid "didn't match any item"
@@ -663,4 +685,70 @@ msgstr ""
 
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
+msgstr ""
+
+#: inc/targetticket.class.php:87
+msgid "equals to the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:88
+msgid "calculated from the ticket creation date"
+msgstr ""
+
+#: inc/targetticket.class.php:89
+msgid "calculated from the answer to the question"
+msgstr ""
+
+#: inc/targetticket.class.php:217
+msgid "Ticket actors"
+msgstr ""
+
+#: inc/targetticket.class.php:256 inc/targetticket.class.php:311
+#: inc/targetticket.class.php:366
+msgid "Form requester"
+msgstr "Formular Solicitant"
+
+#: inc/targetticket.class.php:257 inc/targetticket.class.php:312
+#: inc/targetticket.class.php:367
+msgid "Form validator"
+msgstr "Validator formular"
+
+#: inc/targetticket.class.php:258 inc/targetticket.class.php:313
+#: inc/targetticket.class.php:368
+msgid "Specific person"
+msgstr ""
+
+#: inc/targetticket.class.php:259 inc/targetticket.class.php:314
+#: inc/targetticket.class.php:369
+msgid "Person from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:260 inc/targetticket.class.php:315
+#: inc/targetticket.class.php:370
+msgid "Specific group"
+msgstr "Specific grup"
+
+#: inc/targetticket.class.php:261 inc/targetticket.class.php:316
+#: inc/targetticket.class.php:371
+msgid "Group from the question"
+msgstr ""
+
+#: inc/targetticket.class.php:372
+msgid "Specific supplier"
+msgstr "Furnizor specific"
+
+#: inc/targetticket.class.php:373
+msgid "Supplier from the question"
+msgstr ""
+
+#: inc/form.class/php:1033
+msgid "Duplicate"
+msgstr "Duplicheaza"
+
+#: inc/form.class/php:1054
+msgid "Form duplicated: %s"
+msgstr ""
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
 msgstr ""
