@@ -1,6 +1,27 @@
 GLPI Formcreator 0.85 ChangeLog
 ===============================
 
+Version 0.85-1.2.4
+------------------
+
+> 2015-03-26
+
+### Bugfixes:
+
+* Fix due date selected value in form target configuration
+* Fix severals issues on encoding, quotes and languages
+* Fix multi-select field display for validators
+* Fix a bug on ticket creation for form which don't need validation
+* Send "Form validation accepted" notification only if form need to be validated
+
+
+### Features:
+
+* Redirect to login if not logged (from notifaction link)
+* Don't chek entity right on answer validation
+* Optimize init of plugin and load js/css only when needed
+
+
 Version 0.85-1.2.3
 ------------------
 
