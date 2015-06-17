@@ -843,11 +843,10 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // /!\ Followup is directly saved to the database to avoid double notification on ticket
       //     creation and add followup
       if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
+         $message = addslashes(__('Your form have been accepted by the validator', 'formcreator'));
          if (!empty($formanswer->fields['comment'])) {
-            $message = addslashes($formanswer->fields['comment']);
-         } else {
-            $message = addslashes(__('Your form have been accepted by the validator', 'formcreator'));
-         }
+            $message.= "\n".addslashes($formanswer->fields['comment']);
+         } 
 
         $query = "INSERT INTO `glpi_ticketfollowups` SET
                      `tickets_id` = $ticketID,
