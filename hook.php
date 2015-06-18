@@ -68,14 +68,15 @@ function plugin_formcreator_addDefaultWhere($type)
 {
    switch ($type) {
       case "PluginFormcreatorFormanswer" :
-         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+         if (Session::haveRight('config', UPDATE)) {
+            return " 1=1 ";
+         } else if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
          return " `glpi_plugin_formcreator_formanswers`.`validator_id` = " . $_SESSION['glpiID'].
                 " OR `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
 
-         } else if (!Session::haveRight('config', UPDATE)) {
+         } else {
             return " `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
-
          }
          break;
       default:
