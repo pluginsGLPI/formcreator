@@ -134,3 +134,17 @@ function plugin_formcreator_encode($string)
    $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
    return $string;
 }
+
+/**
+ * Encode special chars
+ *
+ * @param  String    $string  The string to encode
+ * @return String             The encoded string
+ */
+function plugin_formcreator_decode($string)
+{
+   $string = stripcslashes($string);
+   $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
+   $string = str_replace('&apos;', "'", $string);
+   return $string;
+}

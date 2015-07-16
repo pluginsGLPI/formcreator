@@ -16,7 +16,11 @@ class textareaField extends PluginFormcreatorField
             Html::initEditorSystem('formcreator_field_' . $this->fields['id']);
          }
       } else {
-         echo nl2br($this->getAnswer());
+         if ($GLOBALS['CFG_GLPI']["use_rich_text"]) {
+            echo plugin_formcreator_decode($this->getAnswer());
+         } else {
+            echo nl2br($this->getAnswer());
+         }
       }
    }
 
