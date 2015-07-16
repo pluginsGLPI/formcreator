@@ -339,8 +339,7 @@ $rand = mt_rand();
                'on_change' => 'toggleCondition(this);',
                'rand'      => $rand,
             ));
-
-            $hide = ($question->fields['show_rule'] == 'always') ? ' style="display:none"' : '';
+            $hide = (empty($question->fields['show_rule']) || ($question->fields['show_rule'] == 'always')) ? ' style="display:none"' : '';
             ?>
          </td>
          <td colspan="3">
@@ -534,7 +533,7 @@ $rand = mt_rand();
       }
 
       function toggleCondition(field) {
-         if(field.value == "show") {
+         if(field.value == "always") {
             document.getElementById("div_show_condition").style.display = "none";
          } else {
             document.getElementById("div_show_condition").style.display = "block";
