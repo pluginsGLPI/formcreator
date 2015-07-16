@@ -712,7 +712,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       // Parse datas and tags
       $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
-      $datas['content']               = addslashes($this->parseTags($this->fields['comment'], $formanswer));
+      $datas['content']               = plugin_formcreator_encode($this->parseTags($this->fields['comment'], $formanswer));
       $datas['entities_id']           = (isset($_SESSION['glpiactive_entity']))
                                           ? $_SESSION['glpiactive_entity']
                                           : $form->fields['entities_id'];
@@ -846,7 +846,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          $message = addslashes(__('Your form have been accepted by the validator', 'formcreator'));
          if (!empty($formanswer->fields['comment'])) {
             $message.= "\n".addslashes($formanswer->fields['comment']);
-         } 
+         }
 
         $query = "INSERT INTO `glpi_ticketfollowups` SET
                      `tickets_id` = $ticketID,

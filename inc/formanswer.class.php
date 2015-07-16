@@ -549,7 +549,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       foreach ($find_sections as $section_line) {
          if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-            $output = '<h2>' . $section_line['name'] . '</h2>';
+            $output .= '<h2>' . $section_line['name'] . '</h2>';
          } else {
             $output .= PHP_EOL . $section_line['name'] . PHP_EOL;
             $output .= '---------------------------------';
@@ -588,15 +588,17 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   }
                } elseif ($question_line['fieldtype'] == 'textarea') {
                   if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-                     $output_value = '<br />' . $value;
+                     $output_value = '<br /><blockquote>' . $value . '</blockquote>';
                   } else {
                      $output_value = PHP_EOL . $value;
                   }
                }
 
                if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                  $output .= '<div>';
                   $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
-                  $output .= $output_value . '<br />';
+                  $output .= $output_value;
+                  $output .= '</div>';
                } else {
                   $output .= $question_no . ') ' . $question_line['name'] . ' : ';
                   $output .= $output_value . PHP_EOL . PHP_EOL;
@@ -605,9 +607,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
-      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-         $output = nl2br($output);
-      }
       return $output;
    }
 
