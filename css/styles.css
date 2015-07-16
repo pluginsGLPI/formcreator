@@ -366,3 +366,7 @@ form.formcreator_form .liste span > select {
 .pq-select-multiple {
    width: 95% !important;
 }
+
+.select2-container + select {
+   display: none !important;
+}
