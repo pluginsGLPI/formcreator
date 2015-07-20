@@ -705,3 +705,7 @@ msgstr ""
 #: inc/targetticket.class.php:172
 msgid "Add validation message as first ticket followup"
 msgstr ""
+
+#: inc/formanswer.class.php:499
+msgid "Cannot generate targets!"
+msgstr ""

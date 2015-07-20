@@ -746,7 +746,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       // Create the target ticket
-      $ticketID = $ticket->add($datas);
+      if (!$ticketID = $ticket->add($datas)) {
+         return false;
+      }
 
       // Ajout des acteurs du ticket
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification

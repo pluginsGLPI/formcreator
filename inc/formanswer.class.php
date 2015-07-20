@@ -495,8 +495,16 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                break;
             case 'accepted' :
                // Notify the requester
+               if (!$this->generateTarget()) {
+                  Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
+
+                  $this->update(array(
+                     'id'     => $this->getID(),
+                     'status' => 'waiting',
+                  ));
+               }
                NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
-               $this->generateTarget();
+               return false;
                break;
          }
       }
@@ -514,7 +522,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       foreach($found_targets as $target) {
          $obj = new $target['itemtype'];
          $obj->getFromDB($target['items_id']);
-         $obj->save($this);
+         if (!$obj->save($this)) {
+            return false;
+         }
       }
    }
 

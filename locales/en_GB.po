@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-03-26 14:43+0100\n"
+"PO-Revision-Date: 2015-07-16 17:02+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/"
 "glpi-project-plugin-formcreator/language/en_GB/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.5\n"
 
 #: ajax/question.php:27 inc/question.class.php:200
 msgid "Add a question"
@@ -772,3 +772,7 @@ msgstr "Form duplicated: %s"
 #: inc/targetticket.class.php:172
 msgid "Add validation message as first ticket followup"
 msgstr "Add validation message as first ticket followup"
+
+#: inc/formanswer.class.php:499
+msgid "Cannot generate targets!"
+msgstr "Cannot generate targets!"
