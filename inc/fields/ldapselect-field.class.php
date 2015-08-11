@@ -6,7 +6,7 @@ class ldapselectField extends selectField
    public function getAvailableValues()
    {
       if (!empty($this->fields['values'])) {
-         $ldap_values   = json_decode($this->fields['values']);
+         $ldap_values   = json_decode(plugin_formcreator_decode($this->fields['values']));
          $ldap_dropdown = new RuleRightParameter();
          if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
             return array();

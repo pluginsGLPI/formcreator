@@ -332,9 +332,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             $config_ldap = new AuthLDAP();
             $config_ldap->getFromDB($input['ldap_auth']);
-            $ldap_dropdown = new RuleRightParameter();
-            $ldap_dropdown->getFromDB($input['ldap_attribute']);
-            $attribute     = array($ldap_dropdown->fields['value']);
+
+            if (!empty($input['ldap_attribute'])) {
+               $ldap_dropdown = new RuleRightParameter();
+               $ldap_dropdown->getFromDB($input['ldap_attribute']);
+               $attribute     = array($ldap_dropdown->fields['value']);
+            } else {
+               $attribute     = array();
+            }
 
             // Set specific error handler too catch LDAP errors
             if (!function_exists('warning_handler')) {

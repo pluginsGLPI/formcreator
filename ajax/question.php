@@ -148,7 +148,7 @@ $rand = mt_rand();
             </div>
             <div id="glpi_ldap_field">
             <?php
-            $ldap_values = json_decode($question->fields['values']);
+            $ldap_values = json_decode(plugin_formcreator_decode($question->fields['values']));
             Dropdown::show('AuthLDAP', array(
                'name'      => 'ldap_auth',
                'rand'      => $rand,
@@ -214,7 +214,7 @@ $rand = mt_rand();
                      'rand'  => $rand,
                   ));
                } else {
-                  echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>"
+                  echo '<select name="dropdown_dropdown_default_value' . $rand . '"
                            id="dropdown_dropdown_default_value' . $rand . '">
                            <option value="">---</option>
                         </select>';
