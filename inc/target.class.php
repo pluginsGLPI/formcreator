@@ -164,7 +164,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `plugin_formcreator_forms_id` tinyint(1) NOT NULL,
+                     `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
                      `items_id` int(11) NOT NULL DEFAULT 0,
                      `name` varchar(255) NOT NULL DEFAULT ''
@@ -172,78 +172,87 @@ class PluginFormcreatorTarget extends CommonDBTM
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
 
       // Migration from previous version
-      } elseif(!FieldExists($table, 'itemtype', false)) {
-         // Migration from version 1.5 to 1.6
-         if (!FieldExists($table, 'type', false)) {
-            $query = "ALTER TABLE `$table`
-                      ADD `type` tinyint(1) NOT NULL default '2';";
+      } else{
+         // Migration to 0.85-1.2.5
+         if (FieldExists($table, 'plugin_formcreator_forms_id', false)) {
+            $query = "ALTER TABLE `glpi_plugin_formcreator_targets`
+                       CHANGE `plugin_formcreator_forms_id` `plugin_formcreator_forms_id` INT NOT NULL;";
             $GLOBALS['DB']->query($query);
          }
 
-         // Add new column for link with target items
-         $query = "ALTER TABLE `$table`
-                     ADD `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
-                     ADD `items_id` int(11) NOT NULL DEFAULT 0;";
-         $GLOBALS['DB']->query($query);
-
-         // Create ticket template for each configuration in DB
-         $query = "SELECT t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`
-                   FROM `glpi_plugin_formcreator_targets` t, `glpi_plugin_formcreator_forms` f
-                   WHERE f.`id` = t.`plugin_formcreator_forms_id`
-                   GROUP BY t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`";
-         $result = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
-
-         $i = 0;
-         while ($ligne = $GLOBALS['DB']->fetch_array($result)) {
-            $i++;
-            $id = $ligne['urgency'] . $ligne['priority'] . $ligne['itilcategories_id'] . $ligne['type'];
-
-            $template    = new TicketTemplate();
-            $template_id = $template->add(array(
-               'name'         => 'Template Formcreator ' . $i,
-               'entities_id'  => $ligne['entities_id'],
-               'is_recursive' => 1,
-            ));
-
-            $predefinedField = new TicketTemplatePredefinedField();
-
-            // Urgency
-            if(!empty($ligne['urgency'])) {
-               $predefinedField->add(array(
-                  'tickettemplates_id' => $template_id,
-                  'num'                => 10,
-                  'value'              => $ligne['urgency'],
-               ));
+         if(!FieldExists($table, 'itemtype', false)) {
+            // Migration from version 1.5 to 1.6
+            if (!FieldExists($table, 'type', false)) {
+               $query = "ALTER TABLE `$table`
+                         ADD `type` tinyint(1) NOT NULL default '2';";
+               $GLOBALS['DB']->query($query);
             }
 
-            // Priority
-            if(!empty($ligne['priority'])) {
-               $predefinedField->add(array(
-                  'tickettemplates_id' => $template_id,
-                  'num'                => 3,
-                  'value'              => $ligne['priority'],
-               ));
-            }
+            // Add new column for link with target items
+            $query = "ALTER TABLE `$table`
+                        ADD `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
+                        ADD `items_id` int(11) NOT NULL DEFAULT 0;";
+            $GLOBALS['DB']->query($query);
 
-            // Category
-            if(!empty($ligne['itilcategories_id'])) {
-               $predefinedField->add(array(
-                  'tickettemplates_id' => $template_id,
-                  'num'                => 7,
-                  'value'              => $ligne['itilcategories_id'],
-               ));
-            }
+            // Create ticket template for each configuration in DB
+            $query = "SELECT t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`
+                      FROM `glpi_plugin_formcreator_targets` t, `glpi_plugin_formcreator_forms` f
+                      WHERE f.`id` = t.`plugin_formcreator_forms_id`
+                      GROUP BY t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`";
+            $result = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
 
-            // Type
-            if(!empty($ligne['type'])) {
-               $predefinedField->add(array(
-                  'tickettemplates_id' => $template_id,
-                  'num'                => 14,
-                  'value'              => $ligne['type'],
-               ));
-            }
+            $i = 0;
+            while ($ligne = $GLOBALS['DB']->fetch_array($result)) {
+               $i++;
+               $id = $ligne['urgency'] . $ligne['priority'] . $ligne['itilcategories_id'] . $ligne['type'];
 
-            $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
+               $template    = new TicketTemplate();
+               $template_id = $template->add(array(
+                  'name'         => 'Template Formcreator ' . $i,
+                  'entities_id'  => $ligne['entities_id'],
+                  'is_recursive' => 1,
+               ));
+
+               $predefinedField = new TicketTemplatePredefinedField();
+
+               // Urgency
+               if(!empty($ligne['urgency'])) {
+                  $predefinedField->add(array(
+                     'tickettemplates_id' => $template_id,
+                     'num'                => 10,
+                     'value'              => $ligne['urgency'],
+                  ));
+               }
+
+               // Priority
+               if(!empty($ligne['priority'])) {
+                  $predefinedField->add(array(
+                     'tickettemplates_id' => $template_id,
+                     'num'                => 3,
+                     'value'              => $ligne['priority'],
+                  ));
+               }
+
+               // Category
+               if(!empty($ligne['itilcategories_id'])) {
+                  $predefinedField->add(array(
+                     'tickettemplates_id' => $template_id,
+                     'num'                => 7,
+                     'value'              => $ligne['itilcategories_id'],
+                  ));
+               }
+
+               // Type
+               if(!empty($ligne['type'])) {
+                  $predefinedField->add(array(
+                     'tickettemplates_id' => $template_id,
+                     'num'                => 14,
+                     'value'              => $ligne['type'],
+                  ));
+               }
+
+               $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
+            }
          }
 
          // Prepare Mysql CASE For each ticket template
