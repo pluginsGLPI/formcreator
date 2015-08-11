@@ -108,8 +108,8 @@ function moveQuestion(token, question_id, action) {
    }).done(reloadTab);
 }
 
-function deleteQuestion(items_id, token, question_id, question_name) {
-   if(confirm("<?php echo __('Are you sure you want to delete this question:', 'formcreator'); ?> " + question_name)) {
+function deleteQuestion(items_id, token, question_id) {
+   if(confirm("<?php echo __('Are you sure you want to delete this question?', 'formcreator'); ?> ")) {
       jQuery.ajax({
         url: urlFrontQuestion,
         type: "POST",

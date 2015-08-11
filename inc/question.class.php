@@ -197,7 +197,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/delete.png"
                      alt="*" title="' . __('Delete', 'formcreator') . '"
-                     onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', \'' . addslashes($question['name']) . '\')" align="absmiddle" style="cursor: pointer" /> ';
+                     onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
             echo '</tr>';
          }
