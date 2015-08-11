@@ -253,55 +253,55 @@ class PluginFormcreatorTarget extends CommonDBTM
 
                $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
             }
-         }
 
-         // Prepare Mysql CASE For each ticket template
-         $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
-         foreach ($_SESSION["formcreator_tmp"]["ticket_template"] as $id => $value) {
-            $mysql_case_template .= " WHEN $id THEN $value ";
-         }
-         $mysql_case_template .= "END AS `tickettemplates_id`";
+            // Prepare Mysql CASE For each ticket template
+            $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
+            foreach ($_SESSION["formcreator_tmp"]["ticket_template"] as $id => $value) {
+               $mysql_case_template .= " WHEN $id THEN $value ";
+            }
+            $mysql_case_template .= "END AS `tickettemplates_id`";
 
-         // Create Target ticket
-         $version   = plugin_version_formcreator();
-         $migration = new Migration($version['version']);
-         require_once ('targetticket.class.php');
-         PluginFormcreatorTargetTicket::install($migration);
-         $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
-         $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            // Insert target ticket
-            $query_insert = 'INSERT INTO ' . $table_targetticket . ' SET
-                              `name` = "' . htmlspecialchars($line['name']) . '",
-                              `tickettemplates_id` = "' . (int) $line['tickettemplates_id'] . '",
-                              `comment` = "' . htmlspecialchars($line['content']) . '"';
-            $GLOBALS['DB']->query($query_insert);
-            $targetticket_id = $GLOBALS['DB']->insert_id();
+            // Create Target ticket
+            $version   = plugin_version_formcreator();
+            $migration = new Migration($version['version']);
+            require_once ('targetticket.class.php');
+            PluginFormcreatorTargetTicket::install($migration);
+            $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
+            $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
+            $result = $GLOBALS['DB']->query($query);
+            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+               // Insert target ticket
+               $query_insert = 'INSERT INTO ' . $table_targetticket . ' SET
+                                 `name` = "' . htmlspecialchars($line['name']) . '",
+                                 `tickettemplates_id` = "' . (int) $line['tickettemplates_id'] . '",
+                                 `comment` = "' . htmlspecialchars($line['content']) . '"';
+               $GLOBALS['DB']->query($query_insert);
+               $targetticket_id = $GLOBALS['DB']->insert_id();
 
-            // Update target with target ticket id
-            $query_update = 'UPDATE `' . $table . '`
-                             SET `items_id` = ' . (int) $targetticket_id . '
-                             WHERE `id` = ' . (int) $line['id'];
-            $GLOBALS['DB']->query($query_update);
-         }
+               // Update target with target ticket id
+               $query_update = 'UPDATE `' . $table . '`
+                                SET `items_id` = ' . (int) $targetticket_id . '
+                                WHERE `id` = ' . (int) $line['id'];
+               $GLOBALS['DB']->query($query_update);
+            }
 
-         // Remove useless column content
-         $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `content`;");
+            // Remove useless column content
+            $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `content`;");
 
-         /**
-          * Migration of special chars from previous versions
-          *
-          * @since 0.85-1.2.3
-          */
-         $query  = "SELECT `id`, `comment`
-                    FROM `$table`";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $query_update = 'UPDATE `' . $table . '` SET
-                               `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
-                             WHERE `id` = ' . $line['id'];
-            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+            /**
+             * Migration of special chars from previous versions
+             *
+             * @since 0.85-1.2.3
+             */
+            $query  = "SELECT `id`, `comment`
+                       FROM `$table`";
+            $result = $GLOBALS['DB']->query($query);
+            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+               $query_update = 'UPDATE `' . $table . '` SET
+                                  `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
+                                WHERE `id` = ' . $line['id'];
+               $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+            }
          }
       }
 
