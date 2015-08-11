@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-07-16 17:02+0100\n"
+"PO-Revision-Date: 2015-08-11 13:16+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/"
 "glpi-project-plugin-formcreator/language/en_GB/)\n"
@@ -333,8 +333,8 @@ msgid "Are you sure you want to delete this question:"
 msgstr "Are you sure you want to delete this question:"
 
 #: inc/question.class.php:321
-msgid "Are you sure you want to delete this section:"
-msgstr "Are you sure you want to delete this section:"
+msgid "Are you sure you want to delete this section?"
+msgstr "Are you sure you want to delete this section?"
 
 #: inc/question.class.php:380 inc/question.class.php:428
 #: inc/section.class.php:137

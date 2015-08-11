@@ -127,7 +127,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo '<th align="center" width="32">';
          echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/delete.png"
                   alt="*" title="' . __('Delete', 'formcreator') . '"
-                  onclick="deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ', \'' . addslashes($section['name']) . '\')"
+                  onclick="deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"
                   align="absmiddle" style="cursor: pointer" /> ';
          echo '</th>';
          echo '</tr>';

@@ -313,7 +313,7 @@ msgid "Are you sure you want to delete this question:"
 msgstr ""
 
 #: inc/question.class.php:321
-msgid "Are you sure you want to delete this section:"
+msgid "Are you sure you want to delete this section?"
 msgstr ""
 
 #: inc/question.class.php:380 inc/question.class.php:428 inc/section.class.php:137
