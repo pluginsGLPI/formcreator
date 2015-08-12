@@ -114,6 +114,14 @@ Features
          <num>0.85-1.2.4</num>
          <compatibility>0.85</compatibility>
       </version>
+      <version>
+         <num>0.90-1.2.5</num>
+         <compatibility>0.85</compatibility>
+      </version>
+      <version>
+         <num>0.90-1.2.5</num>
+         <compatibility>0.90</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>fr_FR</lang>
