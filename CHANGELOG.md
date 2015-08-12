@@ -1,6 +1,26 @@
 GLPI Formcreator 0.85 ChangeLog
 ===============================
 
+Version 0.90-1.2.5
+------------------
+
+### Bugfixes:
+
+* Nombre de "Destinations" limitées
+* Question de type LDAP impossible à créer
+* Erreur de suppression d'une section
+* Affichage des réponses des "Zone de texte" avec mise en forme dans la liste des réponse/validations de formulaires
+* Problème d'affichage des champs "Affichage du champ"
+* Problème d'affichage des listes déroulantes dans l'édition des questions
+* Problème mise en forme texte enrichi dans ticket GLPI 0.85.4 et formcreator
+
+### Features:
+
+* Сategories of forms feature
+* Add compatibility with GLPI 0.90.x
+
+
+
 Version 0.85-1.2.4
 ------------------
 
