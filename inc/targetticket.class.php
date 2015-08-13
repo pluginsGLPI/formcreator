@@ -857,6 +857,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      `content`    = \"$message\"";
          $GLOBALS['DB']->query($query);
       }
+
+      return true;
    }
 
    /**

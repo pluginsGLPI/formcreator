@@ -526,6 +526,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             return false;
          }
       }
+      return true;
    }
 
    /**
