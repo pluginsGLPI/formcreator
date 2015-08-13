@@ -7,6 +7,7 @@ Formcreator is a plugin for creating personalized form of easy access outs users
 
 Features
 --------
+
 1. Direct access to forms self-service interface in main menu
 2. Highlighting forms in homepages
 3. Access to forms controlled: public access, identified user access, restricted access to some profiles
@@ -21,7 +22,14 @@ Features
 12. Formatting the ticket set: answers to questions displayed, tickets templates.
 13. Preview form created directly in the configuration.
 
-For more informations, see the [WIKI](https://github.com/TECLIB/formcreator/wiki)
+Translations
+------------
+
+If you want Formcreator to be available in your native language and have a little time , you can help us :
+
+Join us on [Transifex](https://www.transifex.com/teclib/glpi-project-plugin-formcreator)
+
+
 
 ------------------------------------------------------------------------------------------------------------------------
 
