@@ -239,7 +239,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   closeAction: "hide",
                   modal: "true",
                   autoScroll: true,
-                  y: 500
+                  y: 100
                });
 
 
