@@ -460,8 +460,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
       }
 
-      // Fields are differents for GLPI object lists, so we need to replace these values into the good ones
-      if ($input['fieldtype'] == 'glpiselect') {
+      // Fields are differents for GLPI object lists and users lists, so we need to replace these values into the good ones
+      if ($input['fieldtype'] == 'glpiselect' || $input['fieldtype'] == 'user') {
          if (empty($input['glpi_objects'])) {
             Session::addMessageAfterRedirect(
                __('The field value is required:', 'formcreator') . ' ' . $input['name'],

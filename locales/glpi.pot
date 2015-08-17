@@ -649,3 +649,7 @@ msgstr ""
 #: inc/formanswer.class.php:177
 msgid "Form successfully saved."
 msgstr ""
+
+#: ajax/dropdown_values.php:19
+msgid "Use current user"
+msgstr ""

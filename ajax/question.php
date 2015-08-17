@@ -190,6 +190,15 @@ $rand = mt_rand();
                      'value' => $question->fields['default_values'],
                      'rand'  => $rand,
                   ));
+               } elseif($question->fields['fieldtype'] == 'user') {
+                  User::dropdown(array(
+                     'name'                => 'dropdown_default_value',
+                     'value'               => $question->fields['default_values'],
+                     'comments'            => false,
+                     'right'               => 'all',
+                     'display_emptychoice' => true,
+                     'rand'  => $rand,
+                  ));
                } else {
                   echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>"
                            id="dropdown_dropdown_default_value' . $rand . '">
@@ -389,6 +398,8 @@ $rand = mt_rand();
             <?php PluginFormcreatorFields::printAllTabFieldsForJS(); ?>
 
             eval(tab_fields_fields[value]);
+
+            if ("user" == value) showForUsers();
          } else {
             showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
          }
@@ -495,6 +506,12 @@ $rand = mt_rand();
          }
       }
 
+      function showForUsers() {
+         document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').style.visibility = 'hidden';
+         document.getElementById('label_glpi_objects').style.visibility                        = 'hidden';
+         change_glpi_objects(true);
+      }
+
       function toggleCondition(field) {
          if(field.value == "show") {
             document.getElementById("div_show_condition").style.display = "none";
@@ -514,13 +531,18 @@ $rand = mt_rand();
 
       }
 
-      function change_glpi_objects() {
-         glpi_object = document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').value;
+      function change_glpi_objects(isUser = false) {
+         if (isUser) {
+            document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').value = "User";
+            glpi_object = "User";
+         } else {
+            glpi_object = document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').value;
+         }
 
          Ext.get("dropdown_default_value_field").load({
             url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
             scripts: true,
-            params: "dropdown_itemtype=" + glpi_object + "&rand=<?php echo $rand; ?>"
+            params: "dropdown_itemtype=" + glpi_object + "&rand=<?php echo $rand; ?>&value=<?php echo $question->fields['default_values']; ?>"
          });
 
       }

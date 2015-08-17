@@ -35,7 +35,7 @@ class dropdownField implements Field
          if ($field['values'] == 'User') {
             User::dropdown(array(
                'name'                => 'formcreator_field_' . $field['id'],
-               'value'               => $default_value,
+               'value'               => (-1 == $default_value) ? $_SESSION['glpiID'] : $default_value,
                'comments'            => false,
                'right'               => 'all',
                'display_emptychoice' => $field['show_empty'],
