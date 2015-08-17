@@ -616,19 +616,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       echo '</div>';
       echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
-      echo '<script type="text/javascript">
-               function showDescription(id, img){
-                  if(img.alt == "+") {
-                    img.alt = "-";
-                    img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/moins.png";
-                    document.getElementById("desc" + id).style.display = "table-row";
-                  } else {
-                    img.alt = "+";
-                    img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png";
-                    document.getElementById("desc" + id).style.display = "none";
-                  }
-               }
-            </script>';
    }
 
    /**

@@ -4,18 +4,6 @@ include ('../../../inc/includes.php');
 
 header('Content-type: text/javascript');
 
-// Parse inc/fields directory and include all specific validation rules
-// foreach (glob(dirname(dirname(__FILE__)) . '/inc/fields/*') as $filepath) {
-//    // Load *.class.php files and get the class name
-//    if (preg_match("/inc/fields.(.+)\.class.php/", $filepath, $matches)) {
-//       $classname = 'PluginFormcreatorField' . ucfirst($matches[1]);
-//       include_once($filepath);
-//       // If the install method exists, load it
-//       if (method_exists($classname, 'validationScripts')) {
-//          $classname::validationScripts();
-//       }
-//    }
-// }
 ?>
 
 function validateForm(form) {
@@ -29,4 +17,16 @@ function validateForm(form) {
    }
 
    return true;
+}
+
+function showDescription(id, img){
+   if(img.alt == "+") {
+     img.alt = "-";
+     img.src = "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/pics/moins.png";
+     document.getElementById("desc" + id).style.display = "table-row";
+   } else {
+     img.alt = "+";
+     img.src = "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/pics/plus.png";
+     document.getElementById("desc" + id).style.display = "none";
+   }
 }
