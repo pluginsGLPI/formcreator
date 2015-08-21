@@ -21,7 +21,7 @@ if(class_exists($_REQUEST['dropdown_itemtype'])) {
    } else {
       Dropdown::show($_REQUEST['dropdown_itemtype'], array(
          'name'  => 'dropdown_default_value',
-         'value' => $_REQUEST['value'],
+         'value' => isset($_REQUEST['value']) ? $_REQUEST['value'] : 0,
          'rand'  => $_REQUEST['rand'],
       ));
    }

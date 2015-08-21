@@ -653,3 +653,11 @@ msgstr ""
 #: ajax/dropdown_values.php:19
 msgid "Use current user"
 msgstr ""
+
+#: ajax/question.php:393
+msgid "Change the questions' answers with the answer to this question"
+msgstr ""
+
+#: ajax/question.php:642
+msgid "Error: Bad parameters!"
+msgstr ""

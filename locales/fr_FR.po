@@ -11,10 +11,10 @@ msgstr ""
 "Project-Id-Version: GLPI Project - Plugin Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-08-17 11:35+0100\n"
+"PO-Revision-Date: 2015-08-18 11:46+0100\n"
 "Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
-"Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-"
-"project-plugin-formcreator/language/fr_FR/)\n"
+"Language-Team: French (France) (http://www.transifex.com/projects/p/glpi-project-plugin-"
+"formcreator/language/fr_FR/)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,14 +129,12 @@ msgstr "Le nombre suivant doit être supérieur à %d : "
 msgid "The following number must be lower than %d:"
 msgstr "Le nombre suivant doit être inférieur à %d : "
 
-#: inc/fields/checkboxes-field.class.php:105
-#: inc/fields/multiselect-field.class.php:94
+#: inc/fields/checkboxes-field.class.php:105 inc/fields/multiselect-field.class.php:94
 #, php-format
 msgid "The following question needs of at least %d answers"
 msgstr "La question suivante nécessite au moins %d réponses :"
 
-#: inc/fields/checkboxes-field.class.php:110
-#: inc/fields/multiselect-field.class.php:100
+#: inc/fields/checkboxes-field.class.php:110 inc/fields/multiselect-field.class.php:100
 #, php-format
 msgid "The following question does not accept more than %d answers"
 msgstr "La question suivante n'accepte pas plus de %d réponses :"
@@ -163,14 +161,12 @@ msgid "File size:"
 msgstr "Taille du fichier :"
 
 #: inc/fields/checkboxes-field.class.php:99 inc/fields/date-field.class.php:73
-#: inc/fields/datetime-field.class.php:73
-#: inc/fields/dropdown-field.class.php:80 inc/fields/email-field.class.php:74
-#: inc/fields/float-field.class.php:74 inc/fields/integer-field.class.php:74
-#: inc/fields/ldapselect-field.class.php:103
-#: inc/fields/multiselect-field.class.php:88
-#: inc/fields/radios-field.class.php:97 inc/fields/select-field.class.php:88
-#: inc/fields/text-field.class.php:74 inc/fields/textarea-field.class.php:74
-#: scripts/forms-validation.js.php:25
+#: inc/fields/datetime-field.class.php:73 inc/fields/dropdown-field.class.php:80
+#: inc/fields/email-field.class.php:74 inc/fields/float-field.class.php:74
+#: inc/fields/integer-field.class.php:74 inc/fields/ldapselect-field.class.php:103
+#: inc/fields/multiselect-field.class.php:88 inc/fields/radios-field.class.php:97
+#: inc/fields/select-field.class.php:88 inc/fields/text-field.class.php:74
+#: inc/fields/textarea-field.class.php:74 scripts/forms-validation.js.php:25
 msgid "A required field is empty:"
 msgstr "Un champ obligatoire est vide :"
 
@@ -302,23 +298,19 @@ msgid "Add an header"
 msgstr "Ajouter une entête"
 
 #: inc/header.class.php:31 inc/header.class.php:109
-msgid ""
-"An header already exists for this entity! You can have only one header per "
-"entity."
+msgid "An header already exists for this entity! You can have only one header per entity."
 msgstr ""
-"Une entête existe déjà pour cette entité ! Vous ne pouvez avoir qu'une seule "
-"entête par entité."
+"Une entête existe déjà pour cette entité ! Vous ne pouvez avoir qu'une seule entête par "
+"entité."
 
 #: inc/header.class.php:48
 msgid ""
-"An header exists for a parent entity! Another header will overwrite the "
-"previous one."
+"An header exists for a parent entity! Another header will overwrite the previous one."
 msgstr ""
-"Une entête existe pour une entité parente ! Ajouter une entête remplacera la "
-"précédente pour cette entité."
+"Une entête existe pour une entité parente ! Ajouter une entête remplacera la précédente "
+"pour cette entité."
 
-#: inc/question.class.php:122 inc/question.class.php:189
-#: inc/target.class.php:69
+#: inc/question.class.php:122 inc/question.class.php:189 inc/target.class.php:69
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -335,8 +327,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer la question suivante :"
 msgid "Are you sure you want to delete this section:"
 msgstr "Êtes-vous sûr de vouloir supprimer la section suivante :"
 
-#: inc/question.class.php:380 inc/question.class.php:428
-#: inc/section.class.php:137
+#: inc/question.class.php:380 inc/question.class.php:428 inc/section.class.php:137
 msgid "The title is required"
 msgstr "L'intitulé est obligatoire"
 
@@ -422,8 +413,7 @@ msgid_plural "Headers"
 msgstr[0] "Entête"
 msgstr[1] "Entêtes"
 
-#: inc/question.class.php:35 inc/section.class.php:35
-#: inc/targetticket.class.php:85
+#: inc/question.class.php:35 inc/section.class.php:35 inc/targetticket.class.php:85
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Question"
@@ -510,16 +500,16 @@ msgstr "Votre demande a été sauvegardée avec succès !"
 #: inc/notificationtargetformanswer.class.php:91
 msgid ""
 "Hi,\n"
-"Your request from GLPI have been successfully saved with number "
-"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"Your request from GLPI have been successfully saved with number ##formcreator."
+"request_id## and transmetted to the helpdesk team.\n"
 "You can see your answers onto the following link:\n"
 "##formcreator.validation_link##"
 msgstr ""
 "Bonjour,\n"
 "Votre demande déposée sur GLPI a été sauvegardée avec succès sous le numéro "
 "##formcreator.request_id## et transmise à notre équipe de support.\n"
-"Vous pouvez visualiser vos réponses à ce formulaire en cliquant sur le lien "
-"ci-dessous :\n"
+"Vous pouvez visualiser vos réponses à ce formulaire en cliquant sur le lien ci-"
+"dessous :\n"
 "##formcreator.validation_link##"
 
 #: inc/formanswer.class.php:73 inc/notificationtargetformanswer.class.php:47
@@ -595,14 +585,13 @@ msgstr "Un formulaire GLPI est en attente de validation"
 #: inc/notificationtargetformanswer.class.php:86
 msgid ""
 "Hi,\n"
-"A form from GLPI need to be validate and you have been choosen as the "
-"validator.\n"
+"A form from GLPI need to be validate and you have been choosen as the validator.\n"
 "You can access it by clicking onto this link:\n"
 "##formcreator.validation_link##"
 msgstr ""
 "Bonjour,\n"
-"Un formulaire GLPI est en attente de validation et vous avez été désigné "
-"comme valideur.\n"
+"Un formulaire GLPI est en attente de validation et vous avez été désigné comme "
+"valideur.\n"
 "Vous pouvez y accéder en suivant le lien ci-dessous :\n"
 "##formcreator.validation_link##"
 
@@ -613,20 +602,20 @@ msgstr "Votre formulaire a été refusé par le valideur"
 #: inc/notificationtargetformanswer.class.php:92
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your form have been refused by the validator "
-"for the reason below:\n"
+"We are sorry to inform you that your form have been refused by the validator for the "
+"reason below:\n"
 "##formcreator.validation_comment##\n"
 "\n"
 "You can still modify and resubmit it by clicking onto this link:\n"
 "##formcreator.validation_link##"
 msgstr ""
 "Bonjour,\n"
-"Nous somme au regret de vous annoncer que votre formulaire a été refusé par "
-"le valideur pour la raison suivante :\n"
+"Nous somme au regret de vous annoncer que votre formulaire a été refusé par le valideur "
+"pour la raison suivante :\n"
 "##formcreator.validation_comment##\n"
 "\n"
-"Vous pouvez toutefois modifier vos réponses et envoyer de nouveau le "
-"formulaire en suivant le lien ci-dessous :\n"
+"Vous pouvez toutefois modifier vos réponses et envoyer de nouveau le formulaire en "
+"suivant le lien ci-dessous :\n"
 "##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:97
@@ -636,13 +625,12 @@ msgstr "Votre formulaire a été accepté par le valideur"
 #: inc/notificationtargetformanswer.class.php:98
 msgid ""
 "Hi,\n"
-"We are pleased to inform you that your form have been accepted by the "
-"validator.\n"
+"We are pleased to inform you that your form have been accepted by the validator.\n"
 "Your request will be considered soon."
 msgstr ""
 "Bonjour,\n"
-"Nous avons le plaisir de vous annoncer que votre formulaire a été accepté "
-"par le valideur.\n"
+"Nous avons le plaisir de vous annoncer que votre formulaire a été accepté par le "
+"valideur.\n"
 "Votre demande sera prise en compte très prochainement."
 
 #: inc/notificationtargetformanswer.class.php:103
@@ -652,12 +640,12 @@ msgstr "Votre formulaire a été supprimé par un administrateur"
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your request cannot be considered and have "
-"been deleted by an administrator."
+"We are sorry to inform you that your request cannot be considered and have been deleted "
+"by an administrator."
 msgstr ""
 "Bonjour,\n"
-"Nous avons le regret de vous annoncer que votre formulaire n'est pas "
-"recevable et a été supprimé par un administrateur."
+"Nous avons le regret de vous annoncer que votre formulaire n'est pas recevable et a été "
+"supprimé par un administrateur."
 
 #: setup.php:90
 msgid "Forms waiting for validation"
@@ -697,11 +685,11 @@ msgstr "Affiché par défaut, sauf si"
 
 #: ajax/question.php:386
 msgid ""
-"Specify the additional validation conditions in the description of the "
-"question to help users."
+"Specify the additional validation conditions in the description of the question to help "
+"users."
 msgstr ""
-"Indiquez les conditions de validation supplémentaire dans la description de "
-"la question pour aider les utilisateurs."
+"Indiquez les conditions de validation supplémentaire dans la description de la question "
+"pour aider les utilisateurs."
 
 #: inc/formanswer.class.php:175
 msgid "Form accepted by validator."
@@ -714,3 +702,11 @@ msgstr "Formulaire sauvegardé avec succès"
 #: ajax/dropdown_values.php:19
 msgid "Use current user"
 msgstr "Utiliser l'utilisateur courrant"
+
+#: ajax/question.php:393
+msgid "Change the questions' answers with the answer to this question"
+msgstr "Mettre à jour la réponse à une question en fonction de la réponse à cette question"
+
+#: ajax/question.php:642
+msgid "Error: Bad parameters!"
+msgstr "Erreur : Paramètres incorrectes !"

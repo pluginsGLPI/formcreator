@@ -39,6 +39,7 @@ class dropdownField implements Field
                'comments'            => false,
                'right'               => 'all',
                'display_emptychoice' => $field['show_empty'],
+               'on_change'           => 'loadFields(' . $field['id'] . ', this.value)',
             ));
          } else {
             Dropdown::show($field['values'], array(
@@ -46,6 +47,7 @@ class dropdownField implements Field
                'value'               => $default_value,
                'comments'            => false,
                'display_emptychoice' => $field['show_empty'],
+               'on_change'           => 'loadFields(' . $field['id'] . ', this.value)',
             ));
          }
       }

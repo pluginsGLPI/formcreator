@@ -645,7 +645,7 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '</div>';
       }
       // Get and display sections of the form
-      $question      = new PluginFormcreatorQuestion();
+      $question  = new PluginFormcreatorQuestion();
       $questions = array();
 
       $section_class = new PluginFormcreatorSection();
@@ -705,6 +705,65 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
       echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+
+      echo '<script type="text/javascript">
+               function updateFields(fieldsToUpdate) {
+                  for(var field in fieldsToUpdate) {
+                     switch(fieldsToUpdate[field].type) {
+                        case "radios" :
+                           Ext.select("*[type=radio][name=" + field + "][value=" + fieldsToUpdate[field].value + "]").elements[0].checked = true;
+                           break;
+                        case "checkboxes" :
+                           for (var i = 0; i < fieldsToUpdate[field].value.length; i++) {
+                              var myElement = Ext.select("input[type=\'checkbox\'][name=\'" + field + "[]\'][value=\'" + fieldsToUpdate[field].value[i] + "\']").elements[0];
+                              if(typeof myElement !==  "undefined") {
+                                 myElement.checked = true;
+                              }
+                           }
+                           break;
+                        case "multiselect" :
+                           for (var i = 0; i < fieldsToUpdate[field].value.length; i++) {
+                              Ext.select("select[name=\'" + field + "[]\'] option[value=\'" + fieldsToUpdate[field].value[i] + "\']").elements[0].selected = true;
+                           }
+                           break;
+                        case "datetime" :
+                           var num = field.substr(18);
+                           var date = fieldsToUpdate[field].value.substr(0, 10);
+                           var time = fieldsToUpdate[field].value.substr(11);
+
+                           Ext.select("input[name=" + field + "]").elements[0].value = fieldsToUpdate[field].value;
+                           Ext.select("#form-group-field" + num + " input[id*=-date]").elements[0].value = date;
+                           Ext.select("#form-group-field" + num + " input[id*=-time]").elements[0].value = time;
+                           break;
+                        case "date" :
+                           var num = field.substr(18);
+                           var date = fieldsToUpdate[field].value.substr(0, 10);
+
+                           Ext.select("input[name=" + field + "]").elements[0].value = fieldsToUpdate[field].value;
+                           Ext.select("#form-group-field" + num + " input[id*=-date]").elements[0].value = date;
+                           break;
+                        default:
+                           Ext.select("*[name=" + field + "]").elements[0].value = fieldsToUpdate[field].value;
+                     }
+                  }
+               }
+
+               function loadFields(fieldId, fieldValue) {
+                  Ext.Ajax.request({
+                     url: "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/ajax/get_matching_values.php",
+                     success: function(response){
+                        fieldsToUpdate = JSON.parse(response.responseText);
+                        updateFields(fieldsToUpdate);
+                     },
+                     params: {
+                        field_id: fieldId,
+                        field_value: fieldValue,
+                        _glpi_csrf_token: "' . Session::getNewCSRFToken() . '"
+                     }
+                  });
+               }
+            </script>';
+
       echo '</form>';
    }
 

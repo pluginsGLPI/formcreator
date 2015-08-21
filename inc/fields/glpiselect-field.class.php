@@ -5,6 +5,33 @@ require_once('dropdown-field.class.php');
 
 class glpiselectField extends dropdownField
 {
+
+   public static function show($field, $datas, $edit = true)
+   {
+      parent::show($field, $datas, $edit = true);
+      
+      $default_value = static::getDefaultValue($field);
+      
+      if (!empty($default_value )) {
+         echo '<script type="text/javascript">
+                  Ext.onReady(function() {
+                     loadFields(' . $field['id'] . ', "' . Toolbox::addslashes_deep($default_value) . '");
+                  });
+               </script>';
+      }
+   }
+   
+   public static function getDefaultValue($field)
+   {
+      $default_values = explode("\r\n", $field['default_values']);
+      $default_value  = array_shift($default_values);
+
+      if (!empty($datas['formcreator_field_' . $field['id']])) {
+         $default_value = $datas['formcreator_field_' . $field['id']];
+      }
+      return $default_value;
+   }
+
    public static function getName()
    {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');

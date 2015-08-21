@@ -387,6 +387,103 @@ $rand = mt_rand();
          </td>
       </tr>
 
+      <?php if (isset($question->fields['fieldtype'])
+               && ( ('user' == $question->fields['fieldtype'])
+                  || (('glpiselect' == $question->fields['fieldtype'])
+                     && !empty($question->fields['values'])))) : ?>
+      <tr class="line0"><td colspan="4">&nbsp;</td></tr>
+
+      <tr class="line1" id="matching_title_tr">
+         <th colspan="4"><?php echo __("Change the questions' answers with the answer to this question", 'formcreator'); ?></th>
+      </tr>
+      <tr>
+         <td colspan="4">
+            <table border="0" cellpadding="0" cellspacing="1" width="100%" id="tab_matching_list">
+               <tr>
+                  <th width="60%"><?php echo _n('Question', 'Questions', 1, 'formcreator'); ?></th>
+                  <th width="30%"><?php echo __('Value'); ?></th>
+                  <th width="10%">&nbsp;</th>
+               </tr>
+
+               <?php
+                  // Get search options for selected question type
+                  $tabSearchOptions = array(-1 => Dropdown::EMPTY_VALUE);
+                  if ('user' == $question->fields['fieldtype']) {
+                     $class = 'User';
+                  } elseif ('glpiselect' == $question->fields['fieldtype']
+                        && (!empty($question->fields['values']))) {
+                     $class = $question->fields['values'];
+                  }
+                  if (isset($class) && class_exists($class)) {
+                     $obj = new $class();
+                     $searchOptions    = $obj->getSearchOptions();
+                     array_shift($searchOptions);
+                     foreach ($searchOptions as $key => $values) {
+                        $tabSearchOptions[$key] = $values['name'];
+                     }
+                  }
+                  // List all matching values registered
+                  $nb_matching = 0;
+                  $sql = "SELECT m.`targets_id`, q.`name`, `fields`
+                          FROM `glpi_plugin_formcreator_matching_questions` m
+                          LEFT JOIN `glpi_plugin_formcreator_questions` q ON m.`targets_id` = q.`id`
+                          WHERE `questions_id` = " . (int) $question_id;
+                  $result = $GLOBALS['DB']->query($sql);
+                  while ($line = $GLOBALS['DB']->fetch_array($result)) {
+                     $nb_matching++;
+               ?>
+               <tr class="line<?php echo $nb_matching % 2; ?>" id="matching_<?php echo $line['targets_id']; ?>">
+                  <td><?php echo $line['name']; ?></td>
+                  <td><?php echo $tabSearchOptions[$line['fields']]; ?></td>
+                  <td align="center"><img src="<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/pics/delete.png"
+                     alt="*" title="<?php echo __('Delete', 'formcreator'); ?>"
+                     onclick="deleteMatching(<?php echo (int) $question_id; ?>, <?php echo $line['targets_id']; ?>)" align="absmiddle" style="cursor: pointer" /></td>
+               </tr>
+               <?php
+                  }
+               ?>
+
+               <tr id="matching_tab_separator">
+                  <th>&nbsp;</th>
+                  <th>&nbsp;</th>
+                  <th>&nbsp;</th>
+               </tr>
+               <tr>
+                  <td>
+                     <?php
+                     // List of all form questions
+                     $questions_tab = array(-1 => Dropdown::EMPTY_VALUE);
+                     $sql = "SELECT q.`id`, q.`name`
+                             FROM $table_question q
+                             LEFT JOIN $table_section s ON q.`plugin_formcreator_sections_id` = s.`id`
+                             WHERE s.`plugin_formcreator_forms_id` = $form_id
+                             AND q.`id` != $question_id
+                             AND q.`id` NOT IN(SELECT `targets_id` FROM `glpi_plugin_formcreator_matching_questions` WHERE `questions_id` = $question_id)
+                             ORDER BY s.`order`, q.`order`";
+                     $result = $GLOBALS['DB']->query($sql);
+                     while ($line = $GLOBALS['DB']->fetch_array($result)) {
+                        $questions_tab[$line['id']] = (strlen($line['name']) < 30)
+                           ? $line['name']
+                           : substr($line['name'], 0, strrpos(substr($line['name'], 0, 30), ' ')) . '...';
+                     }
+                     Dropdown::showFromArray('matching_question', $questions_tab);
+                     ?>
+                  </td>
+                  <td>
+                     <?php
+                        // List of selected object field
+                        Dropdown::showFromArray('matching_field', $tabSearchOptions);
+                     ?>
+                  </td>
+                  <td align="center">
+                     <input type="button" value="<?php echo __('Add'); ?>" class="submit_button"
+                        onclick="addMatchingValue();" />
+                  </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+      <?php endif; ?>
    </table>
 
    <script type="text/javascript">
@@ -557,6 +654,68 @@ $rand = mt_rand();
             },
             params: {
                value: ldap_directory,
+               _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
+            }
+         });
+      }
+
+      var nbMatching = <?php echo isset($nb_matching) ? $nb_matching : 0; ?>;
+      function addMatchingValue() {
+         var question = document.getElementsByName('matching_question')[0].value;
+         var field    = document.getElementsByName('matching_field')[0].value;
+         var id       = <?php echo !empty($question->fields['id']) ? $question->fields['id']  : 0; ?>;
+
+         Ext.Ajax.request({
+            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/question_matching.php",
+            success: function(response){
+               document.getElementsByName('matching_question')[0].value = -1;
+               document.getElementsByName('matching_field')[0].value = -1;
+               var responseObject = JSON.parse(response.responseText);
+               Ext.select('select[name=matching_question] option[value=' + responseObject.targets_id + ']').remove();
+               nbMatching++;
+               Ext.select('#matching_tab_separator').insertHtml(
+                  'beforeBegin',
+                  '<tr class="line' + (nbMatching % 2) + '" id="matching_' + responseObject.targets_id + '"><td>' + responseObject.targets_name + '</td><td>' + responseObject.fields_name + '</td><td align="center"><img src="<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/pics/delete.png" alt="*" title="<?php echo __('Delete', 'formcreator'); ?>" onclick="deleteMatching(<?php echo (int) $question_id; ?>, ' + responseObject.targets_id + ')" align="absmiddle" style="cursor: pointer" /></td></tr>');
+            },
+            failure: function(response){
+               Ext.Msg.show({
+                  title: "<?php echo __('ERROR:'); ?>",
+                  msg: response.responseText,
+                  buttons: Ext.MessageBox.OK,
+                  icon: Ext.MessageBox.ERROR
+               });
+            },
+            params: {
+               type:             'add',
+               id:               id,
+               question:         question,
+               field:            field,
+               _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
+            }
+         });
+      }
+
+      function deleteMatching(question, target) {
+         Ext.Ajax.request({
+            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/question_matching.php",
+            success: function(response){
+               var responseObject = JSON.parse(response.responseText);
+               Ext.select('select[name=matching_question]').insertHtml('beforeEnd', '<option value=' + responseObject.targets_id + '">' + responseObject.targets_name + '</option>');
+               nbMatching--;
+               Ext.select('#matching_' + responseObject.targets_id).remove();
+            },
+            failure: function(response){
+               Ext.Msg.show({
+                  title: "<?php echo __('ERROR:'); ?>",
+                  msg: response.responseText,
+                  buttons: Ext.MessageBox.OK,
+                  icon: Ext.MessageBox.ERROR
+               });
+            },
+            params: {
+               type:             'delete',
+               question:         question,
+               target:           target,
                _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
             }
          });

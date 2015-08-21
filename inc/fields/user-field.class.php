@@ -4,8 +4,22 @@ require_once('glpiselect-field.class.php');
 
 class userField extends glpiselectField
 {
-   public function __construct() {
+   public static function show($field, $datas, $edit = true)
+   {
+      parent::show($field, $datas, $edit = true);
+   }
+   
+   public static function getDefaultValue($field)
+   {
+      $default_values = explode("\r\n", $field['default_values']);
+      $default_value  = array_shift($default_values);
 
+      if (!empty($datas['formcreator_field_' . $field['id']])) {
+         $default_value = $datas['formcreator_field_' . $field['id']];
+      } elseif (-1 == $default_value) {
+         $default_value = $_SESSION['glpiID'];
+      }
+      return $default_value;
    }
 
    public static function getName()
