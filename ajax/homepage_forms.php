@@ -14,6 +14,7 @@ include ('../../../inc/includes.php');
                      WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
                      AND $form_table.`is_active` = 1
                      AND $form_table.`is_deleted` = 0
+                     AND $form_table.`helpdesk_home` = 1
                      AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
                      AND $where
                      AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
@@ -23,7 +24,7 @@ include ('../../../inc/includes.php');
                   )
                  ORDER BY $cat_table.`name` ASC";
       $result = $GLOBALS['DB']->query($query);
-      if (!empty($result)) {
+      if ($GLOBALS['DB']->numrows($result) > 0) {
          echo '<table class="tab_cadrehov">';
          echo '<tr class="noHover">';
          echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
@@ -40,6 +41,7 @@ include ('../../../inc/includes.php');
                             WHERE $form_table.`plugin_formcreator_categories_id` = {$category['id']}
                             AND $form_table.`is_active` = 1
                             AND $form_table.`is_deleted` = 0
+                            AND $form_table.`helpdesk_home` = 1
                             AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
                             AND $where
                             AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
