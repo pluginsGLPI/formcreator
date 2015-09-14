@@ -58,11 +58,26 @@ function plugin_init_formcreator ()
       // Massive Action definition
       $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
 
-      $PLUGIN_HOOKS['menu_toadd']['formcreator'] = array(
-         'admin'    => 'PluginFormcreatorForm',
-         'helpdesk' => 'PluginFormcreatorFormlist',
-      );
-
+      // If user have acces to one form or more, add link
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+      $query      = "SELECT COUNT($form_table.id)
+                     FROM $form_table
+                     WHERE $form_table.`is_active` = 1
+                     AND $form_table.`is_deleted` = 0
+                     AND $form_table.`helpdesk_home` = 1
+                     AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                     AND $where
+                     AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                        SELECT plugin_formcreator_forms_id
+                        FROM $table_fp
+                        WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))";
+      $result = $GLOBALS['DB']->query($query);
+      list($nb) = $GLOBALS['DB']->fetch_array($result);
+      if ($nb > 0) {
+         $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
+      }
 
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
           || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
@@ -86,8 +101,9 @@ function plugin_init_formcreator ()
       // Config page
       $plugin = new Plugin();
       $links  = array();
-      if (Session::haveRight('entity', UPDATE) && $plugin->isActivated("formcreator")) {
-         $PLUGIN_HOOKS['config_page']['formcreator'] = 'front/form.php';
+      if (Session::haveRight('entity', UPDATE)) {
+         $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
+         $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
          $links['config'] = '/plugins/formcreator/front/form.php';
          $links['add']    = '/plugins/formcreator/front/form.form.php';
       }
