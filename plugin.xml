@@ -10,7 +10,7 @@
       </short>
       <long>
          <fr>
-Formcreator est un plugin permettant la création de formulaires personalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.
+Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.
 
 Fonctionnalités
 ---------------
@@ -30,7 +30,7 @@ Fonctionnalités
 13. Prévisualisation du formulaire créé directement dans la configuration.
          </fr>
          <en>
-Formcreator is a plugin for creating custom form of easy access outs users to create one or more GLPI tickets.
+Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.
 
 Features
 --------
