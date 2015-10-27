@@ -791,6 +791,22 @@ class PluginFormcreatorQuestion extends CommonDBChild
                    DROP `plugin_formcreator_forms_id`;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
+      
+      if (!TableExists('glpi_plugin_formcreator_matching_questions')) {
+         $migration->displayMessage("Installing glpi_plugin_formcreator_matching_questions");
+
+         // Create questions table
+         $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_matching_questions` (
+                     `questions_id` int(11) NOT NULL,
+                     `targets_id` int(11) NOT NULL,
+                     `fields` int(11) NOT NULL,
+                     CONSTRAINT pk_questions_targets PRIMARY KEY (questions_id, targets_id)
+                  )
+                  ENGINE = MyISAM
+                  DEFAULT CHARACTER SET = utf8
+                  COLLATE = utf8_unicode_ci";
+         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      }
 
       return true;
    }
@@ -805,6 +821,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $obj = new self();
       $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
 
+      if (!TableExists('glpi_plugin_formcreator_matching_questions')) {
+         $GLOBALS['DB']->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_matching_questions`');
+      }
+      
       // Delete logs of the plugin
       $GLOBALS['DB']->query('DELETE FROM `glpi_logs` WHERE itemtype = "' . __CLASS__ . '"');
 
