@@ -294,12 +294,12 @@ class PluginFormcreatorTarget extends CommonDBTM
              *
              * @since 0.85-1.2.3
              */
-            if (FieldExists($table, 'comment')) {
+            if (FieldExists($table_targetticket, 'comment')) {
                $query  = "SELECT `id`, `comment`
-                          FROM `$table`";
+                          FROM `$table_targetticket`";
                $result = $GLOBALS['DB']->query($query);
                while ($line = $GLOBALS['DB']->fetch_array($result)) {
-                  $query_update = 'UPDATE `' . $table . '` SET
+                  $query_update = 'UPDATE `' . $table_targetticket . '` SET
                                      `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
                                    WHERE `id` = ' . $line['id'];
                   $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
