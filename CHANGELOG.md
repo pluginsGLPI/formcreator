@@ -6,6 +6,9 @@ Version 0.90-1.3.0
 
 ### Bugfixes:
 
+* Fix a translation bug introduce in 0.90-1.2..5 that include the impossibility to save or update forms destinations.
+* Fix validation link in notifications (now set with Configuration value instead of fixed value)
+
 ### Features:
 
 * Forms categories are now optional.
