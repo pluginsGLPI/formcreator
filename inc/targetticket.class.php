@@ -188,7 +188,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $datas['_users_id_requester']   = $formanswer->fields['requester_id'];
       $datas['_users_id_recipient']   = $formanswer->fields['requester_id'];
       $datas['_users_id_lastupdater'] = Session::getLoginUserID();
-
+      
       // Create the target ticket
       $ticketID = $ticket->add($datas);
       $founded  = $docItem->find('itemtype = "PluginFormcreatorFormanswer" AND items_id = ' . $formanswer->getID());

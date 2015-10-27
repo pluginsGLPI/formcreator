@@ -490,6 +490,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                $this->generateTarget();
                break;
          }
+      } else {
+         $this->generateTarget();
       }
 
       Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
