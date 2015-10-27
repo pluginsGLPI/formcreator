@@ -288,19 +288,22 @@ class PluginFormcreatorTarget extends CommonDBTM
             // Remove useless column content
             $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `content`;");
 
+            
             /**
              * Migration of special chars from previous versions
              *
              * @since 0.85-1.2.3
              */
-            $query  = "SELECT `id`, `comment`
-                       FROM `$table`";
-            $result = $GLOBALS['DB']->query($query);
-            while ($line = $GLOBALS['DB']->fetch_array($result)) {
-               $query_update = 'UPDATE `' . $table . '` SET
-                                  `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
-                                WHERE `id` = ' . $line['id'];
-               $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+            if (FieldExists($table, 'comment')) {
+               $query  = "SELECT `id`, `comment`
+                          FROM `$table`";
+               $result = $GLOBALS['DB']->query($query);
+               while ($line = $GLOBALS['DB']->fetch_array($result)) {
+                  $query_update = 'UPDATE `' . $table . '` SET
+                                     `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
+                                   WHERE `id` = ' . $line['id'];
+                  $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+               }
             }
          }
       }
