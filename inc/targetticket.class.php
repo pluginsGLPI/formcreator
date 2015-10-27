@@ -744,13 +744,53 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       if (!is_null($due_date)) {
          $datas['due_date'] = $due_date;
       }
+      
+      // Select ticket actors
+      $query = "SELECT id, actor_type, actor_value, use_notification
+                FROM glpi_plugin_formcreator_targettickets_actors
+                WHERE plugin_formcreator_targettickets_id = " . $this->getID() . "
+                AND actor_role = 'requester'";
+      $result = $GLOBALS['DB']->query($query);
+      
+      // If there is only one requester add it on creation, otherwize we will add them later
+      if ($GLOBALS['DB']->numrows($result) == 1) {
+         $actor = $GLOBALS['DB']->fetch_array($result);
+         switch ($actor['actor_type']) {
+            case 'creator' :
+               $user_id = $formanswer->fields['requester_id'];
+               break;
+            case 'validator' :
+               $user_id = $formanswer->fields['validator_id'];
+               break;
+            case 'person' :
+            case 'group' :
+            case 'supplier' :
+               $user_id = $actor['actor_value'];
+               break;
+            case 'question_person' :
+            case 'question_group' :
+            case 'question_supplier' :
+               $answer  = new PluginFormcreatorAnswer();
+               $found   = $answer->find('plugin_formcreator_question_id = ' . $actor['actor_value']
+                           . ' AND plugin_formcreator_formanwers_id = ' . $formanswer->fields['id']);
+               $found   = array_shift($found);
+
+               if (empty($found['answer'])) {
+                  continue;
+               } else {
+                  $user_id = (int) $found['answer'];
+               }
+               break;
+         }
+         $datas['_users_id_requester']   = $user_id;
+      }
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
          return false;
       }
 
-      // Ajout des acteurs du ticket
+      // Add actors to ticket
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID();
