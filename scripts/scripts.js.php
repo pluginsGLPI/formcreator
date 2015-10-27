@@ -180,8 +180,8 @@ function addTarget(items_id, token) {
    }).dialog("open");
 }
 
-function deleteTarget(items_id, token, target_id, target_name) {
-   if(confirm("<?php echo __('Are you sure you want to delete this destination:', 'formcreator'); ?> " + target_name)) {
+function deleteTarget(items_id, token, target_id) {
+   if(confirm("<?php echo __('Are you sure you want to delete this destination:', 'formcreator'); ?> ")) {
       jQuery.ajax({
         url: rootDoc + '/plugins/formcreator/front/target.form.php',
         type: "POST",

@@ -68,7 +68,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          echo '<td align="center" width="32">';
          echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/delete.png"
                   alt="*" title="' . __('Delete', 'formcreator') . '"
-                  onclick="deleteTarget(' . $item->getID() . ', \'' . $token . '\', ' . $target['id'] . ', \'' . addslashes($target['name']) . '\')" align="absmiddle" style="cursor: pointer" /> ';
+                  onclick="deleteTarget(' . $item->getID() . ', \'' . $token . '\', ' . $target['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
          echo '</td>';
 
          echo '</tr>';
