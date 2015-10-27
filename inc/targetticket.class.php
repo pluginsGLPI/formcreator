@@ -151,7 +151,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          'minute' => _n('Minute', 'Minutes', 2),
          'hour'   => _n('Hour', 'Hours', 2),
          'day'    => _n('Day', 'Days', 2),
-         'month'  => _n('Month', 'Month', 2),
+         'month'  => __('Month'),
       ), array(
          'value' => $this->fields['due_date_period']
       ));
