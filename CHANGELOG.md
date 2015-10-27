@@ -1,6 +1,17 @@
 GLPI Formcreator 0.85 ChangeLog
 ===============================
 
+Version 0.90-1.3.0
+------------------
+
+### Bugfixes:
+
+### Features:
+
+* Forms categories are now optional.
+
+
+
 Version 0.90-1.2.5
 ------------------
 

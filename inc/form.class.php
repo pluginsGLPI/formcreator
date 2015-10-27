@@ -279,7 +279,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="tab_bg_2">';
-      echo '<td><strong>' . __('Category') . ' <span class="red">*</span></strong></td>';
+      echo '<td>' . __('Category') . '</td>';
       echo '<td>';
       PluginFormcreatorCategory::dropdown(array(
          'name'  => 'plugin_formcreator_categories_id',
@@ -547,13 +547,57 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
       echo '</div>';
-      echo '<div style="width: 550px;">';
-
-      // Show categories wicth have at least one form user can access
+      echo '<div style="width: 550px; float: left;">';
+      
+      // Define tables
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
       $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+      
+      // Show form without category
+            $where       = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+            $table_fp    = getTableForItemType('PluginFormcreatorFormprofiles');
+            $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+                            FROM $form_table
+                            WHERE $form_table.`plugin_formcreator_categories_id` = 0
+                            AND $form_table.`is_active` = 1
+                            AND $form_table.`is_deleted` = 0
+                            AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                            AND $where
+                            AND (`access_rights` != " . self::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                               SELECT plugin_formcreator_forms_id
+                               FROM $table_fp
+                               WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+                            ORDER BY $form_table.name ASC";
+            $result_forms = $GLOBALS['DB']->query($query_forms);
+            $i = 0;
+            if ($GLOBALS['DB']->numrows($result_forms) > 0) {
+               echo '<table class="tab_cadrehov" style="width: 550px">';
+               echo '<tr><th>' . __('Forms without category', 'formcreator') . '</th></tr>';
+               while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
+                  $i++;
+                  echo '<tr class="line' . ($i % 2) . '">';
+                  echo '<td>';
+                  echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png" alt="+" title=""
+                            onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+                  echo '&nbsp;';
+                  echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+                           . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
+                           title="' . plugin_formcreator_encode($form['description']) . '">'
+                           . $form['name']
+                           . '</a></td>';
+                  echo '</tr>';
+                  echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
+                  echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
+                  echo '</tr>';
+               }
+
+            echo '</table>';
+            echo '<br />';
+         }
+
+      // Show categories wicth have at least one form user can access
       $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                  FROM $cat_table
                  WHERE 0 < (
@@ -764,12 +808,6 @@ class PluginFormcreatorForm extends CommonDBTM
       // - name is required
       if(empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
-
-      // - Category is required
-      if(empty($input['plugin_formcreator_categories_id'])) {
-         Session::addMessageAfterRedirect(__('The form category cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
 
