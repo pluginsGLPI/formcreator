@@ -789,6 +789,14 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       if (!$ticketID = $ticket->add($datas)) {
          return false;
       }
+      
+      // Add link between Ticket and FormAnswer
+      $itemlink = new Item_Ticket();
+      $itemlink->add(array(
+         'itemtype'   => 'PluginFormcreatorFormanswer',
+         'items_id'   => $formanswer->fields['id'],
+         'tickets_id' => $ticketID,
+      ));
 
       // Add actors to ticket
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification

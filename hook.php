@@ -84,6 +84,13 @@ function plugin_formcreator_addDefaultWhere($type)
    }
 }
 
+function plugin_formcreator_AssignToTicket($types)
+{
+   $types['PluginFormcreatorFormanswer'] = PluginFormcreatorFormanswer::getTypeName();
+      
+   return $types;
+}
+
 
 // function plugin_formcreator_MassiveActions($type) {
 

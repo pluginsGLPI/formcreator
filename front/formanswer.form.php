@@ -53,7 +53,7 @@ if ($plugin->isActivated("formcreator")) {
          );
       }
 
-      $formanswer->showForm($_REQUEST);
+      $formanswer->display($_REQUEST);
 
       Html::footer();
    }

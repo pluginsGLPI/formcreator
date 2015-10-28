@@ -1,7 +1,9 @@
 <?php
 class PluginFormcreatorFormanswer extends CommonDBChild
 {
-   static $rightname = 'config';
+   public $dohistory  = true;
+   public $usenotepad = true;
+   public $usenotepadrights = true;
 
    static public $itemtype = "PluginFormcreatorForm";
    static public $items_id = "plugin_formcreator_forms_id";
@@ -65,6 +67,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'table'         => getTableForItemType('PluginFormcreatorForm'),
             'field'         => 'name',
             'name'          => PluginFormcreatorForm::getTypeName(1),
+            'searchtype'    => 'contains',
             'datatype'      => 'string',
             'massiveaction' => false,
 
@@ -100,6 +103,29 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    }
 
    /**
+    * Define how to display a specific value in search result table
+    *
+    * @param  String $field   Name of the field as define in $this->getSearchOptions()
+    * @param  Mixed  $values  The value as it is stored in DB
+    * @param  Array  $options Options (optional)
+    * @return Mixed           Value to be displayed
+    */
+   public static function getSpecificValueToDisplay($field, $values, array $options=array())
+   {
+      if (!is_array($values)) {
+         $values = array($field => $values);
+      }
+      switch ($field) {
+         case 'status' :
+            $output = '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
+                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" />';
+            return $output;
+            break;
+      }
+      return parent::getSpecificValueToDisplay($field, $values, $options);
+   }
+
+   /**
     * Define how to display search field for a specific type
     *
     * @since version 0.84
@@ -113,7 +139,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     **/
    public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array())
    {
-
       if (!is_array($values)) {
          $values = array($field => $values);
       }
@@ -141,19 +166,66 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       }
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
+   /**
+    * Display a list of all forms on the configuration page
+    *
+    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
+    * @param  integer    $tabnum       Number of the current tab
+    * @param  integer    $withtemplate
+    *
+    * @see CommonDBTM::displayTabContentForItem
+    *
+    * @return null                     Nothing, just display the list
+    */
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
+   {
+      $item->showForm($item->fields['id']);
+   }
+   
+   public function defineTabs($options = array())
+   {
+      $ong = array();
+      $this->addStandardTab(__CLASS__, $ong, $options);
+      if ($this->fields['id'] > 0) {
+         $this->addStandardTab('Ticket', $ong, $options);
+         $this->addStandardTab('Document_Item', $ong, $options);
+         $this->addStandardTab('Notepad', $ong, $options);
+         $this->addStandardTab('Log', $ong, $options);
+      }
+      return $ong;
+   }
 
+   /**
+    * Return the name of the tab for item including forms like the config page
+    *
+    * @param  CommonGLPI $item         Instance of a CommonGLPI Item (The Config Item)
+    * @param  integer    $withtemplate
+    *
+    * @return String                   Name to be displayed
+    */
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
+   {
+      return $this->getTypeName();
+   }
 
-   public function showForm($datas) {
-      if (!isset($datas['id']) || !$this->getFromDB($datas['id'])) {
+   public function showForm($ID, $options = array()) {
+      if (!isset($ID) || !$this->getFromDB($ID)) {
          Html::displayNotFoundError();
       }
+      $options = array('canedit' => false);
+
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+      
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
 
-      echo '<form name="formcreator_form' . $form->getID() . '" method="post" role="form" enctype="multipart/form-data"
-               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/formanswer.form.php"
-               class="formcreator_form form_horizontal">';
-      echo '<h1 class="form-title">' . $form->fields['name'] . '</h1>';
+//      echo '<form name="formcreator_form' . $form->getID() . '" method="post" role="form" enctype="multipart/form-data"
+//               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/formanswer.form.php"
+//               class="formcreator_form form_horizontal">';
+//      echo '<h1 class="form-title">' . $form->fields['name'] . '</h1>';
+      
+      echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
       // Form Header
       if (!empty($form->fields['content'])) {
@@ -248,7 +320,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
 
       echo '</div>';
-      echo '</form>';
+//      echo '</form>';
       echo '<script type="text/javascript">
                function checkComment(field) {
                   if (document.getElementById("comment").value == "") {
@@ -257,30 +329,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   }
                }
             </script>';
-   }
-
-
-   /**
-    * Define how to display a specific value in search result table
-    *
-    * @param  String $field   Name of the field as define in $this->getSearchOptions()
-    * @param  Mixed  $values  The value as it is stored in DB
-    * @param  Array  $options Options (optional)
-    * @return Mixed           Value to be displayed
-    */
-   public static function getSpecificValueToDisplay($field, $values, array $options=array())
-   {
-      if (!is_array($values)) {
-         $values = array($field => $values);
-      }
-      switch ($field) {
-         case 'status' :
-            $output = '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
-                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" />';
-            return $output;
-            break;
-      }
-      return parent::getSpecificValueToDisplay($field, $values, $options);
+      
+      echo '</td></tr>';
+      
+      $this->showFormButtons($options);
+      return true;
    }
 
    /**
@@ -293,7 +346,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    **/
    public function prepareInputForAdd($input)
    {
-
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($input['plugin_formcreator_forms_id']);
+      $input['name'] = $form->getName();
+      
       return $input;
    }
 
@@ -307,7 +363,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    **/
    public function prepareInputForUpdate($input)
    {
-
       return $input;
    }
 
@@ -657,6 +712,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `name` varchar(255) NOT NULL DEFAULT '',
                      `entities_id` int(11) NOT NULL DEFAULT '0',
                      `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
@@ -683,6 +739,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $query_update = 'UPDATE `' . $table . '` SET
                                `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
                              WHERE `id` = ' . $line['id'];
+            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+         }
+         
+         if (!FieldExists('glpi_plugin_formcreator_formanswers', 'name')) {
+            $query_update = 'ALTER TABLE `glpi_plugin_formcreator_formanswers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
          }
       }
