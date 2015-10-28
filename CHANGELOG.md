@@ -13,6 +13,7 @@ Version 0.90-1.3.0
 ### Features:
 
 * Forms categories are now optional.
+* Add link between formanswer and generated tickets + Add document, notes and history tabs
 
 
 
