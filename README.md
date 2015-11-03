@@ -3,7 +3,7 @@ Introduction
 
 [![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
 
-Formcreator is a plugin for creating personalized form of easy access outs users to create one or more GLPI tickets.
+Formcreator is a plugin which allow creation of customized forms of easy access. It also allow users to create one or more GLPI tickets at the same time.
 
 Features
 --------
