@@ -7,7 +7,7 @@
 function plugin_version_formcreator ()
 {
    return array('name'       => _n('Form', 'Forms', 2, 'formcreator'),
-            'version'        => '0.90-1.2.5',
+            'version'        => '0.90-1.3',
             'author'         => '<a href="mailto:jmoreau@teclib.com">Jérémy MOREAU</a>
                                   - <a href="http://www.teclib.com">Teclib\'</a>',
             'homepage'       => 'https://github.com/TECLIB/formcreator',
@@ -22,8 +22,8 @@ function plugin_version_formcreator ()
  */
 function plugin_formcreator_check_prerequisites ()
 {
-   if (version_compare(GLPI_VERSION,'0.85','lt') || version_compare(GLPI_VERSION,'0.91','ge')) {
-      echo 'This plugin requires GLPI >= 0.85 and GLPI < 0.91';
+   if (version_compare(GLPI_VERSION,'0.85','lt')) {
+      echo 'This plugin requires GLPI >= 0.85';
    } else {
       return true;
    }
@@ -50,7 +50,7 @@ function plugin_init_formcreator ()
 
    // Set the plugin CSRF compliance (required since GLPI 0.84)
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
-   
+
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
    array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorFormanswer');
