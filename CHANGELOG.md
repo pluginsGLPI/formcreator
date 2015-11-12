@@ -9,12 +9,16 @@ Version 0.90-1.3.0
 * Fix a translation bug introduce in 0.90-1.2..5 that include the impossibility to save or update forms destinations.
 * Fix validation link in notifications (now set with Configuration value instead of fixed value)
 * Fix notification on ticket creation for destination with only one requester.
+* Improve right management on menu.
+* Fix form appear on home page even I select "no" in Direct access on homepage field.
+* The validation link into formcreator's notification is now dynamic and take care of GLPI's URL defined in setup.
+* Fix a bug introduced by GLPI 0.90 on vertical split view. It was impossible to scroll down for long forms.
 
 ### Features:
 
 * Forms categories are now optional.
 * Add link between formanswer and generated tickets + Add document, notes and history tabs
-
+* Add an IP address field type.
 
 
 Version 0.90-1.2.5
