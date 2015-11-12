@@ -548,13 +548,13 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '</div>';
       echo '<div style="width: 550px; float: left;">';
-      
+
       // Define tables
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
       $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
-      
+
       // Show form without category
             $where       = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
             $table_fp    = getTableForItemType('PluginFormcreatorFormprofiles');
@@ -583,7 +583,7 @@ class PluginFormcreatorForm extends CommonDBTM
                             onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
                   echo '&nbsp;';
                   echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-                           . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
+                           . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
                            title="' . plugin_formcreator_encode($form['description']) . '">'
                            . $form['name']
                            . '</a></td>';
@@ -646,7 +646,7 @@ class PluginFormcreatorForm extends CommonDBTM
                          onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
                echo '&nbsp;';
                echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-                        . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
+                        . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
                         title="' . plugin_formcreator_encode($form['description']) . '">'
                         . $form['name']
                         . '</a></td>';

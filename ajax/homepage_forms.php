@@ -47,7 +47,7 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
    echo '<tr class="noHover">';
    echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
    echo '</tr>';
-   
+
    if ($GLOBALS['DB']->numrows($result_forms) > 0) {
       echo '<tr class="noHover"><th>' . __('Forms without category', 'formcreator') . '</th></tr>';
       $i = 0;
@@ -59,7 +59,7 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
                    onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
          echo '&nbsp;';
          echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-                  . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
+                  . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
                   title="' . plugin_formcreator_encode($form['description']) . '">'
                   . $form['name']
                   . '</a></td>';
@@ -98,7 +98,7 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
                       onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
             echo '&nbsp;';
             echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-                     . '/plugins/formcreator/front/showform.php?id=' . $form['id'] . '"
+                     . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
                      title="' . plugin_formcreator_encode($form['description']) . '">'
                      . $form['name']
                      . '</a></td>';

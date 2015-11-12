@@ -98,8 +98,8 @@ msgstr ""
 msgid "A category already exists with the same name! Category creation failed."
 msgstr ""
 
-#: front/config.form.php:21 front/form.form.php:70 front/showform.php:45
-#: front/showform.php:58 front/targetticket.form.php:20
+#: front/config.form.php:21 front/form.form.php:70 front/formdisplay.php:45
+#: front/formdisplay.php:58 front/targetticket.form.php:20
 msgid "Form Creator"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgstr ""
 msgid "Formcreator settings"
 msgstr ""
 
-#: front/formlist.php:13 front/formlist.php:18 front/showform.php:35
+#: front/formlist.php:13 front/formlist.php:18 front/formdisplay.php:35
 msgid "Form list"
 msgstr ""
 
