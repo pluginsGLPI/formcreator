@@ -789,6 +789,22 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       if (!$ticketID = $ticket->add($datas)) {
          return false;
       }
+
+      // Add tags in plugin Tag
+      $plugin = new Plugin();
+      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         $tag_ids = $this->getTags($formanswer);
+
+         $item = new PluginTagTagItem();
+
+         foreach ($tag_ids as $tag_id) {
+            $item->add(array(
+                        'plugin_tag_tags_id' => $tag_id,
+                        'items_id' => $ticketID,
+                        'itemtype' => 'Ticket',
+            ));
+         }
+      }
       
       // Add link between Ticket and FormAnswer
       $itemlink = new Item_Ticket();
@@ -907,6 +923,38 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       return true;
+   }
+
+   private function getTags(PluginFormcreatorFormanswer $formanswer) {
+      $tag_ids = array();
+
+      $section   = new PluginFormcreatorSection();
+      $found     = $section->find('plugin_formcreator_forms_id = '
+                                    . $formanswer->fields['plugin_formcreator_forms_id']);
+      $tab_section = array();
+      foreach($found as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if(!empty($tab_section)) {
+         $question  = new PluginFormcreatorQuestion();
+         $found = $question->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ') 
+                                  AND fieldtype = "dropdown" AND `values` = "PluginTagTag"');
+         foreach($found as $question_line) {
+            $id     = $question_line['id'];
+            $name   = $question_line['name'];
+
+            $answer = new PluginFormcreatorAnswer();
+            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $formanswer->getID()
+                                    . ' AND `plugin_formcreator_question_id` = ' . $id);
+            if (count($found)) {
+               $datas = array_shift($found);
+               $tag_ids[] = $datas['answer'];
+            }
+         }
+      }
+
+      return $tag_ids;
    }
 
    /**
