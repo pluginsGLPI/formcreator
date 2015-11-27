@@ -130,13 +130,15 @@ form.formcreator_form {
 }
 
 .formcreator_form > .form_section > h2 {
-   background: #E1D39E;
+   background: #1B2F62; /*#E1D39E;*/
+   color: #FFF;
    margin:  0 0 10px;
    border-radius: 4px 4px 0 0;
    padding: 5px 10px;
    border-bottom: 1px solid #FFF;
-   box-shadow: 0px 2px 2px #CCC;
+   box-shadow: 2px 2px 2px #CCC;
    text-align: center;
+   line-height: 24px;
 }
 
 .formcreator_form .form-group {
@@ -148,11 +150,15 @@ form.formcreator_form {
    font-size: 1.2em;
    float: left;
    width: 250px;
+   line-height: 32px;
 }
 .formcreator_form .form-group:after {
    content: '';
    display: block;
    clear: both;
+}
+.formcreator_form .form-group .form_field > input[type="file"] {
+   height: 32px;
 }
 
 .formcreator_form .form-group.required > label {
@@ -208,10 +214,21 @@ form.formcreator_form {
    height: 24px;
    line-height: 24px;
    padding-top: 3px;
+   padding-bottom: 3px;
+   width: 637px;
+   max-width: 637px;
+}
+#bloc > .formcreator_form .select2-container .select2-choice {
+   width: 395px;
 }
 .formcreator_form .select2-container .select2-choice > .select2-chosen {
+   margin: 1px 0;
    line-height: 24px;
+   color: #333;
    font-size: 1.1em;
+}
+.select2-container .select2-choice .select2-arrow b {
+   margin-top: 3px;
 }
 .formcreator_form textarea:focus,
 .formcreator_form select:focus,
@@ -236,7 +253,19 @@ form.formcreator_form {
    min-height: 24px;
 }
 .formcreator_form .select2-container-multi .select2-choices  {
+   width: 650px;
    min-height: 24px;
+   background: #FFF;
+   background: rgba(255, 255, 255, 0.7);
+   border: 1px solid #999;
+   border-radius: 3px;
+   box-sizing: border-box;
+}
+.select2-drop {
+    max-width: 650px;
+}
+#bloc > .formcreator_form .select2-container-multi .select2-choices  {
+   width: 415px;
 }
 .formcreator_form .form-group option {
    background: none;
