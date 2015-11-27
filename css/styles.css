@@ -383,3 +383,7 @@ form.formcreator_form {
 .select2-container + select {
    display: none !important;
 }
+
+#footer-login{
+   display: none;
+}
