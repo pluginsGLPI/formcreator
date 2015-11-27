@@ -56,33 +56,12 @@ function plugin_init_formcreator ()
    array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorFormanswer');
 
    $plugin = new Plugin();
-   if (isset($_SESSION['glpiID'])
-      && $plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
       // Massive Action definition
       $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
 
-      // If user have acces to one form or more, add link
-      $form_table = getTableForItemType('PluginFormcreatorForm');
-      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
-      $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
-      $query      = "SELECT COUNT($form_table.id)
-                     FROM $form_table
-                     WHERE $form_table.`is_active` = 1
-                     AND $form_table.`is_deleted` = 0
-                     AND $form_table.`helpdesk_home` = 1
-                     AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
-                     AND $where
-                     AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                        SELECT plugin_formcreator_forms_id
-                        FROM $table_fp
-                        WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))";
-      $result = $GLOBALS['DB']->query($query);
-      list($nb) = $GLOBALS['DB']->fetch_array($result);
-      if ($nb > 0) {
-         $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
-      }
-
+      // Load JS and CSS files if we are on a page witch need them
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
           || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
           || isset($_SESSION['glpiactiveprofile']) &&
@@ -99,32 +78,57 @@ function plugin_init_formcreator ()
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
       }
 
-      // Add a link in the main menu plugins for technician and admin panel
-      $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
+      // Load menu entries if user is logged in and if he has access to at least one form
+      if (isset($_SESSION['glpiID'])) {
+         // If user have acces to one form or more, add link
+         $form_table = getTableForItemType('PluginFormcreatorForm');
+         $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+         $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+         $query      = "SELECT COUNT($form_table.id)
+                        FROM $form_table
+                        WHERE $form_table.`is_active` = 1
+                        AND $form_table.`is_deleted` = 0
+                        AND $form_table.`helpdesk_home` = 1
+                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                        AND $where
+                        AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                           SELECT plugin_formcreator_forms_id
+                           FROM $table_fp
+                           WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))";
+         $result = $GLOBALS['DB']->query($query);
+         list($nb) = $GLOBALS['DB']->fetch_array($result);
+         if ($nb > 0) {
+            $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
+         }
 
-      // Config page
-      $plugin = new Plugin();
-      $links  = array();
-      if (Session::haveRight('entity', UPDATE)) {
-         $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
-         $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
-         $links['config'] = '/plugins/formcreator/front/form.php';
-         $links['add']    = '/plugins/formcreator/front/form.form.php';
+         // Add a link in the main menu plugins for technician and admin panel
+         $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
+
+         // Config page
+         $plugin = new Plugin();
+         $links  = array();
+         if (Session::haveRight('entity', UPDATE)) {
+            $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
+            $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
+            $links['config'] = '/plugins/formcreator/front/form.php';
+            $links['add']    = '/plugins/formcreator/front/form.form.php';
+         }
+         $img = '<img  src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/check.png"
+                     title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
+
+         $links[$img] = '/plugins/formcreator/front/formanswer.php';
+
+         // Set options for pages (title, links, buttons...)
+         $links['search'] = '/plugins/formcreator/front/formlist.php';
+         $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
+            'config'       => array('title'  => __('Setup'),
+                                    'page'   => '/plugins/formcreator/front/form.php',
+                                    'links'  => $links),
+            'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
+                                    'links'  => $links),
+         );
       }
-      $img = '<img  src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/check.png"
-                  title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
-      $links[$img] = '/plugins/formcreator/front/formanswer.php';
-
-      // Set options for pages (title, links, buttons...)
-      $links['search'] = '/plugins/formcreator/front/formlist.php';
-      $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
-         'config'       => array('title'  => __('Setup'),
-                                 'page'   => '/plugins/formcreator/front/form.php',
-                                 'links'  => $links),
-         'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                                 'links'  => $links),
-      );
 
       // Load field class and all its method to manage fields
       Plugin::registerClass('PluginFormcreatorFields');
@@ -133,10 +137,6 @@ function plugin_init_formcreator ()
       Plugin::registerClass('PluginFormcreatorFormanswer', array(
          'notificationtemplates_types' => true
       ));
-
-      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE && isset($_SESSION['glpimenu'])) {
-         unset($_SESSION['glpimenu']);
-      }
    }
 }
 
