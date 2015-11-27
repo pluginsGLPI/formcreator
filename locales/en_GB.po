@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2014 Taclib'
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Translators:
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014-2015
@@ -739,3 +739,8 @@ msgstr "Add validation message as first ticket followup"
 #: inc/formanswer.class.php:499
 msgid "Cannot generate targets!"
 msgstr "Cannot generate targets!"
+
+#: inc/form.class.php:577
+msgid "Forms without category"
+msgstr "Forms without category"
+

@@ -709,3 +709,7 @@ msgstr ""
 #: inc/formanswer.class.php:499
 msgid "Cannot generate targets!"
 msgstr ""
+
+#: inc/form.class.php:577
+msgid "Forms without category"
+msgstr ""

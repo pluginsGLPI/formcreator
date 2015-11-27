@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-08-13 09:42+0000\n"
+"PO-Revision-Date: 2015-11-27 10:10+0000\n"
 "Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -736,4 +736,8 @@ msgstr ""
 
 #: inc/formanswer.class.php:499
 msgid "Cannot generate targets!"
+msgstr ""
+
+#: inc/form.class.php:577
+msgid "Forms without category"
 msgstr ""

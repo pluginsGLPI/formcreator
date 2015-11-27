@@ -8,10 +8,10 @@
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI Project - Plugin Formcreator\n"
+"Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-08-13 09:51+0000\n"
+"PO-Revision-Date: 2015-11-27 10:11+0000\n"
 "Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -101,8 +101,8 @@ msgid ""
 "A category already exists with the same name! Category creation failed."
 msgstr "Une catégorie existe déjà avec ce nom ! Création impossible."
 
-#: front/config.form.php:21 front/form.form.php:70 front/showform.php:45
-#: front/showform.php:58 front/targetticket.form.php:20
+#: front/config.form.php:21 front/form.form.php:70 front/formdisplay.php:45
+#: front/formdisplay.php:58 front/targetticket.form.php:20
 msgid "Form Creator"
 msgstr "Formcreator"
 
@@ -110,7 +110,7 @@ msgstr "Formcreator"
 msgid "Formcreator settings"
 msgstr "Configuration de Formcreator"
 
-#: front/formlist.php:13 front/formlist.php:18 front/showform.php:35
+#: front/formlist.php:13 front/formlist.php:18 front/formdisplay.php:35
 msgid "Form list"
 msgstr "Liste des formulaires"
 
@@ -739,3 +739,7 @@ msgstr "Ajouter le message de validation en premier suivi du ticket"
 #: inc/formanswer.class.php:499
 msgid "Cannot generate targets!"
 msgstr "Impossible de générer les destinations !"
+
+#: inc/form.class.php:577
+msgid "Forms without category"
+msgstr "Formulaire(s) sans catégorie"

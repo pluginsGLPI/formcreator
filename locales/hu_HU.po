@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2014 Taclib'
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Translators:
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014
@@ -9,19 +9,17 @@
 # Laszlo Czirbesz <czirbesz.laszlo@soulware.hu>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI Project - Plugin Formcreator\n"
+"Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-30 16:13+0200\n"
-"PO-Revision-Date: 2015-06-04 11:48+0100\n"
-"Last-Translator: Jérémy MOREAU <jmoreau@teclib.com>\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/glpi-"
-"project-plugin-formcreator/language/hu_HU/)\n"
+"PO-Revision-Date: 2015-11-27 10:10+0000\n"
+"Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
+"Language-Team: Hungarian (Hungary) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.4\n"
 
 #: ajax/question.php:27 inc/question.class.php:200
 msgid "Add a question"
@@ -100,12 +98,12 @@ msgid "Add a destination"
 msgstr "Cél hozzáadása"
 
 #: front/category.form.php:13
-msgid "A category already exists with the same name! Category creation failed."
-msgstr ""
-"Ezen a néven már létezik kategória! A kategória létrehozása sikertelen."
+msgid ""
+"A category already exists with the same name! Category creation failed."
+msgstr "Ezen a néven már létezik kategória! A kategória létrehozása sikertelen."
 
-#: front/config.form.php:21 front/form.form.php:70 front/showform.php:45
-#: front/showform.php:58 front/targetticket.form.php:20
+#: front/config.form.php:21 front/form.form.php:70 front/formdisplay.php:45
+#: front/formdisplay.php:58 front/targetticket.form.php:20
 msgid "Form Creator"
 msgstr "Űrlap Készítő"
 
@@ -113,7 +111,7 @@ msgstr "Űrlap Készítő"
 msgid "Formcreator settings"
 msgstr "Űrlapkészítő beállításai"
 
-#: front/formlist.php:13 front/formlist.php:18 front/showform.php:35
+#: front/formlist.php:13 front/formlist.php:18 front/formdisplay.php:35
 msgid "Form list"
 msgstr "Űrlap lista"
 
@@ -307,17 +305,13 @@ msgstr "Fejléc hozzáadása"
 msgid ""
 "An header already exists for this entity! You can have only one header per "
 "entity."
-msgstr ""
-"A fejléc már létezik ebben a szervezetben, szervezetenként egy fejléc adható "
-"meg."
+msgstr "A fejléc már létezik ebben a szervezetben, szervezetenként egy fejléc adható meg."
 
 #: inc/header.class.php:48
 msgid ""
 "An header exists for a parent entity! Another header will overwrite the "
 "previous one."
-msgstr ""
-"Egy fejléc már létezik a szülő szervezetben, mely felül fogja írni a "
-"megadottat."
+msgstr "Egy fejléc már létezik a szülő szervezetben, mely felül fogja írni a megadottat."
 
 #: inc/question.class.php:122 inc/question.class.php:189
 #: inc/target.class.php:69
@@ -330,12 +324,12 @@ msgid "Cancel"
 msgstr "Mégse"
 
 #: inc/question.class.php:281
-msgid "Are you sure you want to delete this question:"
-msgstr "Biztosan törli ezt a kérdést:"
+msgid "Are you sure you want to delete this question?"
+msgstr ""
 
 #: inc/question.class.php:321
-msgid "Are you sure you want to delete this section:"
-msgstr "Biztosan törli ezt a szekciót:"
+msgid "Are you sure you want to delete this section?"
+msgstr ""
 
 #: inc/question.class.php:380 inc/question.class.php:428
 #: inc/section.class.php:137
@@ -562,8 +556,7 @@ msgstr ""
 #: inc/notificationtargetformanswer.class.php:91
 msgid ""
 "Hi,\n"
-"Your request from GLPI have been successfully saved with number "
-"##formcreator.request_id## and transmetted to the helpdesk team.\n"
+"Your request from GLPI have been successfully saved with number ##formcreator.request_id## and transmetted to the helpdesk team.\n"
 "You can see your answers onto the following link:\n"
 "##formcreator.validation_link##"
 msgstr ""
@@ -587,16 +580,10 @@ msgstr "Egy űrlapot jóvá kell hagynia a GLPI-ben"
 #: inc/notificationtargetformanswer.class.php:86
 msgid ""
 "Hi,\n"
-"A form from GLPI need to be validate and you have been choosen as the "
-"validator.\n"
+"A form from GLPI need to be validate and you have been choosen as the validator.\n"
 "You can access it by clicking onto this link:\n"
 "##formcreator.validation_link##"
-msgstr ""
-"Üdvözlöm,\n"
-"Egy űrlapot jóvá kell hagynia a GLPI-ben, melyen önt választották "
-"jóváhagyónak.\n"
-"Elérheti az alábbi linkre kattintva:\n"
-"##formcreator.validation_link##"
+msgstr "Üdvözlöm,\nEgy űrlapot jóvá kell hagynia a GLPI-ben, melyen önt választották jóváhagyónak.\nElérheti az alábbi linkre kattintva:\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:91
 msgid "Your form have been refused by the validator"
@@ -605,20 +592,12 @@ msgstr "Az űrlapját visszautasította a jóváhagyó"
 #: inc/notificationtargetformanswer.class.php:92
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your form have been refused by the validator "
-"for the reason below:\n"
+"We are sorry to inform you that your form have been refused by the validator for the reason below:\n"
 "##formcreator.validation_comment##\n"
 "\n"
 "You can still modify and resubmit it by clicking onto this link:\n"
 "##formcreator.validation_link##"
-msgstr ""
-"Üdvözlöm,\n"
-"Sajnálattal közöljük, hogy az Ön űrlapját elutasította a jóváhagyó. Az "
-"elutasítás oka:\n"
-"##formcreator.validation_comment##\n"
-"\n"
-"Módosíthatja, és újra elküldheti az alábbi linkre kattintva:\n"
-"##formcreator.validation_link##"
+msgstr "Üdvözlöm,\nSajnálattal közöljük, hogy az Ön űrlapját elutasította a jóváhagyó. Az elutasítás oka:\n##formcreator.validation_comment##\n\nMódosíthatja, és újra elküldheti az alábbi linkre kattintva:\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:97
 #: inc/targetticket.class.php:848
@@ -628,13 +607,9 @@ msgstr "Az űrlapját elfogadta a jóváhagyó"
 #: inc/notificationtargetformanswer.class.php:98
 msgid ""
 "Hi,\n"
-"We are pleased to inform you that your form have been accepted by the "
-"validator.\n"
+"We are pleased to inform you that your form have been accepted by the validator.\n"
 "Your request will be considered soon."
-msgstr ""
-"Üdvözlöm,\n"
-"Örömmel értesítjük, hogy az űrlapját elfogadta a jóváhagyó.\n"
-"Kérelme hamarosan mérlegelésre kerül."
+msgstr "Üdvözlöm,\nÖrömmel értesítjük, hogy az űrlapját elfogadta a jóváhagyó.\nKérelme hamarosan mérlegelésre kerül."
 
 #: inc/notificationtargetformanswer.class.php:103
 msgid "Your form have been deleted by an administrator"
@@ -643,12 +618,8 @@ msgstr "Az űrlapját törölte egy Adminisztrátor"
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
 "Hi,\n"
-"We are sorry to inform you that your request cannot be considered and have "
-"been deleted by an administrator."
-msgstr ""
-"Üdvözlöm,\n"
-"Sajnálattal közöljük, hogy az Ön kérelme nem mérlegelhető és egy "
-"Adminisztrátor törölte."
+"We are sorry to inform you that your request cannot be considered and have been deleted by an administrator."
+msgstr "Üdvözlöm,\nSajnálattal közöljük, hogy az Ön kérelme nem mérlegelhető és egy Adminisztrátor törölte."
 
 #: setup.php:90
 msgid "Forms waiting for validation"
@@ -764,4 +735,12 @@ msgstr ""
 
 #: inc/targetticket.class.php:172
 msgid "Add validation message as first ticket followup"
+msgstr ""
+
+#: inc/formanswer.class.php:499
+msgid "Cannot generate targets!"
+msgstr ""
+
+#: inc/form.class.php:577
+msgid "Forms without category"
 msgstr ""
