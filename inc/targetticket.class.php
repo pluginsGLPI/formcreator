@@ -79,6 +79,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</td>';
       echo '</tr>';
 
+      // Ticket Template
       echo '<tr class="line1">';
       echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
       echo '<td width="25%">';
@@ -90,6 +91,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<td width="15%">' . __('Due date') . '</td>';
       echo '<td width="45%">';
 
+      // -------------------------------------------------------------------------------------------
+      // Due date type selection
+      // -------------------------------------------------------------------------------------------
       Dropdown::showFromArray('due_date_rule', array(
          ''          => Dropdown::EMPTY_VALUE,
          'answer'    => __('equals to the answer to the question', 'formcreator'),
@@ -141,11 +145,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          echo '<div id="due_date_time">';
       }
       Dropdown::showNumber("due_date_value", array(
-         'value' => 1,
+         'value' => $this->fields['due_date_value'],
          'min'   => -30,
          'max'   => 30
-      ), array(
-         'value' => $this->fields['due_date_value']
       ));
       Dropdown::showFromArray('due_date_period', array(
          'minute' => _n('Minute', 'Minutes', 2),
@@ -158,6 +160,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</div>';
       echo '</td>';
       echo '</tr>';
+      // -------------------------------------------------------------------------------------------
+      // Due date type selection end
+      // -------------------------------------------------------------------------------------------
 
       if ($form->fields['validation_required']) {
          echo '<tr class="line0">';
@@ -744,14 +749,14 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       if (!is_null($due_date)) {
          $datas['due_date'] = $due_date;
       }
-      
+
       // Select ticket actors
       $query = "SELECT id, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID() . "
                 AND actor_role = 'requester'";
       $result = $GLOBALS['DB']->query($query);
-      
+
       // If there is only one requester add it on creation, otherwize we will add them later
       if ($GLOBALS['DB']->numrows($result) == 1) {
          $actor = $GLOBALS['DB']->fetch_array($result);
@@ -789,7 +794,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       if (!$ticketID = $ticket->add($datas)) {
          return false;
       }
-      
+
       // Add link between Ticket and FormAnswer
       $itemlink = new Item_Ticket();
       $itemlink->add(array(
