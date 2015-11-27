@@ -58,6 +58,17 @@ function plugin_init_formcreator ()
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
+      // If user is not authenticated, create temporary user
+      if(!isset($_SESSION['glpiname'])) {
+         $_SESSION['glpiname'] = 'formcreator_temp_user';
+         $_SESSION['valid_id'] = session_id();
+         $_SESSION['glpiactiveentities'] = 0;
+         $subentities = getSonsOf('glpi_entities', 0);
+         $_SESSION['glpiactiveentities_string'] = (!empty($subentities))
+                                                ? "'" . implode("', '", $subentities) . "'"
+                                                : "'0'";
+      }
+
       // Massive Action definition
       $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
 

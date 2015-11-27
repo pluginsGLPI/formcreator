@@ -25,11 +25,6 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          }
       }
 
-      // If user is not authenticated, create temporary user
-      if(!isset($_SESSION['glpiname'])) {
-         $_SESSION['glpiname'] = 'formcreator_temp_user';
-      }
-
       if (isset($_SESSION['glpiactiveprofile']['interface'])
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
          Html::helpHeader(
