@@ -162,37 +162,29 @@ class PluginFormcreatorForm extends CommonDBTM
 
       switch ($field) {
          case 'is_active' :
-            $output  = "<select name='".$name."'>";
-            $output .=  "<option value='0' ".(($values[$field] == 0)?" selected ":"").">"
-                        . __('Inactive')
-                        . "</option>";
-            $output .=  "<option value='1' ".(($values[$field] == 1)?" selected ":"").">"
-                        . __('Active')
-                        . "</option>";
-            $output .=  "</select>";
-
-            return $output;
+            return Dropdown::showFromArray('criteria[0][value]', array(
+               '0' => __('Inactive'),
+               '1' => __('Active'),
+            ), array(
+               'value'               => $values[$field],
+               'display_emptychoice' => true,
+               'display'             => false
+            ));
             break;
          case 'access_rights' :
-            $output  = '<select name="' . $name . '">';
-            $output .=  '<option value="' . self::ACCESS_PUBLIC . '" '
-                           . (($values[$field] == 0) ? ' selected ' : '') . '>'
-                        . __('Public access', 'formcreator')
-                        . '</option>';
-            $output .=  '<option value="' . self::ACCESS_PRIVATE . '" '
-                           . (($values[$field] == 1) ? ' selected ' : '') . '>'
-                        . __('Private access', 'formcreator')
-                        . '</option>';
-            $output .=  '<option value="' . self::ACCESS_RESTRICTED . '" '
-                           . (($values[$field] == 1) ? ' selected ' : '') . '>'
-                        . __('Restricted access', 'formcreator')
-                        . '</option>';
-            $output .=  '</select>';
-
-            return $output;
+            return Dropdown::showFromArray('criteria[0][value]', array(
+               Dropdown::EMPTY_VALUE => '--- ' . __('All langages', 'formcreator') . ' ---',
+               self::ACCESS_PUBLIC => __('Public access', 'formcreator'),
+               self::ACCESS_PRIVATE => __('Private access', 'formcreator'),
+               self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
+            ), array(
+               'value'               => $values[$field],
+               'display_emptychoice' => true,
+               'display'             => false
+            ));
             break;
          case 'language' :
-            return Dropdown::showLanguages('language', array(
+            return Dropdown::showLanguages('criteria[0][value]', array(
                'value'               => $values[$field],
                'display_emptychoice' => true,
                'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
