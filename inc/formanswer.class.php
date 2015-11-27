@@ -96,7 +96,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'name'          => __('Creation date'),
             'datatype'      => 'datetime',
             'massiveaction' => false,
-            'linkfield'     => 'validator_id',
          ),
       );
       return $tab;
@@ -181,7 +180,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       $item->showForm($item->fields['id']);
    }
-   
+
    public function defineTabs($options = array())
    {
       $ong = array();
@@ -216,7 +215,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-      
+
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
 
@@ -224,7 +223,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 //               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/formanswer.form.php"
 //               class="formcreator_form form_horizontal">';
 //      echo '<h1 class="form-title">' . $form->fields['name'] . '</h1>';
-      
+
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
       // Form Header
@@ -329,9 +328,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   }
                }
             </script>';
-      
+
       echo '</td></tr>';
-      
+
       $this->showFormButtons($options);
       return true;
    }
@@ -349,7 +348,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
       $input['name'] = $form->getName();
-      
+
       return $input;
    }
 
@@ -741,7 +740,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                              WHERE `id` = ' . $line['id'];
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
          }
-         
+
          if (!FieldExists('glpi_plugin_formcreator_formanswers', 'name')) {
             $query_update = 'ALTER TABLE `glpi_plugin_formcreator_formanswers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
