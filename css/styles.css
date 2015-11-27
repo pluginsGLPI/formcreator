@@ -206,20 +206,13 @@ form.formcreator_form {
 }
 .formcreator_form .select2-container .select2-choice {
    height: 24px;
-   padding: 1px 5px;
    line-height: 24px;
-   width: 638px;
-}
-#bloc > .formcreator_form .select2-container .select2-choice {
-   width: 395px;
+   padding-top: 3px;
 }
 .formcreator_form .select2-container .select2-choice > .select2-chosen {
-   margin: 1px 0;
    line-height: 24px;
-   color: #333;
    font-size: 1.1em;
 }
-
 .formcreator_form textarea:focus,
 .formcreator_form select:focus,
 .formcreator_form .form-group .form_field > input:focus
@@ -243,17 +236,8 @@ form.formcreator_form {
    min-height: 24px;
 }
 .formcreator_form .select2-container-multi .select2-choices  {
-   width: 658px;
    min-height: 24px;
-   background: #FFF;
-   background: rgba(255, 255, 255, 0.7);
-   border: 1px solid #999;
-   border-radius: 3px;
 }
-#bloc > .formcreator_form .select2-container-multi .select2-choices  {
-   width: 415px;
-}
-
 .formcreator_form .form-group option {
    background: none;
    border: none;
