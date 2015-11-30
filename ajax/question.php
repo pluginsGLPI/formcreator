@@ -213,11 +213,6 @@ $rand = mt_rand();
                      'value' => $question->fields['default_values'],
                      'rand'  => $rand,
                   ));
-               } else {
-                  echo '<select name="dropdown_dropdown_default_value' . $rand . '"
-                           id="dropdown_dropdown_default_value' . $rand . '">
-                           <option value="">---</option>
-                        </select>';
                }
                ?>
 
