@@ -1,6 +1,21 @@
 GLPI Formcreator 0.85 ChangeLog
 ===============================
 
+Version 0.90-1.3.1
+------------------
+
+### Bugfixes:
+
+* Fix broken links to "My Forms".
+* Fix Status search and display on form list.
+* Fix "+" link on GLPI dropdown questions administration (wasn't update on type changes).
+* Hide the "default value" field when no object is select (on GLPI object questions administration).
+* Fix anonymous forms access (no CSS, no access to dropdowns and objects).
+* Fix CSS display error on dropdowns.
+* Fix "Due date calculated from the ticket" value dipslay.
+* Fix HTML tags which were encoded in ticket desciption if Rich text editor is activated
+
+
 Version 0.90-1.3.0
 ------------------
 
