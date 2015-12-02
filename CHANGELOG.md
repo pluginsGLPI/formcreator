@@ -1,6 +1,14 @@
 GLPI Formcreator 0.85 ChangeLog
 ===============================
 
+Version 0.90-1.3.2
+------------------
+
+### Bugfixes:
+
+* Fix a blocking bug that hide the plugin menu from previous release
+
+
 Version 0.90-1.3.1
 ------------------
 

@@ -130,6 +130,11 @@ Features
          <compatibility>0.85</compatibility>
          <compatibility>0.90</compatibility>
       </version>
+      <version>
+         <num>0.90-1.3.2</num>
+         <compatibility>0.85</compatibility>
+         <compatibility>0.90</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>cz_CZ</lang>
