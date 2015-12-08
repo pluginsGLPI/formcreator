@@ -9,24 +9,24 @@ class dropdownField extends PluginFormcreatorField
 
          echo '<div class="form_field">';
          if(!empty($this->fields['values'])) {
-            if ($this->fields['values'] == 'User') {
-               User::dropdown(array(
-                  'name'                => 'formcreator_field_' . $this->fields['id'],
-                  'value'               => $this->getValue(),
-                  'comments'            => false,
-                  'right'               => 'all',
-                  'display_emptychoice' => $this->fields['show_empty'],
-                  'rand'                => $rand,
-               ));
-            } else {
-               Dropdown::show($this->fields['values'], array(
-                  'name'                => 'formcreator_field_' . $this->fields['id'],
-                  'value'               => $this->getValue(),
-                  'comments'            => false,
-                  'display_emptychoice' => $this->fields['show_empty'],
-                  'rand'                => $rand,
-               ));
+            $values = array();
+            if ($this->fields['show_empty']) $values[0] = Dropdown::EMPTY_VALUE;
+
+            $obj = new $this->fields['values']();
+            $result = $obj->find();
+            foreach ($result AS $id => $datas) {
+               if ($this->fields['values'] == 'User') {
+                  $values[$id] = getUserName($id);
+               } else {
+                  $values[$id] = $datas['name'];
+               }
             }
+
+            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(
+               'value'               => $this->getValue(),
+               'comments'            => false,
+               'rand'                => $rand,
+            ));
          }
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">

@@ -580,6 +580,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             return false;
          }
       }
+      Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
       return true;
    }
 

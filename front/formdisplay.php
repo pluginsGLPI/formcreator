@@ -24,6 +24,19 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
             exit();
          }
       }
+      if(($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
+         // If user is not authenticated, create temporary user
+         if(!isset($_SESSION['glpiname'])) {
+            $_SESSION['formcreator_forms_id'] = $form->fields['id'];
+            $_SESSION['glpiname'] = 'formcreator_temp_user';
+            $_SESSION['valid_id'] = session_id();
+            $_SESSION['glpiactiveentities'] = $form->fields['entities_id'];
+            $subentities = getSonsOf('glpi_entities', $form->fields['entities_id']);
+            $_SESSION['glpiactiveentities_string'] = (!empty($subentities))
+                                                   ? "'" . implode("', '", $subentities) . "'"
+                                                   : "'" . $form->fields['entities_id'] . "'";
+         }
+      }
 
       if (isset($_SESSION['glpiactiveprofile']['interface'])
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
