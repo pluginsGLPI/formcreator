@@ -557,7 +557,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      'status' => 'waiting',
                   ));
                }
-               NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               if ($form->fields['validation_required']) {
+                  NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               }
                return false;
                break;
          }
