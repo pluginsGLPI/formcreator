@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
    <?php
       if (isset($_SESSION['glpiactiveprofile']['interface'])
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
-         echo "$('#c_menu #menu1').after(link);";
+         echo "$('#c_menu #menu1:first-child').after(link);";
       }
    ?>
 
