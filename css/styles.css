@@ -78,7 +78,7 @@ form.formcreator_form {
    line-height: 1.4em;
 }
 #bloc > .formcreator_form {
-   width: 700px;
+   width: 850px;
 }
 
 .formcreator_form > h1 {
@@ -291,10 +291,10 @@ form.formcreator_form {
 }
 
 #bloc > .formcreator_form .form-group .form_field > input, #bloc > .formcreator_form textarea {
-   width: 395px;
+   width: 545px;
 }
 #bloc > .formcreator_form select {
-   width: 417px;
+   width: 567px;
 }
 #footer-login {
    position: relative !important;
