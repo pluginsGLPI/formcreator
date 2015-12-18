@@ -717,7 +717,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       // Parse datas and tags
       $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
-      $datas['content']               = $this->parseTags($this->fields['comment'], $formanswer);
+      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'], $formanswer));
       $datas['entities_id']           = (isset($_SESSION['glpiactive_entity']))
                                           ? $_SESSION['glpiactive_entity']
                                           : $form->fields['entities_id'];
@@ -789,6 +789,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          }
          $datas['_users_id_requester']   = $user_id;
       }
+      Toolbox::logDebug($datas);
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
@@ -949,6 +950,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                $value = '';
             }
             $value   = PluginFormcreatorFields::getValue($question_line, $value);
+            Toolbox::logDebug($value);
             if (is_array($value)) {
                if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);

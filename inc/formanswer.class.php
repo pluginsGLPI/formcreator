@@ -648,9 +648,26 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
                if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
                   if (is_array($value)) {
-                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
+                     if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                        $output_value = '<ul>';
+                        foreach ($value as $choice) {
+                         $output_value .= '<li>' . $choice . '</li>';
+                        }
+                        $output_value .= '</ul>';
+                     } else {
+                        $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
+                     }
                   } elseif (is_array(json_decode($value))) {
-                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
+                     if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                        $value = json_decode($value);
+                        $output_value = '<ul>';
+                        foreach ($value as $choice) {
+                         $output_value .= '<li>' . $choice . '</li>';
+                        }
+                        $output_value .= '</ul>';
+                     } else {
+                        $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
+                     }
                   } else {
                      $output_value = $value;
                   }
