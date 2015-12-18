@@ -76,7 +76,13 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
             $this->getUserByField('requester_id', true);
             break;
          case self::APPROVER :
-            $this->getUserByField('validator_id', true);
+            $form = new PluginFormcreatorForm();
+            $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
+            if ($form->fields['validation_required'] == 1) {
+               $this->getUserByField('validator_id', true);
+            } elseif ($form->fields['validation_required'] == 2) {
+               $this->getAddressesByGroup(0, $this->obj->fields['validator_id']);
+            }
             break;
       }
    }

@@ -219,10 +219,34 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
 
-//      echo '<form name="formcreator_form' . $form->getID() . '" method="post" role="form" enctype="multipart/form-data"
-//               action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/formanswer.form.php"
-//               class="formcreator_form form_horizontal">';
-//      echo '<h1 class="form-title">' . $form->fields['name'] . '</h1>';
+      $canEdit       = $this->fields['status'] == 'refused' && $_SESSION['glpiID'] == $this->fields['requester_id'];
+
+      if (($form->fields['validation_required'] == 1) && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
+         $canValidate = true;
+      } elseif(($form->fields['validation_required'] == 2)) {
+         // Get validator users from group
+         $query = "SELECT u.`id`
+                   FROM `glpi_users` u
+                   INNER JOIN `glpi_groups_users` gu ON gu.`users_id` = u.`id`
+                   INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+                   INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+                   INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+                   WHERE pr.`name` = 'ticketvalidation'
+                   AND (
+                     pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
+                     OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
+                   AND gu.`groups_id` = " . $this->fields['validator_id'] . "
+                   AND u.`id` = " . (int) $_SESSION['glpiID'];
+         $result = $GLOBALS['DB']->query($query);
+
+         if ($GLOBALS['DB']->numrows($result) == 1) {
+            $canValidate = true;
+         } else {
+            $canValidate = false;
+         }
+      } else {
+         $canValidate = false;
+      }
 
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
@@ -272,7 +296,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             // if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
             //    $found['answer'] = json_decode($found['answer']);
             // }
-            $canEdit = $this->fields['status'] == 'refused' && $_SESSION['glpiID'] == $this->fields['requester_id'];
             if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
                PluginFormcreatorFields::showField($question_line, $found['answer'], $canEdit);
             }
@@ -290,7 +313,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          echo '</div>';
 
       // Display validation form
-      } elseif(($this->fields['status'] == 'waiting') && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
+      } elseif(($this->fields['status'] == 'waiting') && $canValidate) {
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '">';

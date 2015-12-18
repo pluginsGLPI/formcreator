@@ -377,7 +377,8 @@ form.formcreator_form {
    background-image: linear-gradient(top, #fff 0%, #eee 50%);
 }
 .pq-select-multiple {
-   width: 95% !important;
+   display: inline-block;
+   width: 85% !important;
 }
 
 .select2-container + select {
@@ -386,4 +387,10 @@ form.formcreator_form {
 
 #footer-login{
    display: none;
+}
+
+.validators_bloc .select2-container {
+   float: left;
+   width: 13% !important;
+   margin: 0 1% 0 0;
 }
