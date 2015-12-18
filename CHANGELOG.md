@@ -1,6 +1,24 @@
 GLPI Formcreator 0.85 ChangeLog
 ===============================
 
+Version 0.90-1.3.3
+------------------
+
+### Bugfixes:
+
+* Fix destination formating
+* Remove notification "form accepted" when no validation needed
+* Fix a security issue : Forms could always be shown as public forms
+* Fix Formcreator menu was displayed too times due to a bug in GLPI
+
+### Features:
+
+* Improve public form display
+* Refactor GLPI object list questions display to ignore GLPI limitations on authentification
+* Add groups to validators
+
+
+
 Version 0.90-1.3.2
 ------------------
 
