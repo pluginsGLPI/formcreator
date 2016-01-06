@@ -352,12 +352,12 @@ class PluginFormcreatorForm extends CommonDBTM
                 GROUP BY u.`id`
                 ORDER BY u.`name`";
       $result = $GLOBALS['DB']->query($query);
-      $groups = array();
+      $groups_users = array();
 
       echo '<div id="validators_users" style="width: 100%">';
       echo '<select name="_validator_users[]" size="4" style="width: 100%" multiple id="validator_users">';
       while($user = $GLOBALS['DB']->fetch_assoc($result)) {
-         $groups[$user['groups_id']] = $user['groups_name'];
+         $groups_users[] = $user['id'];
          echo '<option value="' . $user['id'] . '"';
          if (in_array($user['id'], $validators)) echo ' selected="selected"';
          echo '>' . $user['name'] . '</option>';
@@ -368,10 +368,20 @@ class PluginFormcreatorForm extends CommonDBTM
       // Validators groups
       echo '<div id="validators_groups" style="width: 100%">';
       echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
-      foreach ($groups AS $groups_id => $groups_name) {
-         echo '<option value="' . $groups_id . '"';
-         if (in_array($groups_id, $validators)) echo ' selected="selected"';
-         echo '>' . $groups_name . '</option>';
+      if (!empty($groups_users)) {
+         $query = "SELECT g.`id`, g.`completename`
+                   FROM `glpi_groups` g
+                   INNER JOIN `glpi_groups_users` gu
+                     ON g.`id` = gu.`groups_id`
+                     AND gu.`users_id` IN (" . implode(',', $groups_users) . ")
+                   ORDER BY g.`completename`";
+                   Toolbox::logDebug($query);
+         $result = $GLOBALS['DB']->query($query);
+         while($group = $GLOBALS['DB']->fetch_assoc($result)) {
+            echo '<option value="' . $group['id'] . '"';
+            if (in_array($group['id'], $validators)) echo ' selected="selected"';
+            echo '>' . $group['completename'] . '</option>';
+         }
       }
       echo '</select>';
       echo '</div>';
@@ -849,7 +859,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
    /**
     * Save form validators
-    * 
+    *
     * @return void
     */
    private function updateValidators()
