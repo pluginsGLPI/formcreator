@@ -791,7 +791,6 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          }
          $datas['_users_id_requester']   = $user_id;
       }
-      Toolbox::logDebug($datas);
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
@@ -951,8 +950,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
             } else {
                $value = '';
             }
-            $value   = PluginFormcreatorFields::getValue($question_line, $value);
-            Toolbox::logDebug($value);
+
+            $value = PluginFormcreatorFields::getValue($question_line, $value);
             if (is_array($value)) {
                if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);

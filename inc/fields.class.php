@@ -132,9 +132,6 @@ class PluginFormcreatorFields
                'value'    => $line['show_value']
             );
       }
-Toolbox::logDebug($query);
-Toolbox::logDebug($values);
-Toolbox::logDebug($conditions);
 
       foreach ($conditions as $condition) {
          if (!isset($values[$condition['field']]))             return false;

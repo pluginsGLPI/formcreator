@@ -375,7 +375,6 @@ class PluginFormcreatorForm extends CommonDBTM
                      ON g.`id` = gu.`groups_id`
                      AND gu.`users_id` IN (" . implode(',', $groups_users) . ")
                    ORDER BY g.`completename`";
-                   Toolbox::logDebug($query);
          $result = $GLOBALS['DB']->query($query);
          while($group = $GLOBALS['DB']->fetch_assoc($result)) {
             echo '<option value="' . $group['id'] . '"';
