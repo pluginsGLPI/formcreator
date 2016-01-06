@@ -826,24 +826,7 @@ class PluginFormcreatorForm extends CommonDBTM
    **/
    public function post_addItem()
    {
-      // Save form validators
-      $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators` WHERE `forms_id` = "' . $this->getID() . '"';
-      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-      if ( (($this->fields['validation_required'] == 1) && (!empty($this->input['_validator_users'])))
-            || (($this->fields['validation_required'] == 2) && (!empty($this->input['_validator_groups']))) ) {
-
-         $validators = ($this->fields['validation_required'] == 1)
-                        ? $this->input['_validator_users']
-                        : $this->input['_validator_groups'];
-
-         foreach ($validators as $user) {
-            $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
-                      `forms_id` = "' . $this->getID() . '",
-                      `users_id` = "' . $user . '"';
-            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-         }
-      }
-
+      $this->updateValidators();
       return true;
    }
 
@@ -859,26 +842,33 @@ class PluginFormcreatorForm extends CommonDBTM
       if (isset($input['access_rights']) || isset($_POST['massiveaction'])) {
          return $input;
       } else {
-         // Save form validators
-         $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators` WHERE `forms_id` = "' . $this->getID() . '"';
-         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-
-
-         if ( (($this->fields['validation_required'] == 1) && (!empty($this->input['_validator_users'])))
-               || (($this->fields['validation_required'] == 2) && (!empty($this->input['_validator_groups']))) ) {
-
-            $validators = ($this->fields['validation_required'] == 1)
-                           ? $this->input['_validator_users']
-                           : $this->input['_validator_groups'];
-            foreach ($validators as $user) {
-               $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
-                         `forms_id` = "' . $this->getID() . '",
-                         `users_id` = "' . $user . '"';
-               $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-            }
-         }
-
+         $this->updateValidators();
          return $this->prepareInputForAdd($input);
+      }
+   }
+
+   /**
+    * Save form validators
+    * 
+    * @return void
+    */
+   private function updateValidators()
+   {
+      $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators` WHERE `forms_id` = ' . (int) $this->getID();
+      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+
+      if ( (($this->input['validation_required'] == 1) && (!empty($this->input['_validator_users'])))
+            || (($this->input['validation_required'] == 2) && (!empty($this->input['_validator_groups']))) ) {
+
+         $validators = ($this->input['validation_required'] == 1)
+                        ? $this->input['_validator_users']
+                        : $this->input['_validator_groups'];
+         foreach ($validators as $user) {
+            $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
+                      `forms_id` = ' . (int) $this->getID() . ',
+                      `users_id` = ' . (int) $user;
+            $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         }
       }
    }
 
