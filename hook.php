@@ -68,12 +68,10 @@ function plugin_formcreator_addDefaultWhere($type)
 {
    switch ($type) {
       case "PluginFormcreatorFormanswer" :
-         if (Session::haveRight('config', UPDATE)) {
-            return " 1=1 ";
-         } else if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+         if (Session::haveRight('config', UPDATE)
+            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-         return " `glpi_plugin_formcreator_formanswers`.`validator_id` = " . $_SESSION['glpiID'].
-                " OR `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
+            return " 1=1 ";
 
          } else {
             return " `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
@@ -87,7 +85,7 @@ function plugin_formcreator_addDefaultWhere($type)
 function plugin_formcreator_AssignToTicket($types)
 {
    $types['PluginFormcreatorFormanswer'] = PluginFormcreatorFormanswer::getTypeName();
-      
+
    return $types;
 }
 
