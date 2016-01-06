@@ -31,7 +31,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       switch ($item->getType()) {
          case "PluginFormcreatorForm":
             $env       = new self;
-            $found_env = $env->find('plugin_formcreator_forms_id = ' . $item->getID());
+            $found_env = $env->find('plugin_formcreator_forms_id = ' . (int) $item->getID());
             $nb        = count($found_env);
             return self::createTabEntry(self::getTypeName($nb), $nb);
       }
@@ -47,7 +47,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '</tr>';
 
       $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $item->getID());
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . (int) $item->getID());
       $target_number   = count($found_targets);
       $token           = Session::getNewCSRFToken();
       $i = 0;
@@ -132,9 +132,9 @@ class PluginFormcreatorTarget extends CommonDBTM
             $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
                       (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`)
                       VALUES (
-                         $id_targetticket, \"requester\", \"creator\", 1
+                         $id_targetticket, 'requester', 'creator', 1
                       ), (
-                         $id_targetticket, \"observer\", \"validator\", 1
+                         $id_targetticket, 'observer', 'validator', 1
                       );";
             $GLOBALS['DB']->query($query);
             break;
@@ -271,24 +271,24 @@ class PluginFormcreatorTarget extends CommonDBTM
             $result = $GLOBALS['DB']->query($query);
             while ($line = $GLOBALS['DB']->fetch_array($result)) {
                // Insert target ticket
-               $query_insert = 'INSERT INTO ' . $table_targetticket . ' SET
-                                 `name` = "' . htmlspecialchars($line['name']) . '",
-                                 `tickettemplates_id` = "' . (int) $line['tickettemplates_id'] . '",
-                                 `comment` = "' . htmlspecialchars($line['content']) . '"';
+               $query_insert = "INSERT INTO `$table_targetticket` SET
+                                 `name` = '" . htmlspecialchars($line['name']) . "',
+                                 `tickettemplates_id` = " . (int) $line['tickettemplates_id'] . ",
+                                 `comment` = '" . htmlspecialchars($line['content']) . "'";
                $GLOBALS['DB']->query($query_insert);
                $targetticket_id = $GLOBALS['DB']->insert_id();
 
                // Update target with target ticket id
-               $query_update = 'UPDATE `' . $table . '`
-                                SET `items_id` = ' . (int) $targetticket_id . '
-                                WHERE `id` = ' . (int) $line['id'];
+               $query_update = "UPDATE `$table`
+                                SET `items_id` = " . (int) $targetticket_id . "
+                                WHERE `id` = " . (int) $line['id'];
                $GLOBALS['DB']->query($query_update);
             }
 
             // Remove useless column content
             $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `content`;");
 
-            
+
             /**
              * Migration of special chars from previous versions
              *
@@ -299,9 +299,9 @@ class PluginFormcreatorTarget extends CommonDBTM
                           FROM `$table_targetticket`";
                $result = $GLOBALS['DB']->query($query);
                while ($line = $GLOBALS['DB']->fetch_array($result)) {
-                  $query_update = 'UPDATE `' . $table_targetticket . '` SET
-                                     `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
-                                   WHERE `id` = ' . $line['id'];
+                  $query_update = "UPDATE `$table_targetticket` SET
+                                     `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
+                                   WHERE `id` = " . (int) $line['id'];
                   $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
                }
             }
@@ -313,7 +313,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
    public static function uninstall()
    {
-      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
+      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
       return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
    }
 }

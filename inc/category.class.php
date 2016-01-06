@@ -69,10 +69,10 @@ class PluginFormcreatorCategory extends CommonDropdown
                  FROM `$table`";
       $result = $GLOBALS['DB']->query($query);
       while ($line = $GLOBALS['DB']->fetch_array($result)) {
-         $query_update = 'UPDATE `' . $table . '` SET
-                            `name`    = "' . plugin_formcreator_encode($line['name']) . '",
-                            `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
-                          WHERE `id` = ' . $line['id'];
+         $query_update = "UPDATE `$table` SET
+                            `name`    = '" . plugin_formcreator_encode($line['name']) . "',
+                            `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
+                          WHERE `id` = " . (int) $line['id'];
          $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
       }
 

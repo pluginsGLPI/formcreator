@@ -55,7 +55,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          case "PluginFormcreatorForm":
             $number      = 0;
             $section     = new PluginFormcreatorSection();
-            $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
+            $found     = $section->find('plugin_formcreator_forms_id = ' . (int) $item->getID());
             $tab_section = array();
             foreach($found as $section_item) {
                $tab_section[] = $section_item['id'];
@@ -88,7 +88,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Get sections
       $section          = new PluginFormcreatorSection();
-      $found_sections = $section->find('plugin_formcreator_forms_id = ' . $item->getId(), '`order`');
+      $found_sections = $section->find('plugin_formcreator_forms_id = ' . (int) $item->getId(), '`order`');
       $section_number   = count($found_sections);
       $tab_sections     = array();
       $tab_questions    = array();
@@ -135,7 +135,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // Get questions
          $question          = new PluginFormcreatorQuestion();
-         $found_questions = $question->find('plugin_formcreator_sections_id = ' . $section['id'], '`order`');
+         $found_questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section['id'], '`order`');
          $question_number   = count($found_questions);
          $i = 0;
          foreach ($found_questions as $question) {
@@ -466,9 +466,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $value = plugin_formcreator_encode($input['show_value']);
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
-                  `show_field`     = $show_field,
-                  `show_condition` = \"{$input['show_condition']}\",
-                  `show_value`     = \"{$value}\"";
+                  `show_field`     = " . (int) $show_field . ",
+                  `show_condition` = '" . $input['show_condition'] . "',
+                  `show_value`     = '" . $value . "'";
       $GLOBALS['DB']->query($query);
       // ===============================================================
    }
@@ -657,13 +657,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      break;
                }
 
-               $query_udate = 'UPDATE ' . $table . ' SET
-                                  `fieldtype`      = "' . $fieldtype . '",
-                                  `values`         = "' . htmlspecialchars($values) . '",
-                                  `default_values` = "' . htmlspecialchars($default) . '",
-                                  `regex`          = "' . $regex . '",
-                                  `required`       = "' . $required .' "
-                               WHERE `id` = ' . $line['id'];
+               $query_udate = "UPDATE `$table` SET
+                                  `fieldtype`      = '" . $fieldtype . "',
+                                  `values`         = '" . htmlspecialchars($values) . "',
+                                  `default_values` = '" . htmlspecialchars($default) . "',
+                                  `regex`          = '" . $regex . "',
+                                  `required`       = " . (int) $required . "
+                               WHERE `id` = " . (int) $line['id'];
                $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
             }
 
@@ -730,7 +730,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
                $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
                                  `show_rule` = '$show_rule'
-                               WHERE `id` = {$line['id']}";
+                               WHERE `id` = " . (int) $line['id'];
                $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
 
                $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
@@ -760,12 +760,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
                     FROM `glpi_plugin_formcreator_questions`";
          $result = $GLOBALS['DB']->query($query);
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $query_update = 'UPDATE `glpi_plugin_formcreator_questions` SET
-                               `name`           = "' . plugin_formcreator_encode($line['name']) . '",
-                               `values`         = "' . plugin_formcreator_encode($line['values']) . '",
-                               `default_values` = "' . plugin_formcreator_encode($line['default_values']) . '",
-                               `description`    = "' . plugin_formcreator_encode($line['description']) . '"
-                             WHERE `id` = ' . $line['id'];
+            $query_update = "UPDATE `glpi_plugin_formcreator_questions` SET
+                               `name`           = '" . plugin_formcreator_encode($line['name']) . "',
+                               `values`         = '" . plugin_formcreator_encode($line['values']) . "',
+                               `default_values` = '" . plugin_formcreator_encode($line['default_values']) . "',
+                               `description`    = '" . plugin_formcreator_encode($line['description']) . "'
+                             WHERE `id` = " . (int) $line['id'];
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
          }
 
@@ -774,9 +774,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
                     FROM `glpi_plugin_formcreator_questions_conditions`";
          $result = $GLOBALS['DB']->query($query);
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $query_update = 'UPDATE `glpi_plugin_formcreator_questions_conditions` SET
-                               `show_value` = "' . plugin_formcreator_encode($line['show_value']) . '"
-                             WHERE `id` = ' . $line['id'];
+            $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
+                               `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
+                             WHERE `id` = " . (int) $line['id'];
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
          }
       }

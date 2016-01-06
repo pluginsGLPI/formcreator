@@ -729,8 +729,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       // Define due date
       $answer = new PluginFormcreatorAnswer();
-      $found  = $answer->find('plugin_formcreator_formanwers_id = ' . $formanswer->fields['id']
-                  . ' AND plugin_formcreator_question_id = ' . $this->fields['due_date_question']);
+      $found  = $answer->find('plugin_formcreator_formanwers_id = ' . (int) $formanswer->fields['id']
+                  . ' AND plugin_formcreator_question_id = ' . (int) $this->fields['due_date_question']);
       $date   = array_shift($found);
       $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
 
@@ -778,8 +778,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
             case 'question_group' :
             case 'question_supplier' :
                $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('plugin_formcreator_question_id = ' . $actor['actor_value']
-                           . ' AND plugin_formcreator_formanwers_id = ' . $formanswer->fields['id']);
+               $found   = $answer->find('`plugin_formcreator_question_id` = ' . (int) $actor['actor_value']
+                           . ' AND `plugin_formcreator_formanwers_id` = ' . (int) $formanswer->fields['id']);
                $found   = array_shift($found);
 
                if (empty($found['answer'])) {
@@ -837,8 +837,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
             case 'question_group' :
             case 'question_supplier' :
                $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('plugin_formcreator_question_id = ' . $actor['actor_value']
-                           . ' AND plugin_formcreator_formanwers_id = ' . $formanswer->fields['id']);
+               $found   = $answer->find('`plugin_formcreator_question_id` = ' . (int) $actor['actor_value']
+                           . ' AND `plugin_formcreator_formanwers_id` = ' . (int) $formanswer->fields['id']);
                $found   = array_shift($found);
 
                if (empty($found['answer'])) {
@@ -885,7 +885,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       // Attach documents to ticket
-      $found = $docItem->find('itemtype = "PluginFormcreatorFormanswer" AND items_id = ' . $formanswer->getID());
+      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer' AND items_id = " . (int) $formanswer->getID());
       if(count($found) > 0) {
          foreach ($found as $document) {
             $docItem->add(array(
@@ -928,8 +928,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
 
       $section     = new PluginFormcreatorSection();
-      $found     = $section->find('plugin_formcreator_forms_id = '
-                                    . $formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
+      $found       = $section->find('plugin_formcreator_forms_id = '
+                     . (int) $formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
       $tab_section = array();
       foreach($found as $section_item) {
          $tab_section[] = $section_item['id'];
@@ -943,8 +943,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
             $name   = $question_line['name'];
 
             $answer = new PluginFormcreatorAnswer();
-            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $formanswer->getID()
-                                    . ' AND `plugin_formcreator_question_id` = ' . $id);
+            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $formanswer->getID()
+                                    . ' AND `plugin_formcreator_question_id` = ' . (int) $id);
             if (count($found)) {
                $datas = array_shift($found);
                $value = $datas['answer'];

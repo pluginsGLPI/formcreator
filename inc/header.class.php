@@ -23,7 +23,7 @@ class PluginFormcreatorHeader extends CommonDropdown
    {
 
       $header  = new self();
-      $found = $header->find('entities_id = ' . $_SESSION['glpiactive_entity']);
+      $found = $header->find('entities_id = ' . (int) $_SESSION['glpiactive_entity']);
       if (count($found) > 0) {
          echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
             <h3 class="tab_bg_2" style="padding: 5px">
@@ -104,7 +104,7 @@ class PluginFormcreatorHeader extends CommonDropdown
    public function prepareInputForAdd($input)
    {
       $header = new self();
-      $found = $header->find('entities_id = ' . $input['entities_id']);
+      $found = $header->find('entities_id = ' . (int) $input['entities_id']);
       if (count($found) > 0) {
          Session::addMessageAfterRedirect(__('An header already exists for this entity! You can have only one header per entity.', 'formcreator'), false, ERROR);
          return array();

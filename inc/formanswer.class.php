@@ -280,17 +280,17 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $questions     = array();
 
       $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $form->getID(), '`order` ASC');
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . (int) $form->getID(), '`order` ASC');
       echo '<div class="form_section">';
       foreach ($find_sections as $section_line) {
          echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
-         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         $questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
             $answer = new PluginFormcreatorAnswer();
-            $found = $answer->find('plugin_formcreator_formanwers_id = "' . $this->getID() . '"
-                            AND plugin_formcreator_question_id = "' . $question_line['id'] . '"');
+            $found = $answer->find("plugin_formcreator_formanwers_id = " . (int) $this->getID() . "
+                            AND plugin_formcreator_question_id = " . (int) $question_line['id']);
             $found = array_shift($found);
 
             // if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
@@ -414,7 +414,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                if ($question['fieldtype'] != 'file') {
                   $answer = new PluginFormcreatorAnswer();
                   $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
-                                          AND `plugin_formcreator_question_id` = ' . $question['id']);
+                                          AND `plugin_formcreator_question_id` = ' . (int) $question['id']);
                   $found = array_shift($found);
 
                   $data_value = $datas['formcreator_field_' . $question['id']];
@@ -440,7 +440,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $doc    = new Document();
                   $answer = new PluginFormcreatorAnswer();
                   $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
-                                          AND `plugin_formcreator_question_id` = ' . $question['id']);
+                                          AND `plugin_formcreator_question_id` = ' . (int) $question['id']);
                   $found  = array_shift($found);
 
                   $file_datas                 = array();
@@ -454,7 +454,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   if ($docID = $doc->add($file_datas)) {
                      $table    = getTableForItemType('Document');
                      $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
-                     $query    = "UPDATE $table SET filename = '" . $filename . "' WHERE id = " . $docID;
+                     $query    = "UPDATE `$table` SET `filename` = '" . $filename . "' WHERE `id` = " . (int) $docID;
                      $GLOBALS['DB']->query($query);
 
                      $docItem = new Document_Item();
@@ -539,7 +539,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                if ($docID = $doc->add($file_datas)) {
                   $table    = getTableForItemType('Document');
                   $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
-                  $query    = "UPDATE $table SET filename = '" . $filename . "' WHERE id = " . $docID;
+                  $query    = "UPDATE `$table` SET `filename` = '" . $filename . "' WHERE `id` = " . (int) $docID;
                   $GLOBALS['DB']->query($query);
 
                   $docItem = new Document_Item();
@@ -595,7 +595,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . (int) $this->fields['plugin_formcreator_forms_id']);
 
       // Generate targets
       foreach($found_targets as $target) {
@@ -629,10 +629,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = '
-                                             . $this->fields['plugin_formcreator_forms_id'], '`order` ASC');
+                                             . (int) $this->fields['plugin_formcreator_forms_id'], '`order` ASC');
 
       $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID());
+      $answers = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $this->getID());
       $answers_values = array();
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
@@ -649,12 +649,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          // Display all fields of the section
          $question  = new PluginFormcreatorQuestion();
-         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         $questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
             $id     = $question_line['id'];
             $name   = $question_line['name'];
-            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . $this->getID()
-                                    . ' AND `plugin_formcreator_question_id` = ' . $id);
+            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $this->getID()
+                                    . ' AND `plugin_formcreator_question_id` = ' . (int) $id);
 
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
 
@@ -778,9 +778,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                     FROM `$table`";
          $result = $GLOBALS['DB']->query($query);
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $query_update = 'UPDATE `' . $table . '` SET
-                               `comment` = "' . plugin_formcreator_encode($line['comment']) . '"
-                             WHERE `id` = ' . $line['id'];
+            $query_update = "UPDATE `$table` SET
+                               `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
+                             WHERE `id` = " . (int) $line['id'];
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
          }
 

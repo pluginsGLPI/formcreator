@@ -113,14 +113,15 @@ class PluginFormcreatorFields
       $question->getFromDB($id);
       $fields     = $question->fields;
       $conditions = array();
+      $return     = false;
 
       // If the field is always shown
       if ($fields['show_rule'] == 'always') return true;
 
       // Get conditions to show or hide field
       $query = "SELECT `show_logic`, `show_field`, `show_condition`, `show_value`
-                FROM glpi_plugin_formcreator_questions_conditions
-                WHERE `plugin_formcreator_questions_id` = {$fields['id']}";
+                FROM `glpi_plugin_formcreator_questions_conditions`
+                WHERE `plugin_formcreator_questions_id` = " . (int) $fields['id'];
       $result = $GLOBALS['DB']->query($query);
       while ($line = $GLOBALS['DB']->fetch_array($result)) {
          $conditions[] = array(
@@ -131,6 +132,9 @@ class PluginFormcreatorFields
                'value'    => $line['show_value']
             );
       }
+Toolbox::logDebug($query);
+Toolbox::logDebug($values);
+Toolbox::logDebug($conditions);
 
       foreach ($conditions as $condition) {
          if (!isset($values[$condition['field']]))             return false;

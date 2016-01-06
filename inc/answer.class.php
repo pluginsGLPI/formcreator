@@ -123,9 +123,9 @@ class PluginFormcreatorAnswer extends CommonDBChild
                     FROM `$table`";
          $result = $GLOBALS['DB']->query($query);
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $query_update = 'UPDATE `' . $table . '` SET
-                               `answer` = "' . plugin_formcreator_encode($line['answer']) . '"
-                             WHERE `id` = ' . $line['id'];
+            $query_update = "UPDATE `$table` SET
+                               `answer` = '" . plugin_formcreator_encode($line['answer']) . "'
+                             WHERE `id` = " . (int) $line['id'];
             $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
          }
       }
@@ -144,7 +144,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
       $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
 
       // Delete logs of the plugin
-      $GLOBALS['DB']->query('DELETE FROM `glpi_logs` WHERE itemtype = "' . __CLASS__ . '"');
+      $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }

@@ -28,10 +28,10 @@ if ($plugin->isActivated("formcreator")) {
       $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
       $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors SET
                   `plugin_formcreator_targettickets_id` = $id,
-                  `actor_role`                          = \"{$_POST['actor_role']}\",
-                  `actor_type`                          = \"{$_POST['actor_type']}\",
-                  `actor_value`                         = \"$actor_value\",
-                  `use_notification`                    = \"$use_notification\"";
+                  `actor_role`                          = '" . $_POST['actor_role'] . "',
+                  `actor_type`                          = '" . $_POST['actor_type'] . "',
+                  `actor_value`                         = " . (int) $actor_value . ",
+                  `use_notification`                    = " . (int) $use_notification;
       $DB->query($query);
       Html::back();
 
@@ -52,7 +52,7 @@ if ($plugin->isActivated("formcreator")) {
 
       $itemtype = "PluginFormcreatorTargetTicket";
       $target   = new PluginFormcreatorTarget;
-      $found    = $target->find("itemtype = '$itemtype' AND items_id = '" . $_REQUEST['id'] . "'");
+      $found    = $target->find("itemtype = '$itemtype' AND items_id = " . (int) $_REQUEST['id']);
       $first    = array_shift($found);
       $form     = new PluginFormcreatorForm;
       $form->getFromDB($first['plugin_formcreator_forms_id']);
