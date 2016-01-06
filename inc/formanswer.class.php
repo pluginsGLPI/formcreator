@@ -184,7 +184,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    public function defineTabs($options = array())
    {
       $ong = array();
-      $this->addStandardTab(__CLASS__, $ong, $options);
+      $this->addDefaultFormTab($ong);
       if ($this->fields['id'] > 0) {
          $this->addStandardTab('Ticket', $ong, $options);
          $this->addStandardTab('Document_Item', $ong, $options);

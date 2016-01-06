@@ -45,6 +45,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $form = new PluginFormcreatorForm();
       $form->getFromDB($target['plugin_formcreator_forms_id']);
 
+      echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       // General information : name
@@ -657,6 +658,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       echo '</table>';
+      echo '</div>';
    }
 
    /**

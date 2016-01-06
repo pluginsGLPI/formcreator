@@ -50,6 +50,11 @@ function plugin_init_formcreator ()
 {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
+   // Hack for vertical display
+   if (isset($CFG_GLPI['layout_excluded_pages'])) {
+      array_push($CFG_GLPI['layout_excluded_pages'], "targetticket.form.php");
+   }
+
    // Set the plugin CSRF compliance (required since GLPI 0.84)
    $PLUGIN_HOOKS['csrf_compliant']['formcreator'] = true;
 
