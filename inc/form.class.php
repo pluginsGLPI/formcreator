@@ -767,7 +767,8 @@ class PluginFormcreatorForm extends CommonDBTM
             $query = 'SELECT g.`id`, g.`completename`
                       FROM `glpi_groups` g
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = g.`id`
-                      WHERE fv.`forms_id` = "' . $this->getID(). '"';
+                      WHERE fv.`forms_id` = ' . (int) $this->getID();
+                      Toolbox::logDebug($query);
             $result = $GLOBALS['DB']->query($query);
             while($validator = $GLOBALS['DB']->fetch_assoc($result)) {
                $validators[$validator['id']] = $validator['completename'];
@@ -778,7 +779,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $query = 'SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
                       FROM `glpi_users` u
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
-                      WHERE fv.`forms_id` = "' . $this->getID(). '"';
+                      WHERE fv.`forms_id` = ' . (int) $this->getID();
             $result = $GLOBALS['DB']->query($query);
             while($validator = $GLOBALS['DB']->fetch_assoc($result)) {
                $validators[$validator['id']] = formatUserName($validator['id'], $validator['name'], $validator['realname'], $validator['firstname']);
