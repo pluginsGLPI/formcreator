@@ -39,7 +39,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $rand = mt_rand();
 
       $obj = new PluginFormcreatorTarget();
-      $found = $obj->find('itemtype = "' . __CLASS__ . '" AND items_id = ' . $this->getID());
+      $found = $obj->find("itemtype = '" . __CLASS__ . "' AND items_id = " . (int) $this->getID());
       $target = array_shift($found);
 
       $form = new PluginFormcreatorForm();
