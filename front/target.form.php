@@ -20,6 +20,9 @@ if ($plugin->isActivated("formcreator")) {
       $target->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
+   } elseif(isset($_GET['id'])) {
+      $target->getFromDB($_GET['id']);
+      Html::redirect(Toolbox::getItemTypeFormURL($target->fields['itemtype']) . '?id=' . $_GET['id']);
    } else {
       Html::back();
    }
