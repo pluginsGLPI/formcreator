@@ -13,7 +13,19 @@ class dropdownField extends PluginFormcreatorField
             if ($this->fields['show_empty']) $values[0] = Dropdown::EMPTY_VALUE;
 
             $obj = new $this->fields['values']();
-            $result = $obj->find();
+            $obj->getEmpty();
+
+            $where = '';
+            $whereTab = array();
+            if (isset($obj->fields['is_deleted'])) {
+               $whereTab[] = '`is_deleted` = 0';
+            }
+            if (isset($obj->fields['is_active'])) {
+               $whereTab[] = '`is_active` = 1';
+            }
+            $where = implode(' AND ', $whereTab);
+
+            $result = $obj->find($where);
             foreach ($result AS $id => $datas) {
                if ($this->fields['values'] == 'User') {
                   $values[$id] = getUserName($id);
