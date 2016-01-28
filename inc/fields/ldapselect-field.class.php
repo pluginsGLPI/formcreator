@@ -55,7 +55,6 @@ class ldapselectField extends selectField
 
            } while($cookie !== null && $cookie != '');
 
-            if($this->fields['show_empty']) $tab_values = array('' => '-----') + $tab_values;
             asort($tab_values);
             return $tab_values;
          } catch(Exception $e) {
