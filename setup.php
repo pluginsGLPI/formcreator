@@ -61,6 +61,7 @@ function plugin_init_formcreator ()
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
    array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorFormanswer');
+   array_push($CFG_GLPI["document_types"], 'PluginFormcreatorFormanswer');
 
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
