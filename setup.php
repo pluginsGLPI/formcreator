@@ -78,14 +78,12 @@ function plugin_init_formcreator ()
                         FROM $form_table
                         WHERE $form_table.`is_active` = 1
                         AND $form_table.`is_deleted` = 0
-                        AND $form_table.`helpdesk_home` = 1
-                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '0')
                         AND $where
                         AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                            SELECT plugin_formcreator_forms_id
                            FROM $table_fp
                            WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))";
-
          $result = $GLOBALS['DB']->query($query);
          list($nb) = $GLOBALS['DB']->fetch_array($result);
          if ($nb > 0) {

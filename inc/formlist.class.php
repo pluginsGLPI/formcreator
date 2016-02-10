@@ -22,6 +22,7 @@ class PluginFormcreatorFormlist extends CommonGLPI
                   title="' . __('Forms waiting for validation', 'formcreator') . '"
                   alt="' . __('Forms waiting for validation', 'formcreator') . '">';
 
+      $menu['links']['search'] = PluginFormcreatorFormList::getSearchURL(false);
       if (PluginFormcreatorForm::canCreate()) {
          $menu['links']['add'] = PluginFormcreatorForm::getFormURL(false);
       }
