@@ -23,6 +23,10 @@ class dropdownField extends PluginFormcreatorField
             if (isset($obj->fields['is_active'])) {
                $whereTab[] = '`is_active` = 1';
             }
+            $table = getTableForItemType($this->fields['values']);
+            if (isset($obj->fields['entities_id'])) {
+               $whereTab[] = getEntitiesRestrictRequest('', $table);
+            }
             $where = implode(' AND ', $whereTab);
 
             $result = $obj->find($where);
