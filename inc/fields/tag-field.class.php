@@ -18,7 +18,7 @@ class tagField extends dropdownField
             $obj = new PluginTagTag();
             $obj->getEmpty();
 
-            $where = "`type_menu` LIKE '%\"Ticket\"%'";
+            $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
             $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
 
             $result = $obj->find($where);
