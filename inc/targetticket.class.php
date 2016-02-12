@@ -165,6 +165,109 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // Due date type selection end
       // -------------------------------------------------------------------------------------------
 
+      // Ticket Entity
+      echo '<tr class="line1">';
+      echo '<td width="15%">' . __('Destination entity') . '</td>';
+      echo '<td width="25%">';
+      $rand = mt_rand();
+      Dropdown::showFromArray('destination_entity', array(
+         'requester' => __("Requester user's entity", 'formcreator'),
+         'form'      => __('The form entity', 'formcreator'),
+         'validator' => __('Default entity of the validator', 'formcreator'),
+         'specific'  => __('Specific entity', 'formcreator'),
+         'user'      => __('Default entity of a user type question answer', 'formcreator'),
+         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
+      ), array(
+         'value'     => $this->fields['destination_entity'],
+         'on_change' => 'change_entity()',
+         'rand'      => $rand,
+      ));
+
+      $script = <<<EOS
+         function change_entity() {
+            $('#entity_specific_title').hide();
+            $('#entity_user_title').hide();
+            $('#entity_entity_title').hide();
+            $('#entity_specific_value').hide();
+            $('#entity_user_value').hide();
+            $('#entity_entity_value').hide();
+
+            switch($('#dropdown_destination_entity$rand').val()) {
+               case 'specific' :
+                  $('#entity_specific_title').show();
+                  $('#entity_specific_value').show();
+                  break;
+               case 'user' :
+                  $('#entity_user_title').show();
+                  $('#entity_user_value').show();
+                  break;
+               case 'entity' :
+                  $('#entity_entity_title').show();
+                  $('#entity_entity_value').show();
+                  break;
+            }
+         }
+         change_entity();
+EOS;
+
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
+      echo '<span id="entity_user_title" style="display: none">' . __('User type question', 'formcreator') . '</span>';
+      echo '<span id="entity_entity_title" style="display: none">' . __('Entity type question', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="entity_specific_value" style="display: none">';
+      Entity::dropdown(array(
+         'name' => '_destination_entity_value_specific',
+         'value' => $this->fields['destination_entity_value'],
+      ));
+      echo '</div>';
+
+      echo '<div id="entity_user_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = " . (int) $this->getID() . "
+                AND q.fieldtype = 'glpiselect'
+                AND q.values = 'User'";
+      $result2 = $GLOBALS['DB']->query($query2);
+      $users_questions = array();
+      while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, array(
+         'value' => $this->fields['destination_entity_value'],
+      ));
+      echo '</div>';
+
+      echo '<div id="entity_entity_value" style="display: none">';
+      // select all entity questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = " . (int) $this->getID() . "
+                AND q.fieldtype = 'glpiselect'
+                AND q.values = 'Entity'";
+      $result2 = $GLOBALS['DB']->query($query2);
+      $entities_questions = array();
+      while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+         $entities_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, array(
+         'value' => $this->fields['destination_entity_value'],
+      ));
+      echo '</div>';
+
+      echo '</td>';
+
+      echo '</tr>';
+
       if ($form->fields['validation_required']) {
          echo '<tr class="line0">';
          echo '<td colspan="4">';
@@ -689,6 +792,21 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          $input['comment'] = Html::entity_decode_deep($input['comment']);
       }
 
+      switch ($input['destination_entity']) {
+         case 'specific' :
+            $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
+            break;
+         case 'user' :
+            $input['destination_entity_value'] = $input['_destination_entity_value_user'];
+            break;
+         case 'entity' :
+            $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
+            break;
+         default :
+            $input['destination_entity_value'] = 'NULL';
+            break;
+      }
+
       return $input;
    }
 
@@ -720,12 +838,68 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // Parse datas and tags
       $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
       $datas['content']               = htmlentities($this->parseTags($this->fields['comment'], $formanswer));
-      $datas['entities_id']           = (isset($_SESSION['glpiactive_entity']))
-                                          ? $_SESSION['glpiactive_entity']
-                                          : $form->fields['entities_id'];
       $datas['_users_id_requester']   = 0;
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
+
+      // Computation of the entity
+      switch ($this->fields['destination_entity']) {
+         // Requester's entity
+         case 'requester' :
+            $userObj = new User();
+            $userObj->getFromDB($formanswer->fields['requester_id']);
+            $datas['entities_id'] = $userObj->fields['entities_id'];
+            break;
+
+         // Specific entity
+         case 'specific' :
+            $datas['entities_id'] = $this->fields['destination_entity_value'];
+            break;
+
+         // The form entity
+         case 'form' :
+            $datas['entities_id'] = $form->fields['entities_id'];
+            break;
+
+         // The validator entity
+         case 'validator' :
+            $userObj = new User();
+            $userObj->getFromDB($formanswer->fields['validator_id']);
+            $datas['entities_id'] = $userObj->fields['entities_id'];
+            break;
+
+         // Default entity of a user from the answer of a user's type question
+         case 'user' :
+            $answer  = new PluginFormcreatorAnswer();
+            $found   = $answer->find('plugin_formcreator_formanwers_id = ' . (int) $formanswer->fields['id']
+                        . ' AND plugin_formcreator_question_id = ' . (int) $this->fields['destination_entity_value']);
+            $user    = array_shift($found);
+            $user_id = $user['answer'];
+
+            if ($user_id > 0) {
+               $userObj = new User();
+               $userObj->getFromDB($user_id);
+               $datas['entities_id'] = $userObj->fields['entities_id'];
+            } else {
+               $datas['entities_id'] = 0;
+            }
+            break;
+
+         // Entity from the answer of an entity's type question
+         case 'entity' :
+            $answer = new PluginFormcreatorAnswer();
+            $found  = $answer->find('plugin_formcreator_formanwers_id = ' . (int) $formanswer->fields['id']
+                        . ' AND plugin_formcreator_question_id = ' . (int) $this->fields['destination_entity_value']);
+            $entity = array_shift($found);
+
+            $datas['entities_id'] = (int) $entity['answer'];
+            break;
+
+         // Requester current entity
+         default :
+            $datas['entities_id'] = 0;
+            break;
+      }
 
       // Define due date
       $answer = new PluginFormcreatorAnswer();
@@ -1019,17 +1193,29 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                      `due_date_question` INT NULL DEFAULT NULL,
                      `due_date_value` TINYINT NULL DEFAULT NULL,
                      `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-                     `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE
+                     `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
+                     `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
+                     `destination_entity_value` int(11) NULL DEFAULT NULL,
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
-      } elseif(!FieldExists($table, 'due_date_rule', false)) {
-         $query = "ALTER TABLE `$table`
-                     ADD `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
-                     ADD `due_date_question` INT NULL DEFAULT NULL,
-                     ADD `due_date_value` TINYINT NULL DEFAULT NULL,
-                     ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-                     ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      } else {
+         if(!FieldExists($table, 'due_date_rule', false)) {
+            $query = "ALTER TABLE `$table`
+                        ADD `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
+                        ADD `due_date_question` INT NULL DEFAULT NULL,
+                        ADD `due_date_value` TINYINT NULL DEFAULT NULL,
+                        ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
+                        ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
+            $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         }
+
+         // Migration to Formcreator 0.90-1.4
+         if(!FieldExists($table, 'destination_entity', false)) {
+            $query = "ALTER TABLE `$table`
+                        ADD `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
+                        ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
+            $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         }
       }
 
       if (!TableExists('glpi_plugin_formcreator_targettickets_actors')) {
