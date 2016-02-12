@@ -797,6 +797,37 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          return false;
       }
 
+      // Add tag if presents
+      $plugin = new Plugin();
+      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         $tagObj = new PluginTagTagItem();
+         $tags   = array();
+
+         $query = "SELECT answer
+                   FROM `glpi_plugin_formcreator_answers`
+                   WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
+                   AND `plugin_formcreator_question_id` IN (
+                      SELECT q.`id`
+                      FROM `glpi_plugin_formcreator_questions` q
+                      LEFT JOIN `glpi_plugin_formcreator_sections` s ON  q.`plugin_formcreator_sections_id` = s.`id`
+                      WHERE q.`fieldtype` = 'tag'
+                      AND s.`plugin_formcreator_forms_id` = " . (int) $formanswer->fields['plugin_formcreator_forms_id'] . "
+                   )";
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $tags = array_merge($tags, json_decode($line['answer']));
+         }
+         $tags = array_unique($tags);
+
+         foreach ($tags as $tag) {
+            $tagObj->add(array(
+               'plugin_tag_tags_id' => $tag,
+               'items_id'           => $ticketID,
+               'itemtype'           => 'Ticket',
+            ));
+         }
+      }
+
       // Add link between Ticket and FormAnswer
       $itemlink = new Item_Ticket();
       $itemlink->add(array(

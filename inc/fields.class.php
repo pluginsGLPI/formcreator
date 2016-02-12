@@ -34,6 +34,7 @@ class PluginFormcreatorFields
    {
       // Get field types and file path
       $tab_field_types = self::getTypes();
+      $plugin = new Plugin();
 
       // Initialize array
       $tab_field_types_name     = array();
@@ -42,6 +43,11 @@ class PluginFormcreatorFields
       // Get localized names of field types
       foreach ($tab_field_types as $field_type => $class_file) {
          $classname                         = $field_type . 'Field';
+
+         if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
+            continue;
+         }
+
          $tab_field_types_name[$field_type] = $classname::getName();
       }
 
@@ -95,6 +101,12 @@ class PluginFormcreatorFields
 
       if(array_key_exists($field['fieldtype'], $tab_field_types)) {
          $fieldClass = $field['fieldtype'] . 'Field';
+
+         $plugin = new Plugin();
+         if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
+            return;
+         }
+
          $obj = new $fieldClass($field, $datas);
          $obj->show($edit);
       }

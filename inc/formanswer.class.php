@@ -651,6 +651,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $question  = new PluginFormcreatorQuestion();
          $questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
+            // Don't save tags in "full form"
+            if ($question_line['fieldtype'] == 'tag') continue;
+
             $id     = $question_line['id'];
             $name   = $question_line['name'];
             $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $this->getID()
