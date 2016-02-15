@@ -815,7 +815,10 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                    )";
          $result = $GLOBALS['DB']->query($query);
          while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $tags = array_merge($tags, json_decode($line['answer']));
+            $tab = json_decode($line['answer']);
+            if (is_array($tab)) {
+               $tags = array_merge($tags, $tab);
+            }
          }
          $tags = array_unique($tags);
 

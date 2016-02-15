@@ -52,8 +52,10 @@ class tagField extends dropdownField
       $return = array();
       $values = $this->getValue();
 
-      foreach ($values as $value) {
-         $return[] = Dropdown::getDropdownName(getTableForItemType('PluginTagTag'), $value);
+      if (!empty($values)) {
+         foreach ($values as $value) {
+            $return[] = Dropdown::getDropdownName(getTableForItemType('PluginTagTag'), $value);
+         }
       }
 
       return json_encode($return);
