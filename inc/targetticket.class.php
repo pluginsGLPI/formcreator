@@ -753,6 +753,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       }
 
       // Select ticket actors
+      $solo_requester = false;
       $query = "SELECT id, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID() . "
@@ -762,6 +763,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // If there is only one requester add it on creation, otherwize we will add them later
       if ($GLOBALS['DB']->numrows($result) == 1) {
          $actor = $GLOBALS['DB']->fetch_array($result);
+         $solo_requester = true;
          switch ($actor['actor_type']) {
             case 'creator' :
                $user_id = $formanswer->fields['requester_id'];
@@ -845,9 +847,11 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID();
       $result = $GLOBALS['DB']->query($query);
       while ($actor = $GLOBALS['DB']->fetch_array($result)) {
-
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
          if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) continue;
+
+         // If there is only one requester, it have already been added, so continue to next actors
+         if ($solo_requester && ($actor['actor_role'] == 'requester'))                     continue;
 
          switch ($actor['actor_role']) {
             case 'requester' : $role = CommonITILActor::REQUESTER;   break;
