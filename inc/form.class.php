@@ -1269,6 +1269,37 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
+    * Transfer a form to another entity. Execute transfert action for massive action.
+    *
+    * @return Boolean true if success, false otherwize.
+    */
+   public function Transfer($entity)
+   {
+      $query = "UPDATE `glpi_plugin_formcreator_forms` SET
+                   `entities_id` = " . (int) $entity . "
+                WHERE `id` = " . (int) $this->fields['id'];
+      $GLOBALS['DB']->query($query);
+      return true;
+   }
+
+   /**
+    * @since version 0.85
+    *
+    * @see CommonDBTM::showMassiveActionsSubForm()
+   **/
+   public static function showMassiveActionsSubForm(MassiveAction $ma) {
+      switch ($ma->getAction()) {
+         case 'Transfert':
+            Entity::dropdown(array(
+               'name' => 'entities_id',
+            ));
+            echo '<br /><br />' . Html::submit(_x('button','Post'), array('name' => 'massiveaction'));
+            return true;
+    }
+      return parent::showMassiveActionsSubForm($ma);
+   }
+
+   /**
     * Execute massive action for PluginFormcreatorFrom
     *
     * @since version 0.85
@@ -1284,6 +1315,17 @@ class PluginFormcreatorForm extends CommonDBTM
             foreach ($ids as $id) {
                if ($item->getFromDB($id) && $item->Duplicate()) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+               } else {
+                  // Example of ko count
+                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+               }
+            }
+            return;
+         case 'Transfert' :
+            foreach ($ids as $id) {
+               if ($item->getFromDB($id) && $item->Transfer($ma->POST['entities_id'])) {
+                  Session::addMessageAfterRedirect(sprintf(__('Form Transfered: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
                } else {
                   // Example of ko count

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-12 16:19+0100\n"
-"PO-Revision-Date: 2016-02-12 15:20+0000\n"
+"POT-Creation-Date: 2016-02-15 14:30+0100\n"
+"PO-Revision-Date: 2016-02-15 13:30+0000\n"
 "Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
 "Language-Team: Spanish (Chile) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/es_CL/)\n"
 "MIME-Version: 1.0\n"
@@ -335,9 +335,14 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-#: inc/form.class.php:1286
+#: inc/form.class.php:1317
 #, php-format
 msgid "Form duplicated: %s"
+msgstr ""
+
+#: inc/form.class.php:1328
+#, php-format
+msgid "Form Transfered: %s"
 msgstr ""
 
 #: inc/formprofiles.class.php:12
@@ -447,7 +452,7 @@ msgid ""
 msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:113
-#: inc/targetticket.class.php:1053
+#: inc/targetticket.class.php:1115
 msgid "Your form have been accepted by the validator"
 msgstr ""
 

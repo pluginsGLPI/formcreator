@@ -95,10 +95,10 @@ function plugin_formcreator_MassiveActions($type) {
    switch ($type) {
       // New action for core and other plugin types : name = plugin_PLUGINNAME_actionname
       case 'PluginFormcreatorForm' :
-         return array('PluginFormcreatorForm'.MassiveAction::CLASS_ACTION_SEPARATOR.'Duplicate' =>
-                                                              _x('button', 'Duplicate'));
-
-      // Actions for types provided by the plugin are included inside the classes
+         return array(
+            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
+            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
+         );
    }
    return array();
 }

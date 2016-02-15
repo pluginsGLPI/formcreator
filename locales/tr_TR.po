@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2015
+# Kaya Zeren <kayazeren@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-12 16:19+0100\n"
-"PO-Revision-Date: 2016-02-12 15:20+0000\n"
+"POT-Creation-Date: 2016-02-15 14:30+0100\n"
+"PO-Revision-Date: 2016-02-15 13:30+0000\n"
 "Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -254,7 +254,7 @@ msgstr "Form verisi"
 
 #: inc/form.class.php:82
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: inc/form.class.php:110
 msgid "Homepage"
@@ -329,10 +329,15 @@ msgstr "Bir değerlendirici seçmelisiniz!"
 msgid "Duplicate"
 msgstr "Kopyala"
 
-#: inc/form.class.php:1286
+#: inc/form.class.php:1317
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Form kopyalandı: %s"
+
+#: inc/form.class.php:1328
+#, php-format
+msgid "Form Transfered: %s"
+msgstr ""
 
 #: inc/formprofiles.class.php:12
 msgid "Target"
@@ -399,7 +404,7 @@ msgstr "Onaylama bağlantısı"
 
 #: inc/notificationtargetformanswer.class.php:55
 msgid "Request #"
-msgstr ""
+msgstr "İstek No"
 
 #: inc/notificationtargetformanswer.class.php:94
 msgid "A form has been created"
@@ -414,7 +419,7 @@ msgid ""
 "Hi,\\nYour request from GLPI have been successfully saved with number "
 "##formcreator.request_id## and transmetted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Merhaba,\\nGLPI üzerinden yaptığınız istek ##formcreator.request_id## numarası ile kaydedilerek destek ekibine iletildi.\\nYanıtlarınızı şu bağlantıdan görebilirsiniz:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:101
 msgid "A form from GLPI need to be validate"
@@ -425,7 +430,7 @@ msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Merhaba,\\nGLPI üzerinde değerlendirilmesi gereken bir formu değerlendirmek üzere seçildiniz.\\nAşağıdaki bağlantıya tıklayarak forma erişebilirsiniz:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:107
 msgid "Your form have been refused by the validator"
@@ -437,10 +442,10 @@ msgid ""
 "validator for the reason "
 "below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Merhaba,\\NMalesef, formunuz değerlendirici tarafından aşağıdaki açıklama ile reddedildi:\n##formcreator.validation_comment##\\nAşağıdaki bağlantıyı kullanarak formunuzu değiştirip yeniden gönderebilirsiniz:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:113
-#: inc/targetticket.class.php:1053
+#: inc/targetticket.class.php:1115
 msgid "Your form have been accepted by the validator"
 msgstr "Formunuz değerlendirici tarafından onaylandı"
 
@@ -448,7 +453,7 @@ msgstr "Formunuz değerlendirici tarafından onaylandı"
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form have been accepted by the "
 "validator.\\nYour request will be considered soon."
-msgstr ""
+msgstr "Merhaba,\\nFormunuz değerlendirici tarafından onaylandı.\\nİsteğiniz yakında ele alınacak."
 
 #: inc/notificationtargetformanswer.class.php:119
 msgid "Your form have been deleted by an administrator"
@@ -458,7 +463,7 @@ msgstr "Formunuz yönetici tarafından silindi"
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "have been deleted by an administrator."
-msgstr ""
+msgstr "Merhaba,\\nMalesef, isteğiniz ele alınamadığından bir yönetici tarafından silindi."
 
 #: inc/question.class.php:35 inc/targetticket.class.php:730
 msgid "Question"
@@ -536,35 +541,35 @@ msgstr "sorunun yanıtından hesaplanan"
 
 #: inc/targetticket.class.php:174
 msgid "Requester user's entity"
-msgstr ""
+msgstr "İstekte bulunan kullanıcının varlığı"
 
 #: inc/targetticket.class.php:175
 msgid "The form entity"
-msgstr ""
+msgstr "Form varlığı"
 
 #: inc/targetticket.class.php:176
 msgid "Default entity of the validator"
-msgstr ""
+msgstr "Onaylayan kişinin varsayılan varlığı"
 
 #: inc/targetticket.class.php:177
 msgid "Specific entity"
-msgstr ""
+msgstr "Belirli varlık"
 
 #: inc/targetticket.class.php:178
 msgid "Default entity of a user type question answer"
-msgstr ""
+msgstr "Soruyu yanıtlayan kullanıcı tipinin varsayılan varlığı"
 
 #: inc/targetticket.class.php:179
 msgid "From a GLPI object > Entity type question answer"
-msgstr ""
+msgstr "Bir GLPI nesnesinden > Varlık tipi soru yanıtı"
 
 #: inc/targetticket.class.php:217
 msgid "User type question"
-msgstr ""
+msgstr "Kullanıcı tipi soru"
 
 #: inc/targetticket.class.php:218
 msgid "Entity type question"
-msgstr ""
+msgstr "Varlık tipi soru"
 
 #: inc/targetticket.class.php:281
 msgid "Add validation message as first ticket followup"
