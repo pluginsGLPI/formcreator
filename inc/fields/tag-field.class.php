@@ -12,27 +12,25 @@ class tagField extends dropdownField
          $required = $this->fields['required'] ? ' required' : '';
 
          echo '<div class="form_field">';
-         if(!empty($this->fields['values'])) {
-            $values = array();
+         $values = array();
 
-            $obj = new PluginTagTag();
-            $obj->getEmpty();
+         $obj = new PluginTagTag();
+         $obj->getEmpty();
 
-            $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
-            $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
+         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
+         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
 
-            $result = $obj->find($where);
-            foreach ($result AS $id => $datas) {
-               $values[$id] = $datas['name'];
-            }
-
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(
-               'values'               => $this->getValue(),
-               'comments'            => false,
-               'rand'                => $rand,
-               'multiple'            => true,
-            ));
+         $result = $obj->find($where);
+         foreach ($result AS $id => $datas) {
+            $values[$id] = $datas['name'];
          }
+
+         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(
+            'values'               => $this->getValue(),
+            'comments'            => false,
+            'rand'                => $rand,
+            'multiple'            => true,
+         ));
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
