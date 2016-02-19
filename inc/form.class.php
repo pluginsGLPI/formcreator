@@ -886,9 +886,10 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       $valid = true;
 
-      $tab_section       = array();
-      $sections          = new PluginFormcreatorSection();
-      $found_sections  = $sections->find('`plugin_formcreator_forms_id` = ' . (int) $this->getID());
+      $tab_section    = array();
+      $datas          = array();
+      $sections       = new PluginFormcreatorSection();
+      $found_sections = $sections->find('`plugin_formcreator_forms_id` = ' . (int) $this->getID());
       foreach ($found_sections as $id => $fields) $tab_section[] = $id;
 
       $questions         = new PluginFormcreatorQuestion();
@@ -927,7 +928,9 @@ class PluginFormcreatorForm extends CommonDBTM
             $valid = false;
          }
       }
-      $datas = $datas + $_POST;
+      if (isset($_POST) && is_array($_POST)) {
+         $datas = $datas + $_POST;
+      }
 
       // Check required_validator
       if ($this->fields['validation_required'] && empty($datas['formcreator_validator'])) {
