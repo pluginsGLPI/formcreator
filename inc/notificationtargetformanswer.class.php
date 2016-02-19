@@ -181,25 +181,25 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       $table_templates    = getTableForItemType('NotificationTemplate');
 
       // Delete translations
-      $query = 'DELETE FROM `' . $table_translations . '`
+      $query = "DELETE FROM `$table_translations`
                 WHERE `notificationtemplates_id` IN (
-                  SELECT `id` FROM ' . $table_templates . ' WHERE `itemtype` = "PluginFormcreatorFormanswer")';
+                  SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorFormanswer')";
       $GLOBALS['DB']->query($query);
 
       // Delete notification templates
-      $query = 'DELETE FROM `' . $table_templates . '`
-                WHERE `itemtype` = "PluginFormcreatorFormanswer"';
+      $query = "DELETE FROM `$table_templates`
+                WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
       $GLOBALS['DB']->query($query);
 
       // Delete notification targets
-      $query = 'DELETE FROM `' . $table_targets . '`
+      $query = "DELETE FROM `$table_targets`
                 WHERE `notifications_id` IN (
-                  SELECT `id` FROM ' . $table_notification . ' WHERE `itemtype` = "PluginFormcreatorFormanswer")';
+                  SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorFormanswer')";
       $GLOBALS['DB']->query($query);
 
       // Delete notifications
-      $query = 'DELETE FROM `' . $table_notification . '`
-                WHERE `itemtype` = "PluginFormcreatorFormanswer"';
+      $query = "DELETE FROM `$table_notification`
+                WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
       $GLOBALS['DB']->query($query);
    }
 }

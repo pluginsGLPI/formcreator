@@ -1073,7 +1073,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Create standard search options
-      $query = 'DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = "PluginFormcreatorForm"';
+      $query = "DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = 'PluginFormcreatorForm'";
       $GLOBALS['DB']->query($query) or die("error deleting glpi_displaypreferences ". $GLOBALS['DB']->error());
 
       $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
@@ -1099,7 +1099,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $GLOBALS['DB']->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
 
       // Delete logs of the plugin
-      $GLOBALS['DB']->query('DELETE FROM `glpi_logs` WHERE itemtype = "' . __CLASS__ . '"');
+      $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }

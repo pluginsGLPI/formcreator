@@ -1195,7 +1195,7 @@ EOS;
                      `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
                      `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
                      `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
-                     `destination_entity_value` int(11) NULL DEFAULT NULL,
+                     `destination_entity_value` int(11) NULL DEFAULT NULL
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       } else {
