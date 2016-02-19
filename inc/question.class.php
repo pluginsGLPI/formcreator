@@ -462,11 +462,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // ===============================================================
       // TODO : Mettre en place l'interface multi-conditions
       // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
-      $show_field = isset($input['show_field']) ? $input['show_field'] : 'NULL';
-      $value = plugin_formcreator_encode($input['show_value']);
+      $value      = plugin_formcreator_encode($input['show_value']);
+      $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
-                  `show_field`     = " . (int) $show_field . ",
+                  `show_field`     = $show_field,
                   `show_condition` = '" . $input['show_condition'] . "',
                   `show_value`     = '" . $value . "'";
       $GLOBALS['DB']->query($query);
@@ -726,7 +726,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      $show_condition = '==';
                }
 
-               $line['show_value'] = addslashes($line['show_value']);
+               $show_field = empty($line['show_field']) ? 'NULL' : (int) $line['show_field'];
 
                $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
                                  `show_rule` = '$show_rule'
@@ -735,9 +735,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
                $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                                   `plugin_formcreator_questions_id` = {$line['id']},
-                                  `show_field`     = '{$line['show_field']}',
-                                  `show_condition` = '{$show_condition}',
-                                  `show_value`     = '{$line['show_value']}'";
+                                  `show_field`     = $show_field,
+                                  `show_condition` = '$show_condition',
+                                  `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
                $GLOBALS['DB']->query($query_udate) or die ($GLOBALS['DB']->error());
             }
 
