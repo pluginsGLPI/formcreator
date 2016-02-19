@@ -135,7 +135,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
          // If it doesn't exists, create it
          if (count($exists) == 0) {
             $template_id = $template->add(array(
-               'name'     => addslashes($datas['name']),
+               'name'     => Toolbox::addslashes_deep($datas['name']),
                'comment'  => '',
                'itemtype' => 'PluginFormcreatorFormanswer',
             ));
@@ -144,14 +144,14 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
             $translation->add(array(
                'notificationtemplates_id' => $template_id,
                'language'                 => '',
-               'subject'                  => addslashes($datas['subject']),
-               'content_text'             => addslashes($datas['content']),
-               'content_html'             => '<p>'.str_replace('\n', '<br />', $datas['content']).'</p>',
+               'subject'                  => Toolbox::addslashes_deep($datas['subject']),
+               'content_text'             => Toolbox::addslashes_deep($datas['content']),
+               'content_html'             => '<p>'.str_replace('\n', '<br />', Toolbox::addslashes_deep($datas['content'])).'</p>',
             ));
 
             // Create the notification
             $notification_id = $notification->add(array(
-               'name'                     => addslashes($datas['name']),
+               'name'                     => Toolbox::addslashes_deep($datas['name']),
                'comment'                  => '',
                'entities_id'              => 0,
                'is_recursive'             => 1,
