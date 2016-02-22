@@ -161,11 +161,10 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</div>';
       echo '</td>';
       echo '</tr>';
-      // -------------------------------------------------------------------------------------------
-      // Due date type selection end
-      // -------------------------------------------------------------------------------------------
 
+      // -------------------------------------------------------------------------------------------
       // Ticket Entity
+      // -------------------------------------------------------------------------------------------
       echo '<tr class="line1">';
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
@@ -268,6 +267,114 @@ EOS;
 
       echo '</tr>';
 
+
+      // -------------------------------------------------------------------------------------------
+      //  Tags
+      // -------------------------------------------------------------------------------------------
+      $plugin = new Plugin();
+      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         echo '<tr class="line1">';
+         echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
+         echo '<td width="25%">';
+         $rand = mt_rand();
+         Dropdown::showFromArray('tag_type', array(
+            'none'                   => __("None"),
+            'questions'              => __('Tags from questions', 'formcreator'),
+            'specifics'              => __('Specific tags', 'formcreator'),
+            'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
+            'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator'),
+         ), array(
+            'value'     => $this->fields['tag_type'],
+            'on_change' => 'change_tag_type()',
+            'rand'      => $rand,
+         ));
+
+         $script = <<<EOS
+            function change_tag_type() {
+               $('#tag_question_title').hide();
+               $('#tag_specific_title').hide();
+               $('#tag_question_value').hide();
+               $('#tag_specific_value').hide();
+
+               switch($('#dropdown_tag_type$rand').val()) {
+                  case 'questions' :
+                     $('#tag_question_title').show();
+                     $('#tag_question_value').show();
+                     break;
+                  case 'specifics' :
+                     $('#tag_specific_title').show();
+                     $('#tag_specific_value').show();
+                     break;
+                  case 'questions_and_specific' :
+                  case 'questions_or_specific' :
+                     $('#tag_question_title').show();
+                     $('#tag_specific_title').show();
+                     $('#tag_question_value').show();
+                     $('#tag_specific_value').show();
+                     break;
+               }
+            }
+            change_tag_type();
+EOS;
+
+         echo Html::scriptBlock($script);
+         echo '</td>';
+         echo '<td width="15%">';
+         echo '<div id="tag_question_title" style="display: none">' . _n('Question', 'Questions', 2, 'formcreator') . '</div>';
+         echo '<div id="tag_specific_title" style="display: none">' . __('Tags', 'tag') . '</div>';
+         echo '</td>';
+         echo '<td width="25%">';
+
+         // Tag questions
+         echo '<div id="tag_question_value" style="display: none">';
+         $query2 = "SELECT q.id, q.name, q.values
+                   FROM glpi_plugin_formcreator_questions q
+                   INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                   WHERE t.items_id = " . (int) $this->getID() . "
+                   AND q.fieldtype = 'tag'";
+         $result2 = $GLOBALS['DB']->query($query2);
+         $entities_questions = array();
+         while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+            $entities_questions[$question['id']] = $question['name'];
+         }
+         Dropdown::showFromArray('_tag_questions', $entities_questions, array(
+            'values'   => explode(',', $this->fields['tag_questions']),
+            'multiple' => true,
+         ));
+         echo '</div>';
+
+         // Spécific tags
+         echo '<div id="tag_specific_value" style="display: none">';
+
+         $obj = new PluginTagTag();
+         $obj->getEmpty();
+
+         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
+         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
+
+         $result = $obj->find($where);
+         $values = array();
+         foreach ($result AS $id => $datas) {
+            $values[$id] = $datas['name'];
+         }
+
+         Dropdown::showFromArray('_tag_specifics', $values, array(
+            'values'   => explode(',', $this->fields['tag_specifics']),
+            'comments' => false,
+            'rand'     => $rand,
+            'multiple' => true,
+         ));
+         echo '</div>';
+
+         echo '</td>';
+         echo '</tr>';
+      }
+
+
+      // -------------------------------------------------------------------------------------------
+      //  Validation as ticket followup
+      // -------------------------------------------------------------------------------------------
       if ($form->fields['validation_required']) {
          echo '<tr class="line0">';
          echo '<td colspan="4">';
@@ -285,6 +392,7 @@ EOS;
       }
 
       echo '</table>';
+
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
@@ -807,6 +915,16 @@ EOS;
             break;
       }
 
+      $plugin = new Plugin();
+      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                    ? implode(',', $input['_tag_questions'])
+                                    : '';
+         $input['tag_specifics'] = (!empty($input['_tag_questions']))
+                                    ? implode(',', $input['_tag_specifics'])
+                                    : '';
+      }
+
       return $input;
    }
 
@@ -835,7 +953,7 @@ EOS;
       $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
       $datas                = array_merge($datas, $predefined_fields);
 
-      // Parse datas and tags
+      // Parse datas
       $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
       $datas['content']               = htmlentities($this->parseTags($this->fields['comment'], $formanswer));
       $datas['_users_id_requester']   = 0;
@@ -976,28 +1094,41 @@ EOS;
       // Add tag if presents
       $plugin = new Plugin();
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+
          $tagObj = new PluginTagTagItem();
          $tags   = array();
 
-         $query = "SELECT answer
-                   FROM `glpi_plugin_formcreator_answers`
-                   WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
-                   AND `plugin_formcreator_question_id` IN (
-                      SELECT q.`id`
-                      FROM `glpi_plugin_formcreator_questions` q
-                      LEFT JOIN `glpi_plugin_formcreator_sections` s ON  q.`plugin_formcreator_sections_id` = s.`id`
-                      WHERE q.`fieldtype` = 'tag'
-                      AND s.`plugin_formcreator_forms_id` = " . (int) $formanswer->fields['plugin_formcreator_forms_id'] . "
-                   )";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
-            $tab = json_decode($line['answer']);
-            if (is_array($tab)) {
-               $tags = array_merge($tags, $tab);
+         // Add question tags
+         if (($this->fields['tag_type'] == 'questions'
+               || $this->fields['tag_type'] == 'questions_and_specific'
+               || $this->fields['tag_type'] == 'questions_or_specific')
+            && (!empty($this->fields['tag_questions']))) {
+
+            $query = "SELECT answer
+                      FROM `glpi_plugin_formcreator_answers`
+                      WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
+                      AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
+            $result = $GLOBALS['DB']->query($query);
+            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+               $tab = json_decode($line['answer']);
+               if (is_array($tab)) {
+                  $tags = array_merge($tags, $tab);
+               }
             }
          }
+
+         // Add specific tags
+         if ($this->fields['tag_type'] == 'specifics'
+             || $this->fields['tag_type'] == 'questions_and_specific'
+             || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
+             && (!empty($this->fields['tag_specifics']))) {
+
+            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+         }
+
          $tags = array_unique($tags);
 
+         // Save tags in DB
          foreach ($tags as $tag) {
             $tagObj->add(array(
                'plugin_tag_tags_id' => $tag,
@@ -1195,7 +1326,10 @@ EOS;
                      `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
                      `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
                      `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
-                     `destination_entity_value` int(11) NULL DEFAULT NULL
+                     `destination_entity_value` int(11) NULL DEFAULT NULL,
+                     `tag_type` ENUM('none', 'questions', 'specifics', 'questions_and_specific', 'questions_or_specific') NOT NULL DEFAULT 'none',
+                     `tag_questions` VARCHAR(255) NOT NULL,
+                     `tag_specifics` VARCHAR(255) NOT NULL
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       } else {
@@ -1214,6 +1348,13 @@ EOS;
             $query = "ALTER TABLE `$table`
                         ADD `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
+            $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         }
+         if(!FieldExists($table, 'tag_type', false)) {
+            $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
+                         ADD `tag_type` ENUM('none', 'questions', 'specifics', 'questions_and_specific', 'questions_or_specific') NOT NULL DEFAULT 'none',
+                         ADD `tag_questions` VARCHAR(255) NOT NULL,
+                         ADD `tag_specifics` VARCHAR(255) NOT NULL;";
             $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
          }
       }

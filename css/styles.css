@@ -394,3 +394,11 @@ form.formcreator_form {
    width: 13% !important;
    margin: 0 1% 0 0;
 }
+
+#tag_question_value .select2-container, #tag_specific_value .select2-container {
+   width: 98%;
+}
+
+#tag_question_title, #tag_specific_title {
+   line-height: 31px;
+}
