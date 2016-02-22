@@ -30,6 +30,16 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
+    * Check if current user have the right to read requests
+    *
+    * @return boolean True if he can read requests
+    */
+   public static function canDelete()
+   {
+      return Session::haveRight("entity", UPDATE);
+   }
+
+   /**
     * Returns the type name with consideration of plural
     *
     * @param number $nb Number of item(s)
