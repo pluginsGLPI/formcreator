@@ -920,7 +920,7 @@ EOS;
          $input['tag_questions'] = (!empty($input['_tag_questions']))
                                     ? implode(',', $input['_tag_questions'])
                                     : '';
-         $input['tag_specifics'] = (!empty($input['_tag_questions']))
+         $input['tag_specifics'] = (!empty($input['_tag_specifics']))
                                     ? implode(',', $input['_tag_specifics'])
                                     : '';
       }
