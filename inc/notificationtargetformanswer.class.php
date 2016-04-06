@@ -92,8 +92,8 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       $notifications = array(
          'plugin_formcreator_form_created' => array(
                'name'     => __('A form has been created', 'formcreator'),
-               'subject'  => __('Your request have been saved', 'formcreator'),
-               'content'  => __('Hi,\nYour request from GLPI have been successfully saved with number ##formcreator.request_id## and transmetted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
+               'subject'  => __('Your request has been saved', 'formcreator'),
+               'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
                'notified' => self::AUTHOR,
             ),
          'plugin_formcreator_need_validation' => array(
@@ -104,20 +104,20 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
             ),
          'plugin_formcreator_refused'         => array(
                'name'     => __('The form is refused', 'formcreator'),
-               'subject'  => __('Your form have been refused by the validator', 'formcreator'),
-               'content'  => __('Hi,\nWe are sorry to inform you that your form have been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+               'subject'  => __('Your form has been refused by the validator', 'formcreator'),
+               'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
                'notified' => self::AUTHOR,
             ),
          'plugin_formcreator_accepted'        => array(
                'name'     => __('The form is accepted', 'formcreator'),
-               'subject'  => __('Your form have been accepted by the validator', 'formcreator'),
-               'content'  => __('Hi,\nWe are pleased to inform you that your form have been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
+               'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
+               'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
                'notified' => self::AUTHOR,
             ),
          'plugin_formcreator_deleted'         => array(
                'name'     => __('The form is deleted', 'formcreator'),
-               'subject'  => __('Your form have been deleted by an administrator', 'formcreator'),
-               'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and have been deleted by an administrator.', 'formcreator'),
+               'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
+               'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
                'notified' => self::AUTHOR,
             ),
       );

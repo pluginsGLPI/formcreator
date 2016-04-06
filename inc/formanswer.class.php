@@ -588,7 +588,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
-      Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
+      Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }
 
    public function generateTarget()
@@ -605,7 +605,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             return false;
          }
       }
-      Session::addMessageAfterRedirect(__('The form have been successfully saved!', 'formcreator'), true, INFO);
+      Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
       return true;
    }
 

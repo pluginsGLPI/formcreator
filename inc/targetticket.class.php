@@ -1243,7 +1243,7 @@ EOS;
       // /!\ Followup is directly saved to the database to avoid double notification on ticket
       //     creation and add followup
       if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
-         $message = addslashes(__('Your form have been accepted by the validator', 'formcreator'));
+         $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
          if (!empty($formanswer->fields['comment'])) {
             $message.= "\n".addslashes($formanswer->fields['comment']);
          }
