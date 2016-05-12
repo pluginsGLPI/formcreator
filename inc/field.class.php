@@ -103,8 +103,7 @@ abstract class PluginFormcreatorField implements Field
 
    public function isRequired()
    {
-      $is_visible = PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']);
-      return ($is_visible && $this->fields['required']);
+      return $this->fields['required'];
    }
 
 }
