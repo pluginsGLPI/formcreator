@@ -170,7 +170,9 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<td width="25%">';
       $rand = mt_rand();
       Dropdown::showFromArray('destination_entity', array(
-         'requester' => __("Requester user's entity", 'formcreator'),
+         'requester' => __("Default requester user's entity", 'formcreator'),
+         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
+         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
          'form'      => __('The form entity', 'formcreator'),
          'validator' => __('Default entity of the validator', 'formcreator'),
          'specific'  => __('Specific entity', 'formcreator'),
@@ -935,6 +937,8 @@ EOS;
     */
    public function save(PluginFormcreatorFormanswer $formanswer)
    {
+      global $DB;
+
       $datas   = array();
       $ticket  = new Ticket();
       $docItem = new Document_Item();
@@ -967,6 +971,27 @@ EOS;
             $userObj = new User();
             $userObj->getFromDB($formanswer->fields['requester_id']);
             $datas['entities_id'] = $userObj->fields['entities_id'];
+            break;
+
+         // Requester's first dynamic entity
+         case 'requester_dynamic_first' :
+            $order_entities = "`glpi_profiles`.`name` ASC";
+         case 'requester_dynamic_last' :
+            if (!isset($order_entities)) {
+               $order_entities = "`glpi_profiles`.`name` DESC";
+            }
+            $query_entities = "SELECT `glpi_profiles_users`.`entities_id`
+                      FROM `glpi_profiles_users`
+                      LEFT JOIN `glpi_profiles`
+                        ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
+                      WHERE `glpi_profiles_users`.`users_id` = ".$formanswer->fields['requester_id']."
+                     ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
+            $res_entities = $DB->query($query_entities);
+            while( $data_entities = $DB->fetch_array($res_entities)) {
+
+            }
+            $first_entity = array_shift($data_entities);
+            $datas['entities_id'] = $first_entity['entities_id'];
             break;
 
          // Specific entity
