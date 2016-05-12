@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-06 08:45+0200\n"
-"PO-Revision-Date: 2016-04-06 06:48+0000\n"
+"POT-Creation-Date: 2016-05-12 10:51+0200\n"
+"PO-Revision-Date: 2016-05-12 08:54+0000\n"
 "Last-Translator: Alexandre DELAUNAY <delaunay.alexandre@gmail.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgid "Edit a question"
 msgstr "Modifier une question"
 
 #: ajax/question.php:64 inc/section.class.php:35
-#: inc/targetticket.class.php:841
+#: inc/targetticket.class.php:844
 msgid "Section"
 msgid_plural "Sections"
 msgstr[0] "Section"
@@ -181,7 +181,7 @@ msgstr "La question a été sauvegardée avec succès !"
 msgid "The question has been successfully updated!"
 msgstr "La question a été mise à jour avec succès !"
 
-#: inc/answer.class.php:35 inc/targetticket.class.php:840
+#: inc/answer.class.php:35 inc/targetticket.class.php:843
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Réponse"
@@ -455,7 +455,7 @@ msgid ""
 msgstr "Bonjour,\\\\nNous somme désolé de vous informer que votre demande a été refusé par le valideur pour les raisons suivantes :\\\\n##formcreator.validation_comment##\\\\n\\\\nVous pouvez toutefois modifier et renvoyer votre demande en cliquant sur le lien ci-dessous :\\\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:113
-#: inc/targetticket.class.php:1246
+#: inc/targetticket.class.php:1274
 msgid "Your form has been accepted by the validator"
 msgstr "Votre formulaire a été accepté par le valideur"
 
@@ -475,8 +475,8 @@ msgid ""
 "has been deleted by an administrator."
 msgstr "Bonjour,\\\\nNous sommes au regret de vous informer que votre demande ne peut être traitée et a été supprimée par un administrateur."
 
-#: inc/question.class.php:35 inc/targetticket.class.php:323
-#: inc/targetticket.class.php:838
+#: inc/question.class.php:35 inc/targetticket.class.php:326
+#: inc/targetticket.class.php:841
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Question"
@@ -555,124 +555,136 @@ msgid "calculated from the answer to the question"
 msgstr "calculée à partir de la réponse à la question"
 
 #: inc/targetticket.class.php:173
-msgid "Requester user's entity"
-msgstr "Entité du demandeur"
+msgid "Current active entity"
+msgstr "Entité active"
 
 #: inc/targetticket.class.php:174
+msgid "Default requester user's entity"
+msgstr "Entité par défaut du demandeur"
+
+#: inc/targetticket.class.php:175
+msgid "First dynamic requester user's entity (alphabetical)"
+msgstr "Première entité dynamique du demandeur (alphabétiquement)"
+
+#: inc/targetticket.class.php:176
+msgid "Last dynamic requester user's entity (alphabetical)"
+msgstr "Dernière entité dynamique du demandeur (alphabétiquement)"
+
+#: inc/targetticket.class.php:177
 msgid "The form entity"
 msgstr "Entité du formulaire"
 
-#: inc/targetticket.class.php:175
+#: inc/targetticket.class.php:178
 msgid "Default entity of the validator"
 msgstr "Entité par défaut du valideur"
 
-#: inc/targetticket.class.php:176
+#: inc/targetticket.class.php:179
 msgid "Specific entity"
 msgstr "Entité spécifique"
 
-#: inc/targetticket.class.php:177
+#: inc/targetticket.class.php:180
 msgid "Default entity of a user type question answer"
 msgstr "Entité par défaut d'un utilisateur issue d'une question"
 
-#: inc/targetticket.class.php:178
+#: inc/targetticket.class.php:181
 msgid "From a GLPI object > Entity type question answer"
 msgstr "Entité issue d'une question"
 
-#: inc/targetticket.class.php:216
+#: inc/targetticket.class.php:219
 msgid "User type question"
 msgstr "Question de type \"utilisateur\""
 
-#: inc/targetticket.class.php:217
+#: inc/targetticket.class.php:220
 msgid "Entity type question"
 msgstr "Question de type \"entité\""
 
-#: inc/targetticket.class.php:277
+#: inc/targetticket.class.php:280
 msgid "Ticket tags"
 msgstr "Étiquettes du ticket"
 
-#: inc/targetticket.class.php:282
+#: inc/targetticket.class.php:285
 msgid "Tags from questions"
 msgstr "Étiquettes depuis les questions"
 
-#: inc/targetticket.class.php:283
+#: inc/targetticket.class.php:286
 msgid "Specific tags"
 msgstr "Étiquettes spécifiques"
 
-#: inc/targetticket.class.php:284
+#: inc/targetticket.class.php:287
 msgid "Tags from questions and specific tags"
 msgstr "Étiquettes depuis les questions et spécifiques"
 
-#: inc/targetticket.class.php:285
+#: inc/targetticket.class.php:288
 msgid "Tags from questions or specific tags"
 msgstr "Étiquettes depuis les questions ou spécifiques"
 
-#: inc/targetticket.class.php:324
+#: inc/targetticket.class.php:327
 msgid "Tags"
 msgstr "Étiquettes"
 
-#: inc/targetticket.class.php:388
+#: inc/targetticket.class.php:391
 msgid "Add validation message as first ticket followup"
 msgstr "Ajouter le message de validation en premier suivi du ticket"
 
-#: inc/targetticket.class.php:402
+#: inc/targetticket.class.php:405
 msgid "Cancel"
 msgstr "Annuler"
 
-#: inc/targetticket.class.php:474
+#: inc/targetticket.class.php:477
 msgid "Ticket actors"
 msgstr "Acteurs du ticket"
 
-#: inc/targetticket.class.php:514 inc/targetticket.class.php:570
-#: inc/targetticket.class.php:613 inc/targetticket.class.php:670
-#: inc/targetticket.class.php:713 inc/targetticket.class.php:783
+#: inc/targetticket.class.php:517 inc/targetticket.class.php:573
+#: inc/targetticket.class.php:616 inc/targetticket.class.php:673
+#: inc/targetticket.class.php:716 inc/targetticket.class.php:786
 msgid "Form requester"
 msgstr "Demandeur du formulaire"
 
-#: inc/targetticket.class.php:515 inc/targetticket.class.php:573
-#: inc/targetticket.class.php:614 inc/targetticket.class.php:673
-#: inc/targetticket.class.php:714 inc/targetticket.class.php:786
+#: inc/targetticket.class.php:518 inc/targetticket.class.php:576
+#: inc/targetticket.class.php:617 inc/targetticket.class.php:676
+#: inc/targetticket.class.php:717 inc/targetticket.class.php:789
 msgid "Form validator"
 msgstr "Valideur du formulaire"
 
-#: inc/targetticket.class.php:516 inc/targetticket.class.php:615
-#: inc/targetticket.class.php:715
+#: inc/targetticket.class.php:519 inc/targetticket.class.php:618
+#: inc/targetticket.class.php:718
 msgid "Specific person"
 msgstr "Personne spécifique"
 
-#: inc/targetticket.class.php:517 inc/targetticket.class.php:583
-#: inc/targetticket.class.php:616 inc/targetticket.class.php:683
-#: inc/targetticket.class.php:716 inc/targetticket.class.php:796
+#: inc/targetticket.class.php:520 inc/targetticket.class.php:586
+#: inc/targetticket.class.php:619 inc/targetticket.class.php:686
+#: inc/targetticket.class.php:719 inc/targetticket.class.php:799
 msgid "Person from the question"
 msgstr "Personne depuis la question"
 
-#: inc/targetticket.class.php:518 inc/targetticket.class.php:617
-#: inc/targetticket.class.php:717
+#: inc/targetticket.class.php:521 inc/targetticket.class.php:620
+#: inc/targetticket.class.php:720
 msgid "Specific group"
 msgstr "Groupe spécifique"
 
-#: inc/targetticket.class.php:519 inc/targetticket.class.php:594
-#: inc/targetticket.class.php:618 inc/targetticket.class.php:694
-#: inc/targetticket.class.php:718 inc/targetticket.class.php:807
+#: inc/targetticket.class.php:522 inc/targetticket.class.php:597
+#: inc/targetticket.class.php:621 inc/targetticket.class.php:697
+#: inc/targetticket.class.php:721 inc/targetticket.class.php:810
 msgid "Group from the question"
 msgstr "Groupe depuis la question"
 
-#: inc/targetticket.class.php:719
+#: inc/targetticket.class.php:722
 msgid "Specific supplier"
 msgstr "Fournisseur spécifique"
 
-#: inc/targetticket.class.php:720 inc/targetticket.class.php:818
+#: inc/targetticket.class.php:723 inc/targetticket.class.php:821
 msgid "Supplier from the question"
 msgstr "Fournisseur depuis la question"
 
-#: inc/targetticket.class.php:845
+#: inc/targetticket.class.php:848
 msgid "Full form"
 msgstr "Formulaire complet"
 
-#: inc/targetticket.class.php:887
+#: inc/targetticket.class.php:890
 msgid "The title cannot be empty!"
 msgstr "Le titre ne doit pas être vide !"
 
-#: inc/targetticket.class.php:893
+#: inc/targetticket.class.php:896
 msgid "The description cannot be empty!"
 msgstr "La desciption ne doit pas être vide !"
 
