@@ -170,6 +170,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<td width="25%">';
       $rand = mt_rand();
       Dropdown::showFromArray('destination_entity', array(
+         'current' => __("Current active entity", 'formcreator'),
          'requester' => __("Default requester user's entity", 'formcreator'),
          'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
          'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
@@ -967,6 +968,8 @@ EOS;
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
+         case 'current' :
+            $datas['entities_id'] = $_SESSION['glpiactive_entity'];
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($formanswer->fields['requester_id']);
