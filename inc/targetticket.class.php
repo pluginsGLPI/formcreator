@@ -1,6 +1,39 @@
 <?php
 class PluginFormcreatorTargetTicket extends CommonDBTM
 {
+
+   static function getEnumDestinationEntity() {
+      return array(
+         'current'   => __("Current active entity", 'formcreator'),
+         'requester' => __("Default requester user's entity", 'formcreator'),
+         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
+         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
+         'form'      => __('The form entity', 'formcreator'),
+         'validator' => __('Default entity of the validator', 'formcreator'),
+         'specific'  => __('Specific entity', 'formcreator'),
+         'user'      => __('Default entity of a user type question answer', 'formcreator'),
+         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
+      );
+   }
+
+   static function getEnumTagType() {
+      return array(
+            'none'                   => __("None"),
+            'questions'              => __('Tags from questions', 'formcreator'),
+            'specifics'              => __('Specific tags', 'formcreator'),
+            'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
+            'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
+      );
+   }
+
+   static function getEnumDueDateRule() {
+      return array(
+         'answer'    => __('equals to the answer to the question', 'formcreator'),
+         'ticket'    => __('calculated from the ticket creation date', 'formcreator'),
+         'calcul'    => __('calculated from the answer to the question', 'formcreator'),
+      );
+   }
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -95,15 +128,13 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // -------------------------------------------------------------------------------------------
       // Due date type selection
       // -------------------------------------------------------------------------------------------
-      Dropdown::showFromArray('due_date_rule', array(
-         ''          => Dropdown::EMPTY_VALUE,
-         'answer'    => __('equals to the answer to the question', 'formcreator'),
-         'ticket'    => __('calculated from the ticket creation date', 'formcreator'),
-         'calcul'    => __('calculated from the answer to the question', 'formcreator'),
-      ), array(
-         'value'     => $this->fields['due_date_rule'],
-         'on_change' => 'formcreatorChangeDueDate(this.value)',
-      ));
+      Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(), 
+         array(
+            'value'     => $this->fields['due_date_rule'],
+            'on_change' => 'formcreatorChangeDueDate(this.value)',
+            'display_emptychoice' => true
+         )
+      );
 
       // for each section ...
       $questions_list = array(Dropdown::EMPTY_VALUE);
@@ -169,21 +200,15 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
       $rand = mt_rand();
-      Dropdown::showFromArray('destination_entity', array(
-         'current' => __("Current active entity", 'formcreator'),
-         'requester' => __("Default requester user's entity", 'formcreator'),
-         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'form'      => __('The form entity', 'formcreator'),
-         'validator' => __('Default entity of the validator', 'formcreator'),
-         'specific'  => __('Specific entity', 'formcreator'),
-         'user'      => __('Default entity of a user type question answer', 'formcreator'),
-         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
-      ), array(
-         'value'     => $this->fields['destination_entity'],
-         'on_change' => 'change_entity()',
-         'rand'      => $rand,
-      ));
+      Dropdown::showFromArray(
+         'destination_entity', 
+         self::getEnumDestinationEntity(), 
+         array(
+            'value'     => $this->fields['destination_entity'],
+            'on_change' => 'change_entity()',
+            'rand'      => $rand,
+         )
+      );
 
       $script = <<<EOS
          function change_entity() {
@@ -280,17 +305,13 @@ EOS;
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
          $rand = mt_rand();
-         Dropdown::showFromArray('tag_type', array(
-            'none'                   => __("None"),
-            'questions'              => __('Tags from questions', 'formcreator'),
-            'specifics'              => __('Specific tags', 'formcreator'),
-            'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-            'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator'),
-         ), array(
-            'value'     => $this->fields['tag_type'],
-            'on_change' => 'change_tag_type()',
-            'rand'      => $rand,
-         ));
+         Dropdown::showFromArray('tag_type', self::getEnumTagType(),
+            array(
+               'value'     => $this->fields['tag_type'],
+               'on_change' => 'change_tag_type()',
+               'rand'      => $rand,
+            )
+         );
 
          $script = <<<EOS
             function change_tag_type() {
@@ -1341,6 +1362,9 @@ EOS;
 
    public static function install(Migration $migration)
    {
+      $enum_destination_entity = "'".implode("', '", array_values(self::getEnumDestinationEntity()))."'";
+      $enum_tag_type           = "'".implode("', '", array_values(self::getEnumTagType()))."'";
+      $enum_due_date_rule      = "'".implode("', '", array_values(self::getEnumDueDateRule()))."'";
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -1348,14 +1372,14 @@ EOS;
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `tickettemplates_id` int(11) NULL DEFAULT NULL,
                      `comment` text collate utf8_unicode_ci,
-                     `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
+                     `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
                      `due_date_question` INT NULL DEFAULT NULL,
                      `due_date_value` TINYINT NULL DEFAULT NULL,
                      `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
                      `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
-                     `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
+                     `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
-                     `tag_type` ENUM('none', 'questions', 'specifics', 'questions_and_specific', 'questions_or_specific') NOT NULL DEFAULT 'none',
+                     `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                      `tag_questions` VARCHAR(255) NOT NULL,
                      `tag_specifics` VARCHAR(255) NOT NULL
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -1363,7 +1387,7 @@ EOS;
       } else {
          if(!FieldExists($table, 'due_date_rule', false)) {
             $query = "ALTER TABLE `$table`
-                        ADD `due_date_rule` ENUM('answer', 'ticket', 'calcul') NULL DEFAULT NULL,
+                        ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
                         ADD `due_date_question` INT NULL DEFAULT NULL,
                         ADD `due_date_value` TINYINT NULL DEFAULT NULL,
                         ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
@@ -1374,17 +1398,29 @@ EOS;
          // Migration to Formcreator 0.90-1.4
          if(!FieldExists($table, 'destination_entity', false)) {
             $query = "ALTER TABLE `$table`
-                        ADD `destination_entity` ENUM('requester', 'specific', 'form', 'validator', 'user', 'entity') NOT NULL DEFAULT 'requester',
+                        ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
             $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         } else {
+            $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
+            if (count($current_enum_destination_entity) != count($enum_destination_entity)) {
+               $query = "ALTER TABLE `$table`
+                           CHANGE COLUMN `destination_entity` `destination_entity` 
+                           ENUM($enum_destination_entity) 
+                           NOT NULL DEFAULT 'requester'";
+               $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+            }
          }
+
          if(!FieldExists($table, 'tag_type', false)) {
-            $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-                         ADD `tag_type` ENUM('none', 'questions', 'specifics', 'questions_and_specific', 'questions_or_specific') NOT NULL DEFAULT 'none',
+            $query = "ALTER TABLE `$table`
+                         ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                          ADD `tag_questions` VARCHAR(255) NOT NULL,
                          ADD `tag_specifics` VARCHAR(255) NOT NULL;";
             $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
          }
+
+         
       }
 
       if (!TableExists('glpi_plugin_formcreator_targettickets_actors')) {
