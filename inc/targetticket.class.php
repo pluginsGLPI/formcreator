@@ -18,19 +18,19 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
    static function getEnumTagType() {
       return array(
-            'none'                   => __("None"),
-            'questions'              => __('Tags from questions', 'formcreator'),
-            'specifics'              => __('Specific tags', 'formcreator'),
-            'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-            'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
+         'none'                   => __("None"),
+         'questions'              => __('Tags from questions', 'formcreator'),
+         'specifics'              => __('Specific tags', 'formcreator'),
+         'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
+         'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
       );
    }
 
    static function getEnumDueDateRule() {
       return array(
-         'answer'    => __('equals to the answer to the question', 'formcreator'),
-         'ticket'    => __('calculated from the ticket creation date', 'formcreator'),
-         'calcul'    => __('calculated from the answer to the question', 'formcreator'),
+         'answer' => __('equals to the answer to the question', 'formcreator'),
+         'ticket' => __('calculated from the ticket creation date', 'formcreator'),
+         'calcul' => __('calculated from the answer to the question', 'formcreator'),
       );
    }
 
