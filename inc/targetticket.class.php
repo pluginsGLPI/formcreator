@@ -1362,9 +1362,9 @@ EOS;
 
    public static function install(Migration $migration)
    {
-      $enum_destination_entity = "'".implode("', '", array_values(self::getEnumDestinationEntity()))."'";
-      $enum_tag_type           = "'".implode("', '", array_values(self::getEnumTagType()))."'";
-      $enum_due_date_rule      = "'".implode("', '", array_values(self::getEnumDueDateRule()))."'";
+      $enum_destination_entity = "'".implode("', '", array_keys(self::getEnumDestinationEntity()))."'";
+      $enum_tag_type           = "'".implode("', '", array_keys(self::getEnumTagType()))."'";
+      $enum_due_date_rule      = "'".implode("', '", array_keys(self::getEnumDueDateRule()))."'";
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
