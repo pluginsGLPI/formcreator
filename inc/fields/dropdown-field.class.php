@@ -29,7 +29,12 @@ class dropdownField extends PluginFormcreatorField
             }
             $where = implode(' AND ', $whereTab);
 
-            $result = $obj->find($where);
+            $order = 'name';
+            if (isset($obj->fields['completename'])) {
+               $order = 'completename';
+            }
+
+            $result = $obj->find($where, $order);
             foreach ($result AS $id => $datas) {
                if ($this->fields['values'] == 'User') {
                   $values[$id] = getUserName($id);
