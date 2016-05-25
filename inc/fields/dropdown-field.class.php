@@ -3,6 +3,8 @@ class dropdownField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {
+      global $DB;
+
       if ($canEdit) {
          $rand     = mt_rand();
          $required = $this->fields['required'] ? ' required' : '';
@@ -34,7 +36,26 @@ class dropdownField extends PluginFormcreatorField
                $order = 'completename';
             }
 
-            $result = $obj->find($where, $order);
+            // specific way to retrieve data for users
+            if ($obj instanceof User) {
+               $query_user = "SELECT DISTINCT `glpi_users`.`id`,
+                                     `glpi_users`.`name`
+                              FROM `glpi_users`
+                              INNER JOIN `glpi_profiles_users`
+                                ON (`glpi_users`.`id` = `glpi_profiles_users`.`users_id`)
+                              WHERE `glpi_users`.`is_active`  = 1
+                                AND `glpi_users`.`is_deleted` = 0
+                                AND ".getEntitiesRestrictRequest('', "glpi_profiles_users")."
+                              ORDER BY `glpi_users`.`name`";
+               $res_user = $DB->query($query_user);
+               while ($data_user = $DB->fetch_assoc($res_user)) {
+                  $result[$data_user['id']] = $data_user;
+               }
+
+            // Common way to retrieve data
+            } else {
+               $result = $obj->find($where, $order);
+            }
             foreach ($result AS $id => $datas) {
                if ($this->fields['values'] == 'User') {
                   $values[$id] = getUserName($id);
