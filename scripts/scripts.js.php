@@ -63,7 +63,7 @@ function showWizard() {
 		data: {wizard: 'categories'},
 		type: "GET"
 	}).done(function(response){
-		$('.central > tbody:first').prepend('<tr class="nohover"><td><div id="plugin_formcreator_wizard_categories" class="slinky-menu">' + response + '</div></td></tr>');
+		$('.central > tbody:first').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
 		$('#plugin_formcreator_wizard_categories').slinky({ title: true});
 	});
 	$.ajax({
