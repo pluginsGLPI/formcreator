@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorCategory extends CommonDropdown
+class PluginFormcreatorCategory extends CommonTreeDropdown
 {
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
@@ -21,21 +21,25 @@ class PluginFormcreatorCategory extends CommonDropdown
    {
       global $CFG_GLPI;
 
-      echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
-         <h3 class="tab_bg_2" style="padding: 5px">
-           <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) . '" class="submit">
-                <img src="' . $CFG_GLPI['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
-                ' . __('Add a form category', 'formcreator') . '
-            </a>
-         </h3>
-      </div>';
+//       echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
+//          <h3 class="tab_bg_2" style="padding: 5px">
+//            <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) . '" class="submit">
+//                 <img src="' . $CFG_GLPI['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
+//                 ' . __('Add a form category', 'formcreator') . '
+//             </a>
+//          </h3>
+//       </div>';
 
-      $params['sort']  = (!empty($_POST['sort'])) ? (int) $_POST['sort'] : 0;
-      $params['order'] = (!empty($_POST['order']) && in_array($_POST['order'], array('ASC', 'DESC')))
-                           ? $_POST['order'] : 'ASC';
-      $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
-      Search::manageGetValues(__CLASS__);
-      Search::showList(__CLASS__, $params);
+//       $params['sort']  = (!empty($_POST['sort'])) ? (int) $_POST['sort'] : 0;
+//       $params['order'] = (!empty($_POST['order']) && in_array($_POST['order'], array('ASC', 'DESC')))
+//                            ? $_POST['order'] : 'ASC';
+//       $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
+//       Search::manageParams(__CLASS__);
+//       Search::showList(__CLASS__, $params);
+
+      if ($item->getType()==__CLASS__) {
+         $item->showChildren();
+      }
    }
 
    public static function install(Migration $migration)
@@ -75,7 +79,21 @@ class PluginFormcreatorCategory extends CommonDropdown
                           WHERE `id` = " . (int) $line['id'];
          $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
       }
-
+      
+      /**
+       * Migrate categories to tree structure
+       * 
+       * @since 0.85-1.2.4
+       */
+      $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
+      $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => completename));
+      $migration->addField($table, 'level', 'integer', array('value' => 1, 'after' => plugin_formcreator_categories_id));
+      $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
+      $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
+      $migration->migrationOneTable($table);
+      $query  = "UPDATE $table SET `completename`=`name`";
+      $GLOBALS['DB']->query($query);
+      
       return true;
    }
 
