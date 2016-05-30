@@ -110,7 +110,6 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
       }
    }
    echo '</table>';
-   echo '<br />';
    echo '<script type="text/javascript">
             function showDescription(id, img){
                if(img.alt == "+") {
