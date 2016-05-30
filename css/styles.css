@@ -402,3 +402,8 @@ form.formcreator_form {
 #tag_question_title, #tag_specific_title {
    line-height: 31px;
 }
+
+#plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
+	background-color: #FFF;
+	color: #3A5693;
+}

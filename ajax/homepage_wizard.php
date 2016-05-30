@@ -13,12 +13,12 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-//        echo '<div id="plugin_formcreator_wizard_categories" class="slinky-menu"><ul>';
-//        while ($category = $GLOBALS['DB']->fetch_array($result)) {
-//           echo '<li><a href="#" onclick="updateWizardFormsView(' . $category['id'] . ')">' . $category['name'] . '</a></li>';
-//        }
-//        echo '</ul></div>';
+   echo '<table class="tab_cadrehov">';
+   echo '<tr><th>' . __('FormCreator assistant', 'formcreator') . '</th></tr>';
+   echo '<tr><td><div id="plugin_formcreator_wizard_categories" class="slinky-menu">';
    echo PluginFormcreatorCategory::getHtmlCategoryTree();   
+   echo '</div></td></tr>';
+   echo '</table>';
 
 }
 
