@@ -38,7 +38,8 @@ jQuery(document).ready(function($) {
          showFormList()
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
-      showFormList()
+      showFormList();
+      showWizard();
    }
 
 
@@ -56,13 +57,42 @@ jQuery(document).ready(function($) {
    });
 });
 
+function showWizard() {
+	$.ajax({
+		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+		data: {wizard: 'categories'},
+		type: "GET"
+	}).done(function(response){
+		$('.central > tbody:first').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
+		$('#plugin_formcreator_wizard_categories').slinky({ title: true});
+	});
+	$.ajax({
+		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+		data: {wizard: 'forms'},
+		type: "GET"
+	}).done(function(response){
+		$('.central > tbody:eq(1)').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
+	});
+}
+
 function showFormList() {
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
-      $('.central td').first().prepend(response);
+      $('.central > tbody:first').first().prepend(response);
    });
+}
+
+function updateWizardFormsView(categoryId) {
+	$.ajax({
+		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+		data: {wizard: 'forms', categoriesId: categoryId},
+		type: "GET"
+	}).done(function(response){
+		$('.central > tbody:eq(1) > tr:first').remove();
+		$('.central > tbody:eq(1)').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
+	});
 }
 
 // === QUESTIONS ===
