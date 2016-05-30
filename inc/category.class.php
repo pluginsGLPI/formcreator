@@ -21,25 +21,42 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    {
       global $CFG_GLPI;
 
-//       echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
-//          <h3 class="tab_bg_2" style="padding: 5px">
-//            <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) . '" class="submit">
-//                 <img src="' . $CFG_GLPI['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
-//                 ' . __('Add a form category', 'formcreator') . '
-//             </a>
-//          </h3>
-//       </div>';
-
-//       $params['sort']  = (!empty($_POST['sort'])) ? (int) $_POST['sort'] : 0;
-//       $params['order'] = (!empty($_POST['order']) && in_array($_POST['order'], array('ASC', 'DESC')))
-//                            ? $_POST['order'] : 'ASC';
-//       $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
-//       Search::manageParams(__CLASS__);
-//       Search::showList(__CLASS__, $params);
-
       if ($item->getType()==__CLASS__) {
          $item->showChildren();
       }
+   }
+   
+   /**
+    * Recursively build an HTML category tree with UL / LI tags
+    * @param integer $rootId ID of the root item
+    */
+   public static function getHtmlCategoryTree($rootId = 0) {
+      $formCategory = new self();
+      if ($rootId == 0) {
+         $items = $formCategory->find("`level`='1'");
+      } else {
+         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId'");
+      }
+
+      if ($rootId !=0) {
+         $formCategory->getFromDB($rootId);
+         $html = '<a href="#" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
+      } else {
+         $html = '';
+      }
+      
+
+      // No item, then return
+      if (count($items) == 0) {
+         return $html;
+      }
+      
+      $html .= '<ul>';
+      foreach($items as $categoryId => $categoryItem) {
+         $html .= '<li>' . self::getHtmlCategoryTree($categoryId) . '</li>';
+      }
+      $html .= '</ul>';
+      return $html;
    }
 
    public static function install(Migration $migration)
@@ -91,7 +108,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
       $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
       $migration->migrationOneTable($table);
-      $query  = "UPDATE $table SET `completename`=`name`";
+      $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
       $GLOBALS['DB']->query($query);
       
       return true;
