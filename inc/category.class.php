@@ -27,30 +27,50 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
    
    /**
-    * Recursively build an HTML category tree with UL / LI tags
+    * Recursively build an HTML category tree with nested UL / LI tags
+    * 
     * @param integer $rootId ID of the root item
     */
    public static function getHtmlCategoryTree($rootId = 0) {
+      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      // Selects categories containing forms or sub-categories
+      $where      = "0 < (
+               SELECT COUNT($form_table.id)
+               FROM $form_table
+               WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
+               AND $form_table.`is_active` = 1
+               AND $form_table.`is_deleted` = 0
+               AND $form_table.`helpdesk_home` = 1
+               AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+               AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
+               AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                  SELECT plugin_formcreator_forms_id
+                  FROM $table_fp
+                  WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+            ) OR 0 < (SELECT COUNT(*) FROM `$cat_table` AS `cat2` WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`)";
+
       $formCategory = new self();
       if ($rootId == 0) {
-         $items = $formCategory->find("`level`='1'");
+         $items = $formCategory->find("`level`='1' AND ($where)");
       } else {
-         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId'");
+         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)");
       }
 
       if ($rootId !=0) {
          $formCategory->getFromDB($rootId);
-         $html = '<a href="#" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
+         $html = '<a href="#" data-category-id="' . $rootId . '" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
       } else {
          $html = '';
       }
       
-
-      // No item, then return
+      // No sub-categories, then return
       if (count($items) == 0) {
          return $html;
       }
       
+      // Generate UL / LI for sub categories
       $html .= '<ul>';
       foreach($items as $categoryId => $categoryItem) {
          $html .= '<li>' . self::getHtmlCategoryTree($categoryId) . '</li>';
