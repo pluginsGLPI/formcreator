@@ -60,7 +60,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       if ($rootId !=0) {
          $formCategory->getFromDB($rootId);
-         $html = '<a href="#" data-category-id="' . $rootId . '" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
+         $parentId = $formCategory->getField('plugin_formcreator_categories_id');
+         $html = '<a href="#" data-parent-category-id="' . $parentId . '" data-category-id="' . $rootId . '" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
       } else {
          $html = '';
       }
