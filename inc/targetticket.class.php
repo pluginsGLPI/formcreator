@@ -986,6 +986,47 @@ EOS;
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
+      // Select ticket actors
+      $solo_requester = false;
+      $query_requester = "SELECT id, actor_type, actor_value, use_notification
+                          FROM glpi_plugin_formcreator_targettickets_actors
+                          WHERE plugin_formcreator_targettickets_id = ".$this->getID()."
+                          AND actor_role = 'requester'";
+      $result_requester = $GLOBALS['DB']->query($query_requester);
+
+      // If there is only one requester add it on creation, otherwize we will add them later
+      if ($GLOBALS['DB']->numrows($result_requester) == 1) {
+         $actor = $GLOBALS['DB']->fetch_array($result_requester);
+         $solo_requester = true;
+         switch ($actor['actor_type']) {
+            case 'creator' :
+               $user_id = $formanswer->fields['requester_id'];
+               break;
+            case 'validator' :
+               $user_id = $formanswer->fields['validator_id'];
+               break;
+            case 'person' :
+            case 'group' :
+            case 'supplier' :
+               $user_id = $actor['actor_value'];
+               break;
+            case 'question_person' :
+            case 'question_group' :
+            case 'question_supplier' :
+               $answer  = new PluginFormcreatorAnswer();
+               $found   = $answer->find('`plugin_formcreator_question_id` = ' . (int) $actor['actor_value']
+                           . ' AND `plugin_formcreator_formanwers_id` = ' . (int) $formanswer->fields['id']);
+               $found   = array_shift($found);
+               if (empty($found['answer'])) {
+                  continue;
+               } else {
+                  $user_id = (int) $found['answer'];
+               }
+               break;
+         }
+         $datas['_users_id_requester'] = $user_id;
+      }
+
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
@@ -1001,6 +1042,10 @@ EOS;
          case 'requester_dynamic_first' :
             $order_entities = "`glpi_profiles`.`name` ASC";
          case 'requester_dynamic_last' :
+            $requesters_id = $formanswer->fields['requester_id'];
+            if ($datas['_users_id_requester']) {
+               $requesters_id = $datas['_users_id_requester'];
+            }
             if (!isset($order_entities)) {
                $order_entities = "`glpi_profiles`.`name` DESC";
             }
@@ -1008,10 +1053,10 @@ EOS;
                       FROM `glpi_profiles_users`
                       LEFT JOIN `glpi_profiles`
                         ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
-                      WHERE `glpi_profiles_users`.`users_id` = ".$formanswer->fields['requester_id']."
+                      WHERE `glpi_profiles_users`.`users_id` = $requesters_id
                      ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
-            while( $data_entities = $DB->fetch_array($res_entities)) {
+            while($data_entities[] = $DB->fetch_array($res_entities)) {
 
             }
             $first_entity = array_shift($data_entities);
@@ -1091,48 +1136,6 @@ EOS;
       }
       if (!is_null($due_date)) {
          $datas['due_date'] = $due_date;
-      }
-
-      // Select ticket actors
-      $solo_requester = false;
-      $query = "SELECT id, actor_type, actor_value, use_notification
-                FROM glpi_plugin_formcreator_targettickets_actors
-                WHERE plugin_formcreator_targettickets_id = " . $this->getID() . "
-                AND actor_role = 'requester'";
-      $result = $GLOBALS['DB']->query($query);
-
-      // If there is only one requester add it on creation, otherwize we will add them later
-      if ($GLOBALS['DB']->numrows($result) == 1) {
-         $actor = $GLOBALS['DB']->fetch_array($result);
-         $solo_requester = true;
-         switch ($actor['actor_type']) {
-            case 'creator' :
-               $user_id = $formanswer->fields['requester_id'];
-               break;
-            case 'validator' :
-               $user_id = $formanswer->fields['validator_id'];
-               break;
-            case 'person' :
-            case 'group' :
-            case 'supplier' :
-               $user_id = $actor['actor_value'];
-               break;
-            case 'question_person' :
-            case 'question_group' :
-            case 'question_supplier' :
-               $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('`plugin_formcreator_question_id` = ' . (int) $actor['actor_value']
-                           . ' AND `plugin_formcreator_formanwers_id` = ' . (int) $formanswer->fields['id']);
-               $found   = array_shift($found);
-
-               if (empty($found['answer'])) {
-                  continue;
-               } else {
-                  $user_id = (int) $found['answer'];
-               }
-               break;
-         }
-         $datas['_users_id_requester']   = $user_id;
       }
 
       // Create the target ticket
