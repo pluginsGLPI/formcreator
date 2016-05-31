@@ -41,6 +41,15 @@ jQuery(document).ready(function($) {
    } else if (NomDuFichier == "helpdesk.public.php") {
       //showFormList();
       showWizard();
+   } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
+		$('#plugin_formcreator_wizard_categories').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+		$('#plugin_formcreator_wizard_categories a.back').click(
+		    function() { 
+		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
+		        parentAnchor = $(parentItem).children('a')[0];
+		        updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
+		    }
+		);
    }
 
 
