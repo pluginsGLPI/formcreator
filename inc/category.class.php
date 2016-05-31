@@ -27,30 +27,30 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
    
    /**
-    * Recursively build an HTML category tree with nested UL / LI tags
-    * 
-    * @param integer $rootId ID of the root item
+    * @param $rootId id of the subtree root
+    * @return array Tree of form categories as nested array
     */
-   public static function getHtmlCategoryTree($rootId = 0) {
+   public static function getCategoryTree($rootId = 0) {
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      
       // Selects categories containing forms or sub-categories
       $where      = "0 < (
-               SELECT COUNT($form_table.id)
-               FROM $form_table
-               WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
-               AND $form_table.`is_active` = 1
-               AND $form_table.`is_deleted` = 0
-               AND $form_table.`helpdesk_home` = 1
-               AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
-               AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
-               AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                  SELECT plugin_formcreator_forms_id
-                  FROM $table_fp
-                  WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
-            ) OR 0 < (SELECT COUNT(*) FROM `$cat_table` AS `cat2` WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`)";
-
+      SELECT COUNT($form_table.id)
+      FROM $form_table
+      WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
+      AND $form_table.`is_active` = 1
+      AND $form_table.`is_deleted` = 0
+      AND $form_table.`helpdesk_home` = 1
+      AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+      AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
+      AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+      SELECT plugin_formcreator_forms_id
+      FROM $table_fp
+      WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+      ) OR 0 < (SELECT COUNT(*) FROM `$cat_table` AS `cat2` WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`)";
+      
       $formCategory = new self();
       if ($rootId == 0) {
          $items = $formCategory->find("`level`='1' AND ($where)");
@@ -58,23 +58,55 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)");
       }
 
-      if ($rootId !=0) {
-         $formCategory->getFromDB($rootId);
-         $parentId = $formCategory->getField('plugin_formcreator_categories_id');
-         $html = '<a href="#" data-parent-category-id="' . $parentId . '" data-category-id="' . $rootId . '" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
-      } else {
-         $html = '';
-      }
-      
       // No sub-categories, then return
       if (count($items) == 0) {
-         return $html;
+         return array();
       }
       
       // Generate UL / LI for sub categories
-      $html .= '<ul>';
+      $children = array();
       foreach($items as $categoryId => $categoryItem) {
-         $html .= '<li>' . self::getHtmlCategoryTree($categoryId) . '</li>';
+         $children[$categoryId] = self::getCategoryTree($categoryId);
+      }
+      return $children;
+   }
+   
+   /**
+    * Prints form categories in a HTML slinky component
+    */
+   public static function slinkyView() {
+      $categoryTree = array(0 => self::getCategoryTree());
+      echo '<table class="tab_cadrehov">';
+      echo '<tr><th>' . __('FormCreator assistant', 'formcreator') . '</th></tr>';
+      echo '<tr><td><div id="plugin_formcreator_wizard_categories" class="slinky-menu">';
+      echo self::HtmlCategoryTree($categoryTree);
+      echo '</div></td></tr>';
+      echo '</table>';
+   }
+   
+   /**
+    * Build nested UL / LI tags for category tree  
+    * @param array $categoryRoot
+    */
+   protected static function HtmlCategoryTree(array $categoryRoot) {
+      reset($categoryRoot);
+      $categoryId = key($categoryRoot);
+      $subCategories = $categoryRoot[$categoryId];
+      
+      if ($categoryId != 0) {
+         $formCategory = new self();
+         $formCategory->getFromDB($categoryId);
+         $parentId = $formCategory->getField('plugin_formcreator_categories_id');
+         $html = '<a href="#" data-parent-category-id="' . $parentId . '" data-category-id="' . $categoryId . '" onclick="updateWizardFormsView(' . $categoryId . ')">' . $formCategory->getField('name') . '</a>';
+      }
+      if (count($subCategories) == 0) {
+         return $html;
+      }
+      $html .= '<ul>';
+      foreach($subCategories as $subCategoryId => $subCategoryChildren) {
+         $html .= '<li>';
+         $html .= self::HtmlCategoryTree(array($subCategoryId => $subCategoryChildren)); 
+         $html .= '</li>';
       }
       $html .= '</ul>';
       return $html;

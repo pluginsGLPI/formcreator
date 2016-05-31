@@ -13,12 +13,17 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-   echo '<table class="tab_cadrehov">';
-   echo '<tr><th>' . __('FormCreator assistant', 'formcreator') . '</th></tr>';
-   echo '<tr><td><div id="plugin_formcreator_wizard_categories" class="slinky-menu">';
-   echo PluginFormcreatorCategory::getHtmlCategoryTree();
-   echo '</div></td></tr>';
-   echo '</table>';
+   PluginFormcreatorCategory::slinkyView();
+}
+
+/**
+ * Builds a category tree with UL / LI HTML  tags
+ * @param array $categoryTree nested arrays of category IDs
+ */
+function plugin_formcreator_buildCategorySlinky(array $categoryTree) {
+   $html = '<a href="#" data-parent-category-id="' . $parentId . '" data-category-id="' . $rootId . '" onclick="updateWizardFormsView(' . $rootId . ')">' . $formCategory->getField('name') . '</a>';
+   foreach($categoryTree as $categoryId => $categorySubTree) {
+   }
 }
 
 function plugin_formcreator_showWizardForms($rootCategory = 0) {
