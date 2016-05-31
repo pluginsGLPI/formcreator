@@ -509,77 +509,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<div style="width: 950px; margin: 0 auto;">';
       echo '<div style="float:right; width: 375px;">';
-         echo '<table class="tab_cadrehov" style="width: 375px">';
-            echo '<tr><th colspan="2">' . __('My last forms (requester)', 'formcreator') . '</th></tr>';
-            $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
-                      FROM glpi_plugin_formcreator_forms f
-                      INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`requester_id` = '" . $_SESSION['glpiID'] . "'
-                      AND f.is_deleted = 0
-                      ORDER BY fa.`status` ASC, fa.`request_date` DESC
-                      LIMIT 0, 5";
-            $result = $GLOBALS['DB']->query($query);
-            if ($GLOBALS['DB']->numrows($result) == 0) {
-               echo '<tr><td colspan="2" class="line1" align="center">' . __('No form posted yet', 'formcreator') . '</td></tr>';
-            } else {
-               while ($form = $GLOBALS['DB']->fetch_assoc($result)) {
-                  $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
-                  $img = '<img src="' . $img_dir . '' . $form['status'] . '.png" align="absmiddle"
-                              alt="' . __($form['status'], 'formcreator') . '"
-                              title="' . __($form['status'], 'formcreator') . '" />';
-                  echo '<tr>';
-                  echo '<td>' . $img . ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';
-                  echo '<td align="center" width="35%">' . Html::convDateTime($form['request_date']) . '</td>';
-                  echo '</tr>';
-               }
-               echo '<tr>';
-               echo '<th colspan="2" align="center">';
-               echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]=2">';
-               echo __('All my forms (requester)', 'formcreator');
-               echo '</a>';
-               echo '</th>';
-               echo '</tr>';
-            }
-         echo '</table>';
-
-         echo '<br />';
-
-         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-            echo '<table class="tab_cadrehov" style="width: 375px">';
-            echo '<tr><th colspan="2">' . __('My last forms (validator)', 'formcreator') . '</t></tr>';
-            $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
-                      FROM glpi_plugin_formcreator_forms f
-                      INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`validator_id` = '" . $_SESSION['glpiID'] . "'
-                      AND f.is_deleted = 0
-                      ORDER BY fa.`status` ASC, fa.`request_date` DESC
-                      LIMIT 0, 5";
-            $result = $GLOBALS['DB']->query($query);
-            if ($GLOBALS['DB']->numrows($result) == 0) {
-               echo '<tr><td colspan="2" class="line1" align="center">' . __('No form waiting for validation', 'formcreator') . '</td></tr>';
-            } else {
-               while ($form = $GLOBALS['DB']->fetch_assoc($result)) {
-                  $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
-                  $img = '<img src="' . $img_dir . '' . $form['status'] . '.png" align="absmiddle"
-                              alt="' . __($form['status'], 'formcreator') . '"
-                              title="' . __($form['status'], 'formcreator') . '" />';
-                  echo '<tr>';
-                  echo '<td>' . $img . ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';
-                  echo '<td align="center" width="35%">' . Html::convDateTime($form['request_date']) . '</td>';
-                  echo '</tr>';
-               }
-               echo '<tr>';
-               echo '<th colspan="2" align="center">';
-               echo '<a href="formanswer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=2">';
-               echo __('All my forms (validator)', 'formcreator');
-               echo '</a>';
-               echo '</th>';
-               echo '</tr>';
-            }
-            echo '</table>';
-         }
-
+      $this->showMyLastForms();
       echo '</div>';
       echo '<div style="width: 550px; float: left;">';
 
@@ -712,6 +642,79 @@ class PluginFormcreatorForm extends CommonDBTM
                   }
                }
             </script>';
+   }
+
+   protected function showMyLastForms() {
+      echo '<table class="tab_cadrehov" style="width: 375px">';
+      echo '<tr><th colspan="2">' . __('My last forms (requester)', 'formcreator') . '</th></tr>';
+      $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
+                      FROM glpi_plugin_formcreator_forms f
+                      INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
+                      WHERE fa.`requester_id` = '" . $_SESSION['glpiID'] . "'
+                      AND f.is_deleted = 0
+                      ORDER BY fa.`status` ASC, fa.`request_date` DESC
+                      LIMIT 0, 5";
+      $result = $GLOBALS['DB']->query($query);
+      if ($GLOBALS['DB']->numrows($result) == 0) {
+         echo '<tr><td colspan="2" class="line1" align="center">' . __('No form posted yet', 'formcreator') . '</td></tr>';
+      } else {
+         while ($form = $GLOBALS['DB']->fetch_assoc($result)) {
+            $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
+            $img = '<img src="' . $img_dir . '' . $form['status'] . '.png" align="absmiddle"
+                              alt="' . __($form['status'], 'formcreator') . '"
+                              title="' . __($form['status'], 'formcreator') . '" />';
+            echo '<tr>';
+            echo '<td>' . $img . ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';
+            echo '<td align="center" width="35%">' . Html::convDateTime($form['request_date']) . '</td>';
+            echo '</tr>';
+         }
+         echo '<tr>';
+         echo '<th colspan="2" align="center">';
+         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]=2">';
+         echo __('All my forms (requester)', 'formcreator');
+         echo '</a>';
+         echo '</th>';
+         echo '</tr>';
+      }
+      echo '</table>';
+      
+      echo '<br />';
+      
+      if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+         echo '<table class="tab_cadrehov" style="width: 375px">';
+         echo '<tr><th colspan="2">' . __('My last forms (validator)', 'formcreator') . '</t></tr>';
+         $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
+                FROM glpi_plugin_formcreator_forms f
+                INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
+                WHERE fa.`validator_id` = '" . $_SESSION['glpiID'] . "'
+                AND f.is_deleted = 0
+                ORDER BY fa.`status` ASC, fa.`request_date` DESC
+                LIMIT 0, 5";
+         $result = $GLOBALS['DB']->query($query);
+         if ($GLOBALS['DB']->numrows($result) == 0) {
+            echo '<tr><td colspan="2" class="line1" align="center">' . __('No form waiting for validation', 'formcreator') . '</td></tr>';
+         } else {
+            while ($form = $GLOBALS['DB']->fetch_assoc($result)) {
+               $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
+               $img = '<img src="' . $img_dir . '' . $form['status'] . '.png" align="absmiddle"
+                        alt="' . __($form['status'], 'formcreator') . '"
+                        title="' . __($form['status'], 'formcreator') . '" />';
+               echo '<tr>';
+               echo '<td>' . $img . ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';
+               echo '<td align="center" width="35%">' . Html::convDateTime($form['request_date']) . '</td>';
+               echo '</tr>';
+            }
+            echo '<tr>';
+            echo '<th colspan="2" align="center">';
+            echo '<a href="formanswer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=2">';
+            echo __('All my forms (validator)', 'formcreator');
+            echo '</a>';
+            echo '</th>';
+            echo '</tr>';
+         }
+         echo '</table>';
+      }
    }
 
    /**
