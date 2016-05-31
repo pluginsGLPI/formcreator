@@ -31,4 +31,23 @@ class PluginFormcreatorFormlist extends CommonGLPI
 
       return $menu;
    }
+   
+   /**
+    * returns the forms in the category subtree
+    * @param integer $categoryId category id of the subtree to search into  
+    */
+   public static function getHtmlFormListForCategory($categoryId) {
+      // Find all categories in the subtree
+      $categories = getSonsOf(PluginFormcreatorCategory::getTable(), 'plugin_formcreator_categories_id');
+      $categoryIdList = implode(', ', array_keys($categories));
+      
+      // Find forms in the subtree
+      $form = new PluginFormcreatorForm();
+      $forms = $form->find("`plugin_formcreator_categories_id` IN ($categoryIdList)");
+      $html = '';
+      foreach ($forms as $formId => $item) {
+         $html .= '<tr><td>' . '' . '</tr></td>';
+      }
+      
+   }
 }

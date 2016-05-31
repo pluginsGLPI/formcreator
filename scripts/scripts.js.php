@@ -38,7 +38,7 @@ jQuery(document).ready(function($) {
          showFormList()
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
-      showFormList();
+      //showFormList();
       showWizard();
    }
 
@@ -64,7 +64,14 @@ function showWizard() {
 		type: "GET"
 	}).done(function(response){
 		$('.central > tbody:first').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
-		$('#plugin_formcreator_wizard_categories').slinky({ title: true});
+		$('#plugin_formcreator_wizard_categories').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+		$('#plugin_formcreator_wizard_categories a.back').click(
+		    function() { 
+		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
+		        parentAnchor = $(parentItem).children('a')[0];
+		        updateWizardFormsView(parentAnchor.getAttribute('data-category-id'));
+		    }
+		);
 	});
 	$.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
