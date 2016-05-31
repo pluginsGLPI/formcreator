@@ -14,3 +14,4 @@ class PluginFormcreatorCommon {
 
       return $enum;
    }
+}
