@@ -137,7 +137,8 @@ function plugin_init_formcreator ()
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
       }
       
-      if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
+            || strpos($_SERVER['REQUEST_URI'], "central.php") !== false) {
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
          $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/slinky/assets/css/jquery.slinky.css';
       }
