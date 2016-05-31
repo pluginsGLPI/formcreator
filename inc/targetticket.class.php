@@ -1027,6 +1027,12 @@ EOS;
          $datas['_users_id_requester'] = $user_id;
       }
 
+      $requesters_id = $formanswer->fields['requester_id'];
+      if ($datas['_users_id_requester']) {
+         $requesters_id = $datas['_users_id_requester'];
+      }
+
+
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
@@ -1034,7 +1040,7 @@ EOS;
             $datas['entities_id'] = $_SESSION['glpiactive_entity'];
          case 'requester' :
             $userObj = new User();
-            $userObj->getFromDB($formanswer->fields['requester_id']);
+            $userObj->getFromDB($requesters_id);
             $datas['entities_id'] = $userObj->fields['entities_id'];
             break;
 
@@ -1042,10 +1048,6 @@ EOS;
          case 'requester_dynamic_first' :
             $order_entities = "`glpi_profiles`.`name` ASC";
          case 'requester_dynamic_last' :
-            $requesters_id = $formanswer->fields['requester_id'];
-            if ($datas['_users_id_requester']) {
-               $requesters_id = $datas['_users_id_requester'];
-            }
             if (!isset($order_entities)) {
                $order_entities = "`glpi_profiles`.`name` DESC";
             }
