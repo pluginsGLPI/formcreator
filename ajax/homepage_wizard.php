@@ -30,6 +30,8 @@ function plugin_formcreator_showWizardForms($rootCategory = 0) {
    if ($rootCategory == 0) {
       $category = new PluginFormcreatorCategory();
       $selectedCategories = $category->find('1');
+      // Add forms without category
+      $selectedCategories[0] = '0';
    } else {
       $selectedCategories = getSonsOf($cat_table, $rootCategory);
    }
