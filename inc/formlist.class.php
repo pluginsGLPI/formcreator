@@ -31,5 +31,5 @@ class PluginFormcreatorFormlist extends CommonGLPI
 
       return $menu;
    }
-   
+
 }
