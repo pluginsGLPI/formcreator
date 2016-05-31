@@ -42,7 +42,7 @@ function plugin_formcreator_showWizardForms($rootCategory = 0) {
    }
    $selectedCategories = implode(', ', array_keys($selectedCategories));
    
-   // Fond forms without category and accessible by the current user
+   // Find forms without category and accessible by the current user
    $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                    FROM $form_table
                    WHERE $form_table.`plugin_formcreator_categories_id` IN ($selectedCategories)
