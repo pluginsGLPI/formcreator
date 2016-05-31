@@ -70,7 +70,7 @@ function showWizard() {
 		    function() { 
 		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
 		        parentAnchor = $(parentItem).children('a')[0];
-		        updateWizardFormsView(parentAnchor.getAttribute('data-category-id'));
+		        updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
 		    }
 		);
 	});
