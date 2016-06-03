@@ -597,7 +597,8 @@ class PluginFormcreatorForm extends CommonDBTM
                             WHERE $form_table.`plugin_formcreator_categories_id` = 0
                             AND $form_table.`is_active` = 1
                             AND $form_table.`is_deleted` = 0
-                            AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '0')
+                            AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
+                                 OR $form_table.`language` IN ('0', '', NULL))
                             AND $where
                             AND (`access_rights` != " . self::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                                SELECT plugin_formcreator_forms_id
@@ -640,7 +641,8 @@ class PluginFormcreatorForm extends CommonDBTM
                      WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
                      AND $form_table.`is_active` = 1
                      AND $form_table.`is_deleted` = 0
-                     AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '0')
+                     AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
+                          OR $form_table.`language` IN ('0', '', NULL))
                      AND $where
                      AND ($form_table.`access_rights` != " . self::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                         SELECT plugin_formcreator_forms_id
@@ -663,7 +665,8 @@ class PluginFormcreatorForm extends CommonDBTM
                             WHERE $form_table.`plugin_formcreator_categories_id` = {$category['id']}
                             AND $form_table.`is_active` = 1
                             AND $form_table.`is_deleted` = 0
-                            AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '0')
+                            AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
+                                 OR $form_table.`language` IN ('0', '', NULL))
                             AND $where
                             AND (`access_rights` != " . self::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                                SELECT plugin_formcreator_forms_id
