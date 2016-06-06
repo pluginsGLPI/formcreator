@@ -9,7 +9,12 @@ if (!isset($_SESSION['glpiactiveprofile']['id'])) {
 if ($_REQUEST['wizard'] == 'categories') {
    plugin_formcreator_showWizardCategories();
 } else if ($_REQUEST['wizard'] == 'forms') {
-   plugin_formcreator_showWizardForms($_REQUEST['categoriesId']);
+   if (isset($_REQUEST['categoriesId'])) {
+      $categoriesId = (int) $_REQUEST['categoriesId'];
+   } else {
+      $categoriesId = 0;
+   }
+   plugin_formcreator_showWizardForms($categoriesId);
 }
 
 function plugin_formcreator_showWizardCategories() {
