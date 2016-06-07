@@ -403,6 +403,10 @@ form.formcreator_form {
    line-height: 31px;
 }
 
+#plugin_formcreator_wizard_categories {
+	float: left;
+}
+
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
 	background-color: #FFF;
 	color: #3A5693;
@@ -410,16 +414,21 @@ form.formcreator_form {
 
 .plugin_formcreator_formBlock {
 	//width: 230px;
-	width-max: 230px;
-	width-min: 100px;
+	max-width: 230px;
+	min-width: 100px;
 	margin: 4px;
 	padding: 4px;
 	display: inline-block;
 	background: #E7E7E7;
 }
 
+#plugin_formcreator_lastForms {
+	width: 275px; 
+	float:right;
+}
+
 #plugin_formcreator_wizard_forms {
-	//min-width: 250px;
+	min-width: 116px;
 	overflow: hidden;
 }
 
