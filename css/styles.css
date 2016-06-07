@@ -424,3 +424,25 @@ form.formcreator_form {
 #plugin_formcreator_wizard_forms > div {
 	text-align: center;
 }
+
+#plugin_formcreator_searchBar {
+	overflow: hidden;
+	
+}
+
+#plugin_formcreator_searchBar input {	
+	width: 95%;
+	background: #E7E7E7;
+	margin: 10px;
+}
+
+#plugin_formcreator_searchBar input::before {
+    width: 16px;
+    height: 16px;
+    content: "";
+    display: inline-block;
+    background-image: url("../../../pics/search.png");
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}

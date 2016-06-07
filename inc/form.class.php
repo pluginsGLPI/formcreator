@@ -508,6 +508,10 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       echo '<div style="margin: 0 20px;">';
+
+      echo '<div id="plugin_formcreator_searchBar">';
+      $this->showSearchBar();
+      echo '</div>';
       
       echo '<div style="width: 375px; float:right; ">';
       $this->showMyLastForms();
@@ -597,6 +601,13 @@ class PluginFormcreatorForm extends CommonDBTM
          }
          echo '<div>';
       }
+   }
+   
+   protected function showSearchBar() {
+      echo '<form name="formcreator_search" method="post" action="?">';
+      echo '<input type="text" name="search" placeholder="' . __('Please, describe your need here', 'formcreator') . '"/>';
+      Html::closeForm();
+      
    }
 
    protected function showMyLastForms() {
