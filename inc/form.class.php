@@ -513,11 +513,11 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showSearchBar();
       echo '</div>';
       
-      echo '<div style="width: 375px; float:right; ">';
+      echo '<div style="width: 30%; float:right; ">';
       $this->showMyLastForms();
       echo '</div>';
       
-      echo '<div style="width: 375px; float: left;">';
+      echo '<div style="width: 30%; float: left;">';
       PluginFormcreatorCategory::slinkyView();      
       echo '</div>';
       
