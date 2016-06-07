@@ -5,6 +5,7 @@ header('Content-Type: text/javascript');
 
 var modalWindow;
 var rootDoc          = "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>";
+var currentCategory  = "0";
 
 // === MENU ===
 var link = '';
@@ -51,7 +52,17 @@ jQuery(document).ready(function($) {
 		    }
 		);
    }
-
+   
+   searchInput = $('#plugin_formcreator_searchBar input:first');
+   if (searchInput.length == 1) {
+   	searchInput.keypress(
+   		function(event) {
+   			if (event.which == 13) {
+   				updateWizardFormsView(currentCategory);
+   			}
+   		}
+   	);	
+   }
 
    // === Add better multi-select on form configuration validators ===
    // initialize the pqSelect widget.
@@ -105,10 +116,11 @@ function showFormList() {
 }
 
 function updateWizardFormsView(categoryId) {
+	currentCategory = categoryId;
    keywords = $('#plugin_formcreator_searchBar input:first').val();
-	$.ajax({
+   $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-		data: {wizard: 'forms', categoriesId: categoryId, words: keywords},
+		data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords},
 		type: "GET"
 	}).done(function(response){
 		$('#plugin_formcreator_wizard_forms').empty();
