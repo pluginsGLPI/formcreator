@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
       showFormList();
       //showWizard();
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
-		$('#plugin_formcreator_wizard_categories').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+		$('#plugin_formcreator_wizard_categories div:first').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
 		$('#plugin_formcreator_wizard_categories a.back').click(
 		    function() { 
 		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
@@ -105,15 +105,18 @@ function showFormList() {
 }
 
 function updateWizardFormsView(categoryId) {
+   keywords = $('#plugin_formcreator_searchBar input:first').val();
 	$.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-		data: {wizard: 'forms', categoriesId: categoryId},
+		data: {wizard: 'forms', categoriesId: categoryId, words: keywords},
 		type: "GET"
 	}).done(function(response){
 		$('#plugin_formcreator_wizard_forms').empty();
 		$('#plugin_formcreator_wizard_forms').prepend(response);
 	});
 }
+
+// === SEARCH BAR ===
 
 // === QUESTIONS ===
 var urlQuestion      = rootDoc + "/plugins/formcreator/ajax/question.php";
