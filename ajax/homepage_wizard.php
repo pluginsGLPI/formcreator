@@ -18,7 +18,7 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-   echo '<div id="plugin_formcreator_wizard_categories" style="width: 275px; float: left;">';
+   echo '<div id="plugin_formcreator_wizard_categories">';
    PluginFormcreatorCategory::slinkyView();
    echo '</div>';
 }

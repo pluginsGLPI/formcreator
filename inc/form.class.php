@@ -507,7 +507,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showSearchBar();
       echo '</div>';
       
-      echo '<div id="plugin_formcreator_wizard_categories" style="width: 275px; float: left;">';
+      echo '<div id="plugin_formcreator_wizard_categories">';
       PluginFormcreatorCategory::slinkyView();      
       echo '</div>';
       
@@ -594,10 +594,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
    
    protected function showSearchBar() {
-      echo '<form name="formcreator_search" method="post" action="?">';
-      echo '<input type="text" name="search" placeholder="' . __('Please, describe your need here', 'formcreator') . '"/>';
-      Html::closeForm();
-      
+      echo '<form name="formcreator_search" onsubmit="javascript: return false;" >';
+      echo '<input type="text" name="words" placeholder="' . __('Please, describe your need here', 'formcreator') . '"/>';
+      echo '</form>';
    }
 
    protected function showMyLastForms() {
