@@ -517,7 +517,7 @@ class PluginFormcreatorForm extends CommonDBTM
       PluginFormcreatorCategory::slinkyView();      
       echo '</div>';
       
-      echo '<div id="plugin_formcreator_wizard_forms" style="min-width: 200px; overflow: hidden; ">';
+      echo '<div id="plugin_formcreator_wizard_forms">';
       $this->showFormListView();
       echo '</div>';
 
@@ -571,52 +571,36 @@ class PluginFormcreatorForm extends CommonDBTM
       ORDER BY $form_table.name ASC";
       $result_forms = $GLOBALS['DB']->query($query_forms);
        
-      echo '<table class="tab_cadrehov">';
-      echo '<tr class="noHover">';
+      //echo '<table class="tab_cadrehov">';
+      //echo '<tr class="noHover">';
       //echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
-      echo '</tr>';
+      //echo '</tr>';
       
       if ($GLOBALS['DB']->numrows($result_forms) == 0) {
-         echo '<tr><td>' . __('No form yet in this category', 'formcreator') . '</td></tr>';
+         echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
       } else {
-         $i = 0;
+         echo '<div class="tab_cadrehov">';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
-            $i++;
-            echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
-            echo '<td>';
-            echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png" alt="+" title=""
-                onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
-            echo '&nbsp;';
+            echo '<div class="plugin_formcreator_formBlock">';
             echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-            . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
-               title="' . plugin_formcreator_encode($form['description']) . '">'
-                           . $form['name']
-                           . '</a></td>';
-                           echo '</tr>';
-                           echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
-                           echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
-                           echo '</tr>';
-         }
-          
-      }
-      echo '</table>';
-      echo '<script type="text/javascript">
-            function showDescription(id, img){
-               if(img.alt == "+") {
-                 img.alt = "-";
-                 img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/moins.png";
-                 document.getElementById("desc" + id).style.display = "table-row";
-               } else {
-                 img.alt = "+";
-                 img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png";
-                 document.getElementById("desc" + id).style.display = "none";
-               }
+            . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] 
+            . '" title="' . plugin_formcreator_encode($form['description']) . '">'
+            . $form['name']
+            . '</a>';
+            echo '<br />';
+            $formDescription = plugin_formcreator_encode($form['description']);
+            if (empty($formDescription)) {
+               $formDescription = '&nbsp;';
             }
-         </script>';
+            echo $formDescription;
+            echo '</div>';
+         }
+         echo '<div>';
+      }
    }
 
    protected function showMyLastForms() {
-      echo '<table class="tab_cadrehov" style="width: 375px">';
+      echo '<table class="tab_cadrehov">';
       echo '<tr><th colspan="2">' . __('My last forms (requester)', 'formcreator') . '</th></tr>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
@@ -653,7 +637,7 @@ class PluginFormcreatorForm extends CommonDBTM
       
       if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-         echo '<table class="tab_cadrehov" style="width: 375px">';
+         echo '<table class="tab_cadrehov">';
          echo '<tr><th colspan="2">' . __('My last forms (validator)', 'formcreator') . '</t></tr>';
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f

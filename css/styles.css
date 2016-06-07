@@ -407,3 +407,20 @@ form.formcreator_form {
 	background-color: #FFF;
 	color: #3A5693;
 }
+
+.plugin_formcreator_formBlock {
+	width: 230px;
+	margin: 4px;
+	padding: 4px;
+	display: inline-block;
+	background: #E7E7E7;
+}
+
+#plugin_formcreator_wizard_forms {
+	min-width: 250px;
+	overflow: hidden;
+}
+
+#plugin_formcreator_wizard_forms > div {
+	text-align: center;
+}
