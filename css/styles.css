@@ -405,6 +405,7 @@ form.formcreator_form {
 
 #plugin_formcreator_wizard_categories {
 	float: left;
+	width: 275px;
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
