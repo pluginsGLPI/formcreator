@@ -409,7 +409,9 @@ form.formcreator_form {
 }
 
 .plugin_formcreator_formBlock {
-	width: 230px;
+	//width: 230px;
+	width-max: 230px;
+	width-min: 100px;
 	margin: 4px;
 	padding: 4px;
 	display: inline-block;
@@ -417,7 +419,7 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard_forms {
-	min-width: 250px;
+	//min-width: 250px;
 	overflow: hidden;
 }
 
@@ -426,8 +428,7 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_searchBar {
-	overflow: hidden;
-	
+	width: 100%;	
 }
 
 #plugin_formcreator_searchBar input {	
