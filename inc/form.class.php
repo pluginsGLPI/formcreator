@@ -1042,11 +1042,8 @@ class PluginFormcreatorForm extends CommonDBTM
        * 
        * @since 0.85-1.2.4
        */
-      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`description`)";
-      $GLOBALS['DB']->query($query);
-      if ($GLOBALS['DB']->errno() != 1061) { 
-         die ($GLOBALS['DB']->error());
-      }
+      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
+      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       
       if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formvalidators` (
