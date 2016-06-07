@@ -77,7 +77,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    public static function slinkyView() {
       $categoryTree = array(0 => self::getCategoryTree());
       echo '<table class="tab_cadrehov">';
-      echo '<tr><th>' . __('Form categories', 'formcreator') . '</th></tr>';
+      //echo '<tr><th>' . __('Form categories', 'formcreator') . '</th></tr>';
       echo '<tr><td><div id="plugin_formcreator_wizard_categories" class="slinky-menu">';
       echo self::HtmlCategoryTree($categoryTree);
       echo '</div></td></tr>';

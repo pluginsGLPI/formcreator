@@ -497,7 +497,7 @@ class PluginFormcreatorForm extends CommonDBTM
                  FROM $table
                  WHERE $where";
       $result = $GLOBALS['DB']->query($query);
-      if (!empty($result)) {
+      if (false && !empty($result)) {
          list($description) = $GLOBALS['DB']->fetch_array($result);
          if (!empty($description)) {
             echo '<table class="tab_cadre_fixe">';
@@ -507,19 +507,20 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
-      echo '<div style="width: 950px; margin: 0 auto;">';
-      echo '<div style="float:right; width: 375px;">';
+      echo '<div style="margin: 0 20px;">';
+      
+      echo '<div style="width: 375px; float:right; ">';
       $this->showMyLastForms();
       echo '</div>';
-      echo '<div style="width: 200px; float: left;">';
       
+      echo '<div style="width: 375px; float: left;">';
       PluginFormcreatorCategory::slinkyView();      
       echo '</div>';
-      echo '<div id="plugin_formcreator_wizard_forms" style="width: 350px; float: left;">';
       
+      echo '<div id="plugin_formcreator_wizard_forms" style="min-width: 200px; overflow: hidden; ">';
       $this->showFormListView();
       echo '</div>';
-      
+
       echo '</div>';
       echo '</div>';
       echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
@@ -572,7 +573,7 @@ class PluginFormcreatorForm extends CommonDBTM
        
       echo '<table class="tab_cadrehov">';
       echo '<tr class="noHover">';
-      echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+      //echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
       echo '</tr>';
       
       if ($GLOBALS['DB']->numrows($result_forms) == 0) {
@@ -648,7 +649,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       echo '</table>';
       
-      echo '<br />';
+      //echo '<br />';
       
       if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
