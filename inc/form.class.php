@@ -533,7 +533,9 @@ class PluginFormcreatorForm extends CommonDBTM
 //             </script>';
    }
    
-   public function showFormListView($rootCategory = 0) {
+   public function showFormListView($rootCategory = 0, $keywords = '') {
+      global $DB;
+      
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
@@ -550,6 +552,10 @@ class PluginFormcreatorForm extends CommonDBTM
       $selectedCategories = implode(', ', array_keys($selectedCategories));
        
       // Find forms without category and accessible by the current user
+      if (!empty($keywords)) {
+         $keywords = $DB->escape($keywords);
+         $where .= " AND MATCH(`description`) AGAINST('$keywords' IN NATURAL LANGUAGE MODE)";
+      }
       $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
       FROM $form_table
       WHERE $form_table.`plugin_formcreator_categories_id` IN ($selectedCategories)

@@ -14,7 +14,8 @@ if ($_REQUEST['wizard'] == 'categories') {
    } else {
       $categoriesId = 0;
    }
-   plugin_formcreator_showWizardForms($categoriesId);
+   $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
+   plugin_formcreator_showWizardForms($categoriesId, $keywords);
 }
 
 function plugin_formcreator_showWizardCategories() {
@@ -23,7 +24,7 @@ function plugin_formcreator_showWizardCategories() {
    echo '</div>';
 }
 
-function plugin_formcreator_showWizardForms($rootCategory = 0) {
+function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
    $form = new PluginFormcreatorForm();
-   $form->showFormListView($rootCategory);
+   $form->showFormListView($rootCategory, $keywords);
 }
