@@ -35,12 +35,12 @@ jQuery(document).ready(function($) {
 
    if (NomDuFichier == "central.php") {
       $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-         //showFormList()
-         showWizard();
+         showFormList()
+         //showWizard();
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
-      //showFormList();
-      showWizard();
+      showFormList();
+      //showWizard();
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
 		$('#plugin_formcreator_wizard_categories').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
 		$('#plugin_formcreator_wizard_categories a.back').click(
