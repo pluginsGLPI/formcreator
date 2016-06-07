@@ -497,15 +497,6 @@ class PluginFormcreatorForm extends CommonDBTM
                  FROM $table
                  WHERE $where";
       $result = $GLOBALS['DB']->query($query);
-      if (false && !empty($result)) {
-         list($description) = $GLOBALS['DB']->fetch_array($result);
-         if (!empty($description)) {
-            echo '<table class="tab_cadre_fixe">';
-            echo '<tr><td>' . html_entity_decode($description) . '</td></tr>';
-            echo '</table>';
-            echo '<br />';
-         }
-      }
 
       echo '<div style="margin: 0 20px;">';
 
@@ -513,7 +504,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showSearchBar();
       echo '</div>';
       
-      echo '<div style="width: 30%; float:right; ">';
+      echo '<div style="width: 30%; float:right;">';
       $this->showMyLastForms();
       echo '</div>';
       
