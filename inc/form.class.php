@@ -1037,6 +1037,17 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
+      /**
+       * Migrate categories to tree structure
+       * 
+       * @since 0.85-1.2.4
+       */
+      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`description`)";
+      $GLOBALS['DB']->query($query);
+      if ($GLOBALS['DB']->errno() != 1061) { 
+         die ($GLOBALS['DB']->error());
+      }
+      
       if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formvalidators` (
                      `forms_id` int(11) NOT NULL,
