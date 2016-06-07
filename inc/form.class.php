@@ -498,17 +498,16 @@ class PluginFormcreatorForm extends CommonDBTM
                  WHERE $where";
       $result = $GLOBALS['DB']->query($query);
 
-      echo '<div style="margin: 0 20px;">';
+      echo '<div id="plugin_formcreator_lastForms">';
+      $this->showMyLastForms();
+      echo '</div>';
+      echo '<div style="margin-right: 275px;">';
 
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
       
-      echo '<div style="width: 30%; float:right;">';
-      $this->showMyLastForms();
-      echo '</div>';
-      
-      echo '<div style="width: 30%; float: left;">';
+      echo '<div id="plugin_formcreator_wizard_categories" style="width: 275px; float: left;">';
       PluginFormcreatorCategory::slinkyView();      
       echo '</div>';
       
@@ -519,19 +518,19 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       echo '</div>';
       echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
-      echo '<script type="text/javascript">
-               function showDescription(id, img){
-                  if(img.alt == "+") {
-                    img.alt = "-";
-                    img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/moins.png";
-                    document.getElementById("desc" + id).style.display = "table-row";
-                  } else {
-                    img.alt = "+";
-                    img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png";
-                    document.getElementById("desc" + id).style.display = "none";
-                  }
-               }
-            </script>';
+//       echo '<script type="text/javascript">
+//                function showDescription(id, img){
+//                   if(img.alt == "+") {
+//                     img.alt = "-";
+//                     img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/moins.png";
+//                     document.getElementById("desc" + id).style.display = "table-row";
+//                   } else {
+//                     img.alt = "+";
+//                     img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png";
+//                     document.getElementById("desc" + id).style.display = "none";
+//                   }
+//                }
+//             </script>';
    }
    
    public function showFormListView($rootCategory = 0) {
