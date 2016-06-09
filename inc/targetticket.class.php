@@ -1408,7 +1408,8 @@ EOS;
             $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
-            if (count($current_enum_destination_entity) != count(self::getEnumDestinationEntity())) {
+            $reference_enum_destination_entity = self::getEnumDestinationEntity();
+            if (count($current_enum_destination_entity) != count($reference_enum_destination_entity)) {
                $query = "ALTER TABLE `$table`
                            CHANGE COLUMN `destination_entity` `destination_entity` 
                            ENUM($enum_destination_entity) 
