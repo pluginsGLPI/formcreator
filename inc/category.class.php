@@ -30,10 +30,16 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @param $rootId id of the subtree root
     * @return array Tree of form categories as nested array
     */
-   public static function getCategoryTree($rootId = 0) {
+   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      if ($helpdeskHome) {
+         $helpdesk   ="AND $form_table.`helpdesk_home` = 1";
+      } else {
+         $helpdesk   = '';
+      }
+      
       
       // Selects categories containing forms or sub-categories
       $where      = "0 < (
@@ -42,7 +48,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
       AND $form_table.`is_active` = 1
       AND $form_table.`is_deleted` = 0
-      AND $form_table.`helpdesk_home` = 1
+      $helpdesk
       AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
       AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
       AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
@@ -74,12 +80,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    /**
     * Prints form categories in a HTML slinky component
     */
-   public static function slinkyView() {
-      $categoryTree = array(0 => self::getCategoryTree());
+   public static function slinkyView($helpdeskHome = false) {
+      $categoryTree = array(0 => self::getCategoryTree($helpdeskHome));
       echo '<table class="tab_cadrehov">';
       //echo '<tr><th>' . __('Form categories', 'formcreator') . '</th></tr>';
       echo '<tr><td><div class="slinky-menu">';
-      echo self::HtmlCategoryTree($categoryTree);
+      echo self::HtmlCategoryTree($categoryTree, $helpdeskHome);
       echo '</div></td></tr>';
       echo '</table>';
    }

@@ -20,11 +20,11 @@ if ($_REQUEST['wizard'] == 'categories') {
 
 function plugin_formcreator_showWizardCategories() {
    echo '<div id="plugin_formcreator_wizard_categories">';
-   PluginFormcreatorCategory::slinkyView();
+   PluginFormcreatorCategory::slinkyView(true);
    echo '</div>';
 }
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
    $form = new PluginFormcreatorForm();
-   $form->showFormListView($rootCategory, $keywords);
+   $form->showFormListView($rootCategory, $keywords, true);
 }

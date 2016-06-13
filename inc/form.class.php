@@ -508,7 +508,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       
       echo '<div id="plugin_formcreator_wizard_categories">';
-      PluginFormcreatorCategory::slinkyView();      
+      PluginFormcreatorCategory::slinkyView();
       echo '</div>';
       
       echo '<div id="plugin_formcreator_wizard_forms">';
@@ -533,14 +533,19 @@ class PluginFormcreatorForm extends CommonDBTM
 //             </script>';
    }
    
-   public function showFormListView($rootCategory = 0, $keywords = '') {
+   public function showFormListView($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
       global $DB;
       
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
       $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
-       
+      if ($helpdeskHome) {
+         $helpdesk   ="AND $form_table.`helpdesk_home` = 1";
+      } else {
+         $helpdesk   = '';
+      }
+      
       if ($rootCategory == 0) {
          $category = new PluginFormcreatorCategory();
          $selectedCategories = $category->find('1');
@@ -558,17 +563,18 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
       FROM $form_table
+      LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
       WHERE $form_table.`plugin_formcreator_categories_id` IN ($selectedCategories)
       AND $form_table.`is_active` = 1
       AND $form_table.`is_deleted` = 0
-      AND $form_table.`helpdesk_home` = 1
+      $helpdesk
       AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
       AND $where
       AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
       SELECT plugin_formcreator_forms_id
       FROM $table_fp
       WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
-      ORDER BY $form_table.name ASC";
+      ORDER BY $cat_table.level ASC, $form_table.name ASC";
       $result_forms = $GLOBALS['DB']->query($query_forms);
        
       //echo '<table class="tab_cadrehov">';
