@@ -426,6 +426,7 @@ form.formcreator_form {
 .plugin_formcreator_formTile div:first-child {
 	color: #F00;
 	float: right;
+	margin: 0 5px;
 }
 
 #plugin_formcreator_lastForms {

@@ -512,7 +512,9 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       
       echo '<div id="plugin_formcreator_wizard_forms">';
-      $this->showFormListView();
+      //$this->showFormListView();
+      //Show the most popular
+      $this->showMostPopular();
       echo '</div>';
 
       echo '</div>';
@@ -603,6 +605,62 @@ class PluginFormcreatorForm extends CommonDBTM
             }
             echo $formDescription;
             echo '</div>';
+         }
+         echo '<div>';
+      }
+   }
+   
+   /**
+    * show most popular
+    */
+   public function showMostPopular($helpdeskHome = false) {
+      global $DB;
+      
+      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+      if ($helpdeskHome) {
+         $helpdesk   ="AND $form_table.`helpdesk_home` = 1";
+      } else {
+         $helpdesk   = '';
+      }
+
+      $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+      FROM $form_table
+      WHERE $form_table.`is_active` = 1
+      AND $form_table.`is_deleted` = 0
+      $helpdesk
+      AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+      AND $where
+      AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+      SELECT plugin_formcreator_forms_id
+      FROM $table_fp
+      WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+      ORDER BY $form_table.usage_count DESC, $form_table.name ASC LIMIT 6";
+      $result_forms = $GLOBALS['DB']->query($query_forms);
+      
+      if ($GLOBALS['DB']->numrows($result_forms) == 0) {
+         echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
+      } else {
+         echo '<div class="tab_cadrehov">';
+         $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
+         $pic = 'form.png';
+         while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
+            echo '<div class="plugin_formcreator_formTile">';
+            echo '<div><img src="' . $img_dir . $pic . '"/></div>';
+            echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+            . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id']
+            . '" title="' . plugin_formcreator_encode($form['description']) . '">'
+                  . $form['name']
+                  . '</a>';
+                  echo '<br />';
+                  $formDescription = plugin_formcreator_encode($form['description']);
+                  if (empty($formDescription)) {
+                     $formDescription = '&nbsp;';
+                  }
+                  echo $formDescription;
+                  echo '</div>';
          }
          echo '<div>';
       }

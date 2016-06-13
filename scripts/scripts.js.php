@@ -45,11 +45,16 @@ jQuery(document).ready(function($) {
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
 		$('#plugin_formcreator_wizard_categories div:first').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
 		$('#plugin_formcreator_wizard_categories a.back').click(
-		    function() { 
+		    function() {
 		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
 		        parentAnchor = $(parentItem).children('a')[0];
 		        updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
 		    }
+		);
+		$('#plugin_formcreator_wizard_categories a.mostPopular').click(
+		   function () {
+		      showMostPopular();
+		   }
 		);
    }
    
@@ -122,6 +127,17 @@ function updateWizardFormsView(categoryId) {
    $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
 		data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords},
+		type: "GET"
+	}).done(function(response){
+		$('#plugin_formcreator_wizard_forms').empty();
+		$('#plugin_formcreator_wizard_forms').prepend(response);
+	});
+}
+
+function showMostPopular() {
+   $.ajax({
+		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+		data: {wizard: 'mostPopular'},
 		type: "GET"
 	}).done(function(response){
 		$('#plugin_formcreator_wizard_forms').empty();
