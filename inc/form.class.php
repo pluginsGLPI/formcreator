@@ -581,7 +581,7 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          echo '<div class="tab_cadrehov">';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
-            echo '<div class="plugin_formcreator_formBlock">';
+            echo '<div class="plugin_formcreator_formTile">';
             echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
             . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] 
             . '" title="' . plugin_formcreator_encode($form['description']) . '">'
