@@ -164,8 +164,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
        * @since 0.85-1.2.4
        */
       $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
-      $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => completename));
-      $migration->addField($table, 'level', 'integer', array('value' => 1, 'after' => plugin_formcreator_categories_id));
+      $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => 'completename'));
+      $migration->addField($table, 'level', 'integer', array('value' => 1, 'after' => 'plugin_formcreator_categories_id'));
       $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
       $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
       $migration->migrationOneTable($table);
