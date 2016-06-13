@@ -88,11 +88,12 @@ function showWizard() {
 	}).done(function(response){
 		$('.central > tbody:first').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
 		$('#plugin_formcreator_wizard_categories').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+
 		$('#plugin_formcreator_wizard_categories a.back').click(
 		    function() { 
-		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
-		        parentAnchor = $(parentItem).children('a')[0];
-		        updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
+		       parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
+		       parentAnchor = $(parentItem).children('a')[0];
+		       updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
 		    }
 		);
 	});
@@ -116,7 +117,7 @@ function showFormList() {
 }
 
 function updateWizardFormsView(categoryId) {
-	currentCategory = categoryId;
+   currentCategory = categoryId;
    keywords = $('#plugin_formcreator_searchBar input:first').val();
    $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
