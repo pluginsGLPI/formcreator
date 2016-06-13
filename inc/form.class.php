@@ -1051,7 +1051,13 @@ class PluginFormcreatorForm extends CommonDBTM
        * 
        * @since 0.85-1.2.4
        */
-      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`, ADD FULLTEXT INDEX `Search` (`name`, `description`)";
+      // An error may occur id the Search index does not exists
+      // This is not critical as we need to (re) create it
+      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`";
+      $GLOBALS['DB']->query($query); 
+      
+      // Re-add FULLTEXT index
+      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
       $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       
       if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
