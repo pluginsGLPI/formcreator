@@ -430,7 +430,7 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_lastForms {
-	width: 275px; 
+	width: 275px;
 	float:right;
 }
 
@@ -444,22 +444,25 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_searchBar {
-	width: 100%;	
+   position: relative;
+   margin: 10px 30px 0 6px;
+   box-sizing: border-box;
 }
 
-#plugin_formcreator_searchBar input {	
-	width: 95%;
-	background: #E7E7E7;
-	margin: 10px;
+#plugin_formcreator_searchBar input {
+   width: 100%;
+   background: #E7E7E7;
+   font-size: 1.4em;
+   padding: 10px 0 10px 10px;
 }
 
-#plugin_formcreator_searchBar input::before {
-    width: 16px;
-    height: 16px;
-    content: "";
-    display: inline-block;
-    background-image: url("../../../pics/search.png");
-    position: absolute;
-    top: 4px;
-    right: 4px;
+#plugin_formcreator_searchBar:after {
+   width: 16px;
+   height: 16px;
+   content: '';
+   display: inline-block;
+   background-image: url("../pics/search.png");
+   position: absolute;
+   top: 12px;
+   right: 0;
 }
