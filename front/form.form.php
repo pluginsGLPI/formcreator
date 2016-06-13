@@ -48,6 +48,10 @@ if ($plugin->isActivated("formcreator")) {
 
          // Save form
          $form->saveForm();
+         $form->update([
+               'id' => $form->getID(),
+               'usage_count' => $form->getField('usage_count') + 1,
+         ]);
 
          // If user was not authenticated, remove temporary user
          if($_SESSION['glpiname'] == 'formcreator_temp_user') {

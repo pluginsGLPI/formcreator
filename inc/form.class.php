@@ -832,7 +832,9 @@ class PluginFormcreatorForm extends CommonDBTM
    **/
    public function prepareInputForUpdate($input)
    {
-      if (isset($input['access_rights']) || isset($_POST['massiveaction'])) {
+      if (isset($input['access_rights']) 
+            || isset($_POST['massiveaction'])
+            || isset($input['usage_count'])) {
          return $input;
       } else {
          $this->updateValidators();
@@ -1047,9 +1049,10 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       /**
-       * Migrate categories to tree structure
+       * Add natural language search
+       * Add form usage counter
        * 
-       * @since 0.85-1.2.4
+       * @since 0.90-1.5
        */
       // An error may occur id the Search index does not exists
       // This is not critical as we need to (re) create it
@@ -1071,6 +1074,9 @@ class PluginFormcreatorForm extends CommonDBTM
                   COLLATE = utf8_unicode_ci;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
+      
+      $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required', 'value' => '0'));
+      $migration->migrationOneTable($table);
 
       // Create standard search options
       $query = "DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = 'PluginFormcreatorForm'";
