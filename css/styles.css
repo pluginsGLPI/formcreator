@@ -423,6 +423,11 @@ form.formcreator_form {
 	background: #E7E7E7;
 }
 
+.plugin_formcreator_formTile div:first-child {
+	color: #F00;
+	float: right;
+}
+
 #plugin_formcreator_lastForms {
 	width: 275px; 
 	float:right;

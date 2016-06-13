@@ -580,8 +580,11 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
       } else {
          echo '<div class="tab_cadrehov">';
+         $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
+         $pic = 'form.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
             echo '<div class="plugin_formcreator_formTile">';
+            echo '<div><img src="' . $img_dir . $pic . '"/></div>';
             echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
             . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] 
             . '" title="' . plugin_formcreator_encode($form['description']) . '">'
