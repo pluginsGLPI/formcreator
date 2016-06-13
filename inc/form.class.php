@@ -561,7 +561,7 @@ class PluginFormcreatorForm extends CommonDBTM
       // Find forms without category and accessible by the current user
       if (!empty($keywords)) {
          $keywords = $DB->escape($keywords);
-         $where .= " AND MATCH(`name`, `description`) AGAINST('$keywords' IN NATURAL LANGUAGE MODE)";
+         $where .= " AND MATCH($form_table.`name`, $form_table.`description`) AGAINST('$keywords' IN NATURAL LANGUAGE MODE)";
       }
       $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
       FROM $form_table
