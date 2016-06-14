@@ -550,6 +550,11 @@ class PluginFormcreatorForm extends CommonDBTM
          $selectedCategories = $category->find('1');
          // Add forms without category
          $selectedCategories[0] = '0';
+         
+         $query_faqs = KnowbaseItem::getListRequest([
+               'faq'      => '1',
+               'contains' => $keywords
+         ]);
       } else {
          $selectedCategories = getSonsOf($cat_table, $rootCategory);
       }
@@ -578,8 +583,6 @@ class PluginFormcreatorForm extends CommonDBTM
       
       $formList = array();
       if ($GLOBALS['DB']->numrows($result_forms) > 0) {
-         $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
-         $pic = 'form.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
             $formDescription = plugin_formcreator_encode($form['description']);
             if (empty($formDescription)) {
@@ -588,7 +591,20 @@ class PluginFormcreatorForm extends CommonDBTM
             $formList[] = [
                   'id'           => $form['id'],
                   'name'         => $form['name'],
-                  'description'  => $formDescription
+                  'description'  => $formDescription,
+                  'type'         => 'form'
+            ];
+         }
+      }
+      
+      $result_faqs = $GLOBALS['DB']->query($query_faqs);
+      if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
+         while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
+            $formList[] = [
+                  'id'           => $faq['id'],
+                  'name'         => $faq['name'],
+                  'description'  => '',
+                  'type'         => 'faq'
             ];
          }
       }
@@ -638,7 +654,8 @@ class PluginFormcreatorForm extends CommonDBTM
             $formList[] = [
                   'id'           => $form['id'],
                   'name'         => $form['name'],
-                  'description'  => $formDescription
+                  'description'  => $formDescription,
+                  'type'         => 'form'
             ];
          }
       }

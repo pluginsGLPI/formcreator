@@ -56,6 +56,12 @@ jQuery(document).ready(function($) {
 		      showMostPopular();
 		   }
 		);
+		$('#plugin_formcreator_wizard_categories a.allForms').click(
+		   function () {
+		      updateWizardFormsView(0);
+		   }
+		);
+		
 		showMostPopular();
    }
    
@@ -162,11 +168,18 @@ function buildTiles(list) {
    } else {
       var items = [];
       $.each(list, function(key, form) {
-      	// Build a HTML tile 
+      	// Build a HTML tile
+      	if (form.type == 'form') {
+      	   pic = 'form.png';
+      	   url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id;
+      	} else {
+      	   pic = 'faq.png';
+      	   url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
+      	}
       	items.push(
       		'<div class="plugin_formcreator_formTile">'
-      	   + '<div><img src="' + rootDoc + '/plugins/formcreator/pics/form.png' + '"/></div>'
-      	   + '<a href="' + rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id + '" title="' + form.description + '">'
+      	   + '<div><img src="' + rootDoc + '/plugins/formcreator/pics/' + pic + '"/></div>'
+      	   + '<a href="' + url + '" title="' + form.description + '">'
       	   + form.name
       	   + '</a><br />'
       	   + form.description
