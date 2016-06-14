@@ -589,7 +589,7 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          echo '<div class="tab_cadrehov">';
          $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
-         $pic = 'form.png';
+         $pic = 'form_b.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
             echo '<div class="plugin_formcreator_formTile">';
             echo '<div><img src="' . $img_dir . $pic . '"/></div>';
@@ -645,7 +645,7 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          echo '<div class="tab_cadrehov">';
          $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
-         $pic = 'form.png';
+         $pic = 'form_b.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
             echo '<div class="plugin_formcreator_formTile">';
             echo '<div><img src="' . $img_dir . $pic . '"/></div>';
