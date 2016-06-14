@@ -514,7 +514,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="plugin_formcreator_wizard_forms">';
       //$this->showFormListView();
       //Show the most popular
-      $this->showMostPopular();
+      //$this->showMostPopular();
       echo '</div>';
 
       echo '</div>';
@@ -578,35 +578,25 @@ class PluginFormcreatorForm extends CommonDBTM
       WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
       ORDER BY $cat_table.level ASC, $form_table.name ASC";
       $result_forms = $GLOBALS['DB']->query($query_forms);
-       
-      //echo '<table class="tab_cadrehov">';
-      //echo '<tr class="noHover">';
-      //echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
-      //echo '</tr>';
       
       if ($GLOBALS['DB']->numrows($result_forms) == 0) {
          echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
       } else {
-         echo '<div class="tab_cadrehov">';
+         $formList = array();
          $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
          $pic = 'form.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
-            echo '<div class="plugin_formcreator_formTile">';
-            echo '<div><img src="' . $img_dir . $pic . '"/></div>';
-            echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-            . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] 
-            . '" title="' . plugin_formcreator_encode($form['description']) . '">'
-            . $form['name']
-            . '</a>';
-            echo '<br />';
             $formDescription = plugin_formcreator_encode($form['description']);
             if (empty($formDescription)) {
                $formDescription = '&nbsp;';
             }
-            echo $formDescription;
-            echo '</div>';
+            $formList[] = [
+                  'id'           => $form['id'],
+                  'name'         => $form['name'],
+                  'description'  => $formDescription
+            ];
          }
-         echo '<div>';
+         echo json_encode($formList, JSON_UNESCAPED_SLASHES);
       }
    }
    
@@ -643,26 +633,21 @@ class PluginFormcreatorForm extends CommonDBTM
       if ($GLOBALS['DB']->numrows($result_forms) == 0) {
          echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
       } else {
-         echo '<div class="tab_cadrehov">';
+         $formList = array();
          $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
          $pic = 'form.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
-            echo '<div class="plugin_formcreator_formTile">';
-            echo '<div><img src="' . $img_dir . $pic . '"/></div>';
-            echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
-            . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id']
-            . '" title="' . plugin_formcreator_encode($form['description']) . '">'
-                  . $form['name']
-                  . '</a>';
-                  echo '<br />';
-                  $formDescription = plugin_formcreator_encode($form['description']);
-                  if (empty($formDescription)) {
-                     $formDescription = '&nbsp;';
-                  }
-                  echo $formDescription;
-                  echo '</div>';
+            $formDescription = plugin_formcreator_encode($form['description']);
+            if (empty($formDescription)) {
+               $formDescription = '&nbsp;';
+            }
+            $formList[] = [
+                  'id'           => $form['id'],
+                  'name'         => $form['name'],
+                  'description'  => $formDescription
+            ];
          }
-         echo '<div>';
+         echo json_encode($formList, JSON_UNESCAPED_SLASHES);
       }
    }
    

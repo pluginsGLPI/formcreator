@@ -56,6 +56,7 @@ jQuery(document).ready(function($) {
 		      showMostPopular();
 		   }
 		);
+		showMostPopular();
    }
    
    searchInput = $('#plugin_formcreator_searchBar input:first');
@@ -135,10 +136,12 @@ function updateWizardFormsView(categoryId) {
    $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
 		data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords},
-		type: "GET"
+		type: "GET",
+		dataType: "json"
 	}).done(function(response){
-		$('#plugin_formcreator_wizard_forms').empty();
-		$('#plugin_formcreator_wizard_forms').prepend(response);
+	   buildTiles(response);
+		//$('#plugin_formcreator_wizard_forms').empty();
+		//$('#plugin_formcreator_wizard_forms').prepend(response);
 	});
 }
 
@@ -146,11 +149,31 @@ function showMostPopular() {
    $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
 		data: {wizard: 'mostPopular'},
-		type: "GET"
+		type: "GET",
+		dataType: "json"
 	}).done(function(response){
-		$('#plugin_formcreator_wizard_forms').empty();
-		$('#plugin_formcreator_wizard_forms').prepend(response);
+	   buildTiles(response);
 	});
+}
+
+function buildTiles(list) {
+   var items = [];
+   $.each(list, function(key, form) {
+   	items.push(
+   		'<div class="plugin_formcreator_formTile">'
+   	   + '<div><img src="' + rootDoc + '/plugins/formcreator/pics/form.png' + '"/></div>'
+   	   + '<a href="' + rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id + '" title="' + form.description + '">'
+   	   + form.name
+   	   + '</a><br />'
+   	   + form.description
+   	   + '</div>'
+   	);
+   });
+   html = '<div class="tab_cadrehov">'
+   + items.join("")
+   + '</div>';
+   $('#plugin_formcreator_wizard_forms').empty();
+   $('#plugin_formcreator_wizard_forms').prepend(html);
 }
 
 // === SEARCH BAR ===
