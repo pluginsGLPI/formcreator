@@ -128,7 +128,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // -------------------------------------------------------------------------------------------
       // Due date type selection
       // -------------------------------------------------------------------------------------------
-      Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(), 
+      Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
          array(
             'value'     => $this->fields['due_date_rule'],
             'on_change' => 'formcreatorChangeDueDate(this.value)',
@@ -201,8 +201,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<td width="25%">';
       $rand = mt_rand();
       Dropdown::showFromArray(
-         'destination_entity', 
-         self::getEnumDestinationEntity(), 
+         'destination_entity',
+         self::getEnumDestinationEntity(),
          array(
             'value'     => $this->fields['destination_entity'],
             'on_change' => 'change_entity()',
@@ -832,9 +832,9 @@ EOS;
                   . '</b> "' . $question->getName() . '"';
                break;
             case 'supplier' :
-               $group = new Group();
-               $group->getFromDB($values['actor_value']);
-               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $group->getName() . '"';
+               $supplier = new Supplier();
+               $supplier->getFromDB($values['actor_value']);
+               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $supplier->getName() . '"';
                break;
             case 'question_supplier' :
                $question = new PluginFormcreatorQuestion();
@@ -1410,8 +1410,8 @@ EOS;
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
             if (count($current_enum_destination_entity) != count(self::getEnumDestinationEntity())) {
                $query = "ALTER TABLE `$table`
-                           CHANGE COLUMN `destination_entity` `destination_entity` 
-                           ENUM($enum_destination_entity) 
+                           CHANGE COLUMN `destination_entity` `destination_entity`
+                           ENUM($enum_destination_entity)
                            NOT NULL DEFAULT 'requester'";
                $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
             }
@@ -1425,7 +1425,7 @@ EOS;
             $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
          }
 
-         
+
       }
 
       if (!TableExists('glpi_plugin_formcreator_targettickets_actors')) {
