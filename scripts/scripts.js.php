@@ -56,6 +56,13 @@ jQuery(document).ready(function($) {
 		      showMostPopular();
 		   }
 		);
+		$('#plugin_formcreator_wizard_categories a.allForms').click(
+		   function () {
+		      updateWizardFormsView(0);
+		   }
+		);
+		
+		showMostPopular();
    }
    
    searchInput = $('#plugin_formcreator_searchBar input:first');
@@ -63,7 +70,7 @@ jQuery(document).ready(function($) {
       var timer;
    	searchInput.keypress(
    		function(event) {   		
-   		   if (timer !== null) {
+   		   if (typeof timer != "undefined") {
    		      clearTimeout(timer);
    		   }
    		   timer = setTimeout(function() {
@@ -135,10 +142,10 @@ function updateWizardFormsView(categoryId) {
    $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
 		data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords},
-		type: "GET"
+		type: "GET",
+		dataType: "json"
 	}).done(function(response){
-		$('#plugin_formcreator_wizard_forms').empty();
-		$('#plugin_formcreator_wizard_forms').prepend(response);
+	   buildTiles(response);
 	});
 }
 
@@ -146,11 +153,48 @@ function showMostPopular() {
    $.ajax({
 		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
 		data: {wizard: 'mostPopular'},
-		type: "GET"
+		type: "GET",
+		dataType: "json"
 	}).done(function(response){
-		$('#plugin_formcreator_wizard_forms').empty();
-		$('#plugin_formcreator_wizard_forms').prepend(response);
+	   buildTiles(response);
 	});
+}
+
+function buildTiles(list) {
+   if (list.length == 0) {
+      html = '<div class="tab_cadrehov">'
+      + "<?php echo __('No form yet in this category', 'formcreator') ?>"
+      + '</div>';
+   } else {
+      var items = [];
+      $.each(list, function(key, form) {
+      	// Build a HTML tile
+      	if (form.type == 'form') {
+      	   pic = 'form.png';
+      	   url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id;
+      	} else {
+      	   pic = 'faq.png';
+      	   url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
+      	}
+      	items.push(
+      		'<div class="plugin_formcreator_formTile">'
+      	   + '<div><img src="' + rootDoc + '/plugins/formcreator/pics/' + pic + '"/></div>'
+      	   + '<a href="' + url + '" title="' + form.description + '">'
+      	   + form.name
+      	   + '</a><br />'
+      	   + form.description
+      	   + '</div>'
+      	);
+      });
+      
+      // concatenate all HTML parts
+      html = '<div class="tab_cadrehov">'
+      + items.join("")
+      + '</div>';
+	}    
+   // Display all tiles
+   $('#plugin_formcreator_wizard_forms').empty();
+   $('#plugin_formcreator_wizard_forms').prepend(html);
 }
 
 // === SEARCH BAR ===
