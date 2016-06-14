@@ -579,10 +579,8 @@ class PluginFormcreatorForm extends CommonDBTM
       ORDER BY $cat_table.level ASC, $form_table.name ASC";
       $result_forms = $GLOBALS['DB']->query($query_forms);
       
-      if ($GLOBALS['DB']->numrows($result_forms) == 0) {
-         echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
-      } else {
-         $formList = array();
+      $formList = array();
+      if ($GLOBALS['DB']->numrows($result_forms) > 0) {
          $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
          $pic = 'form.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
@@ -596,8 +594,8 @@ class PluginFormcreatorForm extends CommonDBTM
                   'description'  => $formDescription
             ];
          }
-         echo json_encode($formList, JSON_UNESCAPED_SLASHES);
       }
+      echo json_encode($formList, JSON_UNESCAPED_SLASHES);
    }
    
    /**
@@ -630,9 +628,8 @@ class PluginFormcreatorForm extends CommonDBTM
       ORDER BY $form_table.usage_count DESC, $form_table.name ASC LIMIT 6";
       $result_forms = $GLOBALS['DB']->query($query_forms);
       
-      if ($GLOBALS['DB']->numrows($result_forms) == 0) {
-         echo '<div>' . __('No form yet in this category', 'formcreator') . '</div>';
-      } else {
+      $formList = array();
+      if ($GLOBALS['DB']->numrows($result_forms) > 0) {
          $formList = array();
          $img_dir = $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/';
          $pic = 'form.png';
@@ -647,8 +644,8 @@ class PluginFormcreatorForm extends CommonDBTM
                   'description'  => $formDescription
             ];
          }
-         echo json_encode($formList, JSON_UNESCAPED_SLASHES);
       }
+      echo json_encode($formList, JSON_UNESCAPED_SLASHES);
    }
    
    protected function showSearchBar() {

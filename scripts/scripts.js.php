@@ -140,8 +140,6 @@ function updateWizardFormsView(categoryId) {
 		dataType: "json"
 	}).done(function(response){
 	   buildTiles(response);
-		//$('#plugin_formcreator_wizard_forms').empty();
-		//$('#plugin_formcreator_wizard_forms').prepend(response);
 	});
 }
 
@@ -157,21 +155,31 @@ function showMostPopular() {
 }
 
 function buildTiles(list) {
-   var items = [];
-   $.each(list, function(key, form) {
-   	items.push(
-   		'<div class="plugin_formcreator_formTile">'
-   	   + '<div><img src="' + rootDoc + '/plugins/formcreator/pics/form.png' + '"/></div>'
-   	   + '<a href="' + rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id + '" title="' + form.description + '">'
-   	   + form.name
-   	   + '</a><br />'
-   	   + form.description
-   	   + '</div>'
-   	);
-   });
-   html = '<div class="tab_cadrehov">'
-   + items.join("")
-   + '</div>';
+   if (list.length == 0) {
+      html = '<div class="tab_cadrehov">'
+      + "<?php echo __('No form yet in this category', 'formcreator') ?>"
+      + '</div>';
+   } else {
+      var items = [];
+      $.each(list, function(key, form) {
+      	// Build a HTML tile 
+      	items.push(
+      		'<div class="plugin_formcreator_formTile">'
+      	   + '<div><img src="' + rootDoc + '/plugins/formcreator/pics/form.png' + '"/></div>'
+      	   + '<a href="' + rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id + '" title="' + form.description + '">'
+      	   + form.name
+      	   + '</a><br />'
+      	   + form.description
+      	   + '</div>'
+      	);
+      });
+      
+      // concatenate all HTML parts
+      html = '<div class="tab_cadrehov">'
+      + items.join("")
+      + '</div>';
+	}    
+   // Display all tiles
    $('#plugin_formcreator_wizard_forms').empty();
    $('#plugin_formcreator_wizard_forms').prepend(html);
 }
