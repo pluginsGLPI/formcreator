@@ -512,9 +512,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       
       echo '<div id="plugin_formcreator_wizard_forms">';
-      //$this->showFormListView();
-      //Show the most popular
-      //$this->showMostPopular();
       echo '</div>';
 
       echo '</div>';
@@ -726,7 +723,7 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '</table>';
       }
    }
-
+   
    /**
     * Display the Form end-user form to be filled
     *
