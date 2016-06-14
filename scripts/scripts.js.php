@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
       var timer;
    	searchInput.keypress(
    		function(event) {   		
-   		   if (timer !== null) {
+   		   if (typeof timer != "undefined") {
    		      clearTimeout(timer);
    		   }
    		   timer = setTimeout(function() {
