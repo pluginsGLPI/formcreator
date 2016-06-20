@@ -603,7 +603,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $formList[] = [
                   'id'           => $faq['id'],
                   'name'         => $faq['name'],
-                  'description'  => '',
+                  'description'  => '&nbsp;',
                   'type'         => 'faq'
             ];
          }
