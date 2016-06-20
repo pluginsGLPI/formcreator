@@ -91,52 +91,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       }
       return $children;
    }
-      
-   /**
-    * Prints form categories in a HTML slinky component
-    */
-   public static function slinkyView($helpdeskHome = false) {
-      $categoryTree = array(0 => self::getCategoryTree($helpdeskHome));
-      echo '<table class="tab_cadrehov">';
-      echo '<tr>';
-      echo '<td align="center"><a href="#" class="mostPopular">' . __('Most popular', 'formcreator') . '</a></td>';
-      echo '<td align="center"><a href="#" class="allForms">' . __('All forms', 'formcreator') .'</td>';
-      echo '</tr>';
-      echo '<tr><td colspan="2"><div class="slinky-menu">';
-      echo self::HtmlCategoryTree($categoryTree, $helpdeskHome);
-      echo '</div></td></tr>';
-      echo '</table>';
-   }
-   
-   /**
-    * Build nested UL / LI tags for category tree  
-    * @param array $categoryRoot
-    */
-   protected static function HtmlCategoryTree(array $categoryRoot) {
-      reset($categoryRoot);
-      $categoryId = key($categoryRoot);
-      $subCategories = $categoryRoot[$categoryId];
-      
-      if ($categoryId != 0) {
-         $formCategory = new self();
-         $formCategory->getFromDB($categoryId);
-         $parentId = $formCategory->getField('plugin_formcreator_categories_id');
-         $html = '<a href="#" data-parent-category-id="' . $parentId . '" data-category-id="' . $categoryId . '" onclick="updateWizardFormsView(' . $categoryId . ')">' . $formCategory->getField('name') . '</a>';
-      } else {
-         $html = '';
-      }
-      if (count($subCategories) == 0) {
-         return $html;
-      }
-      $html .= '<ul>';
-      foreach($subCategories as $subCategoryId => $subCategoryChildren) {
-         $html .= '<li>';
-         $html .= self::HtmlCategoryTree(array($subCategoryId => $subCategoryChildren)); 
-         $html .= '</li>';
-      }
-      $html .= '</ul>';
-      return $html;
-   }
 
    public static function install(Migration $migration)
    {
