@@ -128,6 +128,8 @@ function updateCategoriesView() {
 	  $('#plugin_formcreator_wizard_categories a.allForms').click(
 	     function () {
 	       updateWizardFormsView(0);
+	       updateCategoriesView();
+	       $('#plugin_formcreator_wizard_categories .slinky-menu').show();
          }
       );
       
@@ -170,6 +172,7 @@ function showMostPopular() {
       $('#plugin_formcreator_wizard_forms').empty();
       $('#plugin_formcreator_wizard_forms').prepend(html);
 	});
+	$('#plugin_formcreator_wizard_categories .slinky-menu').hide();
 }
 
 function buildCategoryList(tree) {
