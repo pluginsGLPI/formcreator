@@ -37,32 +37,12 @@ jQuery(document).ready(function($) {
    if (NomDuFichier == "central.php") {
       $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
          showFormList()
-         //showWizard();
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
       showFormList();
-      //showWizard();
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
-		$('#plugin_formcreator_wizard_categories div:first').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
-		$('#plugin_formcreator_wizard_categories a.back').click(
-		    function() {
-		        parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
-		        parentAnchor = $(parentItem).children('a')[0];
-		        updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
-		    }
-		);
-		$('#plugin_formcreator_wizard_categories a.mostPopular').click(
-		   function () {
-		      showMostPopular();
-		   }
-		);
-		$('#plugin_formcreator_wizard_categories a.allForms').click(
-		   function () {
-		      updateWizardFormsView(0);
-		   }
-		);
-		
-		showMostPopular();
+      updateCategoriesView();
+	  showMostPopular();
    }
    
    searchInput = $('#plugin_formcreator_searchBar input:first');
@@ -98,41 +78,65 @@ jQuery(document).ready(function($) {
    });
 });
 
-function showWizard() {
-	$('.central > tbody:first').prepend('<tr class="nohover"><td><div id="plugin_formcreator_wizard_categories"></div></td></tr>');
-	$('.central > tbody:eq(1)').prepend('<tr class="nohover"><td><div id="plugin_formcreator_wizard_forms"></div></td></tr>');
-	$.ajax({
-		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-		data: {wizard: 'categories'},
-		type: "GET"
-	}).done(function(response){
-		$('.central > tbody:first').prepend('<tr class="nohover"><td>' + response + '</td></tr>');
-		$('#plugin_formcreator_wizard_categories').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
-
-		$('#plugin_formcreator_wizard_categories a.back').click(
-		    function() { 
-		       parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
-		       parentAnchor = $(parentItem).children('a')[0];
-		       updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
-		    }
-		);
-	});
-	$.ajax({
-		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-		data: {wizard: 'forms'},
-		type: "GET"
-	}).done(function(response){
-		$('#plugin_formcreator_wizard_forms').empty();
-		$('#plugin_formcreator_wizard_forms').prepend(response);
-	});
-}
-
 function showFormList() {
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
       $('.central > tbody:first').first().prepend(response);
+   });
+}
+
+function updateCategoriesView() {
+   $.ajax({
+		url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+		data: {wizard: 'categories'},
+		type: "GET",
+		dataType: "json"
+	}).done(function(response){
+	   html = '<table class="tab_cadrehov">'
+      + '<tr>'
+      + '<td align="center"><a href="#" class="mostPopular"><?php echo __('Most popular', 'formcreator') ?></a></td>'
+      + '<td align="center"><a href="#" class="allForms"><?php  echo  __('All forms', 'formcreator') ?></td>'
+      + '</tr>'
+      + '<tr><td colspan="2"><div class="slinky-menu">';
+	   html = html + buildCategoryList(response);
+	   html = html + '</div></td></tr>'
+	   + '</table>';
+
+	   //Display categories
+      $('#plugin_formcreator_wizard_categories').empty();
+      $('#plugin_formcreator_wizard_categories').prepend(html);
+      
+      // Setup slinky
+      $('#plugin_formcreator_wizard_categories div:first').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+      $('#plugin_formcreator_wizard_categories a.back').click(
+         function() {
+            parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
+            parentAnchor = $(parentItem).children('a')[0];
+            updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
+         }
+      );
+      
+      // Setup events
+      $('#plugin_formcreator_wizard_categories a.mostPopular').click(
+         function () {
+            showMostPopular();
+         }
+      );
+      
+	  $('#plugin_formcreator_wizard_categories a.allForms').click(
+	     function () {
+	       updateWizardFormsView(0);
+         }
+      );
+      
+	  $('#plugin_formcreator_wizard_categories a[data-category-id]').click(
+	     function (event) {
+	       updateWizardFormsView(event.target.getAttribute('data-category-id'));
+         }
+      );
+      
    });
 }
 
@@ -145,7 +149,11 @@ function updateWizardFormsView(categoryId) {
 		type: "GET",
 		dataType: "json"
 	}).done(function(response){
-	   buildTiles(response);
+	   html = buildTiles(response);
+	   
+	   //Display tiles
+      $('#plugin_formcreator_wizard_forms').empty();
+      $('#plugin_formcreator_wizard_forms').prepend(html);
 	});
 }
 
@@ -156,8 +164,33 @@ function showMostPopular() {
 		type: "GET",
 		dataType: "json"
 	}).done(function(response){
-	   buildTiles(response);
+	   html = buildTiles(response);
+	   
+      // Display all tiles
+      $('#plugin_formcreator_wizard_forms').empty();
+      $('#plugin_formcreator_wizard_forms').prepend(html);
 	});
+}
+
+function buildCategoryList(tree) {
+	if (tree.id != 0) {
+	   html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
+         + ' data-category-id="' + tree.id + '"' 
+         + ' onclick="updateWizardFormsView(' + tree.id + ')">' 
+         + tree.name 
+         + '</a>';
+	} else {
+	   html = '';
+	}
+	if (Object.keys(tree.subcategories).length == 0) {
+		return html;
+	}
+	html = html + '<ul>';
+	$.each(tree.subcategories, function (key, val) {
+		html = html + '<li>' + buildCategoryList(val) + '</li>';
+	});
+	html = html + '</ul>';
+	return html;
 }
 
 function buildTiles(list) {
@@ -167,7 +200,7 @@ function buildTiles(list) {
       + '</div>';
    } else {
       var items = [];
-      $.each(list, function(key, form) {
+      $.each(list, function (key, form) {
       	// Build a HTML tile
       	if (form.type == 'form') {
       	   pic = 'form.png';
@@ -191,10 +224,8 @@ function buildTiles(list) {
       html = '<div class="tab_cadrehov">'
       + items.join("")
       + '</div>';
+      return html;
 	}    
-   // Display all tiles
-   $('#plugin_formcreator_wizard_forms').empty();
-   $('#plugin_formcreator_wizard_forms').prepend(html);
 }
 
 // === SEARCH BAR ===

@@ -21,9 +21,11 @@ if ($_REQUEST['wizard'] == 'categories') {
 }
 
 function plugin_formcreator_showWizardCategories() {
-   echo '<div id="plugin_formcreator_wizard_categories">';
-   PluginFormcreatorCategory::slinkyView(true);
-   echo '</div>';
+//    echo '<div id="plugin_formcreator_wizard_categories">';
+//    PluginFormcreatorCategory::slinkyView(true);
+//    echo '</div>';
+   $tree = PluginFormcreatorCategory::getCategoryTree(0, true);
+   echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {

@@ -40,7 +40,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $helpdesk   = '';
       }
       
-      
       // Selects categories containing forms or sub-categories
       $where      = "0 < (
       SELECT COUNT($form_table.id)
@@ -60,23 +59,39 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $formCategory = new self();
       if ($rootId == 0) {
          $items = $formCategory->find("`level`='1' AND ($where)");
+         $name = '';
+         $parent = 0;
       } else {
          $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)");
+         $formCategory = new self();
+         $formCategory->getFromDB($rootId);
+         $name = $formCategory->getField('name');
+         $parent = $formCategory->getField('plugin_formcreator_categories_id');
       }
 
       // No sub-categories, then return
       if (count($items) == 0) {
-         return array();
+         return array(
+               'name'            => $name, 
+               'parent'          => $parent, 
+               'id'              => $rootId,
+               'subcategories'   => new stdClass()
+         );
       }
       
-      // Generate UL / LI for sub categories
-      $children = array();
+      // Generate sub categories
+      $children = array(
+            'name'            => $name, 
+            'parent'          => $parent,
+            'id'              => $rootId,
+            'subcategories'   => array()
+      );
       foreach($items as $categoryId => $categoryItem) {
-         $children[$categoryId] = self::getCategoryTree($categoryId);
+         $children['subcategories'][$categoryId] = self::getCategoryTree($categoryId);
       }
       return $children;
    }
-   
+      
    /**
     * Prints form categories in a HTML slinky component
     */

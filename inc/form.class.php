@@ -508,7 +508,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       
       echo '<div id="plugin_formcreator_wizard_categories">';
-      PluginFormcreatorCategory::slinkyView();
       echo '</div>';
       
       echo '<div id="plugin_formcreator_wizard_forms">';
