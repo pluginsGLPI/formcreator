@@ -48,17 +48,17 @@ jQuery(document).ready(function($) {
    searchInput = $('#plugin_formcreator_searchBar input:first');
    if (searchInput.length == 1) {
       var timer;
-   	searchInput.keypress(
-   		function(event) {   		
+   	searchInput.keyup(
+   		function(event) {
    		   if (typeof timer != "undefined") {
    		      clearTimeout(timer);
    		   }
-   		   timer = setTimeout(function() {
-   		   	updateWizardFormsView(currentCategory);
-   		   	console.log('timer event');
-   		   }, 300);
    		   if (event.which == 13) {
-   				
+   				updateWizardFormsView(currentCategory);
+   		   } else {
+      		   timer = setTimeout(function() {
+      		   	updateWizardFormsView(currentCategory);
+      		   }, 300);
    		   }
    		}
    	);	
