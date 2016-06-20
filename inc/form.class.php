@@ -597,15 +597,17 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
       
-      $result_faqs = $GLOBALS['DB']->query($query_faqs);
-      if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
-         while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
-            $formList[] = [
-                  'id'           => $faq['id'],
-                  'name'         => $faq['name'],
-                  'description'  => '&nbsp;',
-                  'type'         => 'faq'
-            ];
+      if ($rootCategory == 0) {
+         $result_faqs = $GLOBALS['DB']->query($query_faqs);
+         if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
+            while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
+               $formList[] = [
+                     'id'           => $faq['id'],
+                     'name'         => $faq['name'],
+                     'description'  => '&nbsp;',
+                     'type'         => 'faq'
+               ];
+            }
          }
       }
       echo json_encode($formList, JSON_UNESCAPED_SLASHES);
