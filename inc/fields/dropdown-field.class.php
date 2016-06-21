@@ -3,72 +3,23 @@ class dropdownField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {
-      global $DB;
-
       if ($canEdit) {
-         $rand     = mt_rand();
-         $required = $this->fields['required'] ? ' required' : '';
-
          echo '<div class="form_field">';
          if(!empty($this->fields['values'])) {
-            $values = array();
-            if ($this->fields['show_empty']) $values[0] = Dropdown::EMPTY_VALUE;
+            $rand     = mt_rand();
+            $required = $this->fields['required'] ? ' required' : '';
+            $itemtype = $this->fields['values'];
 
-            $obj = new $this->fields['values']();
-            $obj->getEmpty();
+            $dparams = array('name'     => 'formcreator_field_' . $this->fields['id'],
+                             'value'    => $this->getValue(),
+                             'comments' => false,
+                             'rand'     => $rand);
 
-            $where = '';
-            $whereTab = array();
-            if (isset($obj->fields['is_deleted'])) {
-               $whereTab[] = '`is_deleted` = 0';
-            }
-            if (isset($obj->fields['is_active'])) {
-               $whereTab[] = '`is_active` = 1';
-            }
-            $table = getTableForItemType($this->fields['values']);
-            if (isset($obj->fields['entities_id'])) {
-               $whereTab[] = getEntitiesRestrictRequest('', $table);
-            }
-            $where = implode(' AND ', $whereTab);
-
-            $order = 'name';
-            if (isset($obj->fields['completename'])) {
-               $order = 'completename';
+            if ($itemtype == "User") {
+               $dparams['right'] = 'all';
             }
 
-            // specific way to retrieve data for users
-            if ($obj instanceof User) {
-               $query_user = "SELECT DISTINCT `glpi_users`.`id`,
-                                     `glpi_users`.`name`
-                              FROM `glpi_users`
-                              INNER JOIN `glpi_profiles_users`
-                                ON (`glpi_users`.`id` = `glpi_profiles_users`.`users_id`)
-                              WHERE `glpi_users`.`is_active`  = 1
-                                AND `glpi_users`.`is_deleted` = 0
-                                AND ".getEntitiesRestrictRequest('', "glpi_profiles_users")."
-                              ORDER BY `glpi_users`.`name`";
-               $res_user = $DB->query($query_user);
-               while ($data_user = $DB->fetch_assoc($res_user)) {
-                  $result[$data_user['id']] = $data_user;
-               }
-
-            // Common way to retrieve data
-            } else {
-               $result = $obj->find($where, $order);
-            }
-            foreach ($result AS $id => $datas) {
-               if ($this->fields['values'] == 'User') {
-                  $values[$id] = getUserName($id);
-               } else {
-                  $values[$id] = $datas['name'];
-               }
-            }
-
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(
-               'value'               => $this->getValue(),
-               'comments'            => false,
-               'rand'                => $rand,
-            ));
+            $itemtype::dropdown($dparams);
          }
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">

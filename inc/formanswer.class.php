@@ -208,6 +208,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    }
 
    public function showForm($ID, $options = array()) {
+      global $DB;
+
       if (!isset($ID) || !$this->getFromDB($ID)) {
          Html::displayNotFoundError();
       }
@@ -219,27 +221,29 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
 
-      $canEdit       = $this->fields['status'] == 'refused' && $_SESSION['glpiID'] == $this->fields['requester_id'];
+      $canEdit = $this->fields['status'] == 'refused'
+                 && $_SESSION['glpiID'] == $this->fields['requester_id'];
 
-      if (($form->fields['validation_required'] == 1) && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
+      if (($form->fields['validation_required'] == 1)
+          && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
          $canValidate = true;
       } elseif(($form->fields['validation_required'] == 2)) {
          // Get validator users from group
          $query = "SELECT u.`id`
                    FROM `glpi_users` u
-                   INNER JOIN `glpi_groups_users` gu ON gu.`users_id` = u.`id`
+                   INNER JOIN `glpi_groups_users` gu   ON gu.`users_id` = u.`id`
                    INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                   INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                   INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+                   INNER JOIN `glpi_profiles` p        ON p.`id` = pu.`profiles_id`
+                   INNER JOIN `glpi_profilerights` pr  ON p.`id` = pr.`profiles_id`
                    WHERE pr.`name` = 'ticketvalidation'
                    AND (
-                     pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
-                     OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
-                   AND gu.`groups_id` = " . $this->fields['validator_id'] . "
-                   AND u.`id` = " . (int) $_SESSION['glpiID'];
-         $result = $GLOBALS['DB']->query($query);
+                     pr.`rights` & ".TicketValidation::VALIDATEREQUEST." = ".TicketValidation::VALIDATEREQUEST."
+                     OR pr.`rights` & ".TicketValidation::VALIDATEINCIDENT." = ".TicketValidation::VALIDATEINCIDENT.")
+                   AND gu.`groups_id` = ".$this->fields['validator_id']."
+                   AND u.`id` = ".$_SESSION['glpiID'];
+         $result = $DB->query($query);
 
-         if ($GLOBALS['DB']->numrows($result) == 1) {
+         if ($DB->numrows($result) == 1) {
             $canValidate = true;
          } else {
             $canValidate = false;
@@ -277,27 +281,27 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Get and display sections of the form
       $question      = new PluginFormcreatorQuestion();
-      $questions     = array();
 
       $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . (int) $form->getID(), '`order` ASC');
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = '.$form->getID(), '`order` ASC');
       echo '<div class="form_section">';
       foreach ($find_sections as $section_line) {
+         $section_line['id'] = intval($section_line['id']);
          echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
-         $questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section_line['id'], '`order` ASC');
-         foreach ($questions as $question_line) {
-            $answer = new PluginFormcreatorAnswer();
-            $found = $answer->find("plugin_formcreator_formanwers_id = " . (int) $this->getID() . "
-                            AND plugin_formcreator_question_id = " . (int) $question_line['id']);
-            $found = array_shift($found);
+         $questions = $question->find('plugin_formcreator_sections_id = '.$section_line['id'], '`order` ASC');
 
-            // if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
-            //    $found['answer'] = json_decode($found['answer']);
-            // }
+         $query_questions = "SELECT `questions`.*, `answers`.`answer`
+                             FROM `glpi_plugin_formcreator_questions` AS questions
+                             INNER JOIN `glpi_plugin_formcreator_answers` AS answers
+                               ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                             WHERE `questions`.`plugin_formcreator_sections_id` = ".$section_line['id']."
+                             ORDER BY `questions`.`order` ASC";
+         $res_questions = $DB->query($query_questions);
+         while ($question_line = $DB->fetch_assoc($res_questions)) {
             if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               PluginFormcreatorFields::showField($question_line, $found['answer'], $canEdit);
+               PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
             }
          }
 
@@ -306,9 +310,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
-         echo '<div class="form-group line' . (count($questions) + 1) % 2 . '">';
+         echo '<div class="form-group line'.((count($questions) + 1) % 2).'">';
          echo '<div class="center">';
-         echo '<input type="submit" name="save_formanswer" class="submit_button" value="' . __('Save') . '" />';
+         echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
          echo '</div>';
          echo '</div>';
 
@@ -390,20 +394,31 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
    public function saveAnswers($datas)
    {
-      $form = new PluginFormcreatorForm();
+      global $DB;
+      $form   = new PluginFormcreatorForm();
+      $answer = new PluginFormcreatorAnswer();
+
       $form->getFromDB($datas['formcreator_form']);
 
-      $query = "SELECT q.`id`, q.`fieldtype`, q.`name`
+      $formanwers_id = isset($datas['id'])
+                        ?intval($datas['id'])
+                        :-1;
+
+      $query = "SELECT q.`id`, q.`fieldtype`, q.`name`, a.`id` as answer_id
                 FROM glpi_plugin_formcreator_questions q
-                LEFT JOIN glpi_plugin_formcreator_sections s ON s.`id` = q.`plugin_formcreator_sections_id`
+                LEFT JOIN glpi_plugin_formcreator_sections s
+                  ON s.`id` = q.`plugin_formcreator_sections_id`
+                LEFT JOIN `glpi_plugin_formcreator_answers` AS a
+                  ON a.`plugin_formcreator_formanwers_id` = $formanwers_id
+                  AND a.`plugin_formcreator_question_id` = q.`id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
-      $result = $GLOBALS['DB']->query($query);
+      $result = $DB->query($query);
 
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
          $status = $_POST['status'];
          $this->update(array(
-            'id'                          => (int) $datas['id'],
+            'id'                          => intval($datas['id']),
             'status'                      => $status,
             'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
          ));
@@ -412,11 +427,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          if ($status == 'waiting') {
             while ($question = $GLOBALS['DB']->fetch_array($result)) {
                if ($question['fieldtype'] != 'file') {
-                  $answer = new PluginFormcreatorAnswer();
-                  $found = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
-                                          AND `plugin_formcreator_question_id` = ' . (int) $question['id']);
-                  $found = array_shift($found);
-
                   $data_value = $datas['formcreator_field_' . $question['id']];
                   if (isset($data_value)) {
                      if (is_array($data_value)) {
@@ -432,16 +442,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   }
 
                   $answer->update(array(
-                     'id'     => $found['id'],
+                     'id'     => $question['answer_id'],
                      'answer' => $answer_value,
                   ));
                } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
                      && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
                   $doc    = new Document();
-                  $answer = new PluginFormcreatorAnswer();
-                  $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $datas['id'] . '
-                                          AND `plugin_formcreator_question_id` = ' . (int) $question['id']);
-                  $found  = array_shift($found);
 
                   $file_datas                 = array();
                   $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
@@ -452,20 +458,21 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
 
                   if ($docID = $doc->add($file_datas)) {
+                     $docID = intval($docID);
                      $table    = getTableForItemType('Document');
                      $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
-                     $query    = "UPDATE `$table` SET `filename` = '" . $filename . "' WHERE `id` = " . (int) $docID;
-                     $GLOBALS['DB']->query($query);
+                     $query    = "UPDATE `$table` SET `filename` = '$filename' WHERE `id` = $docID";
+                     $DB->query($query);
 
                      $docItem = new Document_Item();
                      $docItemId = $docItem->add(array(
                         'documents_id' => $docID,
                         'itemtype'     => __CLASS__,
-                        'items_id'     => (int) $datas['id'],
+                        'items_id'     => intval($datas['id']),
                      ));
 
                      $answer->update(array(
-                        'id'     => $found['id'],
+                        'id'     => $question['answer_id'],
                         'answer' => $docID,
                      ));
                   }
@@ -499,7 +506,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          ));
 
          // Save questions answers
-         while ($question = $GLOBALS['DB']->fetch_assoc($result)) {
+         while ($question = $DB->fetch_assoc($result)) {
             // If the answer is set, check if it is an array (then implode id).
             if (isset($datas[$question['id']])) {
                $question_answer = $datas[$question['id']];
@@ -516,7 +523,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                $question_answer = '';
             }
 
-            $answer   = new PluginFormcreatorAnswer();
             $answerID = $answer->add(array(
                'plugin_formcreator_formanwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
@@ -537,10 +543,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
 
                if ($docID = $doc->add($file_datas)) {
+                  $docID = intval($docID);
                   $table    = getTableForItemType('Document');
                   $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
-                  $query    = "UPDATE `$table` SET `filename` = '" . $filename . "' WHERE `id` = " . (int) $docID;
-                  $GLOBALS['DB']->query($query);
+                  $query    = "UPDATE `$table` SET `filename` = '$filename' WHERE `id` = $docID";
+                  $DB->query($query);
 
                   $docItem = new Document_Item();
                   $docItemId = $docItem->add(array(
