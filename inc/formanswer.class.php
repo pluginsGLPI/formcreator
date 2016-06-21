@@ -623,6 +623,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public function getFullForm()
    {
+      global $DB;
+
       $question_no = 0;
       $output      = '';
 
@@ -655,29 +657,25 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
 
          // Display all fields of the section
-         $question  = new PluginFormcreatorQuestion();
-         $questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section_line['id'], '`order` ASC');
-         foreach ($questions as $question_line) {
+         $query_questions = "SELECT `questions`.*, `answers`.`answer`
+                             FROM `glpi_plugin_formcreator_questions` AS questions
+                             INNER JOIN `glpi_plugin_formcreator_answers` AS answers
+                               ON `answers`.`plugin_formcreator_question_id` = `questions`.id
+                               AND `answers`.`plugin_formcreator_formanwers_id` = ".$this->getID()."
+                             WHERE `questions`.`plugin_formcreator_sections_id` = ".$section_line['id']."
+                             ORDER BY `questions`.`order` ASC";
+         $res_questions = $DB->query($query_questions);
+         while ($question_line = $DB->fetch_assoc($res_questions)) {
+
             // Don't save tags in "full form"
             if ($question_line['fieldtype'] == 'tag') continue;
-
-            $id     = $question_line['id'];
-            $name   = $question_line['name'];
-            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $this->getID()
-                                    . ' AND `plugin_formcreator_question_id` = ' . (int) $id);
 
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
 
             if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
                $question_no ++;
-
-               if (count($found)) {
-                  $datas = array_shift($found);
-                  $value = $datas['answer'];
-               } else {
-                  $value = '';
-               }
-               $output_value = PluginFormcreatorFields::getValue($question_line, $value);
+               $output_value = PluginFormcreatorFields::getValue($question_line,
+                                                                 $question_line['answer']);
 
                if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
                   if (is_array($value)) {

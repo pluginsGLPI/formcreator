@@ -1322,10 +1322,9 @@ EOS;
       global $DB, $CFG_GLPI;
 
       $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
-
       $section     = new PluginFormcreatorSection();
-      $found       = $section->find('plugin_formcreator_forms_id = '
-                     . (int) $formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
+      $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
+                                    '`order` ASC');
       $tab_section = array();
       foreach($found as $section_item) {
          $tab_section[] = $section_item['id'];
