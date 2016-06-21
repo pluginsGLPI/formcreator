@@ -294,7 +294,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          $query_questions = "SELECT `questions`.*, `answers`.`answer`
                              FROM `glpi_plugin_formcreator_questions` AS questions
-                             INNER JOIN `glpi_plugin_formcreator_answers` AS answers
+                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
                                ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
                                AND `answers`.`plugin_formcreator_formanwers_id` = ".$this->getID()."
                              WHERE `questions`.`plugin_formcreator_sections_id` = ".$section_line['id']."
