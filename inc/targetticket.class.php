@@ -1160,8 +1160,8 @@ EOS;
                       FROM `glpi_plugin_formcreator_answers`
                       WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
-            $result = $GLOBALS['DB']->query($query);
-            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $result = $DB->query($query);
+            while ($line = $DB->fetch_array($result)) {
                $tab = json_decode($line['answer']);
                if (is_array($tab)) {
                   $tags = array_merge($tags, $tab);
