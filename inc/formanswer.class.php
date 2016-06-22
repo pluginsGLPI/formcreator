@@ -292,6 +292,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`
                             AND plugin_formcreator_forms_id = ".$form->getID()."
+                          GROUP BY questions.`id`
                           ORDER BY sections.`order` ASC,
                                    sections.`id` ASC,
                                    questions.`order` ASC";
@@ -327,7 +328,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       } elseif(($this->fields['status'] == 'waiting') && $canValidate) {
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-            echo '<div class="form-group required line' . (count($questions) + 1) % 2 . '">';
+            echo '<div class="form-group required line1">';
             echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
             echo '<textarea class="form-control"
                      rows="5"
@@ -336,7 +337,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
             echo '</div>';
 
-            echo '<div class="form-group line' . count($questions) % 2 . '">';
+            echo '<div class="form-group line1">';
             echo '<div class="center" style="float: left; width: 50%;">';
             echo '<input type="submit" name="refuse_formanswer" class="submit_button"
                      value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
@@ -643,89 +644,97 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $output .= PHP_EOL . PHP_EOL;
       }
 
-      $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = '
-                                             . (int) $this->fields['plugin_formcreator_forms_id'], '`order` ASC');
-
+      // retrieve answers
       $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $this->getID());
+      $answers = $answer->find('`plugin_formcreator_formanwers_id` = '.$this->getID());
       $answers_values = array();
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
       }
 
-      foreach ($find_sections as $section_line) {
-         if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-            $output .= '<h2>' . $section_line['name'] . '</h2>';
-         } else {
-            $output .= PHP_EOL . $section_line['name'] . PHP_EOL;
-            $output .= '---------------------------------';
-            $output .= PHP_EOL;
+      // computer all questions
+      $query_questions = "SELECT sections.`name` as section_name,
+                                 questions.*,
+                                 answers.`answer`
+                          FROM `glpi_plugin_formcreator_questions` AS questions
+                          INNER JOIN `glpi_plugin_formcreator_answers` AS answers
+                            ON answers.`plugin_formcreator_question_id` = questions.`id`
+                            AND answers.`plugin_formcreator_formanwers_id` = ".$this->getID()."
+                          INNER JOIN `glpi_plugin_formcreator_sections` as sections
+                            ON questions.`plugin_formcreator_sections_id` = sections.`id`
+                            AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
+                          GROUP BY questions.`id`
+                          ORDER BY sections.`order` ASC,
+                                sections.`id` ASC,
+                                questions.`order` ASC";
+      $res_questions = $DB->query($query_questions);
+      $last_section = "";
+      while ($question_line = $DB->fetch_assoc($res_questions)) {
+
+         // Get and display current section if needed
+         if ($last_section != $question_line['section_name']) {
+            if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+               $output .= '<h2>'.$question_line['section_name'].'</h2>';
+            } else {
+               $output .= PHP_EOL.$question_line['section_name'].PHP_EOL;
+               $output .= '---------------------------------';
+               $output .= PHP_EOL;
+            }
+            $last_section = $question_line['section_name'];
          }
 
-         // Display all fields of the section
-         $query_questions = "SELECT `questions`.*, `answers`.`answer`
-                             FROM `glpi_plugin_formcreator_questions` AS questions
-                             INNER JOIN `glpi_plugin_formcreator_answers` AS answers
-                               ON `answers`.`plugin_formcreator_question_id` = `questions`.id
-                               AND `answers`.`plugin_formcreator_formanwers_id` = ".$this->getID()."
-                             WHERE `questions`.`plugin_formcreator_sections_id` = ".$section_line['id']."
-                             ORDER BY `questions`.`order` ASC";
-         $res_questions = $DB->query($query_questions);
-         while ($question_line = $DB->fetch_assoc($res_questions)) {
+         // Don't save tags in "full form"
+         if ($question_line['fieldtype'] == 'tag') continue;
 
-            // Don't save tags in "full form"
-            if ($question_line['fieldtype'] == 'tag') continue;
+         if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
 
-            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
+         if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
+            $question_no ++;
+            $value = $question_line['answer'];
+            $output_value = PluginFormcreatorFields::getValue($question_line,
+                                                              $value);
 
-            if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
-               $question_no ++;
-               $output_value = PluginFormcreatorFields::getValue($question_line,
-                                                                 $question_line['answer']);
-
-               if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
-                  if (is_array($value)) {
-                     if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-                        $output_value = '<ul>';
-                        foreach ($value as $choice) {
-                         $output_value .= '<li>' . $choice . '</li>';
-                        }
-                        $output_value .= '</ul>';
-                     } else {
-                        $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
-                     }
-                  } elseif (is_array(json_decode($value))) {
-                     if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-                        $value = json_decode($value);
-                        $output_value = '<ul>';
-                        foreach ($value as $choice) {
-                         $output_value .= '<li>' . $choice . '</li>';
-                        }
-                        $output_value .= '</ul>';
-                     } else {
-                        $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
-                     }
-                  } else {
-                     $output_value = $value;
-                  }
-               } elseif ($question_line['fieldtype'] == 'textarea') {
+            if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
+               if (is_array($value)) {
                   if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-                     $output_value = '<br /><blockquote>' . $value . '</blockquote>';
+                     $output_value = '<ul>';
+                     foreach ($value as $choice) {
+                      $output_value .= '<li>' . $choice . '</li>';
+                     }
+                     $output_value .= '</ul>';
                   } else {
-                     $output_value = PHP_EOL . $value;
+                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
                   }
-               }
-
-               if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-                  $output .= '<div>';
-                  $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
-                  $output .= $output_value;
-                  $output .= '</div>';
+               } elseif (is_array(json_decode($value))) {
+                  if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                     $value = json_decode($value);
+                     $output_value = '<ul>';
+                     foreach ($value as $choice) {
+                      $output_value .= '<li>' . $choice . '</li>';
+                     }
+                     $output_value .= '</ul>';
+                  } else {
+                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
+                  }
                } else {
-                  $output .= $question_no . ') ' . $question_line['name'] . ' : ';
-                  $output .= $output_value . PHP_EOL . PHP_EOL;
+                  $output_value = $value;
                }
+            } elseif ($question_line['fieldtype'] == 'textarea') {
+               if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                  $output_value = '<br /><blockquote>' . $value . '</blockquote>';
+               } else {
+                  $output_value = PHP_EOL . $value;
+               }
+            }
+
+            if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+               $output .= '<div>';
+               $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
+               $output .= $output_value;
+               $output .= '</div>';
+            } else {
+               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
+               $output .= $output_value . PHP_EOL . PHP_EOL;
             }
          }
       }
