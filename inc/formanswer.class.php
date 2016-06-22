@@ -279,35 +279,41 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          echo '</div>';
       }
 
-      // Get and display sections of the form
-      $question      = new PluginFormcreatorQuestion();
-
-      $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = '.$form->getID(), '`order` ASC');
       echo '<div class="form_section">';
-      foreach ($find_sections as $section_line) {
-         $section_line['id'] = intval($section_line['id']);
-         echo '<h2>' . $section_line['name'] . '</h2>';
 
-         // Display all fields of the section
-         $questions = $question->find('plugin_formcreator_sections_id = '.$section_line['id'], '`order` ASC');
-
-         $query_questions = "SELECT `questions`.*, `answers`.`answer`
-                             FROM `glpi_plugin_formcreator_questions` AS questions
-                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
-                               ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
-                               AND `answers`.`plugin_formcreator_formanwers_id` = ".$this->getID()."
-                             WHERE `questions`.`plugin_formcreator_sections_id` = ".$section_line['id']."
-                             ORDER BY `questions`.`order` ASC";
-         $res_questions = $DB->query($query_questions);
-         while ($question_line = $DB->fetch_assoc($res_questions)) {
-            if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
-            }
+      // Display all fields of the section
+      $query_questions = "SELECT sections.`name` as section_name,
+                                 questions.*,
+                                 answers.`answer`
+                          FROM `glpi_plugin_formcreator_questions` AS questions
+                          LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
+                            ON answers.`plugin_formcreator_question_id` = questions.`id`
+                            AND answers.`plugin_formcreator_formanwers_id` = $ID
+                          INNER JOIN `glpi_plugin_formcreator_sections` as sections
+                            ON questions.`plugin_formcreator_sections_id` = sections.`id`
+                            AND plugin_formcreator_forms_id = ".$form->getID()."
+                          ORDER BY sections.`order` ASC,
+                                   sections.`id` ASC,
+                                   questions.`order` ASC";
+      $res_questions = $DB->query($query_questions);
+      $last_section = "";
+      while ($question_line = $DB->fetch_assoc($res_questions)) {
+         // Get and display current section if needed
+         if ($last_section != $question_line['section_name']) {
+            echo '<h2>'.$question_line['section_name'].'</h2>';
+            $last_section = $question_line['section_name'];
          }
 
+         if ($canEdit
+            || ($question_line['fieldtype'] != "description"
+                && $question_line['fieldtype'] != "hidden")) {
+            PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
+         }
       }
-      echo '<script type="text/javascript">formcreatorShowFields();</script>';
+
+      echo '<script type="text/javascript">
+         formcreatorShowFields();
+      </script>';
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
