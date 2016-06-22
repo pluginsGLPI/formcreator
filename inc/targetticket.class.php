@@ -982,8 +982,13 @@ EOS;
       $datas                = array_merge($datas, $predefined_fields);
 
       // Parse datas
-      $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
-      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'], $formanswer));
+      $fullform = $formanswer->getFullForm();
+      $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
+                                                                    $formanswer,
+                                                                    $fullform));
+      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'],
+                                                                      $formanswer,
+                                                                      $fullform));
       $datas['_users_id_requester']   = 0;
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
@@ -1318,10 +1323,14 @@ EOS;
     * @param  PluginFormcreatorFormanswer $formanswer    Formanswer object where answers are stored
     * @return String                                     Parsed string with tags replaced by form values
     */
-   private function parseTags($content, PluginFormcreatorFormanswer $formanswer) {
+   private function parseTags($content, PluginFormcreatorFormanswer $formanswer, $fullform = "") {
       global $DB, $CFG_GLPI;
 
-      $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
+      if ($fullform == "") {
+         $fullform = $formanswer->getFullForm();
+      }
+
+      $content     = str_replace('##FULLFORM##', $fullform, $content);
       $section     = new PluginFormcreatorSection();
       $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
                                     '`order` ASC');
