@@ -661,9 +661,6 @@ class PluginFormcreatorForm extends CommonDBTM
          $pic = 'form_b.png';
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
             $formDescription = plugin_formcreator_encode($form['description']);
-            if (empty($formDescription)) {
-               $formDescription = '&nbsp;';
-            }
             $formList[] = [
                   'id'           => $form['id'],
                   'name'         => $form['name'],

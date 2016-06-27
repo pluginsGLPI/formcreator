@@ -413,14 +413,66 @@ form.formcreator_form {
 	color: #3A5693;
 }
 
+#plugin_formcreator_formlist {
+   background: white;
+   border-radius: 3px;
+   padding: 3px;
+   margin-top: 10px;
+}
+
 .plugin_formcreator_formTile {
-	//width: 230px;
-	max-width: 230px;
-	min-width: 100px;
-	margin: 4px;
-	padding: 4px;
+   width: calc(50% - 6px);
+   height: 120px;
+	margin: 3px;
 	display: inline-block;
-	background: #E7E7E7;
+   border-radius: 3px;
+   vertical-align: top;
+   text-align: left;
+   overflow: hidden;
+   cursor: pointer;
+   background: #E7E7E7 no-repeat top 10px right 2px;
+   border:2px solid #E7E7E7;
+   box-sizing: border-box;
+}
+.plugin_formcreator_formTile:hover {
+   background-color:#F1F1F1;
+   opacity: .8;
+}
+
+.plugin_formcreator_formTile.form {
+   background-image: url(../pics/form.png);
+}
+
+.plugin_formcreator_formTile.faq {
+   background-image: url(../pics/faq.png);
+}
+
+@media screen and (max-width: 490px) {
+   .plugin_formcreator_formTile {
+      width: calc(100% - 6px);
+   }
+}
+
+@media screen and (min-width: 1200px) {
+   .plugin_formcreator_formTile {
+      width: calc(33.3% - 6px);
+   }
+}
+
+@media screen and (min-width: 1600px) {
+   .plugin_formcreator_formTile {
+      width: calc(25% - 6px);
+   }
+}
+
+a.plugin_formcreator_formTile_title {
+   font-size: 1.1em;
+   margin: 10px 40px 15px 10px;
+   display: block;
+}
+
+.plugin_formcreator_formTile_description {
+   margin: 0 15px 5px 15px;
 }
 
 .plugin_formcreator_formTile div:first-child {
