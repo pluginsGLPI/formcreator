@@ -550,10 +550,6 @@ class PluginFormcreatorForm extends CommonDBTM
          // Add forms without category
          $selectedCategories[0] = '0';
          
-         $query_faqs = KnowbaseItem::getListRequest([
-               'faq'      => '1',
-               'contains' => $keywords
-         ]);
       } else {
          $selectedCategories = getSonsOf($cat_table, $rootCategory);
       }
@@ -596,19 +592,27 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
       
-      if ($rootCategory == 0) {
-         $result_faqs = $GLOBALS['DB']->query($query_faqs);
-         if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
-            while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
-               $formList[] = [
-                     'id'           => $faq['id'],
-                     'name'         => $faq['name'],
-                     'description'  => '&nbsp;',
-                     'type'         => 'faq'
-               ];
-            }
+      // Find FAQ entries
+      $query_faqs = KnowbaseItem::getListRequest([
+            'faq'      => '1',
+            'contains' => $keywords
+      ]);
+      if ($rootCategory != 0) {
+         $query_faqs = "SELECT * FROM ($query_faqs)  AS `faqs`
+         WHERE `faqs`.`knowbaseitemcategories_id` IN (SELECT `knowbaseitemcategories_id` FROM `$cat_table` WHERE `id` IN ($selectedCategories) AND `knowbaseitemcategories_id` <> '0')";
+      }
+      $result_faqs = $GLOBALS['DB']->query($query_faqs);
+      if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
+         while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
+            $formList[] = [
+                  'id'           => $faq['id'],
+                  'name'         => $faq['name'],
+                  'description'  => '&nbsp;',
+                  'type'         => 'faq'
+            ];
          }
       }
+      
       echo json_encode($formList, JSON_UNESCAPED_SLASHES);
    }
    
@@ -660,6 +664,26 @@ class PluginFormcreatorForm extends CommonDBTM
             ];
          }
       }
+
+      // Find FAQ entries
+      $query_faqs = KnowbaseItem::getListRequest([
+            'faq'      => '1',
+            'contains' => ''
+      ]);
+      $query_faqs = "SELECT * FROM ($query_faqs) AS `faqs`
+      ORDER BY `faqs`.`view` DESC LIMIT 6";
+      $result_faqs = $GLOBALS['DB']->query($query_faqs);
+      if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
+         while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
+            $formList[] = [
+                  'id'           => $faq['id'],
+                  'name'         => $faq['name'],
+                  'description'  => '&nbsp;',
+                  'type'         => 'faq'
+            ];
+         }
+      }
+      
       echo json_encode($formList, JSON_UNESCAPED_SLASHES);
    }
    
