@@ -30,10 +30,11 @@ function plugin_formcreator_showWizardCategories() {
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
    $form = new PluginFormcreatorForm();
-   $form->showFormListView($rootCategory, $keywords, true);
+   $form->showFormListView($rootCategory, $keywords, 0, true);
 }
 
 function plugin_formcreator_showMostPopularForms() {
    $form = new PluginFormcreatorForm();
-   $form->showMostPopular();
+   $form->showFormListView(0, '', 6, true);
+   
 }
