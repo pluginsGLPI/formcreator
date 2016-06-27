@@ -506,10 +506,10 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
-      
+
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '</div>';
-      
+
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
 
@@ -530,10 +530,10 @@ class PluginFormcreatorForm extends CommonDBTM
 //                }
 //             </script>';
    }
-   
+
    public function showFormListView($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
       global $DB;
-      
+
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
@@ -543,18 +543,26 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          $helpdesk   = '';
       }
-      
+
       if ($rootCategory == 0) {
          $category = new PluginFormcreatorCategory();
          $selectedCategories = $category->find('1');
          // Add forms without category
          $selectedCategories[0] = '0';
+<<<<<<< 62b6b1df986e9ad2af1485b598b42de53ad18d1a
          
+=======
+
+         $query_faqs = KnowbaseItem::getListRequest([
+               'faq'      => '1',
+               'contains' => $keywords
+         ]);
+>>>>>>> CS
       } else {
          $selectedCategories = getSonsOf($cat_table, $rootCategory);
       }
       $selectedCategories = implode(', ', array_keys($selectedCategories));
-       
+
       // Find forms without category and accessible by the current user
       if (!empty($keywords)) {
          $keywords = $DB->escape($keywords);
@@ -575,7 +583,7 @@ class PluginFormcreatorForm extends CommonDBTM
       WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
       ORDER BY $cat_table.level ASC, $form_table.name ASC";
       $result_forms = $GLOBALS['DB']->query($query_forms);
-      
+
       $formList = array();
       if ($GLOBALS['DB']->numrows($result_forms) > 0) {
          while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
@@ -591,7 +599,7 @@ class PluginFormcreatorForm extends CommonDBTM
             ];
          }
       }
-      
+
       // Find FAQ entries
       $query_faqs = KnowbaseItem::getListRequest([
             'faq'      => '1',
@@ -612,16 +620,16 @@ class PluginFormcreatorForm extends CommonDBTM
             ];
          }
       }
-      
+
       echo json_encode($formList, JSON_UNESCAPED_SLASHES);
    }
-   
+
    /**
     * show most popular
     */
    public function showMostPopular($helpdeskHome = false) {
       global $DB;
-      
+
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
@@ -645,7 +653,7 @@ class PluginFormcreatorForm extends CommonDBTM
       WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
       ORDER BY $form_table.usage_count DESC, $form_table.name ASC LIMIT 6";
       $result_forms = $GLOBALS['DB']->query($query_forms);
-      
+
       $formList = array();
       if ($GLOBALS['DB']->numrows($result_forms) > 0) {
          $formList = array();
@@ -686,7 +694,7 @@ class PluginFormcreatorForm extends CommonDBTM
       
       echo json_encode($formList, JSON_UNESCAPED_SLASHES);
    }
-   
+
    protected function showSearchBar() {
       echo '<form name="formcreator_search" onsubmit="javascript: return false;" >';
       echo '<input type="text" name="words" placeholder="' . __('Please, describe your need here', 'formcreator') . '"/>';
@@ -726,9 +734,9 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '</tr>';
       }
       echo '</table>';
-      
+
       //echo '<br />';
-      
+
       if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
          echo '<table class="tab_cadrehov">';
@@ -765,7 +773,7 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '</table>';
       }
    }
-   
+
    /**
     * Display the Form end-user form to be filled
     *
@@ -911,7 +919,7 @@ class PluginFormcreatorForm extends CommonDBTM
    **/
    public function prepareInputForUpdate($input)
    {
-      if (isset($input['access_rights']) 
+      if (isset($input['access_rights'])
             || isset($_POST['massiveaction'])
             || isset($input['usage_count'])) {
          return $input;
@@ -1130,18 +1138,18 @@ class PluginFormcreatorForm extends CommonDBTM
       /**
        * Add natural language search
        * Add form usage counter
-       * 
+       *
        * @since 0.90-1.5
        */
       // An error may occur id the Search index does not exists
       // This is not critical as we need to (re) create it
       $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`";
-      $GLOBALS['DB']->query($query); 
-      
+      $GLOBALS['DB']->query($query);
+
       // Re-add FULLTEXT index
       $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
       $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-      
+
       if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formvalidators` (
                      `forms_id` int(11) NOT NULL,
@@ -1153,7 +1161,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   COLLATE = utf8_unicode_ci;";
          $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
       }
-      
+
       $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required', 'value' => '0'));
       $migration->migrationOneTable($table);
 
