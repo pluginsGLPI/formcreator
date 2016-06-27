@@ -549,15 +549,10 @@ class PluginFormcreatorForm extends CommonDBTM
          $selectedCategories = $category->find('1');
          // Add forms without category
          $selectedCategories[0] = '0';
-<<<<<<< 62b6b1df986e9ad2af1485b598b42de53ad18d1a
-         
-=======
-
          $query_faqs = KnowbaseItem::getListRequest([
                'faq'      => '1',
                'contains' => $keywords
          ]);
->>>>>>> CS
       } else {
          $selectedCategories = getSonsOf($cat_table, $rootCategory);
       }
