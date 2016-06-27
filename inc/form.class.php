@@ -538,7 +538,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param number $polularity Order by popularity of items, limited by this quantity, if > 0
     * @param string $helpdeskHome show items for helpdesk only
     */
-   public function showFormListView($rootCategory = 0, $keywords = '', $popularity = 0, $helpdeskHome = false) {
+   public function showFormList($rootCategory = 0, $keywords = '', $popularity = 0, $helpdeskHome = false) {
       global $DB;
 
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
