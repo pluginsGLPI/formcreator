@@ -136,12 +136,14 @@ function plugin_init_formcreator ()
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
       }
-      
+
       if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
             || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
             || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false) {
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
          $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/slinky/assets/css/jquery.slinky.css';
+
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
       }
 
       // Load field class and all its method to manage fields

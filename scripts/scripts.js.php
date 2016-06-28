@@ -167,6 +167,7 @@ function updateWizardFormsView(categoryId) {
 	   //Display tiles
       $('#plugin_formcreator_wizard_forms').empty();
       $('#plugin_formcreator_wizard_forms').prepend(html);
+      $('#plugin_formcreator_formlist').masonry();
 	});
 }
 
@@ -182,6 +183,7 @@ function showMostPopular() {
       // Display all tiles
       $('#plugin_formcreator_wizard_forms').empty();
       $('#plugin_formcreator_wizard_forms').prepend(html);
+      $('#plugin_formcreator_formlist').masonry();
 	});
 	$('#plugin_formcreator_wizard_categories .slinky-menu').hide();
 }
@@ -225,14 +227,20 @@ function buildTiles(list) {
       	} else {
       	   url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
       	}
+
+         description = '';
+         if (form.description) {
+            description = '<div class="plugin_formcreator_formTile_description">'
+                          +form.description
+                          +'</div>';
+         }
+
       	items.push(
-      		'<div class="plugin_formcreator_formTile plugin_formcreator_card '+form.type+'" title="'+form.description+'">'
+      		'<div class="plugin_formcreator_formTile '+form.type+'" title="'+form.description+'">'
       	   + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
       	   + form.name
       	   + '</a>'
-            + '<div class="plugin_formcreator_formTile_description">'
-      	   + form.description
-            + '</div>'
+            + description
       	   + '</div>'
       	);
       });

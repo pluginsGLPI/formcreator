@@ -591,9 +591,6 @@ class PluginFormcreatorForm extends CommonDBTM
       if ($DB->numrows($result_forms) > 0) {
          while ($form = $DB->fetch_array($result_forms)) {
             $formDescription = plugin_formcreator_encode($form['description']);
-            if (empty($formDescription)) {
-               $formDescription = '&nbsp;';
-            }
             $formList[] = [
                   'id'           => $form['id'],
                   'name'         => $form['name'],
@@ -618,7 +615,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $formList[] = [
                   'id'           => $faq['id'],
                   'name'         => $faq['name'],
-                  'description'  => '&nbsp;',
+                  'description'  => '',
                   'type'         => 'faq'
             ];
          }

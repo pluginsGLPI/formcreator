@@ -414,7 +414,7 @@ form.formcreator_form {
    bottom: 0;
    left: 0;
    position: absolute;
-   border-right: 1px solid rgba(0,0,0,.1);;
+   border-right: 1px solid rgba(0,0,0,.1);
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
@@ -435,33 +435,15 @@ form.formcreator_form {
 }
 
 .plugin_formcreator_formTile {
-   width: 50%;
+   margin: 0 3px 6px 3px;
+   width: 300px;
 	display: inline-block;
    vertical-align: top;
    text-align: left;
    overflow: hidden;
    cursor: pointer;
    border-radius: 0;
-   min-height: 90px;
    box-sizing: border-box;
-}
-
-@media screen and (max-width: 490px) {
-   .plugin_formcreator_formTile {
-      width: 100%;
-   }
-}
-
-@media screen and (min-width: 1200px) {
-   .plugin_formcreator_formTile {
-      width: 33.333%;
-   }
-}
-
-@media screen and (min-width: 1600px) {
-   .plugin_formcreator_formTile {
-      width: 25%;
-   }
 }
 
 a.plugin_formcreator_formTile_title {
@@ -470,6 +452,11 @@ a.plugin_formcreator_formTile_title {
    display: block;
    height: 30px;
    background: #E7E7E7 no-repeat top 10px right 10px;
+}
+
+.plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
+   background: #EEEEEE no-repeat top 10px right 10px;
+   cursor: pointer;
 }
 
 .plugin_formcreator_formTile.form a.plugin_formcreator_formTile_title {
@@ -481,7 +468,11 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_formTile_description {
-   margin: 0 15px 5px 15px;
+   padding: 0 15px 5px 15px;
+   border-top: 0;
+   border-right: 1px solid rgba(0,0,0,.1);
+   border-bottom: 1px solid rgba(0,0,0,.1);
+   border-left: 1px solid rgba(0,0,0,.1);
 }
 
 .plugin_formcreator_formTile div:first-child {
