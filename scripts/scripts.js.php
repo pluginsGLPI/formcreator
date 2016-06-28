@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
       updateCategoriesView();
 	  showMostPopular();
    }
-   
+
    searchInput = $('#plugin_formcreator_searchBar input:first');
    if (searchInput.length == 1) {
       var timer;
@@ -66,7 +66,7 @@ jQuery(document).ready(function($) {
       			$('#plugin_formcreator_searchBar').addClass('clearable');
    			}
    		}
-   	);	
+   	);
    	$('#plugin_formcreator_searchBar').click(function(event) {
    		if (searchInput.val().length > 0) {
    		   searchInput.val('');
@@ -117,7 +117,7 @@ function updateCategoriesView() {
 	   //Display categories
       $('#plugin_formcreator_wizard_categories').empty();
       $('#plugin_formcreator_wizard_categories').prepend(html);
-      
+
       // Setup slinky
       $('#plugin_formcreator_wizard_categories div:nth(1)').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
       $('#plugin_formcreator_wizard_categories a.back').click(
@@ -127,14 +127,14 @@ function updateCategoriesView() {
             updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
          }
       );
-      
+
       // Setup events
       $('#plugin_formcreator_wizard_categories a.mostPopular').click(
          function () {
             showMostPopular();
          }
       );
-      
+
 	  $('#plugin_formcreator_wizard_categories a.allForms').click(
 	     function () {
 	       updateWizardFormsView(0);
@@ -142,13 +142,13 @@ function updateCategoriesView() {
 	       $('#plugin_formcreator_wizard_categories .slinky-menu').show();
          }
       );
-      
+
 	  $('#plugin_formcreator_wizard_categories a[data-category-id]').click(
 	     function (event) {
 	       updateWizardFormsView(event.target.getAttribute('data-category-id'));
          }
       );
-      
+
    });
 }
 
@@ -162,7 +162,7 @@ function updateWizardFormsView(categoryId) {
 		dataType: "json"
 	}).done(function(response){
 	   html = buildTiles(response);
-	   
+
 	   //Display tiles
       $('#plugin_formcreator_wizard_forms').empty();
       $('#plugin_formcreator_wizard_forms').prepend(html);
@@ -177,7 +177,7 @@ function showMostPopular() {
 		dataType: "json"
 	}).done(function(response){
 	   html = buildTiles(response);
-	   
+
       // Display all tiles
       $('#plugin_formcreator_wizard_forms').empty();
       $('#plugin_formcreator_wizard_forms').prepend(html);
@@ -188,9 +188,9 @@ function showMostPopular() {
 function buildCategoryList(tree) {
 	if (tree.id != 0) {
 	   html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
-         + ' data-category-id="' + tree.id + '"' 
-         + ' onclick="updateWizardFormsView(' + tree.id + ')">' 
-         + tree.name 
+         + ' data-category-id="' + tree.id + '"'
+         + ' onclick="updateWizardFormsView(' + tree.id + ')">'
+         + tree.name
          + '</a>';
 	} else {
 	   html = '';
