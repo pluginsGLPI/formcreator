@@ -60,8 +60,19 @@ jQuery(document).ready(function($) {
       		   	updateWizardFormsView(currentCategory);
       		   }, 300);
    		   }
+      		if (searchInput.val().length == 0) {
+      			$('#plugin_formcreator_searchBar').removeClass('clearable');
+      		} else {
+      			$('#plugin_formcreator_searchBar').addClass('clearable');
+   			}
    		}
    	);	
+   	$('#plugin_formcreator_searchBar').click(function(event) {
+   		if (searchInput.val().length > 0) {
+   		   searchInput.val('');
+   		   $('#plugin_formcreator_searchBar').removeClass('clearable');
+   		}
+   	});
    }
 
    // === Add better multi-select on form configuration validators ===

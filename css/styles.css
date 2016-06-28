@@ -519,6 +519,17 @@ a.plugin_formcreator_formTile_title {
    right: 0;
 }
 
+#plugin_formcreator_searchBar.clearable:after {
+   width: 16px;
+   height: 16px;
+   content: '';
+   display: inline-block;
+   background-image: url("../pics/clear-search.png");
+   position: absolute;
+   top: 12px;
+   right: 0;
+}
+
 #plugin_formcreator_wizard_categories {
 	margin: 10px;
 }
