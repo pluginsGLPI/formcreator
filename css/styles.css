@@ -413,62 +413,62 @@ form.formcreator_form {
 	color: #3A5693;
 }
 
+.plugin_formcreator_card {
+   background: #FFF;
+   border-radius: 2px;
+   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
+               0 3px 1px -2px rgba(0,0,0,.2),
+               0 1px 5px 0 rgba(0,0,0,.12);
+}
+
 #plugin_formcreator_formlist {
-   background: white;
-   border-radius: 3px;
-   padding: 3px;
    margin-top: 10px;
 }
 
 .plugin_formcreator_formTile {
-   width: calc(50% - 6px);
-   height: 120px;
-	margin: 3px;
+   width: 50%;
 	display: inline-block;
-   border-radius: 3px;
    vertical-align: top;
    text-align: left;
    overflow: hidden;
    cursor: pointer;
-   background: #E7E7E7 no-repeat top 10px right 2px;
-   border:2px solid #E7E7E7;
+   border-radius: 0;
+   min-height: 90px;
    box-sizing: border-box;
-}
-.plugin_formcreator_formTile:hover {
-   background-color:#F1F1F1;
-   opacity: .8;
-}
-
-.plugin_formcreator_formTile.form {
-   background-image: url(../pics/form.png);
-}
-
-.plugin_formcreator_formTile.faq {
-   background-image: url(../pics/faq.png);
 }
 
 @media screen and (max-width: 490px) {
    .plugin_formcreator_formTile {
-      width: calc(100% - 6px);
+      width: 100%;
    }
 }
 
 @media screen and (min-width: 1200px) {
    .plugin_formcreator_formTile {
-      width: calc(33.3% - 6px);
+      width: 33.333%;
    }
 }
 
 @media screen and (min-width: 1600px) {
    .plugin_formcreator_formTile {
-      width: calc(25% - 6px);
+      width: 25%;
    }
 }
 
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
-   margin: 10px 40px 15px 10px;
+   padding: 10px 40px 15px 10px;
    display: block;
+   height: 30px;
+   background: #E7E7E7 no-repeat top 10px right 10px;
+}
+
+.plugin_formcreator_formTile.form a.plugin_formcreator_formTile_title {
+   background-image: url(../pics/form.png);
+}
+
+.plugin_formcreator_formTile.faq a.plugin_formcreator_formTile_title {
+   background-image: url(../pics/faq.png);
 }
 
 .plugin_formcreator_formTile_description {
@@ -489,6 +489,7 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_wizard_forms {
 	min-width: 116px;
 	overflow: hidden;
+   padding: 0 3px 3px 3px;
 }
 
 #plugin_formcreator_wizard_forms > div {
@@ -503,12 +504,44 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_searchBar input {
    width: 100%;
-   background: #E7E7E7;
    font-size: 1.4em;
    padding: 10px 0 10px 10px;
    box-sizing: border-box;
    height: 40px;
-   border: 2px solid #D3D3D3;
+   border: 0;
+   border-radius: 0;
+   background-color: inherit;
+   border-bottom: 1px solid #C2C2C2;
+   z-index: 1;
+}
+
+#plugin_formcreator_searchBar input + label {
+   position: absolute;
+   left: 45%;
+   top: 30%;
+   color: #C2C2C2;
+   z-index: 2;
+   transition:
+      background 0.4s,
+      color 0.4s,
+      top 0.4s,
+      bottom 0.4s,
+      right 0.4s,
+}
+
+#plugin_formcreator_searchBar input:focus {
+   border-color: #3874BC;
+   border-bottom: 2px solid #3874BC;
+}
+
+#plugin_formcreator_searchBar input:valid + label {
+   left: -9999px;
+}
+
+#plugin_formcreator_searchBar input:focus + label {
+   color: #3874BC;
+   top: -15px;
+   left: 45%;
 }
 
 #plugin_formcreator_searchBar:after {
@@ -540,5 +573,10 @@ a.plugin_formcreator_formTile_title {
 	display: inline-block;
 	width: 50%;
 	padding: 11px 0;
-	border-bottom: solid 1px;
+	border-bottom: 1px solid rgba(0,0,0,.1);
+   box-sizing: border-box;
+}
+
+.slinky-menu li {
+   border-bottom: 1px solid rgba(0,0,0,.1);
 }

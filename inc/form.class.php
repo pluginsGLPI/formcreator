@@ -507,7 +507,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showSearchBar();
       echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard_categories">';
+      echo '<div id="plugin_formcreator_wizard_categories" class="plugin_formcreator_card">';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_forms">';
@@ -625,7 +625,8 @@ class PluginFormcreatorForm extends CommonDBTM
 
    protected function showSearchBar() {
       echo '<form name="formcreator_search" onsubmit="javascript: return false;" >';
-      echo '<input type="text" name="words" placeholder="' . __('Please, describe your need here', 'formcreator') . '"/>';
+      echo '<input type="text" name="words" id="formcreator_search_input" required/>';
+      echo '<label for="formcreator_search_input">'.__('Please, describe your need here', 'formcreator').'</label>';
       echo '</form>';
    }
 

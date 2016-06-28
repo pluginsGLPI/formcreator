@@ -212,7 +212,7 @@ function buildTiles(list) {
    });
 
    if (list.length == 0) {
-      html = '<div id="plugin_formcreator_formlist">'
+      html = '<div id="plugin_formcreator_formlist" class="plugin_formcreator_card">'
       + "<?php echo __('No form yet in this category', 'formcreator') ?>"
       + '</div>';
    } else {
@@ -225,7 +225,7 @@ function buildTiles(list) {
       	   url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
       	}
       	items.push(
-      		'<div class="plugin_formcreator_formTile '+form.type+'" title="'+form.description+'">'
+      		'<div class="plugin_formcreator_formTile plugin_formcreator_card '+form.type+'" title="'+form.description+'">'
       	   + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
       	   + form.name
       	   + '</a>'
@@ -237,7 +237,7 @@ function buildTiles(list) {
       });
 
       // concatenate all HTML parts
-      html = '<div id="plugin_formcreator_formlist">'
+      html = '<div id="plugin_formcreator_formlist" class="plugin_formcreator_card">'
       + items.join("")
       + '</div>';
 
