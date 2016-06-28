@@ -532,7 +532,7 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Show form and FAQ items 
+    * Show form and FAQ items
     * @param number $rootCategory Items of this subtree only. 0 = no filtering
     * @param string $keywords Filter items with keywords
     * @param number $polularity Order by popularity of items, limited by this quantity, if > 0
@@ -544,17 +544,17 @@ class PluginFormcreatorForm extends CommonDBTM
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
-      
+
       if ($popularity == 0) {
          $order         = "$cat_table.level ASC, $form_table.name ASC";
       } else {
          $order         = "$form_table.usage_count DESC, $form_table.name ASC LIMIT " . (int) $popularity;
       }
-      
+
       $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
       $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
       $where_form       .= " AND $form_table.`language` IN ('" . $_SESSION['glpilanguage'] . "', '', NULL, '0')";
-      
+
       if ($helpdeskHome) {
          $where_form    .= "AND $form_table.`helpdesk_home` = '1'";
       }
@@ -566,7 +566,7 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          $selectedCategories = '';
       }
-      
+
       // Find forms without category and accessible by the current user
       if (!empty($keywords)) {
          $keywords = $DB->escape($keywords);
@@ -631,7 +631,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
    protected function showMyLastForms() {
       global $DB, $CFG_GLPI;
-      
+
       echo '<table class="tab_cadrehov">';
       echo '<tr><th colspan="2">' . __('My last forms (requester)', 'formcreator') . '</th></tr>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
