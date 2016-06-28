@@ -56,21 +56,34 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $helpdesk   = '';
       }
 
+      $query_faqs = KnowbaseItem::getListRequest([
+            'faq'      => '1',
+            'contains' => ''
+      ]);
+
       // Selects categories containing forms or sub-categories
-      $where      = "0 < (
-      SELECT COUNT($form_table.id)
-      FROM $form_table
-      WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
-      AND $form_table.`is_active` = 1
-      AND $form_table.`is_deleted` = 0
-      $helpdesk
-      AND $form_table.`language` IN ('" . $_SESSION['glpilanguage'] . "', '', NULL, '0')
-      AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
-      AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-      SELECT plugin_formcreator_forms_id
-      FROM $table_fp
-      WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
-      ) OR 0 < (SELECT COUNT(*) FROM `$cat_table` AS `cat2` WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`)";
+      $where      = "(SELECT COUNT($form_table.id)
+         FROM $form_table
+         WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
+         AND $form_table.`is_active` = 1
+         AND $form_table.`is_deleted` = 0
+         $helpdesk
+         AND $form_table.`language` IN ('" . $_SESSION['glpilanguage'] . "', '', NULL, '0')
+         AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
+         AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+         SELECT plugin_formcreator_forms_id
+         FROM $table_fp
+         WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+      ) > 0
+      OR (SELECT COUNT(*)
+         FROM `$cat_table` AS `cat2`
+         WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`
+      ) > 0
+      OR (SELECT COUNT(*)
+         FROM ($query_faqs) AS `faqs`
+         WHERE `faqs`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`
+         AND `faqs`.`knowbaseitemcategories_id` <> '0'
+      ) > 0";
 
       $formCategory = new self();
       if ($rootId == 0) {
