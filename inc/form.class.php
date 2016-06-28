@@ -503,14 +503,17 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       echo '<div style="margin-right: 275px;">';
 
+      echo '<div id="plugin_formcreator_wizard_categories"  class="plugin_formcreator_card">';
+      echo '</div>';
+
+      echo '<div id="plugin_formcreator_wizard_middle" class="plugin_formcreator_card">';
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
-
-      echo '<div id="plugin_formcreator_wizard_categories" class="plugin_formcreator_card">';
+      echo '<div id="plugin_formcreator_wizard_forms">';
+      echo '</div>';
       echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
 
       echo '</div>';

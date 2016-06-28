@@ -213,7 +213,7 @@ function buildTiles(list) {
    });
 
    if (list.length == 0) {
-      html = '<div id="plugin_formcreator_formlist" class="plugin_formcreator_card">'
+      html = '<div id="plugin_formcreator_formlist">'
       + "<?php echo __('No form yet in this category', 'formcreator') ?>"
       + '</div>';
    } else {
@@ -238,7 +238,7 @@ function buildTiles(list) {
       });
 
       // concatenate all HTML parts
-      html = '<div id="plugin_formcreator_formlist" class="plugin_formcreator_card">'
+      html = '<div id="plugin_formcreator_formlist">'
       + items.join("")
       + '</div>';
 

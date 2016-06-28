@@ -486,10 +486,10 @@ a.plugin_formcreator_formTile_title {
 	float:right;
 }
 
-#plugin_formcreator_wizard_forms {
+#plugin_formcreator_wizard_middle {
 	min-width: 116px;
 	overflow: hidden;
-   padding: 0 3px 3px 3px;
+   padding: 10px 3px 3px 3px;
 }
 
 #plugin_formcreator_wizard_forms > div {
@@ -498,7 +498,7 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_searchBar {
    position: relative;
-   margin: 10px 0 0 6px;
+   margin: 10px 0 25px 6px;
    box-sizing: border-box;
 }
 
@@ -585,7 +585,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_wizard_categories {
-	margin: 10px;
+	margin: 0 10px;
 }
 #plugin_formcreator_wizard_categories div > a {
 	align: center;
