@@ -403,9 +403,17 @@ form.formcreator_form {
    line-height: 31px;
 }
 
+#plugin_formcreator_wizard {
+   margin-right: 275px;
+   position: relative;
+}
+
 #plugin_formcreator_wizard_categories {
-	float: left;
 	width: 275px;
+   top: 10px;
+   bottom: 10px;
+   left: 10px;
+   position: absolute;
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
@@ -486,10 +494,11 @@ a.plugin_formcreator_formTile_title {
 	float:right;
 }
 
-#plugin_formcreator_wizard_middle {
+#plugin_formcreator_wizard_right {
+   margin-left: 295px;
 	min-width: 116px;
 	overflow: hidden;
-   padding: 10px 3px 3px 3px;
+   padding: 10px 10px 3px 3px;
 }
 
 #plugin_formcreator_wizard_forms > div {
@@ -584,9 +593,6 @@ a.plugin_formcreator_formTile_title {
    right: 0;
 }
 
-#plugin_formcreator_wizard_categories {
-	margin: 0 10px;
-}
 #plugin_formcreator_wizard_categories div > a {
 	align: center;
 	display: inline-block;
