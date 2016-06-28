@@ -71,6 +71,7 @@ jQuery(document).ready(function($) {
    		if (searchInput.val().length > 0) {
    		   searchInput.val('');
    		   $('#plugin_formcreator_searchBar').removeClass('clearable');
+   		   updateWizardFormsView(currentCategory);
    		}
    	});
    }
