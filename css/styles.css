@@ -410,10 +410,11 @@ form.formcreator_form {
 
 #plugin_formcreator_wizard_categories {
 	width: 275px;
-   top: 10px;
-   bottom: 10px;
-   left: 10px;
+   top: 0;
+   bottom: 0;
+   left: 0;
    position: absolute;
+   border-right: 1px solid rgba(0,0,0,.1);;
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
@@ -498,7 +499,7 @@ a.plugin_formcreator_formTile_title {
    margin-left: 295px;
 	min-width: 116px;
 	overflow: hidden;
-   padding: 10px 10px 3px 3px;
+   padding: 10px 0 3px 3px;
 }
 
 #plugin_formcreator_wizard_forms > div {
