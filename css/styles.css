@@ -497,7 +497,7 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_searchBar {
    position: relative;
-   margin: 10px 30px 0 6px;
+   margin: 10px 0 0 6px;
    box-sizing: border-box;
 }
 
@@ -506,6 +506,9 @@ a.plugin_formcreator_formTile_title {
    background: #E7E7E7;
    font-size: 1.4em;
    padding: 10px 0 10px 10px;
+   box-sizing: border-box;
+   height: 40px;
+   border: 2px solid #D3D3D3;
 }
 
 #plugin_formcreator_searchBar:after {
@@ -516,9 +519,8 @@ a.plugin_formcreator_formTile_title {
    background-image: url("../pics/search.png");
    position: absolute;
    top: 12px;
-   right: 0;
+   right: 10px;
 }
-
 #plugin_formcreator_searchBar.clearable:after {
    width: 16px;
    height: 16px;

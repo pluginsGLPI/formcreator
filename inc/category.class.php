@@ -25,12 +25,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $item->showChildren();
       }
    }
-   
+
    /**
     * {@inheritDoc}
     * @see CommonTreeDropdown::getAdditionalFields()
     */
-   public function getAdditionalFields() 
+   public function getAdditionalFields()
    {
       return [
             [
@@ -41,7 +41,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             ]
       ];
    }
-   
+
    /**
     * @param $rootId id of the subtree root
     * @return array Tree of form categories as nested array
@@ -55,7 +55,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       } else {
          $helpdesk   = '';
       }
-      
+
       // Selects categories containing forms or sub-categories
       $where      = "0 < (
       SELECT COUNT($form_table.id)
@@ -71,7 +71,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       FROM $table_fp
       WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
       ) OR 0 < (SELECT COUNT(*) FROM `$cat_table` AS `cat2` WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`)";
-      
+
       $formCategory = new self();
       if ($rootId == 0) {
          $items = $formCategory->find("`level`='1' AND ($where)");
@@ -88,16 +88,16 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       // No sub-categories, then return
       if (count($items) == 0) {
          return array(
-               'name'            => $name, 
-               'parent'          => $parent, 
+               'name'            => $name,
+               'parent'          => $parent,
                'id'              => $rootId,
                'subcategories'   => new stdClass()
          );
       }
-      
+
       // Generate sub categories
       $children = array(
-            'name'            => $name, 
+            'name'            => $name,
             'parent'          => $parent,
             'id'              => $rootId,
             'subcategories'   => array()
@@ -145,10 +145,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                           WHERE `id` = " . (int) $line['id'];
          $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
       }
-      
+
       /**
        * Migrate categories to tree structure
-       * 
+       *
        * @since 0.90-1.5
        */
       $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
@@ -160,7 +160,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $migration->migrationOneTable($table);
       $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
       $GLOBALS['DB']->query($query);
-      
+
       return true;
    }
 
