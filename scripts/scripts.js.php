@@ -94,22 +94,21 @@ function updateCategoriesView() {
 		type: "GET",
 		dataType: "json"
 	}).done(function(response){
-	   html = '<table class="tab_cadrehov">'
-      + '<tr>'
-      + '<td align="center"><a href="#" class="mostPopular"><?php echo __('Most popular', 'formcreator') ?></a></td>'
-      + '<td align="center"><a href="#" class="allForms"><?php  echo  __('All forms', 'formcreator') ?></td>'
-      + '</tr>'
-      + '<tr><td colspan="2"><div class="slinky-menu">';
+	   html = '<div>'
+      + '<a href="#" class="mostPopular"><?php echo __('Most popular', 'formcreator') ?></a>'
+      + '<a href="#" class="allForms"><?php  echo  __('All forms', 'formcreator') ?>'
+      + '</div>'
+      + '<div class="slinky-menu">';
 	   html = html + buildCategoryList(response);
-	   html = html + '</div></td></tr>'
-	   + '</table>';
+	   html = html + '</div>'
+	   + '';
 
 	   //Display categories
       $('#plugin_formcreator_wizard_categories').empty();
       $('#plugin_formcreator_wizard_categories').prepend(html);
       
       // Setup slinky
-      $('#plugin_formcreator_wizard_categories div:first').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+      $('#plugin_formcreator_wizard_categories div:nth(1)').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
       $('#plugin_formcreator_wizard_categories a.back').click(
          function() {
             parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];

@@ -518,3 +518,14 @@ a.plugin_formcreator_formTile_title {
    top: 12px;
    right: 0;
 }
+
+#plugin_formcreator_wizard_categories {
+	margin: 10px;
+}
+#plugin_formcreator_wizard_categories div > a {
+	align: center;
+	display: inline-block;
+	width: 50%;
+	padding: 11px 0;
+	border-bottom: solid 1px;
+}
