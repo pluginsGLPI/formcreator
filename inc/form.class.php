@@ -635,8 +635,8 @@ class PluginFormcreatorForm extends CommonDBTM
    protected function showMyLastForms() {
       global $DB, $CFG_GLPI;
 
-      echo '<table class="tab_cadrehov">';
-      echo '<tr><th colspan="2">' . __('My last forms (requester)', 'formcreator') . '</th></tr>';
+      echo '<div class="plugin_formcreator_card">';
+      echo '<div class="plugin_formcreator_heading">' . __('My last forms (requester)', 'formcreator') . '</div>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
@@ -646,34 +646,27 @@ class PluginFormcreatorForm extends CommonDBTM
                       LIMIT 0, 5";
       $result = $DB->query($query);
       if ($DB->numrows($result) == 0) {
-         echo '<tr><td colspan="2" class="line1" align="center">' . __('No form posted yet', 'formcreator') . '</td></tr>';
+         echo '<div class="line1" align="center">' . __('No form posted yet', 'formcreator') . '</div>';
       } else {
          while ($form = $DB->fetch_assoc($result)) {
-            $img_dir = $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/';
-            $img = '<img src="' . $img_dir . '' . $form['status'] . '.png" align="absmiddle"
-                              alt="' . __($form['status'], 'formcreator') . '"
-                              title="' . __($form['status'], 'formcreator') . '" />';
-            echo '<tr>';
-            echo '<td>' . $img . ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';
-            echo '<td align="center" width="35%">' . Html::convDateTime($form['request_date']) . '</td>';
-            echo '</tr>';
+               echo '<div class="plugin_formcreator_answer plugin_formcreator_' . $form['status'] . '">';
+               echo ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a>';
+               echo '<div>' . Html::convDateTime($form['request_date']) . '</div>';
+               echo '</div>';
          }
-         echo '<tr>';
-         echo '<th colspan="2" align="center">';
+         echo '<div align="center">';
          echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]=2">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
-         echo '</th>';
-         echo '</tr>';
+         echo '</div>';
       }
-      echo '</table>';
-
-      //echo '<br />';
+      echo '</div>';
 
       if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-         echo '<table class="tab_cadrehov">';
-         echo '<tr><th colspan="2">' . __('My last forms (validator)', 'formcreator') . '</t></tr>';
+
+         echo '<div class="plugin_formcreator_card">';
+         echo '<div class="plugin_formcreator_heading">' . __('My last forms (validator)', 'formcreator') . '</div>';
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
                 INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
@@ -683,27 +676,21 @@ class PluginFormcreatorForm extends CommonDBTM
                 LIMIT 0, 5";
          $result = $DB->query($query);
          if ($DB->numrows($result) == 0) {
-            echo '<tr><td colspan="2" class="line1" align="center">' . __('No form waiting for validation', 'formcreator') . '</td></tr>';
+            echo '<div class="line1" align="center">' . __('No form waiting for validation', 'formcreator') . '</div>';
          } else {
             while ($form = $DB->fetch_assoc($result)) {
-               $img_dir = $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/';
-               $img = '<img src="' . $img_dir . '' . $form['status'] . '.png" align="absmiddle"
-                        alt="' . __($form['status'], 'formcreator') . '"
-                        title="' . __($form['status'], 'formcreator') . '" />';
-               echo '<tr>';
-               echo '<td>' . $img . ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a></td>';
-               echo '<td align="center" width="35%">' . Html::convDateTime($form['request_date']) . '</td>';
-               echo '</tr>';
+               echo '<div class="plugin_formcreator_answer plugin_formcreator_' . $form['status'] . '">';
+               echo ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a>';
+               echo '<div>' . Html::convDateTime($form['request_date']) . '</div>';
+               echo '</div>';
             }
-            echo '<tr>';
-            echo '<th colspan="2" align="center">';
+            echo '<div align="center">';
             echo '<a href="formanswer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=2">';
             echo __('All my forms (validator)', 'formcreator');
             echo '</a>';
-            echo '</th>';
-            echo '</tr>';
+            echo '</div>';
          }
-         echo '</table>';
+         echo '</div>';
       }
    }
 
