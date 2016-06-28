@@ -553,7 +553,7 @@ class PluginFormcreatorForm extends CommonDBTM
       
       $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
       $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
-      $where_form       .= " AND ($form_table.`language` = '" . $_SESSION['glpilanguage'] . "' OR $form_table.`language` IN ('', NULL, '0'))";
+      $where_form       .= " AND $form_table.`language` IN ('" . $_SESSION['glpilanguage'] . "', '', NULL, '0')";
       
       if ($helpdeskHome) {
          $where_form    .= "AND $form_table.`helpdesk_home` = '1'";
@@ -581,11 +581,11 @@ class PluginFormcreatorForm extends CommonDBTM
          FROM $table_fp
          WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
       ORDER BY $order";
-      $result_forms = $GLOBALS['DB']->query($query_forms);
+      $result_forms = $DB->query($query_forms);
 
       $formList = array();
-      if ($GLOBALS['DB']->numrows($result_forms) > 0) {
-         while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
+      if ($DB->numrows($result_forms) > 0) {
+         while ($form = $DB->fetch_array($result_forms)) {
             $formDescription = plugin_formcreator_encode($form['description']);
             if (empty($formDescription)) {
                $formDescription = '&nbsp;';
@@ -608,9 +608,9 @@ class PluginFormcreatorForm extends CommonDBTM
          $query_faqs = "SELECT * FROM ($query_faqs)  AS `faqs`
          WHERE `faqs`.`knowbaseitemcategories_id` IN (SELECT `knowbaseitemcategories_id` FROM `$cat_table` WHERE `id` IN ($selectedCategories) AND `knowbaseitemcategories_id` <> '0')";
       }
-      $result_faqs = $GLOBALS['DB']->query($query_faqs);
-      if ($GLOBALS['DB']->numrows($result_faqs) > 0) {
-         while ($faq = $GLOBALS['DB']->fetch_array($result_faqs)) {
+      $result_faqs = $DB->query($query_faqs);
+      if ($DB->numrows($result_faqs) > 0) {
+         while ($faq = $DB->fetch_array($result_faqs)) {
             $formList[] = [
                   'id'           => $faq['id'],
                   'name'         => $faq['name'],

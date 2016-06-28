@@ -64,7 +64,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       AND $form_table.`is_active` = 1
       AND $form_table.`is_deleted` = 0
       $helpdesk
-      AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+      AND $form_table.`language` IN ('" . $_SESSION['glpilanguage'] . "', '', NULL, '0')
       AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
       AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
       SELECT plugin_formcreator_forms_id
