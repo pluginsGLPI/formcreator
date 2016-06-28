@@ -512,33 +512,52 @@ a.plugin_formcreator_formTile_title {
    border-radius: 0;
    background-color: inherit;
    border-bottom: 1px solid #C2C2C2;
-   z-index: 1;
 }
 
-#plugin_formcreator_searchBar input + label {
+#plugin_formcreator_searchBar input ~ label {
    position: absolute;
    left: 45%;
    top: 30%;
    color: #C2C2C2;
-   z-index: 2;
    transition:
-      background 0.4s,
-      color 0.4s,
-      top 0.4s,
-      bottom 0.4s,
-      right 0.4s,
+      background 0.2s,
+      color 0.2s,
+      top 0.2s,
+      bottom 0.2s,
+      right 0.2s;
 }
 
-#plugin_formcreator_searchBar input:focus {
-   border-color: #3874BC;
-   border-bottom: 2px solid #3874BC;
+#formcreator_search_input_bar {
+   position:relative;
+   display:block;
+   width:100%;
+}
+#formcreator_search_input_bar:before,
+#formcreator_search_input_bar:after {
+   content:'';
+   position: absolute;
+   width: 0;
+   height: 2px;
+   bottom: 0;
+   transition:0.2s ease all;
+   background-color: #3874BC;
+}
+#formcreator_search_input_bar:before {
+  left:50%;
+}
+#formcreator_search_input_bar:after {
+  right:50%;
+}
+#plugin_formcreator_searchBar input:focus ~ #formcreator_search_input_bar:before,
+#plugin_formcreator_searchBar input:focus ~ #formcreator_search_input_bar:after {
+   width:50%;
 }
 
-#plugin_formcreator_searchBar input:valid + label {
+#plugin_formcreator_searchBar input:valid ~ label {
    left: -9999px;
 }
 
-#plugin_formcreator_searchBar input:focus + label {
+#plugin_formcreator_searchBar input:focus ~ label {
    color: #3874BC;
    top: -15px;
    left: 45%;
