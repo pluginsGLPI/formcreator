@@ -604,14 +604,21 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer {
    margin: 3px;
-   background: no-repeat;
+   list-style: none;
+   padding: 0;
    text-align: left;
+}
+
+#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer a {
+   margin: 3px;
+   background-repeat: no-repeat;
    background-position: left center;
    padding: 11px 11px 11px 20px;
 }
 
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer > div{
-   float: right;
+#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer > span{
+   display: block;
+   text-align: right;
 }
 
 #plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_waiting {

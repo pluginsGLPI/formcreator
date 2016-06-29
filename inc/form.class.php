@@ -647,13 +647,15 @@ class PluginFormcreatorForm extends CommonDBTM
       $result = $DB->query($query);
       if ($DB->numrows($result) == 0) {
          echo '<div class="line1" align="center">' . __('No form posted yet', 'formcreator') . '</div>';
+         echo "<ul>";
       } else {
          while ($form = $DB->fetch_assoc($result)) {
-               echo '<div class="plugin_formcreator_answer plugin_formcreator_' . $form['status'] . '">';
-               echo ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a>';
-               echo '<div>' . Html::convDateTime($form['request_date']) . '</div>';
-               echo '</div>';
+               echo '<li class="plugin_formcreator_answer">';
+               echo ' <a class="plugin_formcreator_' . $form['status'] . '" href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a>';
+               echo '<span>' . Html::convDateTime($form['request_date']) . '</span>';
+               echo '</li>';
          }
+         echo "</ul>";
          echo '<div align="center">';
          echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]=2">';
          echo __('All my forms (requester)', 'formcreator');
@@ -678,12 +680,14 @@ class PluginFormcreatorForm extends CommonDBTM
          if ($DB->numrows($result) == 0) {
             echo '<div class="line1" align="center">' . __('No form waiting for validation', 'formcreator') . '</div>';
          } else {
+            echo "<ul>";
             while ($form = $DB->fetch_assoc($result)) {
-               echo '<div class="plugin_formcreator_answer plugin_formcreator_' . $form['status'] . '">';
-               echo ' <a href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a>';
-               echo '<div>' . Html::convDateTime($form['request_date']) . '</div>';
-               echo '</div>';
+               echo '<li class="plugin_formcreator_answer">';
+               echo ' <a class="plugin_formcreator_' . $form['status'] . '" href="formanswer.form.php?id=' . $form['id'] . '">' . $form['name'] . '</a>';
+               echo '<span>' . Html::convDateTime($form['request_date']) . '</span>';
+               echo '</li>';
             }
+            echo "</ul>";
             echo '<div align="center">';
             echo '<a href="formanswer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=2">';
             echo __('All my forms (validator)', 'formcreator');
