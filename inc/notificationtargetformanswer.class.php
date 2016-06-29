@@ -20,9 +20,11 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
 
    public function getDatasForTemplate($event, $options = array())
    {
+      global $CFG_GLPI;
+
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
-      $link = $GLOBALS['CFG_GLPI']['url_base'];
+      $link = $CFG_GLPI['url_base'];
       $link .= '/plugins/formcreator/front/formanswer.form.php?id=' . $this->obj->getID();
 
       $requester = new User();
@@ -174,6 +176,8 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
 
    public static function uninstall()
    {
+      global $DB;
+
       // Define DB tables
       $table_targets      = getTableForItemType('NotificationTarget');
       $table_notification = getTableForItemType('Notification');
@@ -184,22 +188,22 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       $query = "DELETE FROM `$table_translations`
                 WHERE `notificationtemplates_id` IN (
                   SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorFormanswer')";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
       // Delete notification templates
       $query = "DELETE FROM `$table_templates`
                 WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
       // Delete notification targets
       $query = "DELETE FROM `$table_targets`
                 WHERE `notifications_id` IN (
                   SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorFormanswer')";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
       // Delete notifications
       $query = "DELETE FROM `$table_notification`
                 WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
    }
 }

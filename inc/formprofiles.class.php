@@ -19,13 +19,15 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
+      global $DB;
+
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
              method='post' action=' ";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
 
-      echo '<tr><th colspan="2">' . __('Access type', 'formcreator') . '</th></tr>';
-      echo '<td>' . __('Access', 'formcreator') . '</td>';
+      echo '<tr><th colspan="2">'.__('Access type', 'formcreator').'</th></tr>';
+      echo '<td>'.__('Access', 'formcreator').'</td>';
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
@@ -41,7 +43,7 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
       echo '</td>';
 
       if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         echo '<tr><th colspan="2">' . self::getTypeName(2) . '</th></tr>';
+         echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
 
          $table         = getTableForItemType(__CLASS__);
          $table_profile = getTableForItemType('Profile');
@@ -49,12 +51,12 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
                    FROM $table_profile p
                    LEFT JOIN $table f
                      ON p.`id` = f.`plugin_formcreator_profiles_id`
-                     AND f.`plugin_formcreator_forms_id` = " . (int) $item->fields['id'];
-         $result = $GLOBALS['DB']->query($query);
-         while(list($id, $name, $profile) = $GLOBALS['DB']->fetch_array($result)) {
+                     AND f.`plugin_formcreator_forms_id` = ".$item->fields['id'];
+         $result = $DB->query($query);
+         while(list($id, $name, $profile) = $DB->fetch_array($result)) {
             $checked = $profile ? ' checked' : '';
             echo '<tr><td colspan="2"><label>';
-            echo '<input type="checkbox" name="profiles_id[]" value="' . $id . '" ' . $checked . '> ';
+            echo '<input type="checkbox" name="profiles_id[]" value="'.$id.'" '.$checked.'> ';
             echo $name;
             echo '</label></td></tr>';
          }
@@ -63,8 +65,8 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
       echo '<tr>';
          echo '<td class="center" colspan="2">';
             echo '<input type="hidden" name="profiles_id[]" value="0" />';
-            echo '<input type="hidden" name="form_id" value="' . (int) $item->fields['id'] . '" />';
-            echo '<input type="submit" name="update" value="' . __('Save') . '" class="submit" />';
+            echo '<input type="hidden" name="form_id" value="'.$item->fields['id'].'" />';
+            echo '<input type="submit" name="update" value="'.__('Save').'" class="submit" />';
          echo "</td>";
       echo "</tr>";
 
@@ -74,6 +76,8 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
 
    static function install(Migration $migration)
    {
+      global $DB;
+
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -81,7 +85,7 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
                      `plugin_formcreator_profiles_id` INT NOT NULL ,
                      PRIMARY KEY (`plugin_formcreator_forms_id`, `plugin_formcreator_profiles_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         $DB->query($query) or die($DB->error());
       }
 
       return true;
@@ -89,7 +93,9 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
 
    static function uninstall()
    {
+      global $DB;
+
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      return $DB->query($query) or die($DB->error());
    }
 }

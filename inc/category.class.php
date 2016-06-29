@@ -68,12 +68,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          AND $form_table.`is_active` = 1
          AND $form_table.`is_deleted` = 0
          $helpdesk
-         AND $form_table.`language` IN ('" . $_SESSION['glpilanguage'] . "', '', NULL, '0')
-         AND " . getEntitiesRestrictRequest("", $form_table, "", "", true, false) . "
-         AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+         AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')
+         AND ".getEntitiesRestrictRequest("", $form_table, "", "", true, false)."
+         AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
-         WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+         WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
       ) > 0
       OR (SELECT COUNT(*)
          FROM `$cat_table` AS `cat2`
@@ -123,6 +123,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -132,15 +134,15 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                      PRIMARY KEY (`id`),
                      KEY `name` (`name`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         $DB->query($query) or die($DB->error());
       }
 
       // Migration from previous version
       if (TableExists('glpi_plugin_formcreator_cats')) {
          $query = "INSERT IGNORE INTO `$table` (`id`, `name`)
                      SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
-         $GLOBALS['DB']->query($query);
-         $GLOBALS['DB']->query("DROP TABLE glpi_plugin_formcreator_cats");
+         $DB->query($query);
+         $DB->query("DROP TABLE glpi_plugin_formcreator_cats");
       }
 
       /**
@@ -150,13 +152,13 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
        */
       $query  = "SELECT `id`, `name`, `comment`
                  FROM `$table`";
-      $result = $GLOBALS['DB']->query($query);
-      while ($line = $GLOBALS['DB']->fetch_array($result)) {
+      $result = $DB->query($query);
+      while ($line = $DB->fetch_array($result)) {
          $query_update = "UPDATE `$table` SET
-                            `name`    = '" . plugin_formcreator_encode($line['name']) . "',
-                            `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
-                          WHERE `id` = " . (int) $line['id'];
-         $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+                            `name`    = '".plugin_formcreator_encode($line['name'])."',
+                            `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                          WHERE `id` = ".$line['id'];
+         $DB->query($query_update) or die ($DB->error());
       }
 
       /**
@@ -166,20 +168,23 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
        */
       $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
       $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => 'completename'));
-      $migration->addField($table, 'level', 'integer', array('value' => 1, 'after' => 'plugin_formcreator_categories_id'));
+      $migration->addField($table, 'level', 'integer', array('value' => 1,
+                                                             'after' => 'plugin_formcreator_categories_id'));
       $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
       $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
       $migration->addField($table, 'knowbaseitemcategories_id', 'integer', array('after' => 'ancestors_cache'));
       $migration->migrationOneTable($table);
       $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
       return true;
    }
 
    public static function uninstall()
    {
-      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      global $DB;
+
+      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
+      return $DB->query($query) or die($DB->error());
    }
 }

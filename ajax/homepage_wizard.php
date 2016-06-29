@@ -10,7 +10,7 @@ if ($_REQUEST['wizard'] == 'categories') {
    plugin_formcreator_showWizardCategories();
 } else if ($_REQUEST['wizard'] == 'forms') {
    if (isset($_REQUEST['categoriesId'])) {
-      $categoriesId = (int) $_REQUEST['categoriesId'];
+      $categoriesId = intval($_REQUEST['categoriesId']);
    } else {
       $categoriesId = 0;
    }
@@ -33,5 +33,4 @@ function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
 function plugin_formcreator_showMostPopularForms() {
    $form = new PluginFormcreatorForm();
    $form->showFormList(0, '', 6, true);
-   
 }

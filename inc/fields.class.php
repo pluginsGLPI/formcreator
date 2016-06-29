@@ -11,9 +11,9 @@ class PluginFormcreatorFields
    {
       $tab_field_types     = array();
 
-      foreach (glob(dirname(__FILE__) . '/fields/*-field.class.php') as $class_file) {
+      foreach (glob(dirname(__FILE__).'/fields/*-field.class.php') as $class_file) {
          preg_match("/fields.(.+)-field\.class.php/", $class_file, $matches);
-         $classname = $matches[1] . 'Field';
+         $classname = $matches[1].'Field';
 
          include_once($class_file);
 
@@ -42,7 +42,7 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname                         = $field_type . 'Field';
+         $classname                         = $field_type.'Field';
 
          if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
             continue;
@@ -65,11 +65,11 @@ class PluginFormcreatorFields
     */
    public static function getValue($field, $value)
    {
-      $class_file = dirname(__FILE__) . '/fields/' . $field['fieldtype'] . '-field.class.php';
+      $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'-field.class.php';
       if(is_file($class_file)) {
          include_once ($class_file);
 
-         $classname = $field['fieldtype'] . 'Field';
+         $classname = $field['fieldtype'].'Field';
          if(class_exists($classname)) {
             $obj = new $classname($field, $value);
             return $obj->getAnswer();
@@ -86,10 +86,10 @@ class PluginFormcreatorFields
 
       // Get field types preference for JS
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname = $field_type . 'Field';
+         $classname = $field_type.'Field';
 
          if(method_exists($classname, 'getJSFields')) {
-            echo PHP_EOL . '            ' . $classname::getJSFields();
+            echo PHP_EOL.'            '.$classname::getJSFields();
          }
       }
    }
@@ -100,7 +100,7 @@ class PluginFormcreatorFields
       $tab_field_types = self::getTypes();
 
       if(array_key_exists($field['fieldtype'], $tab_field_types)) {
-         $fieldClass = $field['fieldtype'] . 'Field';
+         $fieldClass = $field['fieldtype'].'Field';
 
          $plugin = new Plugin();
          if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
@@ -121,6 +121,8 @@ class PluginFormcreatorFields
     */
    public static function isVisible($id, $values)
    {
+      global $DB;
+
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
       $fields     = $question->fields;
@@ -133,9 +135,9 @@ class PluginFormcreatorFields
       // Get conditions to show or hide field
       $query = "SELECT `show_logic`, `show_field`, `show_condition`, `show_value`
                 FROM `glpi_plugin_formcreator_questions_conditions`
-                WHERE `plugin_formcreator_questions_id` = " . (int) $fields['id'];
-      $result = $GLOBALS['DB']->query($query);
-      while ($line = $GLOBALS['DB']->fetch_array($result)) {
+                WHERE `plugin_formcreator_questions_id` = ".$fields['id'];
+      $result = $DB->query($query);
+      while ($line = $DB->fetch_array($result)) {
          $conditions[] = array(
                'multiple' => in_array($fields['fieldtype'], array('checkboxes', 'multiselect')),
                'logic'    => $line['show_logic'],
@@ -178,14 +180,14 @@ class PluginFormcreatorFields
                break;
             default:
                if (is_array($values[$condition['field']])) {
-                  eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
-                     . ' Array(' . implode(',', $values[$condition['field']]) . ');');
+                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
+                    .' Array('.implode(',', $values[$condition['field']]).');');
                } elseif (!is_null(json_decode($values[$condition['field']]))) {
-                  eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
-                     . ' Array(' .implode(',', json_decode($values[$condition['field']])) . ');');
+                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
+                    .' Array(' .implode(',', json_decode($values[$condition['field']])).');');
                } else {
-                  eval('$value = "' . $values[$condition['field']] . '" '
-                     . $condition['operator'] . ' "' . $condition['value'] . '";');
+                  eval('$value = "'.$values[$condition['field']].'" '
+                    .$condition['operator'].' "'.$condition['value'].'";');
                }
          }
          switch ($condition['logic']) {

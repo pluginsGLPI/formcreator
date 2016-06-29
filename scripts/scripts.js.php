@@ -4,7 +4,7 @@ header('Content-Type: text/javascript');
 ?>
 
 var modalWindow;
-var rootDoc          = "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>";
+var rootDoc          = "<?php echo $CFG_GLPI['root_doc']; ?>";
 var currentCategory  = "0";
 
 // === MENU ===
