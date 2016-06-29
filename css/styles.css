@@ -584,7 +584,7 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_searchBar {
    position: relative;
-   margin: 10px 0 25px 6px;
+   margin: 10px 25px 25px 6px;
    box-sizing: border-box;
 }
 
