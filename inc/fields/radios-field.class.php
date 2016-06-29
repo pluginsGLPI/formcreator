@@ -9,7 +9,7 @@ class radiosField extends PluginFormcreatorField
 
          $values = $this->getAvailableValues();
          if(!empty($values)) {
-            echo '<div class="checkbox">';
+            echo '<div class="formcreator_radios">';
             $i = 0;
             foreach ($values as $value) {
                if ((trim($value) != '')) {
@@ -22,7 +22,6 @@ class radiosField extends PluginFormcreatorField
                   echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
-                  if($i != count($values)) echo '<br />';
                }
             }
             echo '</div>';
