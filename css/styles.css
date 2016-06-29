@@ -606,6 +606,7 @@ a.plugin_formcreator_formTile_title {
    list-style: none;
    padding: 0;
    text-align: left;
+   border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
 #plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer a {
@@ -615,9 +616,11 @@ a.plugin_formcreator_formTile_title {
    padding: 11px 11px 11px 20px;
 }
 
-#plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer > span{
+.plugin_formcreator_date {
    display: block;
    text-align: right;
+   font-size: .8em;
+   font-style: italic;
 }
 
 #plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_waiting {
