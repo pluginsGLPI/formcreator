@@ -223,8 +223,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
 
-      $canEdit       = $this->fields['status'] == 'refused'
-                       && $_SESSION['glpiID'] == $this->fields['requester_id'];
+      $canEdit = $this->fields['status'] == 'refused'
+                 && $_SESSION['glpiID'] == $this->fields['requester_id'];
 
       if ($form->fields['validation_required'] == 1
           && $_SESSION['glpiID'] == $this->fields['validator_id']) {
@@ -233,10 +233,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          // Get validator users from group
          $query = "SELECT u.`id`
                    FROM `glpi_users` u
-                   INNER JOIN `glpi_groups_users` gu ON gu.`users_id` = u.`id`
+                   INNER JOIN `glpi_groups_users` gu   ON gu.`users_id` = u.`id`
                    INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                   INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                   INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+                   INNER JOIN `glpi_profiles` p        ON p.`id` = pu.`profiles_id`
+                   INNER JOIN `glpi_profilerights` pr  ON p.`id` = pr.`profiles_id`
                    WHERE pr.`name` = 'ticketvalidation'
                    AND (
                      pr.`rights` & ".TicketValidation::VALIDATEREQUEST." = ".TicketValidation::VALIDATEREQUEST."
@@ -281,34 +281,42 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          echo '</div>';
       }
 
-      // Get and display sections of the form
-      $question      = new PluginFormcreatorQuestion();
-      $questions     = array();
-
-      $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = '.$form->getID(), '`order` ASC');
       echo '<div class="form_section">';
-      foreach ($find_sections as $section_line) {
-         echo '<h2>'.$section_line['name'].'</h2>';
 
-         // Display all fields of the section
-         $questions = $question->find('plugin_formcreator_sections_id = '.$section_line['id'], '`order` ASC');
-         foreach ($questions as $question_line) {
-            $answer = new PluginFormcreatorAnswer();
-            $found = $answer->find("plugin_formcreator_formanwers_id = ".$this->getID()."
-                            AND plugin_formcreator_question_id = ".$question_line['id']);
-            $found = array_shift($found);
-
-            // if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
-            //    $found['answer'] = json_decode($found['answer']);
-            // }
-            if ($canEdit || ($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               PluginFormcreatorFields::showField($question_line, $found['answer'], $canEdit);
-            }
+      // Display all fields of the section
+      $query_questions = "SELECT sections.`name` as section_name,
+                                 questions.*,
+                                 answers.`answer`
+                          FROM `glpi_plugin_formcreator_questions` AS questions
+                          LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
+                            ON answers.`plugin_formcreator_question_id` = questions.`id`
+                            AND answers.`plugin_formcreator_formanwers_id` = $ID
+                          INNER JOIN `glpi_plugin_formcreator_sections` as sections
+                            ON questions.`plugin_formcreator_sections_id` = sections.`id`
+                            AND plugin_formcreator_forms_id = ".$form->getID()."
+                          GROUP BY questions.`id`
+                          ORDER BY sections.`order` ASC,
+                                   sections.`id` ASC,
+                                   questions.`order` ASC";
+      $res_questions = $DB->query($query_questions);
+      $last_section = "";
+      while ($question_line = $DB->fetch_assoc($res_questions)) {
+         // Get and display current section if needed
+         if ($last_section != $question_line['section_name']) {
+            echo '<h2>'.$question_line['section_name'].'</h2>';
+            $last_section = $question_line['section_name'];
          }
 
+         if ($canEdit
+            || ($question_line['fieldtype'] != "description"
+                && $question_line['fieldtype'] != "hidden")) {
+            PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
+         }
       }
-      echo '<script type="text/javascript">formcreatorShowFields();</script>';
+
+      echo '<script type="text/javascript">
+         formcreatorShowFields();
+      </script>';
 
       // Display submit button
       if ($this->fields['status'] == 'refused'
@@ -323,7 +331,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       } elseif(($this->fields['status'] == 'waiting') && $canValidate) {
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-            echo '<div class="form-group required line'.((count($questions) + 1) % 2).'">';
+            echo '<div class="form-group required line1">';
             echo '<label for="comment">'.__('Comment', 'formcreator').' <span class="red">*</span></label>';
             echo '<textarea class="form-control"
                      rows="5"
@@ -332,7 +340,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             echo '<div class="help-block">'.__('Required if refused', 'formcreator').'</div>';
             echo '</div>';
 
-            echo '<div class="form-group line'.(count($questions) % 2).'">';
+            echo '<div class="form-group line1">';
             echo '<div class="center" style="float: left; width: 50%;">';
             echo '<input type="submit" name="refuse_formanswer" class="submit_button"
                      value="'.__('Refuse', 'formcreator').'" onclick="return checkComment(this);" />';
@@ -398,13 +406,23 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    public function saveAnswers($datas)
    {
       global $DB;
-      $form = new PluginFormcreatorForm();
+
+      $form   = new PluginFormcreatorForm();
+      $answer = new PluginFormcreatorAnswer();
+
       $form->getFromDB($datas['formcreator_form']);
 
-      $query = "SELECT q.`id`, q.`fieldtype`, q.`name`
+      $formanwers_id = isset($datas['id'])
+                        ?intval($datas['id'])
+                        :-1;
+
+      $query = "SELECT q.`id`, q.`fieldtype`, q.`name`, a.`id` as answer_id
                 FROM glpi_plugin_formcreator_questions q
                 LEFT JOIN glpi_plugin_formcreator_sections s
                   ON s.`id` = q.`plugin_formcreator_sections_id`
+                LEFT JOIN `glpi_plugin_formcreator_answers` AS a
+                  ON a.`plugin_formcreator_formanwers_id` = $formanwers_id
+                  AND a.`plugin_formcreator_question_id` = q.`id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
       $result = $DB->query($query);
 
@@ -423,12 +441,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          if ($status == 'waiting') {
             while ($question = $DB->fetch_array($result)) {
                if ($question['fieldtype'] != 'file') {
-                  $answer = new PluginFormcreatorAnswer();
-                  $found = $answer->find('`plugin_formcreator_formanwers_id` = '.$datas['id'].'
-                                          AND `plugin_formcreator_question_id` = '.$question['id']);
-                  $found = array_shift($found);
-
-                  $data_value = $datas['formcreator_field_'.$question['id']];
+                  $data_value = $datas['formcreator_field_' . $question['id']];
                   if (isset($data_value)) {
                      if (is_array($data_value)) {
                         foreach ($data_value as $key => $value) {
@@ -443,16 +456,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   }
 
                   $answer->update(array(
-                     'id'     => $found['id'],
+                     'id'     => $question['answer_id'],
                      'answer' => $answer_value,
                   ));
                } elseif (isset($_FILES['formcreator_field_'.$question['id']]['tmp_name'])
                      && is_file($_FILES['formcreator_field_'.$question['id']]['tmp_name'])) {
                   $doc    = new Document();
-                  $answer = new PluginFormcreatorAnswer();
-                  $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$datas['id'].'
-                                          AND `plugin_formcreator_question_id` = '.$question['id']);
-                  $found  = array_shift($found);
 
                   $file_datas                 = array();
                   $file_datas["name"]         = $form->fields['name'].' - '.$question['name'];
@@ -463,6 +472,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   Document::uploadDocument($file_datas, $_FILES['formcreator_field_'.$question['id']]);
 
                   if ($docID = $doc->add($file_datas)) {
+                     $docID = intval($docID);
                      $table    = getTableForItemType('Document');
                      $filename = $_FILES['formcreator_field_'.$question['id']]['name'];
                      $query    = "UPDATE `$table` SET `filename` = '".$filename."'
@@ -477,7 +487,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      ));
 
                      $answer->update(array(
-                        'id'     => $found['id'],
+                        'id'     => $question['answer_id'],
                         'answer' => $docID,
                      ));
                   }
@@ -528,7 +538,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                $question_answer = '';
             }
 
-            $answer   = new PluginFormcreatorAnswer();
             $answerID = $answer->add(array(
                'plugin_formcreator_formanwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
@@ -549,10 +558,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                Document::uploadDocument($file_datas, $_FILES['formcreator_field_'.$question['id']]);
 
                if ($docID = $doc->add($file_datas)) {
+                  $docID = intval($docID);
                   $table    = getTableForItemType('Document');
                   $filename = $_FILES['formcreator_field_'.$question['id']]['name'];
                   $query    = "UPDATE `$table` SET `filename` = '".$filename."'
-                               WHERE `id` = ".$docID;
+                               WHERE `id` = $docID";
                   $DB->query($query);
 
                   $docItem = new Document_Item();
@@ -629,7 +639,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public function getFullForm()
    {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
 
       $question_no = 0;
       $output      = '';
@@ -642,10 +652,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $output .= PHP_EOL.PHP_EOL;
       }
 
-      $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = '
-                                            .$this->fields['plugin_formcreator_forms_id'], '`order` ASC');
-
+      // retrieve answers
       $answer = new PluginFormcreatorAnswer();
       $answers = $answer->find('`plugin_formcreator_formanwers_id` = '.$this->getID());
       $answers_values = array();
@@ -653,82 +660,91 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
       }
 
-      foreach ($find_sections as $section_line) {
-         if ($CFG_GLPI['use_rich_text']) {
-            $output .= '<h2>'.$section_line['name'].'</h2>';
-         } else {
-            $output .= PHP_EOL.$section_line['name'].PHP_EOL;
-            $output .= '---------------------------------';
-            $output .= PHP_EOL;
+      // computer all questions
+      $query_questions = "SELECT sections.`name` as section_name,
+                                 questions.*,
+                                 answers.`answer`
+                          FROM `glpi_plugin_formcreator_questions` AS questions
+                          INNER JOIN `glpi_plugin_formcreator_answers` AS answers
+                            ON answers.`plugin_formcreator_question_id` = questions.`id`
+                            AND answers.`plugin_formcreator_formanwers_id` = ".$this->getID()."
+                          INNER JOIN `glpi_plugin_formcreator_sections` as sections
+                            ON questions.`plugin_formcreator_sections_id` = sections.`id`
+                            AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
+                          GROUP BY questions.`id`
+                          ORDER BY sections.`order` ASC,
+                                sections.`id` ASC,
+                                questions.`order` ASC";
+      $res_questions = $DB->query($query_questions);
+      $last_section = "";
+      while ($question_line = $DB->fetch_assoc($res_questions)) {
+
+         // Get and display current section if needed
+         if ($last_section != $question_line['section_name']) {
+            if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+               $output .= '<h2>'.$question_line['section_name'].'</h2>';
+            } else {
+               $output .= PHP_EOL.$question_line['section_name'].PHP_EOL;
+               $output .= '---------------------------------';
+               $output .= PHP_EOL;
+            }
+            $last_section = $question_line['section_name'];
          }
 
-         // Display all fields of the section
-         $question  = new PluginFormcreatorQuestion();
-         $questions = $question->find('plugin_formcreator_sections_id = '.$section_line['id'], '`order` ASC');
-         foreach ($questions as $question_line) {
-            // Don't save tags in "full form"
-            if ($question_line['fieldtype'] == 'tag') continue;
+         // Don't save tags in "full form"
+         if ($question_line['fieldtype'] == 'tag') continue;
 
-            $id     = $question_line['id'];
-            $name   = $question_line['name'];
-            $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$this->getID()
-                                   .' AND `plugin_formcreator_question_id` = '.$id);
+         if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
 
-            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
+         if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
+            $question_no ++;
+            $value = $question_line['answer'];
+            $output_value = PluginFormcreatorFields::getValue($question_line,
+                                                              $value);
 
-            if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
-               $question_no ++;
-
-               if (count($found)) {
-                  $datas = array_shift($found);
-                  $value = $datas['answer'];
-               } else {
-                  $value = '';
-               }
-               $output_value = PluginFormcreatorFields::getValue($question_line, $value);
-
-               if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
-                  if (is_array($value)) {
-                     if ($CFG_GLPI['use_rich_text']) {
-                        $output_value = '<ul>';
-                        foreach ($value as $choice) {
-                         $output_value .= '<li>'.$choice.'</li>';
-                        }
-                        $output_value .= '</ul>';
-                     } else {
-                        $output_value = PHP_EOL." - ".implode(PHP_EOL." - ", $value);
+            if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
+               if (is_array($value)) {
+                  if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                     $output_value = '<ul>';
+                     foreach ($value as $choice) {
+                        $output_value .= '<li>'.$choice.'</li>';
                      }
-                  } elseif (is_array(json_decode($value))) {
-                     if ($CFG_GLPI['use_rich_text']) {
-                        $value = json_decode($value);
-                        $output_value = '<ul>';
-                        foreach ($value as $choice) {
-                         $output_value .= '<li>'.$choice.'</li>';
-                        }
-                        $output_value .= '</ul>';
-                     } else {
-                        $output_value = PHP_EOL." - ".implode(PHP_EOL." - ", json_decode($value));
-                     }
+                     $output_value .= '</ul>';
                   } else {
-                     $output_value = $value;
+                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
                   }
-               } elseif ($question_line['fieldtype'] == 'textarea') {
+
+               } elseif (is_array(json_decode($value))) {
                   if ($CFG_GLPI['use_rich_text']) {
-                     $output_value = '<br /><blockquote>'.$value.'</blockquote>';
+                     $value = json_decode($value);
+                     $output_value = '<ul>';
+                     foreach ($value as $choice) {
+                      $output_value .= '<li>' . $choice . '</li>';
+                     }
+                     $output_value .= '</ul>';
                   } else {
-                     $output_value = PHP_EOL.$value;
+                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
                   }
+               } else {
+                  $output_value = $value;
                }
 
+            } elseif ($question_line['fieldtype'] == 'textarea') {
                if ($CFG_GLPI['use_rich_text']) {
-                  $output .= '<div>';
-                  $output .= '<b>'.$question_no.') '.$question_line['name'].' : </b>';
-                  $output .= $output_value;
-                  $output .= '</div>';
+                  $output_value = '<br /><blockquote>' . $value . '</blockquote>';
                } else {
-                  $output .= $question_no.') '.$question_line['name'].' : ';
-                  $output .= $output_value.PHP_EOL.PHP_EOL;
+                  $output_value = PHP_EOL . $value;
                }
+            }
+
+            if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+               $output .= '<div>';
+               $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
+               $output .= $output_value;
+               $output .= '</div>';
+            } else {
+               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
+               $output .= $output_value . PHP_EOL . PHP_EOL;
             }
          }
       }

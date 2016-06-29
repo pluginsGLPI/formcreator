@@ -847,9 +847,9 @@ EOS;
                  .'</b> "'.$question->getName().'"';
                break;
             case 'supplier' :
-               $group = new Group();
-               $group->getFromDB($values['actor_value']);
-               echo $img_supplier.' <b>'.__('Supplier').' </b> "'.$group->getName().'"';
+               $supplier = new Supplier();
+               $supplier->getFromDB($values['actor_value']);
+               echo $img_supplier.' <b>'.__('Supplier').' </b> "'.$supplier->getName().'"';
                break;
             case 'question_supplier' :
                $question = new PluginFormcreatorQuestion();
@@ -982,6 +982,8 @@ EOS;
       $ticket  = new Ticket();
       $docItem = new Document_Item();
       $form    = new PluginFormcreatorForm();
+      $answer  = new PluginFormcreatorAnswer();
+
       $form->getFromDB($formanswer->fields['plugin_formcreator_forms_id']);
 
       // Get default request type
@@ -997,8 +999,13 @@ EOS;
       $datas                = array_merge($datas, $predefined_fields);
 
       // Parse datas
-      $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
-      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'], $formanswer));
+      $fullform = $formanswer->getFullForm();
+      $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
+                                                                    $formanswer,
+                                                                    $fullform));
+      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'],
+                                                                      $formanswer,
+                                                                      $fullform));
       $datas['_users_id_requester']   = 0;
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
@@ -1030,9 +1037,8 @@ EOS;
             case 'question_person' :
             case 'question_group' :
             case 'question_supplier' :
-               $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value']
-                          .' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
+               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
+                                        ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
                $found   = array_shift($found);
                if (empty($found['answer'])) {
                   continue;
@@ -1101,9 +1107,8 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $answer  = new PluginFormcreatorAnswer();
-            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id']
-                       .' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
+            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
 
@@ -1118,9 +1123,8 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $answer = new PluginFormcreatorAnswer();
-            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id']
-                       .' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
+            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                    ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
             $datas['entities_id'] = $entity['answer'];
@@ -1133,9 +1137,8 @@ EOS;
       }
 
       // Define due date
-      $answer = new PluginFormcreatorAnswer();
-      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id']
-                 .' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
+      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                              ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
       $date   = array_shift($found);
       $str    = "+".$this->fields['due_date_value']." ".$this->fields['due_date_period'];
 
@@ -1249,9 +1252,8 @@ EOS;
             case 'question_person' :
             case 'question_group' :
             case 'question_supplier' :
-               $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value']
-                          .' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
+               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
+                                        ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
                $found   = array_shift($found);
 
                if (empty($found['answer'])) {
@@ -1298,7 +1300,8 @@ EOS;
       }
 
       // Attach documents to ticket
-      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer' AND items_id = ".$formanswer->getID());
+      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer'
+                               AND items_id = ".$formanswer->getID());
       if(count($found) > 0) {
          foreach ($found as $document) {
             $docItem->add(array(
@@ -1337,37 +1340,35 @@ EOS;
     * @param  PluginFormcreatorFormanswer $formanswer    Formanswer object where answers are stored
     * @return String                                     Parsed string with tags replaced by form values
     */
-   private function parseTags($content, PluginFormcreatorFormanswer $formanswer) {
-      global $CFG_GLPI;
+   private function parseTags($content, PluginFormcreatorFormanswer $formanswer, $fullform = "") {
+      global $DB, $CFG_GLPI;
 
-      $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
+      if ($fullform == "") {
+         $fullform = $formanswer->getFullForm();
+      }
 
+      $content     = str_replace('##FULLFORM##', $fullform, $content);
       $section     = new PluginFormcreatorSection();
-      $found       = $section->find('plugin_formcreator_forms_id = '
-                    .$formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
+      $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
+                                    '`order` ASC');
       $tab_section = array();
       foreach($found as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if(!empty($tab_section)) {
-         $question  = new PluginFormcreatorQuestion();
-         $found = $question->find('plugin_formcreator_sections_id IN ('.implode(', ', $tab_section).')', '`order` ASC');
-         foreach($found as $question_line) {
-            $id     = $question_line['id'];
-            $name   = $question_line['name'];
-
-            $answer = new PluginFormcreatorAnswer();
-            $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$formanswer->getID()
-                                   .' AND `plugin_formcreator_question_id` = '.$id);
-            if (count($found)) {
-               $datas = array_shift($found);
-               $value = $datas['answer'];
-            } else {
-               $value = '';
-            }
-
-            $value = PluginFormcreatorFields::getValue($question_line, $value);
+         $query_questions = "SELECT `questions`.*, `answers`.`answer`
+                             FROM `glpi_plugin_formcreator_questions` AS questions
+                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
+                               ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                               AND `plugin_formcreator_formanwers_id` = ".$formanswer->getID()."
+                             WHERE `questions`.`plugin_formcreator_sections_id` IN (".implode(', ', $tab_section).")
+                             ORDER BY `questions`.`order` ASC";
+         $res_questions = $DB->query($query_questions);
+         while ($question_line = $DB->fetch_assoc($res_questions)) {
+            $id    = $question_line['id'];
+            $name  = $question_line['name'];
+            $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
             if (is_array($value)) {
                if ($CFG_GLPI['use_rich_text']) {
                   $value = '<br />'.implode('<br />', $value);
@@ -1429,7 +1430,7 @@ EOS;
             $DB->query($query) or die($DB->error());
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
-            if (count($current_enum_destination_entity) != count($enum_destination_entity)) {
+            if (count($current_enum_destination_entity) != count(self::getEnumDestinationEntity())) {
                $query = "ALTER TABLE `$table`
                            CHANGE COLUMN `destination_entity` `destination_entity`
                            ENUM($enum_destination_entity)
