@@ -319,7 +319,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<tr class="tab_bg_2">';
       echo '<td>'.__('Need to be validate?', 'formcreator').'</td>';
-      echo '<td colspan="3" class="validators_bloc">';
+      echo '<td class="validators_bloc">';
 
       Dropdown::showFromArray('validation_required', array(
          0 => Dropdown::EMPTY_VALUE,
@@ -415,8 +415,10 @@ class PluginFormcreatorForm extends CommonDBTM
                changeValidators('.$this->fields["validation_required"].');
             </script>';
       echo '</td>';
-      echo '</tr>';
 
+      echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
+      echo '<td>';
+      Dropdown::showYesNo("is_default", $this->fields["is_default"]);
       echo '</td>';
       echo '</tr>';
 
@@ -1014,7 +1016,9 @@ class PluginFormcreatorForm extends CommonDBTM
                      `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
                      `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
                      `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
-                     `validation_required` tinyint(1) NOT NULL DEFAULT '0'
+                     `validation_required` tinyint(1) NOT NULL DEFAULT '0',
+                     `usage_count` int(11) NOT NULL DEFAULT '0',
+                     `is_default` tinyint(1) NOT NULL DEFAULT '0'
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -1088,6 +1092,10 @@ class PluginFormcreatorForm extends CommonDBTM
       $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
       $DB->query($query) or die ($DB->error());
 
+      $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required', 'value' => '0'));
+      $migration->addField($table, 'is_default', 'bool', array('after' => 'usage_count', 'value' => '0'));
+      $migration->migrationOneTable($table);
+
       if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formvalidators` (
                      `forms_id` int(11) NOT NULL,
@@ -1099,9 +1107,6 @@ class PluginFormcreatorForm extends CommonDBTM
                   COLLATE = utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
       }
-
-      $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required', 'value' => '0'));
-      $migration->migrationOneTable($table);
 
       // Create standard search options
       $query = "DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = 'PluginFormcreatorForm'";
