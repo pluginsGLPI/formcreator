@@ -578,7 +578,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $selectedCategories = '';
       }
 
-      // Find forms without category and accessible by the current user
+      // Find forms accessible by the current user
       if (!empty($keywords)) {
          $keywords = $DB->escape($keywords);
          $where_form .= " AND MATCH($form_table.`name`, $form_table.`description`) AGAINST('$keywords*' IN BOOLEAN MODE)";
@@ -625,6 +625,37 @@ class PluginFormcreatorForm extends CommonDBTM
                   'description'  => '',
                   'type'         => 'faq'
             ];
+         }
+      }
+
+      if (count($formList) == 0) {
+         // No form nor FAQ have been selected
+         // Fallback to default forms
+         $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
+         $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
+         $where_form       .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
+         $where_form       .= " AND `is_default` <> '0'";
+         $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+         FROM $form_table
+         LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
+         WHERE $where_form
+         AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
+         SELECT plugin_formcreator_forms_id
+         FROM $table_fp
+         WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
+         ORDER BY $order";
+         $result_forms = $DB->query($query_forms);
+
+         if ($DB->numrows($result_forms) > 0) {
+            while ($form = $DB->fetch_array($result_forms)) {
+               $formDescription = plugin_formcreator_encode($form['description']);
+               $formList[] = [
+                     'id'           => $form['id'],
+                     'name'         => $form['name'],
+                     'description'  => $formDescription,
+                     'type'         => 'form'
+               ];
+            }
          }
       }
 
