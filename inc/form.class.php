@@ -519,8 +519,8 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showSearchBar();
       echo '</div>';
       echo '<ul class="plugin_formcreator_sort">';
-      echo '<li><a href="#" class="mostPopularSort">Popularity sort</a></li>';
-      echo '<li><a href="#" class="alphabeticSort">Alphabetic sort</a></li>';
+      echo '<li><a href="#" class="mostPopularSort">'.__('Popularity sort', 'formcreator').'</a></li>';
+      echo '<li><a href="#" class="alphabeticSort">'.__('Alphabetic sort', 'formcreator').'</a></li>';
       echo '</ul>';
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
