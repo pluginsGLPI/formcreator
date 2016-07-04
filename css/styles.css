@@ -725,3 +725,8 @@ a.plugin_formcreator_formTile_title {
    border-bottom: 1px solid rgba(0,0,0,.1);
    padding: 11px;
 }
+
+.plugin_formcreator_sort li {
+	display: inline-block;
+	width: 50%;
+}

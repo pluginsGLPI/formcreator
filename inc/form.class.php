@@ -549,17 +549,17 @@ class PluginFormcreatorForm extends CommonDBTM
     * Show form and FAQ items
     * @param number $rootCategory Items of this subtree only. 0 = no filtering
     * @param string $keywords Filter items with keywords
-    * @param number $polularity Order by popularity of items, limited by this quantity, if > 0
+    * @param boolean $polularity If true : popularity sort; if false alphabetic sort
     * @param string $helpdeskHome show items for helpdesk only
     */
-   public function showFormList($rootCategory = 0, $keywords = '', $popularity = 0, $helpdeskHome = false) {
+   public function showFormList($rootCategory = 0, $keywords = '', $sortByPopularity = false, $helpdeskHome = false) {
       global $DB;
 
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
 
-      if ($popularity == 0) {
+      if (! $sortByPopularity) {
          //$order         = "$cat_table.level ASC, $form_table.name ASC";
          $order         = "$form_table.name ASC";
       } else {
@@ -588,7 +588,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $keywords = $DB->escape($keywords);
          $where_form .= " AND MATCH($form_table.`name`, $form_table.`description`) AGAINST('$keywords*' IN BOOLEAN MODE)";
       }
-      $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+      $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description, $form_table.usage_count
       FROM $form_table
       LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
       WHERE $where_form
@@ -607,7 +607,8 @@ class PluginFormcreatorForm extends CommonDBTM
                   'id'           => $form['id'],
                   'name'         => $form['name'],
                   'description'  => $formDescription,
-                  'type'         => 'form'
+                  'type'         => 'form',
+                  'usage_count'  => $form['usage_count']
             ];
          }
       }
@@ -628,7 +629,8 @@ class PluginFormcreatorForm extends CommonDBTM
                   'id'           => $faq['id'],
                   'name'         => $faq['name'],
                   'description'  => '',
-                  'type'         => 'faq'
+                  'type'         => 'faq',
+                  'usage_count'  => $faq['view']
             ];
          }
       }
@@ -640,7 +642,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
          $where_form       .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
          $where_form       .= " AND `is_default` <> '0'";
-         $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+         $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description, $form_table.usage_count
          FROM $form_table
          LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
          WHERE $where_form
@@ -658,7 +660,8 @@ class PluginFormcreatorForm extends CommonDBTM
                      'id'           => $form['id'],
                      'name'         => $form['name'],
                      'description'  => $formDescription,
-                     'type'         => 'form'
+                     'type'         => 'form',
+                     'usage_count'  => $form['usage_count']
                ];
             }
          }
