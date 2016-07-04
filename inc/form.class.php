@@ -1077,7 +1077,7 @@ class PluginFormcreatorForm extends CommonDBTM
        *
        * @since 0.90-1.5
        */
-      // An error may occur id the Search index does not exists
+      // An error may occur if the Search index does not exists
       // This is not critical as we need to (re) create it
       If (isIndex('glpi_plugin_formcreator_forms', 'Search')) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`";
