@@ -518,6 +518,10 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
+      echo '<ul class="plugin_formcreator_sort">';
+      echo '<li><a href="#" class="mostPopularSort">Popularity sort</a></li>';
+      echo '<li><a href="#" class="alphabeticSort">Alphabetic sort</a></li>';
+      echo '</ul>';
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
       echo '</div>';
@@ -556,9 +560,11 @@ class PluginFormcreatorForm extends CommonDBTM
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
 
       if ($popularity == 0) {
-         $order         = "$cat_table.level ASC, $form_table.name ASC";
+         //$order         = "$cat_table.level ASC, $form_table.name ASC";
+         $order         = "$form_table.name ASC";
       } else {
-         $order         = "$form_table.usage_count DESC, $form_table.name ASC LIMIT ".(int) $popularity;
+         //$order         = "$form_table.usage_count DESC, $form_table.name ASC LIMIT ".(int) $popularity;
+         $order         = "$form_table.usage_count DESC, $form_table.name ASC";
       }
 
       $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
