@@ -47,20 +47,15 @@ jQuery(document).ready(function($) {
       updateWizardFormsView(0);
 
       // Setup events
-      $('#plugin_formcreator_wizard_right a.mostPopularSort').click(
-         function () {
-            sortByName = false;
-            showTiles(tiles);
-         }
-      );
+      $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].onclick = function () {
+         sortByName = false;
+         showTiles(tiles);
+      }
 
-     $('#plugin_formcreator_wizard_right a.alphabeticSort').click(
-        function () {
-           sortByName = true;
-           showTiles(tiles);
-         }
-      );
-
+     $('.plugin_formcreator_sort input[value=alphabeticSort]')[0].onclick = function () {
+        sortByName = true;
+        showTiles(tiles);
+     }
    }
 
    // Initialize search bar
@@ -101,6 +96,9 @@ jQuery(document).ready(function($) {
             );
          }
       });
+
+      // Initialize sort controls
+      $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].checked = true;
    }
 
    // === Add better multi-select on form configuration validators ===

@@ -491,7 +491,7 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard_categories {
-	width: 275px;
+   width: 275px;
    top: 0;
    bottom: 0;
    left: 0;
@@ -500,8 +500,8 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
-	background-color: #FFF;
-	color: #3A5693;
+   background-color: #FFF;
+   color: #3A5693;
 }
 
 .plugin_formcreator_card {
@@ -519,7 +519,7 @@ form.formcreator_form {
 .plugin_formcreator_formTile {
    margin: 0 3px 6px 3px;
    width: 300px;
-	display: inline-block;
+   display: inline-block;
    vertical-align: top;
    text-align: left;
    overflow: hidden;
@@ -557,14 +557,14 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_formTile div:first-child {
-	color: #F00;
-	float: right;
-	margin: 0 5px;
+   color: #F00;
+   float: right;
+   margin: 0 5px;
 }
 
 #plugin_formcreator_lastForms {
-	width: 265px;
-	float:right;
+   width: 265px;
+   float:right;
 }
 
 #plugin_formcreator_lastForms > div {
@@ -573,8 +573,8 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_wizard_right {
    margin-left: 295px;
-	min-width: 116px;
-	overflow: hidden;
+   min-width: 116px;
+   overflow: hidden;
    padding: 10px 0 3px 3px;
 }
 
@@ -718,7 +718,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_heading {
-	font-weight: bold;
+   font-weight: bold;
 }
 
 #plugin_formcreator_lastForms .plugin_formcreator_card > div {
@@ -726,7 +726,8 @@ a.plugin_formcreator_formTile_title {
    padding: 11px;
 }
 
-.plugin_formcreator_sort li {
-	display: inline-block;
-	width: 50%;
+.plugin_formcreator_sort input {
+   display: inline-block;
+   text-align: left;
+   margin: 0 20px;
 }
