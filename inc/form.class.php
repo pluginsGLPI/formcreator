@@ -523,8 +523,14 @@ class PluginFormcreatorForm extends CommonDBTM
 //       echo '<li><a href="#" class="alphabeticSort">'.__('Alphabetic sort', 'formcreator').'</a></li>';
 //       echo '</ul>';
       echo '<div class="plugin_formcreator_sort">';
-      echo '<label for="plugin_formcreator_mostPopular">'.__('Popularity sort', 'formcreator').'</label><input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
-      echo '<label for="plugin_formcreator_alphabetic">'.__('Alphabetic sort', 'formcreator').'</label><input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />';
+      echo '<span class="formcreator_radios">';
+      echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
+      echo '<label for="plugin_formcreator_mostPopular">'.__('Popularity sort', 'formcreator').'</label>';
+      echo '</span>';
+      echo '<span class="formcreator_radios">';
+      echo '<input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />';
+      echo '<label for="plugin_formcreator_alphabetic">'.__('Alphabetic sort', 'formcreator').'</label>';
+      echo '</span>';
       echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
