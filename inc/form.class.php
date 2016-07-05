@@ -634,6 +634,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       if (count($formList) == 0) {
+         $defaultForms = true;
          // No form nor FAQ have been selected
          // Fallback to default forms
          $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
@@ -663,9 +664,11 @@ class PluginFormcreatorForm extends CommonDBTM
                ];
             }
          }
+      } else {
+         $defaultForms = false;
       }
 
-      echo json_encode($formList, JSON_UNESCAPED_SLASHES);
+      return $formList;
    }
 
    protected function showSearchBar() {

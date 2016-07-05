@@ -25,5 +25,6 @@ function plugin_formcreator_showWizardCategories() {
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
    $form = new PluginFormcreatorForm();
-   $form->showFormList($rootCategory, $keywords, true);
+   $formList = $form->showFormList($rootCategory, $keywords, true);
+   echo json_encode($formList, JSON_UNESCAPED_SLASHES);
 }
