@@ -205,9 +205,13 @@ function sortFormAndFaqItems(items, byName) {
    return items;
 }
 
-function showTiles(tiles) {
+function showTiles(tiles, defaultForms) {
    tiles = sortFormAndFaqItems(tiles, sortByName);
-   html = buildTiles(tiles);
+   html = '';
+   if (defaultForms) {
+      html += '<p><?php echo __('No form found. Please choose a form below instead', 'formcreator')?></p>'
+   }
+   html += buildTiles(tiles);
 
    //Display tiles
    $('#plugin_formcreator_wizard_forms').empty();
@@ -218,8 +222,8 @@ function showTiles(tiles) {
 function updateWizardFormsView(categoryId) {
    $.when(getFormAndFaqItems(categoryId)).then(
       function (response) {
-         tiles = response;
-         showTiles(tiles);
+         tiles = response.forms;
+         showTiles(tiles, response.default);
       }
    );
 }

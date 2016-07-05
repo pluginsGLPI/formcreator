@@ -668,7 +668,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $defaultForms = false;
       }
 
-      return $formList;
+      return array('default' => $defaultForms, 'forms' => $formList);
    }
 
    protected function showSearchBar() {
