@@ -215,22 +215,6 @@ function showTiles(tiles) {
    $('#plugin_formcreator_formlist').masonry();
 }
 
-function showMostPopular() {
-   $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-      data: {wizard: 'mostPopular'},
-      type: "GET",
-      dataType: "json"
-   }).done(function(response){
-      html = buildTiles(response);
-
-      // Display all tiles
-      $('#plugin_formcreator_wizard_forms').empty();
-      $('#plugin_formcreator_wizard_forms').prepend(html);
-      $('#plugin_formcreator_formlist').masonry();
-   });
-}
-
 function updateWizardFormsView(categoryId) {
    $.when(getFormAndFaqItems(categoryId)).then(
       function (response) {

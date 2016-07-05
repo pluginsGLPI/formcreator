@@ -518,10 +518,14 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
-      echo '<ul class="plugin_formcreator_sort">';
-      echo '<li><a href="#" class="mostPopularSort">'.__('Popularity sort', 'formcreator').'</a></li>';
-      echo '<li><a href="#" class="alphabeticSort">'.__('Alphabetic sort', 'formcreator').'</a></li>';
-      echo '</ul>';
+//       echo '<ul class="plugin_formcreator_sort">';
+//       echo '<li><a href="#" class="mostPopularSort">'.__('Popularity sort', 'formcreator').'</a></li>';
+//       echo '<li><a href="#" class="alphabeticSort">'.__('Alphabetic sort', 'formcreator').'</a></li>';
+//       echo '</ul>';
+      echo '<div class="plugin_formcreator_sort">';
+      echo '<label for="">'.__('Popularity sort', 'formcreator').'</label><input type="radio" class="form-control" name="sort" value="mostPopularSort" />';
+      echo '<label for="">'.__('Alphabetic sort', 'formcreator').'</label><input type="radio" class="form-control" name="sort" value="alphabeticSort" />';
+      echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
       echo '</div>';
@@ -552,20 +556,14 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param boolean $polularity If true : popularity sort; if false alphabetic sort
     * @param string $helpdeskHome show items for helpdesk only
     */
-   public function showFormList($rootCategory = 0, $keywords = '', $sortByPopularity = false, $helpdeskHome = false) {
+   public function showFormList($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
       global $DB;
 
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
 
-      if (! $sortByPopularity) {
-         //$order         = "$cat_table.level ASC, $form_table.name ASC";
-         $order         = "$form_table.name ASC";
-      } else {
-         //$order         = "$form_table.usage_count DESC, $form_table.name ASC LIMIT ".(int) $popularity;
-         $order         = "$form_table.usage_count DESC, $form_table.name ASC";
-      }
+      $order         = "$form_table.name ASC";
 
       $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
       $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);

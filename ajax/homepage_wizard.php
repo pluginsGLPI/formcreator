@@ -16,8 +16,6 @@ if ($_REQUEST['wizard'] == 'categories') {
    }
    $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
    plugin_formcreator_showWizardForms($categoriesId, $keywords);
-} else if ($_REQUEST['wizard'] == 'mostPopular') {
-   plugin_formcreator_showMostPopularForms();
 }
 
 function plugin_formcreator_showWizardCategories() {
@@ -27,10 +25,5 @@ function plugin_formcreator_showWizardCategories() {
 
 function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
    $form = new PluginFormcreatorForm();
-   $form->showFormList($rootCategory, $keywords, 0, true);
-}
-
-function plugin_formcreator_showMostPopularForms() {
-   $form = new PluginFormcreatorForm();
-   $form->showFormList(0, '', 6, true);
+   $form->showFormList($rootCategory, $keywords, true);
 }
