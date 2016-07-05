@@ -175,7 +175,7 @@ function getFormAndFaqItems(categoryId) {
    }).fail(function () {
       deferred.reject();
    });
-   return deferred;
+   return deferred.promise();
 }
 
 function sortFormAndFaqItems(items, byName) {
@@ -220,10 +220,17 @@ function showTiles(tiles, defaultForms) {
 }
 
 function updateWizardFormsView(categoryId) {
-   $.when(getFormAndFaqItems(categoryId)).then(
+   $.when(getFormAndFaqItems(categoryId)).done(
       function (response) {
          tiles = response.forms;
          showTiles(tiles, response.default);
+      }
+   ).fail(
+      function () {
+         html = '<p><?php echo __('An error occured while querying forms', 'formcreator')?></p>'
+         $('#plugin_formcreator_wizard_forms').empty();
+         $('#plugin_formcreator_wizard_forms').prepend(html);
+         $('#plugin_formcreator_formlist').masonry();
       }
    );
 }

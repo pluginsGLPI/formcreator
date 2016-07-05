@@ -667,7 +667,6 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          $defaultForms = false;
       }
-
       return array('default' => $defaultForms, 'forms' => $formList);
    }
 
