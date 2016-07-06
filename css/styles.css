@@ -605,9 +605,11 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_searchBar input ~ label {
    position: absolute;
-   left: 45%;
+   display: block;
    top: 30%;
    color: #C2C2C2;
+   text-align: center;
+   width: 100%;
    transition:
       background 0.2s,
       color 0.2s,
@@ -740,4 +742,49 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_sort .formcreator_radios input[type = radio] + label {
    display: inline-block;
    margin-right: 10px;
+}
+
+
+/* ################--------------- Responsive  ---------------#################### */
+@media screen and (max-width: 700px) {
+   form.formcreator_form {
+       width: 100%;
+   }
+
+   .formcreator_form .form-group > label,
+   .formcreator_form .form-group .form_field,
+   .formcreator_form .form-group .form_field > input,
+   .formcreator_form textarea,
+   .formcreator_form select {
+      width: 100%;
+   }
+   .formcreator_form .form-group .form_field input.hasDatepicker  {
+      width: 88%;
+   }
+
+   .formcreator_form .select2-container .select2-choice,
+   .formcreator_form .select2-container-multi .select2-choices {
+      width: 96%;
+   }
+
+
+   #plugin_formcreator_wizard,
+   #plugin_formcreator_wizard_right {
+      margin: 0;
+      width: 100%;
+   }
+
+   #plugin_formcreator_wizard_categories {
+      width: 100%;
+      position: initial;
+   }
+
+   #plugin_formcreator_lastForms {
+      float: none;
+      width: 100%;
+   }
+
+   #plugin_formcreator_searchBar input ~ label {
+
+   }
 }
