@@ -19,15 +19,15 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
              method='post' action=' ";
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
 
-      echo '<tr><th colspan="2">'.__('Access type', 'formcreator').'</th></tr>';
-      echo '<td>'.__('Access', 'formcreator').'</td>';
+      echo '<tr><th colspan="2">'.__('Access type', 'formcreator').'</th>';
+      echo '</tr>';
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
@@ -41,6 +41,18 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
          )
       );
       echo '</td>';
+      echo '<td>'.__('Link to the form', 'formcreator').': ';
+      if ($item->fields['is_active']) {
+         $form_url = $CFG_GLPI['url_base'].'/plugins/formcreator/front/formdisplay.php?id='.$item->getID();
+         echo '<a href="'.$form_url.'">'.$form_url.'</a>&nbsp;';
+         echo '<a href="mailto:?subject='.$item->getName().'&body='.$form_url.'" target="_blank">';
+         echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/email.png" />';
+         echo '</a>';
+      } else {
+         echo __('Please active the form to view the link', 'formcreator');
+      }
+      echo '</td>';
+      echo "</tr>";
 
       if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
          echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
