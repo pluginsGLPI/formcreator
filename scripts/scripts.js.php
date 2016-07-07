@@ -27,6 +27,13 @@ jQuery(document).ready(function($) {
       position: ['center', 50]
    });
 
+   // Prevent jQuery UI dialog from blocking focusin
+   $(document).on('focusin', function(e) {
+       if ($(e.target).closest(".mce-window, .moxman-window").length) {
+         e.stopImmediatePropagation();
+      }
+   });
+
    <?php
       if (isset($_SESSION['glpiactiveprofile']['interface'])
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
@@ -312,7 +319,8 @@ function addQuestion(items_id, token, section) {
       section_id: section,
       form_id: items_id,
       _glpi_csrf_token: token
-   }).dialog("open");
+   })
+   .dialog("open");
 }
 
 function editQuestion(items_id, token, question, section) {
