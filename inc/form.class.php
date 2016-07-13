@@ -571,7 +571,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       $order         = "$form_table.name ASC";
 
-      $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
+      $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0 ";
       $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
       $where_form       .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
 
