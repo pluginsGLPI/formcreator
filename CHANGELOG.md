@@ -1,5 +1,25 @@
-GLPI Formcreator 0.85 ChangeLog
+GLPI Formcreator ChangeLog
 ===============================
+
+
+Version 0.90-1.3.4
+------------------
+
+## Bugfixes:
+
+* multiple issues with validators
+* sql strict mode compatibility
+* performance improvements
+* order of dropdowns
+* display forms without languages
+* deletion of forms is now possible
+
+## Features:
+
+* Integration with tag plugin
+* more options for entity computing
+
+
 
 Version 0.90-1.3.3
 ------------------
