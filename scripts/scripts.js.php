@@ -35,7 +35,9 @@ jQuery(document).ready(function($) {
 
    if (NomDuFichier == "central.php") {
       $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+        if ($('#homepage_forms_container').length < 1){
          showFormList()
+        }
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
       showFormList()
