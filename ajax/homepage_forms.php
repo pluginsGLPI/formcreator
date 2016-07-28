@@ -43,7 +43,7 @@ $query  = "SELECT $cat_table.`name`, $cat_table.`id`
            ORDER BY $cat_table.`name` ASC";
 $result = $GLOBALS['DB']->query($query);
 if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_forms) > 0) {
-   echo '<table class="tab_cadrehov">';
+   echo '<table class="tab_cadrehov" id="homepage_forms_container">';
    echo '<tr class="noHover">';
    echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
    echo '</tr>';
