@@ -44,6 +44,10 @@ jQuery(document).ready(function($) {
    }
 
 
+   fcInitMultiSelect();
+});
+
+function fcInitMultiSelect() {
    // === Add better multi-select on form configuration validators ===
    // initialize the pqSelect widget.
    $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
@@ -56,7 +60,7 @@ jQuery(document).ready(function($) {
           checkbox: true //adds checkbox to options
       });
    });
-});
+}
 
 function showFormList() {
    $.ajax({

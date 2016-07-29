@@ -408,6 +408,7 @@ class PluginFormcreatorForm extends CommonDBTM
                      document.getElementById("validators_users").style.display  = "none";
                      document.getElementById("validators_groups").style.display = "none";
                   }
+                  fcInitMultiSelect();
                }
                changeValidators(' . $this->fields["validation_required"] . ');
             </script>';
