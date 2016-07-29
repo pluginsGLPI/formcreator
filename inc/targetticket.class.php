@@ -1388,8 +1388,8 @@ EOS;
                      `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-                     `tag_questions` VARCHAR(255) NOT NULL,
-                     `tag_specifics` VARCHAR(255) NOT NULL
+                     `tag_questions` VARCHAR(255) NOT NULL DEFAULT '',
+                     `tag_specifics` VARCHAR(255) NOT NULL DEFAULT ''
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       } else {
