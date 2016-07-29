@@ -359,6 +359,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
                   OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
                 AND $subentities
+                AND u.`is_active` = '1'
                 GROUP BY u.`id`
                 ORDER BY u.`name`";
       $result = $GLOBALS['DB']->query($query);
