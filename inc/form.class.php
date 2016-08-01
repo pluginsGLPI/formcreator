@@ -398,7 +398,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</select>';
       echo '</div>';
 
-
       echo '<script type="text/javascript">
                function changeValidators(value) {
                   if (value == 1) {
@@ -512,16 +511,14 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_card">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
+      echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
+      echo '</div>';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right">';
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';
-//       echo '<ul class="plugin_formcreator_sort">';
-//       echo '<li><a href="#" class="mostPopularSort">'.__('Popularity sort', 'formcreator').'</a></li>';
-//       echo '<li><a href="#" class="alphabeticSort">'.__('Alphabetic sort', 'formcreator').'</a></li>';
-//       echo '</ul>';
       echo '<div class="plugin_formcreator_sort">';
       echo '<span class="formcreator_radios">';
       echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
@@ -540,19 +537,6 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '</div>';
       echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
-//       echo '<script type="text/javascript">
-//                function showDescription(id, img){
-//                   if(img.alt == "+") {
-//                     img.alt = "-";
-//                     img.src = "'.$CFG_GLPI['root_doc'].'/pics/moins.png";
-//                     document.getElementById("desc" + id).style.display = "table-row";
-//                   } else {
-//                     img.alt = "+";
-//                     img.src = "'.$CFG_GLPI['root_doc'].'/pics/plus.png";
-//                     document.getElementById("desc" + id).style.display = "none";
-//                   }
-//                }
-//             </script>';
    }
 
    /**

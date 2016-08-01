@@ -67,6 +67,11 @@ jQuery(document).ready(function($) {
         sortByName = true;
         showTiles(tiles);
      }
+
+     $('#plugin_formcreator_wizard_categories > div:first')[0].onclick = function () {
+        updateCategoriesView();
+        updateWizardFormsView(0);
+     }
    }
 
    // Initialize search bar
@@ -86,23 +91,17 @@ jQuery(document).ready(function($) {
                   updateWizardFormsView(currentCategory);
                }, 300);
             }
-            if (searchInput.val().length == 0) {
-               $('#plugin_formcreator_searchBar').removeClass('clearable');
-            } else {
-               $('#plugin_formcreator_searchBar').addClass('clearable');
-            }
          }
       );
       // Clear the search bar if it gains focus
       $('#plugin_formcreator_searchBar input').focus(function(event) {
          if (searchInput.val().length > 0) {
             searchInput.val('');
-            $('#plugin_formcreator_searchBar').removeClass('clearable');
             updateWizardFormsView(currentCategory);
             $.when(getFormAndFaqItems(0)).then(
                function (response) {
                   tiles = response;
-                  showTiles(tiles);
+                  showTiles(tiles.forms);
                }
             );
          }
@@ -147,14 +146,14 @@ function updateCategoriesView() {
       html = html + '</div>';
 
       //Display categories
-      $('#plugin_formcreator_wizard_categories').empty();
-      $('#plugin_formcreator_wizard_categories').prepend(html);
+      $('#plugin_formcreator_wizard_categories > div').nextAll().remove();
+      $('#plugin_formcreator_wizard_categories').append(html);
 
       // Setup slinky
-      $('#plugin_formcreator_wizard_categories div:nth(0)').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+      $('#plugin_formcreator_wizard_categories div:nth(1)').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
       $('#plugin_formcreator_wizard_categories a.back').click(
          function() {
-            parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories', 'li')[1];
+            parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
             parentAnchor = $(parentItem).children('a')[0];
             updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
          }
