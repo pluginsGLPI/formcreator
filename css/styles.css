@@ -651,7 +651,6 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_searchBar input:focus ~ label {
    color: #3874BC;
    top: -15px;
-   left: 45%;
 }
 
 #plugin_formcreator_searchBar:after {
