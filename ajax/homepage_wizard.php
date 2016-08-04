@@ -15,7 +15,8 @@ if ($_REQUEST['wizard'] == 'categories') {
       $categoriesId = 0;
    }
    $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
-   plugin_formcreator_showWizardForms($categoriesId, $keywords);
+   $helpdeskHome = isset($_REQUEST['helpdeskHome']) ? $_REQUEST['helpdeskHome'] != '0' : false;
+   plugin_formcreator_showWizardForms($categoriesId, $keywords, $helpdeskHome);
 }
 
 function plugin_formcreator_showWizardCategories() {
@@ -23,8 +24,8 @@ function plugin_formcreator_showWizardCategories() {
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
-function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords) {
+function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords, $helpdeskHome = false) {
    $form = new PluginFormcreatorForm();
-   $formList = $form->showFormList($rootCategory, $keywords, true);
+   $formList = $form->showFormList($rootCategory, $keywords, $helpdeskHome);
    echo json_encode($formList, JSON_UNESCAPED_SLASHES);
 }

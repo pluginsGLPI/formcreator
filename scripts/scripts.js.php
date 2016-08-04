@@ -8,6 +8,7 @@ var rootDoc          = "<?php echo $CFG_GLPI['root_doc']; ?>";
 var currentCategory  = "0";
 var sortByName = false;
 var tiles = [];
+var helpdeskHome = 0;
 
 // === MENU ===
 var link = '';
@@ -177,7 +178,7 @@ function getFormAndFaqItems(categoryId) {
    deferred = jQuery.Deferred();
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords},
+      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: helpdeskHome},
       type: "GET",
       dataType: "json"
    }).done(function (response) {
