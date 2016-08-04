@@ -665,9 +665,9 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_wizard_categories div > a {
-   align: center;
+   text-align: center;
    display: inline-block;
-   width: 50%;
+   width: 100%;
    padding: 11px 0;
    border-bottom: 1px solid rgba(0,0,0,.1);
    box-sizing: border-box;
