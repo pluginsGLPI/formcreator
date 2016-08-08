@@ -486,8 +486,11 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard {
-   margin-right: 275px;
    position: relative;
+}
+
+.plugin_formcreator_marginRight {
+	margin-right: 275px;
 }
 
 #plugin_formcreator_wizard_categories {

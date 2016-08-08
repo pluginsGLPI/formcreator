@@ -66,6 +66,11 @@ function plugin_init_formcreator ()
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
+      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'
+            && strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
+               Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+      }
+
       // Massive Action definition
       $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
 
@@ -139,7 +144,8 @@ function plugin_init_formcreator ()
 
       if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
             || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
-            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false) {
+            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
+            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false) {
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
          $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/slinky/assets/css/jquery.slinky.css';
 

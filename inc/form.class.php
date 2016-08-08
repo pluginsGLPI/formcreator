@@ -508,6 +508,50 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showMyLastForms();
       echo '</div>';
 
+      echo '<div id="plugin_formcreator_wizard"  class="plugin_formcreator_marginRight plugin_formcreator_card">';
+
+      echo '<div id="plugin_formcreator_wizard_categories">';
+      echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
+      echo '</div>';
+      echo '</div>';
+
+      echo '<div id="plugin_formcreator_wizard_right">';
+      echo '<div id="plugin_formcreator_searchBar">';
+      $this->showSearchBar();
+      echo '</div>';
+      echo '<div class="plugin_formcreator_sort">';
+      echo '<span class="formcreator_radios">';
+      echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
+      echo '<label for="plugin_formcreator_mostPopular">'.__('Popularity sort', 'formcreator').'</label>';
+      echo '</span>';
+      echo '<span class="formcreator_radios">';
+      echo '<input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />';
+      echo '<label for="plugin_formcreator_alphabetic">'.__('Alphabetic sort', 'formcreator').'</label>';
+      echo '</span>';
+      echo '</div>';
+      echo '<div id="plugin_formcreator_wizard_forms">';
+      echo '</div>';
+      echo '</div>';
+
+      echo '</div>';
+
+      echo '</div>';
+      echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
+   }
+
+   public function showWizard() {
+      global $CFG_GLPI, $DB;
+
+      echo '<div class="center">';
+
+      // Show header for the current entity or it's first parent header
+      $table  = getTableForItemType('PluginFormcreatorHeader');
+      $where  = getEntitiesRestrictRequest( "", $table, "", "", true, false);
+      $query  = "SELECT $table.`comment`
+      FROM $table
+      WHERE $where";
+      $result = $DB->query($query);
+
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_card">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
