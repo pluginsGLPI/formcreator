@@ -347,7 +347,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
 
       // Select all users with ticket validation right and there groups
-      $query = "SELECT u.`id`, u.`name`, u.`realname`, g.`id` AS groups_id, g.`completename` AS groups_name
+      $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, g.`id` AS groups_id, g.`completename` AS groups_name
                 FROM `glpi_users` u
                 INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                 INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
@@ -379,7 +379,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="validators_groups" style="width: 100%">';
       echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
       if (!empty($groups_users)) {
-         $query = "SELECT g.`id`, g.`completename`
+         $query = "SELECT DISTINCT g.`id`, g.`completename`
                    FROM `glpi_groups` g
                    INNER JOIN `glpi_groups_users` gu
                      ON g.`id` = gu.`groups_id`
@@ -408,6 +408,7 @@ class PluginFormcreatorForm extends CommonDBTM
                      document.getElementById("validators_users").style.display  = "none";
                      document.getElementById("validators_groups").style.display = "none";
                   }
+                  fcInitMultiSelect();
                }
                changeValidators(' . $this->fields["validation_required"] . ');
             </script>';

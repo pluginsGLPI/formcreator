@@ -156,7 +156,8 @@ class PluginFormcreatorFields
                } else {
                   if (is_array($values[$condition['field']])) {
                      $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                  } elseif (!is_null(json_decode($values[$condition['field']]))
+                            && json_last_error() != JSON_ERROR_NONE) {
                      $value = !in_array($condition['value'], json_decode($values[$condition['field']]));
                   } else {
                      $value = $condition['value'] != $values[$condition['field']];
@@ -169,7 +170,8 @@ class PluginFormcreatorFields
                } else {
                   if (is_array($values[$condition['field']])) {
                      $value = in_array($condition['value'], $values[$condition['field']]);
-                  } elseif (!is_null(json_decode($values[$condition['field']]))) {
+                  } elseif (!is_null(json_decode($values[$condition['field']]))
+                            && json_last_error() != JSON_ERROR_NONE) {
                      $value = in_array($condition['value'], json_decode($values[$condition['field']]));
                   } else {
                      $value = $condition['value'] == $values[$condition['field']];
@@ -180,7 +182,8 @@ class PluginFormcreatorFields
                if (is_array($values[$condition['field']])) {
                   eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
                      . ' Array(' . implode(',', $values[$condition['field']]) . ');');
-               } elseif (!is_null(json_decode($values[$condition['field']]))) {
+               } elseif (!is_null(json_decode($values[$condition['field']]))
+                            && json_last_error() != JSON_ERROR_NONE) {
                   eval('$value = "' . $condition['value'] . '" ' . $condition['operator']
                      . ' Array(' .implode(',', json_decode($values[$condition['field']])) . ');');
                } else {

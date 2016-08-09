@@ -832,9 +832,9 @@ EOS;
                   . '</b> "' . $question->getName() . '"';
                break;
             case 'supplier' :
-               $group = new Group();
-               $group->getFromDB($values['actor_value']);
-               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $group->getName() . '"';
+               $supplier = new Supplier();
+               $supplier->getFromDB($values['actor_value']);
+               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $supplier->getName() . '"';
                break;
             case 'question_supplier' :
                $question = new PluginFormcreatorQuestion();
@@ -977,12 +977,14 @@ EOS;
       $ticket  = new Ticket();
       $docItem = new Document_Item();
       $form    = new PluginFormcreatorForm();
+      $answer  = new PluginFormcreatorAnswer();
+
       $form->getFromDB($formanswer->fields['plugin_formcreator_forms_id']);
 
       // Get default request type
       $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
-      list($requesttypes_id) = $GLOBALS['DB']->fetch_array($result);
+      $result  = $DB->query($query) or die ($DB->error());
+      list($requesttypes_id) = $DB->fetch_array($result);
 
       $datas['requesttypes_id'] = $requesttypes_id;
 
@@ -992,8 +994,13 @@ EOS;
       $datas                = array_merge($datas, $predefined_fields);
 
       // Parse datas
-      $datas['name']                  = addslashes($this->parseTags($this->fields['name'], $formanswer));
-      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'], $formanswer));
+      $fullform = $formanswer->getFullForm();
+      $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
+                                                                    $formanswer,
+                                                                    $fullform));
+      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'],
+                                                                      $formanswer,
+                                                                      $fullform));
       $datas['_users_id_requester']   = 0;
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
@@ -1004,11 +1011,11 @@ EOS;
                           FROM glpi_plugin_formcreator_targettickets_actors
                           WHERE plugin_formcreator_targettickets_id = ".$this->getID()."
                           AND actor_role = 'requester'";
-      $result_requester = $GLOBALS['DB']->query($query_requester);
+      $result_requester = $DB->query($query_requester);
 
       // If there is only one requester add it on creation, otherwize we will add them later
-      if ($GLOBALS['DB']->numrows($result_requester) == 1) {
-         $actor = $GLOBALS['DB']->fetch_array($result_requester);
+      if ($DB->numrows($result_requester) == 1) {
+         $actor = $DB->fetch_array($result_requester);
          $solo_requester = true;
          switch ($actor['actor_type']) {
             case 'creator' :
@@ -1025,9 +1032,8 @@ EOS;
             case 'question_person' :
             case 'question_group' :
             case 'question_supplier' :
-               $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('`plugin_formcreator_question_id` = ' . (int) $actor['actor_value']
-                           . ' AND `plugin_formcreator_formanwers_id` = ' . (int) $formanswer->fields['id']);
+               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
+                                        ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
                $found   = array_shift($found);
                if (empty($found['answer'])) {
                   continue;
@@ -1096,9 +1102,8 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $answer  = new PluginFormcreatorAnswer();
-            $found   = $answer->find('plugin_formcreator_formanwers_id = ' . (int) $formanswer->fields['id']
-                        . ' AND plugin_formcreator_question_id = ' . (int) $this->fields['destination_entity_value']);
+            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
 
@@ -1113,9 +1118,8 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $answer = new PluginFormcreatorAnswer();
-            $found  = $answer->find('plugin_formcreator_formanwers_id = ' . (int) $formanswer->fields['id']
-                        . ' AND plugin_formcreator_question_id = ' . (int) $this->fields['destination_entity_value']);
+            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                    ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
             $datas['entities_id'] = (int) $entity['answer'];
@@ -1128,9 +1132,8 @@ EOS;
       }
 
       // Define due date
-      $answer = new PluginFormcreatorAnswer();
-      $found  = $answer->find('plugin_formcreator_formanwers_id = ' . (int) $formanswer->fields['id']
-                  . ' AND plugin_formcreator_question_id = ' . (int) $this->fields['due_date_question']);
+      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                              ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
       $date   = array_shift($found);
       $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
 
@@ -1174,8 +1177,8 @@ EOS;
                       FROM `glpi_plugin_formcreator_answers`
                       WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
-            $result = $GLOBALS['DB']->query($query);
-            while ($line = $GLOBALS['DB']->fetch_array($result)) {
+            $result = $DB->query($query);
+            while ($line = $DB->fetch_array($result)) {
                $tab = json_decode($line['answer']);
                if (is_array($tab)) {
                   $tags = array_merge($tags, $tab);
@@ -1216,8 +1219,8 @@ EOS;
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID();
-      $result = $GLOBALS['DB']->query($query);
-      while ($actor = $GLOBALS['DB']->fetch_array($result)) {
+      $result = $DB->query($query);
+      while ($actor = $DB->fetch_array($result)) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
          if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) continue;
 
@@ -1244,9 +1247,8 @@ EOS;
             case 'question_person' :
             case 'question_group' :
             case 'question_supplier' :
-               $answer  = new PluginFormcreatorAnswer();
-               $found   = $answer->find('`plugin_formcreator_question_id` = ' . (int) $actor['actor_value']
-                           . ' AND `plugin_formcreator_formanwers_id` = ' . (int) $formanswer->fields['id']);
+               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
+                                        ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
                $found   = array_shift($found);
 
                if (empty($found['answer'])) {
@@ -1293,7 +1295,8 @@ EOS;
       }
 
       // Attach documents to ticket
-      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer' AND items_id = " . (int) $formanswer->getID());
+      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer'
+                               AND items_id = ".$formanswer->getID());
       if(count($found) > 0) {
          foreach ($found as $document) {
             $docItem->add(array(
@@ -1319,7 +1322,7 @@ EOS;
                      `date`       = NOW(),
                      `users_id`   = {$_SESSION['glpiID']},
                      `content`    = \"$message\"";
-         $GLOBALS['DB']->query($query);
+         $DB->query($query);
       }
 
       return true;
@@ -1332,37 +1335,37 @@ EOS;
     * @param  PluginFormcreatorFormanswer $formanswer    Formanswer object where answers are stored
     * @return String                                     Parsed string with tags replaced by form values
     */
-   private function parseTags($content, PluginFormcreatorFormanswer $formanswer) {
-      $content     = str_replace('##FULLFORM##', $formanswer->getFullForm(), $content);
+   private function parseTags($content, PluginFormcreatorFormanswer $formanswer, $fullform = "") {
+      global $DB, $CFG_GLPI;
 
+      if ($fullform == "") {
+         $fullform = $formanswer->getFullForm();
+      }
+
+      $content     = str_replace('##FULLFORM##', $fullform, $content);
       $section     = new PluginFormcreatorSection();
-      $found       = $section->find('plugin_formcreator_forms_id = '
-                     . (int) $formanswer->fields['plugin_formcreator_forms_id'], '`order` ASC');
+      $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
+                                    '`order` ASC');
       $tab_section = array();
       foreach($found as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if(!empty($tab_section)) {
-         $question  = new PluginFormcreatorQuestion();
-         $found = $question->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')', '`order` ASC');
-         foreach($found as $question_line) {
-            $id     = $question_line['id'];
-            $name   = $question_line['name'];
-
-            $answer = new PluginFormcreatorAnswer();
-            $found  = $answer->find('`plugin_formcreator_formanwers_id` = ' . (int) $formanswer->getID()
-                                    . ' AND `plugin_formcreator_question_id` = ' . (int) $id);
-            if (count($found)) {
-               $datas = array_shift($found);
-               $value = $datas['answer'];
-            } else {
-               $value = '';
-            }
-
-            $value = PluginFormcreatorFields::getValue($question_line, $value);
+         $query_questions = "SELECT `questions`.*, `answers`.`answer`
+                             FROM `glpi_plugin_formcreator_questions` AS questions
+                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
+                               ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                               AND `plugin_formcreator_formanwers_id` = ".$formanswer->getID()."
+                             WHERE `questions`.`plugin_formcreator_sections_id` IN (".implode(', ', $tab_section).")
+                             ORDER BY `questions`.`order` ASC";
+         $res_questions = $DB->query($query_questions);
+         while ($question_line = $DB->fetch_assoc($res_questions)) {
+            $id    = $question_line['id'];
+            $name  = $question_line['name'];
+            $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
             if (is_array($value)) {
-               if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+               if ($CFG_GLPI['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);
                } else {
                   $value = "\r\n" . implode("\r\n", $value);
@@ -1397,8 +1400,8 @@ EOS;
                      `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-                     `tag_questions` VARCHAR(255) NOT NULL,
-                     `tag_specifics` VARCHAR(255) NOT NULL
+                     `tag_questions` VARCHAR(255) NOT NULL DEFAULT '',
+                     `tag_specifics` VARCHAR(255) NOT NULL DEFAULT ''
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
       } else {
