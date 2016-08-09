@@ -896,18 +896,6 @@ EOS;
       echo '</div>';
    }
 
-   public function prepareInputForAdd($input) {
-      if (!isset($input['tag_questions'])) {
-         $input['tag_questions'] = '';
-      }
-
-      if (!isset($input['tag_specifics'])) {
-         $input['tag_specifics'] = '';
-      }
-
-      return $input;
-   }
-
    /**
     * Prepare input datas for updating the target ticket
     *
