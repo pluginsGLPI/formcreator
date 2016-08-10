@@ -1450,7 +1450,12 @@ EOS;
    public static function uninstall()
    {
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      $success1 = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+
+      $query = "DROP TABLE IF EXISTS `glpi_plugin_formcreator_targettickets_actors`";
+      $success2 = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+
+      return $success1 && $success2;
    }
 
    private static function getDeleteImage($id) {

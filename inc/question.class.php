@@ -791,8 +791,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     */
    public static function uninstall()
    {
-      $obj = new self();
-      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
+      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . self::getTable() . '`');
 
       // Delete logs of the plugin
       $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");

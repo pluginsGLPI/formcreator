@@ -1112,8 +1112,12 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public static function uninstall()
    {
-      $obj = new self();
-      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      global $DB;
+
+      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `'.self::getTable().'`');
+
+      $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_formvalidators`');
+      $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_questions_conditions`');
 
       // Delete logs of the plugin
       $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
