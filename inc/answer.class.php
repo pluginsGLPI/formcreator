@@ -49,12 +49,12 @@ class PluginFormcreatorAnswer extends CommonDBChild
       foreach ($input as $key => $value) {
          if (is_array($value)) {
             foreach($value as $key2 => $value2) {
-               $input[$key][$key2] = plugin_formcreator_encode($value2);
+               $input[$key][$key2] = plugin_formcreator_encode($value2, false);
             }
          } elseif(is_array(json_decode($value))) {
             $value = json_decode($value);
             foreach($value as $key2 => $value2) {
-               $value[$key2] = plugin_formcreator_encode($value2);
+               $value[$key2] = plugin_formcreator_encode($value2, false);
             }
             // Verify the constant exits (included in PHP 5.4+)
             if (defined('JSON_UNESCAPED_UNICODE')) {
@@ -64,7 +64,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
                $input[$key] = json_encode($value);
             }
          } else {
-            $input[$key] = plugin_formcreator_encode($value);
+            $input[$key] = plugin_formcreator_encode($value, false);
          }
       }
 
