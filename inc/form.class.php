@@ -347,7 +347,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
 
       // Select all users with ticket validation right and there groups
-      $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, g.`id` AS groups_id, g.`completename` AS groups_name
+      $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
                 FROM `glpi_users` u
                 INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
                 INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
@@ -359,6 +359,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
                   OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
                 AND $subentities
+                AND u.`is_active` = '1'
                 GROUP BY u.`id`
                 ORDER BY u.`name`";
       $result = $GLOBALS['DB']->query($query);
@@ -370,7 +371,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $groups_users[] = $user['id'];
          echo '<option value="' . $user['id'] . '"';
          if (in_array($user['id'], $validators)) echo ' selected="selected"';
-         echo '>' . $user['name'] . '</option>';
+         echo '>' . $user['realname'] . ' ' .$user['firstname'] . '</option>';
       }
       echo '</select>';
       echo '</div>';
