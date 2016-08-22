@@ -1423,8 +1423,8 @@ EOS;
          if(!FieldExists($table, 'tag_type', false)) {
             $query = "ALTER TABLE `$table`
                          ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-                         ADD `tag_questions` VARCHAR(255) NOT NULL DEFAULT '',
-                         ADD `tag_specifics` VARCHAR(255) NOT NULL DEFAULT '';";
+                         ADD `tag_questions` VARCHAR(255) NOT NULL,
+                         ADD `tag_specifics` VARCHAR(255) NOT NULL;";
             $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
          }
 
