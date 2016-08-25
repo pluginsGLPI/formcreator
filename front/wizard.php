@@ -10,6 +10,18 @@ if($plugin->isActivated("formcreator")) {
    $form = new PluginFormcreatorForm();
    $form->showWizard();
 
+   if (Session::haveRight("reminder_public", READ)) {
+      //echo "<tr class='noHover'><td class='top'>";
+      Reminder::showListForCentral(false);
+      //echo "</td></tr>";
+   }
+
+   if (Session::haveRight("rssfeed_public", READ)) {
+      //echo "<tr class='noHover'><td class='top'>";
+      RSSFeed::showListForCentral(false);
+      //echo "</td></tr>";
+   }
+
 
    Html::footer();
 } else {
