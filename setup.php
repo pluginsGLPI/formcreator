@@ -66,9 +66,11 @@ function plugin_init_formcreator ()
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'
-            && strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
-               Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+      if (isset($_SESSION['glpiactiveprofile']['interface'])) {
+         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'
+               && strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
+                  Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+         }
       }
 
       // Massive Action definition
