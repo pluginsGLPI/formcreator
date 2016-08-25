@@ -5,7 +5,7 @@ include ("../../../inc/includes.php");
 $plugin = new Plugin();
 
 if($plugin->isActivated("formcreator")) {
-   Html::header(__('Service catalog', 'formcreator'), '');
+   Html::helpHeader(__('Service catalog', 'formcreator'));
 
    $form = new PluginFormcreatorForm();
    $form->showWizard();
@@ -23,7 +23,7 @@ if($plugin->isActivated("formcreator")) {
    }
 
 
-   Html::footer();
+   Html::helpFooter();
 } else {
    Html::displayNotFoundError();
 }
