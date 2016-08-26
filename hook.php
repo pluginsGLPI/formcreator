@@ -22,7 +22,7 @@ function plugin_formcreator_install()
       }
    }
 
-   return true ;
+   return true;
 }
 
 /**
