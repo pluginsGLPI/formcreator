@@ -66,10 +66,12 @@ function plugin_init_formcreator ()
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
-      if (isset($_SESSION['glpiactiveprofile']['interface'])) {
+      if (isset($_SESSION['glpiactiveprofile']['interface']) && isset($_SESSION['glpiactive_entity'])) {
          if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'
                && strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
-                  Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+            if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']) == '1') {
+               Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+            }
          }
       }
 
@@ -161,6 +163,8 @@ function plugin_init_formcreator ()
       Plugin::registerClass('PluginFormcreatorFormanswer', array(
          'notificationtemplates_types' => true
       ));
+
+      Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
    }
 }
 
