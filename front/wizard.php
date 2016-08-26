@@ -5,10 +5,13 @@ include ("../../../inc/includes.php");
 $plugin = new Plugin();
 
 if($plugin->isActivated("formcreator")) {
-   Html::helpHeader(__('Service catalog', 'formcreator'));
+
+   // TODO : remove the standard GLPi header
+   //Html::helpHeader(__('Service catalog', 'formcreator'));
+   PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
 
    $form = new PluginFormcreatorForm();
-   $form->showWizard();
+   $form->showServiceCatalog();
 
    if (Session::haveRight("reminder_public", READ)) {
       //echo "<tr class='noHover'><td class='top'>";

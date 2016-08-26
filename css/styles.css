@@ -519,6 +519,14 @@ form.formcreator_form {
    margin-top: 10px;
 }
 
+.plugin_formcreator_menuplaceholder {
+	margin-left: 200px;
+}
+
+.plugin_formcreator_separator {
+	margin-top: 10px;
+}
+
 .plugin_formcreator_formTile {
    margin: 0 3px 6px 3px;
    width: 300px;

@@ -66,11 +66,17 @@ function plugin_init_formcreator ()
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
 
-      if (isset($_SESSION['glpiactiveprofile']['interface']) && isset($_SESSION['glpiactive_entity'])) {
-         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'
-               && strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
-            if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']) == '1') {
-               Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+      // Redirect to helpdesk replacement
+      if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
+         // Not changing profile or active entity
+         if (isset($_SESSION['glpiactiveprofile']['interface'])
+               && isset($_SESSION['glpiactive_entity'])) {
+            // Interface and active entity are set in session
+            if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk'
+                  && strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
+               if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']) == '1') {
+                  Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+               }
             }
          }
       }

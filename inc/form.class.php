@@ -530,12 +530,12 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
    }
 
-   public function showWizard() {
+   public function showServiceCatalog() {
       global $CFG_GLPI, $DB;
 
       echo '<div class="center">';
 
-      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_card">';
+      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder plugin_formcreator_card">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
