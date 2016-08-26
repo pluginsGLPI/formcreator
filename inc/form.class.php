@@ -490,25 +490,16 @@ class PluginFormcreatorForm extends CommonDBTM
    /**
     * Show the list of forms to be displayed to the end-user
     */
-   public function showList()
-   {
+   public function showList() {
       global $CFG_GLPI, $DB;
 
       echo '<div class="center">';
-
-      // Show header for the current entity or it's first parent header
-      $table  = getTableForItemType('PluginFormcreatorHeader');
-      $where  = getEntitiesRestrictRequest( "", $table, "", "", true, false);
-      $query  = "SELECT $table.`comment`
-                 FROM $table
-                 WHERE $where";
-      $result = $DB->query($query);
 
       echo '<div id="plugin_formcreator_lastForms">';
       $this->showMyLastForms();
       echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard"  class="plugin_formcreator_marginRight plugin_formcreator_card">';
+      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_marginRight plugin_formcreator_card">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
@@ -543,14 +534,6 @@ class PluginFormcreatorForm extends CommonDBTM
       global $CFG_GLPI, $DB;
 
       echo '<div class="center">';
-
-      // Show header for the current entity or it's first parent header
-      $table  = getTableForItemType('PluginFormcreatorHeader');
-      $where  = getEntitiesRestrictRequest( "", $table, "", "", true, false);
-      $query  = "SELECT $table.`comment`
-      FROM $table
-      WHERE $where";
-      $result = $DB->query($query);
 
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_card">';
 
