@@ -6,8 +6,6 @@ $plugin = new Plugin();
 
 if($plugin->isActivated("formcreator")) {
 
-   // TODO : remove the standard GLPi header
-   //Html::helpHeader(__('Service catalog', 'formcreator'));
    PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
 
    $form = new PluginFormcreatorForm();

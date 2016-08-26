@@ -520,11 +520,7 @@ form.formcreator_form {
 }
 
 .plugin_formcreator_menuplaceholder {
-	margin-left: 200px;
-}
-
-.plugin_formcreator_separator {
-	margin-top: 10px;
+   margin-left: 275px;
 }
 
 .plugin_formcreator_formTile {
@@ -742,6 +738,18 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_sort .formcreator_radios input[type = radio] + label {
    display: inline-block;
    margin-right: 10px;
+}
+
+.plugin_formcreator_leftMenu {
+   float: left;
+   width: 250px;
+}
+.plugin_formcreator_leftMenu li {
+   margin: 10px 5px;
+   
+}
+.plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
+   margin-top: 20px;
 }
 
 
