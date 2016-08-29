@@ -12,19 +12,14 @@ if($plugin->isActivated("formcreator")) {
    $form->showServiceCatalog();
 
    if (Session::haveRight("reminder_public", READ)) {
-      //echo "<tr class='noHover'><td class='top'>";
-      Reminder::showListForCentral(false);
-      //echo "</td></tr>";
+      //Reminder::showListForCentral(false);
    }
 
    if (Session::haveRight("rssfeed_public", READ)) {
-      //echo "<tr class='noHover'><td class='top'>";
-      RSSFeed::showListForCentral(false);
-      //echo "</td></tr>";
+      //RSSFeed::showListForCentral(false);
    }
 
-
-   Html::helpFooter();
+   PluginFormcreatorWizard::footer();
 } else {
    Html::displayNotFoundError();
 }

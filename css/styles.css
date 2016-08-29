@@ -486,7 +486,7 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard {
-   position: relative;
+   
 }
 
 .plugin_formcreator_marginRight {
@@ -498,7 +498,8 @@ form.formcreator_form {
    top: 0;
    bottom: 0;
    left: 0;
-   position: absolute;
+   /*position: absolute;*/
+   float: left;
    border-right: 1px solid rgba(0,0,0,.1);
 }
 
@@ -517,10 +518,6 @@ form.formcreator_form {
 
 #plugin_formcreator_formlist {
    margin-top: 10px;
-}
-
-.plugin_formcreator_menuplaceholder {
-   margin-left: 275px;
 }
 
 .plugin_formcreator_formTile {
@@ -579,7 +576,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_wizard_right {
-   margin-left: 295px;
+   /*margin-left: 295px;*/
    min-width: 116px;
    overflow: hidden;
    padding: 10px 0 3px 3px;
@@ -611,7 +608,8 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_searchBar input ~ label {
-   position: absolute;
+   /*position: absolute;*/
+   float: left;
    display: block;
    top: 30%;
    color: #C2C2C2;
@@ -739,17 +737,58 @@ a.plugin_formcreator_formTile_title {
    display: inline-block;
    margin-right: 10px;
 }
+.plugin_formcreator_leftHeader {
+   float: left;
+   height: 100% !important;
+   margin-top: -10px;
+}
+
+.plugin_formcreator_footer {
+   clear: both;
+}
+
+.plugin_formcreator_leftHeader #header_top{
+   width: 250px;
+}
 
 .plugin_formcreator_leftMenu {
-   float: left;
    width: 250px;
+   padding-left: 0 !important; /* Overrides CSS from GLPi */
+   padding-top: 20px;
+   height: auto !important;
 }
 .plugin_formcreator_leftMenu li {
    margin: 10px 5px;
-   
 }
+
+.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem {
+   background: #3A5693;
+}
+
+.plugin_formcreator_leftMenu a {
+	color: #FFF;
+}
+
+.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem a {
+	color: #FFF;
+}
+
 .plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
    margin-top: 20px;
+   margin-bottom: 0;
+}
+
+#page.plugin_formcreator_page {
+   margin-left: 265px;
+   margin-top: 10px;
+   margin-right: 10px;
+   margin-bottom: 0;
+   padding: 0;
+}
+
+#page.plugin_formcreator_container {
+   margin-top: -40px;
+   padding-top: 40px;
 }
 
 
