@@ -778,11 +778,22 @@ a.plugin_formcreator_formTile_title {
    margin-bottom: 0;
 }
 
-#plugin_formcreator_logoutIcon span{
+#plugin_formcreator_logoutIcon, #plugin_formcreator_preferences_icon {
+	display: inline-block;	
+}
+
+#plugin_formcreator_logoutIcon span {
    background: url("../../../pics/logout.png");
    display: inline-block;
    width: 16px;
    height: 16px;
+}
+
+#plugin_formcreator_preferences_icon a:first-child {
+   background: url("../../../pics/preferences.png");
+   display: inline-block;
+   width: 18px;
+   height: 18px;
 }
 
 #page.plugin_formcreator_page {

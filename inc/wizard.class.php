@@ -68,15 +68,20 @@ class PluginFormcreatorWizard {
       echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . _n('Reservation', 'Reservations', 2) . '</a></li>';
 
-      echo '<li class="' . ($activeMenuItem == self::MENU_SETTINGS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
-            __s('My settings').'">' . __s('My settings') . '</a></li>';
-
       // Profile and entity selection
       // check user id : header used for display messages when session logout
       if (Session::getLoginUserID()) {
          self::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
       }
+
+      echo '<li id="plugin_formcreator_preferences_icon" class="' . ($activeMenuItem == self::MENU_SETTINGS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
+            __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
+//      echo '<span id="myname">';
+//       echo formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
+//             $_SESSION["glpifirstname"], 0, 20);
+//      echo '</span>';
+      echo '</a></li>';
 
       // Logout
       echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
