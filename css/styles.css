@@ -778,6 +778,13 @@ a.plugin_formcreator_formTile_title {
    margin-bottom: 0;
 }
 
+#plugin_formcreator_logoutIcon span{
+   background: url("../../../pics/logout.png");
+   display: inline-block;
+   width: 16px;
+   height: 16px;
+}
+
 #page.plugin_formcreator_page {
    margin-left: 265px;
    margin-top: 10px;

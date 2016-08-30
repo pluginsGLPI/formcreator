@@ -79,16 +79,21 @@ class PluginFormcreatorWizard {
       }
 
       // Logout
-      echo '<li class="plugin_formcreator_leftMenuItem_separator"><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';
-      /// logout witout noAuto login for extauth
+      echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
       if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
          echo '?noAUTO=1';
       }
       echo '" title="'.__s('Logout').'">';
-      echo __s('Logout');
+      //echo __s('Logout');
+      echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span>';
       echo '</li>';
 
       echo '</ul></div>';
+//       echo '<div id="c_preference"><ul>';
+//       echo '<li id="deconnexion"><a href="" title="'.__s('Logout').'">';
+//       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span>';
+//       echo '</a></li>';
+//       echo '</ul></div>';
 
       echo '</div>';
 
