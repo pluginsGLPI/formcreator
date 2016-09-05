@@ -464,10 +464,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
       $value      = plugin_formcreator_encode($input['show_value']);
       $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
+      $show_condition = plugin_formcreator_decode($input['show_condition']);
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
                   `show_field`     = $show_field,
-                  `show_condition` = '" . $input['show_condition'] . "',
+                  `show_condition` = '" . $show_condition . "',
                   `show_value`     = '" . $value . "'";
       $GLOBALS['DB']->query($query);
       // ===============================================================
