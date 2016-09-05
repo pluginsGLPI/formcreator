@@ -38,14 +38,17 @@ class PluginFormcreatorWizard {
       // Left vertical menu
       $activeMenuItem = self::findActiveMenuItem();
       echo '<div id="c_menu" class="plugin_formcreator_leftMenu"><ul>';
-      echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
-      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Service catalog', 'formcreator') . '</a></li>';
+      echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
 
-      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
-      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('My last forms', 'formcreator') . '</a></li>';
+      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
 
-      echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
-      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . _n('Reservation', 'Reservations', 2) . '</a></li>';
+      echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . _n('Reservation', 'Reservations', 2) . '</a></li>';
+
+      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
 
       // Profile and entity selection
       // check user id : header used for display messages when session logout
@@ -84,8 +87,7 @@ class PluginFormcreatorWizard {
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span>';
       echo '</li>';
 
-      echo '</ul></div></div>';
-
+      echo '</ul></div><div class="plugin_formcreator_leftMenuEnd"></div></div>';
       echo '</div>';
 
       echo '<div id="page" class="plugin_formcreator_page">';

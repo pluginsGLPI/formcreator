@@ -756,21 +756,63 @@ a.plugin_formcreator_formTile_title {
    padding-left: 0 !important; /* Overrides CSS from GLPi */
    padding-top: 20px;
    height: auto !important;
+   text-align: left !important;
 }
+
+.plugin_formcreator_leftMenu ul {
+   margin-left: 10px;
+   margin-right: -10px;
+}
+
 .plugin_formcreator_leftMenu li {
    margin: 10px 5px;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem {
    background: #3A5693;
+   background: url('../pics/selected-menu-item.png') right center no-repeat;
+   margin: 0;
 }
 
 .plugin_formcreator_leftMenu a {
    color: #FFF;
+   font-size: larger;
+   height: 48px;
+   line-height: 48px;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem a {
-   color: #FFF;
+   font-size: large;
+}
+
+.plugin_formcreator_serviceCatalogIcon span, 
+.plugin_formcreator_myRequestsIcon span, 
+.plugin_formcreator_reservationsIcon span, 
+.plugin_formcreator_feedsIcon span {
+   width: 42px;
+   height: 24px;
+   display: inline-block;
+   vertical-align: middle;
+}
+
+.plugin_formcreator_serviceCatalogIcon span {
+   background: url('../pics/issue.png') left no-repeat;
+   background-size: contain;
+}
+
+.plugin_formcreator_myRequestsIcon span {
+   background: url('../pics/list.png') left no-repeat;
+   background-size: contain;
+}
+
+.plugin_formcreator_reservationsIcon span {
+   background: url('../pics/reservation.png') left no-repeat;
+   background-size: contain;
+}
+
+.plugin_formcreator_feedsIcon span {
+   background: url('../pics/feed.png') left no-repeat;
+   background-size: contain;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
@@ -778,11 +820,15 @@ a.plugin_formcreator_formTile_title {
    margin-bottom: 0;
 }
 
+.plugin_formcreator_leftMenuEnd {
+   clear: both;
+}
+
 #plugin_formcreator_avatar {
-   width: 32px;
-   height: 32px;
+   width: 64px;
+   height: 64px;
    float: left;
-   background: url('../../../pics/login_user.png') no-repeat;
+   background: url('../pics/user.png') no-repeat;
 }
 
 #plugin_formcreator_logoutIcon, #plugin_formcreator_preferences_icon, #plugin_formcreator_bookmarkIcon {
