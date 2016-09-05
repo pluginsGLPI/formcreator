@@ -26,28 +26,7 @@ class PluginFormcreatorWizard {
             $body_class = "";
          }
       }
-         echo "<body class='$body_class'>";
-//       echo '<div id="header">';
-//       echo '<div id="header_top">';
-//       echo '<div id="c_logo">';
-//       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/central.php" accesskey="1" title="home"></a>';
-//       echo '</div>';
-//       echo '<div id="c_preference">';
-//       echo '<ul><li id="deconnexion"><a href="' . $CFG_GLPI["root_doc"] . '/front/logout.php"></a></li></ul>';
-//       echo '</div>';
-//       echo '</div>';
-//       echo '<div id="c_menu">';
-//       echo '</div>';
-//       echo '<div id="c_ssmenu2">';
-//       echo '<ul>';
-//       // check user id : header used for display messages when session logout
-//       if (Session::getLoginUserID()) {
-//          html::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
-//       }
-//       echo '</ul>';
-//       echo '</div>';
-//       echo '</div>';
-//      echo '</div>';
+      echo "<body class='$body_class'>";
 
       echo '<div class="plugin_formcreator_container">';
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
@@ -74,14 +53,27 @@ class PluginFormcreatorWizard {
          self::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
       }
 
+      echo '</ul>';
+      echo '<span id="plugin_formcreator_avatar"></span>';
+      echo '<div id="myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
+                              $_SESSION["glpifirstname"], 0, 20) . '</div>';
+      echo '<div>';
+      echo '<ul>';
       echo '<li id="plugin_formcreator_preferences_icon" class="' . ($activeMenuItem == self::MENU_SETTINGS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
-//      echo '<span id="myname">';
-//       echo formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
-//             $_SESSION["glpifirstname"], 0, 20);
-//      echo '</span>';
       echo '</a></li>';
+
+      // Bookmark
+      echo '<li id="plugin_formcreator_bookmarkIcon">';
+      Ajax::createIframeModalWindow('loadbookmark',
+            $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
+            array('title'         => __('Load a bookmark'),
+                  'reloadonclose' => true));
+      echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
+      echo '<span id="bookmark_icon" title="' . __('Load a bookmark') . '" alt="' . __('Load a bookmark') . '" class="button-icon"></span>';
+      echo '</a>';
+      echo '</li>';
 
       // Logout
       echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
@@ -89,16 +81,10 @@ class PluginFormcreatorWizard {
          echo '?noAUTO=1';
       }
       echo '" title="'.__s('Logout').'">';
-      //echo __s('Logout');
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span>';
       echo '</li>';
 
-      echo '</ul></div>';
-//       echo '<div id="c_preference"><ul>';
-//       echo '<li id="deconnexion"><a href="" title="'.__s('Logout').'">';
-//       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span>';
-//       echo '</a></li>';
-//       echo '</ul></div>';
+      echo '</ul></div></div>';
 
       echo '</div>';
 

@@ -766,11 +766,11 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_leftMenu a {
-	color: #FFF;
+   color: #FFF;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem a {
-	color: #FFF;
+   color: #FFF;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
@@ -778,19 +778,37 @@ a.plugin_formcreator_formTile_title {
    margin-bottom: 0;
 }
 
-#plugin_formcreator_logoutIcon, #plugin_formcreator_preferences_icon {
-	display: inline-block;	
+#plugin_formcreator_avatar {
+   width: 32px;
+   height: 32px;
+   float: left;
+   background: url('../../../pics/login_user.png') no-repeat;
+}
+
+#plugin_formcreator_logoutIcon, #plugin_formcreator_preferences_icon, #plugin_formcreator_bookmarkIcon {
+   display: inline-block;
+}
+
+#plugin_formcreator_bookmarkIcon span {
+   background: url("../../../pics/bookmark.png");
+   display: inline-block;
+   width: 18px;
+   height: 18px;
 }
 
 #plugin_formcreator_logoutIcon span {
-   background: url("../../../pics/logout.png");
+   background: url("../../../pics/logout.png") no-repeat;
    display: inline-block;
-   width: 16px;
-   height: 16px;
+   width: 18px;
+   height: 18px;
+}
+
+#myname {
+   color: #FFF;
 }
 
 #plugin_formcreator_preferences_icon a:first-child {
-   background: url("../../../pics/preferences.png");
+   background: url("../../../pics/preferences.png") no-repeat;
    display: inline-block;
    width: 18px;
    height: 18px;
