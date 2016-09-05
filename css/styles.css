@@ -759,9 +759,15 @@ a.plugin_formcreator_formTile_title {
    text-align: left !important;
 }
 
-.plugin_formcreator_leftMenu ul {
+.plugin_formcreator_leftMenu ul.plugin_formcreator_services {
    margin-left: 10px;
    margin-right: -13px;
+}
+
+.plugin_formcreator_leftMenu ul.plugin_formcreator_user {
+   margin: 0;
+   float: right;
+   display: inline-block;
 }
 
 .plugin_formcreator_leftMenu li {

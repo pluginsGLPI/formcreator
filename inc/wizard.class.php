@@ -37,15 +37,16 @@ class PluginFormcreatorWizard {
 
       // Left vertical menu
       $activeMenuItem = self::findActiveMenuItem();
-      echo '<div id="c_menu" class="plugin_formcreator_leftMenu"><ul>';
+      echo '<div id="c_menu" class="plugin_formcreator_leftMenu"><ul class="plugin_formcreator_services">';
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
 
-      echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . _n('Reservation', 'Reservations', 2) . '</a></li>';
+      // TODO : find the best way to reuse the code from GLPi for reservations
+//       echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
+//       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator', 2) . '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
@@ -61,7 +62,7 @@ class PluginFormcreatorWizard {
       echo '<div id="myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
                               $_SESSION["glpifirstname"], 0, 20) . '</div>';
       echo '<div>';
-      echo '<ul>';
+      echo '<ul  class="plugin_formcreator_user">';
       echo '<li id="plugin_formcreator_preferences_icon" class="' . ($activeMenuItem == self::MENU_SETTINGS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
