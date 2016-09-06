@@ -42,7 +42,7 @@ class PluginFormcreatorWizard {
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardanswers.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
 
       // TODO : find the best way to reuse the code from GLPi for reservations
 //       echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
@@ -85,7 +85,7 @@ class PluginFormcreatorWizard {
          echo '?noAUTO=1';
       }
       echo '" title="'.__s('Logout').'">';
-      echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span>';
+      echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
       echo '</ul></div><div class="plugin_formcreator_leftMenuEnd"></div></div>';
