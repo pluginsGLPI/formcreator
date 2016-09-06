@@ -1,3 +1,7 @@
+html, body {
+	height: 100%;
+}
+
 @-moz-keyframes ripple {
   0%, 100% {
     opacity: 0;
@@ -741,10 +745,15 @@ a.plugin_formcreator_formTile_title {
    float: left;
    height: 100% !important;
    margin-top: -10px;
+   background-color: #3A5693;
 }
 
 .plugin_formcreator_footer {
    clear: both;
+   position: absolute;
+   bottom: 0;
+   padding: 5px 0 !important;
+   width: 100%;
 }
 
 .plugin_formcreator_leftHeader #header_top{
@@ -880,6 +889,9 @@ a.plugin_formcreator_formTile_title {
    padding-top: 40px;
 }
 
+.plugin_formcreator_container {
+   height: 100%;
+}
 
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
