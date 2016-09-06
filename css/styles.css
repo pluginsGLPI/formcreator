@@ -760,6 +760,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_leftMenu ul.plugin_formcreator_services {
+   margin-top: 40px;
    margin-left: 10px;
    margin-right: -13px;
 }
