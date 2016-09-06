@@ -563,7 +563,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
 
       echo '</div>';
-      echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
    }
 
    /**
