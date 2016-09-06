@@ -4,7 +4,7 @@ class PluginFormcreatorWizard {
    const MENU_CATALOG      = 1;
    const MENU_LAST_FORMS   = 2;
    const MENU_RESERVATIONS = 3;
-   const MENU_SETTINGS     = 4;
+   const MENU_FEEDS        = 4;
 
    public static function header($title) {
       global $CFG_GLPI, $HEADER_LOADED, $PLUGIN_HOOKS;
@@ -48,8 +48,8 @@ class PluginFormcreatorWizard {
 //       echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
 //       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator', 2) . '</a></li>';
 
-      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
+      echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
 
       // Profile and entity selection
       // check user id : header used for display messages when session logout
@@ -63,7 +63,7 @@ class PluginFormcreatorWizard {
                               $_SESSION["glpifirstname"], 0, 20) . '</div>';
       echo '<div>';
       echo '<ul  class="plugin_formcreator_user">';
-      echo '<li id="plugin_formcreator_preferences_icon" class="' . ($activeMenuItem == self::MENU_SETTINGS ? 'plugin_formcreator_selectedMenuItem' : '')  . '">';
+      echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
       echo '</a></li>';
@@ -141,14 +141,14 @@ class PluginFormcreatorWizard {
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizard.php") !== false) {
          return self::MENU_CATALOG;
       }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizard.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizardanswers.php") !== false) {
          return self::MENU_LAST_FORMS;
       }
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/reservationitem.php") !== false) {
          return self::MENU_RESERVATIONS;
       }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizard.php") !== false) {
-         return self::MENU_SETTINGS;
+      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizardfeeds.php") !== false) {
+         return self::MENU_FEEDS;
       }
       return false;
    }
