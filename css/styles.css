@@ -867,6 +867,8 @@ a.plugin_formcreator_formTile_title {
 
 #myname {
    color: #FFF;
+   display: block !important;
+   margin: 0;
 }
 
 #plugin_formcreator_preferences_icon a:first-child {
