@@ -760,6 +760,13 @@ a.plugin_formcreator_formTile_title {
    width: 250px;
 }
 
+@media screen and (max-width: 700px) {
+   .plugin_formcreator_leftHeader {
+      position: inherit !important;
+      width: inherit !important;
+   }
+}
+
 .plugin_formcreator_leftMenu {
    width: 250px;
    padding-left: 0 !important; /* Overrides CSS from GLPi */
@@ -774,10 +781,15 @@ a.plugin_formcreator_formTile_title {
    margin-right: -13px;
 }
 
-.plugin_formcreator_leftMenu ul.plugin_formcreator_user {
-   margin: 0;
+.plugin_formcreator_leftMenu ul.plugin_formcreator_userMenu {
+   margin-left: 100px;
    float: right;
    display: inline-block;
+}
+
+.plugin_formcreator_leftMenuBottom {
+   position: absolute;
+   bottom: 24px;
 }
 
 .plugin_formcreator_leftMenu li {
@@ -843,8 +855,14 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_avatar {
    width: 64px;
    height: 64px;
-   float: left;
+   /*float: left;*/
+   display: table-cell;
    background: url('../pics/user.png') no-repeat;
+}
+
+.plugin_formcreator_userMenuCell {
+   display: table-cell;
+   
 }
 
 #plugin_formcreator_logoutIcon, #plugin_formcreator_preferences_icon, #plugin_formcreator_bookmarkIcon {
@@ -865,10 +883,12 @@ a.plugin_formcreator_formTile_title {
    height: 18px;
 }
 
-#myname {
-   color: #FFF;
+.plugin_formcreator_myname {
    display: block !important;
-   margin: 0;
+   color: #FFF;
+   margin: 0 !important;
+   height: 32px;
+   line-height: 32px;
 }
 
 #plugin_formcreator_preferences_icon a:first-child {

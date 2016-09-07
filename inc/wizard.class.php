@@ -58,11 +58,12 @@ class PluginFormcreatorWizard {
       }
 
       echo '</ul>';
+      echo '<div class="plugin_formcreator_leftMenuBottom">';
       echo '<span id="plugin_formcreator_avatar"></span>';
-      echo '<div id="myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
+      echo '<div class="plugin_formcreator_userMenuCell"><div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
                               $_SESSION["glpifirstname"], 0, 20) . '</div>';
-      echo '<div>';
-      echo '<ul  class="plugin_formcreator_user">';
+      //echo '<div>';
+      echo '<ul class="plugin_formcreator_userMenu">';
       echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
@@ -88,7 +89,7 @@ class PluginFormcreatorWizard {
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
-      echo '</ul></div><div class="plugin_formcreator_leftMenuEnd"></div></div>';
+      echo '</ul></div><!--div class="plugin_formcreator_leftMenuEnd"--></div></div>';
       echo '</div>';
 
       echo '<div id="page" class="plugin_formcreator_page">';
