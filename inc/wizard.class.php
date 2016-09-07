@@ -89,7 +89,7 @@ class PluginFormcreatorWizard {
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
-      echo '</ul></div><!--div class="plugin_formcreator_leftMenuEnd"--></div></div>';
+      echo '</ul></div></div></div>';
       echo '</div>';
 
       echo '<div id="page" class="plugin_formcreator_page">';
