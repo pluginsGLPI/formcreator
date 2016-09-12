@@ -7,7 +7,7 @@ class PluginFormcreatorCommon {
       $enum = array();
       if ($res = $DB->query( "SHOW COLUMNS FROM {$table} WHERE Field = '{$field}'" )) {
          $data = $DB->fetch_array($res);
-         $type = $data[0];
+         $type = $data['Type'];
          preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
          $enum = explode("','", $matches[1]);
       }
