@@ -506,9 +506,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                => isset($datas['formcreator_validator'])
-                                                ? $datas['formcreator_validator']
-                                                : 0,
+            'validator_id'                =>  0,
             'status'                      => $status,
             'request_date'                => date('Y-m-d H:i:s'),
          ));
