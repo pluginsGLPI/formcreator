@@ -509,6 +509,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
+      $userId = $_SESSION['glpiID'];
       echo '<div style="width: 950px; margin: 0 auto;">';
       echo '<div style="float:right; width: 375px;">';
          echo '<table class="tab_cadrehov" style="width: 375px">';
@@ -516,7 +517,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`requester_id` = '" . $_SESSION['glpiID'] . "'
+                      WHERE fa.`requester_id` = '$userId'
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
@@ -550,10 +551,20 @@ class PluginFormcreatorForm extends CommonDBTM
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<table class="tab_cadrehov" style="width: 375px">';
             echo '<tr><th colspan="2">' . __('My last forms (validator)', 'formcreator') . '</t></tr>';
+            $groupList = Group_User::getUserGroups($userId);
+            $groupIdList = array();
+            foreach ($groupList as $group) {
+               $groupIdList[] = $group['id'];
+            }
+            $groupIdList = $groupIdList + array('NULL', '0', '');
+            $groupIdList = "'" . implode("', '", $groupIdList) . "'";
             $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
+                      INNER JOIN glpi_plugin_formcreator_formvalidators fv ON fv.`forms_id`=f.`id`
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`validator_id` = '" . $_SESSION['glpiID'] . "'
+                      WHERE (f.`validation_required` = 1 AND fv.`users_id` = '$userId'
+                        OR f.`validation_required` = 2 AND fv.`users_id` IN ($groupIdList)
+                      )
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
