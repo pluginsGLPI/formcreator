@@ -171,6 +171,12 @@ function plugin_init_formcreator ()
 
       Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
    }
+
+   if ($plugin->isInstalled('formcreator')) {
+      $PLUGIN_HOOKS['pre_item_purge']['formcreator']   = array(
+            'ticket' => array('plugin_formcreator_pre_ticket_purge'),
+      );
+   }
 }
 
 /**

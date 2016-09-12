@@ -8,23 +8,31 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
 }
 
 if(PluginFormcreatorFormanswer::canView()) {
-   if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-      Html::helpHeader(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF']
-      );
-   } else {
-      Html::header(
-         __('Form Creator', 'formcreator'),
-         $_SERVER['PHP_SELF'],
-         'helpdesk',
-         'PluginFormcreatorFormlist'
-      );
-   }
+      if (plugin_formcreator_replaceHelpdesk()) {
+         PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+      } else {
+         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+            Html::helpHeader(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF']
+            );
+         } else {
+            Html::header(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF'],
+               'helpdesk',
+               'PluginFormcreatorFormlist'
+            );
+         }
+      }
 
    Search::show('PluginFormcreatorFormanswer');
 
-   Html::footer();
+   if (plugin_formcreator_replaceHelpdesk()) {
+      PluginFormcreatorWizard::footer();
+   } else {
+      Html::footer();
+   }
 } else {
    Html::displayRightError();
 }

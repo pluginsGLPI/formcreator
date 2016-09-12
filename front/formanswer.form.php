@@ -39,24 +39,32 @@ if ($plugin->isActivated("formcreator")) {
 
    // Show target ticket form
    } else {
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         Html::helpHeader(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
+      if (plugin_formcreator_replaceHelpdesk()) {
+         PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
       } else {
-         Html::header(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF'],
-            'helpdesk',
-            'PluginFormcreatorFormlist'
-         );
+         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+            Html::helpHeader(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF']
+            );
+         } else {
+            Html::header(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF'],
+               'helpdesk',
+               'PluginFormcreatorFormlist'
+            );
+         }
       }
 
       $formanswer->display($_REQUEST);
 
+   if (plugin_formcreator_replaceHelpdesk()) {
+      PluginFormcreatorWizard::footer();
+   } else {
       Html::footer();
    }
+}
 
 // Or display a "Not found" error
 } else {
