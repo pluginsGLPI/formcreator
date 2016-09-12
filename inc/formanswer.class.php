@@ -219,32 +219,33 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $this->showFormHeader($options);
 
       $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $formId = $this->fields['plugin_formcreator_forms_id'];
+      $form->getFromDB($formId);
 
       $canEdit = $this->fields['status'] == 'refused'
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
 
-      if (($form->fields['validation_required'] == 1)
-          && ($_SESSION['glpiID'] == $this->fields['validator_id'])) {
-         $canValidate = true;
-      } elseif(($form->fields['validation_required'] == 2)) {
-         // Get validator users from group
-         $query = "SELECT u.`id`
-                   FROM `glpi_users` u
-                   INNER JOIN `glpi_groups_users` gu   ON gu.`users_id` = u.`id`
-                   INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                   INNER JOIN `glpi_profiles` p        ON p.`id` = pu.`profiles_id`
-                   INNER JOIN `glpi_profilerights` pr  ON p.`id` = pr.`profiles_id`
-                   WHERE pr.`name` = 'ticketvalidation'
-                   AND (
-                     pr.`rights` & ".TicketValidation::VALIDATEREQUEST." = ".TicketValidation::VALIDATEREQUEST."
-                     OR pr.`rights` & ".TicketValidation::VALIDATEINCIDENT." = ".TicketValidation::VALIDATEINCIDENT.")
-                   AND gu.`groups_id` = ".$this->fields['validator_id']."
-                   AND u.`id` = ".$_SESSION['glpiID'];
-         $result = $DB->query($query);
+      $userId = $_SESSION['glpiID'];
 
-         if ($DB->numrows($result) == 1) {
-            $canValidate = true;
+      if ($form->fields['validation_required'] == 1) {
+         // Check the user is one of the users able to validate this form answer
+         $query = "SELECT *
+               FROM glpi_plugin_formcreator_formvalidators
+               WHERE `forms_id`='$formId' AND `users_id` = '$userId'";
+         $result = $DB->query($query);
+         $canValidate = ($DB->numrows($result) > 0);
+      } elseif(($form->fields['validation_required'] == 2)) {
+         // Check the user is member of at least one validator group fot the form answers
+         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+               $formId = $form->getID();
+               $condition = "`glpi_groups`.`id` IN (
+                  SELECT `users_id`
+                  FROM `glpi_plugin_formcreator_formvalidators`
+                  WHERE `forms_id` = '$formId'
+               )";
+               $groupList = Group_User::getUserGroups($userId, $condition);
+               $canValidate = (count($groupList) > 0);
          } else {
             $canValidate = false;
          }
@@ -425,10 +426,16 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
          $status = $_POST['status'];
+         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
+            $validatorId = $_SESSION['glpiID'];
+         } else {
+            $validatorId = 0;
+         }
          $this->update(array(
             'id'                          => intval($datas['id']),
             'status'                      => $status,
             'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
+            'validator_id'                => $validatorId,
          ));
 
          // Update questions answers
@@ -506,9 +513,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                => isset($datas['formcreator_validator'])
-                                                ? $datas['formcreator_validator']
-                                                : 0,
+            'validator_id'                =>  0,
             'status'                      => $status,
             'request_date'                => date('Y-m-d H:i:s'),
          ));
