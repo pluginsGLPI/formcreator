@@ -823,6 +823,10 @@ a.plugin_formcreator_formTile_title {
    vertical-align: middle;
 }
 
+.plugin_formcreator_entityProfile {
+	text-align: center;
+}
+
 .plugin_formcreator_serviceCatalogIcon span {
    background: url('../pics/issue.png') left no-repeat;
    background-size: contain;
