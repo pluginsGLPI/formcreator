@@ -103,6 +103,9 @@ function plugin_formcreator_MassiveActions($type) {
    return array();
 }
 
-function plugin_formcreator_pre_ticket_purge() {
-
+function plugin_formcreator_pre_ticket_purge(CommonDBTM $item) {
+   $answerTicket = new PluginFormcreatorFormanswer_Ticket();
+   return $answerTicket->deleteByCriteria(array(
+      'tickets_id'      => $item->getID()
+   ));
 }

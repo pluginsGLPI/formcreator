@@ -1330,6 +1330,13 @@ EOS;
          $DB->query($query);
       }
 
+      //Associate the answers to the ticket
+      $answerTicket = new PluginFormcreatorFormanswer_Ticket();
+      $answerTicket->add(array(
+            'tickets_id'                        => $ticketID,
+            'plugin_formcreator_formanswers_id' => $formanswer->getID()
+      ));
+
       return true;
    }
 

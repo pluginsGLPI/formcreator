@@ -174,7 +174,7 @@ function plugin_init_formcreator ()
 
    if ($plugin->isInstalled('formcreator')) {
       $PLUGIN_HOOKS['pre_item_purge']['formcreator']   = array(
-            'ticket' => array('plugin_formcreator_pre_ticket_purge'),
+            'Ticket' => 'plugin_formcreator_pre_ticket_purge',
       );
    }
 }
