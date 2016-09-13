@@ -176,6 +176,11 @@ function plugin_init_formcreator ()
       $PLUGIN_HOOKS['pre_item_purge']['formcreator']   = array(
             'Ticket' => 'plugin_formcreator_pre_ticket_purge',
       );
+
+      // Override table name computation for the itemtype issue. This is a clone of FormAnswer
+      // to override its display in the wizard context
+      $CFG_GLPI['glpitablesitemtype']['PluginFormcreatorIssue']      = 'glpi_plugin_formcreator_formanswers';
+      $CFG_GLPI['glpiitemtypetables']['glpi_plugin_formcreator_formanswers'] = 'PluginFormcreatorIssue';
    }
 }
 

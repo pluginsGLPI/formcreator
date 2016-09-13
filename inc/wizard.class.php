@@ -42,7 +42,7 @@ class PluginFormcreatorWizard {
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/formanswer.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
 
       // TODO : find the best way to reuse the code from GLPi for reservations
 //       echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
@@ -145,7 +145,10 @@ class PluginFormcreatorWizard {
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizard.php") !== false) {
          return self::MENU_CATALOG;
       }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/formanswer.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/issue.php") !== false) {
+         return self::MENU_LAST_FORMS;
+      }
+         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/issue.form.php") !== false) {
          return self::MENU_LAST_FORMS;
       }
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/reservationitem.php") !== false) {
