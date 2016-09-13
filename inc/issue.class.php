@@ -59,15 +59,42 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
          $options['id'] = 0;
       }
 
+      // Header if the item + link to the list of items
       $this->showNavigationHeader($options);
-      echo "<div class='form_content'>";
-      echo "<div class='modify_form'>";
-      $ticket = new Ticket();
-      $ticket->getFromDB(11);
-      $ticket->showTimeline('123456');
-      echo "</div>";
-      echo "</div>";
 
+      // Timeline
+      $formanswerId = $options['id'];
+      $formanswer_ticket = new PluginFormcreatorFormanswer_Ticket();
+      $rows = $formanswer_ticket->find("`plugin_formcreator_formanswers_id` = $formanswerId", "`tickets_id` ASC");
+      if (count($rows) == 0) {
+         // No ticket asociated to this issue
+         // Show the form answers
+         $this->showForm($this->getID(), $options);
+      } else {
+         // There is at least one ticket for this issue
+         // Show the timelines of this issue
+         $ticketId = null;
+         foreach ($rows as $id => $row) {
+            $ticketId = $id;
+         }
+         $ticket = new Ticket();
+         if (!$ticket->getFromDB($ticketId)) {
+            Html::displayNotFoundError();
+         } else {
+            // Header to navigate through tickets in a single formanswer
+            // This happens when a form has several ticket targets
+
+            echo '';
+            echo '';
+
+
+            echo "<div class='form_content'>";
+            echo "<div class='modify_form'>";
+            $ticket->showTimeline('123456');
+            echo "</div>";
+            echo "</div>";
+         }
+      }
    }
 
 }

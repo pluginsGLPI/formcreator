@@ -145,6 +145,9 @@ class PluginFormcreatorWizard {
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizard.php") !== false) {
          return self::MENU_CATALOG;
       }
+         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/formdisplay.php") !== false) {
+         return self::MENU_CATALOG;
+      }
       if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/issue.php") !== false) {
          return self::MENU_LAST_FORMS;
       }

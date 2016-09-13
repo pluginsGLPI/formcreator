@@ -40,14 +40,22 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
 
       if (isset($_SESSION['glpiactiveprofile']['interface'])
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
-         Html::helpHeader(
-            __('Form list', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
+         if (plugin_formcreator_replaceHelpdesk()) {
+            PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+         } else {
+            Html::helpHeader(
+               __('Form list', 'formcreator'),
+               $_SERVER['PHP_SELF']
+            );
+         }
 
          $form->displayUserForm($form);
 
-         Html::helpFooter();
+         if (plugin_formcreator_replaceHelpdesk()) {
+            PluginFormcreatorWizard::footer();
+         } else {
+            Html::helpFooter();
+         }
 
       } elseif(!empty($_SESSION['glpiactiveprofile'])) {
          Html::header(

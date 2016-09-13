@@ -177,14 +177,15 @@ form.formcreator_form {
 .formcreator_form .form-group > label {
    display: block;
    font-size: 1.2em;
-   float: left;
+   /*float: left;*/
+   display: inline-block;
    width: 250px;
    line-height: 32px;
 }
 .formcreator_form .form-group:after {
    content: '';
    display: block;
-   clear: both;
+   /*clear: both;*/
 }
 .formcreator_form .form-group .form_field > input[type="file"] {
    height: 32px;
@@ -196,7 +197,8 @@ form.formcreator_form {
 
 .formcreator_form .form-group .form_field {
    width: 650px;
-   float: left;
+   /*float: left;*/
+   display: inline-block;
    text-align: justify;
    word-wrap: break-word;
 }
@@ -364,12 +366,12 @@ form.formcreator_form {
    width: auto;
 }
 .formcreator_form .form-group > .help-block {
-   margin-left: 250px;
+   /*margin-left: 250px;*/
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
    font-style: italic;
-   clear: both;
+   /*clear: both;*/
 }
 .formcreator_form .form-group > .help-block p {
    margin: 0;
@@ -917,6 +919,10 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_container {
    height: 100%;
+}
+
+.plugin_formcreator_page .navigationheader .tab_cadre_pager {
+	width: auto;
 }
 
 /* ################--------------- Responsive  ---------------#################### */
