@@ -102,7 +102,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo '<th align="center" width="32">';
          if($section['order'] != 1) {
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/up2.png"
-                     alt="*" title="' . __('Edit') . '"
+                     alt="*" title="' . __('Bring up') . '"
                      onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
          } else {
             echo '&nbsp;';
@@ -111,7 +111,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo '<th align="center" width="32">';
          if($section['order'] != $section_number) {
             echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/down2.png"
-                     alt="*" title="' . __('Edit') . '"
+                     alt="*" title="' . __('Bring down') . '"
                      onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
          } else {
             echo '&nbsp;';
@@ -174,7 +174,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
             if($question['order'] != 1) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/up.png"
-                        alt="*" title="' . __('Edit') . '"
+                        alt="*" title="' . __('Bring up') . '"
                         onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
@@ -183,7 +183,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
             if($question['order'] != $question_number) {
                echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/down.png"
-                        alt="*" title="' . __('Edit') . '"
+                        alt="*" title="' . __('Bring down') . '"
                         onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
