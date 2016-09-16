@@ -369,9 +369,14 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<select name="_validator_users[]" size="4" style="width: 100%" multiple id="validator_users">';
       while($user = $GLOBALS['DB']->fetch_assoc($result)) {
          $groups_users[] = $user['id'];
+         if (!empty($user['realname']) && !empty($user['firstname'])) {
+            $displayName = $user['realname'] . ' ' .$user['firstname'];
+         } else {
+            $displayName = $user['name'];
+         }
          echo '<option value="' . $user['id'] . '"';
          if (in_array($user['id'], $validators)) echo ' selected="selected"';
-         echo '>' . $user['realname'] . ' ' .$user['firstname'] . '</option>';
+         echo '>' . $displayName . '</option>';
       }
       echo '</select>';
       echo '</div>';
