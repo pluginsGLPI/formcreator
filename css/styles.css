@@ -815,6 +815,27 @@ a.plugin_formcreator_formTile_title {
    font-size: large;
 }
 
+.plugin_formcreator_threadBrowser {
+   margin: 5px;
+   border-top: 1px dashed #3C5874; 
+}
+
+.plugin_formcreator_threadBrowser > div {
+   text-align: center;
+}
+
+.plugin_formcreator_first, .plugin_formcreator_left {
+   float: left;
+   width: 16px;
+   margin: 10px 0;
+}
+
+.plugin_formcreator_right, .plugin_formcreator_last {
+   float: right;
+   width: 16px;
+   margin: 10px 0;
+}
+
 .plugin_formcreator_serviceCatalogIcon span, 
 .plugin_formcreator_myRequestsIcon span, 
 .plugin_formcreator_reservationsIcon span, 

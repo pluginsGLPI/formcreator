@@ -72,21 +72,83 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
          $this->showForm($this->getID(), $options);
       } else {
          // There is at least one ticket for this issue
+
          // Show the timelines of this issue
-         $ticketId = null;
+         $ticketIds = array();
          foreach ($rows as $id => $row) {
-            $ticketId = $row['tickets_id'];
+            $ticketIds[] = $row['tickets_id'];
          }
+         $ticketSequence = array_flip($ticketIds);
+         if (!isset($_GET['tid'])) {
+            $ticketId = $ticketIds[0];
+         } else {
+            $ticketId = Toolbox::cleanInteger($_GET['tid']);
+         }
+         $ticketIndex = $ticketSequence[$ticketId];
+         $previousTicketId = $ticketIndex > 0 ? $ticketIds[$ticketIndex - 1] : 0;
+         $nextTicketId = $ticketIndex < count($ticketIds) - 1 ? $ticketIds[$ticketIndex + 1] : 0;
+         $firstTicketId = $ticketId != $ticketIds[0] ? $ticketIds[0] : 0;
+         $lastTicketId = $ticketIds[count($ticketIds) - 1];
+         $currentTicketid = $ticketIds[$_SESSION['plugin_formcreator_formanswer_timeline_index']];
+
          $ticket = new Ticket();
-         if (!$ticket->getFromDB($ticketId)) {
+         if (!$ticket->getFromDB($currentTicketid)) {
             Html::displayNotFoundError();
          } else {
             // Header to navigate through tickets in a single formanswer
             // This happens when a form has several ticket targets
 
-            echo '';
-            echo '';
+            echo '<div class="plugin_formcreator_threadBrowser">';
+            if ($firstTicketId == 0) {
+               echo '<span class="plugin_formcreator_first">'
+                  .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/first_off.png" alt="'
+                  . __('First'). '" title="'
+                  . __('First'). '" class="pointer"></span>';
+            } else {
+               echo '<span class="plugin_formcreator_first"><a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/issue.form.php?id=' . $formanswerId . '&tid=' . $firstTicketId . '">'
+                  .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/first.png" alt="'
+                  . __('First'). '" title="'
+                  . __('First'). '" class="pointer"></a></span>';
+            }
 
+            if ($previousTicketId == 0) {
+               echo '<span class="plugin_formcreator_left">'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/left_off.png" alt="'
+                     . __('First'). '" title="'
+                     . __('First'). '" class="pointer"></span>';
+            } else {
+               echo '<span class="plugin_formcreator_left"><a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/issue.form.php?id=' . $formanswerId . '&tid=' . $previousTicketId . '">'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/left.png" alt="'
+                     . __('Previous'). '" title="'
+                     . __('Previous'). '" class="pointer"></a></span>';
+            }
+
+            if ($nextTicketId == 0) {
+               echo '<span class="plugin_formcreator_last">'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last_off.png" alt="'
+                     . __('First'). '" title="'
+                     . __('First'). '" class="pointer"></span>';
+            } else {
+               echo '<span class="plugin_formcreator_last"><a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/issue.form.php?id=' . $formanswerId . '&tid=' . $lastTicketId . '">'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last.png" alt="'
+                     . __('Last'). '" title="'
+                     . __('Last'). '" class="pointer"></a></span>';
+            }
+
+            if ($lastTicketId == 0) {
+               echo '<span class="plugin_formcreator_right">'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last_off.png" alt="'
+                           . __('First'). '" title="'
+                                 . __('First'). '" class="pointer"></span>';
+               } else {
+               echo '<span class="plugin_formcreator_right"><a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/issue.form.php?id=' . $formanswerId . '&tid=' . $nextTicketId . '">'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/right_off.png" alt="'
+                     . __('Next'). '" title="'
+                     . __('Next'). '" class="pointer"></a></span>';
+            }
+            echo '<div class="navigationheader big b">' . __('Threads', 'formcreator') . '</div>';
+
+            echo '</div>';
 
             echo "<div class='timeline_box'>";
             $rand = mt_rand();
