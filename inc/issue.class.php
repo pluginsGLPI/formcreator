@@ -64,8 +64,8 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
 
       // Timeline
       $formanswerId = $options['id'];
-      $formanswer_ticket = new PluginFormcreatorFormanswer_Ticket();
-      $rows = $formanswer_ticket->find("`plugin_formcreator_formanswers_id` = $formanswerId", "`tickets_id` ASC");
+      $item_ticket = new Item_Ticket();
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormanswer' AND `items_id` = $formanswerId", "`tickets_id` ASC");
       if (count($rows) == 0) {
          // No ticket asociated to this issue
          // Show the form answers
@@ -75,7 +75,7 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
          // Show the timelines of this issue
          $ticketId = null;
          foreach ($rows as $id => $row) {
-            $ticketId = $id;
+            $ticketId = $row['tickets_id'];
          }
          $ticket = new Ticket();
          if (!$ticket->getFromDB($ticketId)) {

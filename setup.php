@@ -172,9 +172,6 @@ function plugin_init_formcreator ()
    }
 
    if ($plugin->isInstalled('formcreator')) {
-      $PLUGIN_HOOKS['pre_item_purge']['formcreator']   = array(
-            'Ticket' => 'plugin_formcreator_pre_ticket_purge',
-      );
 
       // Override table name computation for the itemtype issue. This is a clone of FormAnswer
       // to override its display in the wizard context

@@ -150,7 +150,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          // select all date and datetime questions
          $query2 = "SELECT q.id, q.name
                    FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s 
+                   INNER JOIN glpi_plugin_formcreator_sections s
                      ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
                    AND q.fieldtype IN ('date', 'datetime')";
@@ -1329,13 +1329,6 @@ EOS;
          $DB->query($query);
       }
 
-      //Associate the answers to the ticket
-      $answerTicket = new PluginFormcreatorFormanswer_Ticket();
-      $answerTicket->add(array(
-            'tickets_id'                        => $ticketID,
-            'plugin_formcreator_formanswers_id' => $formanswer->getID()
-      ));
-
       return true;
    }
 
@@ -1476,7 +1469,7 @@ EOS;
 
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
       $success1 = $DB->query($query) or die($DB->error());
-      
+
       $query = "DROP TABLE IF EXISTS `glpi_plugin_formcreator_targettickets_actors`";
       $success2 = $DB->query($query) or die($DB->error());
 
