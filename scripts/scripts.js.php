@@ -279,9 +279,9 @@ function buildTiles(list) {
    });
 
    if (list.length == 0) {
-      html = '<div id="plugin_formcreator_formlist">'
+      html = '<p id="plugin_formcreator_formlist">'
       + "<?php echo __('No form yet in this category', 'formcreator') ?>"
-      + '</div>';
+      + '</p>';
    } else {
       var items = [];
       $.each(list, function (key, form) {
@@ -313,9 +313,9 @@ function buildTiles(list) {
       html = '<div id="plugin_formcreator_formlist">'
       + items.join("")
       + '</div>';
-
-      return html;
    }
+
+   return html;
 }
 
 // === SEARCH BAR ===
