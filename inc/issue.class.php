@@ -88,10 +88,10 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
             echo '';
 
 
-            echo "<div class='form_content'>";
-            echo "<div class='modify_form'>";
+            echo "<div class='timeline_box'>";
+            $rand = mt_rand();
+            $ticket->showTimelineForm($rand);
             $ticket->showTimeline('123456');
-            echo "</div>";
             echo "</div>";
          }
       }
