@@ -54,9 +54,9 @@ class PluginFormcreatorForm extends CommonDBTM
       global $CFG_GLPI;
 
       $menu  = parent::getMenuContent();
-      $image = '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/check.png"
-                  title="'.__('Forms waiting for validation', 'formcreator').'"
-                  alt="'.__('Forms waiting for validation', 'formcreator').'">';
+      $image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+                  title="' . __('Forms waiting for validation', 'formcreator') . '"
+                  alt="' . __('Forms waiting for validation', 'formcreator') . '">';
       $menu['links']['search'] = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config'] = PluginFormcreatorForm::getSearchURL(false);
       $menu['links'][$image]   = PluginFormcreatorFormanswer::getSearchURL(false);
@@ -183,7 +183,7 @@ class PluginFormcreatorForm extends CommonDBTM
             break;
          case 'access_rights' :
             return Dropdown::showFromArray('criteria[0][value]', array(
-               Dropdown::EMPTY_VALUE => '--- '.__('All langages', 'formcreator').' ---',
+               Dropdown::EMPTY_VALUE => '--- ' . __('All langages', 'formcreator') . ' ---',
                self::ACCESS_PUBLIC => __('Public access', 'formcreator'),
                self::ACCESS_PRIVATE => __('Private access', 'formcreator'),
                self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
@@ -197,7 +197,7 @@ class PluginFormcreatorForm extends CommonDBTM
             return Dropdown::showLanguages('criteria[0][value]', array(
                'value'               => $values[$field],
                'display_emptychoice' => true,
-               'emptylabel'          => '--- '.__('All langages', 'formcreator').' ---',
+               'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
                'display'             => false
             ));
             break;
@@ -223,15 +223,15 @@ class PluginFormcreatorForm extends CommonDBTM
       switch ($field) {
          case 'is_active':
             if($values[$field] == 0) {
-               $output = '<div style="text-align: center"><img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/inactive.png"
+               $output = '<div style="text-align: center"><img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/inactive.png"
                            height="16" width="16"
-                           alt="'.__('Inactive').'"
-                           title="'.__('Inactive').'" /></div>';
+                           alt="' . __('Inactive') . '"
+                           title="' . __('Inactive') . '" /></div>';
             } else {
-               $output = '<div style="text-align: center"><img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/active.png"
+               $output = '<div style="text-align: center"><img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/active.png"
                            height="16" width="16"
-                           alt="'.__('Active').'"
-                           title="'.__('Active').'" /></div>';
+                           alt="' . __('Active') . '"
+                           title="' . __('Active') . '" /></div>';
             }
             return $output;
             break;
@@ -275,23 +275,23 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showFormHeader($options);
 
       echo '<tr class="tab_bg_1">';
-      echo '<td width="20%"><strong>'.__('Name').' <span class="red">*</span></strong></td>';
-      echo '<td width="30%"><input type="text" name="name" value="'.$this->fields["name"].'" size="35"/></td>';
-      echo '<td width="20%"><strong>'.__('Active').' <span class="red">*</span></strong></td>';
+      echo '<td width="20%"><strong>' . __('Name') . ' <span class="red">*</span></strong></td>';
+      echo '<td width="30%"><input type="text" name="name" value="' . $this->fields["name"] . '" size="35"/></td>';
+      echo '<td width="20%"><strong>' . __('Active') . ' <span class="red">*</span></strong></td>';
       echo '<td width="30%">';
       Dropdown::showYesNo("is_active", $this->fields["is_active"]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="tab_bg_2">';
-      echo '<td>'.__('Category').'</td>';
+      echo '<td>' . __('Category') . '</td>';
       echo '<td>';
       PluginFormcreatorCategory::dropdown(array(
          'name'  => 'plugin_formcreator_categories_id',
          'value' => ($ID != 0) ? $this->fields["plugin_formcreator_categories_id"] : 0,
       ));
       echo '</td>';
-      echo '<td>'.__('Direct access on homepage', 'formcreator').'</td>';
+      echo '<td>' . __('Direct access on homepage', 'formcreator') . '</td>';
       echo '<td>';
       Dropdown::showYesNo("helpdesk_home", $this->fields["helpdesk_home"]);
       echo '</td>';
@@ -299,27 +299,27 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</tr>';
 
       echo '<tr class="tab_bg_1">';
-      echo '<td>'.__('Description').'</td>';
-      echo '<td><input type="text" name="description" value="'.$this->fields['description'].'" size="35" /></td>';
-      echo '<td>'.__('Language').'</td>';
+      echo '<td>' . __('Description') . '</td>';
+      echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="35" /></td>';
+      echo '<td>' . __('Language') . '</td>';
       echo '<td>';
       Dropdown::showLanguages('language', array(
          'value'               => ($ID != 0) ? $this->fields['language'] : $_SESSION['glpilanguage'],
          'display_emptychoice' => true,
-         'emptylabel'          => '--- '.__('All langages', 'formcreator').' ---',
+         'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
       ));
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="tab_bg_1">';
-      echo '<td>'._n('Header', 'Headers', 1, 'formcreator').'</td>';
-      echo '<td colspan="3"><textarea name="content" cols="124" rows="10">'.$this->fields["content"].'</textarea></td>';
+      echo '<td>' . _n('Header', 'Headers', 1, 'formcreator') . '</td>';
+      echo '<td colspan="3"><textarea name="content" cols="124" rows="10">' . $this->fields["content"] . '</textarea></td>';
       Html::initEditorSystem('content');
       echo '</tr>';
 
       echo '<tr class="tab_bg_2">';
-      echo '<td>'.__('Need to be validate?', 'formcreator').'</td>';
-      echo '<td class="validators_bloc">';
+      echo '<td>' . __('Need to be validate?', 'formcreator') . '</td>';
+      echo '<td colspan="3" class="validators_bloc">';
 
       Dropdown::showFromArray('validation_required', array(
          0 => Dropdown::EMPTY_VALUE,
@@ -334,7 +334,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $validators = array();
       $query = "SELECT `users_id`
                 FROM `glpi_plugin_formcreator_formvalidators`
-                WHERE `forms_id` = '".$this->getID(). "'";
+                WHERE `forms_id` = '" . $this->getID(). "'";
       $result = $DB->query($query);
       while(list($id) = $DB->fetch_array($result)) {
          $validators[] = $id;
@@ -359,9 +359,10 @@ class PluginFormcreatorForm extends CommonDBTM
                 LEFT JOIN `glpi_groups` g ON g.`id` = gu.`groups_id`
                 WHERE pr.`name` = 'ticketvalidation'
                 AND (
-                  pr.`rights` & ".TicketValidation::VALIDATEREQUEST." = ".TicketValidation::VALIDATEREQUEST."
-                  OR pr.`rights` & ".TicketValidation::VALIDATEINCIDENT." = ".TicketValidation::VALIDATEINCIDENT.")
+                  pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
+                  OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
                 AND $subentities
+                AND u.`is_active` = '1'
                 GROUP BY u.`id`
                 ORDER BY u.`name`";
       $result = $DB->query($query);
@@ -371,9 +372,14 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<select name="_validator_users[]" size="4" style="width: 100%" multiple id="validator_users">';
       while($user = $DB->fetch_assoc($result)) {
          $groups_users[] = $user['id'];
-         echo '<option value="'.$user['id'].'"';
+         if (!empty($user['realname']) && !empty($user['firstname'])) {
+            $displayName = $user['realname'] . ' ' .$user['firstname'];
+         } else {
+            $displayName = $user['name'];
+         }
+         echo '<option value="' . $user['id'] . '"';
          if (in_array($user['id'], $validators)) echo ' selected="selected"';
-         echo '>'.$user['name'].'</option>';
+         echo '>' . $displayName . '</option>';
       }
       echo '</select>';
       echo '</div>';
@@ -382,17 +388,17 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div id="validators_groups" style="width: 100%">';
       echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
       if (!empty($groups_users)) {
-         $query = "SELECT g.`id`, g.`completename`
+         $query = "SELECT DISTINCT g.`id`, g.`completename`
                    FROM `glpi_groups` g
                    INNER JOIN `glpi_groups_users` gu
                      ON g.`id` = gu.`groups_id`
-                     AND gu.`users_id` IN (".implode(',', $groups_users).")
+                     AND gu.`users_id` IN (" . implode(',', $groups_users) . ")
                    ORDER BY g.`completename`";
          $result = $DB->query($query);
          while($group = $DB->fetch_assoc($result)) {
-            echo '<option value="'.$group['id'].'"';
+            echo '<option value="' . $group['id'] . '"';
             if (in_array($group['id'], $validators)) echo ' selected="selected"';
-            echo '>'.$group['completename'].'</option>';
+            echo '>' . $group['completename'] . '</option>';
          }
       }
       echo '</select>';
@@ -410,10 +416,12 @@ class PluginFormcreatorForm extends CommonDBTM
                      document.getElementById("validators_users").style.display  = "none";
                      document.getElementById("validators_groups").style.display = "none";
                   }
+                  fcInitMultiSelect();
                }
-               changeValidators('.$this->fields["validation_required"].');
+               changeValidators(' . $this->fields["validation_required"] . ');
             </script>';
       echo '</td>';
+      echo '</tr>';
 
       echo '<td>'.__('Default form in service catalog', 'formcreator').'</td>';
       echo '<td>';
@@ -778,10 +786,10 @@ class PluginFormcreatorForm extends CommonDBTM
          $datas = null;
       }
 
-      echo '<form name="formcreator_form'.$item->getID().'" method="post" role="form" enctype="multipart/form-data"
-               action="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/front/form.form.php"
+      echo '<form name="formcreator_form' . $item->getID() . '" method="post" role="form" enctype="multipart/form-data"
+               action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php"
                class="formcreator_form form_horizontal" onsubmit="return validateForm(this);">';
-      echo '<h1 class="form-title">'.$item->fields['name'].'</h1>';
+      echo '<h1 class="form-title">' . $item->fields['name'] . '</h1>';
 
       // Form Header
       if (!empty($item->fields['content'])) {
@@ -794,13 +802,13 @@ class PluginFormcreatorForm extends CommonDBTM
       $questions     = array();
 
       $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = '.$item->getID(), '`order` ASC');
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
       echo '<div class="form_section">';
       foreach ($find_sections as $section_line) {
-         echo '<h2>'.$section_line['name'].'</h2>';
+         echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
-         $questions = $question->find('plugin_formcreator_sections_id = '.$section_line['id'], '`order` ASC');
+         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
             if (isset($datas[$question_line['id']])) {
                // multiple choice question are saved as JSON and needs to be decoded
@@ -824,7 +832,7 @@ class PluginFormcreatorForm extends CommonDBTM
             $query = 'SELECT g.`id`, g.`completename`
                       FROM `glpi_groups` g
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = g.`id`
-                      WHERE fv.`forms_id` = '.$this->getID();
+                      WHERE fv.`forms_id` = ' . $this->getID();
                       Toolbox::logDebug($query);
             $result = $DB->query($query);
             while($validator = $DB->fetch_assoc($result)) {
@@ -836,15 +844,15 @@ class PluginFormcreatorForm extends CommonDBTM
             $query = 'SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
                       FROM `glpi_users` u
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
-                      WHERE fv.`forms_id` = '.$this->getID();
+                      WHERE fv.`forms_id` = ' . $this->getID();
             $result = $DB->query($query);
             while($validator = $DB->fetch_assoc($result)) {
                $validators[$validator['id']] = formatUserName($validator['id'], $validator['name'], $validator['realname'], $validator['firstname']);
             }
          }
 
-         echo '<div class="form-group required liste line'.((count($questions) + 1) % 2).'" id="form-validator">';
-         echo '<label>'.__('Choose a validator', 'formcreator').' <span class="red">*</span></label>';
+         echo '<div class="form-group required liste line' . (count($questions) + 1) % 2 . '" id="form-validator">';
+         echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
          Dropdown::showFromArray('formcreator_validator', $validators);
          echo '</div>';
       }
@@ -853,11 +861,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Display submit button
       echo '<div class="center">';
-      echo '<input type="submit" name="submit_formcreator" class="submit_button" value="'.__('Send').'" />';
+      echo '<input type="submit" name="submit_formcreator" class="submit_button" value="' . __('Send') . '" />';
       echo '</div>';
 
-      echo '<input type="hidden" name="formcreator_form" value="'.$item->getID().'">';
-      echo '<input type="hidden" name="_glpi_csrf_token" value="'.Session::getNewCSRFToken().'">';
+      echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
+      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
       echo '</form>';
    }
 
@@ -952,32 +960,32 @@ class PluginFormcreatorForm extends CommonDBTM
       $tab_section    = array();
       $datas          = array();
       $sections       = new PluginFormcreatorSection();
-      $found_sections = $sections->find('`plugin_formcreator_forms_id` = '.$this->getID());
+      $found_sections = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
       foreach ($found_sections as $id => $fields) $tab_section[] = $id;
 
       $questions         = new PluginFormcreatorQuestion();
-      $found_questions = $questions->find('`plugin_formcreator_sections_id` IN ('.implode(',', $tab_section) .')');
+      $found_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
 
       // Validate form fields
       foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
-         if (isset($_POST['formcreator_field_'.$id])) {
-            $datas[$id] = is_array($_POST['formcreator_field_'.$id])
-                           ? json_encode($_POST['formcreator_field_'.$id])
-                           : $_POST['formcreator_field_'.$id];
+         if (isset($_POST['formcreator_field_' . $id])) {
+            $datas[$id] = is_array($_POST['formcreator_field_' . $id])
+                           ? json_encode($_POST['formcreator_field_' . $id])
+                           : $_POST['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
             if ($fields['fieldtype'] == 'float') {
                $datas[$id] = str_replace(',', '.', $datas[$id]);
                $datas[$id] = str_replace(' ', '', $datas[$id]);
             }
-            unset($_POST['formcreator_field_'.$id]);
+            unset($_POST['formcreator_field_' . $id]);
          } else {
             $datas[$id] = '';
          }
 
-         $className = $fields['fieldtype'].'Field';
-         $filePath  = dirname(__FILE__).'/fields/'.$fields['fieldtype'].'-field.class.php';
+         $className = $fields['fieldtype'] . 'Field';
+         $filePath  = dirname(__FILE__) . '/fields/' . $fields['fieldtype'] . '-field.class.php';
 
          if(is_file($filePath)) {
             include_once ($filePath);
@@ -1122,10 +1130,10 @@ class PluginFormcreatorForm extends CommonDBTM
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `$table` SET
-                               `name`        = '".plugin_formcreator_encode($line['name'])."',
-                               `description` = '".plugin_formcreator_encode($line['description'])."',
-                               `content`     = '".plugin_formcreator_encode($line['content'])."'
-                             WHERE `id` = ".$line['id'];
+                               `name`        = '" . plugin_formcreator_encode($line['name']) . "',
+                               `description` = '" . plugin_formcreator_encode($line['description']) . "',
+                               `content`     = '" . plugin_formcreator_encode($line['content']) . "'
+                             WHERE `id` = " . (int) $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
       }
@@ -1168,12 +1176,12 @@ class PluginFormcreatorForm extends CommonDBTM
       $DB->query($query) or die("error deleting glpi_displaypreferences ". $DB->error());
 
       $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-               (NULL, '".__CLASS__."', 30, 1, 0),
-               (NULL, '".__CLASS__."', 3, 2, 0),
-               (NULL, '".__CLASS__."', 10, 3, 0),
-               (NULL, '".__CLASS__."', 7, 4, 0),
-               (NULL, '".__CLASS__."', 8, 5, 0),
-               (NULL, '".__CLASS__."', 9, 6, 0);";
+               (NULL, '" . __CLASS__ . "', 30, 1, 0),
+               (NULL, '" . __CLASS__ . "', 3, 2, 0),
+               (NULL, '" . __CLASS__ . "', 10, 3, 0),
+               (NULL, '" . __CLASS__ . "', 7, 4, 0),
+               (NULL, '" . __CLASS__ . "', 8, 5, 0),
+               (NULL, '" . __CLASS__ . "', 9, 6, 0);";
       $DB->query($query) or die ($DB->error());
 
       return true;
@@ -1188,11 +1196,13 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $DB->query('DROP TABLE IF EXISTS `'.self::getTable().'`');
+
+      $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_formvalidators`');
+      $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_questions_conditions`');
 
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
+      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }
@@ -1216,7 +1226,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // From datas
       $form_datas              = $this->fields;
-      $form_datas['name']     .= ' ['.__('Duplicate', 'formcreator').']';
+      $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
       $form_datas['is_active'] = 0;
 
       unset($form_datas['id']);
@@ -1253,8 +1263,8 @@ class PluginFormcreatorForm extends CommonDBTM
 
          $insert_section = "INSERT INTO `glpi_plugin_formcreator_sections` SET
                       `plugin_formcreator_forms_id` = $new_form_id,
-                      `name`                        = '".$section_values['name']."',
-                      `order`                       = ".$section_values['order'];
+                      `name`                        = '" . $section_values['name'] . "',
+                      `order`                       = " . (int) $section_values['order'];
          $DB->query($insert_section);
          $new_section_id = $DB->insert_id();
          if ($new_section_id === false) return false;
@@ -1272,19 +1282,19 @@ class PluginFormcreatorForm extends CommonDBTM
             $question_id = $question_values['id'];
 
             $insert_question = "INSERT INTO `glpi_plugin_formcreator_questions` SET
-                         `plugin_formcreator_sections_id` = ".$new_section_id.",
-                         `fieldtype`                      = '".addslashes($question_values['fieldtype'])."',
-                         `name`                           = '".addslashes($question_values['name'])."',
-                         `required`                       = ".$question_values['required'].",
-                         `show_empty`                     = ".$question_values['show_empty'].",
-                         `default_values`                 = '".addslashes($question_values['default_values'])."',
-                         `values`                         = '".addslashes($question_values['values'])."',
-                         `range_min`                      = '".addslashes($question_values['range_min'])."',
-                         `range_max`                      = '".addslashes($question_values['range_max'])."',
-                         `description`                    = '". addslashes($question_values['description'])."',
-                         `regex`                          = '".addslashes($question_values['regex'])."',
-                         `order`                          = ".$question_values['order'].",
-                         `show_rule`                      = '".addslashes($question_values['show_rule'])."'";
+                         `plugin_formcreator_sections_id` = " . $new_section_id . ",
+                         `fieldtype`                      = '" . addslashes($question_values['fieldtype']) . "',
+                         `name`                           = '" . addslashes($question_values['name']) . "',
+                         `required`                       = " . $question_values['required'] . ",
+                         `show_empty`                     = " . $question_values['show_empty'] . ",
+                         `default_values`                 = '" . addslashes($question_values['default_values']) . "',
+                         `values`                         = '" . addslashes($question_values['values']) . "',
+                         `range_min`                      = '" . addslashes($question_values['range_min']) . "',
+                         `range_max`                      = '" . addslashes($question_values['range_max']) . "',
+                         `description`                    = '". addslashes($question_values['description']) . "',
+                         `regex`                          = '" . addslashes($question_values['regex']) . "',
+                         `order`                          = " . $question_values['order'] . ",
+                         `show_rule`                      = '" . addslashes($question_values['show_rule']) . "'";
             $DB->query($insert_question);
             $new_question_id = $DB->insert_id();
             if ($new_question_id === false) return false;
@@ -1311,10 +1321,10 @@ class PluginFormcreatorForm extends CommonDBTM
          $target_id = $target_values['id'];
 
          $insert_target = "INSERT INTO `glpi_plugin_formcreator_targets` SET
-                            `plugin_formcreator_forms_id` = ".$new_form_id.",
-                            `itemtype`                    = '".addslashes($target_values['itemtype'])."',
-                            `items_id`                    = ".$target_values['items_id'].",
-                            `name`                        = '".addslashes($target_values['name'])."'";
+                            `plugin_formcreator_forms_id` = " . $new_form_id . ",
+                            `itemtype`                    = '" . addslashes($target_values['itemtype']) . "',
+                            `items_id`                    = " . $target_values['items_id'] . ",
+                            `name`                        = '" . addslashes($target_values['name']) . "'";
          $DB->query($insert_target);
          $new_target_id = $DB->insert_id();
          if ($new_target_id === false) return false;
@@ -1328,27 +1338,27 @@ class PluginFormcreatorForm extends CommonDBTM
          if (!$result_ttickets) return false;
 
          foreach ($tab_questions as $id => $value) {
-            $result_ttickets['name']    = str_replace('##question_'.$id.'##', '##question_'.$value.'##', $result_ttickets['name']);
-            $result_ttickets['name']    = str_replace('##answer_'.$id.'##', '##answer_'.$value.'##', $result_ttickets['name']);
-            $result_ttickets['comment'] = str_replace('##question_'.$id.'##', '##question_'.$value.'##', $result_ttickets['comment']);
-            $result_ttickets['comment'] = str_replace('##answer_'.$id.'##', '##answer_'.$value.'##', $result_ttickets['comment']);
+            $result_ttickets['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['name']);
+            $result_ttickets['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['name']);
+            $result_ttickets['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['comment']);
+            $result_ttickets['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['comment']);
          }
 
          $insert_ttickets = "INSERT INTO `glpi_plugin_formcreator_targettickets` SET
-                               `name`               = '".addslashes($result_ttickets['name'])."',
-                               `tickettemplates_id` = ".$result_ttickets['tickettemplates_id'].",
-                               `comment`            = '".addslashes($result_ttickets['comment'])."',
-                               `due_date_rule`      = '".addslashes($result_ttickets['due_date_rule'])."',
-                               `due_date_question`  = ".$result_ttickets['due_date_question'].",
-                               `due_date_value`     = ".$result_ttickets['due_date_value'].",
-                               `due_date_period`    = '".addslashes($result_ttickets['due_date_period'])."'";
+                               `name`               = '" . addslashes($result_ttickets['name']) . "',
+                               `tickettemplates_id` = " . (int) $result_ttickets['tickettemplates_id'] . ",
+                               `comment`            = '" . addslashes($result_ttickets['comment']) . "',
+                               `due_date_rule`      = '" . addslashes($result_ttickets['due_date_rule']) . "',
+                               `due_date_question`  = " . (int) $result_ttickets['due_date_question'] . ",
+                               `due_date_value`     = " . (int) $result_ttickets['due_date_value'] . ",
+                               `due_date_period`    = '" . addslashes($result_ttickets['due_date_period']) . "'";
          $DB->query($insert_ttickets);
          $new_target_ticket_id = $DB->insert_id();
          if (!$new_target_ticket_id) return false;
 
          $update_target = "UPDATE `glpi_plugin_formcreator_targets` SET
-                              `items_id` = ".$new_target_ticket_id."
-                           WHERE `id` = ".$new_target_id;
+                              `items_id` = " . $new_target_ticket_id . "
+                           WHERE `id` = " . $new_target_id;
          $DB->query($update_target);
 
          // Form target tickets actors
@@ -1373,8 +1383,8 @@ class PluginFormcreatorForm extends CommonDBTM
       global $DB;
 
       $query = "UPDATE `glpi_plugin_formcreator_forms` SET
-                   `entities_id` = ".(int) $entity."
-                WHERE `id` = ".$this->fields['id'];
+                   `entities_id` = " . $entity . "
+                WHERE `id` = " . $this->fields['id'];
       $DB->query($query);
       return true;
    }
@@ -1390,7 +1400,7 @@ class PluginFormcreatorForm extends CommonDBTM
             Entity::dropdown(array(
                'name' => 'entities_id',
             ));
-            echo '<br /><br />'.Html::submit(_x('button','Post'), array('name' => 'massiveaction'));
+            echo '<br /><br />' . Html::submit(_x('button','Post'), array('name' => 'massiveaction'));
             return true;
     }
       return parent::showMassiveActionsSubForm($ma);

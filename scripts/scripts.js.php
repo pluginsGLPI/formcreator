@@ -50,7 +50,9 @@ jQuery(document).ready(function($) {
 
    if (NomDuFichier == "central.php") {
       $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+        if ($('#homepage_forms_container').length < 1){
          showFormList()
+        }
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
       showFormList();
@@ -112,6 +114,10 @@ jQuery(document).ready(function($) {
       $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].checked = true;
    }
 
+   fcInitMultiSelect();
+});
+
+function fcInitMultiSelect() {
    // === Add better multi-select on form configuration validators ===
    // initialize the pqSelect widget.
    $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
@@ -124,7 +130,7 @@ jQuery(document).ready(function($) {
           checkbox: true //adds checkbox to options
       });
    });
-});
+}
 
 function showFormList() {
    $.ajax({

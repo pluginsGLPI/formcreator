@@ -118,8 +118,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       }
       switch ($field) {
          case 'status' :
-            $output = '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/'.$values[$field].'.png"
-                         alt="'.__($values[$field], 'formcreator').'" title="'.__($values[$field], 'formcreator').'" />';
+            $output = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
+                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" />';
             return $output;
             break;
       }
@@ -147,19 +147,19 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       switch ($field) {
          case 'status' :
-            $output  = '<select name="'.$name.'">';
+            $output  = '<select name="' . $name . '">';
             $output .=  '<option value="waiting" '
-                          .(($values[$field] == 'waiting') ? ' selected ' : '').'>'
-                       .__('waiting', 'formcreator')
-                       .'</option>';
+                           . (($values[$field] == 'waiting') ? ' selected ' : '') . '>'
+                        . __('waiting', 'formcreator')
+                        . '</option>';
             $output .=  '<option value="accepted" '
-                          .(($values[$field] == 'accepted') ? ' selected ' : '').'>'
-                       .__('accepted', 'formcreator')
-                       .'</option>';
+                           . (($values[$field] == 'accepted') ? ' selected ' : '') . '>'
+                        . __('accepted', 'formcreator')
+                        . '</option>';
             $output .=  '<option value="refused" '
-                          .(($values[$field] == 'refused') ? ' selected ' : '').'>'
-                       .__('refused', 'formcreator')
-                       .'</option>';
+                           . (($values[$field] == 'refused') ? ' selected ' : '') . '>'
+                        . __('refused', 'formcreator')
+                        . '</option>';
             $output .=  '</select>';
 
             return $output;
@@ -221,32 +221,33 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $this->showFormHeader($options);
 
       $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $formId = $this->fields['plugin_formcreator_forms_id'];
+      $form->getFromDB($formId);
 
       $canEdit = $this->fields['status'] == 'refused'
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
 
-      if ($form->fields['validation_required'] == 1
-          && $_SESSION['glpiID'] == $this->fields['validator_id']) {
-         $canValidate = true;
-      } elseif ($form->fields['validation_required'] == 2) {
-         // Get validator users from group
-         $query = "SELECT u.`id`
-                   FROM `glpi_users` u
-                   INNER JOIN `glpi_groups_users` gu   ON gu.`users_id` = u.`id`
-                   INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                   INNER JOIN `glpi_profiles` p        ON p.`id` = pu.`profiles_id`
-                   INNER JOIN `glpi_profilerights` pr  ON p.`id` = pr.`profiles_id`
-                   WHERE pr.`name` = 'ticketvalidation'
-                   AND (
-                     pr.`rights` & ".TicketValidation::VALIDATEREQUEST." = ".TicketValidation::VALIDATEREQUEST."
-                     OR pr.`rights` & ".TicketValidation::VALIDATEINCIDENT." = ".TicketValidation::VALIDATEINCIDENT.")
-                   AND gu.`groups_id` = ".$this->fields['validator_id']."
-                   AND u.`id` = ".$_SESSION['glpiID'];
-         $result = $DB->query($query);
+      $userId = $_SESSION['glpiID'];
 
-         if ($DB->numrows($result) == 1) {
-            $canValidate = true;
+      if ($form->fields['validation_required'] == 1) {
+         // Check the user is one of the users able to validate this form answer
+         $query = "SELECT *
+               FROM glpi_plugin_formcreator_formvalidators
+               WHERE `forms_id`='$formId' AND `users_id` = '$userId'";
+         $result = $DB->query($query);
+         $canValidate = ($DB->numrows($result) > 0);
+      } elseif(($form->fields['validation_required'] == 2)) {
+         // Check the user is member of at least one validator group fot the form answers
+         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+               $formId = $form->getID();
+               $condition = "`glpi_groups`.`id` IN (
+                  SELECT `users_id`
+                  FROM `glpi_plugin_formcreator_formvalidators`
+                  WHERE `forms_id` = '$formId'
+               )";
+               $groupList = Group_User::getUserGroups($userId, $condition);
+               $canValidate = (count($groupList) > 0);
          } else {
             $canValidate = false;
          }
@@ -265,7 +266,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       if ($this->fields['status'] == 'refused') {
          echo '<div class="refused_header">';
-         echo '<div>'.nl2br($this->fields['comment']).'</div>';
+         echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
       } elseif($this->fields['status'] == 'accepted') {
          echo '<div class="accepted_header">';
@@ -300,6 +301,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                                    questions.`order` ASC";
       $res_questions = $DB->query($query_questions);
       $last_section = "";
+      $questionsCount = $DB->numrows($res_questions);
       while ($question_line = $DB->fetch_assoc($res_questions)) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
@@ -319,9 +321,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       </script>';
 
       // Display submit button
-      if ($this->fields['status'] == 'refused'
-          && $_SESSION['glpiID'] == $this->fields['requester_id']) {
-         echo '<div class="form-group line'.((count($questions) + 1) % 2).'">';
+      if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+         echo '<div class="form-group line'.((questionsCount + 1) % 2).'">';
          echo '<div class="center">';
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
          echo '</div>';
@@ -332,36 +333,36 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<div class="form-group required line1">';
-            echo '<label for="comment">'.__('Comment', 'formcreator').' <span class="red">*</span></label>';
+            echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
             echo '<textarea class="form-control"
                      rows="5"
                      name="comment"
-                     id="comment">'.$this->fields['comment'].'</textarea>';
-            echo '<div class="help-block">'.__('Required if refused', 'formcreator').'</div>';
+                     id="comment">' . $this->fields['comment'] . '</textarea>';
+            echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
             echo '</div>';
 
             echo '<div class="form-group line1">';
             echo '<div class="center" style="float: left; width: 50%;">';
             echo '<input type="submit" name="refuse_formanswer" class="submit_button"
-                     value="'.__('Refuse', 'formcreator').'" onclick="return checkComment(this);" />';
+                     value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
             echo '</div>';
             echo '<div class="center">';
-            echo '<input type="submit" name="accept_formanswer" class="submit_button" value="'.__('Accept', 'formcreator').'" />';
+            echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
             echo '</div>';
             echo '</div>';
          }
       }
 
-      echo '<input type="hidden" name="formcreator_form" value="'.$form->getID().'">';
-      echo '<input type="hidden" name="id" value="'.$this->getID().'">';
-      echo '<input type="hidden" name="_glpi_csrf_token" value="'.Session::getNewCSRFToken().'">';
+      echo '<input type="hidden" name="formcreator_form" value="' . $form->getID() . '">';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '">';
+      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
 
       echo '</div>';
 //      echo '</form>';
       echo '<script type="text/javascript">
                function checkComment(field) {
                   if (document.getElementById("comment").value == "") {
-                     alert("'.__('Refused comment is required!', 'formcreator').'");
+                     alert("' . __('Refused comment is required!', 'formcreator') . '");
                      return false;
                   }
                }
@@ -429,12 +430,16 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
          $status = $_POST['status'];
+         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
+            $validatorId = $_SESSION['glpiID'];
+         } else {
+            $validatorId = 0;
+         }
          $this->update(array(
-            'id'      => $datas['id'],
-            'status'  => $status,
-            'comment' => isset($_POST['comment'])
-                           ? $_POST['comment']
-                           : 'NULL',
+            'id'                          => intval($datas['id']),
+            'status'                      => $status,
+            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
+            'validator_id'                => $validatorId,
          ));
 
          // Update questions answers
@@ -459,24 +464,24 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      'id'     => $question['answer_id'],
                      'answer' => $answer_value,
                   ));
-               } elseif (isset($_FILES['formcreator_field_'.$question['id']]['tmp_name'])
-                     && is_file($_FILES['formcreator_field_'.$question['id']]['tmp_name'])) {
+               } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
+                     && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
                   $doc    = new Document();
 
                   $file_datas                 = array();
-                  $file_datas["name"]         = $form->fields['name'].' - '.$question['name'];
+                  $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
                   $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
                                                       ? $_SESSION['glpiactive_entity']
                                                       : $form->fields['entities_id'];
                   $file_datas["is_recursive"] = $form->fields['is_recursive'];
-                  Document::uploadDocument($file_datas, $_FILES['formcreator_field_'.$question['id']]);
+                  Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
 
                   if ($docID = $doc->add($file_datas)) {
                      $docID = intval($docID);
                      $table    = getTableForItemType('Document');
-                     $filename = $_FILES['formcreator_field_'.$question['id']]['name'];
-                     $query    = "UPDATE `$table` SET `filename` = '".$filename."'
-                                  WHERE `id` = ".$docID;
+                     $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
+                     $query    = "UPDATE `$table` SET `filename` = '$filename'
+                                  WHERE `id` = $docID";
                      $DB->query($query);
 
                      $docItem = new Document_Item();
@@ -513,7 +518,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                => isset($datas['formcreator_validator'])
+            'validator_id'                =>  isset($datas['formcreator_validator'])
                                                 ? $datas['formcreator_validator']
                                                 : 0,
             'status'                      => $status,
@@ -546,22 +551,22 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
             // If the question is a file field, save the file as a document
             if (($question['fieldtype'] == 'file')
-                  && (isset($_FILES['formcreator_field_'.$question['id']]['tmp_name']))
-                  && (is_file($_FILES['formcreator_field_'.$question['id']]['tmp_name']))) {
+                  && (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name']))
+                  && (is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name']))) {
                $doc         = new Document();
                $file_datas                 = array();
-               $file_datas["name"]         = $form->fields['name'].' - '.$question['name'];
+               $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
                $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
                                                    ? $_SESSION['glpiactive_entity']
                                                    : $form->fields['entities_id'];
                $file_datas["is_recursive"] = $form->fields['is_recursive'];
-               Document::uploadDocument($file_datas, $_FILES['formcreator_field_'.$question['id']]);
+               Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
 
                if ($docID = $doc->add($file_datas)) {
                   $docID = intval($docID);
                   $table    = getTableForItemType('Document');
-                  $filename = $_FILES['formcreator_field_'.$question['id']]['name'];
-                  $query    = "UPDATE `$table` SET `filename` = '".$filename."'
+                  $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
+                  $query    = "UPDATE `$table` SET `filename` = '$filename'
                                WHERE `id` = $docID";
                   $DB->query($query);
 
@@ -618,7 +623,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = '.$this->fields['plugin_formcreator_forms_id']);
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       // Generate targets
       foreach($found_targets as $target) {
@@ -645,11 +650,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $output      = '';
 
       if ($CFG_GLPI['use_rich_text']) {
-         $output .= '<h1>'.__('Form data', 'formcreator').'</h1>';
+         $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
-         $output .= __('Form data', 'formcreator').PHP_EOL;
+         $output .= __('Form data', 'formcreator') . PHP_EOL;
          $output .= '=================';
-         $output .= PHP_EOL.PHP_EOL;
+         $output .= PHP_EOL . PHP_EOL;
       }
 
       // retrieve answers
@@ -707,13 +712,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
                      $output_value = '<ul>';
                      foreach ($value as $choice) {
-                        $output_value .= '<li>'.$choice.'</li>';
+                      $output_value .= '<li>' . $choice . '</li>';
                      }
                      $output_value .= '</ul>';
                   } else {
                      $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
                   }
-
                } elseif (is_array(json_decode($value))) {
                   if ($CFG_GLPI['use_rich_text']) {
                      $value = json_decode($value);
@@ -728,7 +732,6 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                } else {
                   $output_value = $value;
                }
-
             } elseif ($question_line['fieldtype'] == 'textarea') {
                if ($CFG_GLPI['use_rich_text']) {
                   $output_value = '<br /><blockquote>' . $value . '</blockquote>';
@@ -817,8 +820,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `$table` SET
-                               `comment` = '".plugin_formcreator_encode($line['comment'])."'
-                             WHERE `id` = ".$line['id'];
+                               `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
+                             WHERE `id` = " . $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
 
@@ -826,15 +829,20 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $query_update = 'ALTER TABLE `glpi_plugin_formcreator_formanswers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
             $DB->query($query_update) or die ($DB->error());
          }
+
+         // valdiator_id should not be set for waiting form answers
+         $query = "UPDATE glpi_plugin_formcreator_formanswers
+               SET `validator_id` = '0' WHERE `status`='waiting'";
+         $DB->query($query);
       }
 
       // Create standard search options
       $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-               (NULL, '".__CLASS__."', 2, 2, 0),
-               (NULL, '".__CLASS__."', 3, 3, 0),
-               (NULL, '".__CLASS__."', 4, 4, 0),
-               (NULL, '".__CLASS__."', 5, 5, 0),
-               (NULL, '".__CLASS__."', 6, 6, 0);";
+               (NULL, '" . __CLASS__ . "', 2, 2, 0),
+               (NULL, '" . __CLASS__ . "', 3, 3, 0),
+               (NULL, '" . __CLASS__ . "', 4, 4, 0),
+               (NULL, '" . __CLASS__ . "', 5, 5, 0),
+               (NULL, '" . __CLASS__ . "', 6, 6, 0);";
       $DB->query($query) or die ($DB->error());
 
       return true;
@@ -850,10 +858,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       global $DB;
 
       $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
 
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
+      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }

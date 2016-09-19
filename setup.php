@@ -96,10 +96,10 @@ function plugin_init_formcreator ()
                         AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
                              OR $form_table.`language` IN ('0', '', NULL))
                         AND $where
-                        AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
+                        AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                            SELECT plugin_formcreator_forms_id
                            FROM $table_fp
-                           WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))";
+                           WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
          $result = $DB->query($query);
          list($nb) = $DB->fetch_array($result);
          if ($nb > 0) {
@@ -110,7 +110,6 @@ function plugin_init_formcreator ()
          $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
          // Config page
-         $plugin = new Plugin();
          $links  = array();
          if (Session::haveRight('entity', UPDATE)) {
             $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
@@ -118,8 +117,8 @@ function plugin_init_formcreator ()
             $links['config'] = '/plugins/formcreator/front/form.php';
             $links['add']    = '/plugins/formcreator/front/form.form.php';
          }
-         $img = '<img  src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/check.png"
-                     title="'.__('Forms waiting for validation', 'formcreator').'" alt="Waiting forms list" />';
+         $img = '<img  src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+                     title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
          $links[$img] = '/plugins/formcreator/front/formanswer.php';
 

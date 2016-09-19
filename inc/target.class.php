@@ -160,6 +160,8 @@ class PluginFormcreatorTarget extends CommonDBTM
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
       }
+
+      return $input;
    }
 
    public static function install(Migration $migration)

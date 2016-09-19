@@ -74,23 +74,23 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $rand = mt_rand();
 
       $obj = new PluginFormcreatorTarget();
-      $found = $obj->find("itemtype = '".__CLASS__."' AND items_id = ".$this->getID());
+      $found = $obj->find("itemtype = '" . __CLASS__ . "' AND items_id = " . $this->getID());
       $target = array_shift($found);
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($target['plugin_formcreator_forms_id']);
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       // General information : name
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="2">'.__('Edit a destination', 'formcreator').'</th></tr>';
+      echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
 
       echo '<tr class="line1">';
-      echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="'.$target['name'].'"></textarea</td>';
+      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"></textarea</td>';
       echo '</tr>';
 
       echo '</table>';
@@ -98,17 +98,17 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // Ticket information : title, template...
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="4">'._n('Target ticket', 'Target tickets', 1, 'formcreator').'</th></tr>';
+      echo '<tr><th colspan="4">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
 
       echo '<tr class="line1">';
-      echo '<td><strong>'.__('Ticket title', 'formcreator').' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="'.$this->fields['name'].'"></textarea</td>';
+      echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
+      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea</td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
-      echo '<td><strong>'.__('Description').' <span style="color:red;">*</span></strong></td>';
+      echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="comment" style="width:700px;" rows="15">'.$this->fields['comment'].'</textarea>';
+      echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
       if ($CFG_GLPI["use_rich_text"]) {
          Html::initEditorSystem('comment');
       }
@@ -117,14 +117,14 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
       // Ticket Template
       echo '<tr class="line1">';
-      echo '<td width="15%">'._n('Ticket template', 'Ticket templates', 1).'</td>';
+      echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
       echo '<td width="25%">';
       Dropdown::show('TicketTemplate', array(
          'name'  => 'tickettemplates_id',
          'value' => $this->fields['tickettemplates_id']
       ));
       echo '</td>';
-      echo '<td width="15%">'.__('Due date').'</td>';
+      echo '<td width="15%">' . __('Due date') . '</td>';
       echo '<td width="45%">';
 
       // -------------------------------------------------------------------------------------------
@@ -142,16 +142,15 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $questions_list = array(Dropdown::EMPTY_VALUE);
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
+                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = " . $this->getID() . "
                 ORDER BY s.order";
       $result = $DB->query($query);
       while ($section = $DB->fetch_array($result)) {
          // select all date and datetime questions
          $query2 = "SELECT q.id, q.name
                    FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s
+                   INNER JOIN glpi_plugin_formcreator_sections s 
                      ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
                    AND q.fieldtype IN ('date', 'datetime')";
@@ -203,7 +202,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       // Ticket Entity
       // -------------------------------------------------------------------------------------------
       echo '<tr class="line1">';
-      echo '<td width="15%">'.__('Destination entity').'</td>';
+      echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
       $rand = mt_rand();
       Dropdown::showFromArray(
@@ -246,9 +245,9 @@ EOS;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="entity_specific_title" style="display: none">'._n('Entity', 'Entities', 1).'</span>';
-      echo '<span id="entity_user_title" style="display: none">'.__('User type question', 'formcreator').'</span>';
-      echo '<span id="entity_entity_title" style="display: none">'.__('Entity type question', 'formcreator').'</span>';
+      echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
+      echo '<span id="entity_user_title" style="display: none">' . __('User type question', 'formcreator') . '</span>';
+      echo '<span id="entity_entity_title" style="display: none">' . __('Entity type question', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
 
@@ -312,7 +311,7 @@ EOS;
       $plugin = new Plugin();
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
          echo '<tr class="line1">';
-         echo '<td width="15%">'.__('Ticket tags', 'formcreator').'</td>';
+         echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
          $rand = mt_rand();
          Dropdown::showFromArray('tag_type', self::getEnumTagType(),
@@ -354,8 +353,8 @@ EOS;
          echo Html::scriptBlock($script);
          echo '</td>';
          echo '<td width="15%">';
-         echo '<div id="tag_question_title" style="display: none">'._n('Question', 'Questions', 2, 'formcreator').'</div>';
-         echo '<div id="tag_specific_title" style="display: none">'.__('Tags', 'tag').'</div>';
+         echo '<div id="tag_question_title" style="display: none">' . _n('Question', 'Questions', 2, 'formcreator') . '</div>';
+         echo '<div id="tag_specific_title" style="display: none">' . __('Tags', 'tag') . '</div>';
          echo '</td>';
          echo '<td width="25%">';
 
@@ -435,10 +434,10 @@ EOS;
 
       echo '<tr class="line1">';
       echo '<td colspan="5" class="center">';
-      echo '<input type="reset" name="reset" class="submit_button" value="'.__('Cancel', 'formcreator').'"
-               onclick="document.location = \'form.form.php?id='.$target['plugin_formcreator_forms_id'].'\'" /> &nbsp; ';
-      echo '<input type="hidden" name="id" value="'.$this->getID().'" />';
-      echo '<input type="submit" name="update" class="submit_button" value="'.__('Save').'" />';
+      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
+               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
       echo '</td>';
       echo '</tr>';
 
@@ -491,7 +490,7 @@ EOS;
       $actors = array('requester' => array(), 'observer' => array(), 'assigned' => array());
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
-                WHERE plugin_formcreator_targettickets_id = ".$this->getID();
+                WHERE plugin_formcreator_targettickets_id = " . $this->getID();
       $result = $DB->query($query);
       while ($actor = $DB->fetch_array($result)) {
          $actors[$actor['actor_role']][$actor['id']] = array(
@@ -501,20 +500,20 @@ EOS;
          );
       }
 
-      $img_user     = '<img src="../../../pics/users.png" alt="'.__('User').'" title="'.__('User').'" width="20" />';
-      $img_group    = '<img src="../../../pics/groupes.png" alt="'.__('Group').'" title="'.__('Group').'" width="20" />';
-      $img_supplier = '<img src="../../../pics/supplier.png" alt="'.__('Supplier').'" title="'.__('Supplier').'" width="20" />';
-      $img_mail     = '<img src="../pics/email.png" alt="'.__('Yes').'" title="'.__('Email followup').' '.__('Yes').'" />';
-      $img_nomail   = '<img src="../pics/email-no.png" alt="'.__('No').'" title="'.__('Email followup').' '.__('No').'" />';
+      $img_user     = '<img src="../../../pics/users.png" alt="' . __('User') . '" title="' . __('User') . '" width="20" />';
+      $img_group    = '<img src="../../../pics/groupes.png" alt="' . __('Group') . '" title="' . __('Group') . '" width="20" />';
+      $img_supplier = '<img src="../../../pics/supplier.png" alt="' . __('Supplier') . '" title="' . __('Supplier') . '" width="20" />';
+      $img_mail     = '<img src="../pics/email.png" alt="' . __('Yes') . '" title="' . __('Email followup') . ' ' . __('Yes') . '" />';
+      $img_nomail   = '<img src="../pics/email-no.png" alt="' . __('No') . '" title="' . __('Email followup') . ' ' . __('No') . '" />';
 
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="3">'.__('Ticket actors', 'formcreator').'</th></tr>';
+      echo '<tr><th colspan="3">' . __('Ticket actors', 'formcreator') . '</th></tr>';
 
       echo '<tr>';
 
       echo '<th width="33%">';
-      echo _n('Requester', 'Requesters', 1).' &nbsp;';
+      echo _n('Requester', 'Requesters', 1) . ' &nbsp;';
       echo '<img title="Ajouter" alt="Ajouter" onclick="displayRequesterForm()" class="pointer"
                id="btn_add_requester" src="../../../pics/add_dropdown.png">';
       echo '<img title="Annuler" alt="Annuler" onclick="hideRequesterForm()" class="pointer"
@@ -522,7 +521,7 @@ EOS;
       echo '</th>';
 
       echo '<th width="34%">';
-      echo _n('Watcher', 'Watchers', 1).' &nbsp;';
+      echo _n('Watcher', 'Watchers', 1) . ' &nbsp;';
       echo '<img title="Ajouter" alt="Ajouter" onclick="displayWatcherForm()" class="pointer"
                id="btn_add_watcher" src="../../../pics/add_dropdown.png">';
       echo '<img title="Annuler" alt="Annuler" onclick="hideWatcherForm()" class="pointer"
@@ -530,7 +529,7 @@ EOS;
       echo '</th>';
 
       echo '<th width="33%">';
-      echo __('Assigned to').' &nbsp;';
+      echo __('Assigned to') . ' &nbsp;';
       echo '<img title="Ajouter" alt="Ajouter" onclick="displayAssignedForm()" class="pointer"
                id="btn_add_assigned" src="../../../pics/add_dropdown.png">';
       echo '<img title="Annuler" alt="Annuler" onclick="hideAssignedForm()" class="pointer"
@@ -545,7 +544,7 @@ EOS;
       echo '<td valign="top">';
 
       // => Add requester form
-      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       Dropdown::showFromArray('actor_type', array(
          ''                => Dropdown::EMPTY_VALUE,
@@ -591,9 +590,9 @@ EOS;
       echo '</div>';
 
       echo '<p align="center">';
-      echo '<input type="hidden" name="id" value="'.$this->getID().'" />';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
       echo '<input type="hidden" name="actor_role" value="requester" />';
-      echo '<input type="submit" value="'.__('Add').'" class="submit_button" />';
+      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
 
       echo "<hr>";
@@ -605,35 +604,35 @@ EOS;
          echo '<div>';
          switch ($values['actor_type']) {
             case 'creator' :
-               echo $img_user.' <b>'.__('Form requester', 'formcreator').'</b>';
+               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
             case 'validator' :
-               echo $img_user.' <b>'.__('Form validator', 'formcreator').'</b>';
+               echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
                break;
             case 'person' :
                $user = new User();
                $user->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('User').' </b> "'.$user->getName().'"';
+               echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
                break;
             case 'question_person' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('Person from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
             case 'group' :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('Group').' </b> "'.$group->getName().'"';
+               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
             case 'question_group' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_group.' <b>'.__('Group from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
          }
-         echo $values['use_notification'] ? ' '.$img_mail.' ' : ' '.$img_nomail.' ';
+         echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
          echo '</div>';
       }
@@ -645,7 +644,7 @@ EOS;
 
       // => Add observer form
       echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'.
-           $CFG_GLPI['root_doc'].'/plugins/formcreator/front/targetticket.form.php">';
+           $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       Dropdown::showFromArray('actor_type', array(
          ''                => Dropdown::EMPTY_VALUE,
@@ -691,9 +690,9 @@ EOS;
       echo '</div>';
 
       echo '<p align="center">';
-      echo '<input type="hidden" name="id" value="'.$this->getID().'" />';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
       echo '<input type="hidden" name="actor_role" value="observer" />';
-      echo '<input type="submit" value="'.__('Add').'" class="submit_button" />';
+      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
 
       echo "<hr>";
@@ -706,35 +705,35 @@ EOS;
          echo '<div>';
          switch ($values['actor_type']) {
             case 'creator' :
-               echo $img_user.' <b>'.__('Form requester', 'formcreator').'</b>';
+               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
             case 'validator' :
-               echo $img_user.' <b>'.__('Form validator', 'formcreator').'</b>';
+               echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
                break;
             case 'person' :
                $user = new User();
                $user->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('User').' </b> "'.$user->getName().'"';
+               echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
                break;
             case 'question_person' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('Person from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
             case 'group' :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('Group').' </b> "'.$group->getName().'"';
+               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
             case 'question_group' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_group.' <b>'.__('Group from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
          }
-         echo $values['use_notification'] ? ' '.$img_mail.' ' : ' '.$img_nomail.' ';
+         echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
          echo '</div>';
       }
@@ -745,7 +744,7 @@ EOS;
       echo '<td valign="top">';
 
       // => Add assigned to form
-      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       Dropdown::showFromArray('actor_type', array(
          ''                  => Dropdown::EMPTY_VALUE,
@@ -805,9 +804,9 @@ EOS;
       echo '</div>';
 
       echo '<p align="center">';
-      echo '<input type="hidden" name="id" value="'.$this->getID().'" />';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
       echo '<input type="hidden" name="actor_role" value="assigned" />';
-      echo '<input type="submit" value="'.__('Add').'" class="submit_button" />';
+      echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
 
       echo "<hr>";
@@ -819,46 +818,46 @@ EOS;
          echo '<div>';
          switch ($values['actor_type']) {
             case 'creator' :
-               echo $img_user.' <b>'.__('Form requester', 'formcreator').'</b>';
+               echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
             case 'validator' :
-               echo $img_user.' <b>'.__('Form validator', 'formcreator').'</b>';
+               echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
                break;
             case 'person' :
                $user = new User();
                $user->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('User').' </b> "'.$user->getName().'"';
+               echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
                break;
             case 'question_person' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('Person from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
             case 'group' :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
-               echo $img_user.' <b>'.__('Group').' </b> "'.$group->getName().'"';
+               echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
             case 'question_group' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_group.' <b>'.__('Group from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
             case 'supplier' :
                $supplier = new Supplier();
                $supplier->getFromDB($values['actor_value']);
-               echo $img_supplier.' <b>'.__('Supplier').' </b> "'.$supplier->getName().'"';
+               echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $supplier->getName() . '"';
                break;
             case 'question_supplier' :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_supplier.' <b>'.__('Supplier from the question', 'formcreator')
-                 .'</b> "'.$question->getName().'"';
+               echo $img_supplier . ' <b>' . __('Supplier from the question', 'formcreator')
+                  . '</b> "' . $question->getName() . '"';
                break;
          }
-         echo $values['use_notification'] ? ' '.$img_mail.' ' : ' '.$img_nomail.' ';
+         echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
          echo '</div>';
       }
@@ -872,16 +871,16 @@ EOS;
       // List of available tags
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="5">'.__('List of available tags').'</th></tr>';
+      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
       echo '<tr>';
-      echo '<th width="40%" colspan="2">'._n('Question', 'Questions', 1, 'formcreator').'</th>';
-      echo '<th width="20%">'.__('Title').'</th>';
-      echo '<th width="20%">'._n('Answer', 'Answers', 1, 'formcreator').'</th>';
-      echo '<th width="20%">'._n('Section', 'Sections', 1, 'formcreator').'</th>';
+      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . __('Title') . '</th>';
+      echo '<th width="20%">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
       echo '</tr>';
 
       echo '<tr class="line0">';
-      echo '<td colspan="2"><strong>'.__('Full form', 'formcreator').'</strong></td>';
+      echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
       echo '<td align="center"><code>-</code></td>';
       echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
       echo '<td align="center">-</td>';
@@ -893,18 +892,18 @@ EOS;
                 FROM $table_questions q
                 LEFT JOIN $table_sections s
                   ON q.`plugin_formcreator_sections_id` = s.`id`
-                WHERE s.`plugin_formcreator_forms_id` = ".$target['plugin_formcreator_forms_id']."
+                WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
                 ORDER BY s.`order`, q.`order`";
       $result = $DB->query($query);
 
       $i = 0;
       while ($question = $DB->fetch_array($result)) {
          $i++;
-         echo '<tr class="line'.($i % 2).'">';
-         echo '<td colspan="2">'.$question['question'].'</td>';
-         echo '<td align="center"><code>##question_'.$question['id'].'##</code></td>';
-         echo '<td align="center"><code>##answer_'.$question['id'].'##</code></td>';
-         echo '<td align="center">'.$question['section'].'</td>';
+         echo '<tr class="line' . ($i % 2) . '">';
+         echo '<td colspan="2">' . $question['question'] . '</td>';
+         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
+         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
+         echo '<td align="center">' . $question['section'] . '</td>';
          echo '</tr>';
       }
 
@@ -1140,7 +1139,7 @@ EOS;
       $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
                               ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
       $date   = array_shift($found);
-      $str    = "+".$this->fields['due_date_value']." ".$this->fields['due_date_period'];
+      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
 
       switch ($this->fields['due_date_rule']) {
          case 'answer':
@@ -1150,7 +1149,7 @@ EOS;
             $due_date = date('Y-m-d H:i:s', strtotime($str));
             break;
          case 'calcul':
-            $due_date = date('Y-m-d H:i:s', strtotime($date['answer']." ".$str));
+            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
             break;
          default:
             $due_date = null;
@@ -1180,8 +1179,8 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanwers_id` = ".$formanswer->fields['id']."
-                      AND `plugin_formcreator_question_id` IN (".$this->fields['tag_questions'].")";
+                      WHERE `plugin_formcreator_formanwers_id` = " . $formanswer->fields['id'] . "
+                      AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
                $tab = json_decode($line['answer']);
@@ -1223,7 +1222,7 @@ EOS;
       // Add actors to ticket
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
-                WHERE plugin_formcreator_targettickets_id = ".$this->getID();
+                WHERE plugin_formcreator_targettickets_id = " . $this->getID();
       $result = $DB->query($query);
       while ($actor = $DB->fetch_array($result)) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
@@ -1378,14 +1377,14 @@ EOS;
             $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
             if (is_array($value)) {
                if ($CFG_GLPI['use_rich_text']) {
-                  $value = '<br />'.implode('<br />', $value);
+                  $value = '<br />' . implode('<br />', $value);
                } else {
-                  $value = "\r\n".implode("\r\n", $value);
+                  $value = "\r\n" . implode("\r\n", $value);
                }
             }
 
-            $content = str_replace('##question_'.$id.'##', $name, $content);
-            $content = str_replace('##answer_'.$id.'##', $value, $content);
+            $content = str_replace('##question_' . $id . '##', $name, $content);
+            $content = str_replace('##answer_' . $id . '##', $value, $content);
          }
       }
 
@@ -1475,15 +1474,20 @@ EOS;
    {
       global $DB;
 
-      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
+      $success1 = $DB->query($query) or die($DB->error());
+      
+      $query = "DROP TABLE IF EXISTS `glpi_plugin_formcreator_targettickets_actors`";
+      $success2 = $DB->query($query) or die($DB->error());
+
+      return $success1 && $success2;
    }
 
    private static function getDeleteImage($id) {
       global $CFG_GLPI;
 
-      $link  = ' &nbsp;<a href="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/front/targetticket.form.php?delete_actor='.$id.'">';
-      $link .= '<img src="../../../pics/delete.png" alt="'.__('Delete').'" title="'.__('Delete').'" />';
+      $link  = ' &nbsp;<a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
+      $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
       $link .= '</a>';
       return $link;
    }

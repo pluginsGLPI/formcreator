@@ -55,7 +55,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          case "PluginFormcreatorForm":
             $number      = 0;
             $section     = new PluginFormcreatorSection();
-            $found     = $section->find('plugin_formcreator_forms_id = '.$item->getID());
+            $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
             $tab_section = array();
             foreach($found as $section_item) {
                $tab_section[] = $section_item['id'];
@@ -63,7 +63,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             if(!empty($tab_section)) {
                $object  = new self;
-               $found = $object->find('plugin_formcreator_sections_id IN ('.implode(', ', $tab_section).')');
+               $found = $object->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')');
                $number  = count($found);
             }
             return self::createTabEntry(self::getTypeName($number), $number);
@@ -84,51 +84,50 @@ class PluginFormcreatorQuestion extends CommonDBChild
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
-      global $CFG_GLPI;
       echo '<table class="tab_cadre_fixe">';
 
       // Get sections
       $section          = new PluginFormcreatorSection();
-      $found_sections = $section->find('plugin_formcreator_forms_id = '.$item->getId(), '`order`');
+      $found_sections = $section->find('plugin_formcreator_forms_id = ' . (int) $item->getId(), '`order`');
       $section_number   = count($found_sections);
       $tab_sections     = array();
       $tab_questions    = array();
       $token            = Session::getNewCSRFToken();
       foreach ($found_sections as $section) {
          $tab_sections[] = $section['id'];
-         echo '<tr id="section_row_'.$section['id'].'">';
-         echo '<th>'.$section['name'].'</th>';
+         echo '<tr id="section_row_' . $section['id'] . '">';
+         echo '<th>' . $section['name'] . '</th>';
          echo '<th align="center" width="32">&nbsp;</th>';
 
          echo '<th align="center" width="32">';
          if($section['order'] != 1) {
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/up2.png"
-                     alt="*" title="'.__('Edit').'"
-                     onclick="moveSection(\''.$token.'\', '.$section['id'].', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up2.png"
+                     alt="*" title="' . __('Bring up') . '"
+                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
          } else {
             echo '&nbsp;';
          }
          echo '</th>';
          echo '<th align="center" width="32">';
          if($section['order'] != $section_number) {
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/down2.png"
-                     alt="*" title="'.__('Edit').'"
-                     onclick="moveSection(\''.$token.'\', '.$section['id'].', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down2.png"
+                     alt="*" title="' . __('Bring down') . '"
+                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
          } else {
             echo '&nbsp;';
          }
          echo '</th>';
 
          echo '<th align="center" width="32">';
-         echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/pencil.png"
-                  alt="*" title="'.__('Edit').'"
-                  onclick="editSection('.$item->getId().', \''.$token.'\', '.$section['id'].')" align="absmiddle" style="cursor: pointer" /> ';
+         echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/pencil.png"
+                  alt="*" title="' . __('Edit') . '"
+                  onclick="editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
          echo '</th>';
 
          echo '<th align="center" width="32">';
-         echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/delete.png"
-                  alt="*" title="'.__('Delete', 'formcreator').'"
-                  onclick="deleteSection('.$item->getId().', \''.$token.'\', '.$section['id'].')"
+         echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
+                  alt="*" title="' . __('Delete', 'formcreator') . '"
+                  onclick="deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"
                   align="absmiddle" style="cursor: pointer" /> ';
          echo '</th>';
          echo '</tr>';
@@ -136,25 +135,25 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // Get questions
          $question          = new PluginFormcreatorQuestion();
-         $found_questions = $question->find('plugin_formcreator_sections_id = '.$section['id'], '`order`');
+         $found_questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section['id'], '`order`');
          $question_number   = count($found_questions);
          $i = 0;
          foreach ($found_questions as $question) {
             $i++;
             $tab_questions[] = $question['id'];
-            echo '<tr class="line'.($i % 2).'" id="question_row_'.$question['id'].'">';
-            echo '<td onclick="editQuestion('.$item->getId().', \''.$token.'\', '.$question['id'].', '.$section['id'].')" style="cursor: pointer">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/ui-'.$question['fieldtype'].'-field.png" alt="" title="" /> ';
+            echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
+            echo '<td onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')" style="cursor: pointer">';
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-' . $question['fieldtype'] . '-field.png" alt="" title="" /> ';
             echo $question['name'];
             echo '</td>';
 
             echo '<td align="center">';
 
-            $question_type = $question['fieldtype'].'Field';
+            $question_type = $question['fieldtype'] . 'Field';
 
 
             $question_types = PluginFormcreatorFields::getTypes();
-            $classname = $question['fieldtype'].'Field';
+            $classname = $question['fieldtype'] . 'Field';
             $fields = $classname::getPrefs();
 
             // avoid quote js error
@@ -163,50 +162,50 @@ class PluginFormcreatorQuestion extends CommonDBChild
             if ($fields['required'] == 0) {
                echo '&nbsp;';
             } elseif($question['required']) {
-               echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/required.png"
-                        alt="*" title="'.__('Required', 'formcreator').'"
-                        onclick="setRequired(\''.$token.'\', '.$question['id'].', 0)" align="absmiddle" style="cursor: pointer" /> ';
+               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/required.png"
+                        alt="*" title="' . __('Required', 'formcreator') . '"
+                        onclick="setRequired(\'' . $token . '\', ' . $question['id'] . ', 0)" align="absmiddle" style="cursor: pointer" /> ';
             } else {
-               echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/not-required.png"
-                        alt="*" title="'.__('Required', 'formcreator').'"
-                        onclick="setRequired(\''.$token.'\', '.$question['id'].', 1)" align="absmiddle" style="cursor: pointer" /> ';
+               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/not-required.png"
+                        alt="*" title="' . __('Required', 'formcreator') . '"
+                        onclick="setRequired(\'' . $token . '\', ' . $question['id'] . ', 1)" align="absmiddle" style="cursor: pointer" /> ';
             }
             echo '</td>';
             echo '<td align="center">';
             if($question['order'] != 1) {
-               echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/up.png"
-                        alt="*" title="'.__('Edit').'"
-                        onclick="moveQuestion(\''.$token.'\', '.$question['id'].', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
+               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
+                        alt="*" title="' . __('Bring up') . '"
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
             }
             echo '</td>';
             echo '<td align="center">';
             if($question['order'] != $question_number) {
-               echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/down.png"
-                        alt="*" title="'.__('Edit').'"
-                        onclick="moveQuestion(\''.$token.'\', '.$question['id'].', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
+               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
+                        alt="*" title="' . __('Bring down') . '"
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
             } else {
                echo '&nbsp;';
             }
             echo '</td>';
             echo '<td align="center">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/pencil.png"
-                     alt="*" title="'.__('Edit').'"
-                     onclick="editQuestion('.$item->getId().', \''.$token.'\', '.$question['id'].', '.$section['id'].')" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/pencil.png"
+                     alt="*" title="' . __('Edit') . '"
+                     onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
             echo '<td align="center">';
-            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/delete.png"
-                     alt="*" title="'.__('Delete', 'formcreator').'"
-                     onclick="deleteQuestion('.$item->getId().', \''.$token.'\', '.$question['id'].')" align="absmiddle" style="cursor: pointer" /> ';
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
+                     alt="*" title="' . __('Delete', 'formcreator') . '"
+                     onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
             echo '</td>';
             echo '</tr>';
          }
 
 
-         echo '<tr class="line'.(($i + 1) % 2).'">';
-         echo '<td colspan="6" id="add_question_td_'.$section['id'].'" class="add_question_tds">';
-         echo '<a href="javascript:addQuestion('.$item->getId().', \''.$token.'\', '.$section['id'].');">
+         echo '<tr class="line' . (($i + 1) % 2) . '">';
+         echo '<td colspan="6" id="add_question_td_' . $section['id'] . '" class="add_question_tds">';
+         echo '<a href="javascript:addQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ');">
                    <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
                    '.__('Add a question', 'formcreator').'
                </a>';
@@ -216,7 +215,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<tr class="line1">';
       echo '<th colspan="6" id="add_section_th">';
-      echo '<a href="javascript:addSection('.$item->getId().', \''.$token.'\');">
+      echo '<a href="javascript:addSection(' . $item->getId() . ', \'' . $token . '\');">
                 <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
                 '.__('Add a section', 'formcreator').'
             </a>';
@@ -272,7 +271,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
       if (empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
          Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator').' '.$input['name'],
+            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
             false,
             ERROR);
          return array();
@@ -282,7 +281,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if ($input['fieldtype'] == 'dropdown') {
          if (empty($input['dropdown_values'])) {
             Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator').' '.$input['name'],
+               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
                false,
                ERROR);
             return array();
@@ -295,7 +294,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if ($input['fieldtype'] == 'glpiselect') {
          if (empty($input['glpi_objects'])) {
             Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator').' '.$input['name'],
+               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
                false,
                ERROR);
             return array();
@@ -307,7 +306,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // A description field should have a description
       if (($input['fieldtype'] == 'description') && empty($input['description'])) {
             Session::addMessageAfterRedirect(
-               __('A description field should have a description:', 'formcreator').' '.$input['name'],
+               __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
                false,
                ERROR);
             return array();
@@ -374,11 +373,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // Add leading and trailing regex marker automaticaly
       if (!empty($input['regex'])) {
          if (substr($input['regex'], 0, 1)  != '/')
-            if (substr($input['regex'], 0, 1)  != '^')   $input['regex'] = '/^'.$input['regex'];
-            else                                         $input['regex'] = '/'.$input['regex'];
+            if (substr($input['regex'], 0, 1)  != '^')   $input['regex'] = '/^' . $input['regex'];
+            else                                         $input['regex'] = '/' . $input['regex'];
          if (substr($input['regex'], -1, 1) != '/')
-            if (substr($input['regex'], -1, 1)  != '$')  $input['regex'] = $input['regex'].'$/';
-            else                                         $input['regex'] = $input['regex'].'/';
+            if (substr($input['regex'], -1, 1)  != '$')  $input['regex'] = $input['regex'] . '$/';
+            else                                         $input['regex'] = $input['regex'] . '/';
       }
 
       return $input;
@@ -450,8 +449,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `{$obj->getTable()}`
                        WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-            $result = $DB->query($query);
-            $line   = $DB->fetch_array($result);
+            $result = $GLOBALS['DB']->query($query);
+            $line   = $GLOBALS['DB']->fetch_array($result);
             $input['order'] = $line['order'] + 1;
          }
       }
@@ -471,11 +470,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
       $value      = plugin_formcreator_encode($input['show_value']);
       $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
+      $show_condition = plugin_formcreator_decode($input['show_condition']);
       $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                   `plugin_formcreator_questions_id` = {$input['id']},
                   `show_field`     = $show_field,
-                  `show_condition` = '".$input['show_condition']."',
-                  `show_value`     = '".$value."'";
+                  `show_condition` = '" . $show_condition . "',
+                  `show_value`     = '" . $value . "'";
       $DB->query($query);
       // ===============================================================
    }
@@ -590,7 +590,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                if (isset($datas->value) && !empty($datas->value)) {
                   if(is_object($datas->value)) {
                      foreach($datas->value as $value) {
-                        if (!empty($value)) $values .= urldecode($value)."\r\n";
+                        if (!empty($value)) $values .= urldecode($value) . "\r\n";
                      }
                   } else {
                      $values .= urldecode($datas->value);
@@ -615,8 +615,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
                            case '5':
                               $regex = urldecode($options->value);
                               // Add leading and trailing regex marker (automaticaly added in V1)
-                              if (substr($regex, 0, 1)  != '/') $regex = '/'.$regex;
-                              if (substr($regex, -1, 1) != '/') $regex = $regex.'/';
+                              if (substr($regex, 0, 1)  != '/') $regex = '/' . $regex;
+                              if (substr($regex, -1, 1) != '/') $regex = $regex . '/';
                               break;
                            case '6':
                               $fieldtype = 'email';
@@ -669,12 +669,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
                }
 
                $query_udate = "UPDATE `$table` SET
-                                  `fieldtype`      = '".$fieldtype."',
-                                  `values`         = '".htmlspecialchars($values)."',
-                                  `default_values` = '".htmlspecialchars($default)."',
-                                  `regex`          = '".$regex."',
-                                  `required`       = ".$required."
-                               WHERE `id` = ".$line['id'];
+                                  `fieldtype`      = '" . $fieldtype . "',
+                                  `values`         = '" . htmlspecialchars($values) . "',
+                                  `default_values` = '" . htmlspecialchars($default) . "',
+                                  `regex`          = '" . $regex . "',
+                                  `required`       = " . (int) $required . "
+                               WHERE `id` = " . $line['id'];
                $DB->query($query_udate) or die ($DB->error());
             }
 
@@ -741,14 +741,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
                $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
                                  `show_rule` = '$show_rule'
-                               WHERE `id` = ".$line['id'];
+                               WHERE `id` = " . $line['id'];
                $DB->query($query_udate) or die ($DB->error());
 
                $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                                   `plugin_formcreator_questions_id` = {$line['id']},
                                   `show_field`     = $show_field,
                                   `show_condition` = '$show_condition',
-                                  `show_value`     = '".Toolbox::addslashes_deep($line['show_value'])."'";
+                                  `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
                $DB->query($query_udate) or die ($DB->error());
             }
 
@@ -772,11 +772,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `glpi_plugin_formcreator_questions` SET
-                               `name`           = '".plugin_formcreator_encode($line['name'])."',
-                               `values`         = '".plugin_formcreator_encode($line['values'])."',
-                               `default_values` = '".plugin_formcreator_encode($line['default_values'])."',
-                               `description`    = '".plugin_formcreator_encode($line['description'])."'
-                             WHERE `id` = ".$line['id'];
+                               `name`           = '" . plugin_formcreator_encode($line['name']) . "',
+                               `values`         = '" . plugin_formcreator_encode($line['values']) . "',
+                               `default_values` = '" . plugin_formcreator_encode($line['default_values']) . "',
+                               `description`    = '" . plugin_formcreator_encode($line['description']) . "'
+                             WHERE `id` = " . $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
 
@@ -786,8 +786,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
-                               `show_value` = '".plugin_formcreator_encode($line['show_value'])."'
-                             WHERE `id` = ".$line['id'];
+                               `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
+                             WHERE `id` = " . (int) $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
       }
@@ -804,11 +804,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $DB->query('DROP TABLE IF EXISTS `' . self::getTable() . '`');
 
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
+      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }
