@@ -44,10 +44,6 @@ class dateField extends PluginFormcreatorField
 
    public function isValid($value)
    {
-      // If the field is not visible, don't check it's value
-      if (!PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']))
-         return true;
-
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($value) == '')) {
          Session::addMessageAfterRedirect(
