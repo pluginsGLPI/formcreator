@@ -84,6 +84,9 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
          } else {
             $ticketId = Toolbox::cleanInteger($_GET['tid']);
          }
+         if (!in_array($ticketId, $ticketIds)) {
+            Html::displayNotFoundError();
+         }
          $ticketIndex = $ticketSequence[$ticketId];
          $previousTicketId = $ticketIndex > 0 ? $ticketIds[$ticketIndex - 1] : 0;
          $nextTicketId = $ticketIndex < count($ticketIds) - 1 ? $ticketIds[$ticketIndex + 1] : 0;
