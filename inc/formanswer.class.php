@@ -322,7 +322,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
-         echo '<div class="form-group line'.((questionsCount + 1) % 2).'">';
+         echo '<div class="form-group line'.(($questionsCount + 1) % 2).'">';
          echo '<div class="center">';
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
          echo '</div>';
