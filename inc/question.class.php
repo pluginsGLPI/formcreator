@@ -84,6 +84,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
+      global $CFG_GLPI;
+
       echo '<table class="tab_cadre_fixe">';
 
       // Get sections
