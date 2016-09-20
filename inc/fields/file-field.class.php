@@ -23,9 +23,6 @@ class fileField extends PluginFormcreatorField
 
    public function isValid($value)
    {
-      // If the field is not visible, don't check it's value
-      if (!PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer'])) return true;
-
       // If the field is required it can't be empty
       if ($this->isRequired() && (empty($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name'])
                                  || !is_file($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name']))) {

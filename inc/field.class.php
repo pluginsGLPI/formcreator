@@ -88,10 +88,6 @@ abstract class PluginFormcreatorField implements Field
 
    public function isValid($value)
    {
-      // If the field is not visible, don't check it's value
-      if (!PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']))
-         return true;
-
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
          Session::addMessageAfterRedirect(
@@ -107,8 +103,7 @@ abstract class PluginFormcreatorField implements Field
 
    public function isRequired()
    {
-      $is_visible = PluginFormcreatorFields::isVisible($this->fields['id'], $this->fields['answer']);
-      return ($is_visible && $this->fields['required']);
+      return $this->fields['required'];
    }
 
 }

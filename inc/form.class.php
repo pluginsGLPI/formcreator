@@ -951,7 +951,7 @@ class PluginFormcreatorForm extends CommonDBTM
             include_once ($filePath);
             if (class_exists($className)) {
                $obj = new $className($fields, $datas);
-               if (!$obj->isValid($datas[$id])) {
+               if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas[$id])) {
                   $valid = false;
                }
             }
