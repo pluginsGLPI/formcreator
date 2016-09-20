@@ -492,11 +492,11 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard {
-   
+   position: relative;
 }
 
 .plugin_formcreator_marginRight {
-	margin-right: 275px;
+   margin-right: 275px;
 }
 
 #plugin_formcreator_wizard_categories {
@@ -574,7 +574,10 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_lastForms {
    width: 265px;
-   float:right;
+   /*float:right;*/
+   position: absolute;
+   right: 0;
+   top: 0;
 }
 
 #plugin_formcreator_lastForms > div {
@@ -831,7 +834,9 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_right, .plugin_formcreator_last {
-   float: right;
+   /*float: right;*/
+   positin: absolute;
+   right: 0;
    width: 16px;
    margin: 10px 0;
 }
@@ -889,7 +894,6 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_userMenuCell {
    display: table-cell;
-   
 }
 
 #plugin_formcreator_logoutIcon, #plugin_formcreator_preferences_icon, #plugin_formcreator_bookmarkIcon {
@@ -969,7 +973,7 @@ a.plugin_formcreator_formTile_title {
    }
 
 
-   #plugin_formcreator_wizard,
+   /*#plugin_formcreator_wizard,*/
    #plugin_formcreator_wizard_right {
       margin: 0;
       width: 100%;
@@ -981,8 +985,12 @@ a.plugin_formcreator_formTile_title {
    }
 
    #plugin_formcreator_lastForms {
-      float: none;
+      position: static;
       width: 100%;
+   }
+
+   .plugin_formcreator_marginRight {
+      margin-right: 0;
    }
 
    #plugin_formcreator_searchBar input ~ label {

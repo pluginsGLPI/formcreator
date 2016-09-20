@@ -501,13 +501,9 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showList() {
       global $CFG_GLPI, $DB;
 
-      echo '<div class="center">';
+      echo '<div class="center" id="plugin_formcreator_wizard">';
 
-      echo '<div id="plugin_formcreator_lastForms">';
-      $this->showMyLastForms();
-      echo '</div>';
-
-      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_marginRight plugin_formcreator_card">';
+      echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
@@ -532,10 +528,13 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       echo '</div>';
 
+      echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
+      echo '</div>';
+      echo '<div id="plugin_formcreator_lastForms">';
+      $this->showMyLastForms();
       echo '</div>';
 
       echo '</div>';
-      echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
    }
 
    public function showServiceCatalog() {
