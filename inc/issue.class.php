@@ -88,11 +88,10 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
          $previousTicketId = $ticketIndex > 0 ? $ticketIds[$ticketIndex - 1] : 0;
          $nextTicketId = $ticketIndex < count($ticketIds) - 1 ? $ticketIds[$ticketIndex + 1] : 0;
          $firstTicketId = $ticketId != $ticketIds[0] ? $ticketIds[0] : 0;
-         $lastTicketId = $ticketIds[count($ticketIds) - 1];
-         $currentTicketid = $ticketIds[$_SESSION['plugin_formcreator_formanswer_timeline_index']];
+         $lastTicketId = $ticketId != $ticketIds[count($ticketIds) - 1] ? $ticketIds[count($ticketIds) - 1] : 0;
 
          $ticket = new Ticket();
-         if (!$ticket->getFromDB($currentTicketid)) {
+         if (!$ticket->getFromDB($ticketId)) {
             Html::displayNotFoundError();
          } else {
             // Header to navigate through tickets in a single formanswer
@@ -123,7 +122,7 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
                      . __('Previous'). '" class="pointer"></a></span>';
             }
 
-            if ($nextTicketId == 0) {
+            if ($lastTicketId == 0) {
                echo '<span class="plugin_formcreator_last">'
                      .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last_off.png" alt="'
                      . __('First'). '" title="'
@@ -135,14 +134,14 @@ class PluginFormcreatorIssue extends PluginFormcreatorFormanswer {
                      . __('Last'). '" class="pointer"></a></span>';
             }
 
-            if ($lastTicketId == 0) {
+            if ($nextTicketId == 0) {
                echo '<span class="plugin_formcreator_right">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last_off.png" alt="'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/right_off.png" alt="'
                            . __('First'). '" title="'
                                  . __('First'). '" class="pointer"></span>';
                } else {
                echo '<span class="plugin_formcreator_right"><a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/issue.form.php?id=' . $formanswerId . '&tid=' . $nextTicketId . '">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/right_off.png" alt="'
+                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/right.png" alt="'
                      . __('Next'). '" title="'
                      . __('Next'). '" class="pointer"></a></span>';
             }
