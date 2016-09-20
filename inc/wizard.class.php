@@ -111,8 +111,6 @@ class PluginFormcreatorWizard {
       }
       $FOOTER_LOADED = true;
 
-      echo "</div>"; // fin de la div id ='page' initiée dans la fonction header
-
       echo "<div id='footer' class='plugin_formcreator_footer'>";
       echo "<table width='100%'><tr><td class='right'>";
       echo "<a href='http://glpi-project.org/'>";
@@ -124,6 +122,8 @@ class PluginFormcreatorWizard {
            " - Copyright (C) 2003-2015 INDEPNET Development Team".
            "</span>";
       echo "</a></td></tr></table></div>";
+
+      echo "</div>"; // fin de la div id ='page' initiée dans la fonction header
 
       if ($_SESSION['glpi_use_mode'] == Session::TRANSLATION_MODE) { // debug mode traduction
          echo "<div id='debug-float'>";

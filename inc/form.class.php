@@ -542,7 +542,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<div class="center">';
 
-      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder plugin_formcreator_card">';
+      echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';

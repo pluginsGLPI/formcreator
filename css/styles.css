@@ -749,14 +749,15 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_leftHeader {
    float: left;
    height: 100% !important;
-   margin-top: -10px;
+   /*margin-top: -10px;*/
    background-color: #3A5693;
 }
 
 .plugin_formcreator_footer {
    clear: both;
-   position: absolute;
-   bottom: 0;
+   /*position: absolute;*/
+   position: relative;
+   bottom: 28px;
    padding: 5px 0 !important;
    width: 100%;
 }
@@ -930,11 +931,9 @@ a.plugin_formcreator_formTile_title {
 }
 
 #page.plugin_formcreator_page {
-   margin-left: 265px;
-   margin-top: 10px;
-   margin-right: 10px;
-   margin-bottom: 0;
+   margin: 0 0 0 250px;
    padding: 0;
+   max-height: 100%;
 }
 
 #page.plugin_formcreator_container {
@@ -947,7 +946,16 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_page .navigationheader .tab_cadre_pager {
-	width: auto;
+   width: auto;
+}
+
+#searchcriterias  {
+   padding-top: 5px;
+}
+
+.tab_cadre_pager, .navigationheader {
+   margin-top: 0;
+   padding-top: 15px;
 }
 
 /* ################--------------- Responsive  ---------------#################### */
