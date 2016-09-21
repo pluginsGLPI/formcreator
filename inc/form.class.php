@@ -726,7 +726,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
          echo "</ul>";
          echo '<div align="center">';
-         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]=2">';
+         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$_SESSION['glpiID'].'">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -758,7 +758,7 @@ class PluginFormcreatorForm extends CommonDBTM
             }
             echo "</ul>";
             echo '<div align="center">';
-            echo '<a href="formanswer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=2">';
+            echo '<a href="formanswer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]='.$_SESSION['glpiID'].'">';
             echo __('All my forms (validator)', 'formcreator');
             echo '</a>';
             echo '</div>';
