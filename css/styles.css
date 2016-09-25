@@ -789,7 +789,7 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_leftMenu ul.plugin_formcreator_userMenu {
    margin-left: 100px;
-   float: right;
+   /*float: right;*/
    display: inline-block;
 }
 
@@ -835,9 +835,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_right, .plugin_formcreator_last {
-   /*float: right;*/
-   positin: absolute;
-   right: 0;
+   float: right;
    width: 16px;
    margin: 10px 0;
 }
@@ -886,11 +884,11 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_avatar {
-   width: 64px;
-   height: 64px;
-   /*float: left;*/
+   width: 32px;
+   height: 32px;
    display: table-cell;
    background: url('../pics/user.png') no-repeat;
+   background-size: contain;
 }
 
 .plugin_formcreator_userMenuCell {
@@ -920,7 +918,7 @@ a.plugin_formcreator_formTile_title {
    color: #FFF;
    margin: 0 !important;
    height: 32px;
-   line-height: 32px;
+   /*line-height: 32px;*/
 }
 
 #plugin_formcreator_preferences_icon a:first-child {
