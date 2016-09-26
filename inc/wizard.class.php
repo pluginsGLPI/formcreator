@@ -62,11 +62,12 @@ class PluginFormcreatorWizard {
       }
       echo '</ul>';
 
+      echo '<div class="plugin_formcreator_userMenuCell">';
       echo '<span id="plugin_formcreator_avatar"></span>';
-      echo '<div class="plugin_formcreator_userMenuCell"><div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
+      echo '<div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
                               $_SESSION["glpifirstname"], 0, 20) . '</div>';
       //echo '<div>';
-      echo '<ul class="plugin_formcreator_userMenu">';
+      echo '<ul class="plugin_formcreator_userMenu_icons">';
       echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
@@ -167,7 +168,7 @@ class PluginFormcreatorWizard {
       global $CFG_GLPI;
 
       if (count($_SESSION["glpiprofiles"]) > 1) {
-         echo '<li class="plugin_formcreator_leftMenuItem_separator"><form name="form" method="post" action="'.$target.'">';
+         echo '<li><form name="form" method="post" action="'.$target.'">';
          $values = array();
          foreach ($_SESSION["glpiprofiles"] as $key => $val) {
             $values[$key] = $val['name'];
@@ -182,11 +183,7 @@ class PluginFormcreatorWizard {
       }
 
       if (Session::isMultiEntitiesMode()) {
-         if (count($_SESSION["glpiprofiles"]) > 1) {
-            echo '<li>';
-         } else {
-            echo '<li class="plugin_formcreator_leftMenuItem_separator">';
-         }
+         echo '<li>';
          Ajax::createModalWindow('entity_window', $CFG_GLPI['root_doc']."/ajax/entitytree.php",
                array('title'       => __('Select the desired entity'),
                      'extraparams' => array('target' => $target)));

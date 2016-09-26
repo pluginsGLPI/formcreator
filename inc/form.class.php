@@ -540,8 +540,6 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showServiceCatalog() {
       global $CFG_GLPI, $DB;
 
-      echo '<div class="center">';
-
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder">';
 
       echo '<div id="plugin_formcreator_wizard_categories">';
@@ -565,8 +563,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
-      echo '</div>';
-
       echo '</div>';
 
       echo '</div>';
