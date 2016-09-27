@@ -2,6 +2,10 @@
 class PluginFormcreatorIssue extends CommonDBTM {
    static $rightname = 'ticket';
 
+   public static function getTypeName($nb = 0) {
+      return _n('Issue', 'Issues', $nb, 'formcreator');
+   }
+
    public static function install(Migration $migration) {
       global $DB;
 
