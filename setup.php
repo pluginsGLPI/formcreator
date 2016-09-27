@@ -1,4 +1,7 @@
 <?php
+global $CFG_GLPI;
+define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc']."/plugins/formcreator");
+
 /**
  * Define the plugin's version and informations
  *
@@ -169,14 +172,6 @@ function plugin_init_formcreator ()
       ));
 
       Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
-   }
-
-   if ($plugin->isInstalled('formcreator')) {
-
-      // Override table name computation for the itemtype issue. This is a clone of FormAnswer
-      // to override its display in the wizard context
-      $CFG_GLPI['glpitablesitemtype']['PluginFormcreatorIssue']      = 'glpi_plugin_formcreator_formanswers';
-      $CFG_GLPI['glpiitemtypetables']['glpi_plugin_formcreator_formanswers'] = 'PluginFormcreatorIssue';
    }
 }
 

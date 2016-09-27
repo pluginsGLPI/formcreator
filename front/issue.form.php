@@ -4,7 +4,7 @@ require_once ('../../../inc/includes.php');
 // Check if plugin is activated...
 $plugin = new Plugin();
 if($plugin->isActivated('formcreator')) {
-   if (!plugin_formcreator_replaceHelpdesk()) {
+   if (!isset($_REQUEST['sub_itemtype'])) {
       Html::displayNotFoundError();
    }
 
