@@ -164,6 +164,12 @@ class PluginFormcreatorTarget extends CommonDBTM
       return $input;
    }
 
+   public function pre_deleteItem() {
+      $itemtype = $this->getField('itemtype');
+      $item = new $itemtype();
+      return $item->delete(array('id' => $this->getField('items_id')));
+   }
+
    public static function install(Migration $migration)
    {
       global $DB;

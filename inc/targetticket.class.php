@@ -968,6 +968,15 @@ EOS;
       return $input;
    }
 
+   public function pre_deleteItem() {
+      global $DB;
+
+      $targetTicketId = $this->getID();
+      $query = "DELETE FROM `glpi_plugin_formcreator_targettickets_actors`
+         WHERE `plugin_formcreator_targettickets_id` = '$targetTicketId'";
+      return $DB->query($query);
+   }
+
    /**
     * Save form datas to the target
     *
