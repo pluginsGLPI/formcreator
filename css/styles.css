@@ -493,11 +493,11 @@ form.formcreator_form {
 
 #plugin_formcreator_wizard {
    position: relative;
-   height: 100%;
 }
 
+
 .plugin_formcreator_page #plugin_formcreator_wizard {
-   height: 100%;
+   height: 100vh;
    background-color: #FFF;
 }
 
@@ -514,6 +514,10 @@ form.formcreator_form {
    left: 0;
    float: left;
    border-right: 1px solid rgba(0,0,0,.1);
+   text-align: center;
+}
+.plugin_formcreator_page #plugin_formcreator_wizard_categories {
+   height: 100vh;
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
@@ -523,7 +527,6 @@ form.formcreator_form {
 
 .plugin_formcreator_card {
    background: #FFF;
-   height: 100%;
    border-radius: 2px;
    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
                0 3px 1px -2px rgba(0,0,0,.2),
@@ -595,8 +598,13 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_wizard_right {
    /*margin-left: 295px;*/
    min-width: 116px;
+   height: 100%;
    overflow: hidden;
-   padding: 10px 0 3px 3px;
+   padding: 10px 0 3px 23px;
+}
+
+.plugin_formcreator_page #plugin_formcreator_wizard_right {
+   height: calc(100vh - 28px);
 }
 
 #plugin_formcreator_wizard_forms {

@@ -61,20 +61,20 @@ jQuery(document).ready(function($) {
       updateWizardFormsView(0);
 
       // Setup events
-      $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].onclick = function () {
+      $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
          sortByName = false;
          showTiles(tiles);
-      }
+      });
 
-     $('.plugin_formcreator_sort input[value=alphabeticSort]')[0].onclick = function () {
-        sortByName = true;
-        showTiles(tiles);
-     }
+      $('.plugin_formcreator_sort input[value=alphabeticSort]').click(function () {
+         sortByName = true;
+         showTiles(tiles);
+      });
 
-     $('#plugin_formcreator_wizard_categories > div:first')[0].onclick = function () {
-        updateCategoriesView();
-        updateWizardFormsView(0);
-     }
+      $('#plugin_formcreator_wizard_categories #wizard_seeall').click(function () {
+         updateCategoriesView();
+         updateWizardFormsView(0);
+      });
    }
 
    // Initialize search bar
@@ -153,11 +153,14 @@ function updateCategoriesView() {
       html = html + '</div>';
 
       //Display categories
-      $('#plugin_formcreator_wizard_categories > div').nextAll().remove();
+      $('#plugin_formcreator_wizard_categories .slinky-menu').remove();
       $('#plugin_formcreator_wizard_categories').append(html);
 
       // Setup slinky
-      $('#plugin_formcreator_wizard_categories div:nth(1)').slinky({ title: true, label: '<?php echo __('Back', 'formcreator') ?>'});
+      $('#plugin_formcreator_wizard_categories div:nth(1)').slinky({
+         title: true,
+         label: '<?php echo __('Back', 'formcreator') ?>'
+      });
       $('#plugin_formcreator_wizard_categories a.back').click(
          function() {
             parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];

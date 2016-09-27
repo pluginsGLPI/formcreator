@@ -504,32 +504,10 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '<div class="center" id="plugin_formcreator_wizard">';
 
       echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
-
-      echo '<div id="plugin_formcreator_wizard_categories">';
-      echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
-      echo '</div>';
+      $this->showWizard();
+      // echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
       echo '</div>';
 
-      echo '<div id="plugin_formcreator_wizard_right">';
-      echo '<div id="plugin_formcreator_searchBar">';
-      $this->showSearchBar();
-      echo '</div>';
-      echo '<div class="plugin_formcreator_sort">';
-      echo '<span class="formcreator_radios">';
-      echo '<input type="radio" class="form-control" id="plugin_formcreator_mostPopular" name="sort" value="mostPopularSort" />';
-      echo '<label for="plugin_formcreator_mostPopular">'.__('Popularity sort', 'formcreator').'</label>';
-      echo '</span>';
-      echo '<span class="formcreator_radios">';
-      echo '<input type="radio" class="form-control" id="plugin_formcreator_alphabetic" name="sort" value="alphabeticSort" />';
-      echo '<label for="plugin_formcreator_alphabetic">'.__('Alphabetic sort', 'formcreator').'</label>';
-      echo '</span>';
-      echo '</div>';
-      echo '<div id="plugin_formcreator_wizard_forms">';
-      echo '</div>';
-      echo '</div>';
-
-      echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
-      echo '</div>';
       echo '<div id="plugin_formcreator_lastForms">';
       $this->showMyLastForms();
       echo '</div>';
@@ -538,13 +516,16 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    public function showServiceCatalog() {
-      global $CFG_GLPI, $DB;
-
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder">';
+      $this->showWizard();
+      echo '</div>';
+   }
+
+   public function showWizard() {
 
       echo '<div id="plugin_formcreator_wizard_categories">';
-      echo '<div><a href="#">' . __('see all', 'formcreator') . '</a>';
-      echo '</div>';
+      echo '<div><h2>'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
+      echo '<div><a href="#" id="wizard_seeall">' . __('see all', 'formcreator') . '</a></div>';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right">';
@@ -563,8 +544,6 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
       echo '<div id="plugin_formcreator_wizard_forms">';
       echo '</div>';
-      echo '</div>';
-
       echo '</div>';
    }
 
