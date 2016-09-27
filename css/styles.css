@@ -768,14 +768,15 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_leftHeader {
    float: left;
    height: 100% !important;
-   /*margin-top: -10px;*/
+   position: fixed;
    background-color: #3A5693;
 }
 
 .plugin_formcreator_footer {
    clear: both;
    position: fixed !important;
-   bottom: 28px;
+   bottom: 0;
+   width:  calc(100% - 250px);
    padding: 5px 0 !important;
 }
 
