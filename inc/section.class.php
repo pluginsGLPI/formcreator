@@ -204,5 +204,8 @@ class PluginFormcreatorSection extends CommonDBChild
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_forms_id = {$this->fields['plugin_formcreator_forms_id']}";
       $DB->query($query);
+
+      $question = new PluginFormcreatorQuestion();
+      $question->deleteByCriteria(array('plugin_formcreator_sections_id' => $this->getID()), 1);
    }
 }

@@ -907,6 +907,25 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
+    * Actions done after the PURGE of the item in the database
+    *
+    * @return nothing
+   **/
+   public function post_purgeItem() {
+      global $DB;
+
+      $target = new PluginFormcreatorTarget();
+      $target->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
+      $section = new PluginFormcreatorSection();
+      $section->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
+
+      $formId = $this->getID();
+      $query = "DELETE FROM `glpi_plugin_formcreator_formvalidators`
+            WHERE `forms_id` = '$formId'";
+      $DB->query($query);
+   }
+
+   /**
     * Save form validators
     *
     * @return void
