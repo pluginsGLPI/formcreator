@@ -493,7 +493,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $questionId = $this->fields['id'];
       $query = "UPDATE `glpi_plugin_formcreator_questions` SET `show_rule`='always'
             WHERE `id` IN (
-                  SELECT * FROM `glpi_plugin_formcreator_questions_conditions`
+                  SELECT `plugin_formcreator_questions_id` FROM `glpi_plugin_formcreator_questions_conditions`
                   WHERE `show_field` = '$questionId'
             )";
       $GLOBALS['DB']->query($query);
