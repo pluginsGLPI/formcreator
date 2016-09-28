@@ -616,7 +616,8 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_searchBar {
    position: relative;
-   margin: 10px 25px 25px 6px;
+   margin: 20px 25px 20px 6px;
+   padding: 10px 0 45px 0;
    box-sizing: border-box;
 }
 
@@ -633,19 +634,26 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_searchBar input ~ label {
-   /*position: absolute;*/
+   position: absolute;
    float: left;
    display: block;
    top: 30%;
-   color: #C2C2C2;
    text-align: center;
    width: 100%;
+   font-size: 1.2em;
    transition:
       background 0.2s,
       color 0.2s,
       top 0.2s,
       bottom 0.2s,
       right 0.2s;
+   cursor: text;
+}
+
+#plugin_formcreator_searchBar input:focus ~ label {
+   color: #3874BC;
+   top: 50%;
+   font-size: 1em;
 }
 
 #formcreator_search_input_bar {
@@ -678,11 +686,6 @@ a.plugin_formcreator_formTile_title {
    left: -9999px;
 }
 
-#plugin_formcreator_searchBar input:focus ~ label {
-   color: #3874BC;
-   top: -15px;
-}
-
 #plugin_formcreator_searchBar:after {
    width: 16px;
    height: 16px;
@@ -690,7 +693,7 @@ a.plugin_formcreator_formTile_title {
    display: inline-block;
    background-image: url("../pics/search.png");
    position: absolute;
-   top: 12px;
+   top: 30%;
    right: 10px;
 }
 
@@ -784,7 +787,7 @@ a.plugin_formcreator_formTile_title {
    clear: both;
    position: fixed !important;
    bottom: 0;
-   width:  calc(100% - 250px);
+   width:  calc(100% - 250px) !important;
    padding: 5px 0 !important;
 }
 
@@ -937,11 +940,20 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_userMenu_icons > li {
    display: inline-block;
    padding: 5px;
+}
+.plugin_formcreator_userMenu_icons .button-icon {
    opacity: .6
 }
 
-.plugin_formcreator_userMenu_icons > li:hover {
+.plugin_formcreator_userMenu_icons .button-icon:hover {
    opacity: 1;
+}
+
+#plugin_formcreator_preferences_icon span {
+   background: url("../../../pics/preferences.png") no-repeat;
+   display: inline-block;
+   width: 18px;
+   height: 18px;
 }
 
 #plugin_formcreator_bookmarkIcon span {
@@ -964,13 +976,6 @@ a.plugin_formcreator_formTile_title {
    margin: 0 !important;
    height: 40px;
    vertical-align: top;
-}
-
-#plugin_formcreator_preferences_icon a:first-child {
-   background: url("../../../pics/preferences.png") no-repeat;
-   display: inline-block;
-   width: 18px;
-   height: 18px;
 }
 
 #page.plugin_formcreator_page {
