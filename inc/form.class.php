@@ -517,11 +517,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
    public function showServiceCatalog() {
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder">';
-      $this->showWizard();
+      $this->showWizard(true);
       echo '</div>';
    }
 
-   public function showWizard() {
+   public function showWizard($service_catalog = false) {
 
       echo '<div id="plugin_formcreator_wizard_categories">';
       echo '<div><h2>'._n("Category", "Categories", 2, 'formcreator').'</h2></div>';
@@ -529,6 +529,13 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
 
       echo '<div id="plugin_formcreator_wizard_right">';
+
+      if ($service_catalog) {
+         echo "<div class='plugin_formcreator_display_central'>";
+         Plugin::doHook('display_central');
+         echo "</div>";
+      }
+
       echo '<div id="plugin_formcreator_searchBar">';
       $this->showSearchBar();
       echo '</div>';

@@ -97,10 +97,6 @@ class PluginFormcreatorWizard {
 
       echo '<div id="page" class="plugin_formcreator_page">';
 
-      echo "<div class='plugin_formcreator_display_central'>";
-      Plugin::doHook('display_central');
-      echo "</div>";
-
       // call static function callcron() every 5min
       CronTask::callCron();
 
