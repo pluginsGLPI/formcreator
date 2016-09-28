@@ -807,7 +807,6 @@ class PluginFormcreatorForm extends CommonDBTM
                       FROM `glpi_groups` g
                       LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = g.`id`
                       WHERE fv.`forms_id` = ' . $this->getID();
-                      Toolbox::logDebug($query);
             $result = $DB->query($query);
             while($validator = $DB->fetch_assoc($result)) {
                $validators[$validator['id']] = $validator['completename'];
