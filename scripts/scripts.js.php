@@ -9,6 +9,7 @@ var currentCategory  = "0";
 var sortByName = false;
 var tiles = [];
 var helpdeskHome = 0;
+var serviceCatalogEnabled = false;
 
 // === MENU ===
 var link = '';
@@ -31,6 +32,8 @@ jQuery(document).ready(function($) {
          modalWindow.find('.mce-container').remove();
       }
    });
+
+   serviceCatalogEnabled = $("#plugin_formcreator_serviceCatalog").length;
 
    // Prevent jQuery UI dialog from blocking focusin
    $(document).on('focusin', function(e) {
@@ -292,7 +295,11 @@ function buildTiles(list) {
          if (form.type == 'form') {
             url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id;
          } else {
-            url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
+            if (serviceCatalogEnabled) {
+               url = rootDoc + '/plugins/formcreator/front/knowbaseitem.form.php?id=' + form.id;
+            } else {
+               url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
+            }
          }
 
          description = '';

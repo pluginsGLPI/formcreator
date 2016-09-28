@@ -26,7 +26,7 @@ class PluginFormcreatorWizard {
             $body_class = "";
          }
       }
-      echo "<body class='$body_class'>";
+      echo "<body class='$body_class' id='plugin_formcreator_serviceCatalog'>";
 
       echo '<div class="plugin_formcreator_container">';
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
@@ -143,22 +143,19 @@ class PluginFormcreatorWizard {
    }
 
    protected static function findActiveMenuItem() {
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizard.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formdisplay.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "formcreator/front/knowbaseitem.form.php") !== false) {
          return self::MENU_CATALOG;
       }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/formdisplay.php") !== false) {
-         return self::MENU_CATALOG;
-      }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/issue.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/issue.php") !== false
+          || strpos($_SERVER['REQUEST_URI'], "formcreator/front/issue.form.php") !== false) {
          return self::MENU_LAST_FORMS;
       }
-         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/issue.form.php") !== false) {
-         return self::MENU_LAST_FORMS;
-      }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/reservationitem.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/reservationitem.php") !== false) {
          return self::MENU_RESERVATIONS;
       }
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/wizardfeeds.php") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizardfeeds.php") !== false) {
          return self::MENU_FEEDS;
       }
       return false;
