@@ -15,14 +15,6 @@ if($plugin->isActivated("formcreator")) {
    $form = new PluginFormcreatorForm();
    $form->showServiceCatalog();
 
-   if (Session::haveRight("reminder_public", READ)) {
-      //Reminder::showListForCentral(false);
-   }
-
-   if (Session::haveRight("rssfeed_public", READ)) {
-      //RSSFeed::showListForCentral(false);
-   }
-
    PluginFormcreatorWizard::footer();
 } else {
    Html::displayNotFoundError();
