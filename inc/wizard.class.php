@@ -48,8 +48,8 @@ class PluginFormcreatorWizard {
 //       echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
 //       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator', 2) . '</a></li>';
 
-//       echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
-//       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
+      echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
 
       echo '</ul>';
       echo '<div class="plugin_formcreator_leftMenuBottom">';
@@ -97,6 +97,10 @@ class PluginFormcreatorWizard {
       echo '</div>';
 
       echo '<div id="page" class="plugin_formcreator_page">';
+
+      echo "<div class='plugin_formcreator_display_central'>";
+      Plugin::doHook('display_central');
+      echo "</div>";
 
       // call static function callcron() every 5min
       CronTask::callCron();

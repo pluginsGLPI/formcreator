@@ -988,7 +988,12 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_container {
-   height: 100%;
+   vertical-align: top;
+   top: 0;
+   position: absolute;
+   right: 0;
+   left: 0;
+   bottom: 0;
 }
 
 .plugin_formcreator_page .navigationheader .tab_cadre_pager {
