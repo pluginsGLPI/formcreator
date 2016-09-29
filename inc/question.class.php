@@ -459,19 +459,21 @@ class PluginFormcreatorQuestion extends CommonDBChild
                 WHERE `plugin_formcreator_questions_id` = {$input['id']}";
       $GLOBALS['DB']->query($query);
 
-      // ===============================================================
-      // TODO : Mettre en place l'interface multi-conditions
-      // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
-      $value      = plugin_formcreator_encode($input['show_value']);
-      $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
-      $show_condition = plugin_formcreator_decode($input['show_condition']);
-      $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
-                  `plugin_formcreator_questions_id` = {$input['id']},
-                  `show_field`     = $show_field,
-                  `show_condition` = '" . $show_condition . "',
-                  `show_value`     = '" . $value . "'";
-      $GLOBALS['DB']->query($query);
-      // ===============================================================
+      if ($input['show_rule'] != 'always') {
+         // ===============================================================
+         // TODO : Mettre en place l'interface multi-conditions
+         // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
+         $value      = plugin_formcreator_encode($input['show_value']);
+         $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
+         $show_condition = plugin_formcreator_decode($input['show_condition']);
+         $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
+                     `plugin_formcreator_questions_id` = {$input['id']},
+                     `show_field`     = $show_field,
+                     `show_condition` = '" . $show_condition . "',
+                     `show_value`     = '" . $value . "'";
+         $GLOBALS['DB']->query($query);
+         // ===============================================================
+      }
    }
 
    /**
@@ -486,6 +488,19 @@ class PluginFormcreatorQuestion extends CommonDBChild
                 `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
+      $GLOBALS['DB']->query($query);
+
+      $questionId = $this->fields['id'];
+      $query = "UPDATE `glpi_plugin_formcreator_questions` SET `show_rule`='always'
+            WHERE `id` IN (
+                  SELECT `plugin_formcreator_questions_id` FROM `glpi_plugin_formcreator_questions_conditions`
+                  WHERE `show_field` = '$questionId'
+            )";
+      $GLOBALS['DB']->query($query);
+
+      $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
+            WHERE `plugin_formcreator_questions_id` = '$questionId'
+            OR `show_field` = '$questionId'";
       $GLOBALS['DB']->query($query);
    }
 
