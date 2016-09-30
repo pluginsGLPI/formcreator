@@ -430,17 +430,15 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
          $status = $_POST['status'];
-         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
-            $validatorId = $_SESSION['glpiID'];
-         } else {
-            $validatorId = 0;
-         }
-         $this->update(array(
+         $formAnswer = array(
             'id'                          => intval($datas['id']),
             'status'                      => $status,
             'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
-            'validator_id'                => $validatorId,
-         ));
+         );
+         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
+            $formAnswer['validator_id'] = $_SESSION['glpiID'];
+         }
+         $this->update($formAnswer);
 
          // Update questions answers
          if ($status == 'waiting') {
