@@ -59,7 +59,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                           'Ticket'                      AS `sub_itemtype`,
                           `tic`.`name`                  AS `name`,
                           `tic`.`status`                AS `status`,
-                          `tic`.`date_creation`         AS `date_creation`,
+                          `tic`.`date`                  AS `date_creation`,
                           `tic`.`date_mod`              AS `date_mod`,
                           `tic`.`entities_id`           AS `entities_id`,
                           0                             AS `is_recursive`,
