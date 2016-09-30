@@ -22,6 +22,7 @@ Features
 11. Adding a description per fields, per sections, per forms, entities or languages.
 12. Formatting the ticket set: answers to questions displayed, tickets templates.
 13. Preview form created directly in the configuration.
+14. An optional service catalog to browse for forms and FAQ in an unified interface.
 
 Translations
 ------------
