@@ -27,12 +27,17 @@ function plugin_version_formcreator ()
  */
 function plugin_formcreator_check_prerequisites ()
 {
+   $success = true;
    if (version_compare(GLPI_VERSION,'0.85','lt')) {
-      echo 'This plugin requires GLPI >= 0.85';
-   } else {
-      return true;
+      echo 'This plugin requires GLPI >= 0.85<br>';
+      $success = false;
    }
-   return false;
+   if (! function_exists("utf8_decode")) {
+      echo "This plugin requires php-xml<br>";
+      $success = false;
+   }
+
+   return $success;
 }
 
 /**
