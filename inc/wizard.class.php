@@ -31,9 +31,12 @@ class PluginFormcreatorWizard {
       echo '<div class="plugin_formcreator_container">';
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
       echo '<div id="header_top">';
-      echo '<div id="c_logo">';
+      echo '<div id="c_logo"></div>';
       echo '</div>';
-      echo '</div>';
+
+      // menu toggle (responsive mode)
+      echo "<input type='checkbox' id='formcreator-toggle-nav'>";
+      echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
 
       // Left vertical menu
       $activeMenuItem = self::findActiveMenuItem();
