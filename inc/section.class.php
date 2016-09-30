@@ -43,6 +43,8 @@ class PluginFormcreatorSection extends CommonDBChild
     */
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $obj   = new self();
       $table = $obj->getTable();
 
@@ -60,7 +62,7 @@ class PluginFormcreatorSection extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         $DB->query($query) or die ($DB->error());
       } else {
          /**
           * Migration of special chars from previous versions
@@ -69,24 +71,24 @@ class PluginFormcreatorSection extends CommonDBChild
           */
          $query  = "SELECT `id`, `name`
                     FROM `$table`";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+         $result = $DB->query($query);
+         while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `$table` SET
-                               `name` = '" . plugin_formcreator_encode($line['name']) . "'
-                             WHERE `id` = " . (int) $line['id'];
-            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+                               `name` = '".plugin_formcreator_encode($line['name'])."'
+                             WHERE `id` = ".$line['id'];
+            $DB->query($query_update) or die ($DB->error());
          }
       }
 
       // Migration from previous version => Remove useless target field
       if(FieldExists($table, 'plugin_formcreator_targets_id', false)) {
-         $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `plugin_formcreator_targets_id`;");
+         $DB->query("ALTER TABLE `$table` DROP `plugin_formcreator_targets_id`;");
       }
 
       // Migration from previous version => Rename "position" into "order" and start order from 1 instead of 0
       if(FieldExists($table, 'position', false)) {
-         $GLOBALS['DB']->query("ALTER TABLE `$table` CHANGE `position` `order` INT(11) NOT NULL DEFAULT '0';");
-         $GLOBALS['DB']->query("UPDATE `$table` SET `order` = `order` + 1;");
+         $DB->query("ALTER TABLE `$table` CHANGE `position` `order` INT(11) NOT NULL DEFAULT '0';");
+         $DB->query("UPDATE `$table` SET `order` = `order` + 1;");
       }
 
       // Migration from previous version => Update Question table, then create a "description" question from content
@@ -104,17 +106,17 @@ class PluginFormcreatorSection extends CommonDBChild
                      FROM $table
                      WHERE `content` != ''
                   );";
-         $GLOBALS['DB']->query($query);
+         $DB->query($query);
 
          // Create description from content
          $query = "INSERT INTO `$table_questions` (`plugin_formcreator_sections_id`, `fieldtype`, `name`, `description`, `order`)
                      SELECT `id`, 'description' AS fieldtype, CONCAT('Description ', `id`) AS name,  `content`, 1 AS `order`
                      FROM $table
                      WHERE `content` != ''";
-         $GLOBALS['DB']->query($query);
+         $DB->query($query);
 
          // Delete content column
-         $GLOBALS['DB']->query("ALTER TABLE `$table` DROP `content`;");
+         $DB->query("ALTER TABLE `$table` DROP `content`;");
       }
 
       return true;
@@ -127,11 +129,13 @@ class PluginFormcreatorSection extends CommonDBChild
     */
    public static function uninstall()
    {
+      global $DB;
+
       $obj = new self();
-      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
 
       // Delete logs of the plugin
-      $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
+      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
 
       return true;
    }
@@ -146,6 +150,8 @@ class PluginFormcreatorSection extends CommonDBChild
    **/
    public function prepareInputForAdd($input)
    {
+      global $DB;
+
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
@@ -163,8 +169,8 @@ class PluginFormcreatorSection extends CommonDBChild
       $query  = "SELECT MAX(`order`) AS `order`
                  FROM `{$obj->getTable()}`
                  WHERE `plugin_formcreator_forms_id` = {$input['plugin_formcreator_forms_id']}";
-      $result = $GLOBALS['DB']->query($query);
-      $line   = $GLOBALS['DB']->fetch_array($result);
+      $result = $DB->query($query);
+      $line   = $DB->fetch_array($result);
       $input['order'] = $line['order'] + 1;
 
       return $input;
@@ -191,10 +197,12 @@ class PluginFormcreatorSection extends CommonDBChild
    **/
    public function post_purgeItem()
    {
+      global $DB;
+
       $query = "UPDATE `{$this->getTable()}` SET
                   `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_forms_id = {$this->fields['plugin_formcreator_forms_id']}";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
    }
 }

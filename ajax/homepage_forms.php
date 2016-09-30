@@ -19,7 +19,7 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                 AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                    SELECT plugin_formcreator_forms_id
                    FROM $table_fp
-                   WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+                   WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
                 ORDER BY $form_table.name ASC";
 $result_forms = $GLOBALS['DB']->query($query_forms);
 
@@ -38,27 +38,27 @@ $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                   SELECT plugin_formcreator_forms_id
                   FROM $table_fp
-                  WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+                  WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
             )
            ORDER BY $cat_table.`name` ASC";
-$result = $GLOBALS['DB']->query($query);
-if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_forms) > 0) {
+$result = $DB->query($query);
+if ($DB->numrows($result) > 0 || $DB->numrows($result_forms) > 0) {
    echo '<table class="tab_cadrehov" id="homepage_forms_container">';
    echo '<tr class="noHover">';
    echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
    echo '</tr>';
 
-   if ($GLOBALS['DB']->numrows($result_forms) > 0) {
+   if ($DB->numrows($result_forms) > 0) {
       echo '<tr class="noHover"><th>' . __('Forms without category', 'formcreator') . '</th></tr>';
       $i = 0;
-      while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
+      while ($form = $DB->fetch_array($result_forms)) {
          $i++;
          echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
          echo '<td>';
-         echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png" alt="+" title=""
+         echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                    onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
          echo '&nbsp;';
-         echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+         echo '<a href="' . $CFG_GLPI['root_doc']
                   . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
                   title="' . plugin_formcreator_encode($form['description']) . '">'
                   . $form['name']
@@ -70,10 +70,10 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
       }
    }
 
-   if ($GLOBALS['DB']->numrows($result) > 0) {
+   if ($DB->numrows($result) > 0) {
       // For each categories, show the list of forms the user can fill
       $i = 0;
-      while ($category = $GLOBALS['DB']->fetch_array($result)) {
+      while ($category = $DB->fetch_array($result)) {
          echo '<tr class="noHover"><th>' . $category['name'] . '</th></tr>';
          $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                          FROM $form_table
@@ -88,16 +88,16 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
                             FROM $table_fp
                             WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                          ORDER BY $form_table.name ASC";
-         $result_forms = $GLOBALS['DB']->query($query_forms);
+         $result_forms = $DB->query($query_forms);
          $i = 0;
-         while ($form = $GLOBALS['DB']->fetch_array($result_forms)) {
+         while ($form = $DB->fetch_array($result_forms)) {
             $i++;
             echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
             echo '<td>';
-            echo '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png" alt="+" title=""
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
                       onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
             echo '&nbsp;';
-            echo '<a href="' . $GLOBALS['CFG_GLPI']['root_doc']
+            echo '<a href="' . $CFG_GLPI['root_doc']
                      . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
                      title="' . plugin_formcreator_encode($form['description']) . '">'
                      . $form['name']
@@ -115,11 +115,11 @@ if ($GLOBALS['DB']->numrows($result) > 0 || $GLOBALS['DB']->numrows($result_form
             function showDescription(id, img){
                if(img.alt == "+") {
                  img.alt = "-";
-                 img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/moins.png";
+                 img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
                  document.getElementById("desc" + id).style.display = "table-row";
                } else {
                  img.alt = "+";
-                 img.src = "' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/plus.png";
+                 img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
                  document.getElementById("desc" + id).style.display = "none";
                }
             }

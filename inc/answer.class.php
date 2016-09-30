@@ -92,6 +92,8 @@ class PluginFormcreatorAnswer extends CommonDBChild
     */
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $obj   = new self();
       $table = $obj->getTable();
 
@@ -108,11 +110,11 @@ class PluginFormcreatorAnswer extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         $DB->query($query) or die ($DB->error());
       } else {
          // Update field type from previous version (Need answer to be text since text can be WYSIWING).
          $query = "ALTER TABLE  `$table` CHANGE  `answer`  `answer` text;";
-         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         $DB->query($query) or die ($DB->error());
 
          /**
           * Migration of special chars from previous versions
@@ -121,12 +123,12 @@ class PluginFormcreatorAnswer extends CommonDBChild
           */
          $query  = "SELECT `id`, `answer`
                     FROM `$table`";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+         $result = $DB->query($query);
+         while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `$table` SET
-                               `answer` = '" . plugin_formcreator_encode($line['answer']) . "'
-                             WHERE `id` = " . (int) $line['id'];
-            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+                               `answer` = '".plugin_formcreator_encode($line['answer'])."'
+                             WHERE `id` = ".$line['id'];
+            $DB->query($query_update) or die ($DB->error());
          }
       }
 
@@ -140,11 +142,13 @@ class PluginFormcreatorAnswer extends CommonDBChild
     */
    public static function uninstall()
    {
+      global $DB;
+
       $obj = new self();
-      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
+      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
 
       // Delete logs of the plugin
-      $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
+      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
 
       return true;
    }

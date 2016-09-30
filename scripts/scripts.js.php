@@ -4,7 +4,12 @@ header('Content-Type: text/javascript');
 ?>
 
 var modalWindow;
-var rootDoc          = "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>";
+var rootDoc          = "<?php echo $CFG_GLPI['root_doc']; ?>";
+var currentCategory  = "0";
+var sortByName = false;
+var tiles = [];
+var helpdeskHome = 0;
+var serviceCatalogEnabled = false;
 
 // === MENU ===
 var link = '';
@@ -21,7 +26,20 @@ jQuery(document).ready(function($) {
       autoOpen: false,
       height: "auto",
       modal: true,
-      position: ['center', 50]
+      position: ['center', 50],
+      open: function( event, ui ) {
+         //remove existing tinymce when reopen modal (without this, tinymce don't load on 2nd opening of dialog)
+         modalWindow.find('.mce-container').remove();
+      }
+   });
+
+   serviceCatalogEnabled = $("#plugin_formcreator_serviceCatalog").length;
+
+   // Prevent jQuery UI dialog from blocking focusin
+   $(document).on('focusin', function(e) {
+       if ($(e.target).closest(".mce-window, .moxman-window").length) {
+         e.stopImmediatePropagation();
+      }
    });
 
    <?php
@@ -40,9 +58,64 @@ jQuery(document).ready(function($) {
         }
       });
    } else if (NomDuFichier == "helpdesk.public.php") {
-      showFormList()
+      showFormList();
+   } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
+      updateCategoriesView();
+      updateWizardFormsView(0);
+
+      // Setup events
+      $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
+         sortByName = false;
+         showTiles(tiles);
+      });
+
+      $('.plugin_formcreator_sort input[value=alphabeticSort]').click(function () {
+         sortByName = true;
+         showTiles(tiles);
+      });
+
+      $('#plugin_formcreator_wizard_categories #wizard_seeall').click(function () {
+         updateCategoriesView();
+         updateWizardFormsView(0);
+      });
    }
 
+   // Initialize search bar
+   searchInput = $('#plugin_formcreator_searchBar input:first');
+   if (searchInput.length == 1) {
+      // Dynamically update forms and faq items while the user types in the search bar
+      var timer;
+      searchInput.keyup(
+         function(event) {
+            if (typeof timer != "undefined") {
+               clearTimeout(timer);
+            }
+            if (event.which == 13) {
+               updateWizardFormsView(currentCategory);
+            } else {
+               timer = setTimeout(function() {
+                  updateWizardFormsView(currentCategory);
+               }, 300);
+            }
+         }
+      );
+      // Clear the search bar if it gains focus
+      $('#plugin_formcreator_searchBar input').focus(function(event) {
+         if (searchInput.val().length > 0) {
+            searchInput.val('');
+            updateWizardFormsView(currentCategory);
+            $.when(getFormAndFaqItems(0)).then(
+               function (response) {
+                  tiles = response;
+                  showTiles(tiles.forms);
+               }
+            );
+         }
+      });
+
+      // Initialize sort controls
+      $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].checked = true;
+   }
 
    fcInitMultiSelect();
 });
@@ -67,9 +140,195 @@ function showFormList() {
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
-      $('.central td').first().prepend(response);
+      $('.central > tbody:first').first().prepend(response);
    });
 }
+
+function updateCategoriesView() {
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+      data: {wizard: 'categories'},
+      type: "GET",
+      dataType: "json"
+   }).done(function(response) {
+      html = '<div class="slinky-menu">';
+      html = html + buildCategoryList(response);
+      html = html + '</div>';
+
+      //Display categories
+      $('#plugin_formcreator_wizard_categories .slinky-menu').remove();
+      $('#plugin_formcreator_wizard_categories').append(html);
+
+      // Setup slinky
+      $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
+         title: true,
+         label: '<?php echo __('Back', 'formcreator') ?>'
+      });
+      $('#plugin_formcreator_wizard_categories a.back').click(
+         function() {
+            parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
+            parentAnchor = $(parentItem).children('a')[0];
+            updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
+         }
+      );
+
+      $('#plugin_formcreator_wizard_categories a[data-category-id]').click(
+         function (event) {
+            updateWizardFormsView(event.target.getAttribute('data-category-id'));
+         }
+      );
+   });
+}
+
+/**
+ * get form and faq items from DB
+ * Returns a promise
+ */
+function getFormAndFaqItems(categoryId) {
+   currentCategory = categoryId;
+   keywords = $('#plugin_formcreator_searchBar input:first').val();
+   deferred = jQuery.Deferred();
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: helpdeskHome},
+      type: "GET",
+      dataType: "json"
+   }).done(function (response) {
+      deferred.resolve(response);
+   }).fail(function () {
+      deferred.reject();
+   });
+   return deferred.promise();
+}
+
+function sortFormAndFaqItems(items, byName) {
+   if (byName == true) {
+      // sort by name
+      items.sort(function (a, b) {
+         if (a.name < b.name) {
+            return -1;
+         }
+         if (a.name > b.name) {
+            return 1
+         }
+         return 0;
+      });
+   } else {
+      // sort by view or usage count
+      items.sort(function (a, b) {
+         if (a.usage_count > b.usage_count) {
+            return -1;
+         }
+         if (a.usage_count < b.usage_count) {
+            return 1
+         }
+         return 0;
+      });
+   }
+   return items;
+}
+
+function showTiles(tiles, defaultForms) {
+   tiles = sortFormAndFaqItems(tiles, sortByName);
+   html = '';
+   if (defaultForms) {
+      html += '<p><?php echo __('No form found. Please choose a form below instead', 'formcreator')?></p>'
+   }
+   html += buildTiles(tiles);
+
+   //Display tiles
+   $('#plugin_formcreator_wizard_forms').empty();
+   $('#plugin_formcreator_wizard_forms').prepend(html);
+   $('#plugin_formcreator_formlist').masonry();
+}
+
+function updateWizardFormsView(categoryId) {
+   $.when(getFormAndFaqItems(categoryId)).done(
+      function (response) {
+         tiles = response.forms;
+         showTiles(tiles, response.default);
+      }
+   ).fail(
+      function () {
+         html = '<p><?php echo __('An error occured while querying forms', 'formcreator')?></p>'
+         $('#plugin_formcreator_wizard_forms').empty();
+         $('#plugin_formcreator_wizard_forms').prepend(html);
+         $('#plugin_formcreator_formlist').masonry();
+      }
+   );
+}
+
+function buildCategoryList(tree) {
+   if (tree.id != 0) {
+      html = '<a href="#" data-parent-category-id="' + tree.parent +'"'
+         + ' data-category-id="' + tree.id + '"'
+         + ' onclick="updateWizardFormsView(' + tree.id + ')">'
+         + tree.name
+         + '</a>';
+   } else {
+      html = '';
+   }
+   if (Object.keys(tree.subcategories).length == 0) {
+      return html;
+   }
+   html = html + '<ul>';
+   $.each(tree.subcategories, function (key, val) {
+      html = html + '<li>' + buildCategoryList(val) + '</li>';
+   });
+   html = html + '</ul>';
+   return html;
+}
+
+function buildTiles(list) {
+   $(document).on('click', '.plugin_formcreator_formTile', function(){
+      document.location = $(this).children('a').attr('href');
+   });
+
+   if (list.length == 0) {
+      html = '<p id="plugin_formcreator_formlist">'
+      + "<?php echo __('No form yet in this category', 'formcreator') ?>"
+      + '</p>';
+   } else {
+      var items = [];
+      $.each(list, function (key, form) {
+         // Build a HTML tile
+         if (form.type == 'form') {
+            url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id;
+         } else {
+            if (serviceCatalogEnabled) {
+               url = rootDoc + '/plugins/formcreator/front/knowbaseitem.form.php?id=' + form.id;
+            } else {
+               url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
+            }
+         }
+
+         description = '';
+         if (form.description) {
+            description = '<div class="plugin_formcreator_formTile_description">'
+                          +form.description
+                          +'</div>';
+         }
+
+         items.push(
+            '<div class="plugin_formcreator_formTile '+form.type+'" title="'+form.description+'">'
+            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+            + form.name
+            + '</a>'
+            + description
+            + '</div>'
+         );
+      });
+
+      // concatenate all HTML parts
+      html = '<div id="plugin_formcreator_formlist">'
+      + items.join("")
+      + '</div>';
+   }
+
+   return html;
+}
+
+// === SEARCH BAR ===
 
 // === QUESTIONS ===
 var urlQuestion      = rootDoc + "/plugins/formcreator/ajax/question.php";
@@ -80,7 +339,8 @@ function addQuestion(items_id, token, section) {
       section_id: section,
       form_id: items_id,
       _glpi_csrf_token: token
-   }).dialog("open");
+   })
+   .dialog("open");
 }
 
 function editQuestion(items_id, token, question, section) {

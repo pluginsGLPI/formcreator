@@ -11,22 +11,23 @@ class checkboxesField extends PluginFormcreatorField
          $values = array();
          $values = $this->getAvailableValues();
          if(!empty($values)) {
-            echo '<div class="checkbox">';
+            echo '<div class="checkboxes">';
             $i = 0;
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
                   $current_value = null;
                   $current_value = $this->getValue();
-                  $checked = (!empty($current_value) && in_array($value, $current_value)) ? ' checked' : '';
-                  echo '<input type="checkbox" class="form-control"
-                        name="formcreator_field_' . $this->fields['id'] . '[]"
-                        id="formcreator_field_' . $this->fields['id'] . '_' . $i . '"
-                        value="' . addslashes($value) . '"' . $checked . ' /> ';
-                  echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
-                  echo $value;
+                  echo "<div class='checkbox'>";
+                  echo Html::getCheckbox(array('title'   => $value,
+                                               'id'      => 'formcreator_field_'.$this->fields['id'].'_'.$i,
+                                               'name'    => 'formcreator_field_'.$this->fields['id'] . '[]',
+                                               'value'   => $value,
+                                               'checked' => (!empty($current_value) && in_array($value, $current_value))));
+                  echo '<label for="formcreator_field_'.$this->fields['id'].'_'.$i.'">';
+                  echo '&nbsp;'.$value;
                   echo '</label>';
-                  if($i != count($values)) echo '<br />';
+                  echo "</div>";
                }
             }
             echo '</div>';

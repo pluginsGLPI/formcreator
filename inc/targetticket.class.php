@@ -69,17 +69,19 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
     */
    public function showForm($options=array())
    {
+      global $CFG_GLPI, $DB;
+
       $rand = mt_rand();
 
       $obj = new PluginFormcreatorTarget();
-      $found = $obj->find("itemtype = '" . __CLASS__ . "' AND items_id = " . (int) $this->getID());
+      $found = $obj->find("itemtype = '" . __CLASS__ . "' AND items_id = " . $this->getID());
       $target = array_shift($found);
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($target['plugin_formcreator_forms_id']);
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       // General information : name
       echo '<table class="tab_cadre_fixe">';
@@ -107,7 +109,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
-      if ($GLOBALS['CFG_GLPI']["use_rich_text"]) {
+      if ($CFG_GLPI["use_rich_text"]) {
          Html::initEditorSystem('comment');
       }
       echo '</td>';
@@ -141,19 +143,20 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
                 INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
+                WHERE t.items_id = " . $this->getID() . "
                 ORDER BY s.order";
-      $result = $GLOBALS['DB']->query($query);
-      while ($section = $GLOBALS['DB']->fetch_array($result)) {
+      $result = $DB->query($query);
+      while ($section = $DB->fetch_array($result)) {
          // select all date and datetime questions
          $query2 = "SELECT q.id, q.name
                    FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_sections s
+                     ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
                    AND q.fieldtype IN ('date', 'datetime')";
-         $result2 = $GLOBALS['DB']->query($query2);
+         $result2 = $DB->query($query2);
          $section_questions = array();
-         while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+         while ($question = $DB->fetch_array($result2)) {
             $section_questions[$question['id']] = $question['name'];
          }
          if (count($section_questions) > 0) {
@@ -161,7 +164,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          }
       }
       // List questions
-      if ($this->fields['due_date_rule'] != 'answer' && $this->fields['due_date_rule'] != 'calcul') {
+      if ($this->fields['due_date_rule'] != 'answer'
+          && $this->fields['due_date_rule'] != 'calcul') {
          echo '<div id="due_date_questions" style="display:none">';
       } else {
          echo '<div id="due_date_questions">';
@@ -171,7 +175,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       ));
       echo '</div>';
 
-      if ($this->fields['due_date_rule'] != 'ticket' && $this->fields['due_date_rule'] != 'calcul') {
+      if ($this->fields['due_date_rule'] != 'ticket'
+          && $this->fields['due_date_rule'] != 'calcul') {
          echo '<div id="due_date_time" style="display:none">';
       } else {
          echo '<div id="due_date_time">';
@@ -257,14 +262,16 @@ EOS;
       // select all user questions (GLPI Object)
       $query2 = "SELECT q.id, q.name, q.values
                 FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
                 AND q.fieldtype = 'glpiselect'
                 AND q.values = 'User'";
-      $result2 = $GLOBALS['DB']->query($query2);
+      $result2 = $DB->query($query2);
       $users_questions = array();
-      while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+      while ($question = $DB->fetch_array($result2)) {
          $users_questions[$question['id']] = $question['name'];
       }
       Dropdown::showFromArray('_destination_entity_value_user', $users_questions, array(
@@ -276,14 +283,16 @@ EOS;
       // select all entity questions (GLPI Object)
       $query2 = "SELECT q.id, q.name, q.values
                 FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
                 AND q.fieldtype = 'glpiselect'
                 AND q.values = 'Entity'";
-      $result2 = $GLOBALS['DB']->query($query2);
+      $result2 = $DB->query($query2);
       $entities_questions = array();
-      while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+      while ($question = $DB->fetch_array($result2)) {
          $entities_questions[$question['id']] = $question['name'];
       }
       Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, array(
@@ -353,13 +362,15 @@ EOS;
          echo '<div id="tag_question_value" style="display: none">';
          $query2 = "SELECT q.id, q.name, q.values
                    FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
-                   INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                   WHERE t.items_id = " . (int) $this->getID() . "
+                   INNER JOIN glpi_plugin_formcreator_sections s
+                     ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_targets t
+                     ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                   WHERE t.items_id = ".$this->getID()."
                    AND q.fieldtype = 'tag'";
-         $result2 = $GLOBALS['DB']->query($query2);
+         $result2 = $DB->query($query2);
          $entities_questions = array();
-         while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+         while ($question = $DB->fetch_array($result2)) {
             $entities_questions[$question['id']] = $question['name'];
          }
          Dropdown::showFromArray('_tag_questions', $entities_questions, array(
@@ -439,23 +450,25 @@ EOS;
       $questions_supplier_list = array(Dropdown::EMPTY_VALUE);
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
                 ORDER BY s.order";
-      $result = $GLOBALS['DB']->query($query);
-      while ($section = $GLOBALS['DB']->fetch_array($result)) {
+      $result = $DB->query($query);
+      while ($section = $DB->fetch_array($result)) {
          // select all user, group or supplier questions (GLPI Object)
          $query2 = "SELECT q.id, q.name, q.values
                    FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_sections s
+                     ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
                    AND q.fieldtype = 'glpiselect'
                    AND q.values IN ('User', 'Group', 'Supplier')";
-         $result2 = $GLOBALS['DB']->query($query2);
+         $result2 = $DB->query($query2);
          $section_questions_user = array();
          $section_questions_group = array();
          $section_questions_supplier = array();
-         while ($question = $GLOBALS['DB']->fetch_array($result2)) {
+         while ($question = $DB->fetch_array($result2)) {
             switch ($question['values']) {
                case 'User' :
                   $section_questions_user[$question['id']] = $question['name'];
@@ -478,8 +491,8 @@ EOS;
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID();
-      $result = $GLOBALS['DB']->query($query);
-      while ($actor = $GLOBALS['DB']->fetch_array($result)) {
+      $result = $DB->query($query);
+      while ($actor = $DB->fetch_array($result)) {
          $actors[$actor['actor_role']][$actor['id']] = array(
             'actor_type'       => $actor['actor_type'],
             'actor_value'      => $actor['actor_value'],
@@ -531,7 +544,7 @@ EOS;
       echo '<td valign="top">';
 
       // => Add requester form
-      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       Dropdown::showFromArray('actor_type', array(
          ''                => Dropdown::EMPTY_VALUE,
@@ -630,7 +643,8 @@ EOS;
       echo '<td valign="top">';
 
       // => Add observer form
-      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'.
+           $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       Dropdown::showFromArray('actor_type', array(
          ''                => Dropdown::EMPTY_VALUE,
@@ -730,7 +744,7 @@ EOS;
       echo '<td valign="top">';
 
       // => Add assigned to form
-      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       Dropdown::showFromArray('actor_type', array(
          ''                  => Dropdown::EMPTY_VALUE,
@@ -876,13 +890,14 @@ EOS;
       $table_sections  = getTableForItemType('PluginFormcreatorSection');
       $query = "SELECT q.`id`, q.`name` AS question, s.`name` AS section
                 FROM $table_questions q
-                LEFT JOIN $table_sections s ON q.`plugin_formcreator_sections_id` = s.`id`
+                LEFT JOIN $table_sections s
+                  ON q.`plugin_formcreator_sections_id` = s.`id`
                 WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
                 ORDER BY s.`order`, q.`order`";
-      $result = $GLOBALS['DB']->query($query);
+      $result = $DB->query($query);
 
       $i = 0;
-      while ($question = $GLOBALS['DB']->fetch_array($result)) {
+      while ($question = $DB->fetch_array($result)) {
          $i++;
          echo '<tr class="line' . ($i % 2) . '">';
          echo '<td colspan="2">' . $question['question'] . '</td>';
@@ -905,6 +920,7 @@ EOS;
    **/
    public function prepareInputForUpdate($input)
    {
+      global $CFG_GLPI;
       // Control fields values :
       // - name is required
       if(empty($input['title'])) {
@@ -920,7 +936,7 @@ EOS;
 
       $input['name'] = plugin_formcreator_encode($input['title']);
 
-      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+      if ($CFG_GLPI['use_rich_text']) {
          $input['comment'] = Html::entity_decode_deep($input['comment']);
       }
 
@@ -1026,7 +1042,7 @@ EOS;
                if (empty($found['answer'])) {
                   continue;
                } else {
-                  $user_id = (int) $found['answer'];
+                  $user_id = $found['answer'];
                }
                break;
          }
@@ -1110,7 +1126,7 @@ EOS;
                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
-            $datas['entities_id'] = (int) $entity['answer'];
+            $datas['entities_id'] = $entity['answer'];
             break;
 
          // Requester current entity
@@ -1163,7 +1179,7 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_formanwers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1242,7 +1258,7 @@ EOS;
                if (empty($found['answer'])) {
                   continue;
                } else {
-                  $user_id = (int) $found['answer'];
+                  $user_id = $found['answer'];
                }
                break;
          }
@@ -1370,6 +1386,8 @@ EOS;
 
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $enum_destination_entity = "'".implode("', '", array_keys(self::getEnumDestinationEntity()))."'";
       $enum_tag_type           = "'".implode("', '", array_keys(self::getEnumTagType()))."'";
       $enum_due_date_rule      = "'".implode("', '", array_keys(self::getEnumDueDateRule()))."'";
@@ -1388,10 +1406,10 @@ EOS;
                      `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-                     `tag_questions` VARCHAR(255) NOT NULL DEFAULT '',
-                     `tag_specifics` VARCHAR(255) NOT NULL DEFAULT ''
+                     `tag_questions` VARCHAR(255) NOT NULL,
+                     `tag_specifics` VARCHAR(255) NOT NULL
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         $DB->query($query) or die($DB->error());
       } else {
          if(!FieldExists($table, 'due_date_rule', false)) {
             $query = "ALTER TABLE `$table`
@@ -1400,7 +1418,7 @@ EOS;
                         ADD `due_date_value` TINYINT NULL DEFAULT NULL,
                         ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
                         ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
-            $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+            $DB->query($query) or die($DB->error());
          }
 
          // Migration to Formcreator 0.90-1.4
@@ -1408,7 +1426,7 @@ EOS;
             $query = "ALTER TABLE `$table`
                         ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
-            $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+            $DB->query($query) or die($DB->error());
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
             if (count($current_enum_destination_entity) != count(self::getEnumDestinationEntity())) {
@@ -1416,19 +1434,17 @@ EOS;
                            CHANGE COLUMN `destination_entity` `destination_entity`
                            ENUM($enum_destination_entity)
                            NOT NULL DEFAULT 'requester'";
-               $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+               $DB->query($query) or die($DB->error());
             }
          }
 
          if(!FieldExists($table, 'tag_type', false)) {
             $query = "ALTER TABLE `$table`
                          ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-                         ADD `tag_questions` VARCHAR(255) NOT NULL DEFAULT '',
-                         ADD `tag_specifics` VARCHAR(255) NOT NULL DEFAULT '';";
-            $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+                         ADD `tag_questions` VARCHAR(255) NOT NULL,
+                         ADD `tag_specifics` VARCHAR(255) NOT NULL;";
+            $DB->query($query) or die($DB->error());
          }
-
-
       }
 
       if (!TableExists('glpi_plugin_formcreator_targettickets_actors')) {
@@ -1441,7 +1457,7 @@ EOS;
                     `use_notification` BOOLEAN NOT NULL DEFAULT TRUE,
                     KEY `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
                   ) ENGINE=MyISAM DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         $DB->query($query) or die($DB->error());
       }
 
       return true;
@@ -1449,17 +1465,21 @@ EOS;
 
    public static function uninstall()
    {
+      global $DB;
+
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      $success1 = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      $success1 = $DB->query($query) or die($DB->error());
 
       $query = "DROP TABLE IF EXISTS `glpi_plugin_formcreator_targettickets_actors`";
-      $success2 = $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      $success2 = $DB->query($query) or die($DB->error());
 
       return $success1 && $success2;
    }
 
    private static function getDeleteImage($id) {
-      $link  = ' &nbsp;<a href="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
+      global $CFG_GLPI;
+
+      $link  = ' &nbsp;<a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
       $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
       $link .= '</a>';
       return $link;

@@ -1,4 +1,7 @@
 <?php
+global $CFG_GLPI;
+define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc']."/plugins/formcreator");
+
 /**
  * Define the plugin's version and informations
  *
@@ -8,7 +11,7 @@ function plugin_version_formcreator ()
 {
    return array(
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
-      'version'        => '0.90-1.3.4',
+      'version'        => '0.90-1.4-beta2',
       'author'         => '<a href="mailto:contact@teclib.com">Jérémy MOREAU</a>
                            - <a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/TECLIB/formcreator',
@@ -48,7 +51,7 @@ function plugin_formcreator_check_config($verbose=false)
  */
 function plugin_init_formcreator ()
 {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
+   global $PLUGIN_HOOKS, $CFG_GLPI, $DB;
 
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
@@ -65,6 +68,20 @@ function plugin_init_formcreator ()
 
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+
+      // Redirect to helpdesk replacement
+      if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
+         if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
+            // Not changing profile or active entity
+            if (isset($_SESSION['glpiactiveprofile']['interface'])
+                  && isset($_SESSION['glpiactive_entity'])) {
+               // Interface and active entity are set in session
+               if (plugin_formcreator_replaceHelpdesk()) {
+                  Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+               }
+            }
+         }
+      }
 
       // Massive Action definition
       $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
@@ -85,9 +102,9 @@ function plugin_init_formcreator ()
                         AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                            SELECT plugin_formcreator_forms_id
                            FROM $table_fp
-                           WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))";
-         $result = $GLOBALS['DB']->query($query);
-         list($nb) = $GLOBALS['DB']->fetch_array($result);
+                           WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
+         $result = $DB->query($query);
+         list($nb) = $DB->fetch_array($result);
          if ($nb > 0) {
             $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
          }
@@ -103,7 +120,7 @@ function plugin_init_formcreator ()
             $links['config'] = '/plugins/formcreator/front/form.php';
             $links['add']    = '/plugins/formcreator/front/form.form.php';
          }
-         $img = '<img  src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/check.png"
+         $img = '<img  src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
                      title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
          $links[$img] = '/plugins/formcreator/front/formanswer.php';
@@ -136,6 +153,16 @@ function plugin_init_formcreator ()
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
       }
 
+      if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
+            || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
+            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
+            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false) {
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
+         $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/slinky/assets/css/jquery.slinky.css';
+
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
+      }
+
       // Load field class and all its method to manage fields
       Plugin::registerClass('PluginFormcreatorFields');
 
@@ -143,6 +170,8 @@ function plugin_init_formcreator ()
       Plugin::registerClass('PluginFormcreatorFormanswer', array(
          'notificationtemplates_types' => true
       ));
+
+      Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
    }
 }
 
@@ -183,4 +212,19 @@ function plugin_formcreator_decode($string)
    $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
    $string = str_replace('&apos;', "'", $string);
    return $string;
+}
+
+/**
+ * Tells if helpdesk replacement is enabled for the current user
+ */
+function plugin_formcreator_replaceHelpdesk() {
+   if (isset($_SESSION['glpiactiveprofile']['interface'])
+         && isset($_SESSION['glpiactive_entity'])) {
+      // Interface and active entity are set in session
+      if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']) == '1'
+            && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+         return true;
+      }
+   }
+   return false;
 }

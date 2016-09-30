@@ -7,7 +7,7 @@ if(empty($_REQUEST['question_id'])) {
    $question_id = 0;
    $question->getEmpty();
 } else {
-   $question_id = (int) $_REQUEST['question_id'];
+   $question_id = intval($_REQUEST['question_id']);
    $question->getFromDB($question_id);
 }
 $form_id = (int) $_REQUEST['form_id'];
@@ -17,7 +17,7 @@ $rand = mt_rand();
 ?>
 
 <form name="form_question" method="post"
-      action="<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/front/question.form.php">
+      action="<?php echo $CFG_GLPI['root_doc']; ?>/plugins/formcreator/front/question.form.php">
 
    <table class="tab_cadre_fixe">
       <tr>
@@ -73,12 +73,12 @@ $rand = mt_rand();
                     FROM $table
                     WHERE `plugin_formcreator_forms_id` = $form_id
                     ORDER BY `order`";
-            $result = $GLOBALS['DB']->query($sql);
-            while ($section = $GLOBALS['DB']->fetch_array($result)) {
+            $result = $DB->query($sql);
+            while ($section = $DB->fetch_array($result)) {
                $sections[$section['id']] = $section['name'];
             }
             Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, array(
-               'value' => ($question->fields['plugin_formcreator_sections_id']) ?: (int) $_REQUEST['section_id'],
+               'value' => ($question->fields['plugin_formcreator_sections_id']) ?:intval($_REQUEST['section_id']),
                'rand'  => $rand,
             ));
             ?>
@@ -347,8 +347,8 @@ $rand = mt_rand();
                        FROM glpi_plugin_formcreator_questions_conditions
                        WHERE `plugin_formcreator_questions_id` = $question_id
                        LIMIT 0, 1";
-               $result = $GLOBALS['DB']->query($sql);
-               list($show_field, $show_condition, $show_value) = $GLOBALS['DB']->fetch_array($result);
+               $result = $DB->query($sql);
+               list($show_field, $show_condition, $show_value) = $DB->fetch_array($result);
                // ===============================================================
 
                $table_question = getTableForItemtype('PluginFormcreatorQuestion');
@@ -360,8 +360,8 @@ $rand = mt_rand();
                        WHERE s.`plugin_formcreator_forms_id` = $form_id
                        AND q.`id` != $question_id
                        ORDER BY s.`order`, q.`order`";
-               $result = $GLOBALS['DB']->query($sql);
-               while ($line = $GLOBALS['DB']->fetch_array($result)) {
+               $result = $DB->query($sql);
+               while ($line = $DB->fetch_array($result)) {
                   $questions_tab[$line['id']] = (strlen($line['name']) < 30)
                      ? $line['name']
                      : substr($line['name'], 0, strrpos(substr($line['name'], 0, 30), ' ')) . '...';
@@ -399,7 +399,7 @@ $rand = mt_rand();
       <tr class="line1">
          <td colspan="4" class="center">
             <input type="hidden" name="id" value="<?php echo $question_id; ?>" />
-            <input type="hidden" name="plugin_formcreator_forms_id" value="<?php echo (int) $_REQUEST['form_id']; ?>" />
+            <input type="hidden" name="plugin_formcreator_forms_id" value="<?php echo intval($_REQUEST['form_id']); ?>" />
             <?php if(0 == $question_id) : ?>
                <input type="submit" name="add" class="submit_button" value="<?php echo __('Add'); ?>" />
             <?php else : ?>
@@ -539,7 +539,7 @@ $rand = mt_rand();
          dropdown_type = document.getElementById('dropdown_dropdown_values<?php echo $rand; ?>').value;
 
          jQuery.ajax({
-            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
+            url: "<?php echo $CFG_GLPI['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
             type: "GET",
             data: {
                dropdown_itemtype: dropdown_type,
@@ -554,7 +554,7 @@ $rand = mt_rand();
          glpi_object = document.getElementById('dropdown_glpi_objects<?php echo $rand; ?>').value;
 
          jQuery.ajax({
-            url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
+            url: "<?php echo $CFG_GLPI['root_doc']; ?>/plugins/formcreator/ajax/dropdown_values.php",
             type: "GET",
             data: {
                dropdown_itemtype: glpi_object,
@@ -569,7 +569,7 @@ $rand = mt_rand();
          var ldap_directory = ldap.value;
 
          jQuery.ajax({
-           url: "<?php echo $GLOBALS['CFG_GLPI']['root_doc']; ?>/plugins/formcreator/ajax/ldap_filter.php",
+           url: "<?php echo $CFG_GLPI['root_doc']; ?>/plugins/formcreator/ajax/ldap_filter.php",
            type: "POST",
            data: {
                value: ldap_directory,

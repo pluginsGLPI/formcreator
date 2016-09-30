@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorCategory extends CommonDropdown
+class PluginFormcreatorCategory extends CommonTreeDropdown
 {
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
@@ -21,25 +21,110 @@ class PluginFormcreatorCategory extends CommonDropdown
    {
       global $CFG_GLPI;
 
-      echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
-         <h3 class="tab_bg_2" style="padding: 5px">
-           <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) . '" class="submit">
-                <img src="' . $CFG_GLPI['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
-                ' . __('Add a form category', 'formcreator') . '
-            </a>
-         </h3>
-      </div>';
+      if ($item->getType()==__CLASS__) {
+         $item->showChildren();
+      }
+   }
 
-      $params['sort']  = (!empty($_POST['sort'])) ? (int) $_POST['sort'] : 0;
-      $params['order'] = (!empty($_POST['order']) && in_array($_POST['order'], array('ASC', 'DESC')))
-                           ? $_POST['order'] : 'ASC';
-      $params['start'] = (!empty($_POST['start'])) ? (int) $_POST['start'] : 0;
-      Search::manageGetValues(__CLASS__);
-      Search::showList(__CLASS__, $params);
+   /**
+    * {@inheritDoc}
+    * @see CommonTreeDropdown::getAdditionalFields()
+    */
+   public function getAdditionalFields()
+   {
+      return [
+            [
+                  'name'      => 'knowbaseitemcategories_id',
+                  'type'      => 'dropdownValue',
+                  'label'     => __('Knowbase category','formcreator'),
+                  'list'      => false
+            ]
+      ];
+   }
+
+   /**
+    * @param $rootId id of the subtree root
+    * @return array Tree of form categories as nested array
+    */
+   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
+      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      if ($helpdeskHome) {
+         $helpdesk   ="AND $form_table.`helpdesk_home` = 1";
+      } else {
+         $helpdesk   = '';
+      }
+
+      $query_faqs = KnowbaseItem::getListRequest([
+            'faq'      => '1',
+            'contains' => ''
+      ]);
+
+      // Selects categories containing forms or sub-categories
+      $where      = "(SELECT COUNT($form_table.id)
+         FROM $form_table
+         WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
+         AND $form_table.`is_active` = 1
+         AND $form_table.`is_deleted` = 0
+         $helpdesk
+         AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')
+         AND ".getEntitiesRestrictRequest("", $form_table, "", "", true, false)."
+         AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
+         SELECT plugin_formcreator_forms_id
+         FROM $table_fp
+         WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
+      ) > 0
+      OR (SELECT COUNT(*)
+         FROM `$cat_table` AS `cat2`
+         WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`
+      ) > 0
+      OR (SELECT COUNT(*)
+         FROM ($query_faqs) AS `faqs`
+         WHERE `faqs`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`
+         AND `faqs`.`knowbaseitemcategories_id` <> '0'
+      ) > 0";
+
+      $formCategory = new self();
+      if ($rootId == 0) {
+         $items = $formCategory->find("`level`='1' AND ($where)");
+         $name = '';
+         $parent = 0;
+      } else {
+         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)");
+         $formCategory = new self();
+         $formCategory->getFromDB($rootId);
+         $name = $formCategory->getField('name');
+         $parent = $formCategory->getField('plugin_formcreator_categories_id');
+      }
+
+      // No sub-categories, then return
+      if (count($items) == 0) {
+         return array(
+               'name'            => $name,
+               'parent'          => $parent,
+               'id'              => $rootId,
+               'subcategories'   => new stdClass()
+         );
+      }
+
+      // Generate sub categories
+      $children = array(
+            'name'            => $name,
+            'parent'          => $parent,
+            'id'              => $rootId,
+            'subcategories'   => array()
+      );
+      foreach($items as $categoryId => $categoryItem) {
+         $children['subcategories'][$categoryId] = self::getCategoryTree($categoryId);
+      }
+      return $children;
    }
 
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -49,15 +134,15 @@ class PluginFormcreatorCategory extends CommonDropdown
                      PRIMARY KEY (`id`),
                      KEY `name` (`name`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         $DB->query($query) or die($DB->error());
       }
 
       // Migration from previous version
       if (TableExists('glpi_plugin_formcreator_cats')) {
          $query = "INSERT IGNORE INTO `$table` (`id`, `name`)
                      SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
-         $GLOBALS['DB']->query($query);
-         $GLOBALS['DB']->query("DROP TABLE glpi_plugin_formcreator_cats");
+         $DB->query($query);
+         $DB->query("DROP TABLE glpi_plugin_formcreator_cats");
       }
 
       /**
@@ -67,21 +152,39 @@ class PluginFormcreatorCategory extends CommonDropdown
        */
       $query  = "SELECT `id`, `name`, `comment`
                  FROM `$table`";
-      $result = $GLOBALS['DB']->query($query);
-      while ($line = $GLOBALS['DB']->fetch_array($result)) {
+      $result = $DB->query($query);
+      while ($line = $DB->fetch_array($result)) {
          $query_update = "UPDATE `$table` SET
-                            `name`    = '" . plugin_formcreator_encode($line['name']) . "',
-                            `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
-                          WHERE `id` = " . (int) $line['id'];
-         $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+                            `name`    = '".plugin_formcreator_encode($line['name'])."',
+                            `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                          WHERE `id` = ".$line['id'];
+         $DB->query($query_update) or die ($DB->error());
       }
+
+      /**
+       * Migrate categories to tree structure
+       *
+       * @since 0.90-1.5
+       */
+      $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
+      $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => 'completename'));
+      $migration->addField($table, 'level', 'integer', array('value' => 1,
+                                                             'after' => 'plugin_formcreator_categories_id'));
+      $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
+      $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
+      $migration->addField($table, 'knowbaseitemcategories_id', 'integer', array('after' => 'ancestors_cache'));
+      $migration->migrationOneTable($table);
+      $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
+      $DB->query($query);
 
       return true;
    }
 
    public static function uninstall()
    {
-      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      global $DB;
+
+      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
+      return $DB->query($query) or die($DB->error());
    }
 }

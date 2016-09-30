@@ -15,7 +15,7 @@ if ($plugin->isActivated("formcreator")) {
 
    } elseif(isset($_POST['refuse_formanswer'])) {
 
-      $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
+      $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
       $_POST['status']                      = 'refused';
       $_POST['save_formanswer']             = true;
       $formanswer->saveAnswers($_POST);
@@ -24,7 +24,7 @@ if ($plugin->isActivated("formcreator")) {
 
    } elseif(isset($_POST['accept_formanswer'])) {
 
-      $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
+      $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
       $_POST['status']                      = 'accepted';
       $_POST['save_formanswer']             = true;
       $formanswer->saveAnswers($_POST);
@@ -32,31 +32,39 @@ if ($plugin->isActivated("formcreator")) {
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
 
    } elseif(isset($_POST['save_formanswer'])) {
-      $_POST['plugin_formcreator_forms_id'] = (int) $_POST['formcreator_form'];
+      $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
       $_POST['status']                      = 'waiting';
       $formanswer->saveAnswers($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
 
    // Show target ticket form
    } else {
-      if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         Html::helpHeader(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
+      if (plugin_formcreator_replaceHelpdesk()) {
+         PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
       } else {
-         Html::header(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF'],
-            'helpdesk',
-            'PluginFormcreatorFormlist'
-         );
+         if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+            Html::helpHeader(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF']
+            );
+         } else {
+            Html::header(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF'],
+               'helpdesk',
+               'PluginFormcreatorFormlist'
+            );
+         }
       }
 
       $formanswer->display($_REQUEST);
 
+   if (plugin_formcreator_replaceHelpdesk()) {
+      PluginFormcreatorWizard::footer();
+   } else {
       Html::footer();
    }
+}
 
 // Or display a "Not found" error
 } else {

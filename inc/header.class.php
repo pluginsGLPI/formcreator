@@ -21,16 +21,17 @@ class PluginFormcreatorHeader extends CommonDropdown
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
    {
+      global $CFG_GLPI;
 
       $header  = new self();
-      $found = $header->find('entities_id = ' . (int) $_SESSION['glpiactive_entity']);
+      $found = $header->find('entities_id = '.$_SESSION['glpiactive_entity']);
       if (count($found) > 0) {
          echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
             <h3 class="tab_bg_2" style="padding: 5px">
-                <img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/menu_add_off.png" alt="+" align="absmiddle" />
-                ' . __('Add an header', 'formcreator') . '<br /><br />
-               <em><i><img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/warning.png" alt="/!\" align="absmiddle" height="16" />&nbsp;
-               ' . __('An header already exists for this entity! You can have only one header per entity.', 'formcreator') . '</i></em>
+                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add_off.png" alt="+" align="absmiddle" />
+                '.__('Add an header', 'formcreator').'<br /><br />
+               <em><i><img src="'.$CFG_GLPI['root_doc'].'/pics/warning.png" alt="/!\" align="absmiddle" height="16" />&nbsp;
+               '.__('An header already exists for this entity! You can have only one header per entity.', 'formcreator').'</i></em>
             </h3>
          </div>';
       } else {
@@ -42,20 +43,20 @@ class PluginFormcreatorHeader extends CommonDropdown
          if (count($found) > 0) {
             echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
                <h3 class="tab_bg_2" style="padding: 5px">
-              <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) .  '" class="submit">
-                   <img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
-                   ' . __('Add an header', 'formcreator') . '
+              <a href="'.Toolbox::getItemTypeFormURL(__CLASS__). '" class="submit">
+                   <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
+                   '.__('Add an header', 'formcreator').'
                </a><br /><br />
-                  <em><i><img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/warning.png" alt="/!\" align="absmiddle" height="16" />&nbsp;
-                  ' . __('An header exists for a parent entity! Another header will overwrite the previous one.', 'formcreator') . '</i></em>
+                  <em><i><img src="'.$CFG_GLPI['root_doc'].'/pics/warning.png" alt="/!\" align="absmiddle" height="16" />&nbsp;
+                  '.__('An header exists for a parent entity! Another header will overwrite the previous one.', 'formcreator').'</i></em>
                </h3>
             </div>';
          } else {
             echo '<div class="tab_cadre_pager" style="padding: 2px; margin: 5px 0">
                <h3 class="tab_bg_2" style="padding: 5px">
-                 <a href="' . Toolbox::getItemTypeFormURL(__CLASS__) .  '" class="submit">
-                      <img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/pics/menu_add.png" alt="+" align="absmiddle" />
-                      ' . __('Add an header', 'formcreator') . '
+                 <a href="'.Toolbox::getItemTypeFormURL(__CLASS__). '" class="submit">
+                      <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
+                      '.__('Add an header', 'formcreator').'
                   </a>
                </h3>
             </div>';
@@ -82,15 +83,15 @@ class PluginFormcreatorHeader extends CommonDropdown
       $this->showFormHeader($options);
       echo '<table class="tab_cadre_fixe">';
 
-      echo "<tr class='line0'><td>" . __('Name') . "</td>";
+      echo "<tr class='line0'><td>".__('Name')."</td>";
       echo "<td>";
       Html::autocompletionTextField($this, "name");
       echo "</td>";
       echo "</tr>";
 
-      echo "<tr class='line1'><td>" . __('Content') . "</td>";
+      echo "<tr class='line1'><td>".__('Content')."</td>";
       echo "<td>";
-      echo "<textarea name='comment' id ='comment' >" . $this->fields['comment'] . "</textarea>";
+      echo "<textarea name='comment' id ='comment' >".$this->fields['comment']."</textarea>";
       Html::initEditorSystem('comment');
       echo "</td>";
       echo "</tr>";
@@ -104,7 +105,7 @@ class PluginFormcreatorHeader extends CommonDropdown
    public function prepareInputForAdd($input)
    {
       $header = new self();
-      $found = $header->find('entities_id = ' . (int) $input['entities_id']);
+      $found = $header->find('entities_id = '.(int) $input['entities_id']);
       if (count($found) > 0) {
          Session::addMessageAfterRedirect(__('An header already exists for this entity! You can have only one header per entity.', 'formcreator'), false, ERROR);
          return array();
@@ -115,6 +116,8 @@ class PluginFormcreatorHeader extends CommonDropdown
 
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -126,15 +129,16 @@ class PluginFormcreatorHeader extends CommonDropdown
                      PRIMARY KEY (`id`),
                      KEY `name` (`name`)
                      ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+         $DB->query($query) or die($DB->error());
       }
 
       // Migration from previous version
       if (TableExists('glpi_plugin_formcreator_titles')) {
          $query = "INSERT INTO `$table` (`id`, `name`, `comment`)
-                     SELECT `id`, CONCAT('Header ', `id`) AS name, `name` AS comment FROM glpi_plugin_formcreator_titles";
-         $GLOBALS['DB']->query($query);
-         $GLOBALS['DB']->query("DROP TABLE glpi_plugin_formcreator_titles");
+                   SELECT `id`, CONCAT('Header ', `id`) AS name, `name` AS comment
+                   FROM glpi_plugin_formcreator_titles";
+         $DB->query($query);
+         $DB->query("DROP TABLE glpi_plugin_formcreator_titles");
       }
 
 
@@ -143,7 +147,9 @@ class PluginFormcreatorHeader extends CommonDropdown
 
    public static function uninstall()
    {
-      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $GLOBALS['DB']->query($query) or die($GLOBALS['DB']->error());
+      global $DB;
+
+      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
+      return $DB->query($query) or die($DB->error());
    }
 }

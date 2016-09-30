@@ -22,7 +22,7 @@ function plugin_formcreator_install()
       }
    }
 
-   return true ;
+   return true;
 }
 
 /**
@@ -58,29 +58,142 @@ function plugin_formcreator_getDropdown()
    );
 }
 
+
+function plugin_formcreator_addDefaultSelect($itemtype) {
+   switch ($itemtype) {
+      case "PluginFormcreatorIssue" :
+         return "`glpi_plugin_formcreator_issues`.`sub_itemtype`, ";
+   }
+   return "";
+}
+
+
+function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
+   $join = "";
+   switch ($itemtype) {
+      case "PluginFormcreatorIssue" :
+         $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
+         $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
+         $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
+   }
+   return $join;
+}
+
+
+function plugin_formcreator_getCondition($table) {
+   if (Session::haveRight('config', UPDATE)
+      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+      $condition = " 1=1 ";
+
+   } else {
+      $condition = " `$table`.`requester_id` = " . $_SESSION['glpiID'];
+   }
+   return $condition;
+}
+
 /**
  * Define specific search request
  *
- * @param  String $type    Itemtype for the search engine
+ * @param  String $itemtype    Itemtype for the search engine
  * @return String          Specific search request
  */
-function plugin_formcreator_addDefaultWhere($type)
+function plugin_formcreator_addDefaultWhere($itemtype)
 {
-   switch ($type) {
-      case "PluginFormcreatorFormanswer" :
-         if (Session::haveRight('config', UPDATE)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-            return " 1=1 ";
-
+   $condition = "";
+   $table = getTableForItemType($itemtype);
+   switch ($itemtype) {
+      case "PluginFormcreatorIssue" :
+         $condition_fanwser = plugin_formcreator_getCondition($table);
+         if ($condition_fanwser == " 1=1") {
+            $condition = $condition_fanwser;
          } else {
-            return " `glpi_plugin_formcreator_formanswers`.`requester_id` = " . $_SESSION['glpiID'];
+            $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorFormanswer'
+                          AND ($condition_fanwser) OR ";
+            $condition= Search::addDefaultWhere("Ticket");
+            $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
+            $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          }
          break;
-      default:
-         return '';
+
+      case "PluginFormcreatorFormanswer" :
+         $condition = plugin_formcreator_getCondition($table);
+         break;
+   }
+   return $condition;
+}
+
+
+function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $searchtype) {
+   $searchopt = &Search::getOptions($itemtype);
+   $table     = $searchopt[$ID]["table"];
+   $field     = $searchopt[$ID]["field"];
+
+   switch ($table.".".$field) {
+      case "glpi_plugin_formcreator_issues.status" :
+         if ($val == 'all') {
+            return "";
+         }
+         $tocheck = array();
+         if ($item = getItemForItemtype($itemtype)) {
+            switch ($val) {
+               case Ticket::INCOMING:
+                  $tocheck = $item->getNewStatusArray();
+                  break;
+
+               case 'process' :
+                  $tocheck = $item->getProcessStatusArray();
+                  break;
+
+               case 'notclosed' :
+                  $tocheck = $item->getAllStatusArray();
+                  foreach ($item->getClosedStatusArray() as $status) {
+                     if (isset($tocheck[$status])) {
+                        unset($tocheck[$status]);
+                     }
+                  }
+                  $tocheck = array_keys($tocheck);
+                  break;
+
+               case 'old' :
+                  $tocheck = array_merge($item->getSolvedStatusArray(),
+                                         $item->getClosedStatusArray());
+                  break;
+
+               case 'notold' :
+                  $tocheck = $item->getAllStatusArray();
+                  foreach ($item->getSolvedStatusArray() as $status) {
+                     if (isset($tocheck[$status])) {
+                        unset($tocheck[$status]);
+                     }
+                  }
+                  foreach ($item->getClosedStatusArray() as $status) {
+                     if (isset($tocheck[$status])) {
+                        unset($tocheck[$status]);
+                     }
+                  }
+                  $tocheck = array_keys($tocheck);
+                  break;
+            }
+         }
+
+         if (count($tocheck) == 0) {
+            $statuses = $item->getAllStatusArray();
+            if (isset($statuses[$val])) {
+               $tocheck = array($val);
+            }
+         }
+
+         if (count($tocheck)) {
+            if ($nott) {
+               return $link." `$table`.`$field` NOT IN ('".implode("','",$tocheck)."')";
+            }
+            return $link." `$table`.`$field` IN ('".implode("','",$tocheck)."')";
+         }
+         break;
    }
 }
+
 
 function plugin_formcreator_AssignToTicket($types)
 {
@@ -89,11 +202,10 @@ function plugin_formcreator_AssignToTicket($types)
    return $types;
 }
 
-// Define actions :
-function plugin_formcreator_MassiveActions($type) {
 
-   switch ($type) {
-      // New action for core and other plugin types : name = plugin_PLUGINNAME_actionname
+function plugin_formcreator_MassiveActions($itemtype) {
+
+   switch ($itemtype) {
       case 'PluginFormcreatorForm' :
          return array(
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
@@ -102,3 +214,19 @@ function plugin_formcreator_MassiveActions($type) {
    }
    return array();
 }
+
+
+function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
+   $searchopt=&Search::getOptions($itemtype);
+   $table=$searchopt[$ID]["table"];
+   $field=$searchopt[$ID]["field"];
+
+   switch ($itemtype) {
+      case "PluginFormcreatorIssue":
+         return PluginFormcreatorIssue::giveItem($itemtype, $ID, $data, $num);
+         break;
+   }
+
+   return "";
+}
+

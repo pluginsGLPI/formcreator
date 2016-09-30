@@ -111,12 +111,14 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public static function getSpecificValueToDisplay($field, $values, array $options=array())
    {
+      global $CFG_GLPI;
+
       if (!is_array($values)) {
          $values = array($field => $values);
       }
       switch ($field) {
          case 'status' :
-            $output = '<img src="' . $GLOBALS['CFG_GLPI']['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
+            $output = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
                          alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" />';
             return $output;
             break;
@@ -299,6 +301,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                                    questions.`order` ASC";
       $res_questions = $DB->query($query_questions);
       $last_section = "";
+      $questionsCount = $DB->numrows($res_questions);
       while ($question_line = $DB->fetch_assoc($res_questions)) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
@@ -319,7 +322,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
-         echo '<div class="form-group line'.((count($questions) + 1) % 2).'">';
+         echo '<div class="form-group line'.(($questionsCount + 1) % 2).'">';
          echo '<div class="center">';
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
          echo '</div>';
@@ -404,6 +407,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    public function saveAnswers($datas)
    {
       global $DB;
+
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
 
@@ -440,7 +444,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          // Update questions answers
          if ($status == 'waiting') {
-            while ($question = $GLOBALS['DB']->fetch_array($result)) {
+            while ($question = $DB->fetch_array($result)) {
                if ($question['fieldtype'] != 'file') {
                   $data_value = $datas['formcreator_field_' . $question['id']];
                   if (isset($data_value)) {
@@ -476,14 +480,15 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      $docID = intval($docID);
                      $table    = getTableForItemType('Document');
                      $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
-                     $query    = "UPDATE `$table` SET `filename` = '$filename' WHERE `id` = $docID";
+                     $query    = "UPDATE `$table` SET `filename` = '$filename'
+                                  WHERE `id` = $docID";
                      $DB->query($query);
 
                      $docItem = new Document_Item();
                      $docItemId = $docItem->add(array(
                         'documents_id' => $docID,
                         'itemtype'     => __CLASS__,
-                        'items_id'     => intval($datas['id']),
+                        'items_id'     => $datas['id'],
                      ));
 
                      $answer->update(array(
@@ -561,7 +566,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $docID = intval($docID);
                   $table    = getTableForItemType('Document');
                   $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
-                  $query    = "UPDATE `$table` SET `filename` = '$filename' WHERE `id` = $docID";
+                  $query    = "UPDATE `$table` SET `filename` = '$filename'
+                               WHERE `id` = $docID";
                   $DB->query($query);
 
                   $docItem = new Document_Item();
@@ -617,7 +623,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . (int) $this->fields['plugin_formcreator_forms_id']);
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       // Generate targets
       foreach($found_targets as $target) {
@@ -638,12 +644,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public function getFullForm()
    {
-      global $DB;
+      global $CFG_GLPI, $DB;
 
       $question_no = 0;
       $output      = '';
 
-      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+      if ($CFG_GLPI['use_rich_text']) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
          $output .= __('Form data', 'formcreator') . PHP_EOL;
@@ -713,7 +719,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
                   }
                } elseif (is_array(json_decode($value))) {
-                  if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                  if ($CFG_GLPI['use_rich_text']) {
                      $value = json_decode($value);
                      $output_value = '<ul>';
                      foreach ($value as $choice) {
@@ -727,7 +733,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $output_value = $value;
                }
             } elseif ($question_line['fieldtype'] == 'textarea') {
-               if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+               if ($CFG_GLPI['use_rich_text']) {
                   $output_value = '<br /><blockquote>' . $value . '</blockquote>';
                } else {
                   $output_value = PHP_EOL . $value;
@@ -757,9 +763,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    **/
    public function post_purgeItem()
    {
+      global $DB;
+
       $table = getTableForItemType('PluginFormcreatorAnswer');
       $query = "DELETE FROM `$table` WHERE `plugin_formcreator_formanwers_id` = {$this->getID()};";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
       // If the form was waiting for validation
       if ($this->fields['status'] == 'waiting') {
@@ -776,6 +784,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public static function install(Migration $migration)
    {
+      global $DB;
+
       $obj   = new self();
       $table = $obj->getTable();
 
@@ -798,7 +808,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+         $DB->query($query) or die ($DB->error());
       } else {
          /**
           * Migration of special chars from previous versions
@@ -807,18 +817,23 @@ class PluginFormcreatorFormanswer extends CommonDBChild
           */
          $query  = "SELECT `id`, `comment`
                     FROM `$table`";
-         $result = $GLOBALS['DB']->query($query);
-         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+         $result = $DB->query($query);
+         while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `$table` SET
                                `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
-                             WHERE `id` = " . (int) $line['id'];
-            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+                             WHERE `id` = " . $line['id'];
+            $DB->query($query_update) or die ($DB->error());
          }
 
          if (!FieldExists('glpi_plugin_formcreator_formanswers', 'name')) {
             $query_update = 'ALTER TABLE `glpi_plugin_formcreator_formanswers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
-            $GLOBALS['DB']->query($query_update) or die ($GLOBALS['DB']->error());
+            $DB->query($query_update) or die ($DB->error());
          }
+
+         // valdiator_id should not be set for waiting form answers
+         $query = "UPDATE glpi_plugin_formcreator_formanswers
+               SET `validator_id` = '0' WHERE `status`='waiting'";
+         $DB->query($query);
       }
 
       // Create standard search options
@@ -828,7 +843,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 4, 4, 0),
                (NULL, '" . __CLASS__ . "', 5, 5, 0),
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
-      $GLOBALS['DB']->query($query) or die ($GLOBALS['DB']->error());
+      $DB->query($query) or die ($DB->error());
 
       return true;
    }
@@ -840,11 +855,13 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public static function uninstall()
    {
+      global $DB;
+
       $obj = new self();
-      $GLOBALS['DB']->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
+      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
 
       // Delete logs of the plugin
-      $GLOBALS['DB']->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
+      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }
