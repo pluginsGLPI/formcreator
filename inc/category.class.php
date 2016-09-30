@@ -38,6 +38,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                   'type'      => 'dropdownValue',
                   'label'     => __('Knowbase category','formcreator'),
                   'list'      => false
+            ],
+            [
+                  'name'      => $this->getForeignKeyField(),
+                  'type'      => 'parent',
+                  'label'     => __('As child of'),
+                  'list'      => false
             ]
       ];
    }
@@ -131,6 +137,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                      `id` int(11) NOT NULL auto_increment,
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `comment` text collate utf8_unicode_ci,
+                     `completename` VARCHAR(255) NULL DEFAULT NULL,
+                     `plugin_formcreator_categories_id` INT(11) NOT NULL DEFAULT '0',
+                     `level` INT(11) NOT NULL DEFAULT '1',
+                     `sons_cache` LONGTEXT NULL COLLATE 'utf8_unicode_ci',
+                     `ancestors_cache` LONGTEXT NULL COLLATE 'utf8_unicode_ci',
+                     `knowbaseitemcategories_id` INT(11) NOT NULL DEFAULT '0',
                      PRIMARY KEY (`id`),
                      KEY `name` (`name`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
@@ -164,19 +176,20 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       /**
        * Migrate categories to tree structure
        *
-       * @since 0.90-1.5
+       * @since 0.90-1.4
        */
-      $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
-      $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => 'completename'));
-      $migration->addField($table, 'level', 'integer', array('value' => 1,
-                                                             'after' => 'plugin_formcreator_categories_id'));
-      $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
-      $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
-      $migration->addField($table, 'knowbaseitemcategories_id', 'integer', array('after' => 'ancestors_cache'));
-      $migration->migrationOneTable($table);
-      $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
-      $DB->query($query);
-
+      if (!FieldExists($table, "knowbaseitemcategories_id")) {
+         $migration->addField($table, 'completename', 'string', array('after' => 'comment'));
+         $migration->addField($table, 'plugin_formcreator_categories_id', 'integer', array('after' => 'completename'));
+         $migration->addField($table, 'level', 'integer', array('value' => 1,
+                                                                'after' => 'plugin_formcreator_categories_id'));
+         $migration->addField($table, 'sons_cache', 'longtext', array('after' => 'level'));
+         $migration->addField($table, 'ancestors_cache', 'longtext', array('after' => 'sons_cache'));
+         $migration->addField($table, 'knowbaseitemcategories_id', 'integer', array('after' => 'ancestors_cache'));
+         $migration->migrationOneTable($table);
+         $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
+         $DB->query($query);
+      }
       return true;
    }
 
