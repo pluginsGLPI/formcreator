@@ -520,9 +520,19 @@ form.formcreator_form {
    height: 100vh;
 }
 
-#plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
+#plugin_formcreator_wizard_categories a {
    background-color: #F8F8F8;
    color: #3A5693;
+}
+
+#plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
+   font-size: 1.2em;
+}
+
+#plugin_formcreator_wizard_categories h2 {
+   background-color: #E9E9E9;
+   margin: 0;
+   padding: 0.83em 0;
 }
 
 .plugin_formcreator_card {
@@ -708,6 +718,11 @@ a.plugin_formcreator_formTile_title {
 
 .slinky-menu li {
    border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+#plugin_formcreator_wizard_categories .slinky-menu .back {
+   background-color: #E9E9E9;
+   padding: 0.83em;
 }
 
 #plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer {
