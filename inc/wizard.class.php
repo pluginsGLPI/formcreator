@@ -44,8 +44,15 @@ class PluginFormcreatorWizard {
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
 
-      echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
+
+      $reservation_item = new reservationitem;
+      $entity_filter = getEntitiesRestrictRequest("", 'glpi_reservationitems', 'entities_id',
+                                                  $_SESSION['glpiactiveentities']);
+      $found_available_res = $reservation_item->find($entity_filter);
+      if (count($found_available_res)) {
+         echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
+         echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
+      }
 
       echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
       echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
