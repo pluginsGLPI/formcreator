@@ -56,6 +56,7 @@ Fonctionnalités
 11. Ajout de description par champs, par section de questions, par formulaires, par entités et langues.
 12. Formatage du/des ticket(s) créé(s) : réponses aux questions à afficher, gabarits de tickets.
 13. Prévisualisation du formulaire créé directement dans la configuration.
+14. Un catalogue de services optionnel pour consulter la FAQ et utiliser les formulaires dans une interface unifiée.
 
 Pour plus d'informations, visitez [la page WIKI](https://github.com/TECLIB/formcreator/wiki)
 
