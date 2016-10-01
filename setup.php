@@ -14,7 +14,7 @@ function plugin_version_formcreator ()
       'version'        => '0.90-1.4-beta2',
       'author'         => '<a href="mailto:contact@teclib.com">Jérémy MOREAU</a>
                            - <a href="http://www.teclib.com">Teclib\'</a>',
-      'homepage'       => 'https://github.com/TECLIB/formcreator',
+      'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
       'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
       'minGlpiVersion' => "0.85"
    );
