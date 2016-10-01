@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.2/phpunit.xsd"
+  bootstrap="tests/bootstrap.php"
+  processIsolation="false"
+  backupGlobals="false"
+  colors="true"
+  >
+  <logging>
+    <log type="junit" target="./tests/logs/junit_install.xml" logIncompleteSkipped="true" />
+  </logging>
+  <!-- exclude relatively to ${basedir} -->
+  <filter>
+    <whitelist>
+      <directory suffix=".php">./inc</directory>
+    </whitelist>
+  </filter>
+  <testsuites>
+    <testsuite name="Install">
+    	<file>./tests/0000_Install/SaveInstallTest.php</file>
+    </testsuite>
+   <testsuite name="Unit">
+    	<directory suffix="Test.php">./tests/0005_Unit/</directory>
+    </testsuite>
+   <testsuite name="Integration">
+    	<directory suffix="Test.php">./tests/0010_Integration/</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
