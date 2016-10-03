@@ -608,12 +608,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                }
                if ($form->fields['validation_required']) {
                   NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               } else {
+                  NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
                }
                return false;
                break;
          }
-      } else {
-
       }
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
