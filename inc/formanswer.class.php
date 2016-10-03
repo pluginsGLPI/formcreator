@@ -584,11 +584,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
-      NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
-
       if ($form->fields['validation_required'] || ($status == 'accepted')) {
          switch ($status) {
             case 'waiting' :
+               // Notify the requester 
+               NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
                // Notify the validator
                NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
                break;
@@ -612,6 +612,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                return false;
                break;
          }
+      } else {
+
       }
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);

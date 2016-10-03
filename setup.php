@@ -1,5 +1,12 @@
 <?php
 global $CFG_GLPI;
+// Version of the plugin
+define('PLUGIN_FORMCREATOR_VERSION', "0.90-1.4-beta2");
+// Minimal GLPI version, inclusive
+define ("PLUGIN_FORMCREATOR_GLPI_MIN_VERSION", "0.85");
+// Maximum GLPI version, exclusive
+define ("PLUGIN_FORMCREATOR_GLPI_MAX_VERSION", "0.91");
+
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc']."/plugins/formcreator");
 
 /**
@@ -11,12 +18,12 @@ function plugin_version_formcreator ()
 {
    return array(
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
-      'version'        => '0.90-1.4-beta2',
+      'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="mailto:contact@teclib.com">Jérémy MOREAU</a>
                            - <a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
       'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
-      'minGlpiVersion' => "0.85"
+      'minGlpiVersion' => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION
    );
 }
 
@@ -28,8 +35,8 @@ function plugin_version_formcreator ()
 function plugin_formcreator_check_prerequisites ()
 {
    $success = true;
-   if (version_compare(GLPI_VERSION,'0.85','lt')) {
-      echo 'This plugin requires GLPI >= 0.85<br>';
+   if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+      echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
       $success = false;
    }
    if (! function_exists("utf8_decode")) {
