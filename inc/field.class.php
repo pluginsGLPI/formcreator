@@ -72,6 +72,10 @@ abstract class PluginFormcreatorField implements Field
          if (static::IS_MULTIPLE) {
             return explode("\r\n", $this->fields['default_values']);
          }
+         if (!$this->fields['show_empty'] && empty($this->fields['default_values'])) {
+            $availableValues = $this->getAvailableValues();
+            return array_shift($availableValues);
+         }
          return $this->fields['default_values'];
       }
    }
