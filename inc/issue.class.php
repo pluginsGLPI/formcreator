@@ -12,7 +12,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // Create standard search options
       $cls = __CLASS__;
       $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = $cls");
+      $found_dprefs = $displayprefs->find("`itemtype` = '$cls'");
       if (count($found_dprefs) == 0) {
          $query = "INSERT IGNORE INTO `glpi_displaypreferences`
                      (`id`, `itemtype`, `num`, `rank`, `users_id`)
