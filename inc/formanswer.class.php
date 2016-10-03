@@ -861,6 +861,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       // Delete logs of the plugin
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
+      $displayPreference = new DisplayPreference();
+      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      
       return true;
    }
 }
