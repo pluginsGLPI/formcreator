@@ -17,6 +17,7 @@ foreach ($currentValues as &$value) {
       $value = plugin_formcreator_encode($value);
    }
 }
+unset ($value);
 $questionToShow = array();
 foreach ($currentValues as $id => $value) {
    $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
