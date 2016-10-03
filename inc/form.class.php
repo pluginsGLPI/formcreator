@@ -686,13 +686,14 @@ class PluginFormcreatorForm extends CommonDBTM
 
    protected function showMyLastForms() {
       global $DB, $CFG_GLPI;
-
+      
+      $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`requester_id` = '".$_SESSION['glpiID']."'
+                      WHERE fa.`requester_id` = '$userId'
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
@@ -709,7 +710,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
          echo "</ul>";
          echo '<div align="center">';
-         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$_SESSION['glpiID'].'">';
+         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -721,10 +722,20 @@ class PluginFormcreatorForm extends CommonDBTM
 
          echo '<div class="plugin_formcreator_card">';
          echo '<div class="plugin_formcreator_heading">'.__('My last forms (validator)', 'formcreator').'</div>';
+         $groupList = Group_User::getUserGroups($userId);
+         $groupIdList = array();
+         foreach ($groupList as $group) {
+            $groupIdList[] = $group['id'];
+         }
+         $groupIdList = $groupIdList + array('NULL', '0', '');
+         $groupIdList = "'" . implode("', '", $groupIdList) . "'";
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
+                INNER JOIN glpi_plugin_formcreator_formvalidators fv ON fv.`forms_id`=f.`id`
                 INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                WHERE fa.`validator_id` = '".$_SESSION['glpiID']."'
+                WHERE (f.`validation_required` = 1 AND fv.`users_id` = '$userId'
+                   OR f.`validation_required` = 2 AND fv.`users_id` IN ($groupIdList)
+                )
                 AND f.is_deleted = 0
                 ORDER BY fa.`status` ASC, fa.`request_date` DESC
                 LIMIT 0, 5";
