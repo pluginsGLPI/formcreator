@@ -422,4 +422,21 @@ class PluginFormcreatorIssue extends CommonDBTM {
    static function getAllStatusArray($withmetaforsearch=false) {
       return Ticket::getAllStatusArray($withmetaforsearch);
    }
+
+   /**
+    * Database table uninstallation for the item type
+    *
+    * @return boolean True on success
+    */
+   public static function uninstall()
+   {
+      global $DB;
+
+      $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
+      $displayPreference = new DisplayPreference();
+      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormCreatorIssue'));
+
+      return true;
+   }
+
 }
