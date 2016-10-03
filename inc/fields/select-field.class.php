@@ -43,7 +43,7 @@ class selectField extends PluginFormcreatorField
    {
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
-      return isset($values[$value]) ? $values[$value] : $value;
+      return in_array($value, $value) ? $value : $this->fields['default_values'];
    }
 
    public static function getName()
