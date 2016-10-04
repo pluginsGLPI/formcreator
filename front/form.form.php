@@ -57,6 +57,8 @@ if ($plugin->isActivated("formcreator")) {
          if($_SESSION['glpiname'] == 'formcreator_temp_user') {
             unset($_SESSION['glpiname']);
             Html::back();
+         } else if (plugin_formcreator_replaceHelpdesk()) {
+            Html::redirect('issue.php');
          } else {
             Html::redirect('formlist.php');
          }
