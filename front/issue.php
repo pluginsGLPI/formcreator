@@ -7,7 +7,7 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
    Html::displayNotFoundError();
 }
 
-if(PluginFormcreatorIssue::canView()) {
+if (PluginFormcreatorIssue::canView()) {
       if (plugin_formcreator_replaceHelpdesk()) {
          PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
       } else {

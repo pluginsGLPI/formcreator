@@ -28,8 +28,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $DB->query($query) or die ($DB->error());
       }
 
-
-
       // create view who merge tickets and formanswers
       $query = "CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS
 
