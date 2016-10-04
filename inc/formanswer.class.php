@@ -854,14 +854,21 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
-
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
+      $log = new Log();
+      $log->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
 
+      // Delete display preferences
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+
+      // Delete relations with tickets
+      $item_ticket = new Item_Ticket();
+      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+
+      // Remove  table
+      $obj = new self();
+      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
 
       return true;
    }
