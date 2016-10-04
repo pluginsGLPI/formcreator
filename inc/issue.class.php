@@ -334,6 +334,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                                  'value'   => $values[$field]));
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
+            $ticket_opts['waiting'] = __('Not validated');
+            $ticket_opts['refused'] = __('Refused');
             return Dropdown::showFromArray($name, $ticket_opts, array('display' => false,
                                                                       'value'   => $values[$field]));
             break;
