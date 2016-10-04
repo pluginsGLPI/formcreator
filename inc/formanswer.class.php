@@ -430,21 +430,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
          $status = $_POST['status'];
-         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
-            $validatorId = $_SESSION['glpiID'];
-         } else {
-            $validatorId = 0;
-         }
-         $formAnswer = array(
+         $this->update(array(
             'id'                          => intval($datas['id']),
             'status'                      => $status,
-            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
-            'validator_id'                => $validatorId,
-         );
-         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
-            $formAnswer['validator_id'] = $_SESSION['glpiID'];
-         }
-         $this->update($formAnswer);
+            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL'
+         ));
 
          // Update questions answers
          if ($status == 'waiting') {
@@ -522,7 +512,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                => 0,
+            'validator_id'                => isset($datas['formcreator_validator'])
+                                                ? $datas['formcreator_validator']
+                                                : 0,
             'status'                      => $status,
             'request_date'                => date('Y-m-d H:i:s'),
          ));
