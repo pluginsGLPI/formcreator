@@ -18,13 +18,13 @@
   </filter>
   <testsuites>
     <testsuite name="Install">
-    	<file>./tests/0000_Install/SaveInstallTest.php</file>
+        <file>./tests/0000_Install/SaveInstallTest.php</file>
     </testsuite>
    <testsuite name="Unit">
-    	<directory suffix="Test.php">./tests/0005_Unit/</directory>
+        <directory suffix="Test.php">./tests/0005_Unit/</directory>
     </testsuite>
    <testsuite name="Integration">
-    	<directory suffix="Test.php">./tests/0010_Integration/</directory>
+        <directory suffix="Test.php">./tests/0010_Integration/</directory>
     </testsuite>
   </testsuites>
 </phpunit>
