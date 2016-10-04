@@ -986,12 +986,11 @@ a.plugin_formcreator_formTile_title {
    height: 18px;
 }
 
-.plugin_formcreator_myname {
+#c_menu #myname {
    display: inline-block;
    color: #FFF;
    margin: 0 !important;
    height: 40px;
-   vertical-align: top;
 }
 
 #page.plugin_formcreator_page {
