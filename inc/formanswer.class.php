@@ -583,7 +583,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       if ($form->fields['validation_required'] || ($status == 'accepted')) {
          switch ($status) {
             case 'waiting' :
-               // Notify the requester 
+               // Notify the requester
                NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
                // Notify the validator
                NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
@@ -594,6 +594,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                break;
             case 'accepted' :
                // Notify the requester
+               if ($form->fields['validation_required']) {
+                  NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               } else {
+                  NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+               }
+
                if (!$this->generateTarget()) {
                   Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
@@ -601,13 +607,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      'id'     => $this->getID(),
                      'status' => 'waiting',
                   ));
+                  return false;
                }
-               if ($form->fields['validation_required']) {
-                  NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
-               } else {
-                  NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
-               }
-               return false;
                break;
          }
       }
@@ -861,7 +862,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
-      
+
       return true;
    }
 }
