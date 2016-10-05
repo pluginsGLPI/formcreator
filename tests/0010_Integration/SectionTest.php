@@ -15,7 +15,6 @@ class SectionTest extends SuperAdminTestCase {
 
       $this->sectionData = array(
             'name'                  => 'a section',
-
       );
    }
 
