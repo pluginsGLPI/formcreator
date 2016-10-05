@@ -1,48 +1,84 @@
 <?php
 class SelectFieldTest extends SuperAdminTestCase {
 
-   public function setUp() {
-      parent::setUp();
+   public function provider() {
 
       // Force include of not autoloaded classes
       // TODO : enhance the plugin to use autoloading
       PluginFormcreatorFields::getTypes();
 
-      $this->selectField = new selectField(
+      $dataset = array(
             array(
-                  'fieldtype'       => 'select',
-                  'name'            => 'question',
-                  'required'        => '0',
-                  'show_empty'      => '0',
-                  'default_values'  => '',
-                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                  'order'           => '1',
-                  'show_rule'       => 'always'
+                  'fields'          => array(
+                        'fieldtype'       => 'select',
+                        'name'            => 'question',
+                        'required'        => '0',
+                        'show_empty'      => '0',
+                        'default_values'  => '',
+                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                        'order'           => '1',
+                        'show_rule'       => 'always'
+                  ),
+                  'data'            => null,
+                  'expectedValue'   => '1'
             ),
-            null
+            array(
+                  'fields'          => array(
+                        'fieldtype'       => 'select',
+                        'name'            => 'question',
+                        'required'        => '0',
+                        'show_empty'      => '1',
+                        'default_values'  => '',
+                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                        'order'           => '1',
+                        'show_rule'       => 'always'
+                  ),
+                  'data'            => null,
+                  'expectedValue'   => ''
+            ),
+            array(
+                  'fields'          => array(
+                        'fieldtype'       => 'select',
+                        'name'            => 'question',
+                        'required'        => '0',
+                        'show_empty'      => '0',
+                        'default_values'  => '3',
+                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                        'order'           => '1',
+                        'show_rule'       => 'always'
+                  ),
+                  'data'            => null,
+                  'expectedValue'   => '3'
+            )
       );
 
-   }
+      foreach($dataset as &$data) {
+         $data['field'] = new selectField($data['fields'], $data['data']);
+      }
 
-   public function testFieldAvailableValue() {
-      $availableValues = $this->selectField->getAvailableValues();
-      $this->assertContains(1, $availableValues);
-      $this->assertContains(2, $availableValues);
-      $this->assertContains(3, $availableValues);
-      $this->assertContains(4, $availableValues);
-      $this->assertContains(5, $availableValues);
-      $this->assertContains(6, $availableValues);
-      $this->assertCount(6, $availableValues);
-
-      return $availableValues;
+      return $dataset;
    }
 
    /**
-    * @depends testFieldAvailableValue
+    * @dataProvider provider
     */
-   public function testFieldValue($availableValues) {
-      $value = $this->selectField->getValue();
-      $this->assertEquals(array_shift($availableValues), $value);
+   public function testFieldAvailableValue($fields, $data, $expectedValue, $fieldInstance) {
+      $availableValues = $fieldInstance->getAvailableValues();
+      $expectedAvaliableValues = explode("\r\n", $fields['values']);
+
+      $this->assertCount(count($expectedAvaliableValues), $availableValues);
+
+      foreach ($expectedAvaliableValues as $expectedValue) {
+         $this->assertContains($expectedValue, $availableValues);
+      }
+   }
+
+   /**
+    * @dataProvider provider
+    */
+   public function testFieldValue($fields, $data, $expectedValue, $fieldInstance) {
+      $value = $fieldInstance->getValue();
+      $this->assertEquals($expectedValue, $value);
    }
 
 }
