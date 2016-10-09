@@ -12,6 +12,6 @@ before_script:
 script:
   - cd plugins/formcreator
   - php tools/cliinstall.php --tests
-  - phpunit
+  - phpunit --verbose --debug
 
   
