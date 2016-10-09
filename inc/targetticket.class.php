@@ -1069,6 +1069,7 @@ EOS;
          // Requester's entity
          case 'current' :
             $datas['entities_id'] = $_SESSION['glpiactive_entity'];
+            break;
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
@@ -1078,7 +1079,6 @@ EOS;
          // Requester's first dynamic entity
          case 'requester_dynamic_first' :
             $order_entities = "`glpi_profiles`.`name` ASC";
-            break;
          case 'requester_dynamic_last' :
             if (!isset($order_entities)) {
                $order_entities = "`glpi_profiles`.`name` DESC";
