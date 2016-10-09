@@ -1078,6 +1078,7 @@ EOS;
          // Requester's first dynamic entity
          case 'requester_dynamic_first' :
             $order_entities = "`glpi_profiles`.`name` ASC";
+            break;
          case 'requester_dynamic_last' :
             if (!isset($order_entities)) {
                $order_entities = "`glpi_profiles`.`name` DESC";
