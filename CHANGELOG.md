@@ -2,6 +2,15 @@ GLPI Formcreator ChangeLog
 ===============================
 
 
+
+Version 0.90-1.4-beta2
+------------------
+* form categories support parent / child relationship
+* new presentation of forms to requesters  
+* optional replacement of the simplified interface with a service catalog
+* natural language search engine
+* sort forms alphabetically or by popularity
+ 
 Version 0.90-1.3.4
 ------------------
 

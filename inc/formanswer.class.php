@@ -430,15 +430,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       // Update form answers
       if (isset($_POST['save_formanswer'])) {
          $status = $_POST['status'];
-         $formAnswer = array(
+         $this->update(array(
             'id'                          => intval($datas['id']),
             'status'                      => $status,
-            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL',
-         );
-         if (isset($_POST['accept_formanswer']) || isset($_POST['refuse_formanswer'])) {
-            $formAnswer['validator_id'] = $_SESSION['glpiID'];
-         }
-         $this->update($formAnswer);
+            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL'
+         ));
 
          // Update questions answers
          if ($status == 'waiting') {
@@ -516,7 +512,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                =>  isset($datas['formcreator_validator'])
+            'validator_id'                => isset($datas['formcreator_validator'])
                                                 ? $datas['formcreator_validator']
                                                 : 0,
             'status'                      => $status,
@@ -584,11 +580,11 @@ class PluginFormcreatorFormanswer extends CommonDBChild
          }
       }
 
-      NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
-
       if ($form->fields['validation_required'] || ($status == 'accepted')) {
          switch ($status) {
             case 'waiting' :
+               // Notify the requester
+               NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
                // Notify the validator
                NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
                break;
@@ -598,6 +594,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                break;
             case 'accepted' :
                // Notify the requester
+               if ($form->fields['validation_required']) {
+                  NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
+               } else {
+                  NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+               }
+
                if (!$this->generateTarget()) {
                   Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
@@ -605,11 +607,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      'id'     => $this->getID(),
                      'status' => 'waiting',
                   ));
+                  return false;
                }
-               if ($form->fields['validation_required']) {
-                  NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
-               }
-               return false;
                break;
          }
       }
@@ -855,11 +854,21 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       global $DB;
 
+      // Delete logs of the plugin
+      $log = new Log();
+      $log->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+
+      // Delete display preferences
+      $displayPreference = new DisplayPreference();
+      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+
+      // Delete relations with tickets
+      $item_ticket = new Item_Ticket();
+      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+
+      // Remove  table
       $obj = new self();
       $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
-
-      // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
    }

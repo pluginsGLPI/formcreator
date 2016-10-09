@@ -12,7 +12,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // Create standard search options
       $cls = __CLASS__;
       $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = $cls");
+      $found_dprefs = $displayprefs->find("`itemtype` = '$cls'");
       if (count($found_dprefs) == 0) {
          $query = "INSERT IGNORE INTO `glpi_displaypreferences`
                      (`id`, `itemtype`, `num`, `rank`, `users_id`)
@@ -27,8 +27,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      ";
          $DB->query($query) or die ($DB->error());
       }
-
-
 
       // create view who merge tickets and formanswers
       $query = "CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS
@@ -336,6 +334,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                                  'value'   => $values[$field]));
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
+            $ticket_opts['waiting'] = __('Not validated');
+            $ticket_opts['refused'] = __('Refused');
             return Dropdown::showFromArray($name, $ticket_opts, array('display' => false,
                                                                       'value'   => $values[$field]));
             break;
@@ -422,4 +422,21 @@ class PluginFormcreatorIssue extends CommonDBTM {
    static function getAllStatusArray($withmetaforsearch=false) {
       return Ticket::getAllStatusArray($withmetaforsearch);
    }
+
+   /**
+    * Database table uninstallation for the item type
+    *
+    * @return boolean True on success
+    */
+   public static function uninstall()
+   {
+      global $DB;
+
+      $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
+      $displayPreference = new DisplayPreference();
+      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormCreatorIssue'));
+
+      return true;
+   }
+
 }

@@ -461,7 +461,9 @@ function deleteTarget(items_id, token, target_id) {
             plugin_formcreator_forms_id: items_id,
             _glpi_csrf_token: token
          }
-      }).done(reloadTab);
+      }).done(function () {
+         location.reload();
+      });
 
    }
 }

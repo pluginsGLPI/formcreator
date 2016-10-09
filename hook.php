@@ -110,7 +110,7 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          } else {
             $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorFormanswer'
                           AND ($condition_fanwser) OR ";
-            $condition= Search::addDefaultWhere("Ticket");
+            $condition = Search::addDefaultWhere("Ticket");
             $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
             $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          }

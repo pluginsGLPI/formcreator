@@ -156,11 +156,11 @@ class PluginFormcreatorFields
                if (empty($values[$condition['field']])) {
                   $value = true;
                } else {
+                  $decodedConditionField = json_decode($values[$condition['field']]);
                   if (is_array($values[$condition['field']])) {
                      $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } elseif (!is_null(json_decode($values[$condition['field']]))
-                            && json_last_error() != JSON_ERROR_NONE) {
-                     $value = !in_array($condition['value'], json_decode($values[$condition['field']]));
+                  } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+                     $value = !in_array($condition['value'], $decodedConditionField);
                   } else {
                      $value = $condition['value'] != $values[$condition['field']];
                   }
@@ -170,24 +170,24 @@ class PluginFormcreatorFields
                if (empty($condition['value'])) {
                   $value = false;
                } else {
+                  $decodedConditionField = json_decode($values[$condition['field']]);
                   if (is_array($values[$condition['field']])) {
                      $value = in_array($condition['value'], $values[$condition['field']]);
-                  } elseif (!is_null(json_decode($values[$condition['field']]))
-                            && json_last_error() != JSON_ERROR_NONE) {
-                     $value = in_array($condition['value'], json_decode($values[$condition['field']]));
+                  } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+                     $value = in_array($condition['value'], $decodedConditionField);
                   } else {
                      $value = $condition['value'] == $values[$condition['field']];
                   }
                }
                break;
             default:
+               $decodedConditionField = json_decode($values[$condition['field']]);
                if (is_array($values[$condition['field']])) {
                   eval('$value = "'.$condition['value'].'" '.$condition['operator']
                     .' Array('.implode(',', $values[$condition['field']]).');');
-               } elseif (!is_null(json_decode($values[$condition['field']]))
-                            && json_last_error() != JSON_ERROR_NONE) {
+               } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                   eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array(' .implode(',', json_decode($values[$condition['field']])).');');
+                    .' Array(' .implode(',', $decodedConditionField).');');
                } else {
                   eval('$value = "'.$values[$condition['field']].'" '
                     .$condition['operator'].' "'.$condition['value'].'";');

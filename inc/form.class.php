@@ -564,16 +564,17 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showFormList($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
       global $DB;
 
-      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
-      $form_table = getTableForItemType('PluginFormcreatorForm');
-      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
-      $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+      $cat_table     = getTableForItemType('PluginFormcreatorCategory');
+      $form_table    = getTableForItemType('PluginFormcreatorForm');
+      $table_fp      = getTableForItemType('PluginFormcreatorFormprofiles');
+      $table_target  = getTableForItemType('PluginFormcreatorTargets');
+      $where         = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
 
       $order         = "$form_table.name ASC";
 
-      $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0 ";
-      $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
-      $where_form       .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
+      $where_form    = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0 ";
+      $where_form    .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
+      $where_form    .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
 
       if ($helpdeskHome) {
          $where_form    .= "AND $form_table.`helpdesk_home` = '1'";
@@ -595,11 +596,14 @@ class PluginFormcreatorForm extends CommonDBTM
       $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description, $form_table.usage_count
       FROM $form_table
       LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
+      LEFT JOIN $table_target ON ($table_target.`plugin_formcreator_forms_id` = $form_table.`id`)
       WHERE $where_form
       AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
-         WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
+         WHERE `plugin_formcreator_profiles_id` = ".$_SESSION['glpiactiveprofile']['id']."))
+      GROUP BY `$table_target`.`plugin_formcreator_forms_id`
+      HAVING COUNT(`$table_target`.`plugin_formcreator_forms_id`) > 0
       ORDER BY $order";
       $result_forms = $DB->query($query_forms);
 
@@ -687,12 +691,13 @@ class PluginFormcreatorForm extends CommonDBTM
    protected function showMyLastForms() {
       global $DB, $CFG_GLPI;
 
+      $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
                       INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`requester_id` = '".$_SESSION['glpiID']."'
+                      WHERE fa.`requester_id` = '$userId'
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
@@ -709,7 +714,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
          echo "</ul>";
          echo '<div align="center">';
-         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$_SESSION['glpiID'].'">';
+         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -721,10 +726,20 @@ class PluginFormcreatorForm extends CommonDBTM
 
          echo '<div class="plugin_formcreator_card">';
          echo '<div class="plugin_formcreator_heading">'.__('My last forms (validator)', 'formcreator').'</div>';
+         $groupList = Group_User::getUserGroups($userId);
+         $groupIdList = array();
+         foreach ($groupList as $group) {
+            $groupIdList[] = $group['id'];
+         }
+         $groupIdList = $groupIdList + array('NULL', '0', '');
+         $groupIdList = "'" . implode("', '", $groupIdList) . "'";
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
+                INNER JOIN glpi_plugin_formcreator_formvalidators fv ON fv.`forms_id`=f.`id`
                 INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                WHERE fa.`validator_id` = '".$_SESSION['glpiID']."'
+                WHERE (f.`validation_required` = 1 AND fv.`users_id` = '$userId'
+                   OR f.`validation_required` = 2 AND fv.`users_id` IN ($groupIdList)
+                )
                 AND f.is_deleted = 0
                 ORDER BY fa.`status` ASC, fa.`request_date` DESC
                 LIMIT 0, 5";
@@ -1172,8 +1187,8 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Create standard search options
-      $query = "DELETE FROM `glpi_displaypreferences` WHERE `itemtype` = 'PluginFormcreatorForm'";
-      $DB->query($query) or die("error deleting glpi_displaypreferences ". $DB->error());
+      $displayPreference = new DisplayPreference();
+      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
 
       $query = "INSERT IGNORE INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
                (NULL, '" . __CLASS__ . "', 30, 1, 0),
@@ -1203,6 +1218,9 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Delete logs of the plugin
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
+
+      $displayPreference = new DisplayPreference();
+      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
 
       return true;
    }

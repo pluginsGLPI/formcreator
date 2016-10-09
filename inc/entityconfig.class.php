@@ -197,7 +197,10 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
 
       $migration->displayMessage("Configuration of existing entities");
-      $query = "SELECT `id` FROM `glpi_entities`";
+      $query = "SELECT `id` FROM `glpi_entities`
+            WHERE `id` NOT IN (
+               SELECT `id` FROM `$table`
+            )";
       $result = $DB->query($query) or die ($DB->error());
       while ($row = $DB->fetch_assoc($result)) {
          $entityConfig = new self();
