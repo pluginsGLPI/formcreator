@@ -1,8 +1,8 @@
 <?php
-/**
+/*
  LICENSE
 
- This file is part of the storkmdm plugin.
+ This file is part of the Formcreator plugin.
 
  Order plugin is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -15,13 +15,13 @@
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with GLPI; along with storkmdm. If not, see <http://www.gnu.org/licenses/>.
+ along with GLPI; along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
- @package   storkmdm
- @author    the storkmdm plugin team
- @copyright Copyright (c) 2015 storkmdm plugin team
+ @package   Formcreator
+ @author    the Formcreator plugin team
+ @copyright Copyright (c) 2015 Formcreator plugin team
  @license   GPLv2+ http://www.gnu.org/licenses/gpl.txt
- @link      https://github.com/teclib/storkmdm
+ @link      https://github.com/PluginsGLPI/Formcreator
  @link      http://www.glpi-project.org/
  @since     0.1.33
  ----------------------------------------------------------------------

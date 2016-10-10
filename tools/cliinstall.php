@@ -24,7 +24,7 @@ if (isset($args)) {
    }
    if (isset($args['--tests'])) {
       // Use test GLPi's database
-      // Requires use of cliinstall of GLPI with --tests argument 
+      // Requires use of cliinstall of GLPI with --tests argument
       define('GLPI_ROOT', dirname(dirname(dirname(__DIR__))));
       define("GLPI_CONFIG_DIR", GLPI_ROOT . "/tests");
    }
@@ -84,5 +84,5 @@ print("Activation Done\n");
 
 //Load the plugin
 print("Loading Plugin...\n");
-$plugin->load("storkmdm");
+$plugin->load("formcreator");
 print("Load Done...\n");

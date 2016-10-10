@@ -84,7 +84,7 @@ class PluginDB extends PHPUnit_Framework_Assert{
      $query = "SHOW TABLES";
      $result = $DB->query($query);
      while ($data=$DB->fetch_array($result)) {
-        if (strstr($data[0], "storkmdm")) {
+        if (strstr($data[0], "formcreator")) {
 
             $data[0] = str_replace(" COLLATE utf8_unicode_ci", "", $data[0]);
             $data[0] = str_replace("( ", "(", $data[0]);
@@ -157,85 +157,6 @@ class PluginDB extends PHPUnit_Framework_Assert{
 
          }
       }
-
-      /*
-       * Verify cron created
-       */
-      $crontask = new CronTask();
-//       $this->assertTrue($crontask->getFromDBbyName('PluginFusioninventoryTask', 'taskscheduler'),
-//               'Cron taskscheduler not created');
-
-      $mqttUser = new PluginStorkmdmMqttuser();
-      $mqttUser->getFromDBByQuery("WHERE `user`='storkmdm-backend'");
-      $this->assertLessThan($mqttUser->getID(), 0, "plugin's mqtt user not added");
-
-//       $plugins_id = 0;
-//       if (count($data)) {
-//          $fields = current($data);
-//          $plugins_id = $fields['id'];
-//       }
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='ssl_only'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'ssl_only' not added in config for plugins ".$plugins_id);
-
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='delete_task'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'delete_task' not added in config");
-
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='inventory_frequence'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'inventory_frequence' not added in config");
-
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='agent_port'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'agent_port' not added in config");
-
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='extradebug'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'extradebug' not added in config");
-
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='users_id'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'users_id' not added in config");
-
-//       $query = "SELECT * FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='version'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'version' not added in config");
-//       $data = $DB->fetch_assoc($result);
-//       $this->assertEquals($data['value'], '0.90+1.0', "Field 'version' not with right version");
-
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_configs`
-//          WHERE `type`='otherserial'";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 1, "type 'otherserial' not added in config");
-
-//       // TODO : test glpi_displaypreferences, rules, bookmark...
-
-
-//       /*
-//        * Verify table glpi_plugin_fusioninventory_inventorycomputercriterias
-//        * have right 10 lines
-//        */
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_inventorycomputercriterias`";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 11, "Number of criteria not right in table".
-//               " glpi_plugin_fusioninventory_inventorycomputercriterias ".$when);
-
-
-//       /*
-//        * Verify table `glpi_plugin_fusioninventory_inventorycomputerstats` filed with data
-//        */
-//       $query = "SELECT `id` FROM `glpi_plugin_fusioninventory_inventorycomputerstats`";
-//       $result = $DB->query($query);
-//       $this->assertEquals($DB->numrows($result), 8760, "Must have table `glpi_plugin_fusioninventory_inventorycomputerstats` not empty");
-
 
    }
 }
