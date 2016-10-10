@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="1" assertions="4" failures="0" errors="0" time="0.315827">
+    <testsuite name="Integration" tests="1" assertions="4" failures="0" errors="0" time="0.315827">
+      <testsuite name="CreateFormTest" file="/home/intra.dethegeek.eu.org/dethegeek/public_html/glpi-91/plugins/formcreator/tests/0010_Integration/CreateFormTest.php" tests="1" assertions="4" failures="0" errors="0" time="0.315827">
+        <testcase name="testCrerateForm" class="CreateFormTest" file="/home/intra.dethegeek.eu.org/dethegeek/public_html/glpi-91/plugins/formcreator/tests/0010_Integration/CreateFormTest.php" line="4" assertions="4" time="0.315827"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>
