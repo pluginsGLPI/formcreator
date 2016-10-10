@@ -154,20 +154,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       return $default_value;
    }
 
-
-   public static function hook_entity_add(CommonDBTM $item) {
-
-      $config = Config::getConfigurationValues('storkmdm', array('default_device_limit'));
-
-      // Create entity configuration
-      $entityconfig = new PluginFormcreatorEntityconfig();
-      $entityconfig->add([
-            'id'                 => $item->getID(),
-            'replace_helpdesk'   => self::CONFIG_PARENT
-
-      ]);
-   }
-
    /**
     * Database table installation for the item type
     *

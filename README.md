@@ -2,6 +2,7 @@ Introduction
 ============
 
 [![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg)
 
 Formcreator is a plugin which allow creation of custom forms of easy access.  
 At the same time, the plugin allow the creation of one or more tickets when the form is filled. 
