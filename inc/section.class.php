@@ -185,6 +185,9 @@ class PluginFormcreatorSection extends CommonDBChild
    **/
    public function prepareInputForUpdate($input)
    {
+      if (!isset($input['plugin_formcreator_forms_id'])) {
+         $input['plugin_formcreator_forms_id'] = $this->fields['plugin_formcreator_forms_id'];
+      }
       return $this->prepareInputForAdd($input);
    }
 

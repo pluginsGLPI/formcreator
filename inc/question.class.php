@@ -343,7 +343,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                $attribute     = array();
             }
 
-            // Set specific error handler too catch LDAP errors
+            // Set specific error handler to catch LDAP errors
             if (!function_exists('warning_handler')) {
                function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
                   if (0 === error_reporting()) return false;
