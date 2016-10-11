@@ -35,36 +35,10 @@ class PluginFormcreatorWizard {
       echo '</div>';
 
       // menu toggle (responsive mode)
-      echo "<input type='checkbox' id='formcreator-toggle-nav'>";
-      echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
+//       echo "<input type='checkbox' id='formcreator-toggle-nav'>";
+//       echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
 
-      // Left vertical menu
-      $activeMenuItem = self::findActiveMenuItem();
-      echo '<div id="c_menu" class="plugin_formcreator_leftMenu"><ul class="plugin_formcreator_services">';
-      echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
-
-      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
-
-
-      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
-         $reservation_item = new reservationitem;
-         $entity_filter = getEntitiesRestrictRequest("", 'glpi_reservationitems', 'entities_id',
-                                                     $_SESSION['glpiactiveentities']);
-         $found_available_res = $reservation_item->find($entity_filter);
-         if (count($found_available_res)) {
-            echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
-            echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
-         }
-      }
-
-      if (RSSFeed::canView()) {
-         echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
-         echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
-      }
-
-      echo '</ul>';
+      echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
       echo '<div class="plugin_formcreator_leftMenuBottom">';
 
       // Profile and entity selection
@@ -106,7 +80,37 @@ class PluginFormcreatorWizard {
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
-      echo '</ul></div></div></div>';
+      echo '</ul></div></div>';
+
+      // Left vertical menu
+      $activeMenuItem = self::findActiveMenuItem();
+      echo '<ul class="plugin_formcreator_services">';
+      echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
+
+      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
+
+
+      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+         $reservation_item = new reservationitem;
+         $entity_filter = getEntitiesRestrictRequest("", 'glpi_reservationitems', 'entities_id',
+                                                     $_SESSION['glpiactiveentities']);
+         $found_available_res = $reservation_item->find($entity_filter);
+         if (count($found_available_res)) {
+            echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
+            echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
+         }
+      }
+
+      if (RSSFeed::canView()) {
+         echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
+         echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
+      }
+
+      echo '</ul>';
+
+      echo '</div>';
       echo '</div>';
 
       echo '<div id="page" class="plugin_formcreator_page">';

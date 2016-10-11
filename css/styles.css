@@ -832,8 +832,9 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_leftMenuBottom {
-   position: absolute;
-   bottom: 45px;
+   /*position: absolute;
+   bottom: 45px;*/
+   margin-top: 40px;
    width: 100%;
 }
 
