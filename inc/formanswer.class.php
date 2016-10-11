@@ -231,23 +231,22 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       if ($form->fields['validation_required'] == 1) {
          // Check the user is one of the users able to validate this form answer
-         $query = "SELECT *
-               FROM glpi_plugin_formcreator_formvalidators
-               WHERE `forms_id`='$formId' AND `users_id` = '$userId'";
-         $result = $DB->query($query);
-         $canValidate = ($DB->numrows($result) > 0);
-      } elseif(($form->fields['validation_required'] == 2)) {
-         // Check the user is member of at least one validator group fot the form answers
+         $form_validator = new PluginFormcreatorForm_Validator();
+         $rows = $form_validator->find("`forms_id` = '$formId' AND `itemtype = 'User' AND `items_id` = '$userId'", "", "1");
+         $canValidate = (count($rows) > 0);
+      } else if(($form->fields['validation_required'] == 2)) {
+         // Check the user is member of at least one validator group for the form answers
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-               $formId = $form->getID();
-               $condition = "`glpi_groups`.`id` IN (
-                  SELECT `users_id`
-                  FROM `glpi_plugin_formcreator_formvalidators`
-                  WHERE `forms_id` = '$formId'
-               )";
-               $groupList = Group_User::getUserGroups($userId, $condition);
-               $canValidate = (count($groupList) > 0);
+               || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+            $table_form_validator = PluginFormcreatorForm_Validator::getTable();
+            $formId = $form->getID();
+            $condition = "`glpi_groups`.`id` IN (
+               SELECT `items_id`
+               FROM `$table_form_validator`
+               WHERE `itemtype` = 'Group' AND forms_id` = '$formId'
+            )";
+            $groupList = Group_User::getUserGroups($userId, $condition);
+            $canValidate = (count($groupList) > 0);
          } else {
             $canValidate = false;
          }

@@ -332,12 +332,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Validators users
       $validators = array();
-      $query = "SELECT `users_id`
-                FROM `glpi_plugin_formcreator_formvalidators`
-                WHERE `forms_id` = '" . $this->getID(). "'";
-      $result = $DB->query($query);
-      while(list($id) = $DB->fetch_array($result)) {
-         $validators[] = $id;
+      $formId = $this->getID();
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$formId'");
+      foreach($rows as $id => $row) {
+         $validators[] = $row['items_id'];
       }
 
       // Si le formulaire est récursif, on authorise les validateurs des sous-entités
@@ -779,10 +778,10 @@ class PluginFormcreatorForm extends CommonDBTM
          $groupIdList = "'" . implode("', '", $groupIdList) . "'";
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
-                INNER JOIN glpi_plugin_formcreator_formvalidators fv ON fv.`forms_id`=f.`id`
+                INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
                 INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                WHERE (f.`validation_required` = 1 AND fv.`users_id` = '$userId'
-                   OR f.`validation_required` = 2 AND fv.`users_id` IN ($groupIdList)
+                WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User'
+                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdList) AND fv.`itemtype` = 'Group'
                 )
                 AND f.is_deleted = 0
                 ORDER BY fa.`status` ASC, fa.`request_date` DESC
@@ -866,14 +865,15 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Show validator selector
       if ($item->fields['validation_required'] > 0) {
+         $table_form_validator = PluginFormcreatorForm_Validator::getTable();
          $validators = array(0 => Dropdown::EMPTY_VALUE);
 
          // Groups
          if ($item->fields['validation_required'] == 2) {
-            $query = 'SELECT g.`id`, g.`completename`
+            $query = "SELECT g.`id`, g.`completename`
                       FROM `glpi_groups` g
-                      LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = g.`id`
-                      WHERE fv.`forms_id` = ' . $this->getID();
+                      LEFT JOIN `$table_form_validator` fv ON fv.`items_id` = g.`id` AND fv.itemtype = 'Group'
+                      WHERE fv.`plugin_formcreator_forms_id` = " . $this->getID();
             $result = $DB->query($query);
             while($validator = $DB->fetch_assoc($result)) {
                $validators[$validator['id']] = $validator['completename'];
@@ -881,10 +881,10 @@ class PluginFormcreatorForm extends CommonDBTM
 
          // Users
          } else {
-            $query = 'SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
+            $query = "SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
                       FROM `glpi_users` u
-                      LEFT JOIN `glpi_plugin_formcreator_formvalidators` fv ON fv.`users_id` = u.`id`
-                      WHERE fv.`forms_id` = ' . $this->getID();
+                      LEFT JOIN `$table_form_validator` fv ON fv.`items_id` = u.`id` AND fv.itemtype = 'User'
+                      WHERE fv.`plugin_formcreator_forms_id` = " . $this->getID();
             $result = $DB->query($query);
             while($validator = $DB->fetch_assoc($result)) {
                $validators[$validator['id']] = formatUserName($validator['id'], $validator['name'], $validator['realname'], $validator['firstname']);
@@ -975,13 +975,12 @@ class PluginFormcreatorForm extends CommonDBTM
 
       $target = new PluginFormcreatorTarget();
       $target->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
+
       $section = new PluginFormcreatorSection();
       $section->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
 
-      $formId = $this->getID();
-      $query = "DELETE FROM `glpi_plugin_formcreator_formvalidators`
-            WHERE `forms_id` = '$formId'";
-      $DB->query($query);
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $form_validator->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
    }
 
    /**
@@ -993,9 +992,8 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       global $DB;
 
-      $query = 'DELETE FROM `glpi_plugin_formcreator_formvalidators`
-                WHERE `forms_id` = '.$this->getID();
-      $DB->query($query) or die ($DB->error());
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $form_validator->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
 
       if ( (($this->input['validation_required'] == 1) && (!empty($this->input['_validator_users'])))
             || (($this->input['validation_required'] == 2) && (!empty($this->input['_validator_groups']))) ) {
@@ -1003,11 +1001,21 @@ class PluginFormcreatorForm extends CommonDBTM
          $validators = ($this->input['validation_required'] == 1)
                         ? $this->input['_validator_users']
                         : $this->input['_validator_groups'];
-         foreach ($validators as $user) {
-            $query = 'INSERT INTO `glpi_plugin_formcreator_formvalidators` SET
-                      `forms_id` = ' . $this->getID() . ',
-                      `users_id` = ' . $user;
-            $DB->query($query) or die ($DB->error());
+         switch ($this->input['validation_required']) {
+            case '1':
+               $validatorItemtype = 'user';
+               break;
+            case '2':
+               $validatorItemtype = 'group';
+               break;
+         }
+         foreach ($validators as $itemId) {
+            $form_validator = new PluginFormcreatorForm_Validator();
+            $form_validator->add(array(
+                  'plugin_formcreator_forms_id' => $this->getID(),
+                  'itemtype'                    => $validatorItemtype,
+                  'items_id'                    => $itemId
+            ));
          }
       }
    }
@@ -1218,18 +1226,6 @@ class PluginFormcreatorForm extends CommonDBTM
       $migration->addField($table, 'is_default', 'bool', array('after' => 'usage_count', 'value' => '0'));
       $migration->migrationOneTable($table);
 
-      if (!TableExists('glpi_plugin_formcreator_formvalidators')) {
-         $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formvalidators` (
-                     `forms_id` int(11) NOT NULL,
-                     `users_id` int(11) NOT NULL,
-                     PRIMARY KEY (`forms_id`, `users_id`)
-                  )
-                  ENGINE = MyISAM
-                  DEFAULT CHARACTER SET = utf8
-                  COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
-      }
-
       // Create standard search options
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
@@ -1257,11 +1253,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
       $DB->query('DROP TABLE IF EXISTS `'.self::getTable().'`');
 
-      $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_formvalidators`');
       $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_questions_conditions`');
 
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
+      $log = new Log();
+      $log->deleteByCriteria(array('itemtype' => __CLASS__));
 
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
@@ -1306,12 +1302,16 @@ class PluginFormcreatorForm extends CommonDBTM
       if (!$DB->query($query)) return false;
 
       // Form validators
-      $query = "INSERT INTO glpi_plugin_formcreator_formvalidators
-                (forms_id, users_id)
-                (SELECT $new_form_id, users_id
-                  FROM glpi_plugin_formcreator_formvalidators
-                  WHERE forms_id = $old_form_id)";
-      if (!$DB->query($query)) return false;
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $rows = $form_validator->find("forms_id = $old_form_id");
+      foreach($rows as $rowId => $row) {
+         unset($row['id']);
+         $row['plugin_formcreator_forms_id'] = $new_form_id;
+         $form_validator = new PluginFormcreatorForm_Validator();
+         if (!$form_validator->add($row)) {
+            return false;
+         }
+      }
 
       // Form sections
       $query_sections = "SELECT `id`, `plugin_formcreator_forms_id`, `name`, `order`
