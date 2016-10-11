@@ -11,6 +11,8 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    const CONFIG_PARENT = -2;
+   const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
+   const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
 
    /**
     * @var bool $dohistory maintain history
