@@ -233,7 +233,7 @@ function plugin_formcreator_replaceHelpdesk() {
    if (isset($_SESSION['glpiactiveprofile']['interface'])
          && isset($_SESSION['glpiactive_entity'])) {
       // Interface and active entity are set in session
-      if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']) == '1'
+      if (PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']) != '0'
             && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          return true;
       }
