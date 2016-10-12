@@ -179,7 +179,7 @@ form.formcreator_form {
    font-size: 1.2em;
    /*float: left;*/
    display: inline-block;
-   width: 250px;
+   width: 300px;
    line-height: 32px;
 }
 .formcreator_form .form-group:after {
@@ -366,7 +366,7 @@ form.formcreator_form {
    width: auto;
 }
 .formcreator_form .form-group > .help-block {
-   /*margin-left: 250px;*/
+   /*margin-left: 300px;*/
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
@@ -431,7 +431,7 @@ form.formcreator_form {
 }
 
 #div_show_condition_field {
-   width: 250px !important;
+   width: 300px !important;
 }
 #div_show_condition_operator {
    width: 50px !important;
@@ -814,12 +814,12 @@ a.plugin_formcreator_formTile_title {
    clear: both;
    position: fixed;
    bottom: 0;
-   width:  calc(100% - 250px);
+   width:  calc(100% - 300px);
    padding: 5px 0;
 }
 
 .plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {
-   width: 250px;
+   width: 300px;
    padding-left: 0; /* Overrides CSS from GLPi */
    padding-top: 20px;
    height: 100%;
@@ -994,12 +994,12 @@ a.plugin_formcreator_formTile_title {
 }
 
 #page.plugin_formcreator_page {
-   margin: 0 0 0 250px;
+   margin: 0 0 0 300px;
    padding: 0;
    max-height: 100%;
    top: 0;
    height: calc(100% - 28px); /* remove footer height*/
-   width: calc(100% - 250px); /* remove left menu width */
+   width: calc(100% - 300px); /* remove left menu width */
 }
 
 #page.plugin_formcreator_container {
