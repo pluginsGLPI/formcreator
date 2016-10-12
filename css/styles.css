@@ -177,7 +177,6 @@ form.formcreator_form {
 .formcreator_form .form-group > label {
    display: block;
    font-size: 1.2em;
-   /*float: left;*/
    display: inline-block;
    width: 300px;
    line-height: 32px;
@@ -185,7 +184,6 @@ form.formcreator_form {
 .formcreator_form .form-group:after {
    content: '';
    display: block;
-   /*clear: both;*/
 }
 .formcreator_form .form-group .form_field > input[type="file"] {
    height: 32px;
@@ -197,7 +195,6 @@ form.formcreator_form {
 
 .formcreator_form .form-group .form_field {
    width: 650px;
-   /*float: left;*/
    display: inline-block;
    text-align: justify;
    word-wrap: break-word;
@@ -366,12 +363,10 @@ form.formcreator_form {
    width: auto;
 }
 .formcreator_form .form-group > .help-block {
-   /*margin-left: 300px;*/
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
    font-style: italic;
-   /*clear: both;*/
 }
 .formcreator_form .form-group > .help-block p {
    margin: 0;
@@ -602,7 +597,6 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_lastForms {
    width: 265px;
-   /*float:right;*/
    position: absolute;
    right: 0;
    top: 0;
@@ -613,7 +607,6 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_wizard_right {
-   /*margin-left: 295px;*/
    min-width: 116px;
    height: 100%;
    overflow: hidden;
@@ -828,14 +821,7 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_leftMenu ul.plugin_formcreator_services {
-   margin-top: 40px;
-}
-
-.plugin_formcreator_leftMenuBottom {
-   /*position: absolute;
-   bottom: 45px;*/
-   margin-top: 40px;
-   width: 100%;
+   /*margin-top: 40px;*/
 }
 
 .plugin_formcreator_services li {
@@ -855,7 +841,7 @@ a.plugin_formcreator_formTile_title {
    background-position: top right;
 }
 
-.plugin_formcreator_leftMenu a {
+.plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
    color: #FFF;
    height: 35px;
    line-height: 35px;
@@ -938,27 +924,37 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_avatar {
-   width: 40px;
-   height: 40px;
+   width: 64px;
+   height: 64px;
+   margin: 13px 0;
    display: inline-block;
    background: url('../pics/user.png') no-repeat;
    background-size: contain;
 }
 
+#myname.plugin_formcreator_myname {
+   margin: 56px 5px 0 5px;
+   width: calc(100% - 10px);
+   display: block;
+   text-align: center;
+}
+
 .plugin_formcreator_userMenuCell {
    display: block;
+   position: absolute;
+   z-index: 1000;
+   right: 5px;
 }
 
 .plugin_formcreator_userMenu_icons {
    float: right;
    display: inline-block;
-   margin-top: 13px;
 }
 
 .plugin_formcreator_userMenu_icons > li {
-   display: inline-block;
    padding: 5px;
 }
+
 .plugin_formcreator_userMenu_icons .button-icon {
    opacity: .6
 }
@@ -1022,9 +1018,14 @@ a.plugin_formcreator_formTile_title {
    width: auto;
 }
 
-#searchcriterias  {
+#searchcriterias {
    padding-top: 5px;
 }
+
+#page .tab_cadre_pager {
+   width: auto;
+}
+
 
 .tab_cadre_pager, .navigationheader {
    margin-top: 0;
@@ -1092,7 +1093,24 @@ a.plugin_formcreator_formTile_title {
       transform: translateY(0);
    }
 
+   #plugin_formcreator_avatar {
+      height: 48px;
+      width: 48px;
+   }
 
+   #myname.plugin_formcreator_myname {
+      margin: 0 85px 0 105px;
+      width: calc(100% - 190px);
+   }
+   
+   .plugin_formcreator_userMenu_icons li {
+      padding: 0;
+   }
+
+   #searchcriterias .tab_cadre_fixe td {
+      padding: 5px 0;
+   }
+   
    .plugin_formcreator_container .plugin_formcreator_leftHeader#header #c_menu {
       position: absolute;
       transform: translateY(-100%) translateZ(0);
@@ -1130,4 +1148,9 @@ a.plugin_formcreator_formTile_title {
    .plugin_formcreator_footer#footer {
       display: none;
    }
+
+   #debug-float.plugin_formcreator_debug-float {
+      z-index: 1000;
+   }
+   
 }

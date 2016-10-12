@@ -31,21 +31,9 @@ class PluginFormcreatorWizard {
       echo '<div class="plugin_formcreator_container">';
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
       echo '<div id="header_top">';
-      echo '<div id="c_logo"></div>';
-      echo '</div>';
-
-      // menu toggle (responsive mode)
-//       echo "<input type='checkbox' id='formcreator-toggle-nav'>";
-//       echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
-
-      echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
-      echo '<div class="plugin_formcreator_leftMenuBottom">';
 
       echo '<div class="plugin_formcreator_userMenuCell">';
       echo '<span id="plugin_formcreator_avatar"></span>';
-      echo '<div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
-                              $_SESSION["glpifirstname"], 0, 20) . '</div>';
-      //echo '<div>';
       echo '<ul class="plugin_formcreator_userMenu_icons">';
       echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
@@ -74,7 +62,17 @@ class PluginFormcreatorWizard {
 
       echo '</ul>';
 
-      echo '</div></div>';
+      echo '</div>';
+      echo '<div id="c_logo"></div>';
+      echo '</div>';
+      echo '<div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
+            $_SESSION["glpifirstname"], 0, 20) . '</div>';
+
+      echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
+
+      // menu toggle (responsive mode)
+      echo "<input type='checkbox' id='formcreator-toggle-nav'>";
+      echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
 
       // Left vertical menu
       $activeMenuItem = self::findActiveMenuItem();
@@ -146,13 +144,13 @@ class PluginFormcreatorWizard {
       echo "</div>"; // fin de la div id ='page' initiée dans la fonction header
 
       if ($_SESSION['glpi_use_mode'] == Session::TRANSLATION_MODE) { // debug mode traduction
-         echo "<div id='debug-float'>";
+         echo "<div id='debug-float' class='plugin_formcreator_debug-float'>";
          echo "<a href='#see_debug'>GLPI TRANSLATION MODE</a>";
          echo "</div>";
       }
 
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) { // mode debug
-         echo "<div id='debug-float'>";
+         echo "<div id='debug-float' class='plugin_formcreator_debug-float'>";
          echo "<a href='#see_debug'>GLPI DEBUG MODE</a>";
          echo "</div>";
       }
