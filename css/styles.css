@@ -924,12 +924,14 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_avatar {
-   width: 64px;
-   height: 64px;
    margin: 13px 0;
    display: inline-block;
-   background: url('../pics/user.png') no-repeat;
-   background-size: contain;
+}
+
+#plugin_formcreator_avatar img {
+   width: 64px;
+   height: 64px;
+   border-radius: 5px;
 }
 
 #myname.plugin_formcreator_myname {

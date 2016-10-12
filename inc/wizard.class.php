@@ -33,7 +33,9 @@ class PluginFormcreatorWizard {
       echo '<div id="header_top">';
 
       echo '<div class="plugin_formcreator_userMenuCell">';
-      echo '<span id="plugin_formcreator_avatar"></span>';
+      $user = new User;
+      $user->getFromDB($_SESSION['glpiID']);
+      echo '<span id="plugin_formcreator_avatar"><img src="' . User::getThumbnailURLForPicture($user->fields['picture']) . '"/></span>';
       echo '<ul class="plugin_formcreator_userMenu_icons">';
       echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
