@@ -929,9 +929,9 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_avatar img {
-   width: 64px;
-   height: 64px;
-   border-radius: 5px;
+   width: 56px;
+   height: 56px;
+   border-radius: 50%;
 }
 
 #myname.plugin_formcreator_myname {
