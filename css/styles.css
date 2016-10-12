@@ -898,6 +898,7 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_entityProfile {
    text-align: center;
+   margin-top: 40px;
 }
 .plugin_formcreator_entityProfile .select2-container,
 .plugin_formcreator_entityProfile .entity_select {

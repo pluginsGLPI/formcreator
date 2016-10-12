@@ -41,14 +41,6 @@ class PluginFormcreatorWizard {
       echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
       echo '<div class="plugin_formcreator_leftMenuBottom">';
 
-      // Profile and entity selection
-      // check user id : header used for display messages when session logout
-      echo '<ul class="plugin_formcreator_entityProfile">';
-      if (Session::getLoginUserID()) {
-         self::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
-      }
-      echo '</ul>';
-
       echo '<div class="plugin_formcreator_userMenuCell">';
       echo '<span id="plugin_formcreator_avatar"></span>';
       echo '<div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
@@ -80,7 +72,9 @@ class PluginFormcreatorWizard {
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
-      echo '</ul></div></div>';
+      echo '</ul>';
+
+      echo '</div></div>';
 
       // Left vertical menu
       $activeMenuItem = self::findActiveMenuItem();
@@ -108,6 +102,14 @@ class PluginFormcreatorWizard {
          echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
       }
 
+      echo '</ul>';
+
+      // Profile and entity selection
+      // check user id : header used for display messages when session logout
+      echo '<ul class="plugin_formcreator_entityProfile">';
+      if (Session::getLoginUserID()) {
+         self::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
+      }
       echo '</ul>';
 
       echo '</div>';
