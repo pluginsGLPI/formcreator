@@ -80,10 +80,10 @@ class PluginFormcreatorWizard {
       $activeMenuItem = self::findActiveMenuItem();
       echo '<ul class="plugin_formcreator_services">';
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Seek assistance', 'formcreator') . '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
+      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My requests for assistance', 'formcreator') . '</a></li>';
 
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
