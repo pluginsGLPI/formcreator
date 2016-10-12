@@ -650,7 +650,7 @@ class PluginFormcreatorForm extends CommonDBTM
          WHERE `faqs`.`knowbaseitemcategories_id` IN (SELECT `knowbaseitemcategories_id` FROM `$table_cat` WHERE `id` IN ($selectedCategories) AND `knowbaseitemcategories_id` <> '0')";
       } else {
          $query_faqs = "SELECT `faqs`.* FROM ($query_faqs)  AS `faqs`
-         LEFT JOIN `$table_cat` ON (`faqs`.`knowbaseitemcategories_id` = `$table_cat`.`knowbaseitemcategories_id`)
+         INNER JOIN `$table_cat` ON (`faqs`.`knowbaseitemcategories_id` = `$table_cat`.`knowbaseitemcategories_id`)
          WHERE `faqs`.`knowbaseitemcategories_id` <> '0'";
       }
       $result_faqs = $DB->query($query_faqs);
