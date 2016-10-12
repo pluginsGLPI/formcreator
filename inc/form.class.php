@@ -670,7 +670,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $defaultForms = true;
          // No form nor FAQ have been selected
          // Fallback to default forms
-         $where_form       = "$table_form.`is_active` = 1 AND $table_form.`is_deleted` = 0";
+         $where_form       = "$table_form.`is_active` = 1 AND $table_form.`is_deleted` = 0 ";
          $where_form       .= getEntitiesRestrictRequest("AND", $table_form, "", "", true, false);
          $where_form       .= " AND $table_form.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
          $where_form       .= " AND `is_default` <> '0'";
