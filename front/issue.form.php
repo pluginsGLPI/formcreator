@@ -19,7 +19,7 @@ if($plugin->isActivated('formcreator')) {
       if (plugin_formcreator_replaceHelpdesk()) {
          PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
       } else {
-         Html::redirect($CFG_GLPI["root_doc"]."/front/central.php");
+         Html::redirect($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
       }
 
       $issue->display($_REQUEST);
