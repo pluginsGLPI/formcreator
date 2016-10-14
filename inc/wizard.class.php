@@ -5,9 +5,10 @@ class PluginFormcreatorWizard {
    const MENU_LAST_FORMS   = 2;
    const MENU_RESERVATIONS = 3;
    const MENU_FEEDS        = 4;
+   const MENU_BOOKMARKS    = 5;
 
    public static function header($title) {
-      global $CFG_GLPI, $HEADER_LOADED, $PLUGIN_HOOKS;
+      global $CFG_GLPI, $HEADER_LOADED, $PLUGIN_HOOKS, $DB;
 
       // Print a nice HTML-head for help page
       if ($HEADER_LOADED) {
@@ -33,25 +34,25 @@ class PluginFormcreatorWizard {
       echo '<div id="header_top">';
 
       echo '<div class="plugin_formcreator_userMenuCell">';
+
+      // avatar
       $user = new User;
       $user->getFromDB($_SESSION['glpiID']);
-      echo '<span id="plugin_formcreator_avatar"><img src="' . User::getThumbnailURLForPicture($user->fields['picture']) . '"/></span>';
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php"
+               title="'.formatUserName (0, $_SESSION["glpiname"],
+                                           $_SESSION["glpirealname"],
+                                           $_SESSION["glpifirstname"], 0, 20).'">';
+      echo '<span id="plugin_formcreator_avatar">
+            <img src="'.User::getThumbnailURLForPicture($user->fields['picture']).'"/>
+            </span>';
+      echo '</a>';
+
+      // icons
       echo '<ul class="plugin_formcreator_userMenu_icons">';
       echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
       echo '</a></li>';
-
-      // Bookmark
-      echo '<li id="plugin_formcreator_bookmarkIcon">';
-      Ajax::createIframeModalWindow('loadbookmark',
-            $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
-            array('title'         => __('Load a bookmark'),
-                  'reloadonclose' => true));
-      echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
-      echo '<span id="bookmark_icon" title="' . __('Load a bookmark') . '" alt="' . __('Load a bookmark') . '" class="button-icon"></span>';
-      echo '</a>';
-      echo '</li>';
 
       // Logout
       echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
@@ -67,8 +68,6 @@ class PluginFormcreatorWizard {
       echo '</div>';
       echo '<div id="c_logo"></div>';
       echo '</div>';
-      echo '<div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
-            $_SESSION["glpifirstname"], 0, 20) . '</div>';
 
       echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
 
@@ -80,10 +79,12 @@ class PluginFormcreatorWizard {
       $activeMenuItem = self::findActiveMenuItem();
       echo '<ul class="plugin_formcreator_services">';
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Seek assistance', 'formcreator') . '</a></li>';
+      echo '<span class="fc_list_icon"></span>';
+      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Seek assistance', 'formcreator') . '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My requests for assistance', 'formcreator') . '</a></li>';
+      echo '<span class="fc_list_icon"></span>';
+      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My requests for assistance', 'formcreator') . '</a></li>';
 
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
@@ -93,13 +94,43 @@ class PluginFormcreatorWizard {
          $found_available_res = $reservation_item->find($entity_filter);
          if (count($found_available_res)) {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
-            echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
+            echo '<span></span>';
+            echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
          }
       }
 
       if (RSSFeed::canView()) {
          echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
-         echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
+         echo '<span class="fc_list_icon"></span>';
+         echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
+      }
+
+
+      $query = "SELECT `glpi_bookmarks`.*,
+                       `glpi_bookmarks_users`.`id` AS IS_DEFAULT
+                FROM `glpi_bookmarks`
+                LEFT JOIN `glpi_bookmarks_users`
+                  ON (`glpi_bookmarks`.`itemtype` = `glpi_bookmarks_users`.`itemtype`
+                      AND `glpi_bookmarks`.`id` = `glpi_bookmarks_users`.`bookmarks_id`
+                      AND `glpi_bookmarks_users`.`users_id` = '".Session::getLoginUserID()."')
+                WHERE `glpi_bookmarks`.`is_private`='1'
+                  AND `glpi_bookmarks`.`users_id`='".Session::getLoginUserID()."'
+                  OR `glpi_bookmarks`.`is_private`='0' ".
+                     getEntitiesRestrictRequest("AND", "glpi_bookmarks", "", "", true);
+
+      if ($result = $DB->query($query)) {
+         if($numrows = $DB->numrows($result)) {
+            echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_bookmarksIcon">';
+            Ajax::createIframeModalWindow('loadbookmark',
+                  $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
+                  array('title'         => __('Load a bookmark'),
+                        'reloadonclose' => true));
+            echo '<span class="fc_list_icon"></span>';
+            echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
+            echo __('Load a bookmark');
+            echo '</a>';
+            echo '</li>';
+         }
       }
 
       echo '</ul>';
