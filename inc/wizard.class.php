@@ -38,8 +38,7 @@ class PluginFormcreatorWizard {
       // avatar
       $user = new User;
       $user->getFromDB($_SESSION['glpiID']);
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
-            __s('My settings').'">';
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php">';
       echo '<span id="plugin_formcreator_avatar">
             <img src="'.User::getThumbnailURLForPicture($user->fields['picture']).'"
                  alt="'.formatUserName (0, $_SESSION["glpiname"],
