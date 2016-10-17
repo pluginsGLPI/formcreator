@@ -1371,7 +1371,7 @@ class PluginFormcreatorForm extends CommonDBTM
          if ($new_target_id === false) return false;
 
          $query_ttickets = "SELECT `id`, `name`, `tickettemplates_id`, `comment`, `due_date_rule`,
-                               `due_date_question`, `due_date_value`, `due_date_period`
+                               `due_date_question`, `due_date_value`, `due_date_period`, `destination_entity`
                             FROM `glpi_plugin_formcreator_targettickets`
                             WHERE `id` = {$target_values['items_id']}";
          $result_ttickets = $DB->query($query_ttickets);
@@ -1392,7 +1392,8 @@ class PluginFormcreatorForm extends CommonDBTM
                                `due_date_rule`      = '" . addslashes($result_ttickets['due_date_rule']) . "',
                                `due_date_question`  = " . (int) $result_ttickets['due_date_question'] . ",
                                `due_date_value`     = " . (int) $result_ttickets['due_date_value'] . ",
-                               `due_date_period`    = '" . addslashes($result_ttickets['due_date_period']) . "'";
+                               `due_date_period`    = '" . addslashes($result_ttickets['due_date_period']) . "',
+                               `destination_entity` = '" . addslashes($result_ttickets['destination_entity']) . "'";
          $DB->query($insert_ttickets);
          $new_target_ticket_id = $DB->insert_id();
          if (!$new_target_ticket_id) return false;
