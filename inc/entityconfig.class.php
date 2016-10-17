@@ -11,6 +11,8 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    const CONFIG_PARENT = -2;
+   const CONFIG_SIMPLIFIED_SERVICE_CATALOG = 1;
+   const CONFIG_EXTENDED_SERVICE_CATALOG = 2;
 
    /**
     * @var bool $dohistory maintain history
@@ -69,11 +71,12 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       } else {
          $elements = array();
       }
-      $elements[0] = __('No');
-      $elements[1] = __('Yes');
+      $elements[0] = __('GLPi\'s helpdesk', 'formcreator');
+      $elements[1] = __('Service catalog simplified', 'formcreator');
+      $elements[2] = __('Service catalog extended', 'formcreator');
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".__('Use Form creator\'s helpdesk', 'formcreator')."</td>";
+      echo "<td>".__('Helpdesk mode', 'formcreator')."</td>";
       echo "<td>";
       Dropdown::showFromArray('replace_helpdesk', $elements, array('value' => $this->fields['replace_helpdesk']));
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {

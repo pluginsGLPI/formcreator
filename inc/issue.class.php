@@ -77,6 +77,36 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function display($options = array()) {
+      $itemtype = $options['sub_itemtype'];
+      if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorFormanswer'))) {
+         html::displayRightError();
+      }
+      //if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
+         $this->displaySimplified($options);
+      //} else {
+         //$this->displayExtended($options);
+      //}
+   }
+
+   public function displayExtended($options = array()) {
+      $item = new $options['sub_itemtype'];
+
+      if (isset($options['id'])
+            && !$item->isNewID($options['id'])) {
+         if (!$item->getFromDB($options['id'])) {
+            Html::displayNotFoundError();
+         }
+      }
+
+      $item->addDivForTabs();
+
+    }
+
+   /**
+    * {@inheritDoc}
+    * @see CommonGLPI::display()
+    */
+   public function displaySimplified($options = array()) {
       global $CFG_GLPI;
 
       $item = new $options['sub_itemtype'];
@@ -123,12 +153,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $_SESSION['glpilayout'] = "lefttab";
 
       if ($item instanceof Ticket) {
-         //Tickets without form associated
-         echo "<div class='timeline_box'>";
-         $rand = mt_rand();
-         $item->showTimelineForm($rand);
-         $item->showTimeline($rand);
-         echo "</div>";
+         if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
+            //Tickets without form associated
+            echo "<div class='timeline_box'>";
+            $rand = mt_rand();
+            $item->showTimelineForm($rand);
+            $item->showTimeline($rand);
+            echo "</div>";
+         } else {
+            $item->addDivForTabs();
+         }
 
       } else if (count($rows) == 0) {
          // No ticket asociated to this issue
@@ -136,101 +170,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          echo '<div class"center">';
          $item->showForm($item->getID(), $options);
          echo '</div>';
-
-      } else {
-         // There is at least one ticket for this issue
-
-         // Show the timelines of this issue
-         $ticketIds = array();
-         foreach ($rows as $id => $row) {
-            $ticketIds[] = $row['tickets_id'];
-         }
-         $ticketSequence = array_flip($ticketIds);
-         if (!isset($_GET['tid'])) {
-            $ticketId = $ticketIds[0];
-         } else {
-            $ticketId = Toolbox::cleanInteger($_GET['tid']);
-         }
-         if (!in_array($ticketId, $ticketIds)) {
-            Html::displayNotFoundError();
-         }
-         $ticketIndex = $ticketSequence[$ticketId];
-         $previousTicketId = $ticketIndex > 0 ? $ticketIds[$ticketIndex - 1] : 0;
-         $nextTicketId = $ticketIndex < count($ticketIds) - 1 ? $ticketIds[$ticketIndex + 1] : 0;
-         $firstTicketId = $ticketId != $ticketIds[0] ? $ticketIds[0] : 0;
-         $lastTicketId = $ticketId != $ticketIds[count($ticketIds) - 1] ? $ticketIds[count($ticketIds) - 1] : 0;
-
-         $ticket = new Ticket();
-         if (!$ticket->getFromDB($ticketId)) {
-            Html::displayNotFoundError();
-         } else {
-            // Header to navigate through tickets in a single formanswer
-            // This happens when a form has several ticket targets
-
-            $nav_url = $CFG_GLPI['root_doc'].
-                       '/plugins/formcreator/front/issue.form.php'.
-                       '?id='.$formanswerId.
-                       '&sub_itemtype='.$options['sub_itemtype'];
-            echo '<div class="plugin_formcreator_threadBrowser">';
-            if ($firstTicketId == 0) {
-               echo '<span class="plugin_formcreator_first">'
-                  .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/first_off.png" alt="'
-                  . __('First'). '" title="'
-                  . __('First'). '" class="pointer"></span>';
-            } else {
-               echo '<span class="plugin_formcreator_first"><a href="' .$nav_url. '&stid=' . $firstTicketId . '">'
-                  .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/first.png" alt="'
-                  . __('First'). '" title="'
-                  . __('First'). '" class="pointer"></a></span>';
-            }
-
-            if ($previousTicketId == 0) {
-               echo '<span class="plugin_formcreator_left">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/left_off.png" alt="'
-                     . __('First'). '" title="'
-                     . __('First'). '" class="pointer"></span>';
-            } else {
-               echo '<span class="plugin_formcreator_left"><a href="' . $nav_url. '&tid=' . $previousTicketId . '">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/left.png" alt="'
-                     . __('Previous'). '" title="'
-                     . __('Previous'). '" class="pointer"></a></span>';
-            }
-
-            if ($lastTicketId == 0) {
-               echo '<span class="plugin_formcreator_last">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last_off.png" alt="'
-                     . __('First'). '" title="'
-                     . __('First'). '" class="pointer"></span>';
-            } else {
-               echo '<span class="plugin_formcreator_last"><a href="' . $nav_url . '&tid=' . $lastTicketId . '">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/last.png" alt="'
-                     . __('Last'). '" title="'
-                     . __('Last'). '" class="pointer"></a></span>';
-            }
-
-            if ($nextTicketId == 0) {
-               echo '<span class="plugin_formcreator_right">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/right_off.png" alt="'
-                           . __('First'). '" title="'
-                                 . __('First'). '" class="pointer"></span>';
-               } else {
-               echo '<span class="plugin_formcreator_right"><a href="' .$nav_url . '&tid=' . $nextTicketId . '">'
-                     .'<img src="' . $CFG_GLPI['root_doc'] . '/pics/right.png" alt="'
-                     . __('Next'). '" title="'
-                     . __('Next'). '" class="pointer"></a></span>';
-            }
-            echo '<div class="navigationheader big b">'.
-                 Html::makeTitle(__('Threads', 'formcreator'), $ticketIndex, count($ticketIds)).
-                 '</div>';
-
-            echo '</div>';
-
-            echo "<div class='timeline_box'>";
-            $rand = mt_rand();
-            $ticket->showTimelineForm($rand);
-            $ticket->showTimeline('123456');
-            echo "</div>";
-         }
       }
       $_SESSION['glpilayout'] = $old_layout;
    }

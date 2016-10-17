@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-28 12:15+0200\n"
-"PO-Revision-Date: 2016-09-28 10:16+0000\n"
+"POT-Creation-Date: 2016-10-14 09:54+0200\n"
+"PO-Revision-Date: 2016-10-14 07:54+0000\n"
 "Last-Translator: alexandre delaunay <delaunay.alexandre@gmail.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -37,8 +37,8 @@ msgstr[1] "Категории формы"
 msgstr[2] "Категории формы"
 msgstr[3] "Категории формы"
 
-#: setup.php:13 setup.php:134 ajax/homepage_forms.php:48
-#: ajax/homepage_link.php:6 inc/entityconfig.class.php:25
+#: setup.php:20 setup.php:146 ajax/homepage_forms.php:48
+#: ajax/homepage_link.php:6 inc/entityconfig.class.php:27
 #: inc/form.class.php:50 inc/formlist.class.php:14 scripts/scripts.js.php:18
 msgid "Form"
 msgid_plural "Forms"
@@ -47,7 +47,7 @@ msgstr[1] "Формы"
 msgstr[2] "Формы"
 msgstr[3] "Формы"
 
-#: setup.php:124 inc/form.class.php:58 inc/form.class.php:59
+#: setup.php:136 inc/form.class.php:58 inc/form.class.php:59
 #: inc/formlist.class.php:22 inc/formlist.class.php:23
 msgid "Forms waiting for validation"
 msgstr "Формы, ожидающие утверждения"
@@ -172,19 +172,18 @@ msgstr "Категория с таким названием уже сущест�
 #: front/formdisplay.php:44 front/issue.form.php:20 front/issue.php:12
 #: front/knowbaseitem.form.php:10 front/reservation.form.php:10
 #: front/reservationitem.php:7 front/reservation.php:12
-#: front/wizardfeeds.php:6 front/wizard.php:13
+#: front/wizardfeeds.php:11 front/wizard.php:13
 msgid "Service catalog"
 msgstr ""
 
 #: front/formanswer.form.php:47 front/formanswer.form.php:52
 #: front/formanswer.php:16 front/formanswer.php:21 front/formdisplay.php:62
-#: front/formdisplay.php:74 front/form.php:15 front/issue.form.php:24
-#: front/issue.form.php:29 front/issue.php:16 front/issue.php:21
-#: front/targetticket.form.php:47
+#: front/formdisplay.php:74 front/form.php:15 front/issue.php:16
+#: front/issue.php:21 front/targetticket.form.php:47
 msgid "Form Creator"
 msgstr "Форма создания заявки"
 
-#: front/formdisplay.php:47 front/formlist.php:13 front/formlist.php:18
+#: front/formdisplay.php:47 front/formlist.php:16 front/formlist.php:22
 msgid "Form list"
 msgstr "Список форм"
 
@@ -214,19 +213,31 @@ msgstr[3] "Ответы"
 msgid "Knowbase category"
 msgstr ""
 
-#: inc/entityconfig.class.php:63
+#: inc/entityconfig.class.php:65
 msgid "Helpdesk"
 msgstr ""
 
+#: inc/entityconfig.class.php:74
+msgid "GLPi's helpdesk"
+msgstr ""
+
+#: inc/entityconfig.class.php:75
+msgid "Service catalog simplified"
+msgstr ""
+
 #: inc/entityconfig.class.php:76
-msgid "Use Form creator's helpdesk"
+msgid "Service catalog extended"
+msgstr ""
+
+#: inc/entityconfig.class.php:79
+msgid "Helpdesk mode"
 msgstr ""
 
 #: inc/field.class.php:98 scripts/forms-validation.js.php:11
 msgid "A required field is empty:"
 msgstr "Требуемое поле пустое:"
 
-#: inc/formanswer.class.php:39 inc/issue.class.php:334
+#: inc/formanswer.class.php:39 inc/issue.class.php:271
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Ответ в форме"
@@ -286,11 +297,11 @@ msgstr "Требуется комментарий для отклонения!"
 msgid "Cannot generate targets!"
 msgstr "Не удается выполнить задание!"
 
-#: inc/formanswer.class.php:619 inc/formanswer.class.php:636
+#: inc/formanswer.class.php:616 inc/formanswer.class.php:633
 msgid "The form has been successfully saved!"
 msgstr "Форма успешно сохранена!"
 
-#: inc/formanswer.class.php:653 inc/formanswer.class.php:655
+#: inc/formanswer.class.php:650 inc/formanswer.class.php:652
 msgid "Form data"
 msgstr "Форма данных"
 
@@ -355,56 +366,56 @@ msgstr ""
 msgid "Alphabetic sort"
 msgstr ""
 
-#: inc/form.class.php:682
+#: inc/form.class.php:710
 msgid "Please, describe your need here"
 msgstr ""
 
-#: inc/form.class.php:690
+#: inc/form.class.php:719
 msgid "My last forms (requester)"
 msgstr "Мои последние формы (заказчик)"
 
-#: inc/form.class.php:700
+#: inc/form.class.php:729
 msgid "No form posted yet"
 msgstr "Еще не создано форм"
 
-#: inc/form.class.php:712
+#: inc/form.class.php:741
 msgid "All my forms (requester)"
 msgstr "Все мои формы (заказчик)"
 
-#: inc/form.class.php:722
+#: inc/form.class.php:751
 msgid "My last forms (validator)"
 msgstr "Мои последние формы (утверждающий)"
 
-#: inc/form.class.php:732
+#: inc/form.class.php:771
 msgid "No form waiting for validation"
 msgstr "Нет форм для утверждения"
 
-#: inc/form.class.php:744
+#: inc/form.class.php:783
 msgid "All my forms (validator)"
 msgstr "Все мои формы (утверждающий)"
 
-#: inc/form.class.php:835
+#: inc/form.class.php:874
 msgid "Choose a validator"
 msgstr "Выбрать утверждающего сотрудника"
 
-#: inc/form.class.php:871 inc/target.class.php:118
+#: inc/form.class.php:910 inc/target.class.php:118
 msgid "The name cannot be empty!"
 msgstr "Требуется указать название!"
 
-#: inc/form.class.php:988
+#: inc/form.class.php:1046
 msgid "You must select validator !"
 msgstr "Вы должны выбрать проверяющего!"
 
-#: inc/form.class.php:1209
+#: inc/form.class.php:1270
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: inc/form.class.php:1404
+#: inc/form.class.php:1465
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Форма дубликата: %s"
 
-#: inc/form.class.php:1415
+#: inc/form.class.php:1476
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Форма передана: %s"
@@ -439,17 +450,13 @@ msgid ""
 "previous one."
 msgstr "Такой заголовок уже существует в родительской организации! Заголовок перезапишет предыдущий."
 
-#: inc/issue.class.php:6 inc/issue.class.php:247
+#: inc/issue.class.php:6 inc/issue.class.php:184
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
-
-#: inc/issue.class.php:225
-msgid "Threads"
-msgstr ""
 
 #: inc/notificationtargetformanswer.class.php:12
 msgid "The form as been saved"
@@ -538,7 +545,7 @@ msgid ""
 msgstr "Здравствуйте,\\nМы сожалеем сообщить Вам, что Ваша форма была отклонена проверяющим по причине ниже:\\n##formcreator.validation_comment##\\n\\nВы можете все еще исправить и снова отправить кликнув по этой ссылке:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:115
-#: inc/targetticket.class.php:1319
+#: inc/targetticket.class.php:1329
 msgid "Your form has been accepted by the validator"
 msgstr "Ваша форма была принята проверяющим"
 
@@ -779,19 +786,19 @@ msgstr "Требуется указать заголовок!"
 msgid "The description cannot be empty!"
 msgstr "Требуется указать описание!"
 
-#: inc/wizard.class.php:42
-msgid "Create an issue"
+#: inc/wizard.class.php:83
+msgid "Seek assistance"
 msgstr ""
 
-#: inc/wizard.class.php:45
-msgid "My issues"
+#: inc/wizard.class.php:87
+msgid "My requests for assistance"
 msgstr ""
 
-#: inc/wizard.class.php:48
+#: inc/wizard.class.php:98
 msgid "Book an asset"
 msgstr ""
 
-#: inc/wizard.class.php:51
+#: inc/wizard.class.php:105
 msgid "Consult feeds"
 msgstr ""
 

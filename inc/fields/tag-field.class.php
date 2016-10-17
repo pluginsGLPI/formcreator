@@ -20,7 +20,7 @@ class tagField extends dropdownField
          $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
          $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'),'','',true);
 
-         $result = $obj->find($where);
+         $result = $obj->find($where, "name");
          foreach ($result AS $id => $datas) {
             $values[$id] = $datas['name'];
          }

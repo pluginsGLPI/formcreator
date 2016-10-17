@@ -5,9 +5,10 @@ class PluginFormcreatorWizard {
    const MENU_LAST_FORMS   = 2;
    const MENU_RESERVATIONS = 3;
    const MENU_FEEDS        = 4;
+   const MENU_BOOKMARKS    = 5;
 
    public static function header($title) {
-      global $CFG_GLPI, $HEADER_LOADED, $PLUGIN_HOOKS;
+      global $CFG_GLPI, $HEADER_LOADED, $PLUGIN_HOOKS, $DB;
 
       // Print a nice HTML-head for help page
       if ($HEADER_LOADED) {
@@ -31,71 +32,27 @@ class PluginFormcreatorWizard {
       echo '<div class="plugin_formcreator_container">';
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
       echo '<div id="header_top">';
-      echo '<div id="c_logo"></div>';
-      echo '</div>';
-
-      // menu toggle (responsive mode)
-      echo "<input type='checkbox' id='formcreator-toggle-nav'>";
-      echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
-
-      // Left vertical menu
-      $activeMenuItem = self::findActiveMenuItem();
-      echo '<div id="c_menu" class="plugin_formcreator_leftMenu"><ul class="plugin_formcreator_services">';
-      echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Create an issue', 'formcreator') . '</a></li>';
-
-      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My issues', 'formcreator') . '</a></li>';
-
-
-      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
-         $reservation_item = new reservationitem;
-         $entity_filter = getEntitiesRestrictRequest("", 'glpi_reservationitems', 'entities_id',
-                                                     $_SESSION['glpiactiveentities']);
-         $found_available_res = $reservation_item->find($entity_filter);
-         if (count($found_available_res)) {
-            echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
-            echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
-         }
-      }
-
-      if (RSSFeed::canView()) {
-         echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
-         echo '<span></span><a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
-      }
-
-      echo '</ul>';
-      echo '<div class="plugin_formcreator_leftMenuBottom">';
-
-      // Profile and entity selection
-      // check user id : header used for display messages when session logout
-      echo '<ul class="plugin_formcreator_entityProfile">';
-      if (Session::getLoginUserID()) {
-         self::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
-      }
-      echo '</ul>';
 
       echo '<div class="plugin_formcreator_userMenuCell">';
-      echo '<span id="plugin_formcreator_avatar"></span>';
-      echo '<div id="myname" class="plugin_formcreator_myname">' . formatUserName (0, $_SESSION["glpiname"], $_SESSION["glpirealname"],
-                              $_SESSION["glpifirstname"], 0, 20) . '</div>';
-      //echo '<div>';
+
+      // avatar
+      $user = new User;
+      $user->getFromDB($_SESSION['glpiID']);
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php"
+               title="'.formatUserName (0, $_SESSION["glpiname"],
+                                           $_SESSION["glpirealname"],
+                                           $_SESSION["glpifirstname"], 0, 20).'">';
+      echo '<span id="plugin_formcreator_avatar">
+            <img src="'.User::getThumbnailURLForPicture($user->fields['picture']).'"/>
+            </span>';
+      echo '</a>';
+
+      // icons
       echo '<ul class="plugin_formcreator_userMenu_icons">';
       echo '<li id="plugin_formcreator_preferences_icon">';
       echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
       echo '</a></li>';
-
-      // Bookmark
-      echo '<li id="plugin_formcreator_bookmarkIcon">';
-      Ajax::createIframeModalWindow('loadbookmark',
-            $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
-            array('title'         => __('Load a bookmark'),
-                  'reloadonclose' => true));
-      echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
-      echo '<span id="bookmark_icon" title="' . __('Load a bookmark') . '" alt="' . __('Load a bookmark') . '" class="button-icon"></span>';
-      echo '</a>';
-      echo '</li>';
 
       // Logout
       echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
@@ -106,7 +63,87 @@ class PluginFormcreatorWizard {
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
-      echo '</ul></div></div></div>';
+      echo '</ul>';
+
+      echo '</div>';
+      echo '<div id="c_logo"></div>';
+      echo '</div>';
+
+      echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
+
+      // menu toggle (responsive mode)
+      echo "<input type='checkbox' id='formcreator-toggle-nav'>";
+      echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
+
+      // Left vertical menu
+      $activeMenuItem = self::findActiveMenuItem();
+      echo '<ul class="plugin_formcreator_services">';
+      echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . ' plugin_formcreator_serviceCatalogIcon">';
+      echo '<span class="fc_list_icon"></span>';
+      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">' . __('Seek assistance', 'formcreator') . '</a></li>';
+
+      echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
+      echo '<span class="fc_list_icon"></span>';
+      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My requests for assistance', 'formcreator') . '</a></li>';
+
+
+      if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
+         $reservation_item = new reservationitem;
+         $entity_filter = getEntitiesRestrictRequest("", 'glpi_reservationitems', 'entities_id',
+                                                     $_SESSION['glpiactiveentities']);
+         $found_available_res = $reservation_item->find($entity_filter);
+         if (count($found_available_res)) {
+            echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
+            echo '<span></span>';
+            echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
+         }
+      }
+
+      if (RSSFeed::canView()) {
+         echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_feedsIcon">';
+         echo '<span class="fc_list_icon"></span>';
+         echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">' . __('Consult feeds', 'formcreator') . '</a></li>';
+      }
+
+
+      $query = "SELECT `glpi_bookmarks`.*,
+                       `glpi_bookmarks_users`.`id` AS IS_DEFAULT
+                FROM `glpi_bookmarks`
+                LEFT JOIN `glpi_bookmarks_users`
+                  ON (`glpi_bookmarks`.`itemtype` = `glpi_bookmarks_users`.`itemtype`
+                      AND `glpi_bookmarks`.`id` = `glpi_bookmarks_users`.`bookmarks_id`
+                      AND `glpi_bookmarks_users`.`users_id` = '".Session::getLoginUserID()."')
+                WHERE `glpi_bookmarks`.`is_private`='1'
+                  AND `glpi_bookmarks`.`users_id`='".Session::getLoginUserID()."'
+                  OR `glpi_bookmarks`.`is_private`='0' ".
+                     getEntitiesRestrictRequest("AND", "glpi_bookmarks", "", "", true);
+
+      if ($result = $DB->query($query)) {
+         if($numrows = $DB->numrows($result)) {
+            echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_bookmarksIcon">';
+            Ajax::createIframeModalWindow('loadbookmark',
+                  $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
+                  array('title'         => __('Load a bookmark'),
+                        'reloadonclose' => true));
+            echo '<span class="fc_list_icon"></span>';
+            echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
+            echo __('Load a bookmark');
+            echo '</a>';
+            echo '</li>';
+         }
+      }
+
+      echo '</ul>';
+
+      // Profile and entity selection
+      // check user id : header used for display messages when session logout
+      echo '<ul class="plugin_formcreator_entityProfile">';
+      if (Session::getLoginUserID()) {
+         self::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
+      }
+      echo '</ul>';
+
+      echo '</div>';
       echo '</div>';
 
       echo '<div id="page" class="plugin_formcreator_page">';
@@ -140,13 +177,13 @@ class PluginFormcreatorWizard {
       echo "</div>"; // fin de la div id ='page' initiée dans la fonction header
 
       if ($_SESSION['glpi_use_mode'] == Session::TRANSLATION_MODE) { // debug mode traduction
-         echo "<div id='debug-float'>";
+         echo "<div id='debug-float' class='plugin_formcreator_debug-float'>";
          echo "<a href='#see_debug'>GLPI TRANSLATION MODE</a>";
          echo "</div>";
       }
 
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) { // mode debug
-         echo "<div id='debug-float'>";
+         echo "<div id='debug-float' class='plugin_formcreator_debug-float'>";
          echo "<a href='#see_debug'>GLPI DEBUG MODE</a>";
          echo "</div>";
       }

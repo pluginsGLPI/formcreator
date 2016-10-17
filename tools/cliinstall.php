@@ -69,12 +69,14 @@ if (!TableExists("glpi_configs")) {
 $plugin = new Plugin();
 
 // Install the plugin
-print("Installing Plugin... Id: " . $plugin->fields['id'] . " " . PLUGIN_FORMCREATOR_VERSION . "... ");
 if (!$plugin->getFromDBbyDir("formcreator")) {
    print("Failed : GLPi does not find the plugin");
    exit(1);
 }
+print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "... ");
+ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
+ob_end_clean();
 print("Done\n");
 
 // Enable the plugin

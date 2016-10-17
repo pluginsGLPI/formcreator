@@ -177,15 +177,13 @@ form.formcreator_form {
 .formcreator_form .form-group > label {
    display: block;
    font-size: 1.2em;
-   /*float: left;*/
    display: inline-block;
-   width: 250px;
+   width: 300px;
    line-height: 32px;
 }
 .formcreator_form .form-group:after {
    content: '';
    display: block;
-   /*clear: both;*/
 }
 .formcreator_form .form-group .form_field > input[type="file"] {
    height: 32px;
@@ -197,7 +195,6 @@ form.formcreator_form {
 
 .formcreator_form .form-group .form_field {
    width: 650px;
-   /*float: left;*/
    display: inline-block;
    text-align: justify;
    word-wrap: break-word;
@@ -366,12 +363,10 @@ form.formcreator_form {
    width: auto;
 }
 .formcreator_form .form-group > .help-block {
-   /*margin-left: 250px;*/
    font-size: 0.8em;
    color: #333;
    padding: 3px 0;
    font-style: italic;
-   /*clear: both;*/
 }
 .formcreator_form .form-group > .help-block p {
    margin: 0;
@@ -431,7 +426,7 @@ form.formcreator_form {
 }
 
 #div_show_condition_field {
-   width: 250px !important;
+   width: 300px !important;
 }
 #div_show_condition_operator {
    width: 50px !important;
@@ -602,7 +597,6 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_lastForms {
    width: 265px;
-   /*float:right;*/
    position: absolute;
    right: 0;
    top: 0;
@@ -613,7 +607,6 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_wizard_right {
-   /*margin-left: 295px;*/
    min-width: 116px;
    height: 100%;
    overflow: hidden;
@@ -814,12 +807,12 @@ a.plugin_formcreator_formTile_title {
    clear: both;
    position: fixed;
    bottom: 0;
-   width:  calc(100% - 250px);
+   width:  calc(100% - 300px);
    padding: 5px 0;
 }
 
 .plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {
-   width: 250px;
+   width: 300px;
    padding-left: 0; /* Overrides CSS from GLPi */
    padding-top: 20px;
    height: 100%;
@@ -829,12 +822,6 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_leftMenu ul.plugin_formcreator_services {
    margin-top: 40px;
-}
-
-.plugin_formcreator_leftMenuBottom {
-   position: absolute;
-   bottom: 45px;
-   width: 100%;
 }
 
 .plugin_formcreator_services li {
@@ -854,7 +841,7 @@ a.plugin_formcreator_formTile_title {
    background-position: top right;
 }
 
-.plugin_formcreator_leftMenu a {
+.plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
    color: #FFF;
    height: 35px;
    line-height: 35px;
@@ -885,10 +872,7 @@ a.plugin_formcreator_formTile_title {
    margin: 10px 0;
 }
 
-.plugin_formcreator_serviceCatalogIcon span, 
-.plugin_formcreator_myRequestsIcon span, 
-.plugin_formcreator_reservationsIcon span, 
-.plugin_formcreator_feedsIcon span {
+span.fc_list_icon {
    width: 42px;
    height: 24px;
    display: inline-block;
@@ -897,6 +881,10 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_entityProfile {
    text-align: center;
+   bottom: 60px;
+   position: absolute;
+   margin: 0 auto;
+   width: 300px;
 }
 .plugin_formcreator_entityProfile .select2-container,
 .plugin_formcreator_entityProfile .entity_select {
@@ -907,23 +895,28 @@ a.plugin_formcreator_formTile_title {
    opacity: 1;
 }
 
-.plugin_formcreator_serviceCatalogIcon span {
+.plugin_formcreator_serviceCatalogIcon span.fc_list_icon {
    background: url('../pics/issue.png') left no-repeat;
    background-size: contain;
 }
 
-.plugin_formcreator_myRequestsIcon span {
+.plugin_formcreator_myRequestsIcon span.fc_list_icon {
    background: url('../pics/list.png') left no-repeat;
    background-size: contain;
 }
 
-.plugin_formcreator_reservationsIcon span {
+.plugin_formcreator_reservationsIcon span.fc_list_icon {
    background: url('../pics/reservation.png') left no-repeat;
    background-size: contain;
 }
 
-.plugin_formcreator_feedsIcon span {
+.plugin_formcreator_feedsIcon span.fc_list_icon {
    background: url('../pics/feed.png') left no-repeat;
+   background-size: contain;
+}
+
+.plugin_formcreator_bookmarksIcon span.fc_list_icon {
+   background: url('../pics/bookmarks.png') left no-repeat;
    background-size: contain;
 }
 
@@ -936,27 +929,36 @@ a.plugin_formcreator_formTile_title {
 }
 
 #plugin_formcreator_avatar {
-   width: 40px;
-   height: 40px;
+   margin-top: 2px;
    display: inline-block;
-   background: url('../pics/user.png') no-repeat;
-   background-size: contain;
+   border: 2px inset white;
+   border-radius: 50%;
+   padding: 2px;
+}
+
+#plugin_formcreator_avatar img {
+   width: 45px;
+   height: 45px;
+   border-radius: 50%;
 }
 
 .plugin_formcreator_userMenuCell {
    display: block;
+   position: absolute;
+   z-index: 1000;
+   right: 5px;
 }
 
 .plugin_formcreator_userMenu_icons {
    float: right;
    display: inline-block;
-   margin-top: 13px;
+   margin-top: 7px;
 }
 
 .plugin_formcreator_userMenu_icons > li {
-   display: inline-block;
-   padding: 5px;
+   padding: 2px 4px;
 }
+
 .plugin_formcreator_userMenu_icons .button-icon {
    opacity: .6
 }
@@ -967,13 +969,6 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_preferences_icon span {
    background: url("../../../pics/preferences.png") no-repeat;
-   display: inline-block;
-   width: 18px;
-   height: 18px;
-}
-
-#plugin_formcreator_bookmarkIcon span {
-   background: url("../../../pics/bookmark.png");
    display: inline-block;
    width: 18px;
    height: 18px;
@@ -994,12 +989,12 @@ a.plugin_formcreator_formTile_title {
 }
 
 #page.plugin_formcreator_page {
-   margin: 0 0 0 250px;
+   margin: 0 0 0 300px;
    padding: 0;
    max-height: 100%;
    top: 0;
    height: calc(100% - 28px); /* remove footer height*/
-   width: calc(100% - 250px); /* remove left menu width */
+   width: calc(100% - 300px); /* remove left menu width */
 }
 
 #page.plugin_formcreator_container {
@@ -1020,9 +1015,14 @@ a.plugin_formcreator_formTile_title {
    width: auto;
 }
 
-#searchcriterias  {
+#searchcriterias {
    padding-top: 5px;
 }
+
+#page .tab_cadre_pager {
+   width: auto;
+}
+
 
 .tab_cadre_pager, .navigationheader {
    margin-top: 0;
@@ -1090,7 +1090,24 @@ a.plugin_formcreator_formTile_title {
       transform: translateY(0);
    }
 
+   #plugin_formcreator_avatar {
+      height: 48px;
+      width: 48px;
+   }
 
+   #myname.plugin_formcreator_myname {
+      margin: 0 85px 0 105px;
+      width: calc(100% - 190px);
+   }
+   
+   .plugin_formcreator_userMenu_icons li {
+      padding: 0;
+   }
+
+   #searchcriterias .tab_cadre_fixe td {
+      padding: 5px 0;
+   }
+   
    .plugin_formcreator_container .plugin_formcreator_leftHeader#header #c_menu {
       position: absolute;
       transform: translateY(-100%) translateZ(0);
@@ -1128,4 +1145,9 @@ a.plugin_formcreator_formTile_title {
    .plugin_formcreator_footer#footer {
       display: none;
    }
+
+   #debug-float.plugin_formcreator_debug-float {
+      z-index: 1000;
+   }
+   
 }

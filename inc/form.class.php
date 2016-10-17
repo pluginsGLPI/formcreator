@@ -564,41 +564,60 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showFormList($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
       global $DB;
 
-      $cat_table     = getTableForItemType('PluginFormcreatorCategory');
-      $form_table    = getTableForItemType('PluginFormcreatorForm');
+      $table_cat     = getTableForItemType('PluginFormcreatorCategory');
+      $table_form    = getTableForItemType('PluginFormcreatorForm');
       $table_fp      = getTableForItemType('PluginFormcreatorFormprofiles');
       $table_target  = getTableForItemType('PluginFormcreatorTargets');
-      $where         = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+      $table_section = getTableForItemType('PluginFormcreatorSections');
+      $table_question= getTableForItemType('PluginFormcreatorQuestions');
+      $where         = getEntitiesRestrictRequest( "", $table_form, "", "", true, false);
 
-      $order         = "$form_table.name ASC";
+      $order         = "$table_form.name ASC";
 
-      $where_form    = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0 ";
-      $where_form    .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
-      $where_form    .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
+      $where_form    = "$table_form.`is_active` = 1 AND $table_form.`is_deleted` = 0 ";
+      $where_form    .= getEntitiesRestrictRequest("AND", $table_form, "", "", true, false);
+      $where_form    .= " AND $table_form.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
 
       if ($helpdeskHome) {
-         $where_form    .= "AND $form_table.`helpdesk_home` = '1'";
+         $where_form    .= "AND $table_form.`helpdesk_home` = '1'";
       }
 
       if ($rootCategory != 0) {
-         $selectedCategories = getSonsOf($cat_table, $rootCategory);
+         $selectedCategories = getSonsOf($table_cat, $rootCategory);
          $selectedCategories = implode(', ', array_keys($selectedCategories));
-         $where_form .= " AND $form_table.`plugin_formcreator_categories_id` IN ($selectedCategories)";
+         $where_form .= " AND $table_form.`plugin_formcreator_categories_id` IN ($selectedCategories)";
       } else {
          $selectedCategories = '';
       }
 
       // Find forms accessible by the current user
+      $keywords = preg_replace("/[^A-Za-z0-9 ]/", '', $keywords);
       if (!empty($keywords)) {
+         // Determine the optimal search mode
+         $searchMode = "BOOLEAN MODE";
+         $query = "SHOW TABLE STATUS WHERE `Name` = '$table_form'";
+         $result = $DB->query($query);
+         if ($result) {
+            $row = $DB->fetch_assoc($result);
+            if ($row['Rows'] > 20) {
+               $searchMode = "NATURAL LANGUAGE MODE";
+            }
+         }
          $keywords = $DB->escape($keywords);
-         $where_form .= " AND MATCH($form_table.`name`, $form_table.`description`) AGAINST('$keywords*' IN BOOLEAN MODE)";
+         $highWeightedMatch = " MATCH($table_form.`name`, $table_form.`description`)
+               AGAINST('$keywords*' IN $searchMode)";
+         $lowWeightedMatch = " MATCH($table_question.`name`, $table_question.`description`)
+               AGAINST('$keywords*' IN $searchMode)";
+         $where_form .= " AND ($highWeightedMatch OR $lowWeightedMatch)";
       }
-      $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description, $form_table.usage_count
-      FROM $form_table
-      LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
-      LEFT JOIN $table_target ON ($table_target.`plugin_formcreator_forms_id` = $form_table.`id`)
+      $query_forms = "SELECT $table_form.id, $table_form.name, $table_form.description, $table_form.usage_count
+      FROM $table_form
+      LEFT JOIN $table_cat ON ($table_cat.id = $table_form.`plugin_formcreator_categories_id`)
+      LEFT JOIN $table_target ON ($table_target.`plugin_formcreator_forms_id` = $table_form.`id`)
+      LEFT JOIN $table_section ON ($table_section.`plugin_formcreator_forms_id` = $table_form.`id`)
+      LEFT JOIN $table_question ON ($table_question.`plugin_formcreator_sections_id` = $table_section.`id`)
       WHERE $where_form
-      AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
+      AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $table_form.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
          WHERE `plugin_formcreator_profiles_id` = ".$_SESSION['glpiactiveprofile']['id']."))
@@ -627,8 +646,12 @@ class PluginFormcreatorForm extends CommonDBTM
             'contains' => $keywords
       ]);
       if ($selectedCategories != '') {
-         $query_faqs = "SELECT * FROM ($query_faqs)  AS `faqs`
-         WHERE `faqs`.`knowbaseitemcategories_id` IN (SELECT `knowbaseitemcategories_id` FROM `$cat_table` WHERE `id` IN ($selectedCategories) AND `knowbaseitemcategories_id` <> '0')";
+         $query_faqs = "SELECT `faqs`.* FROM ($query_faqs)  AS `faqs`
+         WHERE `faqs`.`knowbaseitemcategories_id` IN (SELECT `knowbaseitemcategories_id` FROM `$table_cat` WHERE `id` IN ($selectedCategories) AND `knowbaseitemcategories_id` <> '0')";
+      } else {
+         $query_faqs = "SELECT `faqs`.* FROM ($query_faqs)  AS `faqs`
+         INNER JOIN `$table_cat` ON (`faqs`.`knowbaseitemcategories_id` = `$table_cat`.`knowbaseitemcategories_id`)
+         WHERE `faqs`.`knowbaseitemcategories_id` <> '0'";
       }
       $result_faqs = $DB->query($query_faqs);
       if ($DB->numrows($result_faqs) > 0) {
@@ -647,15 +670,15 @@ class PluginFormcreatorForm extends CommonDBTM
          $defaultForms = true;
          // No form nor FAQ have been selected
          // Fallback to default forms
-         $where_form       = "$form_table.`is_active` = 1 AND $form_table.`is_deleted` = 0";
-         $where_form       .= getEntitiesRestrictRequest("AND", $form_table, "", "", true, false);
-         $where_form       .= " AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
+         $where_form       = "$table_form.`is_active` = 1 AND $table_form.`is_deleted` = 0 ";
+         $where_form       .= getEntitiesRestrictRequest("AND", $table_form, "", "", true, false);
+         $where_form       .= " AND $table_form.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
          $where_form       .= " AND `is_default` <> '0'";
-         $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description, $form_table.usage_count
-         FROM $form_table
-         LEFT JOIN $cat_table ON ($cat_table.id = $form_table.`plugin_formcreator_categories_id`)
+         $query_forms = "SELECT $table_form.id, $table_form.name, $table_form.description, $table_form.usage_count
+         FROM $table_form
+         LEFT JOIN $table_cat ON ($table_cat.id = $table_form.`plugin_formcreator_categories_id`)
          WHERE $where_form
-         AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
+         AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $table_form.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
          WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
@@ -1157,7 +1180,7 @@ class PluginFormcreatorForm extends CommonDBTM
        * Add natural language search
        * Add form usage counter
        *
-       * @since 0.90-1.5
+       * @since 0.90-1.4
        */
       // An error may occur if the Search index does not exists
       // This is not critical as we need to (re) create it

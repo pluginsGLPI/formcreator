@@ -532,7 +532,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `plugin_formcreator_sections_id` int(11) NOT NULL,
                      `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -545,7 +545,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      `description` text NOT NULL,
                      `regex` varchar(255) NULL DEFAULT NULL,
                      `order` int(11) NOT NULL DEFAULT '0',
-                     `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'
+                     `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always',
+                     PRIMARY KEY (`id`),
+                     FULLTEXT INDEX `Search` (`description`, `name`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -807,6 +809,23 @@ class PluginFormcreatorQuestion extends CommonDBChild
                              WHERE `id` = " . (int) $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
+
+         /**
+          * Add natural language search
+          *
+          * @since 0.90-1.4
+          */
+         // An error may occur if the Search index does not exists
+         // This is not critical as we need to (re) create it
+         If (isIndex($table, 'Search')) {
+            $query = "ALTER TABLE `$table` DROP INDEX `Search`";
+            $DB->query($query);
+         }
+
+         // Re-add FULLTEXT index
+         $query = "ALTER TABLE `$table` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
+         $DB->query($query) or die ($DB->error());
+
       }
 
       return true;
