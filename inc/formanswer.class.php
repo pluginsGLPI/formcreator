@@ -232,7 +232,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       if ($form->fields['validation_required'] == 1) {
          // Check the user is one of the users able to validate this form answer
          $form_validator = new PluginFormcreatorForm_Validator();
-         $rows = $form_validator->find("`forms_id` = '$formId' AND `itemtype = 'User' AND `items_id` = '$userId'", "", "1");
+         $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$formId' AND `itemtype` = 'User' AND `items_id` = '$userId'", "", "1");
          $canValidate = (count($rows) > 0);
       } else if(($form->fields['validation_required'] == 2)) {
          // Check the user is member of at least one validator group for the form answers
