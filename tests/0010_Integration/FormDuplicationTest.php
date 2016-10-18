@@ -3,6 +3,7 @@ class FormDuplicationTest extends SuperAdminTestCase
 {
 
    protected $formData;
+   protected $sectionData;
 
    public function setUp() {
       parent::setUp();
@@ -49,16 +50,6 @@ class FormDuplicationTest extends SuperAdminTestCase
             ),
       );
 
-      $this->questionData = array(
-            array(
-                  'name'                  => 'text question',
-                  'fieldtype'             => 'text'
-            ),
-            array(
-               'name'                  => 'other text question',
-               'fieldtype'             => 'text'
-            ),
-      );
    }
 
    public function testInitCreateForm() {
