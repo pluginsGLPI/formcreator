@@ -62,6 +62,7 @@ jQuery(document).ready(function($) {
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
       updateCategoriesView();
       updateWizardFormsView(0);
+      $("#wizard_seeall").parent().addClass('category_active');
 
       // Setup events
       $('.plugin_formcreator_sort input[value=mostPopularSort]').click(function () {
@@ -77,6 +78,8 @@ jQuery(document).ready(function($) {
       $('#plugin_formcreator_wizard_categories #wizard_seeall').click(function () {
          updateCategoriesView();
          updateWizardFormsView(0);
+            $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
+            $(this).addClass('category_active');
       });
    }
 
@@ -174,6 +177,8 @@ function updateCategoriesView() {
 
       $('#plugin_formcreator_wizard_categories a[data-category-id]').click(
          function (event) {
+            $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
+            $(this).addClass('category_active');
             updateWizardFormsView(event.target.getAttribute('data-category-id'));
          }
       );
