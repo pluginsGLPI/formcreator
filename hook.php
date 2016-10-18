@@ -21,6 +21,7 @@ function plugin_formcreator_install()
          }
       }
    }
+   $migration->executeMigration();
 
    return true;
 }
