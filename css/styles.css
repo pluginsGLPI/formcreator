@@ -548,14 +548,58 @@ form.formcreator_form {
 }
 .plugin_formcreator_page #plugin_formcreator_wizard_categories {
    height: 100vh;
-   margin: 5px;
    background-color: #f8f7f3;
+   border-right: 1px solid #DDD;
+   position: relative;
+}
+
+.plugin_formcreator_page #plugin_formcreator_wizard_categories .slinky-menu {
+   position: absolute;
+   left: 0;
+   right: -1px;
 }
 
 #plugin_formcreator_wizard_categories a {
    background-color: inherit;
    color: #3A5693;
    font-size: 1.2em;
+}
+
+#plugin_formcreator_wizard_categories .category_active:not(.next),
+#plugin_formcreator_wizard_categories .category_active ~ul .header {
+   /* background-color: rgba(0, 0, 0, 0.05); */
+   border-bottom: 1px dashed #DDD;
+   position: relative;
+}
+
+#plugin_formcreator_wizard_categories .category_active:not(.next):after,
+#plugin_formcreator_wizard_categories .category_active ~ul .header:after {
+   position: absolute;
+   left: calc(100% - 45px);
+   top: 50%;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   border-right-color: #FFF;
+   border-width: 23px;
+   margin-top: -23px;
+   z-index: 20;
+}
+
+#plugin_formcreator_wizard_categories .category_active:not(.next):before,
+#plugin_formcreator_wizard_categories .category_active ~ul .header:before {
+   position: absolute;
+   left: calc(100% - 46px);
+   top: 50%;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   border-right-color: #DDD;
+   border-width: 23px;
+   margin-top: -23px;
+   z-index: 20;
 }
 
 #plugin_formcreator_wizard_categories h2 {
@@ -571,10 +615,14 @@ form.formcreator_form {
 #plugin_formcreator_wizard_categories h2 {
    margin: 0;
    padding: 14px;
-   color: #3A5693;
+   color: #000;
 }
 #plugin_formcreator_wizard_categories .header h2 {
-   text-align: right;
+   text-align: left;
+}
+#plugin_formcreator_wizard_categories .header .back {
+   right: 20px;
+   left: inherit;
 }
 
 #plugin_formcreator_wizard_categories li {
@@ -593,6 +641,21 @@ form.formcreator_form {
    margin-top: 10px;
 }
 
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
 .plugin_formcreator_formTile {
    margin: 0 3px 6px 3px;
    width: 300px;
@@ -604,17 +667,23 @@ form.formcreator_form {
    border-radius: 0;
    box-sizing: border-box;
    background-color: #E7E7E7;
+   animation-name: fadeInUp ;
+   animation-iteration-count: 1;
+   animation-timing-function: ease-in;
+   animation-duration: 0.3s;
+}
+.plugin_formcreator_formTile:hover {
+   background-color: #EEEEEE
 }
 
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
    padding: 10px 40px 15px 10px;
    display: block;
-   background: #E7E7E7 no-repeat top 10px right 10px;
+   background: transparent no-repeat top 10px right 10px;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
-   background: #EEEEEE no-repeat top 10px right 10px;
    cursor: pointer;
 }
 
@@ -628,10 +697,6 @@ a.plugin_formcreator_formTile_title {
 
 .plugin_formcreator_formTile_description {
    padding: 0 15px 5px 15px;
-   border-top: 0;
-   border-right: 1px solid rgba(0,0,0,.1);
-   border-bottom: 1px solid rgba(0,0,0,.1);
-   border-left: 1px solid rgba(0,0,0,.1);
 }
 
 .plugin_formcreator_formTile div:first-child {
@@ -688,6 +753,7 @@ a.plugin_formcreator_formTile_title {
    background-color: inherit;
    border: 1px solid #C2C2C2;
    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+   background-color: #F8F8F8;
 }
 
 #plugin_formcreator_searchBar input ~ label {
@@ -872,9 +938,24 @@ a.plugin_formcreator_formTile_title {
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem {
-   background-image: url('../pics/selected-menu-item.png');
    background-repeat: no-repeat;
    background-position: top right;
+   background-color: rgba(0, 0, 0, 0.2);
+   position: relative;
+}
+
+.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem:after {
+   position: absolute;
+   left: calc(100% - 48px);
+   top: 50%;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   border-right-color: #f8f7f3;
+   border-width: 24px;
+   margin-top: -24px;
+   z-index: 20;
 }
 
 .plugin_formcreator_leftHeader a, .plugin_formcreator_myname {
@@ -883,9 +964,6 @@ a.plugin_formcreator_formTile_title {
    line-height: 35px;
 }
 
-.plugin_formcreator_leftMenu .plugin_formcreator_selectedMenuItem {
-   background-color: rgba(0, 0, 0, 0.2);
-}
 
 .plugin_formcreator_threadBrowser {
    margin: 5px;
@@ -1164,6 +1242,10 @@ span.fc_list_icon {
       width: 100%;
       position: initial;
       float: none;
+   }
+
+   .plugin_formcreator_page #plugin_formcreator_wizard_categories .slinky-menu {
+      position: static;
    }
 
    .plugin_formcreator_page #plugin_formcreator_wizard {
