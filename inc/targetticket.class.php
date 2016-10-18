@@ -206,7 +206,7 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       echo '</tr>';
 
       // -------------------------------------------------------------------------------------------
-      // Due date type selection
+      // Urgency selection
       // -------------------------------------------------------------------------------------------
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Urgency') . '</td>';
