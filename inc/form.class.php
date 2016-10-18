@@ -516,9 +516,16 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    public function showServiceCatalog() {
+      global $CFG_GLPI;
+
+      echo "<div id='formcreator_servicecatalogue'>";
+
+      // show wizard
       echo '<div id="plugin_formcreator_wizard" class="plugin_formcreator_menuplaceholder">';
       $this->showWizard(true);
       echo '</div>';
+
+      echo '</div>'; #formcreator_servicecatalogue
    }
 
    public function showWizard($service_catalog = false) {
@@ -530,8 +537,9 @@ class PluginFormcreatorForm extends CommonDBTM
 
       echo '<div id="plugin_formcreator_wizard_right">';
 
+      // hook display central (for alert plugin)
       if ($service_catalog) {
-         echo "<div class='plugin_formcreator_display_central'>";
+         echo "<div id='plugin_formcreator_display_central'>";
          Plugin::doHook('display_central');
          echo "</div>";
       }
@@ -621,7 +629,11 @@ class PluginFormcreatorForm extends CommonDBTM
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
          WHERE `plugin_formcreator_profiles_id` = ".$_SESSION['glpiactiveprofile']['id']."))
-      GROUP BY `$table_target`.`plugin_formcreator_forms_id`
+      GROUP BY `$table_target`.`plugin_formcreator_forms_id`,
+               $table_form.id,
+               $table_form.name,
+               $table_form.description,
+               $table_form.usage_count
       HAVING COUNT(`$table_target`.`plugin_formcreator_forms_id`) > 0
       ORDER BY $order";
       $result_forms = $DB->query($query_forms);

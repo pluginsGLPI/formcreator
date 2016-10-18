@@ -100,8 +100,8 @@ input.submit_button:focus {
 }
 
 form.formcreator_form {
-   width: 950px;
-   margin: 10px auto !important;
+   max-width: 950px;
+   margin: 10px auto 50px !important;
    display: block;
    position: relative;
    line-height: 1.4em;
@@ -147,7 +147,6 @@ form.formcreator_form {
 .formcreator_form > .form_header, .formcreator_form > .form_section {
    background: #EEE; /*#EEE;*/
    background: rgba(232, 232, 232, .8); /*#EEE;*/
-   border-radius: 4px;
    box-shadow: 2px 2px 2px #CCC;
    margin: 0 0 10px;
 }
@@ -162,7 +161,6 @@ form.formcreator_form {
    background: #1B2F62; /*#E1D39E;*/
    color: #FFF;
    margin:  0 0 10px;
-   border-radius: 4px 4px 0 0;
    padding: 5px 10px;
    border-bottom: 1px solid #FFF;
    box-shadow: 2px 2px 2px #CCC;
@@ -491,9 +489,49 @@ form.formcreator_form {
 }
 
 
+#formcreator_servicecatalogue {
+   position: absolute;
+   width: calc(100% - 300px);
+}
+
+#formcreator_servicecatalogue_ticket_summary {
+   margin: 5px 0;
+   height: inherit;
+}
+#formcreator_servicecatalogue_ticket_summary .status {
+   min-width: 70px;
+   min-height: 70px;
+   display: inline-block;
+   margin-right: 10px;
+   padding: 5px;
+   text-align: center;
+   background-color: rgba(0, 0, 0, .15);
+}
+#formcreator_servicecatalogue_ticket_summary .status:hover {
+   background-color: rgba(0, 0, 0, .3);
+}
+#formcreator_servicecatalogue_ticket_summary .status_number {
+   font-size: 2em;
+}
+#formcreator_servicecatalogue_ticket_summary .status_label {
+   font-size: .7em;
+}
+#formcreator_servicecatalogue_ticket_summary .status_incoming,
+#formcreator_servicecatalogue_ticket_summary .status_incoming a {
+   color: #c8ffc8;
+}
+#formcreator_servicecatalogue_ticket_summary .status_waiting,
+#formcreator_servicecatalogue_ticket_summary .status_waiting a {
+   color: #f7c976;
+}
+#formcreator_servicecatalogue_ticket_summary .status_solved,
+#formcreator_servicecatalogue_ticket_summary .status_solved a {
+   color: #ffffff;
+}
+
+
 .plugin_formcreator_page #plugin_formcreator_wizard {
-   height: 100vh;
-   background-color: #FFF;
+   height: 100%;
 }
 
 .plugin_formcreator_marginRight {
@@ -503,28 +541,27 @@ form.formcreator_form {
 #plugin_formcreator_wizard_categories {
    width: 275px;
    height: 100%;
-   background-color: #F8F8F8;
    top: 0;
    bottom: 0;
    left: 0;
    float: left;
-   border-right: 1px solid rgba(0,0,0,.1);
-   text-align: center;
 }
 .plugin_formcreator_page #plugin_formcreator_wizard_categories {
    height: 100vh;
+   margin: 5px;
+   background-color: #f8f7f3;
 }
 
 #plugin_formcreator_wizard_categories a {
-   background-color: #F8F8F8;
+   background-color: inherit;
    color: #3A5693;
    font-size: 1.2em;
 }
 
 #plugin_formcreator_wizard_categories h2 {
-   background-color: #E9E9E9;
    margin: 0;
    padding: 0.83em 0;
+   border-bottom: 1px solid #DDD;
 }
 
 #plugin_formcreator_wizard_categories a, #plugin_formcreator_wizard_categories h2 {
@@ -532,9 +569,16 @@ form.formcreator_form {
 }
 
 #plugin_formcreator_wizard_categories h2 {
-   background-color: #E9E9E9;
    margin: 0;
-   padding: 0.83em 0;
+   padding: 14px;
+   color: #3A5693;
+}
+#plugin_formcreator_wizard_categories .header h2 {
+   text-align: right;
+}
+
+#plugin_formcreator_wizard_categories li {
+   background-color: inherit;
 }
 
 .plugin_formcreator_card {
@@ -559,6 +603,7 @@ form.formcreator_form {
    cursor: pointer;
    border-radius: 0;
    box-sizing: border-box;
+   background-color: #E7E7E7;
 }
 
 a.plugin_formcreator_formTile_title {
@@ -611,6 +656,7 @@ a.plugin_formcreator_formTile_title {
    height: 100%;
    overflow: hidden;
    padding: 10px 0 3px 23px;
+   background-color: #FFFFFF;
 }
 
 .plugin_formcreator_page #plugin_formcreator_wizard_right {
@@ -640,14 +686,15 @@ a.plugin_formcreator_formTile_title {
    border: 0;
    border-radius: 0;
    background-color: inherit;
-   border-bottom: 1px solid #C2C2C2;
+   border: 1px solid #C2C2C2;
+   box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 
 #plugin_formcreator_searchBar input ~ label {
    position: absolute;
    float: left;
    display: block;
-   top: 30%;
+   top: 23%;
    text-align: center;
    width: 100%;
    font-size: 1.2em;
@@ -703,26 +750,15 @@ a.plugin_formcreator_formTile_title {
    display: inline-block;
    background-image: url("../pics/search.png");
    position: absolute;
-   top: 30%;
+   top: 23%;
    right: 10px;
 }
 
 #plugin_formcreator_wizard_categories div > a {
-   text-align: center;
    display: inline-block;
    width: 100%;
-   padding: 11px 0;
-   border-bottom: 1px solid rgba(0,0,0,.1);
+   padding: 14px;
    box-sizing: border-box;
-}
-
-.slinky-menu li {
-   border-bottom: 1px solid rgba(0,0,0,.1);
-}
-
-#plugin_formcreator_wizard_categories .slinky-menu .back {
-   background-color: #E9E9E9;
-   padding: 0.83em;
 }
 
 #plugin_formcreator_lastForms .plugin_formcreator_card .plugin_formcreator_answer {
@@ -1069,7 +1105,7 @@ span.fc_list_icon {
    .plugin_formcreator_leftHeader#header .formcreator-nav-button {
       display: inline-block;
       position: absolute;
-      top: 1.5rem; right: 1rem;
+      top: 1.5rem; right: 5.5rem;
       z-index: 1;
       height: 1.5rem; width: 1.8rem;
       background-color: transparent;
@@ -1090,16 +1126,11 @@ span.fc_list_icon {
       transform: translateY(0);
    }
 
-   #plugin_formcreator_avatar {
-      height: 48px;
-      width: 48px;
-   }
-
    #myname.plugin_formcreator_myname {
       margin: 0 85px 0 105px;
       width: calc(100% - 190px);
    }
-   
+
    .plugin_formcreator_userMenu_icons li {
       padding: 0;
    }
@@ -1107,7 +1138,7 @@ span.fc_list_icon {
    #searchcriterias .tab_cadre_fixe td {
       padding: 5px 0;
    }
-   
+
    .plugin_formcreator_container .plugin_formcreator_leftHeader#header #c_menu {
       position: absolute;
       transform: translateY(-100%) translateZ(0);
@@ -1121,6 +1152,11 @@ span.fc_list_icon {
       margin: 0;
       width: 100%;
       height: inherit;
+      margin-top: 60px;
+   }
+
+   .plugin_formcreator_page #formcreator_servicecatalogue {
+      width: 100%;
    }
 
    .plugin_formcreator_page #plugin_formcreator_wizard_categories {
@@ -1136,7 +1172,7 @@ span.fc_list_icon {
    }
 
    .plugin_formcreator_page #plugin_formcreator_wizard_right {
-      width: 100%;
+      width: 94%;
       height: inherit;
       overflow: inherit;
       margin: 0;
@@ -1149,5 +1185,5 @@ span.fc_list_icon {
    #debug-float.plugin_formcreator_debug-float {
       z-index: 1000;
    }
-   
+
 }

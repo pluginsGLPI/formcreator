@@ -69,11 +69,12 @@ class PluginFormcreatorWizard {
       echo '<div id="c_logo"></div>';
       echo '</div>';
 
-      echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
 
       // menu toggle (responsive mode)
       echo "<input type='checkbox' id='formcreator-toggle-nav'>";
       echo "<label for='formcreator-toggle-nav' class='formcreator-nav-button'></label>";
+
+      echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
 
       // Left vertical menu
       $activeMenuItem = self::findActiveMenuItem();
@@ -85,6 +86,49 @@ class PluginFormcreatorWizard {
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
       echo '<span class="fc_list_icon"></span>';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">' . __('My requests for assistance', 'formcreator') . '</a></li>';
+
+      // show ticket summary
+      $options = array('criteria' => array(array('field'      => 4,
+                                                 'searchtype' => 'equals',
+                                                 'value'      => 'process',
+                                                 'link'       => 'AND',
+                                                 'value'      => 'notold')),
+                       'reset'    => 'reset');
+      echo "<li id='formcreator_servicecatalogue_ticket_summary'>";
+      $status_count = self::getTicketSummary(false);
+      echo "<span class='status status_incoming'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                    Toolbox::append_params($options,'&amp;')."'>
+            <span class='status_number'>".
+            $status_count[Ticket::INCOMING]."
+            </span>
+            <div class='status_label'>".__('Processing')."</div>
+            </a>
+            </span>";
+
+      $options['criteria'][0]['value'] = Ticket::WAITING;
+      echo "<span class='status status_waiting'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                    Toolbox::append_params($options,'&amp;')."'>
+            <span class='status_number'>".
+            $status_count[Ticket::WAITING]."
+            </span>
+            <div class='status_label'>".__('Pending')."</div>
+            </a>
+            </span>";
+
+      $options['criteria'][0]['value'] = 'old';
+      echo "<span class='status status_solved'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                    Toolbox::append_params($options,'&amp;')."'>
+            <span class='status_number'>".
+            $status_count[Ticket::SOLVED]."
+            </span>
+            <div class='status_label'>"._x('status', 'Solved')."</div>
+            </a>
+            </span>";
+
+      echo '</li>'; #formcreator_servicecatalogue_ticket_summary
 
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
@@ -151,6 +195,73 @@ class PluginFormcreatorWizard {
       // call static function callcron() every 5min
       CronTask::callCron();
 
+   }
+
+   static function getTicketSummary($full = true) {
+      global $DB;
+
+      $can_group = Session::haveRight(Ticket::$rightname, Ticket::READGROUP)
+                     && isset($_SESSION["glpigroups"])
+                     && count($_SESSION["glpigroups"]);
+
+      // construct query
+      $query = "SELECT glpi_tickets.status,
+                       COUNT(DISTINCT glpi_tickets.id) AS COUNT
+                FROM glpi_tickets
+                LEFT JOIN glpi_tickets_users
+                  ON glpi_tickets.id = glpi_tickets_users.tickets_id
+                  AND glpi_tickets_users.type = '".CommonITILActor::REQUESTER."'
+                LEFT JOIN glpi_ticketvalidations
+                  ON glpi_tickets.id = glpi_ticketvalidations.tickets_id";
+      if ($can_group) {
+         $query .= "
+                LEFT JOIN glpi_groups_tickets
+                  ON glpi_tickets.id = glpi_groups_tickets.tickets_id
+                  AND glpi_groups_tickets.type = '".CommonITILActor::REQUESTER."'
+               ";
+      }
+      $query .= getEntitiesRestrictRequest(" WHERE", "glpi_tickets");
+      $query .= "
+                  AND (
+                     glpi_tickets_users.users_id = '".Session::getLoginUserID()."'
+                     OR glpi_tickets.users_id_recipient = '".Session::getLoginUserID()."'
+                     OR glpi_ticketvalidations.users_id_validate = '".Session::getLoginUserID()."'";
+
+      if ($can_group) {
+         $groups = implode(",",$_SESSION['glpigroups']);
+         $query .= " OR glpi_groups_tickets.groups_id IN (".$groups.") ";
+      }
+      $query.= ")
+            AND NOT glpi_tickets.is_deleted
+         GROUP BY status";
+
+
+      $status = array();
+      $status_labels = Ticket::getAllStatusArray();
+      foreach ($status_labels as $key => $label) {
+         $status[$key] = 0;
+      }
+
+      $result = $DB->query($query);
+      if ($DB->numrows($result) > 0) {
+         while ($data = $DB->fetch_assoc($result)) {
+            $status[$data["status"]] = $data["COUNT"];
+         }
+      }
+
+      if (!$full) {
+         $status[Ticket::INCOMING]+= $status[Ticket::ASSIGNED]
+                                   + $status[Ticket::WAITING]
+                                   + $status[Ticket::PLANNED];
+         $status[Ticket::SOLVED]  += $status[Ticket::CLOSED];
+
+         unset($status[Ticket::CLOSED],
+               $status[Ticket::PLANNED],
+               $status[Ticket::ASSIGNED]);
+      }
+
+
+      return $status;
    }
 
    public static function footer() {
