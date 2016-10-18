@@ -1003,10 +1003,10 @@ class PluginFormcreatorForm extends CommonDBTM
                         : $this->input['_validator_groups'];
          switch ($this->input['validation_required']) {
             case '1':
-               $validatorItemtype = 'user';
+               $validatorItemtype = 'User';
                break;
             case '2':
-               $validatorItemtype = 'group';
+               $validatorItemtype = 'Group';
                break;
          }
          foreach ($validators as $itemId) {
