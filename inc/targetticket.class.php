@@ -36,8 +36,8 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
 
    static function getEnumUrgencyRule() {
       return array(
-            'none'      => __('None'),
-            'answer'    => __('equals to the answer to the question', 'formcreator'),
+            'none'      => __('Urgency from template or Medium'),
+            'answer'    => __('Equals to the answer to the question', 'formcreator'),
       );
    }
 
