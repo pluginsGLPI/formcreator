@@ -1238,6 +1238,21 @@ EOS;
          $datas['due_date'] = $due_date;
       }
 
+      // Define urgency
+      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            ' AND plugin_formcreator_question_id = '.$this->fields['urgency_question']);
+      $urgency = array_shift($found);
+      switch ($this->fields['urgency_rule']) {
+         case 'answer':
+            $urgency = $urgency['answer'];
+            break;
+         default:
+            $urgency = null;
+      }
+      if (!is_null($urgency)) {
+         $datas['urgency'] = $urgency;
+      }
+
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
          return false;
