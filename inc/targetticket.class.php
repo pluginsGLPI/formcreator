@@ -1215,9 +1215,13 @@ EOS;
       }
 
       // Define due date
-      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-                              ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
-      $date   = array_shift($found);
+      if ($this->fields['due_date_question'] !== null) {
+         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                 ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
+         $date   = array_shift($found);
+      } else {
+         $date = null;
+      }
       $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
 
       switch ($this->fields['due_date_rule']) {
