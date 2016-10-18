@@ -1030,9 +1030,12 @@ class PluginFormcreatorForm extends CommonDBTM
       $found_sections = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
       foreach ($found_sections as $id => $fields) $tab_section[] = $id;
 
-      $questions         = new PluginFormcreatorQuestion();
-      $found_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
-
+      if (count($tab_section) < 1) {
+         $found_questions = array();
+      } else {
+         $questions         = new PluginFormcreatorQuestion();
+         $found_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
+      }
       // Validate form fields
       foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
