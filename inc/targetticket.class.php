@@ -1498,7 +1498,7 @@ EOS;
                      `due_date_question` INT NULL DEFAULT NULL,
                      `due_date_value` TINYINT NULL DEFAULT NULL,
                      `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-                     `urgency_rule` int(11) ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none',
+                     `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none',
                      `urgency_question` int(11) NOT NULL DEFAULT '0',
                      `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
                      `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
