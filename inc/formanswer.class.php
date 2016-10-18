@@ -243,7 +243,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $condition = "`glpi_groups`.`id` IN (
                SELECT `items_id`
                FROM `$table_form_validator`
-               WHERE `itemtype` = 'Group' AND forms_id` = '$formId'
+               WHERE `itemtype` = 'Group' AND `plugin_formcreator_forms_id` = '$formId'
             )";
             $groupList = Group_User::getUserGroups($userId, $condition);
             $canValidate = (count($groupList) > 0);
