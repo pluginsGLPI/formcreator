@@ -34,6 +34,13 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
       );
    }
 
+   static function getEnumUrgencyRule() {
+      return array(
+            'none'      => __('Urgency from template or Medium'),
+            'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      );
+   }
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -193,6 +200,60 @@ class PluginFormcreatorTargetTicket extends CommonDBTM
          'month'  => __('Month'),
       ), array(
          'value' => $this->fields['due_date_period']
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+
+      // -------------------------------------------------------------------------------------------
+      // Urgency selection
+      // -------------------------------------------------------------------------------------------
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Urgency') . '</td>';
+      echo '<td width="45%">';
+      Dropdown::showFromArray('urgency_rule', self::getEnumUrgencyRule(), array(
+            'value'                 => $this->fields['urgency_rule'],
+            'on_change'             => 'change_urgency()',
+            'rand'                  => $rand
+      ));
+      $script = <<<EOS
+         function change_urgency() {
+            $('#urgency_specific_question').hide();
+            $('#urgency_specific_value').hide();
+
+            switch($('#dropdown_urgency_rule$rand').val()) {
+               case 'answer' :
+                  $('#urgency_specific_title').show();
+                  $('#urgency_specific_value').show();
+                  break;
+            }
+         }
+         change_urgency();
+EOS;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="urgency_specific_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="urgency_specific_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                AND q.fieldtype = 'urgency'";
+      $result2 = $DB->query($query2);
+      $users_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_urgency_question', $users_questions, array(
+            'value' => $this->fields['urgency_question'],
       ));
       echo '</div>';
       echo '</td>';
@@ -955,6 +1016,14 @@ EOS;
             break;
       }
 
+      switch ($input['urgency_rule']) {
+         case 'answer':
+            $input['urgency_question'] = $input['_urgency_question'];
+            break;
+         default:
+            $input['urgency_question'] = '0';
+      }
+
       $plugin = new Plugin();
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
          $input['tag_questions'] = (!empty($input['_tag_questions']))
@@ -1146,9 +1215,13 @@ EOS;
       }
 
       // Define due date
-      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-                              ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
-      $date   = array_shift($found);
+      if ($this->fields['due_date_question'] !== null) {
+         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                 ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
+         $date   = array_shift($found);
+      } else {
+         $date = null;
+      }
       $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
 
       switch ($this->fields['due_date_rule']) {
@@ -1167,6 +1240,21 @@ EOS;
       }
       if (!is_null($due_date)) {
          $datas['due_date'] = $due_date;
+      }
+
+      // Define urgency
+      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            ' AND plugin_formcreator_question_id = '.$this->fields['urgency_question']);
+      $urgency = array_shift($found);
+      switch ($this->fields['urgency_rule']) {
+         case 'answer':
+            $urgency = $urgency['answer'];
+            break;
+         default:
+            $urgency = null;
+      }
+      if (!is_null($urgency)) {
+         $datas['urgency'] = $urgency;
       }
 
       // Create the target ticket
@@ -1401,6 +1489,8 @@ EOS;
       $enum_destination_entity = "'".implode("', '", array_keys(self::getEnumDestinationEntity()))."'";
       $enum_tag_type           = "'".implode("', '", array_keys(self::getEnumTagType()))."'";
       $enum_due_date_rule      = "'".implode("', '", array_keys(self::getEnumDueDateRule()))."'";
+      $enum_urgency_rule       = "'".implode("', '", array_keys(self::getEnumUrgencyRule()))."'";
+
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -1412,6 +1502,8 @@ EOS;
                      `due_date_question` INT NULL DEFAULT NULL,
                      `due_date_value` TINYINT NULL DEFAULT NULL,
                      `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
+                     `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none',
+                     `urgency_question` int(11) NOT NULL DEFAULT '0',
                      `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
                      `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
@@ -1455,6 +1547,23 @@ EOS;
                          ADD `tag_specifics` VARCHAR(255) NOT NULL;";
             $DB->query($query) or die($DB->error());
          }
+
+         if (!FieldExists($table, 'urgency_rule', false)) {
+            $query = "ALTER TABLE `$table`
+            ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
+            $DB->query($query) or die($DB->error());
+
+         } else {
+            $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'urgency_rule');
+            if (count($current_enum_destination_entity) != count(self::getEnumUrgencyRule())) {
+               $query = "ALTER TABLE `$table`
+               CHANGE COLUMN `urgency_rule` `urgency_rule`
+               ENUM($enum_urgency_rule)
+               NOT NULL DEFAULT 'requester'";
+               $DB->query($query) or die($DB->error());
+            }
+         }
+         $migration->addField($table, 'urgency_question', 'integer', array('after' => 'urgency_rule'));
       }
 
       return true;
