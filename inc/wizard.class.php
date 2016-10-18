@@ -138,7 +138,7 @@ class PluginFormcreatorWizard {
          $found_available_res = $reservation_item->find($entity_filter);
          if (count($found_available_res)) {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_reservationsIcon">';
-            echo '<span></span>';
+            echo '<span class="fc_list_icon"></span>';
             echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">' . __('Book an asset', 'formcreator') . '</a></li>';
          }
       }
