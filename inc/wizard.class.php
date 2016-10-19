@@ -16,6 +16,9 @@ class PluginFormcreatorWizard {
       }
       $HEADER_LOADED = true;
 
+      // force layout of glpi
+      $_SESSION['glpilayout'] = "lefttab";
+
       Html::includeHeader($title);
 
       $body_class = "layout_".$_SESSION['glpilayout'];
@@ -96,6 +99,8 @@ class PluginFormcreatorWizard {
                        'reset'    => 'reset');
       echo "<li id='formcreator_servicecatalogue_ticket_summary'>";
       $status_count = self::getTicketSummary(false);
+
+      if (count($status_count[Ticket::INCOMING])) {
       echo "<span class='status status_incoming'>
             <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
                     Toolbox::append_params($options,'&amp;')."'>
@@ -105,28 +110,46 @@ class PluginFormcreatorWizard {
             <div class='status_label'>".__('Processing')."</div>
             </a>
             </span>";
+      }
 
-      $options['criteria'][0]['value'] = Ticket::WAITING;
-      echo "<span class='status status_waiting'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                    Toolbox::append_params($options,'&amp;')."'>
-            <span class='status_number'>".
-            $status_count[Ticket::WAITING]."
-            </span>
-            <div class='status_label'>".__('Pending')."</div>
-            </a>
-            </span>";
+      if (count($status_count[Ticket::WAITING])) {
+         $options['criteria'][0]['value'] = Ticket::WAITING;
+         echo "<span class='status status_waiting'>
+               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                       Toolbox::append_params($options,'&amp;')."'>
+               <span class='status_number'>".
+               $status_count[Ticket::WAITING]."
+               </span>
+               <div class='status_label'>".__('Pending')."</div>
+               </a>
+               </span>";
+      }
 
-      $options['criteria'][0]['value'] = 'old';
-      echo "<span class='status status_solved'>
-            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                    Toolbox::append_params($options,'&amp;')."'>
-            <span class='status_number'>".
-            $status_count[Ticket::SOLVED]."
-            </span>
-            <div class='status_label'>"._x('status', 'Solved')."</div>
-            </a>
-            </span>";
+      if (count($status_count[Ticket::WAITING])) {
+         $options['criteria'][0]['value'] = Ticket::WAITING;
+         echo "<span class='status status_waiting'>
+               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                       Toolbox::append_params($options,'&amp;')."'>
+               <span class='status_number'>".
+               $status_count[Ticket::WAITING]."
+               </span>
+               <div class='status_label'>".__('To validate', 'formcreator')."</div>
+               </a>
+               </span>";
+      }
+
+      if (count($status_count[Ticket::SOLVED])) {
+         $options['criteria'][0]['value'] = 'old';
+         echo "<span class='status status_solved'>
+               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                       Toolbox::append_params($options,'&amp;')."'>
+               <span class='status_number'>".
+               $status_count[Ticket::SOLVED]."
+               </span>
+               <div class='status_label'>"._x('status', 'Solved')."</div>
+               </a>
+               </span>";
+      }
 
       echo '</li>'; #formcreator_servicecatalogue_ticket_summary
 

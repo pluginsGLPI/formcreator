@@ -499,10 +499,11 @@ form.formcreator_form {
    height: inherit;
 }
 #formcreator_servicecatalogue_ticket_summary .status {
-   min-width: 70px;
-   min-height: 70px;
+   min-width: 50px;
+   min-height: 55px;
    display: inline-block;
-   margin-right: 10px;
+   margin-right: 5px;
+   margin-bottom: 5px;
    padding: 5px;
    text-align: center;
    background-color: rgba(0, 0, 0, .15);
