@@ -288,42 +288,7 @@ class PluginFormcreatorWizard {
    }
 
    public static function footer() {
-      global $CFG_GLPI, $FOOTER_LOADED;
-
-      // Print foot for help page
-      if ($FOOTER_LOADED) {
-         return;
-      }
-      $FOOTER_LOADED = true;
-
-      echo "<div id='footer' class='plugin_formcreator_footer'>";
-      echo "<table width='100%'><tr><td class='right'>";
-      echo "<a href='http://glpi-project.org/'>";
-      echo "<span class='copyright'>GLPI ".$CFG_GLPI["version"].
-           " Copyright (C) ".
-           "2015-".
-           //date("Y"). // TODO, decomment this in 2016
-           " by Teclib'".
-           " - Copyright (C) 2003-2015 INDEPNET Development Team".
-           "</span>";
-      echo "</a></td></tr></table></div>";
-
-      echo "</div>"; // fin de la div id ='page' initiée dans la fonction header
-
-      if ($_SESSION['glpi_use_mode'] == Session::TRANSLATION_MODE) { // debug mode traduction
-         echo "<div id='debug-float' class='plugin_formcreator_debug-float'>";
-         echo "<a href='#see_debug'>GLPI TRANSLATION MODE</a>";
-         echo "</div>";
-      }
-
-      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) { // mode debug
-         echo "<div id='debug-float' class='plugin_formcreator_debug-float'>";
-         echo "<a href='#see_debug'>GLPI DEBUG MODE</a>";
-         echo "</div>";
-      }
-      Html::displayDebugInfos();
-      echo "</body></html>";
-      closeDBConnections();
+      return Html::helpFooter();
    }
 
    protected static function findActiveMenuItem() {

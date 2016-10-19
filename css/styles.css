@@ -906,11 +906,11 @@ a.plugin_formcreator_formTile_title {
    display: none;
 }
 
-.plugin_formcreator_footer#footer {
+#plugin_formcreator_serviceCatalog #footer {
    clear: both;
    position: fixed;
    bottom: 0;
-   width:  calc(100% - 300px);
+   width:  100%;
    padding: 5px 0;
 }
 
@@ -996,7 +996,7 @@ span.fc_list_icon {
 
 .plugin_formcreator_entityProfile {
    text-align: center;
-   bottom: 60px;
+   bottom: 90px;
    position: absolute;
    margin: 0 auto;
    width: 300px;
@@ -1108,8 +1108,9 @@ span.fc_list_icon {
    padding: 0;
    max-height: 100%;
    top: 0;
-   height: calc(100% - 28px); /* remove footer height*/
-   width: calc(100% - 300px); /* remove left menu width */
+   overflow-y: auto;
+   height: calc(100% - 28px);
+   width: calc(100% - 300px);
 }
 
 #page.plugin_formcreator_container {
@@ -1120,7 +1121,7 @@ span.fc_list_icon {
 .plugin_formcreator_container {
    vertical-align: top;
    top: 0;
-   position: absolute;
+   position: fixed;
    right: 0;
    left: 0;
    bottom: 0;
@@ -1234,6 +1235,10 @@ span.fc_list_icon {
       margin-top: 60px;
    }
 
+   #plugin_formcreator_serviceCatalog .plugin_formcreator_container {
+      position: static;
+   }
+
    .plugin_formcreator_page #formcreator_servicecatalogue {
       width: 100%;
    }
@@ -1261,7 +1266,7 @@ span.fc_list_icon {
       margin: 0;
    }
 
-   .plugin_formcreator_footer#footer {
+   #plugin_formcreator_serviceCatalog #footer {
       display: none;
    }
 
