@@ -19,8 +19,7 @@ function plugin_version_formcreator ()
    return array(
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
-      'author'         => '<a href="mailto:contact@teclib.com">Jérémy MOREAU</a>
-                           - <a href="http://www.teclib.com">Teclib\'</a>',
+      'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
       'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
       'minGlpiVersion' => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION
