@@ -436,6 +436,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
+      // retrieve also validation tickets
+      $status['to_validate'] = 0;
+      $query = "SELECT COUNT(DISTINCT $table.id) AS COUNT
+                FROM $table
+                INNER JOIN `glpi_tickets`
+                  ON $table.original_id = `glpi_tickets`.`ìd`
+                  AND `glpi_tickets`.`global_validation` = ".CommonITILValidation::WAITING."
+                INNER JOIN `glpi_ticketvalidations`
+                  ON `$table`.`id` = `glpi_ticketvalidations`.`tickets_id`
+                  AND `glpi_ticketvalidations`.`users_id_validate` = '".Session::getLoginUserID()."'
+                WHERE ".getEntitiesRestrictRequest(" WHERE", "$table");
+      if ($DB->numrows($result) > 0) {
+          while ($data = $DB->fetch_assoc($result)) {
+            $status['to_validate'] = $data["COUNT"];
+         }
+      }
+
       if (!$full) {
          $status[Ticket::INCOMING] = $status[Ticket::INCOMING]
                                    + $status[Ticket::ASSIGNED]

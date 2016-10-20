@@ -100,7 +100,7 @@ class PluginFormcreatorWizard {
       echo "<li id='formcreator_servicecatalogue_ticket_summary'>";
       $status_count = PluginFormcreatorIssue::getTicketSummary(false);
 
-      if (count($status_count[Ticket::INCOMING])) {
+      if (count($status_count[Ticket::INCOMING]) > 0) {
       echo "<span class='status status_incoming'>
             <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
                     Toolbox::append_params($options,'&amp;')."'>
@@ -112,7 +112,7 @@ class PluginFormcreatorWizard {
             </span>";
       }
 
-      if (count($status_count[Ticket::WAITING])) {
+      if (count($status_count[Ticket::WAITING]) > 0) {
          $options['criteria'][0]['value'] = Ticket::WAITING;
          echo "<span class='status status_waiting'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
@@ -125,20 +125,20 @@ class PluginFormcreatorWizard {
                </span>";
       }
 
-      if (count($status_count[Ticket::WAITING])) {
+      if (count($status_count['to_validate']) > 0) {
          $options['criteria'][0]['value'] = Ticket::WAITING;
          echo "<span class='status status_waiting'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
                        Toolbox::append_params($options,'&amp;')."'>
                <span class='status_number'>".
-               $status_count[Ticket::WAITING]."
+               $status_count['to_validate']."
                </span>
                <div class='status_label'>".__('To validate', 'formcreator')."</div>
                </a>
                </span>";
       }
 
-      if (count($status_count[Ticket::SOLVED])) {
+      if (count($status_count[Ticket::SOLVED]) > 0) {
          $options['criteria'][0]['value'] = 'old';
          echo "<span class='status status_solved'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
