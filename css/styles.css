@@ -725,7 +725,8 @@ a.plugin_formcreator_formTile_title {
 #plugin_formcreator_wizard_right {
    min-width: 116px;
    height: 100vh;
-   overflow: hidden;
+   overflow-x: hidden;
+   overflow-y: auto;
    padding: 10px 0 3px 23px;
    background-color: #FFFFFF;
 }
