@@ -566,7 +566,7 @@ form.formcreator_form {
    font-size: 1.2em;
 }
 
-#plugin_formcreator_wizard_categories a[data-category-id]:not(*[data-parent-category-id="0"]) {
+#plugin_formcreator_wizard_categories  a[data-category-id]:not([data-parent-category-id="0"])  {
    margin-left: 20px;
 }
 
@@ -627,6 +627,7 @@ form.formcreator_form {
 }
 #plugin_formcreator_wizard_categories .header .back {
    right: 20px;
+   color: #000;
    left: inherit;
 }
 
