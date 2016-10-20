@@ -682,6 +682,10 @@ form.formcreator_form {
    background-color: #EEEEEE
 }
 
+.plugin_formcreator_formTile.default_form {
+   background-color: #CCC;
+}
+
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
    padding: 10px 40px 15px 10px;

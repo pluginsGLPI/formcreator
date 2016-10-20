@@ -313,8 +313,13 @@ function buildTiles(list) {
                           +'</div>';
          }
 
+         var default_class = '';
+         if (JSON.parse(form.is_default)) {
+            default_class = 'default_form';
+         }
+
          items.push(
-            '<div class="plugin_formcreator_formTile '+form.type+'" title="'+form.description+'">'
+            '<div class="plugin_formcreator_formTile '+form.type+' '+default_class+'" title="'+form.description+'">'
             + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
             + form.name
             + '</a>'
