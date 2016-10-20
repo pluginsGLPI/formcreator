@@ -566,6 +566,10 @@ form.formcreator_form {
    font-size: 1.2em;
 }
 
+#plugin_formcreator_wizard_categories a[data-category-id]:not(*[data-parent-category-id="0"]) {
+   margin-left: 20px;
+}
+
 #plugin_formcreator_wizard_categories .category_active:not(.next),
 #plugin_formcreator_wizard_categories .category_active ~ul .header {
    /* background-color: rgba(0, 0, 0, 0.05); */

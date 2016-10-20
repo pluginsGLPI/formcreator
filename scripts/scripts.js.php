@@ -164,8 +164,7 @@ function updateCategoriesView() {
 
       // Setup slinky
       $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
-         title: true,
-         label: '<?php echo __('Back', 'formcreator') ?>'
+         label: true
       });
       $('#plugin_formcreator_wizard_categories a.back').click(
          function() {
