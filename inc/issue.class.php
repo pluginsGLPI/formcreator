@@ -442,9 +442,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                    + $status[Ticket::WAITING]
                                    + $status[Ticket::PLANNED]
                                    + $status['accepted']
-                                   + $status['waiting']
-                                   + $status['refused'];
-         $status[Ticket::SOLVED]  += $status[Ticket::CLOSED];
+                                   + $status['waiting'];
+         $status[Ticket::SOLVED]  = $status[Ticket::SOLVED]
+                                  + $status[Ticket::CLOSED];
 
          unset($status[Ticket::CLOSED],
                $status[Ticket::PLANNED],
