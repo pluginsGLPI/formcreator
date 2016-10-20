@@ -98,7 +98,7 @@ class PluginFormcreatorWizard {
                                                  'value'      => 'notold')),
                        'reset'    => 'reset');
       echo "<li id='formcreator_servicecatalogue_ticket_summary'>";
-      $status_count = self::getTicketSummary(false);
+      $status_count = PluginFormcreatorIssue::getTicketSummary(false);
 
       if (count($status_count[Ticket::INCOMING])) {
       echo "<span class='status status_incoming'>
@@ -146,7 +146,7 @@ class PluginFormcreatorWizard {
                <span class='status_number'>".
                $status_count[Ticket::SOLVED]."
                </span>
-               <div class='status_label'>"._x('status', 'Solved')."</div>
+               <div class='status_label'>".__('Closed', 'formcreator')."</div>
                </a>
                </span>";
       }
@@ -218,73 +218,6 @@ class PluginFormcreatorWizard {
       // call static function callcron() every 5min
       CronTask::callCron();
 
-   }
-
-   static function getTicketSummary($full = true) {
-      global $DB;
-
-      $can_group = Session::haveRight(Ticket::$rightname, Ticket::READGROUP)
-                     && isset($_SESSION["glpigroups"])
-                     && count($_SESSION["glpigroups"]);
-
-      // construct query
-      $query = "SELECT glpi_tickets.status,
-                       COUNT(DISTINCT glpi_tickets.id) AS COUNT
-                FROM glpi_tickets
-                LEFT JOIN glpi_tickets_users
-                  ON glpi_tickets.id = glpi_tickets_users.tickets_id
-                  AND glpi_tickets_users.type = '".CommonITILActor::REQUESTER."'
-                LEFT JOIN glpi_ticketvalidations
-                  ON glpi_tickets.id = glpi_ticketvalidations.tickets_id";
-      if ($can_group) {
-         $query .= "
-                LEFT JOIN glpi_groups_tickets
-                  ON glpi_tickets.id = glpi_groups_tickets.tickets_id
-                  AND glpi_groups_tickets.type = '".CommonITILActor::REQUESTER."'
-               ";
-      }
-      $query .= getEntitiesRestrictRequest(" WHERE", "glpi_tickets");
-      $query .= "
-                  AND (
-                     glpi_tickets_users.users_id = '".Session::getLoginUserID()."'
-                     OR glpi_tickets.users_id_recipient = '".Session::getLoginUserID()."'
-                     OR glpi_ticketvalidations.users_id_validate = '".Session::getLoginUserID()."'";
-
-      if ($can_group) {
-         $groups = implode(",",$_SESSION['glpigroups']);
-         $query .= " OR glpi_groups_tickets.groups_id IN (".$groups.") ";
-      }
-      $query.= ")
-            AND NOT glpi_tickets.is_deleted
-         GROUP BY status";
-
-
-      $status = array();
-      $status_labels = Ticket::getAllStatusArray();
-      foreach ($status_labels as $key => $label) {
-         $status[$key] = 0;
-      }
-
-      $result = $DB->query($query);
-      if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetch_assoc($result)) {
-            $status[$data["status"]] = $data["COUNT"];
-         }
-      }
-
-      if (!$full) {
-         $status[Ticket::INCOMING]+= $status[Ticket::ASSIGNED]
-                                   + $status[Ticket::WAITING]
-                                   + $status[Ticket::PLANNED];
-         $status[Ticket::SOLVED]  += $status[Ticket::CLOSED];
-
-         unset($status[Ticket::CLOSED],
-               $status[Ticket::PLANNED],
-               $status[Ticket::ASSIGNED]);
-      }
-
-
-      return $status;
    }
 
    public static function footer() {
