@@ -63,7 +63,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                           0                             AS `is_recursive`,
                           `tic`.`users_id_recipient`    AS `requester_id`,
                           ''                            AS `validator_id`,
-                          ''                            AS `comment`
+                          `tic`.`content`               AS `comment`
                    FROM `glpi_tickets` AS `tic`
                    LEFT JOIN `glpi_items_tickets` AS `itic`
                       ON `itic`.`tickets_id` = `tic`.`id`
@@ -245,7 +245,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'table'         => 'glpi_users',
             'field'         => 'name',
             'linkfield'     => 'validator_id',
-            'name'          => __('Approver'),
+            'name'          => __('Form approver'),
             'datatype'      => 'dropdown',
             'massiveaction' => false,
          ),
@@ -255,6 +255,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'name'          => __('Comment'),
             'datatype'      => 'string',
             'massiveaction' => false,
+         ),
+         '11' => array(
+            'table'         => 'glpi_users',
+            'field'         => 'name',
+            'linkfield'     => 'users_id_validate',
+            'name'          => __('Ticket approver'),
+            'datatype'      => 'dropdown',
+            'right'         => array('validate_request', 'validate_incident'),
+            'forcegroupby'  => false,
+            'massiveaction' => false,
+            'joinparams'    => array(
+               'beforejoin' => array(
+                  'table' => 'glpi_ticketvalidations',
+                  'joinparams' => array(
+                     'jointype'   => 'child',
+                     'linkfield'  => 'original_id')))
+
          ),
       );
    }

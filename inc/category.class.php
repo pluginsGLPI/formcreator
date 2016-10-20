@@ -93,11 +93,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       $formCategory = new self();
       if ($rootId == 0) {
-         $items = $formCategory->find("`level`='1' AND ($where)");
+         $items = $formCategory->find("`level`='1' AND ($where)", '`name`');
          $name = '';
          $parent = 0;
       } else {
-         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)");
+         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)",
+                                      '`name`');
          $formCategory = new self();
          $formCategory->getFromDB($rootId);
          $name = $formCategory->getField('name');
@@ -122,8 +123,9 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'subcategories'   => array()
       );
       foreach($items as $categoryId => $categoryItem) {
-         $children['subcategories'][$categoryId] = self::getCategoryTree($categoryId);
+         $children['subcategories'][] = self::getCategoryTree($categoryId);
       }
+
       return $children;
    }
 
