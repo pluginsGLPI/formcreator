@@ -33,6 +33,17 @@ jQuery(document).ready(function($) {
       }
    });
 
+   // toggle menu in desktop mode
+   $('#formcreator-toggle-nav-desktop').change(function() {
+      $('.plugin_formcreator_container').toggleClass('toggle_menu');
+      $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+         data: {wizard: 'toggle_menu'},
+         type: "POST",
+         dataType: "json"
+      })
+   });
+
    serviceCatalogEnabled = $("#plugin_formcreator_serviceCatalog").length;
 
    // Prevent jQuery UI dialog from blocking focusin

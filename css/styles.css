@@ -27,6 +27,31 @@ html, body {
   }
 }
 
+@keyframes fadeIn {
+   0% {
+      opacity: 0
+   }
+   99% {
+      opacity: 0;
+   }
+   100% {
+      opacity: 1;
+   }
+}
+@keyframes fadeOut {
+   0% {
+      opacity: 1;
+   }
+   1% {
+      opacity: 0;
+   }
+  100% {
+      opacity: 0;
+  }
+}
+
+
+
 a.submit_button, input.submit_button {
    display: inline-block;
    min-width: 150px !important;
@@ -271,8 +296,7 @@ form.formcreator_form {
 }
 
 .formcreator_form textarea {
-   width: 638px;
-   min-height: 24px;
+   min-height: 105px;
 }
 
 .formcreator_form div.checkbox {
@@ -491,22 +515,23 @@ form.formcreator_form {
 
 #formcreator_servicecatalogue {
    position: absolute;
-   width: calc(100% - 300px);
+   width: 100%;
 }
 
 #formcreator_servicecatalogue_ticket_summary {
-   margin: 5px 0;
+   margin: 5px 60px 0 5px;
    height: inherit;
 }
 #formcreator_servicecatalogue_ticket_summary .status {
-   min-width: 50px;
-   min-height: 55px;
+   min-width: 60px;
    display: inline-block;
    margin-right: 5px;
-   margin-bottom: 5px;
+   margin-top: -5px;
    padding: 5px;
    text-align: center;
    background-color: rgba(0, 0, 0, .15);
+   vertical-align: top;
+   box-sizing: border-box;
 }
 #formcreator_servicecatalogue_ticket_summary .status:hover {
    background-color: rgba(0, 0, 0, .3);
@@ -516,6 +541,11 @@ form.formcreator_form {
 }
 #formcreator_servicecatalogue_ticket_summary .status_label {
    font-size: .7em;
+   display: none;
+}
+#formcreator_servicecatalogue_ticket_summary .status:hover .status_label {
+   display: block;
+   line-height: 0;
 }
 #formcreator_servicecatalogue_ticket_summary .status_incoming,
 #formcreator_servicecatalogue_ticket_summary .status_incoming a {
@@ -524,6 +554,10 @@ form.formcreator_form {
 #formcreator_servicecatalogue_ticket_summary .status_waiting,
 #formcreator_servicecatalogue_ticket_summary .status_waiting a {
    color: #f7c976;
+}
+#formcreator_servicecatalogue_ticket_summary .status_validate,
+#formcreator_servicecatalogue_ticket_summary .status_validate a {
+   color: #9B9BE9;
 }
 #formcreator_servicecatalogue_ticket_summary .status_solved,
 #formcreator_servicecatalogue_ticket_summary .status_solved a {
@@ -560,9 +594,90 @@ form.formcreator_form {
    right: -1px;
 }
 
+/* SLINKY CSS */
+.slinky-menu {
+   overflow: hidden;
+   transform: translateZ(0);
+   transition: all 300ms ease;
+   -webkit-transform: translateZ(0);
+   -webkit-transition: all 300ms ease;
+}
+
+.slinky-menu > ul {
+   left: 0;
+   position: relative;
+   transform: translateZ(0);
+   transition: all 300ms ease;
+   -webkit-transform: translateZ(0);
+   -webkit-transition: all 300ms ease;
+}
+
+.slinky-menu ul,
+.slinky-menu li {
+   list-style: none;
+   margin: 0;
+}
+
+.slinky-menu ul {
+   width: 100%;
+}
+
+.slinky-menu a {
+   display: block;
+}
+
+.slinky-menu li ul {
+   display: none;
+   left: 100%;
+   position: absolute;
+   top: 0;
+}
+
+.slinky-menu .header {
+   position: relative;
+}
+
+.slinky-menu h2 ~ a.back {
+   left: 0;
+   position: absolute;
+   top: 0;
+}
+
+.slinky-menu h2 {
+   font-size: 1em;
+   margin: 0;
+   text-align: center;
+}
+
+
+.slinky-menu .header {
+   background: #AAA;
+}
+
+.slinky-menu h2 {
+   padding: 1em;
+}
+
+.slinky-menu a {
+   border: none;
+   padding: 1em;
+}
+
+.slinky-menu a.next:after {
+   content: '\276f';
+   margin-left: 1em;
+   float: right;
+}
+
+.slinky-menu a.back:before {
+   content: '\276e';
+   margin-right: 1em;
+   float: left;
+}
+
+
 #plugin_formcreator_wizard_categories a {
    background-color: inherit;
-   color: #3A5693;
    font-size: 1.2em;
 }
 
@@ -908,13 +1023,80 @@ a.plugin_formcreator_formTile_title {
    float: left;
    height: 100%;
    position: fixed;
-   background-color: #3A5693;
 }
 
-.plugin_formcreator_leftHeader#header #formcreator-toggle-nav,
-.plugin_formcreator_leftHeader#header .formcreator-nav-button {
+#plugin_formcreator_serviceCatalog #header_top {
+   height: 45px;
+   line-height: 45px;
+   position: relative;
+}
+.formcreator_header_top#header_top {
+   margin-left:  300px;
+   width: calc(100vw - 300px);
+   text-align: right;
+   color: #FFF;
+   z-index: 50;
+   transition: .3s;
+}
+
+
+.formcreator-nav-button {
+   z-index: 1;
+   height: 1.5rem; width: 1.8rem;
+   background-color: transparent;
+   background-image: linear-gradient(to right, #FFF, #FFF),
+     linear-gradient(to right, #FFF, #FFF),
+     linear-gradient(to right, #FFF, #FFF);
+   background-position: center top, center, center bottom;
+   background-repeat: no-repeat;
+   background-size: 3.5rem .3rem;
+   padding: 0;
+   outline: 0;
+   border: 0;
+   cursor: pointer;
+   -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+#formcreator-toggle-nav-desktop ~ .formcreator-nav-button {
+ float: left;
+ margin: 10px 0 0 10px;
+}
+
+#formcreator-toggle-nav-desktop,
+#formcreator-toggle-nav-responsive,
+#formcreator-toggle-nav-responsive ~ .formcreator-nav-button {
    display: none;
 }
+
+#c_menu li label {
+   animation: .3s fadeIn;
+   opacity: 1;
+}
+.toggle_menu #c_menu li label {
+   animation: .3s fadeOut;
+   opacity: 0;
+}
+.toggle_menu .plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {
+   width: 53px;
+}
+.toggle_menu #c_menu .plugin_formcreator_selectedMenuItem:after {
+   border: 0;
+   top: 50%;
+   left: initial;
+   right: 0;
+   width: 6px;
+   background-color: rgba(0, 0, 0, .3);
+   height: 48px;
+}
+.toggle_menu #page.plugin_formcreator_page {
+   width: calc(100% - 53px);
+   margin-left: 53px;
+}
+
+.toggle_menu .formcreator_header_top#header_top {
+   margin-left: 53px;
+   width: calc(100vw - 53px);
+}
+
 
 #plugin_formcreator_serviceCatalog #footer {
    clear: both;
@@ -931,16 +1113,14 @@ a.plugin_formcreator_formTile_title {
    height: 100%;
    position: relative;
    text-align: left;
-}
-
-.plugin_formcreator_leftMenu ul.plugin_formcreator_services {
-   margin-top: 40px;
+   transition: .3s;
 }
 
 .plugin_formcreator_services li {
    padding:  5px 0 5px 13px;
    width: 100%;
    height: 48px;
+   line-height: 38px;
    box-sizing: border-box;
 }
 
@@ -1005,19 +1185,19 @@ span.fc_list_icon {
 }
 
 .plugin_formcreator_entityProfile {
-   text-align: center;
-   bottom: 90px;
-   position: absolute;
-   margin: 0 auto;
-   width: 300px;
+   float: right;
+}
+.plugin_formcreator_entityProfile > li {
+   line-height: 45px;
+}
+.plugin_formcreator_entityProfile .select2-container {
+   margin-top: 12px;
+   width: inherit !important;
 }
 .plugin_formcreator_entityProfile .select2-container,
 .plugin_formcreator_entityProfile .entity_select {
-   opacity: .6
-}
-.plugin_formcreator_entityProfile .select2-container:hover,
-.plugin_formcreator_entityProfile .entity_select:hover {
-   opacity: 1;
+   color:  #FFF;
+   margin-right: 10px;
 }
 
 .plugin_formcreator_serviceCatalogIcon span.fc_list_icon {
@@ -1054,16 +1234,16 @@ span.fc_list_icon {
 }
 
 #plugin_formcreator_avatar {
-   margin-top: 2px;
    display: inline-block;
    border: 2px inset white;
    border-radius: 50%;
    padding: 2px;
+   float: right;
 }
 
 #plugin_formcreator_avatar img {
-   width: 45px;
-   height: 45px;
+   width: 40px;
+   height: 40px;
    border-radius: 50%;
 }
 
@@ -1077,11 +1257,12 @@ span.fc_list_icon {
 .plugin_formcreator_userMenu_icons {
    float: right;
    display: inline-block;
-   margin-top: 7px;
+   margin: 12px 8px 0 8px;
 }
 
 .plugin_formcreator_userMenu_icons > li {
    padding: 2px 4px;
+   display: inline-block;
 }
 
 .plugin_formcreator_userMenu_icons .button-icon {
@@ -1121,6 +1302,9 @@ span.fc_list_icon {
    overflow-y: auto;
    height: calc(100% - 28px);
    width: calc(100% - 300px);
+   z-index:  0;
+   position: relative;
+   transition: .3s;
 }
 
 #page.plugin_formcreator_container {
@@ -1192,28 +1376,55 @@ span.fc_list_icon {
       position: relative;
    }
 
-   .plugin_formcreator_leftHeader#header .formcreator-nav-button {
-      display: inline-block;
-      position: absolute;
-      top: 1.5rem; right: 5.5rem;
-      z-index: 1;
-      height: 1.5rem; width: 1.8rem;
+   .formcreator_header_top#header_top {
+      display: none;
+      opacity: 0;
+      animation: fadeOut .3s;
       background-color: transparent;
-      background-image: linear-gradient(to right, #FFF, #FFF),
-        linear-gradient(to right, #FFF, #FFF),
-        linear-gradient(to right, #FFF, #FFF);
-      background-position: center top, center, center bottom;
-      background-repeat: no-repeat;
-      background-size: 3.5rem .3rem;
-      padding: 0;
-      outline: 0;
-      border: 0;
-      cursor: pointer;
-      -webkit-tap-highlight-color:rgba(0,0,0,0);
+      text-align: left;
    }
 
-   .plugin_formcreator_leftHeader#header #formcreator-toggle-nav:checked ~ #c_menu {
+   .profile-selector {
+      float: none !important;
+   }
+
+   #formcreator_servicecatalogue_ticket_summary {
+      width: 100%;
+      display: block;
+   }
+
+   .plugin_formcreator_container #footer {
+      display: none;
+   }
+
+   #formcreator-toggle-nav-desktop ~ .formcreator-nav-button {
+      display: none;
+   }
+
+   #formcreator-toggle-nav-responsive ~ .formcreator-nav-button {
+      display: inline-block;
+      position: fixed;
+      top: 1.5rem;
+      right: 1rem;
+      z-index: 2000;
+   }
+
+   #formcreator-toggle-nav-responsive:checked ~ #header #c_menu {
       transform: translateY(0);
+   }
+   #formcreator-toggle-nav-responsive:checked ~ #header .plugin_formcreator_services {
+      margin-top: 120px;
+   }
+   #formcreator-toggle-nav-responsive:checked ~ #header_top.formcreator_header_top {
+      display: block;
+      position: fixed;
+      z-index: 2000;
+      width: 100%;
+      left: 0;
+      top: 70px;
+      margin: 0;
+      opacity: 1;
+      animation: fadeInd .3s;
    }
 
    #myname.plugin_formcreator_myname {
@@ -1243,11 +1454,9 @@ span.fc_list_icon {
       width: 100%;
       height: inherit;
       margin-top: 60px;
+      min-height: calc(100% - 100px);
    }
 
-   #plugin_formcreator_serviceCatalog .plugin_formcreator_container {
-      position: static;
-   }
 
    .plugin_formcreator_page #formcreator_servicecatalogue {
       width: 100%;
@@ -1258,6 +1467,7 @@ span.fc_list_icon {
       width: 100%;
       position: initial;
       float: none;
+      min-height: initial;
    }
 
    .plugin_formcreator_page #plugin_formcreator_wizard_categories .slinky-menu {
