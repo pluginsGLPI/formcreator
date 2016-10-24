@@ -615,16 +615,9 @@ EOS;
       // => Add requester form
       echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      Dropdown::showFromArray('actor_type', array(
-         ''                => Dropdown::EMPTY_VALUE,
-         'creator'         => __('Form requester', 'formcreator'),
-         'validator'       => __('Form validator', 'formcreator'),
-         'person'          => __('Specific person', 'formcreator'),
-         'question_person' => __('Person from the question', 'formcreator'),
-         'question_actors' => __('Actors from the question', 'formcreator'),
-         'group'           => __('Specific group', 'formcreator'),
-         'question_group'  => __('Group from the question', 'formcreator'),
-      ), array(
+      $dropdownItems = array('' => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      Dropdown::showFromArray('actor_type',
+         $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorRequester(this.value)'
       ));
 
@@ -710,7 +703,7 @@ EOS;
             case 'question_actors':
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
-               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
            break;
@@ -729,16 +722,11 @@ EOS;
       echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'.
            $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      Dropdown::showFromArray('actor_type', array(
-         ''                => Dropdown::EMPTY_VALUE,
-         'creator'         => __('Form requester', 'formcreator'),
-         'validator'       => __('Form validator', 'formcreator'),
-         'person'          => __('Specific person', 'formcreator'),
-         'question_person' => __('Person from the question', 'formcreator'),
-         'question_actors' => __('Actors from the question', 'formcreator'),
-         'group'           => __('Specific group', 'formcreator'),
-         'question_group'  => __('Group from the question', 'formcreator'),
-      ), array(
+      $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      unset($dropdownItems['supplier']);
+      unset($dropdownItems['question_supplier']);
+      Dropdown::showFromArray('actor_type',
+         $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
       ));
 
@@ -822,6 +810,12 @@ EOS;
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
                   . '</b> "' . $question->getName() . '"';
                break;
+            case 'question_actors' :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
@@ -836,18 +830,11 @@ EOS;
       // => Add assigned to form
       echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      Dropdown::showFromArray('actor_type', array(
-         ''                  => Dropdown::EMPTY_VALUE,
-         'creator'           => __('Form requester', 'formcreator'),
-         'validator'         => __('Form validator', 'formcreator'),
-         'person'            => __('Specific person', 'formcreator'),
-         'question_person'   => __('Person from the question', 'formcreator'),
-         'question_actors' => __('Actors from the question', 'formcreator'),
-         'group'             => __('Specific group', 'formcreator'),
-         'question_group'    => __('Group from the question', 'formcreator'),
-         'supplier'          => __('Specific supplier', 'formcreator'),
-         'question_supplier' => __('Supplier from the question', 'formcreator'),
-      ), array(
+      $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      unset($dropdownItems['supplier']);
+      unset($dropdownItems['question_supplier']);
+      Dropdown::showFromArray('actor_type',
+         $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
       ));
 
@@ -941,6 +928,12 @@ EOS;
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
                   . '</b> "' . $question->getName() . '"';
+               break;
+            case 'question_actors' :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
                break;
             case 'supplier' :
                $supplier = new Supplier();
