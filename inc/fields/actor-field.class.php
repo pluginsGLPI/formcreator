@@ -88,7 +88,7 @@ class actorField extends PluginFormcreatorField
 
       // Check all IDs exist
       $user = new User();
-      $rows = $user->find("`id` IN (" . explode(', ', $idToCheck). ")");
+      $rows = $user->find("`id` IN (" . implode(', ', $idToCheck). ")");
       if (count($rows) != count($idToCheck)) {
          //at least one ID is not valid
          return false;

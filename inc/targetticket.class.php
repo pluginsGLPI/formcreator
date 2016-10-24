@@ -1121,7 +1121,7 @@ EOS;
       $query_requester = "SELECT id, actor_type, actor_value, use_notification
                           FROM glpi_plugin_formcreator_targettickets_actors
                           WHERE plugin_formcreator_targettickets_id = ".$this->getID()."
-                          AND actor_role = 'requester'";
+                          AND actor_role = 'requester' AND actor_type <> 'question_actors'";
       $result_requester = $DB->query($query_requester);
 
       // If there is only one requester add it on creation, otherwize we will add them later
@@ -1365,15 +1365,15 @@ EOS;
          }
          switch ($actor['actor_type']) {
             case 'creator' :
-               $user_id = $formanswer->fields['requester_id'];
+               $user_id = array($formanswer->fields['requester_id']);
                break;
             case 'validator' :
-               $user_id = $formanswer->fields['validator_id'];
+               $user_id = array($formanswer->fields['validator_id']);
                break;
             case 'person' :
             case 'group' :
             case 'supplier' :
-               $user_id = $actor['actor_value'];
+               $user_id = array($actor['actor_value']);
                break;
             case 'question_person' :
             case 'question_group' :
@@ -1385,43 +1385,64 @@ EOS;
                if (empty($found['answer'])) {
                   continue;
                } else {
-                  $user_id = $found['answer'];
+                  $user_id = array($found['answer']);
                }
                break;
+            case 'question_actors':
+               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
+                     ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
+               $found   = array_shift($found);
+
+               if (empty($found['answer'])) {
+                  continue;
+               } else {
+                  $user_id = explode(',', $found['answer']);
+               }
+               break;
+            default:
+               $user_id = array();
          }
-         switch ($actor['actor_type']) {
-            case 'creator' :
-            case 'validator' :
-            case 'person' :
-            case 'question_person' :
-               $obj = new Ticket_User();
-               $obj->add(array(
-                  'tickets_id'       => $ticketID,
-                  'users_id'         => $user_id,
-                  'type'             => $role,
-                  'use_notification' => $actor['use_notification'],
-               ));
-               break;
-            case 'group' :
-            case 'question_group' :
-               $obj = new Group_Ticket();
-               $obj->add(array(
-                  'tickets_id'       => $ticketID,
-                  'groups_id'        => $user_id,
-                  'type'             => $role,
-                  'use_notification' => $actor['use_notification'],
-               ));
-               break;
-            case 'supplier' :
-            case 'question_supplier' :
-               $obj = new Supplier_Ticket();
-               $obj->add(array(
-                  'tickets_id'       => $ticketID,
-                  'suppliers_id'     => $user_id,
-                  'type'             => $role,
-                  'use_notification' => $actor['use_notification'],
-               ));
-               break;
+         foreach ($user_id as $uid) {
+            $uid = trim($uid);
+            if (!ctype_digit($uid) && !is_int($uid)) {
+               $email = $uid;
+               $uid = User::getOrImportByEmail($email);
+            }
+            switch ($actor['actor_type']) {
+               case 'creator' :
+               case 'validator' :
+               case 'person' :
+               case 'question_person' :
+               case 'question_actors' :
+                  $obj = new Ticket_User();
+                  $obj->add(array(
+                     'tickets_id'       => $ticketID,
+                     'users_id'         => $uid,
+                     'type'             => $role,
+                     'use_notification' => $actor['use_notification'],
+                  ));
+                  break;
+               case 'group' :
+               case 'question_group' :
+                  $obj = new Group_Ticket();
+                  $obj->add(array(
+                     'tickets_id'       => $ticketID,
+                     'groups_id'        => $uid,
+                     'type'             => $role,
+                     'use_notification' => $actor['use_notification'],
+                  ));
+                  break;
+               case 'supplier' :
+               case 'question_supplier' :
+                  $obj = new Supplier_Ticket();
+                  $obj->add(array(
+                     'tickets_id'       => $ticketID,
+                     'suppliers_id'     => $uid,
+                     'type'             => $role,
+                     'use_notification' => $actor['use_notification'],
+                  ));
+                  break;
+            }
          }
       }
 
