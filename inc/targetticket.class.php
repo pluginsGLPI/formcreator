@@ -509,6 +509,7 @@ EOS;
       $questions_user_list     = array(Dropdown::EMPTY_VALUE);
       $questions_group_list    = array(Dropdown::EMPTY_VALUE);
       $questions_supplier_list = array(Dropdown::EMPTY_VALUE);
+      $questions_actors_list   = array(Dropdown::EMPTY_VALUE);
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
                 INNER JOIN glpi_plugin_formcreator_sections s
@@ -527,9 +528,10 @@ EOS;
                      AND q.values IN ('User', 'Group', 'Supplier'))
                    OR (q.fieldtype = 'actor')";
          $result2 = $DB->query($query2);
-         $section_questions_user = array();
-         $section_questions_group = array();
-         $section_questions_supplier = array();
+         $section_questions_user       = array();
+         $section_questions_group      = array();
+         $section_questions_supplier   = array();
+         $section_questions_actors     = array();
          while ($question = $DB->fetch_array($result2)) {
             if ($question['fieldtype'] == 'glpiselect') {
                switch ($question['values']) {
@@ -544,13 +546,13 @@ EOS;
                      break;
                }
             } else if ($question['fieldtype'] == 'actor') {
-               $section_questions_user[$question['id']] = $question['name'];
-               $section_questions_group[$question['id']] = $question['name'];
+               $section_questions_actors[$question['id']] = $question['name'];
             }
          }
          $questions_user_list[$section['name']]     = $section_questions_user;
          $questions_group_list[$section['name']]    = $section_questions_group;
          $questions_supplier_list[$section['name']] = $section_questions_supplier;
+         $questions_actors_list[$section['name']]   = $section_questions_actors;
       }
 
       // Get available questions for actors lists
@@ -619,6 +621,7 @@ EOS;
          'validator'       => __('Form validator', 'formcreator'),
          'person'          => __('Specific person', 'formcreator'),
          'question_person' => __('Person from the question', 'formcreator'),
+         'question_actors' => __('Actors from the question', 'formcreator'),
          'group'           => __('Specific group', 'formcreator'),
          'question_group'  => __('Group from the question', 'formcreator'),
       ), array(
@@ -648,6 +651,12 @@ EOS;
       echo '<div id="block_requester_question_group" style="display:none">';
       Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
          'value' => $this->fields['due_date_question'],
+      ));
+      echo '</div>';
+
+      echo '<div id="block_requester_question_actors" style="display:none">';
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+            'value' => $this->fields['due_date_question'],
       ));
       echo '</div>';
 
@@ -698,6 +707,13 @@ EOS;
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
                   . '</b> "' . $question->getName() . '"';
                break;
+            case 'question_actors':
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
+               . '</b> "' . $question->getName() . '"';
+               break;
+           break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
@@ -719,6 +735,7 @@ EOS;
          'validator'       => __('Form validator', 'formcreator'),
          'person'          => __('Specific person', 'formcreator'),
          'question_person' => __('Person from the question', 'formcreator'),
+         'question_actors' => __('Actors from the question', 'formcreator'),
          'group'           => __('Specific group', 'formcreator'),
          'question_group'  => __('Group from the question', 'formcreator'),
       ), array(
@@ -748,6 +765,12 @@ EOS;
       echo '<div id="block_watcher_question_group" style="display:none">';
       Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
          'value' => $this->fields['due_date_question'],
+      ));
+      echo '</div>';
+
+      echo '<div id="block_watcher_question_actors" style="display:none">';
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+            'value' => $this->fields['due_date_question'],
       ));
       echo '</div>';
 
@@ -819,6 +842,7 @@ EOS;
          'validator'         => __('Form validator', 'formcreator'),
          'person'            => __('Specific person', 'formcreator'),
          'question_person'   => __('Person from the question', 'formcreator'),
+         'question_actors' => __('Actors from the question', 'formcreator'),
          'group'             => __('Specific group', 'formcreator'),
          'question_group'    => __('Group from the question', 'formcreator'),
          'supplier'          => __('Specific supplier', 'formcreator'),
@@ -856,6 +880,12 @@ EOS;
       echo '<div id="block_assigned_question_group" style="display:none">';
       Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
          'value' => $this->fields['due_date_question'],
+      ));
+      echo '</div>';
+
+      echo '<div id="block_assigned_question_actors" style="display:none">';
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+            'value' => $this->fields['due_date_question'],
       ));
       echo '</div>';
 
