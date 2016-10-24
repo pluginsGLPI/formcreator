@@ -383,7 +383,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
       $form_status = array('waiting', 'accepted', 'refused');
       $form_status = array_combine($form_status, $form_status);
-      $all_status = array_merge($ticket_status, $form_status);
+      $all_status = $ticket_status + $form_status;
       return $all_status;
    }
 
