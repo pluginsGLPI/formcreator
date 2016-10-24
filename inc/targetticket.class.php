@@ -518,28 +518,34 @@ EOS;
       $result = $DB->query($query);
       while ($section = $DB->fetch_array($result)) {
          // select all user, group or supplier questions (GLPI Object)
-         $query2 = "SELECT q.id, q.name, q.values
+         $query2 = "SELECT q.id, q.name, q.fieldtype, q.values
                    FROM glpi_plugin_formcreator_questions q
                    INNER JOIN glpi_plugin_formcreator_sections s
                      ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
-                   AND q.fieldtype = 'glpiselect'
-                   AND q.values IN ('User', 'Group', 'Supplier')";
+                   AND (q.fieldtype = 'glpiselect'
+                     AND q.values IN ('User', 'Group', 'Supplier'))
+                   OR (q.fieldtype = 'actor')";
          $result2 = $DB->query($query2);
          $section_questions_user = array();
          $section_questions_group = array();
          $section_questions_supplier = array();
          while ($question = $DB->fetch_array($result2)) {
-            switch ($question['values']) {
-               case 'User' :
-                  $section_questions_user[$question['id']] = $question['name'];
-                  break;
-               case 'Group' :
-                  $section_questions_group[$question['id']] = $question['name'];
-                  break;
-               case 'Supplier' :
-                  $section_questions_supplier[$question['id']] = $question['name'];
-                  break;
+            if ($question['fieldtype'] == 'glpiselect') {
+               switch ($question['values']) {
+                  case 'User' :
+                     $section_questions_user[$question['id']] = $question['name'];
+                     break;
+                  case 'Group' :
+                     $section_questions_group[$question['id']] = $question['name'];
+                     break;
+                  case 'Supplier' :
+                     $section_questions_supplier[$question['id']] = $question['name'];
+                     break;
+               }
+            } else if ($question['fieldtype'] == 'actor') {
+               $section_questions_user[$question['id']] = $question['name'];
+               $section_questions_group[$question['id']] = $question['name'];
             }
          }
          $questions_user_list[$section['name']]     = $section_questions_user;
