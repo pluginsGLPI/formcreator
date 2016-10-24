@@ -618,7 +618,12 @@ class PluginFormcreatorForm extends CommonDBTM
                AGAINST('$keywords*' IN $searchMode)";
          $where_form .= " AND ($highWeightedMatch OR $lowWeightedMatch)";
       }
-      $query_forms = "SELECT $table_form.id, $table_form.name, $table_form.description, $table_form.usage_count
+      $query_forms = "SELECT
+         $table_form.id,
+         $table_form.name,
+         $table_form.description,
+         $table_form.usage_count,
+         $table_form.is_default
       FROM $table_form
       LEFT JOIN $table_cat ON ($table_cat.id = $table_form.`plugin_formcreator_categories_id`)
       LEFT JOIN $table_target ON ($table_target.`plugin_formcreator_forms_id` = $table_form.`id`)
@@ -633,7 +638,8 @@ class PluginFormcreatorForm extends CommonDBTM
                $table_form.id,
                $table_form.name,
                $table_form.description,
-               $table_form.usage_count
+               $table_form.usage_count,
+               $table_form.is_default
       HAVING COUNT(`$table_target`.`plugin_formcreator_forms_id`) > 0
       ORDER BY $order";
       $result_forms = $DB->query($query_forms);
@@ -647,7 +653,8 @@ class PluginFormcreatorForm extends CommonDBTM
                   'name'         => $form['name'],
                   'description'  => $formDescription,
                   'type'         => 'form',
-                  'usage_count'  => $form['usage_count']
+                  'usage_count'  => $form['usage_count'],
+                  'is_default'   => $form['is_default']?"true":"false"
             ];
          }
       }
@@ -673,7 +680,8 @@ class PluginFormcreatorForm extends CommonDBTM
                   'name'         => $faq['name'],
                   'description'  => '',
                   'type'         => 'faq',
-                  'usage_count'  => $faq['view']
+                  'usage_count'  => $faq['view'],
+                  'is_default'   => false
             ];
          }
       }
@@ -705,7 +713,8 @@ class PluginFormcreatorForm extends CommonDBTM
                      'name'         => $form['name'],
                      'description'  => $formDescription,
                      'type'         => 'form',
-                     'usage_count'  => $form['usage_count']
+                     'usage_count'  => $form['usage_count'],
+                     'is_default'   => true
                ];
             }
          }

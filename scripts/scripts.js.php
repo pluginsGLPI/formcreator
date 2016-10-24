@@ -33,6 +33,17 @@ jQuery(document).ready(function($) {
       }
    });
 
+   // toggle menu in desktop mode
+   $('#formcreator-toggle-nav-desktop').change(function() {
+      $('.plugin_formcreator_container').toggleClass('toggle_menu');
+      $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
+         data: {wizard: 'toggle_menu'},
+         type: "POST",
+         dataType: "json"
+      })
+   });
+
    serviceCatalogEnabled = $("#plugin_formcreator_serviceCatalog").length;
 
    // Prevent jQuery UI dialog from blocking focusin
@@ -164,8 +175,7 @@ function updateCategoriesView() {
 
       // Setup slinky
       $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
-         title: true,
-         label: '<?php echo __('Back', 'formcreator') ?>'
+         label: true
       });
       $('#plugin_formcreator_wizard_categories a.back').click(
          function() {
@@ -314,8 +324,13 @@ function buildTiles(list) {
                           +'</div>';
          }
 
+         var default_class = '';
+         if (JSON.parse(form.is_default)) {
+            default_class = 'default_form';
+         }
+
          items.push(
-            '<div class="plugin_formcreator_formTile '+form.type+'" title="'+form.description+'">'
+            '<div class="plugin_formcreator_formTile '+form.type+' '+default_class+'" title="'+form.description+'">'
             + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
             + form.name
             + '</a>'

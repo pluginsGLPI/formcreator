@@ -149,9 +149,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                case 'notclosed' :
                   $tocheck = $item->getAllStatusArray();
                   foreach ($item->getClosedStatusArray() as $status) {
-                     if (isset($tocheck[$status])) {
-                        unset($tocheck[$status]);
-                     }
+                     unset($tocheck[$status]);
                   }
                   $tocheck = array_keys($tocheck);
                   break;
@@ -164,15 +162,13 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                case 'notold' :
                   $tocheck = $item->getAllStatusArray();
                   foreach ($item->getSolvedStatusArray() as $status) {
-                     if (isset($tocheck[$status])) {
-                        unset($tocheck[$status]);
-                     }
+                     unset($tocheck[$status]);
                   }
                   foreach ($item->getClosedStatusArray() as $status) {
-                     if (isset($tocheck[$status])) {
-                        unset($tocheck[$status]);
-                     }
+                     unset($tocheck[$status]);
                   }
+                  unset($tocheck['refused']);
+
                   $tocheck = array_keys($tocheck);
                   break;
             }

@@ -31,7 +31,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // create view who merge tickets and formanswers
       $query = "CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS
 
-                   SELECT CONCAT(1,`fanswer`.`id`)      AS `id`,
+                   SELECT DISTINCT
+                          CONCAT(1,`fanswer`.`id`)      AS `id`,
                           `fanswer`.`id`                AS `original_id`,
                           'PluginFormcreatorFormanswer' AS `sub_itemtype`,
                           `f`.`name`                    AS `name`,
@@ -52,7 +53,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
                    UNION
 
-                   SELECT CONCAT(2,`tic`.`id`)          AS `id`,
+                   SELECT DISTINCT
+                          CONCAT(2,`tic`.`id`)          AS `id`,
                           `tic`.`id`                    AS `original_id`,
                           'Ticket'                      AS `sub_itemtype`,
                           `tic`.`name`                  AS `name`,
@@ -63,12 +65,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
                           0                             AS `is_recursive`,
                           `tic`.`users_id_recipient`    AS `requester_id`,
                           ''                            AS `validator_id`,
-                          ''                            AS `comment`
+                          `tic`.`content`               AS `comment`
                    FROM `glpi_tickets` AS `tic`
                    LEFT JOIN `glpi_items_tickets` AS `itic`
                       ON `itic`.`tickets_id` = `tic`.`id`
                       AND `itic`.`itemtype` = 'PluginFormcreatorFormanswer'
-                   WHERE ISNULL(`itic`.`items_id`)";
+                   WHERE ISNULL(`itic`.`items_id`)
+                     AND `tic`.`is_deleted` = 0";
       $DB->query($query) or die ($DB->error());
    }
 
@@ -194,6 +197,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'field'         => 'id',
             'name'          => __('ID'),
             'datatype'      => 'itemlink',
+            'forcegroupby'  => true,
             'massiveaction' => false,
          ),
          '3' => array(
@@ -245,7 +249,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'table'         => 'glpi_users',
             'field'         => 'name',
             'linkfield'     => 'validator_id',
-            'name'          => __('Approver'),
+            'name'          => __('Form approver'),
             'datatype'      => 'dropdown',
             'massiveaction' => false,
          ),
@@ -255,6 +259,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'name'          => __('Comment'),
             'datatype'      => 'string',
             'massiveaction' => false,
+         ),
+         '11' => array(
+            'table'         => 'glpi_users',
+            'field'         => 'name',
+            'linkfield'     => 'users_id_validate',
+            'name'          => __('Ticket approver'),
+            'datatype'      => 'dropdown',
+            'right'         => array('validate_request', 'validate_incident'),
+            'forcegroupby'  => false,
+            'massiveaction' => false,
+            'joinparams'    => array(
+               'beforejoin' => array(
+                  'table' => 'glpi_ticketvalidations',
+                  'joinparams' => array(
+                     'jointype'   => 'child',
+                     'linkfield'  => 'original_id')))
+
          ),
       );
    }
@@ -359,7 +380,96 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getAllStatusArray($withmetaforsearch=false) {
-      return Ticket::getAllStatusArray($withmetaforsearch);
+      $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
+      $form_status = array('waiting', 'accepted', 'refused');
+      $form_status = array_combine($form_status, $form_status);
+      $all_status = array_merge($ticket_status, $form_status);
+      return $all_status;
+   }
+
+   static function getTicketSummary($full = true) {
+      global $DB;
+
+      $table = self::getTable();
+      $can_group = Session::haveRight(Ticket::$rightname, Ticket::READGROUP)
+                     && isset($_SESSION["glpigroups"])
+                     && count($_SESSION["glpigroups"]);
+
+      // construct query
+      $query = "SELECT $table.status,
+                       COUNT(DISTINCT $table.id) AS COUNT
+                FROM $table
+                LEFT JOIN glpi_tickets_users
+                  ON $table.id = glpi_tickets_users.tickets_id
+                  AND glpi_tickets_users.type IN('".CommonITILActor::REQUESTER."',
+                                                 '".CommonITILActor::OBSERVER."')";
+      if ($can_group) {
+         $query .= "
+                LEFT JOIN glpi_groups_tickets
+                  ON $table.id = glpi_groups_tickets.tickets_id
+                  AND glpi_groups_tickets.type IN('".CommonITILActor::REQUESTER."',
+                                                  '".CommonITILActor::OBSERVER."')";
+      }
+      $query .= getEntitiesRestrictRequest(" WHERE", "$table");
+      $query .= " AND (
+                     glpi_tickets_users.users_id = '".Session::getLoginUserID()."'
+                     OR $table.requester_id = '".Session::getLoginUserID()."'";
+
+      if ($can_group) {
+         $groups = implode(",",$_SESSION['glpigroups']);
+         $query .= " OR glpi_groups_tickets.groups_id IN (".$groups.") ";
+      }
+      $query.= ")
+         GROUP BY status";
+
+
+      $status = array();
+      $status_labels = self::getAllStatusArray();
+      foreach ($status_labels as $key => $label) {
+         $status[$key] = 0;
+      }
+
+      $result = $DB->query($query);
+      if ($DB->numrows($result) > 0) {
+         while ($data = $DB->fetch_assoc($result)) {
+            $status[$data["status"]] = $data["COUNT"];
+         }
+      }
+
+      // retrieve also validation tickets
+      $status['to_validate'] = 0;
+      $query = "SELECT COUNT(DISTINCT $table.id) AS COUNT
+                FROM $table
+                INNER JOIN `glpi_tickets`
+                  ON $table.original_id = `glpi_tickets`.`ìd`
+                  AND `glpi_tickets`.`global_validation` = ".CommonITILValidation::WAITING."
+                INNER JOIN `glpi_ticketvalidations`
+                  ON `$table`.`id` = `glpi_ticketvalidations`.`tickets_id`
+                  AND `glpi_ticketvalidations`.`users_id_validate` = '".Session::getLoginUserID()."'
+                WHERE ".getEntitiesRestrictRequest(" WHERE", "$table");
+      if ($DB->numrows($result) > 0) {
+          while ($data = $DB->fetch_assoc($result)) {
+            $status['to_validate'] = $data["COUNT"];
+         }
+      }
+
+      if (!$full) {
+         $status[Ticket::INCOMING] = $status[Ticket::INCOMING]
+                                   + $status[Ticket::ASSIGNED]
+                                   + $status[Ticket::WAITING]
+                                   + $status[Ticket::PLANNED]
+                                   + $status['accepted']
+                                   + $status['waiting'];
+         $status[Ticket::SOLVED]  = $status[Ticket::SOLVED]
+                                  + $status[Ticket::CLOSED];
+
+         unset($status[Ticket::CLOSED],
+               $status[Ticket::PLANNED],
+               $status[Ticket::ASSIGNED]);
+      }
+
+
+      return $status;
    }
 
    /**
