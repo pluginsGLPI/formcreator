@@ -1457,6 +1457,11 @@ span.fc_list_icon {
       min-height: calc(100% - 100px);
    }
 
+   .toggle_menu #page.plugin_formcreator_page {
+      width: 100%;
+      margin-left: 0;
+   }
+
 
    .plugin_formcreator_page #formcreator_servicecatalogue {
       width: 100%;
