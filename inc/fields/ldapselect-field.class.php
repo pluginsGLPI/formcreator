@@ -53,7 +53,7 @@ class ldapselectField extends selectField
                   ldap_control_paged_result_response($ds, $result, $cookie);
                }
 
-           } while($cookie !== null && $cookie != '');
+            } while($cookie !== null && $cookie != '');
 
             asort($tab_values);
             return $tab_values;
