@@ -10,7 +10,7 @@ class Form_ValidatorTest extends SuperAdminTestCase {
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
-            'validation_required'   => 2
+            'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_GROUP
       );
 
       $this->formDataForUser = array(
@@ -19,7 +19,7 @@ class Form_ValidatorTest extends SuperAdminTestCase {
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
-            'validation_required'   => 1
+            'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_USER
       );
       $this->groupData = array(
             'entities_id'           => $_SESSION['glpiactive_entity'],

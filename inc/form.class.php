@@ -995,17 +995,18 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_validator = new PluginFormcreatorForm_Validator();
       $form_validator->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
 
-      if ( (($this->input['validation_required'] == 1) && (!empty($this->input['_validator_users'])))
-            || (($this->input['validation_required'] == 2) && (!empty($this->input['_validator_groups']))) ) {
+      if ($this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER
+          && !empty($this->input['_validator_users'])
+          || $this->input['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP
+          && !empty($this->input['_validator_groups'])) {
 
-         $validators = ($this->input['validation_required'] == 1)
-                        ? $this->input['_validator_users']
-                        : $this->input['_validator_groups'];
          switch ($this->input['validation_required']) {
-            case '1':
+            case PluginFormcreatorForm_Validator::VALIDATION_USER:
+               $validators = $this->input['_validator_users'];
                $validatorItemtype = 'User';
                break;
-            case '2':
+            case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
+               $validators = $this->input['_validator_groups'];
                $validatorItemtype = 'Group';
                break;
          }
@@ -1279,11 +1280,12 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       global $DB;
 
-      $section       = new PluginFormcreatorSection();
-      $question      = new PluginFormcreatorQuestion();
-      $target        = new PluginFormcreatorTarget();
-      $target_ticket = new PluginFormcreatorTargetTicket();
-      $tab_questions = array();
+      $section        = new PluginFormcreatorSection();
+      $question       = new PluginFormcreatorQuestion();
+      $target         = new PluginFormcreatorTarget();
+      $target_ticket  = new PluginFormcreatorTargetTicket();
+      $form_validator = new PluginFormcreatorForm_Validator();
+      $tab_questions  = array();
 
       // From datas
       $form_datas              = $this->fields;
@@ -1305,12 +1307,10 @@ class PluginFormcreatorForm extends CommonDBTM
       if (!$DB->query($query)) return false;
 
       // Form validators
-      $form_validator = new PluginFormcreatorForm_Validator();
       $rows = $form_validator->find("forms_id = $old_form_id");
       foreach($rows as $rowId => $row) {
          unset($row['id']);
          $row['plugin_formcreator_forms_id'] = $new_form_id;
-         $form_validator = new PluginFormcreatorForm_Validator();
          if (!$form_validator->add($row)) {
             return false;
          }

@@ -16,6 +16,9 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
    static public $items_id_2          = 'items_id';
    static public $checkItem_2_Rights  = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
+   const VALIDATION_USER  = 1;
+   const VALIDATION_GROUP = 2;
+
    public static function install(Migration $migration)
    {
       global $DB;
@@ -41,11 +44,11 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
          $query = "INSERT INTO `$table` (`plugin_formcreator_forms_id`, `itemtype`, `items_id`)
                SELECT
                   `$old_table`.`forms_id`,
-                  IF(`validation_required` = '1', 'User', 'Group'),
+                  IF(`validation_required` = '".self::VALIDATION_USER."', 'User', 'Group'),
                   `$old_table`.`users_id`
                FROM `$old_table`
                LEFT JOIN `$table_form` ON (`$table_form`.`id` = `$old_table`.`forms_id`)
-               WHERE `validation_required` = '1' OR `validation_required` = '2'";
+               WHERE `validation_required` > 1";
          $DB->query($query) or die ($DB->error());
          $migration->displayMessage('Backing up table glpi_plugin_formcreator_formvalidators');
          $migration->renameTable('glpi_plugin_formcreator_formvalidators', 'glpi_plugin_formcreator_formvalidators_backup');
