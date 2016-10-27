@@ -2,7 +2,7 @@
 class PluginFormcreatorAnswer extends CommonDBChild
 {
    static public $itemtype = "PluginFormcreatorFormanswer";
-   static public $items_id = "plugin_formcreator_formanwers_id";
+   static public $items_id = "plugin_formcreator_formanswers_id";
 
    /**
     * Check if current user have the right to create and modify requests
@@ -103,7 +103,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `plugin_formcreator_formanwers_id` int(11) NOT NULL,
+                     `plugin_formcreator_formanswers_id` int(11) NOT NULL,
                      `plugin_formcreator_question_id` int(11) NOT NULL,
                      `answer` text NOT NULL
                   )
@@ -130,6 +130,11 @@ class PluginFormcreatorAnswer extends CommonDBChild
                              WHERE `id` = ".$line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
+
+         /**
+          * Rename column with typo
+          */
+         $migration->changeField($table, 'plugin_formcreator_formanwers_id', 'plugin_formcreator_formanswers_id', 'integer');
       }
 
       return true;

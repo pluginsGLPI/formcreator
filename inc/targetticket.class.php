@@ -1115,7 +1115,7 @@ EOS;
             case 'question_group' :
             case 'question_supplier' :
                $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
-                                        ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
+                                        ' AND `plugin_formcreator_formanswers_id` = '.$formanswer->fields['id']);
                $found   = array_shift($found);
                if (empty($found['answer'])) {
                   continue;
@@ -1185,7 +1185,7 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                      ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1201,7 +1201,7 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1216,7 +1216,7 @@ EOS;
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+         $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                  ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
          $date   = array_shift($found);
       } else {
@@ -1243,7 +1243,7 @@ EOS;
       }
 
       // Define urgency
-      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+      $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
             ' AND plugin_formcreator_question_id = '.$this->fields['urgency_question']);
       $urgency = array_shift($found);
       switch ($this->fields['urgency_rule']) {
@@ -1277,7 +1277,7 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanwers_id` = " . $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1350,7 +1350,7 @@ EOS;
             case 'question_group' :
             case 'question_supplier' :
                $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
-                                        ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
+                                        ' AND `plugin_formcreator_formanswers_id` = '.$formanswer->fields['id']);
                $found   = array_shift($found);
 
                if (empty($found['answer'])) {
@@ -1458,7 +1458,7 @@ EOS;
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
                                ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
-                               AND `plugin_formcreator_formanwers_id` = ".$formanswer->getID()."
+                               AND `plugin_formcreator_formanswers_id` = ".$formanswer->getID()."
                              WHERE `questions`.`plugin_formcreator_sections_id` IN (".implode(', ', $tab_section).")
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
