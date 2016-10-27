@@ -29,7 +29,7 @@ class actorField extends PluginFormcreatorField
                            var items;
                            if (query.term.length > 0) {
                                $.ajax({
-                                 url: "' . $CFG_GLPI['url_base'] . '/ajax/getDropdownUsers.php",
+                                 url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
                                  data: {
                                     all: 0,
                                     right: "all",
@@ -38,7 +38,7 @@ class actorField extends PluginFormcreatorField
                                     page_limit: 20,
                                     page: query.page
                                  },
-                                 type: "GET",
+                                 type: "POST",
                                  dataType: "json"
                               }).done(function(response) { query.callback(response) });
                            } else {
