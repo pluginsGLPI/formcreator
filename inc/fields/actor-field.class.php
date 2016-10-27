@@ -2,6 +2,8 @@
 require_once ('dropdown-field.class.php');
 class actorField extends PluginFormcreatorField
 {
+   const IS_MULTIPLE    = true;
+
    public static function getName()
    {
       return _n('Actor', 'Actors', 1, 'formcreator');
@@ -16,7 +18,7 @@ class actorField extends PluginFormcreatorField
                   type="hidden"
                   name="formcreator_field_' . $this->fields['id'] . '"
                   id="actor_formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getAnswer() . '" />';
+                  value="" />';
          echo '<script type="text/javascript">
                   jQuery(document).ready(function() {
                      $("#actor_formcreator_field_' . $this->fields['id'] . '").select2({
