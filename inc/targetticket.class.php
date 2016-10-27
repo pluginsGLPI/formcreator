@@ -1092,7 +1092,7 @@ EOS;
       $solo_requester = false;
       $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
       $rows = $targetTicketActor->find("`plugin_formcreator_targettickets_id` = $targetTicketId
-            AND `actor_role` = 'requester'");
+                                        AND `actor_role` = 'requester'");
 
       // If there is only one requester add it on creation, otherwize we will add them later
       if (count($rows) == 1) {
@@ -1242,8 +1242,10 @@ EOS;
       }
 
       // Define urgency
-      $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$formanswer->fields['id'].
-            ' AND `plugin_formcreator_question_id` = '.$this->fields['urgency_question']);
+      $formAnswerId = $formanswer->fields['id'];
+      $urgencyQuestion = $this->fields['urgency_question'];
+      $found  = $answer->find("`plugin_formcreator_formanwers_id` = '$formAnswerId'
+                               AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
       $urgency = array_shift($found);
       switch ($this->fields['urgency_rule']) {
          case 'answer':
