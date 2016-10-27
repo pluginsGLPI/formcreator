@@ -1407,6 +1407,11 @@ EOS;
             if (!ctype_digit($uid) && !is_int($uid)) {
                $email = $uid;
                $uid = User::getOrImportByEmail($email);
+               if ($uid == 0) {
+                  $alternativeEmail = array('alternative_email' => $email);
+               } else {
+                  $alternativeEmail = array();
+               }
             }
             switch ($actor['actor_type']) {
                case 'creator' :
@@ -1420,7 +1425,7 @@ EOS;
                      'users_id'         => $uid,
                      'type'             => $role,
                      'use_notification' => $actor['use_notification'],
-                  ));
+                  ) + $alternativeEmail);
                   break;
                case 'group' :
                case 'question_group' :
