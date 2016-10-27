@@ -109,7 +109,7 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          if ($condition_fanwser == " 1=1") {
             $condition = $condition_fanwser;
          } else {
-            $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorFormanswer'
+            $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorForm_Answer'
                           AND ($condition_fanwser) OR ";
             $condition = Search::addDefaultWhere("Ticket");
             $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
@@ -117,7 +117,7 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          }
          break;
 
-      case "PluginFormcreatorFormanswer" :
+      case "PluginFormcreatorForm_Answer" :
          $condition = plugin_formcreator_getCondition($table);
          break;
    }
@@ -194,7 +194,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
 function plugin_formcreator_AssignToTicket($types)
 {
-   $types['PluginFormcreatorFormanswer'] = PluginFormcreatorFormanswer::getTypeName();
+   $types['PluginFormcreatorForm_Answer'] = PluginFormcreatorForm_Answer::getTypeName();
 
    return $types;
 }
@@ -207,6 +207,7 @@ function plugin_formcreator_MassiveActions($itemtype) {
          return array(
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
+            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
          );
    }
    return array();
@@ -226,4 +227,3 @@ function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
 
    return "";
 }
-

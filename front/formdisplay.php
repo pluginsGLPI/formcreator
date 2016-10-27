@@ -12,7 +12,7 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          Session::checkLoginUser();
       }
       if($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         $table = getTableForItemType('PluginFormcreatorFormprofiles');
+         $table = getTableForItemType('PluginFormcreatorForm_Profile');
          $query = "SELECT *
                    FROM $table
                    WHERE plugin_formcreator_profiles_id = {$_SESSION['glpiactiveprofile']['id']}

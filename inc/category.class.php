@@ -55,7 +55,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
       $cat_table  = getTableForItemType('PluginFormcreatorCategory');
       $form_table = getTableForItemType('PluginFormcreatorForm');
-      $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+      $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
       if ($helpdeskHome) {
          $helpdesk   ="AND $form_table.`helpdesk_home` = 1";
       } else {

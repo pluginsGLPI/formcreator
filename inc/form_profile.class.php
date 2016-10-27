@@ -1,6 +1,6 @@
 <?php
 
-class PluginFormcreatorFormprofiles extends CommonDBRelation
+class PluginFormcreatorForm_Profile extends CommonDBRelation
 {
    static public $itemtype_1 = 'PluginFormcreatorForm';
    static public $items_id_1 = 'plugin_formcreator_forms_id';
@@ -91,6 +91,11 @@ class PluginFormcreatorFormprofiles extends CommonDBRelation
       global $DB;
 
       $table = getTableForItemType(__CLASS__);
+
+      if (TableExists('glpi_plugin_formcreator_formprofiles')) {
+         $migration->renameTable('glpi_plugin_formcreator_formprofiles', $table);
+      }
+
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `plugin_formcreator_forms_id` INT NOT NULL ,

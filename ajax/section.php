@@ -33,6 +33,7 @@ echo '</tr>';
 echo '<tr class="line1">';
 echo '<td colspan="2" class="center">';
 echo '<input type="hidden" name="id" value="'.$section_id.'" />';
+echo '<input type="hidden" name="uuid" value="'.$section->fields['uuid'].'" />';
 echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($_REQUEST['form_id']).'" />';
 if(0 == $section_id) {
    echo '<input type="hidden" name="add" value="1" />';

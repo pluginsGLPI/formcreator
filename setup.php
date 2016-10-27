@@ -62,7 +62,7 @@ function plugin_formcreator_check_config($verbose=false)
  */
 function plugin_init_formcreator ()
 {
-   global $PLUGIN_HOOKS, $CFG_GLPI, $DB;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
@@ -74,8 +74,8 @@ function plugin_init_formcreator ()
 
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
-   array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorFormanswer');
-   array_push($CFG_GLPI["document_types"], 'PluginFormcreatorFormanswer');
+   array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorForm_Answer');
+   array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
@@ -100,23 +100,7 @@ function plugin_init_formcreator ()
       // Load menu entries if user is logged in and if he has access to at least one form
       if (isset($_SESSION['glpiID'])) {
          // If user have acces to one form or more, add link
-         $form_table = getTableForItemType('PluginFormcreatorForm');
-         $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
-         $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
-         $query      = "SELECT COUNT($form_table.id)
-                        FROM $form_table
-                        WHERE $form_table.`is_active` = 1
-                        AND $form_table.`is_deleted` = 0
-                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
-                             OR $form_table.`language` IN ('0', '', NULL))
-                        AND $where
-                        AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                           SELECT plugin_formcreator_forms_id
-                           FROM $table_fp
-                           WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
-         $result = $DB->query($query);
-         list($nb) = $DB->fetch_array($result);
-         if ($nb > 0) {
+         if (PluginFormcreatorForm::countAvailableForm() > 0) {
             $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
          }
 
@@ -177,7 +161,7 @@ function plugin_init_formcreator ()
       Plugin::registerClass('PluginFormcreatorFields');
 
       // Notification
-      Plugin::registerClass('PluginFormcreatorFormanswer', array(
+      Plugin::registerClass('PluginFormcreatorForm_Answer', array(
          'notificationtemplates_types' => true
       ));
 
@@ -193,6 +177,9 @@ function plugin_init_formcreator ()
  */
 function plugin_formcreator_encode($string, $mode_legacy=true)
 {
+   if (!is_string($string)) {
+      return $string;
+   }
    if (!$mode_legacy) {
       $string = Html::clean(Html::entity_decode_deep($string));
       $string = preg_replace('/\\r\\n/',' ',$string);
@@ -238,4 +225,50 @@ function plugin_formcreator_replaceHelpdesk() {
       }
    }
    return false;
+}
+
+
+/**
+ * Generate unique id for form based on server name, glpi directory and basetime
+ **/
+function plugin_formcreator_getUuid() {
+
+   //encode uname -a, ex Linux localhost 2.4.21-0.13mdk #1 Fri Mar 14 15:08:06 EST 2003 i686
+   $serverSubSha1 = substr(sha1(php_uname('a')), 0, 8);
+   // encode script current dir, ex : /var/www/glpi_X
+   $dirSubSha1    = substr(sha1(__FILE__), 0, 8);
+
+   return uniqid("$serverSubSha1-$dirSubSha1-", true);
+}
+
+/**
+ * Retrieve an item from the database
+ *
+ * @param $item instance of CommonDBTM object
+ * @param $field field of object's table to search in
+ * @param $value value to search in provided field
+ *
+ * @return true if succeed else false
+**/
+function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $value = "") {
+   global $DB;
+
+   // != 0 because 0 is consider as empty
+   if (!$item instanceof Entity
+       && (strlen($value) == 0
+           || $value === 0)) {
+      return false;
+   }
+
+   $field = $DB->escape($field);
+   $value = $DB->escape($value);
+
+   $found = $item->getFromDBByQuery("WHERE `".$item->getTable()."`.`$field` = '"
+                                    .$value."' LIMIT 1");
+
+   if ($found) {
+      return $item->getID();
+   } else {
+      return false;
+   }
 }

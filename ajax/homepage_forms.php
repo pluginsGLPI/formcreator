@@ -4,7 +4,7 @@ include ('../../../inc/includes.php');
 // Define tables
 $cat_table  = getTableForItemType('PluginFormcreatorCategory');
 $form_table = getTableForItemType('PluginFormcreatorForm');
-$table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+$table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
 $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
 
 // Show form whithout table

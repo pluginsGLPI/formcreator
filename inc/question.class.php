@@ -397,11 +397,20 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $input = $this->checkBeforeSave($input);
+      if (!isset($input['_skip_checks'])
+          || !$input['_skip_checks']) {
+         $input = $this->checkBeforeSave($input);
+      }
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
+      }
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
       }
 
       if (!empty($input)) {
@@ -429,14 +438,24 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $input = $this->checkBeforeSave($input);
+      if (!isset($input['_skip_checks'])
+          || !$input['_skip_checks']) {
+         $input = $this->checkBeforeSave($input);
+      }
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
       }
 
-      if (!empty($input)) {
+      if (!empty($input)
+          && isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
             // Reorder other questions from the old section
@@ -546,6 +565,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      `regex` varchar(255) NULL DEFAULT NULL,
                      `order` int(11) NOT NULL DEFAULT '0',
                      `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always',
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      PRIMARY KEY (`id`),
                      FULLTEXT INDEX `Search` (`description`, `name`)
                   )
@@ -561,7 +581,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
                     `show_field` int(11) DEFAULT NULL,
                     `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
                     `show_value` varchar(255) DEFAULT NULL,
-                    `show_logic` enum('AND','OR','XOR') DEFAULT NULL
+                    `show_logic` enum('AND','OR','XOR') DEFAULT NULL,
+                    `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -826,6 +847,33 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $query = "ALTER TABLE `$table` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
          $DB->query($query) or die ($DB->error());
 
+         // add uuid to questions
+         if (!FieldExists($table, 'uuid', false)) {
+            $migration->addField($table, 'uuid', 'string');
+            $migration->migrationOneTable($table);
+         }
+
+         // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
+         $all_questions = $obj->find("uuid IS NULL");
+         foreach($all_questions as $questions_id => $question) {
+            $obj->update(array('id'           => $questions_id,
+                               '_skip_checks' => true));
+         }
+
+         // add uuid to questions conditions
+         if (!FieldExists("glpi_plugin_formcreator_questions_conditions", 'uuid', false)) {
+            $migration->addField("glpi_plugin_formcreator_questions_conditions", 'uuid', 'string');
+            $migration->migrationOneTable("glpi_plugin_formcreator_questions_conditions");
+         }
+
+         // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
+         $condition_obj = new PluginFormcreatorQuestion_Condition;
+         $all_conditions = $condition_obj->find("uuid IS NULL");
+         foreach($all_conditions as $conditions_id => $condition) {
+            $condition_obj->update(array('id'   => $conditions_id,
+                                         'uuid' => plugin_formcreator_getUuid()));
+         }
+
       }
 
       return true;
@@ -847,5 +895,68 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
 
       return true;
+   }
+
+   /**
+    * Import a section's question into the db
+    * @see PluginFormcreatorSection::import
+    *
+    * @param  integer $sections_id  id of the parent section
+    * @param  array   $question the question data (match the question table)
+    * @return integer the question's id
+    */
+   public static function import($sections_id = 0, $question = array()) {
+      $item = new self;
+
+      $question['plugin_formcreator_sections_id'] = $sections_id;
+      $question['_skip_checks']                   = true;
+
+      if ($questions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $question['uuid'])) {
+         // add id key
+         $question['id'] = $questions_id;
+
+         // update question
+         $item->update($question);
+      } else {
+         //create question
+         $questions_id = $item->add($question);
+      }
+
+      if ($questions_id
+          && isset($question['_conditions'])) {
+         foreach($question['_conditions'] as $condition) {
+            PluginFormcreatorQuestion_Condition::import($questions_id, $condition);
+         }
+      }
+
+      return $questions_id;
+   }
+
+   /**
+    * Export in an array all the data of the current instanciated question
+    * @return array the array with all data (with sub tables)
+    */
+   public function export() {
+      if (!$this->getID()) {
+         return false;
+      }
+
+      $form_question_condition = new PluginFormcreatorQuestion_Condition;
+      $question                = $this->fields;
+
+      // remove key and fk
+      unset($question['id'],
+            $question['plugin_formcreator_sections_id']);
+
+      // get question conditions
+      $question['_conditions'] = [];
+      $all_conditions = $form_question_condition->find("plugin_formcreator_questions_id = ".$this->getID());
+      foreach($all_conditions as $conditions_id => $condition) {
+         if ($form_question_condition->getFromDB($conditions_id)) {
+            $question['_conditions'][] = $form_question_condition->export();
+         }
+      }
+
+      return $question;
    }
 }
