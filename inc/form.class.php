@@ -1159,7 +1159,7 @@ class PluginFormcreatorForm extends CommonDBTM
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                      `description` varchar(255) COLLATE utf8_unicode_ci,
                      `content` longtext COLLATE utf8_unicode_ci,
-                     `plugin_formcreator_categories_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+                     `plugin_formcreator_categories_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
                      `is_active` tinyint(1) NOT NULL DEFAULT '0',
                      `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
                      `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
@@ -1179,7 +1179,7 @@ class PluginFormcreatorForm extends CommonDBTM
       if (FieldExists($table, 'cat', false)
           || !FieldExists($table, 'plugin_formcreator_categories_id', false)) {
          $migration->addField($table, 'plugin_formcreator_categories_id',
-                              'tinyint(3) UNSIGNED NOT NULL', array('value' => '0'));
+                              'integer', array('value' => '0'));
       }
 
       // Migration from previous version
