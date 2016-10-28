@@ -1307,7 +1307,7 @@ class PluginFormcreatorForm extends CommonDBTM
       if (!$DB->query($query)) return false;
 
       // Form validators
-      $rows = $form_validator->find("forms_id = $old_form_id");
+      $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$old_form_id'");
       foreach($rows as $rowId => $row) {
          unset($row['id']);
          $row['plugin_formcreator_forms_id'] = $new_form_id;
