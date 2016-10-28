@@ -131,30 +131,34 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
          case 'question_supplier':
             $question = new PluginFormcreatorQuestion;
             $section = new PluginFormcreatorSection;
-            $question->getFromDB($target_actor['actor_value']);
-            $section->getFromDB($question->fields['plugin_formcreator_sections_id']);
-            $target_actor['_question'] = $section->fields['name'].
-                                         "##$$##".
-                                         $question->fields['name'];
-            unset($target_actor['actor_value']);
+            if ($question->getFromDB($target_actor['actor_value'])
+                && $section->getFromDB($question->fields['plugin_formcreator_sections_id'])) {
+               $target_actor['_question'] = $section->fields['name'].
+                                            "##$$##".
+                                            $question->fields['name'];
+               unset($target_actor['actor_value']);
+            }
             break;
          case 'person':
             $user = new User;
-            $user->getFromDB($target_actor['actor_value']);
-            $target_actor['_user'] = $user->fields['name'];
-            unset($target_actor['actor_value']);
+            if ($user->getFromDB($target_actor['actor_value'])) {
+               $target_actor['_user'] = $user->fields['name'];
+               unset($target_actor['actor_value']);
+            }
             break;
          case 'group':
             $group = new Group;
-            $group->getFromDB($target_actor['actor_value']);
-            $target_actor['_group'] = $group->fields['completename'];
-            unset($target_actor['actor_value']);
+            if ($group->getFromDB($target_actor['actor_value'])) {
+               $target_actor['_group'] = $group->fields['completename'];
+               unset($target_actor['actor_value']);
+            }
             break;
          case 'supplier':
             $supplier = new Supplier;
-            $supplier->getFromDB($target_actor['actor_value']);
-            $target_actor['_supplier'] = $supplier->fields['name'];
-            unset($target_actor['actor_value']);
+            if ($supplier->getFromDB($target_actor['actor_value'])) {
+               $target_actor['_supplier'] = $supplier->fields['name'];
+               unset($target_actor['actor_value']);
+            }
             break;
       }
 
