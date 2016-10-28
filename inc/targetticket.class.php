@@ -1088,16 +1088,15 @@ EOS;
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
       // Select ticket actors
+      $targetTicketId = $this->getID();
       $solo_requester = false;
-      $query_requester = "SELECT id, actor_type, actor_value, use_notification
-                          FROM glpi_plugin_formcreator_targettickets_actors
-                          WHERE plugin_formcreator_targettickets_id = ".$this->getID()."
-                          AND actor_role = 'requester'";
-      $result_requester = $DB->query($query_requester);
+      $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
+      $rows = $targetTicketActor->find("`plugin_formcreator_targettickets_id` = $targetTicketId
+                                        AND `actor_role` = 'requester'");
 
       // If there is only one requester add it on creation, otherwize we will add them later
-      if ($DB->numrows($result_requester) == 1) {
-         $actor = $DB->fetch_array($result_requester);
+      if (count($rows) == 1) {
+         $actor = array_shift($rows);
          $solo_requester = true;
          switch ($actor['actor_type']) {
             case 'creator' :
@@ -1216,8 +1215,8 @@ EOS;
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-                                 ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
+         $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$formanswer->fields['id'].
+                                 ' AND `plugin_formcreator_question_id` = '.$this->fields['due_date_question']);
          $date   = array_shift($found);
       } else {
          $date = null;
@@ -1243,8 +1242,10 @@ EOS;
       }
 
       // Define urgency
-      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-            ' AND plugin_formcreator_question_id = '.$this->fields['urgency_question']);
+      $formAnswerId = $formanswer->fields['id'];
+      $urgencyQuestion = $this->fields['urgency_question'];
+      $found  = $answer->find("`plugin_formcreator_formanwers_id` = '$formAnswerId'
+                               AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
       $urgency = array_shift($found);
       switch ($this->fields['urgency_rule']) {
          case 'answer':
@@ -1318,11 +1319,9 @@ EOS;
       ));
 
       // Add actors to ticket
-      $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
-                FROM glpi_plugin_formcreator_targettickets_actors
-                WHERE plugin_formcreator_targettickets_id = " . $this->getID();
-      $result = $DB->query($query);
-      while ($actor = $DB->fetch_array($result)) {
+      $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
+      $rows = $targetTicketActor->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
+      foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
          if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) continue;
 
