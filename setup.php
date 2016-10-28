@@ -263,7 +263,7 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $val
    $field = $DB->escape($field);
    $value = $DB->escape($value);
 
-   $found = $item->getFromDBByQuery("WHERE `".$item->getTable()."`.`$field` = '"
+   $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
                                     .$value."' LIMIT 1");
 
    if ($found) {
