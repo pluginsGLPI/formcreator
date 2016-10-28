@@ -81,7 +81,10 @@ print("Done\n");
 
 // Enable the plugin
 print("Activating Plugin...\n");
-$plugin->activate($plugin->fields['id']);
+if (!$plugin->activate($plugin->fields['id'])) {
+   print("Activation failed\n");
+   exit(1);
+}
 print("Activation Done\n");
 
 //Load the plugin

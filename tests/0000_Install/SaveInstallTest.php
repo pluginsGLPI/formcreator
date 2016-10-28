@@ -34,6 +34,11 @@ class SaveInstallTest extends CommonDBTestCase
       return FALSE;
    }
 
+   public function testPluginIsActive() {
+      $plugin = new Plugin();
+      $this->assertTrue($plugin->isActivated('formcreator'), "The plugin is not activated");
+   }
+
    public function testSaveInstallation() {
       global $DB;
       $DB = new DB();
