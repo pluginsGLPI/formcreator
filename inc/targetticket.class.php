@@ -1220,7 +1220,7 @@ EOS;
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$formanswer->fields['id'].
+         $found  = $answer->find('`plugin_formcreator_forms_anwers_id` = '.$formanswer->fields['id'].
                                  ' AND `plugin_formcreator_question_id` = '.$this->fields['due_date_question']);
          $date   = array_shift($found);
       } else {
