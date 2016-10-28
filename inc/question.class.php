@@ -285,7 +285,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
       if (isset($input['fieldtype'])) {
-         if ($input['fieldtype'] == 'dropdown') {
+         if ($input['fieldtype'] == 'dropdown'
+             && isset($input['dropdown_values'])) {
             if (empty($input['dropdown_values'])) {
                Session::addMessageAfterRedirect(
                   __('The field value is required:', 'formcreator') . ' ' . $input['name'],
@@ -298,7 +299,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
          // Fields are differents for GLPI object lists, so we need to replace these values into the good ones
-         if ($input['fieldtype'] == 'glpiselect') {
+         if ($input['fieldtype'] == 'glpiselect'
+             && isset($input['glpi_objects'])) {
             if (empty($input['glpi_objects'])) {
                Session::addMessageAfterRedirect(
                   __('The field value is required:', 'formcreator') . ' ' . $input['name'],
@@ -311,7 +313,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
          // A description field should have a description
-         if (($input['fieldtype'] == 'description') && empty($input['description'])) {
+         if ($input['fieldtype'] == 'description'
+             && isset($input['description'])
+             && empty($input['description'])) {
                Session::addMessageAfterRedirect(
                   __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
                   false,
@@ -320,7 +324,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
          // format values for numbers
-         if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
+         if (isset($input['range_min'])
+             && isset($input['range_max'])
+             && isset($input['default_values'])
+             && ($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
             $input['default_values'] = !empty($input['default_values'])
                                           ? (float) str_replace(',', '.', $input['default_values'])
                                           : null;
@@ -335,7 +342,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // LDAP fields validation
          if ($input['fieldtype'] == 'ldapselect') {
             // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-            if(!empty($input['ldap_auth'])) {
+            if(isset($input['ldap_auth'])
+               && !empty($input['ldap_auth'])) {
 
                $config_ldap = new AuthLDAP();
                $config_ldap->getFromDB($input['ldap_auth']);
