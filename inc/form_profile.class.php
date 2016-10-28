@@ -120,8 +120,9 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
          $DB->query("ALTER TABLE $table DROP PRIMARY KEY");
          $migration->addField($table, 'id', 'integer');
          $migration->addKey($table, 'id', 'id', 'PRIMARY KEY');
-         $migration->addKey($table, 'unicity', array('plugin_formcreator_forms_id',
-                                                     'profiles_id'),
+         $migration->addKey($table, array('plugin_formcreator_forms_id',
+                                          'profiles_id'),
+                            'unicity',
                             'UNIQUE KEY');
       }
 
