@@ -15,7 +15,7 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          $table = getTableForItemType('PluginFormcreatorForm_Profile');
          $query = "SELECT *
                    FROM $table
-                   WHERE plugin_formcreator_profiles_id = {$_SESSION['glpiactiveprofile']['id']}
+                   WHERE profiles_id = {$_SESSION['glpiactiveprofile']['id']}
                    AND plugin_formcreator_forms_id = {$form->fields['id']}";
          $result = $DB->query($query);
 

@@ -634,7 +634,7 @@ class PluginFormcreatorForm extends CommonDBTM
       AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $table_form.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
-         WHERE `plugin_formcreator_profiles_id` = ".$_SESSION['glpiactiveprofile']['id']."))
+         WHERE `profiles_id` = ".$_SESSION['glpiactiveprofile']['id']."))
       GROUP BY `$table_target`.`plugin_formcreator_forms_id`,
                $table_form.id,
                $table_form.name,
@@ -702,7 +702,7 @@ class PluginFormcreatorForm extends CommonDBTM
          AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $table_form.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
-         WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
+         WHERE profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
          ORDER BY $order";
          $result_forms = $DB->query($query_forms);
 
@@ -1321,8 +1321,8 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Form profiles
       $query = "INSERT INTO glpi_plugin_formcreator_formprofiles
-                (plugin_formcreator_forms_id, plugin_formcreator_profiles_id)
-                (SELECT $new_form_id, plugin_formcreator_profiles_id
+                (plugin_formcreator_forms_id, profiles_id)
+                (SELECT $new_form_id, profiles_id
                   FROM glpi_plugin_formcreator_formprofiles
                   WHERE plugin_formcreator_forms_id = $old_form_id)";
       if (!$DB->query($query)) return false;
@@ -1569,7 +1569,7 @@ class PluginFormcreatorForm extends CommonDBTM
                         AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                            SELECT plugin_formcreator_forms_id
                            FROM $table_fp
-                           WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
+                           WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
          if ($result = $DB->query($query)) {
             list($nb) = $DB->fetch_array($result);
          }
@@ -1637,10 +1637,10 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // get profiles
       $form['_profiles'] = [];
-      $all_target = $form_target->find("plugin_formcreator_forms_id = ".$this->getID());
-      foreach($all_target as $targets_id => $target) {
-         $form_target->getFromDB($targets_id);
-         $form['_targets'][] = $form_target->export();
+      $all_profiles = $form_profile->find("plugin_formcreator_forms_id = ".$this->getID());
+      foreach($all_profiles as $profiles_id => $profile) {
+         $form_profile->getFromDB($profiles_id);
+         $form['_profiles'][] = $form_profile->export();
       }
 
       return $form;
@@ -1724,7 +1724,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // retrieve foreign keys
       if (!isset($form['_entity'])
-          || !$form['   entities_id']
+          || !$form['entities_id']
                   = plugin_formcreator_getFromDBByField($entity,
                                                         'completename',
                                                         $form['_entity'])) {

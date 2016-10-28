@@ -79,7 +79,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
          SELECT plugin_formcreator_forms_id
          FROM $table_fp
-         WHERE plugin_formcreator_profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
+         WHERE profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
       ) > 0
       OR (SELECT COUNT(*)
          FROM `$cat_table` AS `cat2`
