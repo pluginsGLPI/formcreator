@@ -22,7 +22,7 @@ if (isset($args)) {
    if (!is_null($args['--as-user'])) {
       $asUser = $args['--as-user'];
    }
-   if (isset($args['--tests'])) {
+   if (isset($args['--tests']) &&  $args['--tests'] !== false) {
       // Use test GLPi's database
       // Requires use of cliinstall of GLPI with --tests argument
       define('GLPI_ROOT', dirname(dirname(dirname(__DIR__))));
