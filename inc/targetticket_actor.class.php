@@ -60,6 +60,42 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
 
       $actor['plugin_formcreator_targettickets_id'] = $targettickets_id;
 
+      // retrieve FK
+      if (isset($actor['_question'])) {
+         $section = new PluginFormcreatorSection;
+         $question = new PluginFormcreatorQuestion;
+         $exploded = explode('##$$##', $actor['_question']);
+
+         if (plugin_formcreator_getFromDBByField($section, 'name', $exploded[0])
+             && $questions_id = plugin_formcreator_getFromDBByField($question, 'name', $exploded[1])) {
+            $actor['actor_value'] = $questions_id;
+         } else{
+            return false;
+         }
+
+      } else if (isset($actor['_user'])) {
+         $user = new User;
+         if ($users_id = plugin_formcreator_getFromDBByField($user, 'name', $actor['_user'])) {
+            $actor['actor_value'] = $users_id;
+         } else {
+            return false;
+         }
+      } else if (isset($actor['_group'])) {
+         $group = new Group;
+         if ($groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $actor['_user'])) {
+            $actor['actor_value'] = $groups_id;
+         } else {
+            return false;
+         }
+      } else if (isset($actor['_supplier'])) {
+         $supplier = new Supplier;
+         if ($suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $actor['_user'])) {
+            $actor['actor_value'] = $suppliers_id;
+         } else {
+            return false;
+         }
+      }
+
       if ($actors_id = plugin_formcreator_getFromDBByField($item, 'uuid', $actor['uuid'])) {
          // add id key
          $actor['id'] = $actors_id;
@@ -87,6 +123,40 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
 
       unset($target_actor['id'],
             $target_actor['plugin_formcreator_targettickets_id']);
+
+      // export FK
+      switch ($target_actor['actor_type']) {
+         case 'question_person':
+         case 'question_group':
+         case 'question_supplier':
+            $question = new PluginFormcreatorQuestion;
+            $section = new PluginFormcreatorSection;
+            $question->getFromDB($target_actor['actor_value']);
+            $section->getFromDB($question->fields['plugin_formcreator_sections_id']);
+            $target_actor['_question'] = $section->fields['name'].
+                                         "##$$##".
+                                         $question->fields['name'];
+            unset($target_actor['actor_value']);
+            break;
+         case 'person':
+            $user = new User;
+            $user->getFromDB($target_actor['actor_value']);
+            $target_actor['_user'] = $user->fields['name'];
+            unset($target_actor['actor_value']);
+            break;
+         case 'group':
+            $group = new Group;
+            $group->getFromDB($target_actor['actor_value']);
+            $target_actor['_group'] = $group->fields['completename'];
+            unset($target_actor['actor_value']);
+            break;
+         case 'supplier':
+            $supplier = new Supplier;
+            $supplier->getFromDB($target_actor['actor_value']);
+            $target_actor['_supplier'] = $supplier->fields['name'];
+            unset($target_actor['actor_value']);
+            break;
+      }
 
       return $target_actor;
    }

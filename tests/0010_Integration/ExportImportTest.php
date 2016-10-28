@@ -281,7 +281,10 @@ class ExportImporTest extends SuperAdminTestCase {
       $this->assertArrayNotHasKey('plugin_formcreator_targettickets_id', $actor);
       $this->assertArrayHasKey('actor_role', $actor);
       $this->assertArrayHasKey('actor_type', $actor);
-      $this->assertArrayHasKey('actor_value', $actor);
+      //we should have only one of theses keys : actor_value ,_question ,_user ,_group ,_supplier
+      $actor_value_found_keys = preg_grep('/((actor_value)|(_question)|(_user)|(_group)|(_supplier))/',
+                                          array_keys($actor));
+      $this->assertCount(1, $actor_value_found_keys);
       $this->assertArrayHasKey('use_notification', $actor);
       $this->assertArrayHasKey('uuid', $actor);
    }
