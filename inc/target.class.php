@@ -113,17 +113,40 @@ class PluginFormcreatorTarget extends CommonDBTM
       }
 
       // Control fields values :
-      if (!isset($input['_skip_checks'])
-          || !$input['_skip_checks']) {
-         // - name is required
-         if(empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
-         }
-         // - field type is required
-         if(empty($input['itemtype'])) {
+      // - name is required
+      if(isset($input['name'])
+         && empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+         return array();
+      }
+      // - field type is required
+      if(isset($input['itemtype'])) {
+         if (empty($input['itemtype'])) {
             Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
             return array();
+         }
+
+         switch ($input['itemtype']) {
+            case 'PluginFormcreatorTargetTicket':
+               $targetticket      = new PluginFormcreatorTargetTicket();
+               $id_targetticket   = $targetticket->add(array(
+                  'name'    => $input['name'],
+                  'comment' => '##FULLFORM##'
+               ));
+               $input['items_id'] = $id_targetticket;
+
+               if (!isset($input['_skip_create_actors'])
+                   || !$input['_skip_create_actors']) {
+                  $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
+                            (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`)
+                            VALUES (
+                               $id_targetticket, 'requester', 'creator', 1
+                            ), (
+                               $id_targetticket, 'observer', 'validator', 1
+                            );";
+                  $DB->query($query);
+               }
+               break;
          }
       }
 
@@ -131,29 +154,6 @@ class PluginFormcreatorTarget extends CommonDBTM
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
-      }
-
-      switch ($input['itemtype']) {
-         case 'PluginFormcreatorTargetTicket':
-            $targetticket      = new PluginFormcreatorTargetTicket();
-            $id_targetticket   = $targetticket->add(array(
-               'name'    => $input['name'],
-               'comment' => '##FULLFORM##'
-            ));
-            $input['items_id'] = $id_targetticket;
-
-            if (!isset($input['_skip_create_actors'])
-                || !$input['_skip_create_actors']) {
-               $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
-                         (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`)
-                         VALUES (
-                            $id_targetticket, 'requester', 'creator', 1
-                         ), (
-                            $id_targetticket, 'observer', 'validator', 1
-                         );";
-               $DB->query($query);
-            }
-            break;
       }
 
       return $input;
@@ -350,8 +350,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          // fill missing uuid (force update of targets, see self::prepareInputForUpdate)
          $all_targets = $obj->find("uuid IS NULL");
          foreach($all_targets as $targets_id => $target) {
-            $obj->update(array('id'           => $targets_id,
-                               '_skip_checks' => true));
+            $obj->update(array('id' => $targets_id));
          }
       }
 

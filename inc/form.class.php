@@ -935,13 +935,11 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Control fields values :
-      if (!isset($input['_skip_checks'])
-          || !$input['_skip_checks']) {
-         // - name is required
-         if(empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
-         }
+      // - name is required
+      if(isset($input['name'])
+         && empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+         return array();
       }
 
       return $input;
@@ -1264,8 +1262,7 @@ class PluginFormcreatorForm extends CommonDBTM
       // fill missing uuid (force update of forms, see self::prepareInputForUpdate)
       $all_forms = $obj->find("uuid IS NULL");
       foreach($all_forms as $forms_id => $form) {
-         $obj->update(array('id'           => $forms_id,
-                            '_skip_checks' => true));
+         $obj->update(array('id' => $forms_id));
       }
 
       return true;

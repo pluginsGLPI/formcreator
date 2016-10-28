@@ -129,8 +129,7 @@ class PluginFormcreatorSection extends CommonDBChild
       // fill missing uuid (force update of sections, see self::prepareInputForUpdate)
       $all_sections = $obj->find("uuid IS NULL");
       foreach($all_sections as $sections_id => $section) {
-         $obj->update(array('id'   => $sections_id,
-                            '_skip_checks' => true));
+         $obj->update(array('id' => $sections_id));
       }
 
       return true;
@@ -173,9 +172,8 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Control fields values :
       // - name is required
-      if(empty($input['name'])
-         && (!isset($input['_skip_checks'])
-             || !$input['_skip_checks'])) {
+      if(isset($input['name'])
+         && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
          return array();
       }

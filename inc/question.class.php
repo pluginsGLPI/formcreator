@@ -252,26 +252,30 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       // Control fields values :
       // - name is required
-      if (empty($input['name'])) {
+      if (isset($input['name'])
+          && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
       }
 
       // - field type is required
-      if (empty($input['fieldtype'])) {
+      if (isset($input['fieldtype'])
+          && empty($input['fieldtype'])) {
          Session::addMessageAfterRedirect(__('The field type is required', 'formcreator'), false, ERROR);
          return array();
       }
 
       // - section is required
-      if (empty($input['plugin_formcreator_sections_id'])) {
+      if (isset($input['plugin_formcreator_sections_id'])
+          && empty($input['plugin_formcreator_sections_id'])) {
          Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
          return array();
       }
 
       // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
       $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
-      if (empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
+      if (isset($input['values'])
+          && empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
          Session::addMessageAfterRedirect(
             __('The field value is required:', 'formcreator') . ' ' . $input['name'],
             false,
@@ -280,100 +284,103 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-      if ($input['fieldtype'] == 'dropdown') {
-         if (empty($input['dropdown_values'])) {
-            Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
-            return array();
-         }
-         $input['values']         = $input['dropdown_values'];
-         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
-      }
-
-      // Fields are differents for GLPI object lists, so we need to replace these values into the good ones
-      if ($input['fieldtype'] == 'glpiselect') {
-         if (empty($input['glpi_objects'])) {
-            Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
-            return array();
-         }
-         $input['values']         = $input['glpi_objects'];
-         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
-      }
-
-      // A description field should have a description
-      if (($input['fieldtype'] == 'description') && empty($input['description'])) {
-            Session::addMessageAfterRedirect(
-               __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
-            return array();
-      }
-
-      // format values for numbers
-      if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
-         $input['default_values'] = !empty($input['default_values'])
-                                       ? (float) str_replace(',', '.', $input['default_values'])
-                                       : null;
-         $input['range_min']      = !empty($input['range_min'])
-                                       ? (float) str_replace(',', '.', $input['range_min'])
-                                       : null;
-         $input['range_max']      = !empty($input['range_max'])
-                                       ? (float) str_replace(',', '.', $input['range_max'])
-                                       : null;
-      }
-
-      // LDAP fields validation
-      if ($input['fieldtype'] == 'ldapselect') {
-         // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-         if(!empty($input['ldap_auth'])) {
-
-            $config_ldap = new AuthLDAP();
-            $config_ldap->getFromDB($input['ldap_auth']);
-
-            if (!empty($input['ldap_attribute'])) {
-               $ldap_dropdown = new RuleRightParameter();
-               $ldap_dropdown->getFromDB($input['ldap_attribute']);
-               $attribute     = array($ldap_dropdown->fields['value']);
-            } else {
-               $attribute     = array();
+      if (isset($input['fieldtype'])) {
+         if ($input['fieldtype'] == 'dropdown') {
+            if (empty($input['dropdown_values'])) {
+               Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+               return array();
             }
+            $input['values']         = $input['dropdown_values'];
+            $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+         }
 
-            // Set specific error handler to catch LDAP errors
-            if (!function_exists('warning_handler')) {
-               function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
-                  if (0 === error_reporting()) return false;
-                  throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+         // Fields are differents for GLPI object lists, so we need to replace these values into the good ones
+         if ($input['fieldtype'] == 'glpiselect') {
+            if (empty($input['glpi_objects'])) {
+               Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+               return array();
+            }
+            $input['values']         = $input['glpi_objects'];
+            $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+         }
+
+         // A description field should have a description
+         if (($input['fieldtype'] == 'description') && empty($input['description'])) {
+               Session::addMessageAfterRedirect(
+                  __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+               return array();
+         }
+
+         // format values for numbers
+         if (($input['fieldtype'] == 'integer') || ($input['fieldtype'] == 'float')) {
+            $input['default_values'] = !empty($input['default_values'])
+                                          ? (float) str_replace(',', '.', $input['default_values'])
+                                          : null;
+            $input['range_min']      = !empty($input['range_min'])
+                                          ? (float) str_replace(',', '.', $input['range_min'])
+                                          : null;
+            $input['range_max']      = !empty($input['range_max'])
+                                          ? (float) str_replace(',', '.', $input['range_max'])
+                                          : null;
+         }
+
+         // LDAP fields validation
+         if ($input['fieldtype'] == 'ldapselect') {
+            // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+            if(!empty($input['ldap_auth'])) {
+
+               $config_ldap = new AuthLDAP();
+               $config_ldap->getFromDB($input['ldap_auth']);
+
+               if (!empty($input['ldap_attribute'])) {
+                  $ldap_dropdown = new RuleRightParameter();
+                  $ldap_dropdown->getFromDB($input['ldap_attribute']);
+                  $attribute     = array($ldap_dropdown->fields['value']);
+               } else {
+                  $attribute     = array();
                }
+
+               // Set specific error handler to catch LDAP errors
+               if (!function_exists('warning_handler')) {
+                  function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+                     if (0 === error_reporting()) return false;
+                     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+                  }
+               }
+               set_error_handler("warning_handler", E_WARNING);
+
+               try {
+                  $ds            = $config_ldap->connect();
+                  ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+                  ldap_control_paged_result($ds, 1);
+                  $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
+                  $entries       = ldap_get_entries($ds, $sn);
+               } catch(Exception $e) {
+                  Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
+               }
+
+               restore_error_handler();
+
+               $input['values'] = json_encode(array(
+                  'ldap_auth'      => $input['ldap_auth'],
+                  'ldap_filter'    => $input['ldap_filter'],
+                  'ldap_attribute' => strtolower($input['ldap_attribute']),
+               ));
             }
-            set_error_handler("warning_handler", E_WARNING);
-
-            try {
-               $ds            = $config_ldap->connect();
-               ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-               ldap_control_paged_result($ds, 1);
-               $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-               $entries       = ldap_get_entries($ds, $sn);
-            } catch(Exception $e) {
-               Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
-            }
-
-            restore_error_handler();
-
-            $input['values'] = json_encode(array(
-               'ldap_auth'      => $input['ldap_auth'],
-               'ldap_filter'    => $input['ldap_filter'],
-               'ldap_attribute' => strtolower($input['ldap_attribute']),
-            ));
          }
       }
 
       // Add leading and trailing regex marker automaticaly
-      if (!empty($input['regex'])) {
+      if (isset($input['regex'])
+          && !empty($input['regex'])) {
          if (substr($input['regex'], 0, 1)  != '/')
             if (substr($input['regex'], 0, 1)  != '^')   $input['regex'] = '/^' . $input['regex'];
             else                                         $input['regex'] = '/' . $input['regex'];
@@ -397,10 +404,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      if (!isset($input['_skip_checks'])
-          || !$input['_skip_checks']) {
-         $input = $this->checkBeforeSave($input);
-      }
+      $input = $this->checkBeforeSave($input);
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
@@ -856,8 +860,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
          $all_questions = $obj->find("uuid IS NULL");
          foreach($all_questions as $questions_id => $question) {
-            $obj->update(array('id'           => $questions_id,
-                               '_skip_checks' => true));
+            $obj->update(array('id' => $questions_id));
          }
 
          // add uuid to questions conditions
