@@ -101,7 +101,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` INT(11) NOT NULL AUTO_INCREMENT,
                      `plugin_formcreator_forms_id` INT(11) NOT NULL ,
-                     `profiles_id` INT(11) NOT NULL ,,
+                     `profiles_id` INT(11) NOT NULL,
                      `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      PRIMARY KEY (`id`),
                      UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,
