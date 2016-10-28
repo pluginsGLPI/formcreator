@@ -201,7 +201,8 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       }
 
       // remove fk
-      unset($form_profile['profiles_id'],
+      unset($form_profile['id'],
+            $form_profile['profiles_id'],
             $form_profile['plugin_formcreator_forms_id']);
 
       return $form_profile;
