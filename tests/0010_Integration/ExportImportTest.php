@@ -10,6 +10,7 @@ class ExportImporTest extends SuperAdminTestCase {
       $form_condition = new PluginFormcreatorQuestion_Condition;
       $form_validator = new PluginFormcreatorForm_Validator;
       $form_target    = new PluginFormcreatorTarget;
+      $form_profile   = new PluginFormcreatorForm_Profile;
 
       // create objects
       $forms_id = $form->add(array('name'                => "test export form",
@@ -43,6 +44,9 @@ class ExportImporTest extends SuperAdminTestCase {
                                             'name'                        => "test export target"));
       $form_target->getFromDB($targets_id);
       $targettickets_id = $form_target->fields['items_id'];
+
+      $form_profiles_id = $form_profile->add(array('plugin_formcreator_forms_id' => $forms_id,
+                                                   'profiles_id' => 1));
    }
 
    /**
@@ -73,6 +77,7 @@ class ExportImporTest extends SuperAdminTestCase {
       $this->assertArrayHasKey('_sections', $export);
       $this->assertArrayHasKey('_validators', $export);
       $this->assertArrayHasKey('_targets', $export);
+      $this->assertArrayHasKey('_profiles', $export);
 
       foreach($export["_sections"] as $section) {
          $this->_checkSection($section);
@@ -84,6 +89,10 @@ class ExportImporTest extends SuperAdminTestCase {
 
       foreach($export["_targets"] as $target) {
          $this->_checkTarget($target);
+      }
+
+      foreach($export["_profiles"] as $form_profile) {
+         $this->_checkFormProfile($form_profile);
       }
 
       return $export;
@@ -287,5 +296,13 @@ class ExportImporTest extends SuperAdminTestCase {
       $this->assertCount(1, $actor_value_found_keys);
       $this->assertArrayHasKey('use_notification', $actor);
       $this->assertArrayHasKey('uuid', $actor);
+   }
+
+   public function _checkFormProfile($form_profile = array()) {
+      $this->assertArrayNotHasKey('id', $form_profile);
+      $this->assertArrayNotHasKey('plugin_formcreator_forms_id', $form_profile);
+      $this->assertArrayNotHasKey('profiles_id', $form_profile);
+      $this->assertArrayHasKey('_profile', $form_profile);
+      $this->assertArrayHasKey('uuid', $form_profile);
    }
 }
