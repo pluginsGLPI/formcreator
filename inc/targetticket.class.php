@@ -1152,6 +1152,12 @@ EOS;
          $requesters_id = $formanswer->fields['requester_id'];
       }
 
+      $requesters_id = $formanswer->fields['requester_id'];
+      if ($datas['_users_id_requester']) {
+         $requesters_id = $datas['_users_id_requester'];
+      }
+
+
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
