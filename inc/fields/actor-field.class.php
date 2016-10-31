@@ -62,11 +62,14 @@ class actorField extends PluginFormcreatorField
 
    public function isValid($value)
    {
-      $value = json_decode($value);
-      if (is_null($value)) $value = array();
+      $valueToTrim = explode(',', $value);
+      $value = array();
+      foreach ($valueToTrim as $item) {
+         $value[] = trim($item);
+      }
 
       // If the field is required it can't be empty
-      if ($this->isRequired() && empty($value)) {
+      if ($this->isRequired() && count($value) == 0) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
          return false;
       }
@@ -74,12 +77,12 @@ class actorField extends PluginFormcreatorField
       // Distinguish IDs and emails
       $unknownUsers = array();
       $idToCheck = array();
-      foreach($value as $id => $label) {
-         if (ctype_digit($id) || is_int($id)) {
+      foreach($value as $label) {
+         if (ctype_digit($label) || is_int($label)) {
             // this is the ID of an existing user. Check it belongs to a reachable user
-            $idToCheck[] = $id;
-         } else {
-            $email = filter_var($id, FILTER_VALIDATE_EMAIL);
+            $idToCheck[] = $label;
+         } else if (!empty($label)) {
+            $email = filter_var($label, FILTER_VALIDATE_EMAIL);
             if ($email === false) {
                // Email not validated
                return false;
@@ -89,11 +92,13 @@ class actorField extends PluginFormcreatorField
       }
 
       // Check all IDs exist
-      $user = new User();
-      $rows = $user->find("`id` IN (" . implode(', ', $idToCheck). ")");
-      if (count($rows) != count($idToCheck)) {
-         //at least one ID is not valid
-         return false;
+      if (count($idToCheck) > 0) {
+         $user = new User();
+         $rows = $user->find("`id` IN (" . implode(', ', $idToCheck). ")");
+         if (count($rows) != count($idToCheck)) {
+            //at least one ID is not valid
+            return false;
+         }
       }
 
       // Unknown users are valid email addresses. These emails will be imported if necessary when creatong a ticket
