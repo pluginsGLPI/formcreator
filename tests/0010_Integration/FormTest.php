@@ -1,6 +1,8 @@
 <?php
 class FormTest extends SuperAdminTestCase {
 
+   protected $formData;
+
    public function setUp() {
       parent::setUp();
 
@@ -14,7 +16,7 @@ class FormTest extends SuperAdminTestCase {
       );
    }
 
-   public function testCrerateForm() {
+   public function testCreateForm() {
       $form = new PluginFormcreatorForm();
       $formId = $form->add($this->formData);
       $this->assertFalse($form->isNewItem());
@@ -23,10 +25,10 @@ class FormTest extends SuperAdminTestCase {
    }
 
    /**
-    * @depends testCrerateForm
+    * @depends testCreateForm
     * @param PluginFormCreatorForm $form
     */
-   public function testUpdateForm($form) {
+   public function testUpdateForm(PluginFormcreatorForm $form) {
       $success = $form->update(array(
             'id'                    => $form->getID(),
             'name'                  => 'an updated form',
@@ -41,7 +43,7 @@ class FormTest extends SuperAdminTestCase {
     * @depends testUpdateForm
     * @param PluginFormCreatorForm $form
     */
-   public function testPurgeForm($form) {
+   public function testPurgeForm(PluginFormcreatorForm $form) {
       $success = $form->delete(array(
             'id'              => $form->getID(),
       ), 1);

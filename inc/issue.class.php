@@ -84,11 +84,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorFormanswer'))) {
          html::displayRightError();
       }
-      //if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
+      if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
          $this->displaySimplified($options);
-      //} else {
-         //$this->displayExtended($options);
-      //}
+      } else {
+         $this->displayExtended($options);
+      }
    }
 
    public function displayExtended($options = array()) {
