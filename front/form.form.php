@@ -13,7 +13,7 @@ if ($plugin->isActivated("formcreator")) {
 
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
-   // Edit an existinf form
+   // Edit an existing form
    } elseif(isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
       $form->update($_POST);
