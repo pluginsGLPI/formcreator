@@ -9,30 +9,6 @@ class actorField extends PluginFormcreatorField
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function show($canEdit = true)
-   {
-      $required = ($canEdit && $this->fields['required']) ? ' required' : '';
-
-      echo '<div class="form-group ' . $required . '" id="form-group-field' . $this->fields['id'] . '">';
-      echo '<label for="formcreator_field_' . $this->fields['id'] . '">';
-      echo $this->getLabel();
-      if($canEdit && $this->fields['required']) {
-         echo ' <span class="red">*</span>';
-      }
-      echo '</label>';
-
-      echo '<div class="form_field">';
-      $this->displayField($canEdit);
-      echo '</div>';
-
-      echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
-      echo '</div>';
-      $value = implode(',', (array_keys($this->getAnswer())));
-      // $value = json_encode($this->getAnswer());
-      echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-            . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");</script>';
-   }
-
    public function displayField($canEdit = true)
    {
       global $CFG_GLPI;
@@ -95,7 +71,7 @@ class actorField extends PluginFormcreatorField
             </script>';
    }
 
-   public function serializeDefaultValue($value) {
+   public function serializeValue($value) {
       $serialized = array();
       $value = explode("\r\n", $value);
       foreach ($value as $item) {
@@ -112,12 +88,12 @@ class actorField extends PluginFormcreatorField
          }
       }
 
-      return json_encode(array_keys($serialized));
+      return implode(',', (array_keys($serialized)));
    }
 
-   public function deserializeDefaultValue($value) {
+   public function deserializeValue($value) {
       $deserialized  = array();
-      $serialized = json_decode($value);
+      $serialized = explode(',',$value);
       if ($serialized !== null) {
          foreach ($serialized as $item) {
             $item = trim($item);
@@ -138,23 +114,21 @@ class actorField extends PluginFormcreatorField
    }
 
    protected function sanitizeValue($value) {
-      $answerValue = json_decode($value, JSON_UNESCAPED_SLASHES);
+      $answerValue = explode(',',$value);
 
       $unknownUsers = array();
       $knownUsers = array();
       $idToCheck = array();
-      if ($answerValue !== null) {
-         foreach($answerValue as $item) {
-            $item = trim($item);
-            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-               $unknownUsers[$item] = $item;
-            } else if (!empty($item) && ctype_digit($item) && intval($item)) {
-               $user = new User();
-               $user->getFromDB($item);
-               if (!$user->isNewItem()) {
-                  // A user known in the DB
-                  $knownUsers[$user->getID()] = $user->getField('name');
-               }
+      foreach($answerValue as $item) {
+         $item = trim($item);
+         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+            $unknownUsers[$item] = $item;
+         } else if (!empty($item) && ctype_digit($item) && intval($item)) {
+            $user = new User();
+            $user->getFromDB($item);
+            if (!$user->isNewItem()) {
+               // A user known in the DB
+               $knownUsers[$user->getID()] = $user->getField('name');
             }
          }
       }
@@ -163,9 +137,10 @@ class actorField extends PluginFormcreatorField
 
    public function isValid($value)
    {
-      $sanitized = $this->sanitizeValue($value);
+      //filters empty values
+      $value = array_filter(explode(',', $value));
 
-      $value = explode(',', $value);
+      $sanitized = $this->sanitizeValue(json_encode($value, JSON_OBJECT_AS_ARRAY));
 
       // If the field is required it can't be empty
       if ($this->isRequired() && count($value) == 0) {

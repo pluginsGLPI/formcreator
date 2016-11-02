@@ -414,6 +414,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $result = $DB->query($query);
          $line   = $DB->fetch_array($result);
          $input['order'] = $line['order'] + 1;
+
+         $input = $this->serializeDefaultValue($input);
       }
       return $input;
    }
@@ -458,14 +460,35 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $input['order'] = $line['order'] + 1;
          }
 
-         // Load field types
-         PluginFormcreatorFields::getTypes();
+         $input = $this->serializeDefaultValue($input);
 
-         // Prefer JSON isntead of \r\n separated values
-         if ($input['fieldtype'] == 'actor') {
-            $actorField = new ActorField($input, $input['default_values']);
-            $input['default_values'] = $actorField->serializeDefaultValue($input['default_values']);
-         }
+      }
+
+      return $input;
+   }
+
+   protected function serializeDefaultValue($input) {
+      // Load field types
+      PluginFormcreatorFields::getTypes();
+
+      // actor field only
+      // TODO : generalize to all other field types
+      if ($input['fieldtype'] == 'actor') {
+         $actorField = new ActorField($input, $input['default_values']);
+         $input['default_values'] = $actorField->serializeValue($input['default_values']);
+      }
+
+      return $input;
+   }
+
+   protected function deserializeDefaultValue($input) {
+      // Load field types
+      PluginFormcreatorFields::getTypes();
+
+      // Actor field only
+      if ($input['fieldtype'] == 'actor') {
+         $actorField = new ActorField($input, $input['default_values']);
+         $input['default_values'] = $actorField->deserializeValue($input['default_values']);
       }
 
       return $input;
@@ -493,6 +516,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $DB->query($query);
          // ===============================================================
       }
+   }
+
+   public function post_getFromDB() {
+      $this->fields = $this->deserializeDefaultValue($this->fields);
    }
 
    /**

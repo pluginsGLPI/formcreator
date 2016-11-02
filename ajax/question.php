@@ -13,9 +13,6 @@ if(empty($_REQUEST['question_id'])) {
 $form_id = (int) $_REQUEST['form_id'];
 
 $rand = mt_rand();
-
-// Load field types
-PluginFormcreatorFields::getTypes();
 ?>
 
 <form name="form_question" method="post"
@@ -203,14 +200,7 @@ PluginFormcreatorFields::getTypes();
          </td>
          <td>
             <textarea name="default_values" id="default_values" rows="4" cols="40"
-               style="width: 90%"><?php
-                  if ($question->getField('fieldtype') == 'actor') {
-                     $actorField = new actorField($question->fields, $question->fields['default_values']);
-                     echo $actorField->deserializeDefaultValue($question->fields['default_values']);
-                  } else {
-                     echo $question->fields['default_values'];
-                  }
-               ?></textarea>
+               style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
             <div id="dropdown_default_value_field">
                <?php
                if((($question->fields['fieldtype'] == 'dropdown')
