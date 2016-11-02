@@ -47,7 +47,6 @@ class actorField extends PluginFormcreatorField
          );
       }
       $initialValue = json_encode($initialValue);
-      $initialValue = '[{"id": "4"}]';
       // Value needs to be non empty to allow execition of select2's initSelection
       echo '<input
                type="hidden"
