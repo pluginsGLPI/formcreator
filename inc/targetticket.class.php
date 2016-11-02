@@ -1146,17 +1146,25 @@ EOS;
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
       $this->prepareActors($form, $formanswer);
-      if (count($this->requesters['_users_id_requester']) == 1) {
-         $requesters_id = $this->requesters['_users_id_requester'][0];
-      } else {
+      $additionalActors = null;
+      if (count($this->requesters['_users_id_requester']) == 0) {
+         $datas['_users_id_requester'] = 0;
          $requesters_id = $formanswer->fields['requester_id'];
+      } else if (count($this->requesters['_users_id_requester']) == 1) {
+         $requesters_id = $this->requesters['_users_id_requester'][0];
+         if ($requesters_id == 0) {
+            $requesters_id = $formanswer->fields['requester_id'];
+         }
+         $this->requesters['_users_id_requester'] = $this->requesters['_users_id_requester'][0];
+      } else if (count($this->requesters['_users_id_requester']) > 1) {
+         $requesters_id = $formanswer->fields['requester_id'];
+         $additionalActors = array(
+               '_users_id_requester'         => $datas['_users_id_requester'],
+               '_users_id_requester_notif'   => $datas['_users_id_requester_notif'],
+         );
+         unset($datas['_users_id_requester']);
+         unset($datas['_users_id_requester_notif']);
       }
-
-      $requesters_id = $formanswer->fields['requester_id'];
-      if ($datas['_users_id_requester']) {
-         $requesters_id = $datas['_users_id_requester'];
-      }
-
 
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
@@ -1284,14 +1292,7 @@ EOS;
          $datas['urgency'] = $urgency;
       }
 
-      $datas = $datas + $this->requesters + $this->observers + $this->assigned;
-      $additionalActors = null;
-      if (count($datas['_users_id_requester']) == 0) {
-         $datas['_users_id_requester'] = 0;
-      } else if (count($datas['_users_id_requester']) > 1) {
-         // Add multiple requestes after creation of the ticket
-         $additionalActors =  $datas['_users_id_requester'];
-      }
+      $datas = $this->requesters + $this->observers + $this->assigned + $datas;
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
@@ -1302,7 +1303,7 @@ EOS;
       if ($additionalActors !== null) {
          $ticket->update(array(
                'id'     => $ticketID,
-               '_additional_requesters' => $datas['_users_id_requester']
+               '_additional_requesters' => $additionalActors['_users_id_requester']
          ));
       }
 
