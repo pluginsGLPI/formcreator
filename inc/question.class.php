@@ -406,10 +406,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       if (!empty($input)) {
          // Get next order
-         $obj    = new self();
+         $table = self::getTable();
+         $sectionId = $input['plugin_formcreator_sections_id'];
          $query  = "SELECT MAX(`order`) AS `order`
-                    FROM `{$obj->getTable()}`
-                    WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+                    FROM `$table`
+                    WHERE `plugin_formcreator_sections_id` = '$sectionId'";
          $result = $DB->query($query);
          $line   = $DB->fetch_array($result);
          $input['order'] = $line['order'] + 1;
@@ -440,7 +441,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
             // Reorder other questions from the old section
-            $query = "UPDATE `{$this->getTable()}` SET
+            $table = self::getTable();
+            $query = "UPDATE `$table` SET
                 `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
@@ -451,9 +453,18 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `{$obj->getTable()}`
                        WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-            $result = $GLOBALS['DB']->query($query);
-            $line   = $GLOBALS['DB']->fetch_array($result);
+            $result = $DB->query($query);
+            $line   = $DB->fetch_array($result);
             $input['order'] = $line['order'] + 1;
+         }
+
+         // Load field types
+         PluginFormcreatorFields::getTypes();
+
+         // Prefer JSON isntead of \r\n separated values
+         if ($input['fieldtype'] == 'actor') {
+            $actorField = new ActorField($input, $input['default_values']);
+            $input['default_values'] = $actorField->serializeDefaultValue($input['default_values']);
          }
       }
 
