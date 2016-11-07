@@ -14,7 +14,11 @@ class actorField extends PluginFormcreatorField
       global $CFG_GLPI;
 
       $readonly = $canEdit ? 'false' : 'true';
-      $value = $this->getAnswer();
+      if (isset($this->fields['answer'])) {
+         $value = $this->sanitizeValue($this->fields['answer']);
+      } else {
+         $value = $this->sanitizeValue($this->fields['default_values']);
+      }
       $initialValue = array();
       foreach ($value as $id => $item) {
          $initialValue[] = array(
@@ -114,7 +118,8 @@ class actorField extends PluginFormcreatorField
    }
 
    protected function sanitizeValue($value) {
-      $answerValue = explode(',',$value);
+      $value = trim($value);
+      $answerValue = array_filter(explode(',', $value));
 
       $unknownUsers = array();
       $knownUsers = array();
@@ -137,10 +142,11 @@ class actorField extends PluginFormcreatorField
 
    public function isValid($value)
    {
-      //filters empty values
-      $value = array_filter(explode(',', $value));
+      $sanitized = $this->sanitizeValue($value);
 
-      $sanitized = $this->sanitizeValue(json_encode($value, JSON_OBJECT_AS_ARRAY));
+      // Ignore empty values
+      $value = trim($value);
+      $value = array_filter(explode(',', $value));
 
       // If the field is required it can't be empty
       if ($this->isRequired() && count($value) == 0) {
@@ -155,10 +161,12 @@ class actorField extends PluginFormcreatorField
    public function getValue()
    {
       if (isset($this->fields['answer'])) {
-         return $this->sanitizeValue($this->fields['answer']);
+         $value = $this->sanitizeValue($this->fields['answer']);
       } else {
-         return $this->sanitizeValue($this->fields['default_values']);
+         $value = $this->sanitizeValue($this->fields['default_values']);
       }
+
+      return implode(',', $value);
    }
 
    public static function getPrefs()

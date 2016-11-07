@@ -1160,7 +1160,7 @@ EOS;
          $requesters_id = $formanswer->fields['requester_id'];
          $additionalActors = array(
                '_users_id_requester'         => $datas['_users_id_requester'],
-               '_users_id_requester_notif'   => $datas['_users_id_requester_notif'],
+               '_users_id_requester_notif'   => true,
          );
          unset($datas['_users_id_requester']);
          unset($datas['_users_id_requester_notif']);
@@ -1588,7 +1588,7 @@ EOS;
                if ($answer->isNewItem()) {
                   continue;
                } else {
-                  $userIds = explode(',', $answer->getField('answer'));
+                  $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
                }
                $notify  = true;
                break;
