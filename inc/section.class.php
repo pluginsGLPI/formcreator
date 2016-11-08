@@ -131,7 +131,8 @@ class PluginFormcreatorSection extends CommonDBChild
       global $DB;
 
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
+      $log = new Log;
+      $log->deleteByCriteria(array('itemtype' => __CLASS__));
 
       $table = self::getTable();
       $DB->query("DROP TABLE IF EXISTS `$table`");
