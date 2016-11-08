@@ -451,8 +451,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `{$obj->getTable()}`
                        WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-            $result = $GLOBALS['DB']->query($query);
-            $line   = $GLOBALS['DB']->fetch_array($result);
+            $result = $DB->query($query);
+            $line   = $DB->fetch_array($result);
             $input['order'] = $line['order'] + 1;
          }
       }
@@ -506,12 +506,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   SELECT `plugin_formcreator_questions_id` FROM `glpi_plugin_formcreator_questions_conditions`
                   WHERE `show_field` = '$questionId'
             )";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
       $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
             WHERE `plugin_formcreator_questions_id` = '$questionId'
             OR `show_field` = '$questionId'";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
    }
 
    /**
