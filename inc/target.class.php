@@ -56,15 +56,31 @@ class PluginFormcreatorTarget extends CommonDBTM
       foreach ($found_targets as $target) {
          $i++;
          echo '<tr class="line'.($i % 2).'">';
+         switch ($target['itemtype']) {
+            case 'PluginFormcreatorTargetChange':
+               echo '<td onclick="document.location=\'../front/targetchange.form.php?id=' . $target['items_id'] . '\'" style="cursor: pointer">';
+               break;
+            case 'PluginFormcreatorTargetTicket':
+               echo '<td onclick="document.location=\'../front/targetticket.form.php?id=' . $target['items_id'] . '\'" style="cursor: pointer">';
+               break;
+         }
 
-         echo '<td onclick="document.location=\'../front/targetticket.form.php?id='.$target['items_id'].'\'" style="cursor: pointer">';
+
          echo $target['name'];
          echo '</td>';
 
          echo '<td align="center" width="32">';
          echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/pencil.png"
-                  alt="*" title="'.__('Edit').'"
-                  onclick="document.location=\'../front/targetticket.form.php?id='.$target['items_id'].'\'" align="absmiddle" style="cursor: pointer" /> ';
+                  alt="*" title="'.__('Edit');
+         switch ($target['itemtype']) {
+            case 'PluginFormcreatorTargetChange':
+               echo 'onclick="document.location=\'../front/targetticket.form.php?id='.$target['items_id'].'\'" align="absmiddle" style="cursor: pointer" /> ';
+               break;
+            case 'PluginFormcreatorTargetTicket':
+               echo ' "onclick="document.location=\'../front/targetticket.form.php?id=' . $target['items_id'] . '\'" align="absmiddle" style="cursor: pointer" /> ';
+               break;
+         }
+
          echo '</td>';
 
          echo '<td align="center" width="32">';
@@ -140,6 +156,23 @@ class PluginFormcreatorTarget extends CommonDBTM
                       ), (
                          $id_targetticket, 'observer', 'validator', 1
                       );";
+            $DB->query($query);
+            break;
+         case 'PluginFormcreatorTargetChange':
+            $targetchange      = new PluginFormcreatorTargetChange();
+            $id_targetchange   = $targetticket->add(array(
+                  'name'    => $input['name'],
+                  'comment' => '##FULLFORM##'
+            ));
+            $input['items_id'] = $id_targetchange;
+
+            $query = "INSERT INTO glpi_plugin_formcreator_targetchanges_actors
+                  (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`)
+                  VALUES (
+                     $id_targetchange, 'requester', 'creator', 1
+                  ), (
+                     $id_targetchange, 'observer', 'validator', 1
+                  );";
             $DB->query($query);
             break;
       }
