@@ -406,9 +406,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       if (!empty($input)) {
          // Get next order
-         $obj    = new self();
+         $table = self::getTable();
          $query  = "SELECT MAX(`order`) AS `order`
-                    FROM `{$obj->getTable()}`
+                    FROM `$table`
                     WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
          $result = $DB->query($query);
          $line   = $DB->fetch_array($result);
@@ -440,7 +440,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
             // Reorder other questions from the old section
-            $query = "UPDATE `{$this->getTable()}` SET
+            $table = self::getTable();
+            $query = "UPDATE `$table` SET
                 `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
@@ -449,7 +450,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             // Get the order for the new section
             $obj    = new self();
             $query  = "SELECT MAX(`order`) AS `order`
-                       FROM `{$obj->getTable()}`
+                       FROM `$table`
                        WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
             $result = $DB->query($query);
             $line   = $DB->fetch_array($result);
@@ -494,7 +495,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $query = "UPDATE `{$this->getTable()}` SET
+      $table = self::getTable();
+      $query = "UPDATE `$table` SET
                 `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
@@ -524,8 +526,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
@@ -840,8 +841,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       // Delete logs of the plugin
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");

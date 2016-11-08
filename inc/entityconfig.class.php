@@ -209,8 +209,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       // Delete logs of the plugin
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
