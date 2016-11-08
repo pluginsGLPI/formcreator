@@ -166,14 +166,16 @@ class PluginFormcreatorTargetChange extends CommonDBTM
       echo '</tr>';
       /*Fin Modif G.DONAT ALFUN */
 
-      // Change Template
+      // Ticket Template
+      /**
       echo '<tr class="line1">';
       echo '<td width="15%">' . _n('Change template', 'Change templates', 1) . '</td>';
       echo '<td width="25%">';
-      Dropdown::show('ChangeTemplate', array(
+      Dropdown::show('TicketTemplate', array(
             'name'  => 'changetemplates_id',
             'value' => $this->fields['changetemplates_id']
       ));
+      */
       echo '</td>';
       echo '<td width="15%">' . __('Due date') . '</td>';
       echo '<td width="45%">';
@@ -187,7 +189,8 @@ class PluginFormcreatorTargetChange extends CommonDBTM
                   'on_change' => 'formcreatorChangeDueDate(this.value)',
                   'display_emptychoice' => true
             )
-            );
+      );
+      echo '<td colspan="2"></td>';
 
       // for each section ...
       $questions_list = array(Dropdown::EMPTY_VALUE);
