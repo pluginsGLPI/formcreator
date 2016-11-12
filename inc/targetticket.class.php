@@ -1590,7 +1590,7 @@ EOS;
                } else {
                   $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
                }
-               $notify  = true;
+               $notify = $actor['use_notification'];
                break;
          }
 
