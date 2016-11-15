@@ -158,7 +158,6 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case Ticket::INCOMING:
-               case Ticket::WAITING:
                   $tocheck = $item->getNewStatusArray();
                   break;
 
