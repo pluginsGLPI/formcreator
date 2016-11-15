@@ -25,7 +25,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
       $link = $CFG_GLPI['url_base'];
-      $link .= '/plugins/formcreator/front/formanswer.form.php?id=' . $this->obj->getID();
+      $link .= '/plugins/formcreator/front/form_answer.form.php?id=' . $this->obj->getID();
 
       $requester = new User();
       $requester->getFromDB($this->obj->fields['requester_id']);
@@ -132,14 +132,14 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       foreach ($notifications as $event => $datas)
       {
          // Check if notification allready exists
-         $exists = $notification->find("itemtype = 'PluginFormcreatorFormanswer' AND event = '$event'");
+         $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
 
          // If it doesn't exists, create it
          if (count($exists) == 0) {
             $template_id = $template->add(array(
                'name'     => Toolbox::addslashes_deep($datas['name']),
                'comment'  => '',
-               'itemtype' => 'PluginFormcreatorFormanswer',
+               'itemtype' => 'PluginFormcreatorForm_Answer',
             ));
 
             // Add a default translation for the template
@@ -158,7 +158,7 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
                'entities_id'              => 0,
                'is_recursive'             => 1,
                'is_active'                => 1,
-               'itemtype'                 => 'PluginFormcreatorFormanswer',
+               'itemtype'                 => 'PluginFormcreatorForm_Answer',
                'notificationtemplates_id' => $template_id,
                'event'                    => $event,
                'mode'                     => 'mail',
@@ -187,23 +187,23 @@ class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
       // Delete translations
       $query = "DELETE FROM `$table_translations`
                 WHERE `notificationtemplates_id` IN (
-                  SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorFormanswer')";
+                  SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
       $DB->query($query);
 
       // Delete notification templates
       $query = "DELETE FROM `$table_templates`
-                WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
+                WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
       $DB->query($query);
 
       // Delete notification targets
       $query = "DELETE FROM `$table_targets`
                 WHERE `notifications_id` IN (
-                  SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorFormanswer')";
+                  SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
       $DB->query($query);
 
       // Delete notifications
       $query = "DELETE FROM `$table_notification`
-                WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
+                WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
       $DB->query($query);
    }
 }

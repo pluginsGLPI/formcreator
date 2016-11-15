@@ -4,7 +4,7 @@ include ('../../../inc/includes.php');
 // Define tables
 $cat_table  = getTableForItemType('PluginFormcreatorCategory');
 $form_table = getTableForItemType('PluginFormcreatorForm');
-$table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
+$table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
 $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
 
 // Show form whithout table
@@ -19,7 +19,7 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                 AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                    SELECT plugin_formcreator_forms_id
                    FROM $table_fp
-                   WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
+                   WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
                 ORDER BY $form_table.name ASC";
 $result_forms = $GLOBALS['DB']->query($query_forms);
 
@@ -38,7 +38,7 @@ $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                   SELECT plugin_formcreator_forms_id
                   FROM $table_fp
-                  WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
+                  WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
             )
            ORDER BY $cat_table.`name` ASC";
 $result = $DB->query($query);
@@ -86,7 +86,7 @@ if ($DB->numrows($result) > 0 || $DB->numrows($result_forms) > 0) {
                          AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                             SELECT plugin_formcreator_forms_id
                             FROM $table_fp
-                            WHERE plugin_formcreator_profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+                            WHERE profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
                          ORDER BY $form_table.name ASC";
          $result_forms = $DB->query($query_forms);
          $i = 0;

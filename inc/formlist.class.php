@@ -27,7 +27,7 @@ class PluginFormcreatorFormlist extends CommonGLPI
          $menu['links']['add'] = PluginFormcreatorForm::getFormURL(false);
       }
       $menu['links']['config'] = PluginFormcreatorForm::getSearchURL(false);
-      $menu['links'][$image]   = PluginFormcreatorFormanswer::getSearchURL(false);
+      $menu['links'][$image]   = PluginFormcreatorForm_Answer::getSearchURL(false);
 
       return $menu;
    }

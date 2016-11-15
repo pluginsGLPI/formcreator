@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorFormanswer extends CommonDBChild
+class PluginFormcreatorForm_Answer extends CommonDBChild
 {
    public $dohistory  = true;
    public $usenotepad = true;
@@ -290,7 +290,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                           FROM `glpi_plugin_formcreator_questions` AS questions
                           LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
                             ON answers.`plugin_formcreator_question_id` = questions.`id`
-                            AND answers.`plugin_formcreator_formanwers_id` = $ID
+                            AND answers.`plugin_formcreator_forms_anwers_id` = $ID
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`
                             AND plugin_formcreator_forms_id = ".$form->getID()."
@@ -421,7 +421,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                 LEFT JOIN glpi_plugin_formcreator_sections s
                   ON s.`id` = q.`plugin_formcreator_sections_id`
                 LEFT JOIN `glpi_plugin_formcreator_answers` AS a
-                  ON a.`plugin_formcreator_formanwers_id` = $formanwers_id
+                  ON a.`plugin_formcreator_forms_anwers_id` = $formanwers_id
                   AND a.`plugin_formcreator_question_id` = q.`id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
       $result = $DB->query($query);
@@ -537,7 +537,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             }
 
             $answerID = $answer->add(array(
-               'plugin_formcreator_formanwers_id' => $id,
+               'plugin_formcreator_forms_anwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
                'answer'                           => $question_answer,
             ));
@@ -655,7 +655,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // retrieve answers
       $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find('`plugin_formcreator_formanwers_id` = '.$this->getID());
+      $answers = $answer->find('`plugin_formcreator_forms_anwers_id` = '.$this->getID());
       $answers_values = array();
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
@@ -668,7 +668,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                           FROM `glpi_plugin_formcreator_questions` AS questions
                           INNER JOIN `glpi_plugin_formcreator_answers` AS answers
                             ON answers.`plugin_formcreator_question_id` = questions.`id`
-                            AND answers.`plugin_formcreator_formanwers_id` = ".$this->getID()."
+                            AND answers.`plugin_formcreator_forms_anwers_id` = ".$this->getID()."
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`
                             AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
@@ -762,7 +762,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       global $DB;
 
       $table = getTableForItemType('PluginFormcreatorAnswer');
-      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_formanwers_id` = {$this->getID()};";
+      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_forms_anwers_id` = {$this->getID()};";
       $DB->query($query);
 
       // If the form was waiting for validation
@@ -784,6 +784,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       $obj   = new self();
       $table = $obj->getTable();
+
+      if (TableExists("glpi_plugin_formcreator_formanswers")) {
+         $migration->renameTable('glpi_plugin_formcreator_formanswers', $table);
+      }
 
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
@@ -821,13 +825,13 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $DB->query($query_update) or die ($DB->error());
          }
 
-         if (!FieldExists('glpi_plugin_formcreator_formanswers', 'name')) {
-            $query_update = 'ALTER TABLE `glpi_plugin_formcreator_formanswers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
+         if (!FieldExists($table, 'name')) {
+            $query_update = 'ALTER TABLE `$table` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
             $DB->query($query_update) or die ($DB->error());
          }
 
          // valdiator_id should not be set for waiting form answers
-         $query = "UPDATE glpi_plugin_formcreator_formanswers
+         $query = "UPDATE $table
                SET `validator_id` = '0' WHERE `status`='waiting'";
          $DB->query($query);
       }
@@ -855,15 +859,15 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // Delete logs of the plugin
       $log = new Log();
-      $log->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $log->deleteByCriteria(array('itemtype' => __CLASS__));
 
       // Delete display preferences
       $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $displayPreference->deleteByCriteria(array('itemtype' => __CLASS__));
 
       // Delete relations with tickets
       $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $item_ticket->deleteByCriteria(array('itemtype' => __CLASS__));
 
       // Remove  table
       $obj = new self();

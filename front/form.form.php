@@ -37,6 +37,25 @@ if ($plugin->isActivated("formcreator")) {
       $form->delete($_POST,1);
       $form->redirectToList();
 
+   // Import form
+   } elseif(isset($_GET["import_form"])) {
+      Session::checkRight("entity", UPDATE);
+      Html::header(
+         PluginFormcreatorForm::getTypeName(2),
+         $_SERVER['PHP_SELF'],
+         'admin',
+         'PluginFormcreatorForm',
+         'option'
+      );
+      $form->showImportForm();
+      Html::footer();
+
+   // Import form
+   } elseif(isset($_GET["import_send"])) {
+      Session::checkRight("entity", UPDATE);
+      $form->importJson($_REQUEST);
+      Html::back();
+
    // Save form to target
    } elseif (isset($_POST['submit_formcreator'])) {
       if($form->getFromDB($_POST['formcreator_form'])) {
