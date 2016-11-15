@@ -183,6 +183,12 @@ class PluginFormcreatorWizard {
 
       if (count($status_count['to_validate']) > 0) {
          $options['criteria'][0]['value'] = Ticket::WAITING;
+         $options['criteria'][] = array(
+               'field'        => 11,
+               'searchtype'   => 'equals',
+               'value'        => $_SESSION['glpiID'],
+               'link'         => 'OR',
+         );
          echo "<span class='status status_validate'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
                        Toolbox::append_params($options,'&amp;')."'>

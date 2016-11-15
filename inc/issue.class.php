@@ -271,11 +271,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
             'joinparams'    => array(
                'beforejoin' => array(
-                  'table' => 'glpi_ticketvalidations',
-                  'joinparams' => array(
-                     'jointype'   => 'child',
-                     'linkfield'  => 'original_id')))
-
+                  array(
+                     'table' => 'glpi_items_tickets',
+                     'joinparams' => array(
+                        'jointype'           => 'itemtypeonly',
+                        'specific_itemtype'  => 'PluginFormcreatorFormanswer',
+                        'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
+                     )
+                  ),
+                  array(
+                     'table' => 'glpi_ticketvalidations',
+                     'joinparams' => array(
+                        'jointype'   => 'child',
+                        'linkfield'  => 'tickets_id',
+                     )
+                  )
+               )
+            )
          ),
       );
    }
