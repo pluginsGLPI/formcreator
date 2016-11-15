@@ -106,7 +106,7 @@ function plugin_formcreator_addDefaultWhere($itemtype)
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
          $condition_fanwser = plugin_formcreator_getCondition($table);
-         if ($condition_fanwser == " 1=1") {
+         if ($condition_fanwser == " 1=1 ") {
             $condition = $condition_fanwser;
          } else {
             $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorFormanswer'
