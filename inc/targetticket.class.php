@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorTargetTicket extends CommonDBTM
+class PluginFormcreatorTargetTicket extends CommonDBTM implements PluginFormcreatorTargetInterface
 {
 
    static function getEnumDestinationEntity() {
@@ -1598,23 +1598,23 @@ EOS;
     * @param  array   $target_data the targetticket data (match the targetticket table)
     * @return integer the targetticket's id
     */
-   public static function import($targettickets_id = 0, $target_data = array()) {
+   public static function import($targetitems_id = 0, $target_data = array()) {
       $item = new self;
 
       $target_data['_skip_checks'] = true;
-      $target_data['id'] = $targettickets_id;
+      $target_data['id'] = $targetitems_id;
 
       // update target ticket
       $item->update($target_data);
 
-      if ($targettickets_id
+      if ($targetitems_id
           && isset($target_data['_actors'])) {
          foreach($target_data['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($targettickets_id, $actor);
+            PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
          }
       }
 
-      return $targettickets_id;
+      return $targetitems_id;
    }
 
    /**

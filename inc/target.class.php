@@ -410,6 +410,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       $form_target_actor = new PluginFormcreatorTargetTicket_Actor;
       $target            = $this->fields;
+      $targetId = $this->getID();
 
       // get data from subclass (ex PluginFormcreatorTargetTicket)
       $target_item = new $target['itemtype'];
@@ -426,7 +427,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       // get target actors
       $target['_data']['_actors'] = [];
-      $all_target_actors = $form_target_actor->find("plugin_formcreator_targettickets_id = ".$this->getID());
+      $all_target_actors = $form_target_actor->find("`plugin_formcreator_targettickets_id` = '$targetId'");
       foreach($all_target_actors as $target_actors_id => $target_actor) {
          if ($form_target_actor->getFromDB($target_actors_id)) {
             $target['_data']['_actors'][] = $form_target_actor->export();
