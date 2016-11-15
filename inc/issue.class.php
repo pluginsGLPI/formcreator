@@ -281,7 +281,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ),
                   array(
                      'table' => 'glpi_ticketvalidations',
-                        // no join type in search engine match our need. See plugin_formcreator_addLeftJoin
+                     'joinparams' => array(
+                        'jointype'   => 'child',
+                        'linkfield'  => 'tickets_id',
+                     )
                   )
                )
             )
