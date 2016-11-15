@@ -413,6 +413,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
       global $DB;
 
       $input = $this->checkBeforeSave($input);
+      if (count($input) == 0) {
+         return array();
+      }
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
