@@ -460,15 +460,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
             array('criteria' => array(array(
                               'field'      => 4,
                               'searchtype' => 'equals',
+                              'value'      => Ticket::WAITING,
                               'link'       => 'AND',
-                              'value'      => Ticket::WAITING),
-                        array(
+                  ), array(
                               'field'        => 11,
                               'searchtype'   => 'equals',
                               'value'        => $_SESSION['glpiID'],
                               'link'         => 'OR',
-                        )),
-                  'reset'    => 'reset')
+                  )),
+            )
       );
       if ($searchResult['data']['totalcount'] > 0) {
          $status['to_validate'] = $searchResult['data']['totalcount'];
