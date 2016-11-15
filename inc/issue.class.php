@@ -69,7 +69,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                    FROM `glpi_tickets` AS `tic`
                    LEFT JOIN `glpi_items_tickets` AS `itic`
                       ON `itic`.`tickets_id` = `tic`.`id`
-                      AND `itic`.`itemtype` = 'Ticket'
+                      AND `itic`.`itemtype` = 'PluginFormcreatorFormanswer'
                    WHERE ISNULL(`itic`.`items_id`)
                      AND `tic`.`is_deleted` = 0";
       $DB->query($query) or die ($DB->error());
