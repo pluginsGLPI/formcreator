@@ -448,7 +448,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $DB->query($query);
 
             // Get the order for the new section
-            $obj    = new self();
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `$table`
                        WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
