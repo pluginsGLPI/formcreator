@@ -186,14 +186,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return array(
          __('Issue', 'formcreator'),
          '1' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'name',
             'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
          ),
          '2' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'id',
             'name'          => __('ID'),
             'datatype'      => 'itemlink',
@@ -201,7 +201,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '3' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'sub_itemtype',
             'name'          => __('Type'),
             'searchtype'    => array('equals', 'notequals'),
@@ -209,7 +209,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '4' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'status',
             'name'          => __('Status'),
             'searchtype'    => array('equals', 'notequals'),
@@ -217,14 +217,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '5' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'date_creation',
             'name'          => __('Opening date'),
             'datatype'      => 'datetime',
             'massiveaction' => false,
          ),
          '6' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'date_mod',
             'name'          => __('Last update'),
             'datatype'      => 'datetime',
@@ -254,7 +254,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '10' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'comment',
             'name'          => __('Comment'),
             'datatype'      => 'string',
@@ -460,22 +460,23 @@ class PluginFormcreatorIssue extends CommonDBTM {
             array('criteria' => array(array(
                               'field'      => 4,
                               'searchtype' => 'equals',
-                              'value'      => Ticket::WAITING,
+                              'value'      => 'notclosed',
                               'link'       => 'AND',
                   ), array(
                               'field'        => 9,
                               'searchtype'   => 'equals',
                               'value'        => $_SESSION['glpiID'],
-                              'link'         => 'OR',
+                              'link'         => 'ANd',
                   ), array(
                               'field'        => 4,
                               'searchtype'   => 'equals',
-                              'value'        => Ticket::WAITING,
-                              'link'         => 'AND',
+                              'value'        => 'notclosed',
+                              'link'         => 'OR',
                   ), array(
                               'field'        => 11,
                               'searchtype'   => 'equals',
                               'value'        => $_SESSION['glpiID'],
+                              'link'         => 'AND',
                   )),
             )
       );

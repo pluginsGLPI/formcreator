@@ -182,23 +182,24 @@ class PluginFormcreatorWizard {
       }
 
       if (count($status_count['to_validate']) > 0) {
-         $options['criteria'][0]['value'] = Ticket::WAITING;
+         $options['criteria'][0]['value'] = 'notclosed';
          $options['criteria'][] = array(
                'field'        => 9,
                'searchtype'   => 'equals',
                'value'        => $_SESSION['glpiID'],
-               'link'         => 'OR',
+               'link'         => 'AND',
          );
          $options['criteria'][] = array(
                'field'        => 4,
                'searchtype'   => 'equals',
-               'value'        => Ticket::WAITING,
-               'link'         => 'AND',
+               'value'        => 'notclosed',
+               'link'         => 'OR',
          );
          $options['criteria'][] = array(
                'field'        => 11,
                'searchtype'   => 'equals',
                'value'        => $_SESSION['glpiID'],
+               'link'         => 'AND',
          );
          echo "<span class='status status_validate'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".

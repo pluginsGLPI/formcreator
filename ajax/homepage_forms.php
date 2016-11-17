@@ -21,7 +21,7 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                    FROM $table_fp
                    WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
                 ORDER BY $form_table.name ASC";
-$result_forms = $GLOBALS['DB']->query($query_forms);
+$result_forms = $DB->query($query_forms);
 
 // Show categories wicth have at least one form user can access
 $query  = "SELECT $cat_table.`name`, $cat_table.`id`
