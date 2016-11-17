@@ -463,10 +463,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
                               'value'      => Ticket::WAITING,
                               'link'       => 'AND',
                   ), array(
-                              'field'        => 11,
+                              'field'        => 9,
                               'searchtype'   => 'equals',
                               'value'        => $_SESSION['glpiID'],
                               'link'         => 'OR',
+                  ), array(
+                              'field'        => 4,
+                              'searchtype'   => 'equals',
+                              'value'        => Ticket::WAITING,
+                              'link'         => 'AND',
+                  ), array(
+                              'field'        => 11,
+                              'searchtype'   => 'equals',
+                              'value'        => $_SESSION['glpiID'],
                   )),
             )
       );
