@@ -75,6 +75,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
       case "PluginFormcreatorIssue" :
          $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
          $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`original_id`', $join);
+         $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
    }
    return $join;
