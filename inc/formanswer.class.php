@@ -860,9 +860,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
 
-      // Delete relations with tickets
-      $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      // Delete relations with tickets by direct SQL to prevent sending email notifications
+      $table = Item_Ticket::getTable();
+      $query = "DELETE FROM `$table` WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
+      $DB->query($query);
 
       // Remove  table
       $table = self::getTable();
