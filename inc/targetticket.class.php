@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorTargetTicket extends CommonDBTM implements PluginFormcreatorTargetInterface
+class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
 
    static function getEnumDestinationEntity() {
@@ -1599,10 +1599,43 @@ EOS;
     * @return integer the targetticket's id
     */
    public static function import($targetitems_id = 0, $target_data = array()) {
+      global $DB;
+
       $item = new self;
 
       $target_data['_skip_checks'] = true;
       $target_data['id'] = $targetitems_id;
+
+      // convert question uuid into id
+      $targetTicket = new PluginFormcreatorTargetTicket();
+      $targetTicket->getFromDB($targetitems_id);
+      $formId        = $targetTicket->getForm()->getID();
+      $section       = new PluginFormcreatorSection();
+      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
+            "`order` ASC");
+      $tab_section = array();
+      foreach($found_section as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if(!empty($tab_section)) {
+         $sectionList = "'" . implode(', ', $tab_section) . "'";
+         $question = new PluginFormcreatorQuestion();
+         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
+         foreach ($rows as $id => $question_line) {
+            $uuid  = $question_line['uuid'];
+
+            $content = $target_data['name'];
+            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
+            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
+            $target_data['name'] = $content;
+
+            $content = $target_data['comment'];
+            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
+            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
+            $target_data['comment'] = $content;
+         }
+      }
 
       // update target ticket
       $item->update($target_data);
@@ -1622,6 +1655,8 @@ EOS;
     * @return array the array with all data (with sub tables)
     */
    public function export() {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -1634,6 +1669,36 @@ EOS;
             = Dropdown::getDropdownName('glpi_tickettemplates',
                                         $target_data['tickettemplates_id']);
       }
+
+      // convert questions ID into uuid for ticket description
+      $formId        = $this->getForm()->getID();
+      $section       = new PluginFormcreatorSection();
+      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
+            "`order` ASC");
+      $tab_section = array();
+      foreach($found_section as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if(!empty($tab_section)) {
+         $sectionList = "'" . implode(', ', $tab_section) . "'";
+         $question = new PluginFormcreatorQuestion();
+         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
+         foreach ($rows as $id => $question_line) {
+            $uuid  = $question_line['uuid'];
+
+            $content = $target_data['name'];
+            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
+            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
+            $target_data['name'] = $content;
+
+            $content = $target_data['comment'];
+            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
+            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
+            $target_data['comment'] = $content;
+             }
+      }
+
       // remove key and fk
       unset($target_data['id'],
             $target_data['tickettemplates_id']);
