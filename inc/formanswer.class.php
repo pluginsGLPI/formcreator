@@ -48,7 +48,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       $tab = array(
          '1' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'status',
             'name'          => _n('Status', 'Statuses', 1),
             'searchtype'    => array('equals', 'notequals'),
@@ -56,7 +56,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             'massiveaction' => false,
          ),
          '2' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'id',
             'name'          => __('ID'),
             'searchtype'    => 'contains',
@@ -91,7 +91,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          ),
          '6' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'request_date',
             'name'          => __('Creation date'),
             'datatype'      => 'datetime',
@@ -682,7 +682,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
-            if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+            if ($CFG_GLPI['use_rich_text']) {
                $output .= '<h2>'.$question_line['section_name'].'</h2>';
             } else {
                $output .= PHP_EOL.$question_line['section_name'].PHP_EOL;
@@ -705,7 +705,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
             if (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect'))) {
                if (is_array($value)) {
-                  if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+                  if ($CFG_GLPI['use_rich_text']) {
                      $output_value = '<ul>';
                      foreach ($value as $choice) {
                       $output_value .= '<li>' . $choice . '</li>';
@@ -736,7 +736,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                }
             }
 
-            if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
+            if ($CFG_GLPI['use_rich_text']) {
                $output .= '<div>';
                $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
                $output .= $output_value;
@@ -782,8 +782,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
@@ -866,8 +865,8 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
 
       // Remove  table
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       return true;
    }

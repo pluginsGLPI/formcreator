@@ -45,8 +45,7 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       // Create new table
       if (!TableExists($table)) {
@@ -131,11 +130,12 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
-
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
+      $log = new Log;
+      $log->deleteByCriteria(array('itemtype' => __CLASS__));
+
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       return true;
    }
@@ -165,9 +165,9 @@ class PluginFormcreatorSection extends CommonDBChild
       }
 
       // Get next order
-      $obj    = new self();
+      $table  = self::getTable();
       $query  = "SELECT MAX(`order`) AS `order`
-                 FROM `{$obj->getTable()}`
+                 FROM `$table`
                  WHERE `plugin_formcreator_forms_id` = {$input['plugin_formcreator_forms_id']}";
       $result = $DB->query($query);
       $line   = $DB->fetch_array($result);
@@ -202,7 +202,8 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       global $DB;
 
-      $query = "UPDATE `{$this->getTable()}` SET
+      $table = self::getTable();
+      $query = "UPDATE `$table` SET
                   `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_forms_id = {$this->fields['plugin_formcreator_forms_id']}";

@@ -443,8 +443,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
             // Reorder other questions from the old section
-            $table = self::getTable();
-            $query = "UPDATE `$table` SET
+            $query = "UPDATE `{$this->getTable()}` SET
                 `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
@@ -455,40 +454,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `{$obj->getTable()}`
                        WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-            $result = $DB->query($query);
-            $line   = $DB->fetch_array($result);
+            $result = $GLOBALS['DB']->query($query);
+            $line   = $GLOBALS['DB']->fetch_array($result);
             $input['order'] = $line['order'] + 1;
          }
-
-         $input = $this->serializeDefaultValue($input);
-
-      }
-
-      return $input;
-   }
-
-   protected function serializeDefaultValue($input) {
-      // Load field types
-      PluginFormcreatorFields::getTypes();
-
-      // actor field only
-      // TODO : generalize to all other field types
-      if ($input['fieldtype'] == 'actor') {
-         $actorField = new ActorField($input, $input['default_values']);
-         $input['default_values'] = $actorField->serializeValue($input['default_values']);
-      }
-
-      return $input;
-   }
-
-   protected function deserializeDefaultValue($input) {
-      // Load field types
-      PluginFormcreatorFields::getTypes();
-
-      // Actor field only
-      if ($input['fieldtype'] == 'actor') {
-         $actorField = new ActorField($input, $input['default_values']);
-         $input['default_values'] = $actorField->deserializeValue($input['default_values']);
       }
 
       return $input;
@@ -516,10 +485,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $DB->query($query);
          // ===============================================================
       }
-   }
-
-   public function post_getFromDB() {
-      $this->fields = $this->deserializeDefaultValue($this->fields);
    }
 
    /**

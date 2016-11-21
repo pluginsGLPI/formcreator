@@ -73,21 +73,21 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       $tab = array(
          '2' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'id',
             'name'          => __('ID'),
             'searchtype'    => 'contains',
             'massiveaction' => false,
          ),
          '1' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'name',
             'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
          ),
          '4' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'description',
             'name'          => __('Description', 'formcreator'),
             'massiveaction' => false,
@@ -100,14 +100,14 @@ class PluginFormcreatorForm extends CommonDBTM
             'massiveaction' => false,
          ),
          '6' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'is_recursive',
             'name'          => __('Recursive'),
             'datatype'      => 'bool',
             'massiveaction' => false,
          ),
          '7' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'language',
             'name'          => __('Language'),
             'datatype'      => 'specific',
@@ -115,7 +115,7 @@ class PluginFormcreatorForm extends CommonDBTM
             'massiveaction' => false,
          ),
          '8' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'helpdesk_home',
             'name'          => __('Homepage', 'formcreator'),
             'datatype'      => 'bool',
@@ -123,7 +123,7 @@ class PluginFormcreatorForm extends CommonDBTM
             'massiveaction' => true,
          ),
          '9' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'access_rights',
             'name'          => __('Access', 'formcreator'),
             'datatype'      => 'specific',
@@ -139,7 +139,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          ),
          '30' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'is_active',
             'name'          => __('Active'),
             'datatype'      => 'specific',
@@ -1126,8 +1126,7 @@ class PluginFormcreatorForm extends CommonDBTM
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       // Create default request type
       $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
