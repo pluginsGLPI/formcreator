@@ -458,11 +458,40 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $line   = $GLOBALS['DB']->fetch_array($result);
             $input['order'] = $line['order'] + 1;
          }
+         
+         $input = $this->serializeDefaultValue($input);
       }
 
       return $input;
    }
 
+   protected function serializeDefaultValue($input) {
+      // Load field types
+      PluginFormcreatorFields::getTypes();
+   
+      // actor field only
+      // TODO : generalize to all other field types
+      if ($input['fieldtype'] == 'actor') {
+         $actorField = new ActorField($input, $input['default_values']);
+         $input['default_values'] = $actorField->serializeValue($input['default_values']);
+      }
+   
+      return $input;
+   }
+   
+   protected function deserializeDefaultValue($input) {
+      // Load field types
+      PluginFormcreatorFields::getTypes();
+   
+      // Actor field only
+      if ($input['fieldtype'] == 'actor') {
+         $actorField = new ActorField($input, $input['default_values']);
+         $input['default_values'] = $actorField->deserializeValue($input['default_values']);
+      }
+   
+      return $input;
+   }
+    
    public function updateConditions($input) {
       global $DB;
 
