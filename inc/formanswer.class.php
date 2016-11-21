@@ -456,7 +456,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $answer->update(array(
                      'id'     => $question['answer_id'],
                      'answer' => $answer_value,
-                  ));
+                  ), 0);
                } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
                      && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
                   $doc    = new Document();
@@ -487,7 +487,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      $answer->update(array(
                         'id'     => $question['answer_id'],
                         'answer' => $docID,
-                     ));
+                     ), 0);
                   }
                }
             }
@@ -540,7 +540,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                'plugin_formcreator_formanwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
                'answer'                           => $question_answer,
-            ));
+            ), array(), 0);
 
             // If the question is a file field, save the file as a document
             if (($question['fieldtype'] == 'file')
@@ -573,7 +573,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $answer->update(array(
                      'id'     => $answerID,
                      'answer' => $docID,
-                  ));
+                  ), 0);
                }
             }
          }
