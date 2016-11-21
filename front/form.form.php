@@ -74,7 +74,7 @@ if ($plugin->isActivated("formcreator")) {
          'option'
       );
 
-      $_GET['id'] = intval($_GET['id']);
+      $_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : -1;
       $form->display($_GET);
 
       Html::footer();
