@@ -439,7 +439,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       if (isset($datas['save_formanswer'])) {
          $status = $datas['status'];
          $this->update(array(
-            'id'                          => intval($datas['id']),
+            'id'                          => $formanwers_id,
             'status'                      => $status,
             'comment'                     => isset($datas['comment']) ? $datas['comment'] : 'NULL'
          ));
