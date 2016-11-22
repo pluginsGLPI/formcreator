@@ -74,7 +74,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
          $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
-         $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
+         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`original_id`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
    }
    return $join;
@@ -106,7 +106,7 @@ function plugin_formcreator_addDefaultWhere($itemtype)
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
          $condition_fanwser = plugin_formcreator_getCondition($table);
-         if ($condition_fanwser == " 1=1") {
+         if ($condition_fanwser == " 1=1 ") {
             $condition = $condition_fanwser;
          } else {
             $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorFormanswer'
@@ -122,6 +122,25 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          break;
    }
    return $condition;
+}
+
+
+function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, &$already_link_tables) {
+   $join = "";
+   switch ($itemtype) {
+      case 'PluginFormcreatorIssue':
+            if ($new_table == 'glpi_ticketvalidations') {
+               foreach ($already_link_tables as $table) {
+                  if (strpos($table, $new_table) === 0) {
+                     $AS = $table;
+                  }
+               }
+               $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
+            }
+      break;
+   }
+
+   return $join;
 }
 
 
