@@ -7,7 +7,7 @@ if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator'))
    Html::displayNotFoundError();
 }
 
-if(PluginFormcreatorFormanswer::canView()) {
+if(PluginFormcreatorForm_Answer::canView()) {
       if (plugin_formcreator_replaceHelpdesk()) {
          PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
       } else {
@@ -26,7 +26,7 @@ if(PluginFormcreatorFormanswer::canView()) {
          }
       }
 
-   Search::show('PluginFormcreatorFormanswer');
+   Search::show('PluginFormcreatorForm_Answer');
 
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::footer();

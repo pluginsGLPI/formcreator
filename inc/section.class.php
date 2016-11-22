@@ -45,8 +45,7 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       // Create new table
       if (!TableExists($table)) {
@@ -57,7 +56,8 @@ class PluginFormcreatorSection extends CommonDBChild
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `order` int(11) NOT NULL DEFAULT '0'
+                     `order` int(11) NOT NULL DEFAULT '0',
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -119,6 +119,19 @@ class PluginFormcreatorSection extends CommonDBChild
          $DB->query("ALTER TABLE `$table` DROP `content`;");
       }
 
+      // add uuid to sections
+      if (!FieldExists($table, 'uuid', false)) {
+         $migration->addField($table, 'uuid', 'string');
+         $migration->migrationOneTable($table);
+      }
+
+      // fill missing uuid (force update of sections, see self::prepareInputForUpdate)
+      $obj = new self();
+      $all_sections = $obj->find("uuid IS NULL");
+      foreach($all_sections as $sections_id => $section) {
+         $obj->update(array('id' => $sections_id));
+      }
+
       return true;
    }
 
@@ -131,11 +144,12 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
-
       // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
+      $log = new Log;
+      $log->deleteByCriteria(array('itemtype' => __CLASS__));
+
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       return true;
    }
@@ -159,15 +173,22 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Control fields values :
       // - name is required
-      if(empty($input['name'])) {
+      if(isset($input['name'])
+         && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
          return array();
       }
 
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
       // Get next order
-      $obj    = new self();
+      $table  = self::getTable();
       $query  = "SELECT MAX(`order`) AS `order`
-                 FROM `{$obj->getTable()}`
+                 FROM `$table`
                  WHERE `plugin_formcreator_forms_id` = {$input['plugin_formcreator_forms_id']}";
       $result = $DB->query($query);
       $line   = $DB->fetch_array($result);
@@ -202,7 +223,8 @@ class PluginFormcreatorSection extends CommonDBChild
    {
       global $DB;
 
-      $query = "UPDATE `{$this->getTable()}` SET
+      $table = self::getTable();
+      $query = "UPDATE `$table` SET
                   `order` = `order` - 1
                 WHERE `order` > {$this->fields['order']}
                 AND plugin_formcreator_forms_id = {$this->fields['plugin_formcreator_forms_id']}";
@@ -210,5 +232,68 @@ class PluginFormcreatorSection extends CommonDBChild
 
       $question = new PluginFormcreatorQuestion();
       $question->deleteByCriteria(array('plugin_formcreator_sections_id' => $this->getID()), 1);
+   }
+
+   /**
+    * Import a form's section into the db
+    * @see PluginFormcreatorForm::importJson
+    *
+    * @param  integer $forms_id  id of the parent form
+    * @param  array   $section the section data (match the section table)
+    * @return integer the section's id
+    */
+   public static function import($forms_id = 0, $section = array()) {
+      $item = new self;
+
+      $section['plugin_formcreator_forms_id'] = $forms_id;
+      $section['_skip_checks']                = true;
+
+      if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
+         // add id key
+         $section['id'] = $sections_id;
+
+         // update section
+         $item->update($section);
+      } else {
+         //create section
+         $sections_id = $item->add($section);
+      }
+
+      if ($sections_id
+          && isset($section['_questions'])) {
+         foreach($section['_questions'] as $question) {
+            PluginFormcreatorQuestion::import($sections_id, $question);
+         }
+      }
+
+      return $sections_id;
+   }
+
+   /**
+    * Export in an array all the data of the current instanciated section
+    * @return array the array with all data (with sub tables)
+    */
+   public function export() {
+      if (!$this->getID()) {
+         return false;
+      }
+
+      $form_question = new PluginFormcreatorQuestion;
+      $section       = $this->fields;
+
+      // remove key and fk
+      unset($section['id'],
+            $section['plugin_formcreator_forms_id']);
+
+      // get questions
+      $section['_questions'] = [];
+      $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
+      foreach($all_questions as $questions_id => $question) {
+         if ($form_question->getFromDB($questions_id)) {
+            $section['_questions'][] = $form_question->export();
+         }
+      }
+
+      return $section;
    }
 }

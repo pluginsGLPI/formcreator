@@ -34,7 +34,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                    SELECT DISTINCT
                           CONCAT(1,`fanswer`.`id`)      AS `id`,
                           `fanswer`.`id`                AS `original_id`,
-                          'PluginFormcreatorFormanswer' AS `sub_itemtype`,
+                          'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
                           `f`.`name`                    AS `name`,
                           `fanswer`.`status`            AS `status`,
                           `fanswer`.`request_date`      AS `date_creation`,
@@ -44,12 +44,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
                           `fanswer`.`requester_id`      AS `requester_id`,
                           `fanswer`.`validator_id`      AS `validator_id`,
                           `fanswer`.`comment`           AS `comment`
-                   FROM `glpi_plugin_formcreator_formanswers` AS `fanswer`
+                   FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
                    JOIN `glpi_plugin_formcreator_forms` AS `f`
                       ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
                    LEFT JOIN `glpi_items_tickets` AS `itic`
                       ON `itic`.`items_id` = `fanswer`.`id`
-                      AND `itic`.`itemtype` = 'PluginFormcreatorFormanswer'
+                      AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
 
                    UNION
 
@@ -69,7 +69,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                    FROM `glpi_tickets` AS `tic`
                    LEFT JOIN `glpi_items_tickets` AS `itic`
                       ON `itic`.`tickets_id` = `tic`.`id`
-                      AND `itic`.`itemtype` = 'PluginFormcreatorFormanswer'
+                      AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
                    WHERE ISNULL(`itic`.`items_id`)
                      AND `tic`.`is_deleted` = 0";
       $DB->query($query) or die ($DB->error());
@@ -81,7 +81,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
     */
    public function display($options = array()) {
       $itemtype = $options['sub_itemtype'];
-      if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorFormanswer'))) {
+      if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorForm_Answer'))) {
          html::displayRightError();
       }
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
@@ -148,7 +148,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // Timeline
       $formanswerId = $options['id'];
       $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormanswer'
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer'
                                   AND `items_id` = $formanswerId", "`tickets_id` ASC");
 
       // force recall of ticket
@@ -186,14 +186,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return array(
          __('Issue', 'formcreator'),
          '1' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'name',
             'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
          ),
          '2' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'id',
             'name'          => __('ID'),
             'datatype'      => 'itemlink',
@@ -201,7 +201,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '3' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'sub_itemtype',
             'name'          => __('Type'),
             'searchtype'    => array('equals', 'notequals'),
@@ -209,7 +209,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '4' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'status',
             'name'          => __('Status'),
             'searchtype'    => array('equals', 'notequals'),
@@ -217,14 +217,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '5' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'date_creation',
             'name'          => __('Opening date'),
             'datatype'      => 'datetime',
             'massiveaction' => false,
          ),
          '6' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'date_mod',
             'name'          => __('Last update'),
             'datatype'      => 'datetime',
@@ -254,7 +254,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
          ),
          '10' => array(
-            'table'         => $this->getTable(),
+            'table'         => self::getTable(),
             'field'         => 'comment',
             'name'          => __('Comment'),
             'datatype'      => 'string',
@@ -271,11 +271,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
             'joinparams'    => array(
                'beforejoin' => array(
-                  'table' => 'glpi_ticketvalidations',
-                  'joinparams' => array(
-                     'jointype'   => 'child',
-                     'linkfield'  => 'original_id')))
-
+                  array(
+                     'table' => 'glpi_items_tickets',
+                     'joinparams' => array(
+                        'jointype'           => 'itemtypeonly',
+                        'specific_itemtype'  => 'PluginFormcreatorFormanswer',
+                        'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
+                     )
+                  ),
+                  array(
+                     'table' => 'glpi_ticketvalidations',
+                        // no join type in search engine match our need. See plugin_formcreator_addLeftJoin
+                  )
+               )
+            )
          ),
       );
    }
@@ -289,7 +298,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          case 'sub_itemtype':
             return Dropdown::showFromArray($name,
                                            array('Ticket'                      => __('Ticket'),
-                                                 'PluginFormcreatorFormanswer' => __('Form answer', 'formcreator')),
+                                                 'PluginFormcreatorForm_Answer' => __('Form answer', 'formcreator')),
                                            array('display' => false,
                                                  'value'   => $values[$field]));
          case 'status' :
@@ -348,8 +357,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                alt=\"$status\" title=\"$status\">&nbsp;$status";
                   break;
 
-               case 'PluginFormcreatorFormanswer':
-                  return PluginFormcreatorFormanswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"]);
+               case 'PluginFormcreatorForm_Answer':
+                  return PluginFormcreatorForm_Answer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"]);
                   break;
             }
             break;
@@ -441,16 +450,38 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $query = "SELECT COUNT(DISTINCT $table.id) AS COUNT
                 FROM $table
                 INNER JOIN `glpi_tickets`
-                  ON $table.original_id = `glpi_tickets`.`ìd`
+                  ON $table.original_id = `glpi_tickets`.`id`
                   AND `glpi_tickets`.`global_validation` = ".CommonITILValidation::WAITING."
                 INNER JOIN `glpi_ticketvalidations`
-                  ON `$table`.`id` = `glpi_ticketvalidations`.`tickets_id`
+                  ON `$table`.`original_id` = `glpi_ticketvalidations`.`tickets_id`
                   AND `glpi_ticketvalidations`.`users_id_validate` = '".Session::getLoginUserID()."'
-                WHERE ".getEntitiesRestrictRequest(" WHERE", "$table");
-      if ($DB->numrows($result) > 0) {
-          while ($data = $DB->fetch_assoc($result)) {
-            $status['to_validate'] = $data["COUNT"];
-         }
+                WHERE ".getEntitiesRestrictRequest(" ", "$table");
+      $searchResult = Search::getDatas('PluginFormcreatorIssue',
+            array('criteria' => array(array(
+                              'field'      => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'notclosed',
+                              'link'       => 'AND',
+                  ), array(
+                              'field'        => 9,
+                              'searchtype'   => 'equals',
+                              'value'        => $_SESSION['glpiID'],
+                              'link'         => 'ANd',
+                  ), array(
+                              'field'        => 4,
+                              'searchtype'   => 'equals',
+                              'value'        => 'notclosed',
+                              'link'         => 'OR',
+                  ), array(
+                              'field'        => 11,
+                              'searchtype'   => 'equals',
+                              'value'        => $_SESSION['glpiID'],
+                              'link'         => 'AND',
+                  )),
+            )
+      );
+      if ($searchResult['data']['totalcount'] > 0) {
+         $status['to_validate'] = $searchResult['data']['totalcount'];
       }
 
       if (!$full) {

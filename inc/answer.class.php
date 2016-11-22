@@ -1,8 +1,8 @@
 <?php
 class PluginFormcreatorAnswer extends CommonDBChild
 {
-   static public $itemtype = "PluginFormcreatorFormanswer";
-   static public $items_id = "plugin_formcreator_formanwers_id";
+   static public $itemtype = "PluginFormcreatorForm_Answer";
+   static public $items_id = "plugin_formcreator_forms_anwers_id";
 
    /**
     * Check if current user have the right to create and modify requests
@@ -94,8 +94,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
@@ -103,7 +102,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `plugin_formcreator_formanwers_id` int(11) NOT NULL,
+                     `plugin_formcreator_forms_anwers_id` int(11) NOT NULL,
                      `plugin_formcreator_question_id` int(11) NOT NULL,
                      `answer` text NOT NULL
                   )
@@ -130,6 +129,13 @@ class PluginFormcreatorAnswer extends CommonDBChild
                              WHERE `id` = ".$line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
+
+         //rename foreign key, to match table plugin_formcreator_forms_anwers name
+         $migration->changeField($table,
+                                 'plugin_formcreator_formanwers_id',
+                                 'plugin_formcreator_forms_anwers_id',
+                                 'integer');
+         $migration->migrationOneTable($table);
       }
 
       return true;
@@ -144,8 +150,8 @@ class PluginFormcreatorAnswer extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `'.$obj->getTable().'`');
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       // Delete logs of the plugin
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");

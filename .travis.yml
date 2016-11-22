@@ -16,5 +16,3 @@ script:
   - cd plugins/formcreator
   - php tools/cliinstall.php --tests
   - phpunit --verbose
-
-  

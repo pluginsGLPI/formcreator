@@ -1011,9 +1011,9 @@ EOS;
    /**
     * Save form datas to the target
     *
-    * @param  PluginFormcreatorFormanswer $formanswer    Answers previously saved
+    * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
-   public function save(PluginFormcreatorFormanswer $formanswer)
+   public function save(PluginFormcreatorForm_Answer $formanswer)
    {
       global $DB;
 
@@ -1275,7 +1275,7 @@ EOS;
       // Add link between Ticket and FormAnswer
       $itemlink = new Item_Ticket();
       $itemlink->add(array(
-            'itemtype'   => 'PluginFormcreatorFormanswer',
+            'itemtype'   => 'PluginFormcreatorForm_Answer',
             'items_id'   => $formanswer->fields['id'],
             'tickets_id' => $ticketID,
       ));
@@ -1360,7 +1360,7 @@ EOS;
       }
 
       // Attach documents to ticket
-      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer'
+      $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
                                AND items_id = ".$formanswer->getID());
       if(count($found) > 0) {
          foreach ($found as $document) {
@@ -1397,10 +1397,10 @@ EOS;
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  String $content                            String to be parsed
-    * @param  PluginFormcreatorFormanswer $formanswer    Formanswer object where answers are stored
+    * @param  PluginFormcreatorForm_Answer $formanswer    Formanswer object where answers are stored
     * @return String                                     Parsed string with tags replaced by form values
     */
-   private function parseTags($content, PluginFormcreatorFormanswer $formanswer, $fullform = "") {
+   private function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
       global $DB, $CFG_GLPI;
 
       if ($fullform == "") {
