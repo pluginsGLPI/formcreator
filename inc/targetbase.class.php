@@ -4,8 +4,6 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    abstract public function export();
 
-   abstract public static function import($targetitems_id = 0, $target_data = array());
-
    abstract public function save(PluginFormcreatorForm_Answer $formanswer);
 
    /*
