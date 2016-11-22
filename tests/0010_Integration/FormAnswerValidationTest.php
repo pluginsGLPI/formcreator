@@ -83,8 +83,8 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
 
       $this->formAnswersData['formcreator_form'] = $form->getID();
 
-      $formAnswer = new PluginFormcreatorFormanswer();
-      $formAnswer_table = PluginFormcreatorFormanswer::getTable();
+      $formAnswer = new PluginFormcreatorForm_Answer();
+      $formAnswer_table = PluginFormcreatorForm_Answer::getTable();
       $_POST = $this->formAnswersData;
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
@@ -121,9 +121,9 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
     * @depends testInitCreateFormAnswer
     * @param User $user
     * @param PluginFormcreatorForm $form
-    * @param PluginFormcreatorFormanswer $formAnswer
+    * @param PluginFormcreatorForm_Answer $formAnswer
     */
-   public function testOtherUserValidates(User $user, PluginFormcreatorForm $form, PluginFormcreatorFormanswer $formAnswer) {
+   public function testOtherUserValidates(User $user, PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formAnswer) {
       // Login as other user
       $this->assertTrue(self::login('superadmin', 'superadmin', true));
 
@@ -136,9 +136,9 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
     * @depends testInitCreateFormAnswer
     * @param User $user
     * @param PluginFormcreatorForm $form
-    * @param PluginFormcreatorFormanswer $formAnswer
+    * @param PluginFormcreatorForm_Answer $formAnswer
     */
-    public function testUserValidates(User $user, PluginFormcreatorForm $form, PluginFormcreatorFormanswer $formAnswer) {
+    public function testUserValidates(User $user, PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formAnswer) {
        // Login as glpi
        $this->assertTrue(self::login('glpi', 'glpi', true));
 
