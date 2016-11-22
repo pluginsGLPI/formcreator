@@ -6,7 +6,7 @@ Session::redirectIfNotLoggedIn();
 // Check if plugin is activated...
 $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
-   $formanswer = new PluginFormcreatorFormanswer();
+   $formanswer = new PluginFormcreatorForm_Answer();
 
    // Edit an existing target ticket
    if(isset($_POST['update'])) {
@@ -17,19 +17,19 @@ if ($plugin->isActivated("formcreator")) {
 
       $formanswer->getFromDB(intval($_POST['id']));
       $formanswer->refuseAnswers($_POST);
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
+      $formanswer->redirectToList();
 
    } elseif(isset($_POST['accept_formanswer'])) {
 
       $formanswer->getFromDB(intval($_POST['id']));
       $formanswer->acceptAnswers($_POST);
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
+      $formanswer->redirectToList();
 
    } elseif(isset($_POST['save_formanswer'])) {
       $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
       $_POST['status']                      = 'waiting';
       $formanswer->saveAnswers($_POST);
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/formanswer.php');
+      $formanswer->redirectToList();
 
    // Show target ticket form
    } else {

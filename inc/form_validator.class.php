@@ -19,10 +19,27 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
    const VALIDATION_USER  = 1;
    const VALIDATION_GROUP = 2;
 
+   /**
+    * @see  CommondDBTM::prepareInputForAdd
+    */
+   public function prepareInputForAdd($input) {
+      global $DB;
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
+
    public static function install(Migration $migration)
    {
       global $DB;
 
+      $obj   = new self();
       $table = self::getTable();
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -30,6 +47,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `itemtype`                    varchar(255) NOT NULL DEFAULT '',
                      `items_id`                    int(11) NOT NULL,
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      PRIMARY KEY (`id`),
                      UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`, `itemtype`, `items_id`)
                   )
@@ -53,6 +71,19 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
          $migration->displayMessage('Backing up table glpi_plugin_formcreator_formvalidators');
          $migration->renameTable('glpi_plugin_formcreator_formvalidators', 'glpi_plugin_formcreator_formvalidators_backup');
       }
+
+      // add uuid to validator
+      if (!FieldExists($table, 'uuid', false)) {
+         $migration->addField($table, 'uuid', 'string');
+         $migration->migrationOneTable($table);
+      }
+
+      // fill missing uuid
+      $all_validators = $obj->find("uuid IS NULL");
+      foreach($all_validators as $validators_id => $validator) {
+         $obj->update(array('id'   => $validators_id,
+                            'uuid' => plugin_formcreator_getUuid()));
+      }
    }
 
    public static function uninstall()
@@ -64,4 +95,61 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       return $DB->query($query) or die($DB->error());
    }
 
+   /**
+    * Import a form's validator into the db
+    * @see PluginFormcreatorForm::importJson
+    *
+    * @param  integer $forms_id  id of the parent form
+    * @param  array   $validator the validator data (match the validator table)
+    * @return integer the validator's id
+    */
+   public static function import($forms_id = 0, $validator = array()) {
+      $item = new self;
+
+      $validator['plugin_formcreator_forms_id'] = $forms_id;
+
+      if ($validators_id = plugin_formcreator_getFromDBByField($item, 'uuid', $validator['uuid'])) {
+         // add id key
+         $validator['id'] = $validators_id;
+
+         // update section
+         $item->update($validator);
+      } else {
+         //create section
+         $validators_id = $item->add($validator);
+      }
+
+      return $validators_id;
+   }
+
+   /**
+    * Export in an array all the data of the current instanciated validator
+    * @return array the array with all data (with sub tables)
+    */
+   public function export() {
+      if (!$this->getID()) {
+         return false;
+      }
+
+      $validator = $this->fields;
+
+      // remove key and fk
+      unset($validator['id'],
+            $validator['plugin_formcreator_forms_id']);
+
+      if (is_subclass_of($validator['itemtype'], 'CommonDBTM')) {
+         $validator_obj = new $validator['itemtype'];
+         if ($validator_obj->getFromDB($validator['items_id'])) {
+
+            // replace id data
+            $identifier_field = isset($validator_obj->fields['completename'])
+                                 ? 'completename'
+                                 : 'name';
+            $validator['_item'] = $validator_obj->fields[$identifier_field];
+         }
+      }
+      unset($validator['items_id']);
+
+      return $validator;
+   }
 }

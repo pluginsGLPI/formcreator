@@ -74,6 +74,7 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
          $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
+         $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`original_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
          $join = str_replace('`users_id_recipient`', '`requester_id`', $join);
    }
@@ -106,10 +107,10 @@ function plugin_formcreator_addDefaultWhere($itemtype)
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
          $condition_fanwser = plugin_formcreator_getCondition($table);
-         if ($condition_fanwser == " 1=1") {
+         if ($condition_fanwser == " 1=1 ") {
             $condition = $condition_fanwser;
          } else {
-            $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorFormanswer'
+            $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorForm_Answer'
                           AND ($condition_fanwser) OR ";
             $condition = Search::addDefaultWhere("Ticket");
             $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
@@ -117,11 +118,30 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          }
          break;
 
-      case "PluginFormcreatorFormanswer" :
+      case "PluginFormcreatorForm_Answer" :
          $condition = plugin_formcreator_getCondition($table);
          break;
    }
    return $condition;
+}
+
+
+function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, &$already_link_tables) {
+   $join = "";
+   switch ($itemtype) {
+      case 'PluginFormcreatorIssue':
+            if ($new_table == 'glpi_ticketvalidations') {
+               foreach ($already_link_tables as $table) {
+                  if (strpos($table, $new_table) === 0) {
+                     $AS = $table;
+                  }
+               }
+               $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
+            }
+      break;
+   }
+
+   return $join;
 }
 
 
@@ -194,7 +214,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
 function plugin_formcreator_AssignToTicket($types)
 {
-   $types['PluginFormcreatorFormanswer'] = PluginFormcreatorFormanswer::getTypeName();
+   $types['PluginFormcreatorForm_Answer'] = PluginFormcreatorForm_Answer::getTypeName();
 
    return $types;
 }
@@ -207,6 +227,7 @@ function plugin_formcreator_MassiveActions($itemtype) {
          return array(
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
+            'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
          );
    }
    return array();
@@ -226,4 +247,3 @@ function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
 
    return "";
 }
-
