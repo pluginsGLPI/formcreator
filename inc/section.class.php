@@ -56,7 +56,8 @@ class PluginFormcreatorSection extends CommonDBChild
                      `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `order` int(11) NOT NULL DEFAULT '0'
+                     `order` int(11) NOT NULL DEFAULT '0',
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -118,6 +119,19 @@ class PluginFormcreatorSection extends CommonDBChild
          $DB->query("ALTER TABLE `$table` DROP `content`;");
       }
 
+      // add uuid to sections
+      if (!FieldExists($table, 'uuid', false)) {
+         $migration->addField($table, 'uuid', 'string');
+         $migration->migrationOneTable($table);
+      }
+
+      // fill missing uuid (force update of sections, see self::prepareInputForUpdate)
+      $obj = new self();
+      $all_sections = $obj->find("uuid IS NULL");
+      foreach($all_sections as $sections_id => $section) {
+         $obj->update(array('id' => $sections_id));
+      }
+
       return true;
    }
 
@@ -159,9 +173,16 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Control fields values :
       // - name is required
-      if(empty($input['name'])) {
+      if(isset($input['name'])
+         && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
          return array();
+      }
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
       }
 
       // Get next order
@@ -211,5 +232,68 @@ class PluginFormcreatorSection extends CommonDBChild
 
       $question = new PluginFormcreatorQuestion();
       $question->deleteByCriteria(array('plugin_formcreator_sections_id' => $this->getID()), 1);
+   }
+
+   /**
+    * Import a form's section into the db
+    * @see PluginFormcreatorForm::importJson
+    *
+    * @param  integer $forms_id  id of the parent form
+    * @param  array   $section the section data (match the section table)
+    * @return integer the section's id
+    */
+   public static function import($forms_id = 0, $section = array()) {
+      $item = new self;
+
+      $section['plugin_formcreator_forms_id'] = $forms_id;
+      $section['_skip_checks']                = true;
+
+      if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
+         // add id key
+         $section['id'] = $sections_id;
+
+         // update section
+         $item->update($section);
+      } else {
+         //create section
+         $sections_id = $item->add($section);
+      }
+
+      if ($sections_id
+          && isset($section['_questions'])) {
+         foreach($section['_questions'] as $question) {
+            PluginFormcreatorQuestion::import($sections_id, $question);
+         }
+      }
+
+      return $sections_id;
+   }
+
+   /**
+    * Export in an array all the data of the current instanciated section
+    * @return array the array with all data (with sub tables)
+    */
+   public function export() {
+      if (!$this->getID()) {
+         return false;
+      }
+
+      $form_question = new PluginFormcreatorQuestion;
+      $section       = $this->fields;
+
+      // remove key and fk
+      unset($section['id'],
+            $section['plugin_formcreator_forms_id']);
+
+      // get questions
+      $section['_questions'] = [];
+      $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
+      foreach($all_questions as $questions_id => $question) {
+         if ($form_question->getFromDB($questions_id)) {
+            $section['_questions'][] = $form_question->export();
+         }
+      }
+
+      return $section;
    }
 }
