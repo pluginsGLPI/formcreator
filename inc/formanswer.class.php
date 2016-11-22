@@ -850,7 +850,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public static function uninstall()
    {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Delete logs of the plugin
       $log = new Log();
@@ -860,10 +860,12 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
 
-      // Delete relations with tickets by direct SQL to prevent sending email notifications
-      $table = Item_Ticket::getTable();
-      $query = "DELETE FROM `$table` WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
-      $DB->query($query);
+      // Delete relations with tickets with email notifications disabled
+      $use_mailing = $CFG_GLPI['use_mailing'];
+      $CFG_GLPI['use_mailing'] = '0';
+      $item_ticket = new Item_Ticket();
+      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $CFG_GLPI['use_mailing'] = $use_mailing;
 
       // Remove  table
       $table = self::getTable();
