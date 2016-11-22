@@ -271,11 +271,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'massiveaction' => false,
             'joinparams'    => array(
                'beforejoin' => array(
-                  'table' => 'glpi_ticketvalidations',
-                  'joinparams' => array(
-                     'jointype'   => 'child',
-                     'linkfield'  => 'original_id')))
-
+                  array(
+                     'table' => 'glpi_items_tickets',
+                     'joinparams' => array(
+                        'jointype'           => 'itemtypeonly',
+                        'specific_itemtype'  => 'PluginFormcreatorFormanswer',
+                        'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
+                     )
+                  ),
+                  array(
+                     'table' => 'glpi_ticketvalidations',
+                        // no join type in search engine match our need. See plugin_formcreator_addLeftJoin
+                  )
+               )
+            )
          ),
       );
    }
@@ -441,16 +450,38 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $query = "SELECT COUNT(DISTINCT $table.id) AS COUNT
                 FROM $table
                 INNER JOIN `glpi_tickets`
-                  ON $table.original_id = `glpi_tickets`.`ìd`
+                  ON $table.original_id = `glpi_tickets`.`id`
                   AND `glpi_tickets`.`global_validation` = ".CommonITILValidation::WAITING."
                 INNER JOIN `glpi_ticketvalidations`
-                  ON `$table`.`id` = `glpi_ticketvalidations`.`tickets_id`
+                  ON `$table`.`original_id` = `glpi_ticketvalidations`.`tickets_id`
                   AND `glpi_ticketvalidations`.`users_id_validate` = '".Session::getLoginUserID()."'
-                WHERE ".getEntitiesRestrictRequest(" WHERE", "$table");
-      if ($DB->numrows($result) > 0) {
-          while ($data = $DB->fetch_assoc($result)) {
-            $status['to_validate'] = $data["COUNT"];
-         }
+                WHERE ".getEntitiesRestrictRequest(" ", "$table");
+      $searchResult = Search::getDatas('PluginFormcreatorIssue',
+            array('criteria' => array(array(
+                              'field'      => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'notclosed',
+                              'link'       => 'AND',
+                  ), array(
+                              'field'        => 9,
+                              'searchtype'   => 'equals',
+                              'value'        => $_SESSION['glpiID'],
+                              'link'         => 'ANd',
+                  ), array(
+                              'field'        => 4,
+                              'searchtype'   => 'equals',
+                              'value'        => 'notclosed',
+                              'link'         => 'OR',
+                  ), array(
+                              'field'        => 11,
+                              'searchtype'   => 'equals',
+                              'value'        => $_SESSION['glpiID'],
+                              'link'         => 'AND',
+                  )),
+            )
+      );
+      if ($searchResult['data']['totalcount'] > 0) {
+         $status['to_validate'] = $searchResult['data']['totalcount'];
       }
 
       if (!$full) {
