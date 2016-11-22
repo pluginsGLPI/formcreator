@@ -834,7 +834,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $migration->renameTable('glpi_plugin_formcreator_formanswers', $table);
          $itemTicket_table = Item_Ticket::getTable();
          $itemtype = __CLASS__;
-         $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
+         $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
          $DB->query($query) or die ($DB->error());
       }
 
@@ -918,7 +918,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $use_mailing = $CFG_GLPI['use_mailing'];
       $CFG_GLPI['use_mailing'] = '0';
       $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm_Answer'));
       $CFG_GLPI['use_mailing'] = $use_mailing;
 
       // Remove  table

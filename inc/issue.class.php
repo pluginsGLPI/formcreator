@@ -275,7 +275,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      'table' => 'glpi_items_tickets',
                      'joinparams' => array(
                         'jointype'           => 'itemtypeonly',
-                        'specific_itemtype'  => 'PluginFormcreatorFormanswer',
+                        'specific_itemtype'  => 'PluginFormcreatorForm_Answer',
                         'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
                      )
                   ),
