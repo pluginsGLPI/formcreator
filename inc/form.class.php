@@ -1509,4 +1509,33 @@ class PluginFormcreatorForm extends CommonDBTM
       parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
    }
 
+   public static function countAvailableForm() {
+      global $DB;
+
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
+      $nb         = 0;
+
+      if (TableExists($form_table)
+          && TableExists($table_fp)) {
+         $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+         $query      = "SELECT COUNT($form_table.id)
+                        FROM $form_table
+                        WHERE $form_table.`is_active` = 1
+                        AND $form_table.`is_deleted` = 0
+                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
+                             OR $form_table.`language` IN ('0', '', NULL))
+                        AND $where
+                        AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                           SELECT plugin_formcreator_forms_id
+                           FROM $table_fp
+                           WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
+         if ($result = $DB->query($query)) {
+            list($nb) = $DB->fetch_array($result);
+         }
+      }
+
+      return $nb;
+   }
+
 }

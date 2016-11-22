@@ -100,23 +100,7 @@ function plugin_init_formcreator ()
       // Load menu entries if user is logged in and if he has access to at least one form
       if (isset($_SESSION['glpiID'])) {
          // If user have acces to one form or more, add link
-         $form_table = getTableForItemType('PluginFormcreatorForm');
-         $table_fp   = getTableForItemType('PluginFormcreatorFormprofiles');
-         $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
-         $query      = "SELECT COUNT($form_table.id)
-                        FROM $form_table
-                        WHERE $form_table.`is_active` = 1
-                        AND $form_table.`is_deleted` = 0
-                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
-                             OR $form_table.`language` IN ('0', '', NULL))
-                        AND $where
-                        AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                           SELECT plugin_formcreator_forms_id
-                           FROM $table_fp
-                           WHERE plugin_formcreator_profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
-         $result = $DB->query($query);
-         list($nb) = $DB->fetch_array($result);
-         if ($nb > 0) {
+         if (PluginFormcreatorForm::countAvailableForm() > 0) {
             $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
          }
 
