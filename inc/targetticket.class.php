@@ -1557,7 +1557,7 @@ EOS;
    /**
     * find all actors and prepare data for the ticket being created
     */
-   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormanswer $formanswer) {
+   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formanswer) {
       $targetTicketId = $this->getID();
       $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
       $rows = $targetTicketActor->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
