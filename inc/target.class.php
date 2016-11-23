@@ -152,14 +152,20 @@ class PluginFormcreatorTarget extends CommonDBTM
 
                if (!isset($input['_skip_create_actors'])
                    || !$input['_skip_create_actors']) {
-                  $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors
-                            (`plugin_formcreator_targettickets_id`, `actor_role`, `actor_type`, `use_notification`)
-                            VALUES (
-                               $id_targetticket, 'requester', 'creator', 1
-                            ), (
-                               $id_targetticket, 'observer', 'validator', 1
-                            );";
-                  $DB->query($query);
+                  $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
+                  $targetTicket_actor->add(array(
+                        'plugin_formcreator_targettickets_id'  => $id_targetticket,
+                        'actor_role'                           => 'requester',
+                        'actor_type'                           => 'creator',
+                        'use_notification'                     => '1'
+                  ));
+                  $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
+                  $targetTicket_actor->add(array(
+                        'plugin_formcreator_targettickets_id'  => $id_targetticket,
+                        'actor_role'                           => 'observer',
+                        'actor_type'                           => 'validator',
+                        'use_notification'                     => '1'
+                  ));
                }
                break;
             case 'PluginFormcreatorTargetChange':
