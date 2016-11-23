@@ -15,18 +15,14 @@ if ($plugin->isActivated("formcreator")) {
 
    } elseif(isset($_POST['refuse_formanswer'])) {
 
-      $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-      $_POST['status']                      = 'refused';
-      $_POST['save_formanswer']             = true;
-      $formanswer->saveAnswers($_POST);
+      $formanswer->getFromDB(intval($_POST['id']));
+      $formanswer->refuseAnswers($_POST);
       $formanswer->redirectToList();
 
    } elseif(isset($_POST['accept_formanswer'])) {
 
-      $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-      $_POST['status']                      = 'accepted';
-      $_POST['save_formanswer']             = true;
-      $formanswer->saveAnswers($_POST);
+      $formanswer->getFromDB(intval($_POST['id']));
+      $formanswer->acceptAnswers($_POST);
       $formanswer->redirectToList();
 
    } elseif(isset($_POST['save_formanswer'])) {

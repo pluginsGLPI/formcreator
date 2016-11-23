@@ -35,7 +35,7 @@ class QuestionTest extends SuperAdminTestCase {
     * @depends testInitCreateForm
     * @param PluginFormcreatorForm  $form
     */
-   public function testInitCreateSection(PluginFormcreatorForm  $form) {
+   public function testInitCreateSection(PluginFormcreatorForm $form) {
       $section = new PluginFormcreatorSection();
       $this->sectionData = $this->sectionData + array(
             'plugin_formcreator_forms_id' => $form->getID()
