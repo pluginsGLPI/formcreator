@@ -1655,6 +1655,7 @@ EOS;
       $link .= '</a>';
       return $link;
    }
+
    /**
     * Import a form's targetticket into the db
     * @see PluginFormcreatorTarget::import
@@ -1769,14 +1770,5 @@ EOS;
             $target_data['tickettemplates_id']);
 
       return $target_data;
-   }
-
-   private static function getDeleteImage($id) {
-      global $CFG_GLPI;
-
-      $link  = ' &nbsp;<a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
-      $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
-      $link .= '</a>';
-      return $link;
    }
 }
