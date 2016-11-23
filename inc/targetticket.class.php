@@ -1647,14 +1647,6 @@ EOS;
       }
    }
 
-   public static function uninstall()
-   {
-      global $DB;
-
-      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $DB->query($query) or die($DB->error());
-   }
-
    private static function getDeleteImage($id) {
       global $CFG_GLPI;
 
