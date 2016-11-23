@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorFormanswer extends CommonDBChild
+class PluginFormcreatorForm_Answer extends CommonDBChild
 {
    public $dohistory  = true;
    public $usenotepad = true;
@@ -209,6 +209,39 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       return $this->getTypeName();
    }
 
+   /**
+    * Can the current user validate the form ?
+    *
+    * @param PluginFormcreatorForm $form
+    */
+   public function canValidate($form, CommonDBTM $form_answer) {
+      $userId = $_SESSION['glpiID'];
+      $formId = $form->getID();
+
+      if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER) {
+         $canValidate = ($userId == $form_answer->getField('validator_id'));
+      } else if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
+         // Check the user is member of at least one validator group for the form answers
+         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+               || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+                  $table_form_validator = PluginFormcreatorForm_Validator::getTable();
+                  $condition = "`glpi_groups`.`id` IN (
+                  SELECT `items_id`
+                  FROM `$table_form_validator`
+                  WHERE `itemtype` = 'Group' AND `plugin_formcreator_forms_id` = '$formId'
+                  )";
+                  $groupList = Group_User::getUserGroups($userId, $condition);
+                  $canValidate = (count($groupList) > 0);
+               } else {
+                  $canValidate = false;
+               }
+      } else {
+         $canValidate = false;
+      }
+
+      return $canValidate;
+   }
+
    public function showForm($ID, $options = array()) {
       global $DB;
 
@@ -226,33 +259,9 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       $canEdit = $this->fields['status'] == 'refused'
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
+      $canValidate = $this->canValidate($form, $this);
 
       $userId = $_SESSION['glpiID'];
-
-      if ($form->fields['validation_required'] == 1) {
-         // Check the user is one of the users able to validate this form answer
-         $form_validator = new PluginFormcreatorForm_Validator();
-         $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$formId' AND `itemtype` = 'User' AND `items_id` = '$userId'", "", "1");
-         $canValidate = (count($rows) > 0);
-      } else if(($form->fields['validation_required'] == 2)) {
-         // Check the user is member of at least one validator group for the form answers
-         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-               || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-            $table_form_validator = PluginFormcreatorForm_Validator::getTable();
-            $formId = $form->getID();
-            $condition = "`glpi_groups`.`id` IN (
-               SELECT `items_id`
-               FROM `$table_form_validator`
-               WHERE `itemtype` = 'Group' AND `plugin_formcreator_forms_id` = '$formId'
-            )";
-            $groupList = Group_User::getUserGroups($userId, $condition);
-            $canValidate = (count($groupList) > 0);
-         } else {
-            $canValidate = false;
-         }
-      } else {
-         $canValidate = false;
-      }
 
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
@@ -290,7 +299,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                           FROM `glpi_plugin_formcreator_questions` AS `questions`
                           LEFT JOIN `glpi_plugin_formcreator_answers` AS `answers`
                             ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
-                            AND `answers`.`plugin_formcreator_formanwers_id` = '$ID'
+                            AND `answers`.`plugin_formcreator_forms_anwers_id` = '$ID'
                           INNER JOIN `glpi_plugin_formcreator_sections` AS `sections`
                             ON `questions`.`plugin_formcreator_sections_id` = `sections`.`id`
                             AND `plugin_formcreator_forms_id` = ".$form->getID()."
@@ -421,18 +430,18 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                 LEFT JOIN glpi_plugin_formcreator_sections s
                   ON s.`id` = q.`plugin_formcreator_sections_id`
                 LEFT JOIN `glpi_plugin_formcreator_answers` AS a
-                  ON a.`plugin_formcreator_formanwers_id` = $formanwers_id
+                  ON a.`plugin_formcreator_forms_anwers_id` = $formanwers_id
                   AND a.`plugin_formcreator_question_id` = q.`id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
       $result = $DB->query($query);
 
       // Update form answers
-      if (isset($_POST['save_formanswer'])) {
-         $status = $_POST['status'];
+      if (isset($datas['save_formanswer'])) {
+         $status = $datas['status'];
          $this->update(array(
-            'id'                          => intval($datas['id']),
+            'id'                          => $formanwers_id,
             'status'                      => $status,
-            'comment'                     => isset($_POST['comment']) ? $_POST['comment'] : 'NULL'
+            'comment'                     => isset($datas['comment']) ? $datas['comment'] : 'NULL'
          ));
 
          // Update questions answers
@@ -456,7 +465,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $answer->update(array(
                      'id'     => $question['answer_id'],
                      'answer' => $answer_value,
-                  ));
+                  ), 0);
                } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
                      && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
                   $doc    = new Document();
@@ -487,7 +496,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                      $answer->update(array(
                         'id'     => $question['answer_id'],
                         'answer' => $docID,
-                     ));
+                     ), 0);
                   }
                }
             }
@@ -537,10 +546,10 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             }
 
             $answerID = $answer->add(array(
-               'plugin_formcreator_formanwers_id' => $id,
+               'plugin_formcreator_forms_anwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
                'answer'                           => $question_answer,
-            ));
+            ), array(), 0);
 
             // If the question is a file field, save the file as a document
             if (($question['fieldtype'] == 'file')
@@ -573,7 +582,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                   $answer->update(array(
                      'id'     => $answerID,
                      'answer' => $docID,
-                  ));
+                  ), 0);
                }
             }
          }
@@ -615,6 +624,43 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
    }
 
+   public function refuseAnswers($datas) {
+      $datas['plugin_formcreator_forms_id'] = intval($datas['formcreator_form']);
+      $datas['status']                      = 'refused';
+      $datas['save_formanswer']             = true;
+
+      $form   = new PluginFormcreatorForm();
+      $answer = new PluginFormcreatorAnswer();
+
+      $form->getFromDB($datas['plugin_formcreator_forms_id']);
+
+      if (!$this->canValidate($form, $this)) {
+         Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
+         return false;
+      }
+
+      return $this->saveAnswers($datas);
+   }
+
+   public function acceptAnswers($datas) {
+      $datas['plugin_formcreator_forms_id'] = intval($datas['formcreator_form']);
+      $datas['status']                      = 'accepted';
+      $datas['save_formanswer']             = true;
+
+      $form   = new PluginFormcreatorForm();
+      $answer = new PluginFormcreatorAnswer();
+
+      $form->getFromDB($datas['plugin_formcreator_forms_id']);
+
+      if (!$this->canValidate($form, $this)) {
+         Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
+         return false;
+      }
+
+      return $this->saveAnswers($datas);
+   }
+
+
    public function generateTarget()
    {
       // Get all targets
@@ -655,7 +701,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
 
       // retrieve answers
       $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find('`plugin_formcreator_formanwers_id` = '.$this->getID());
+      $answers = $answer->find('`plugin_formcreator_forms_anwers_id` = '.$this->getID());
       $answers_values = array();
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
@@ -668,7 +714,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
                           FROM `glpi_plugin_formcreator_questions` AS questions
                           INNER JOIN `glpi_plugin_formcreator_answers` AS answers
                             ON answers.`plugin_formcreator_question_id` = questions.`id`
-                            AND answers.`plugin_formcreator_formanwers_id` = ".$this->getID()."
+                            AND answers.`plugin_formcreator_forms_anwers_id` = ".$this->getID()."
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`
                             AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
@@ -762,7 +808,7 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       global $DB;
 
       $table = getTableForItemType('PluginFormcreatorAnswer');
-      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_formanwers_id` = {$this->getID()};";
+      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_forms_anwers_id` = {$this->getID()};";
       $DB->query($query);
 
       // If the form was waiting for validation
@@ -783,6 +829,14 @@ class PluginFormcreatorFormanswer extends CommonDBChild
       global $DB;
 
       $table = self::getTable();
+
+      if (TableExists("glpi_plugin_formcreator_formanswers")) {
+         $migration->renameTable('glpi_plugin_formcreator_formanswers', $table);
+         $itemTicket_table = Item_Ticket::getTable();
+         $itemtype = __CLASS__;
+         $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
+         $DB->query($query) or die ($DB->error());
+      }
 
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
@@ -820,13 +874,13 @@ class PluginFormcreatorFormanswer extends CommonDBChild
             $DB->query($query_update) or die ($DB->error());
          }
 
-         if (!FieldExists('glpi_plugin_formcreator_formanswers', 'name')) {
-            $query_update = 'ALTER TABLE `glpi_plugin_formcreator_formanswers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
+         if (!FieldExists($table, 'name')) {
+            $query_update = 'ALTER TABLE `$table` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
             $DB->query($query_update) or die ($DB->error());
          }
 
          // valdiator_id should not be set for waiting form answers
-         $query = "UPDATE glpi_plugin_formcreator_formanswers
+         $query = "UPDATE $table
                SET `validator_id` = '0' WHERE `status`='waiting'";
          $DB->query($query);
       }
@@ -850,19 +904,22 @@ class PluginFormcreatorFormanswer extends CommonDBChild
     */
    public static function uninstall()
    {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Delete logs of the plugin
       $log = new Log();
-      $log->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $log->deleteByCriteria(array('itemtype' => __CLASS__));
 
       // Delete display preferences
       $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $displayPreference->deleteByCriteria(array('itemtype' => __CLASS__));
 
-      // Delete relations with tickets
+      // Delete relations with tickets with email notifications disabled
+      $use_mailing = $CFG_GLPI['use_mailing'];
+      $CFG_GLPI['use_mailing'] = '0';
       $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorFormanswer'));
+      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm_Answer'));
+      $CFG_GLPI['use_mailing'] = $use_mailing;
 
       // Remove  table
       $table = self::getTable();

@@ -397,6 +397,7 @@ $rand = mt_rand();
 
       <tr class="line1">
          <td colspan="4" class="center">
+            <input type="hidden" name="uuid" value="<?php echo $question->fields['uuid']; ?>" />
             <input type="hidden" name="id" value="<?php echo $question_id; ?>" />
             <input type="hidden" name="plugin_formcreator_forms_id" value="<?php echo intval($_REQUEST['form_id']); ?>" />
             <?php if(0 == $question_id) : ?>

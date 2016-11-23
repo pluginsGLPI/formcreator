@@ -16,14 +16,14 @@ if ($plugin->isActivated("formcreator")) {
          ));
       }
 
-      $table = getTableForItemType('PluginFormcreatorFormprofiles');
+      $table = getTableForItemType('PluginFormcreatorForm_Profile');
       $DB->query("DELETE FROM $table WHERE plugin_formcreator_forms_id = " . (int) $_POST["form_id"]);
 
       foreach($_POST["profiles_id"] as $profile_id) {
          if ($profile_id != 0) {
             $query = "INSERT IGNORE INTO $table SET
                         `plugin_formcreator_forms_id` = " . (int) $_POST["form_id"] .",
-                        `plugin_formcreator_profiles_id` = " . (int) $profile_id;
+                        `profiles_id` = " . (int) $profile_id;
             $DB->query($query);
          }
       }

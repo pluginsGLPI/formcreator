@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorTargetTicket extends CommonDBTM
+class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
 
    protected $requesters;
@@ -666,6 +666,7 @@ EOS;
 
       echo '<p align="center">';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="hidden" name="uuid" value="' . $target->fields['uuid'] . '" />';
       echo '<input type="hidden" name="actor_role" value="requester" />';
       echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
@@ -1017,56 +1018,60 @@ EOS;
    public function prepareInputForUpdate($input)
    {
       global $CFG_GLPI;
+
       // Control fields values :
-      // - name is required
-      if(empty($input['title'])) {
-         Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
+      if (!isset($input['_skip_checks'])
+          || !$input['_skip_checks']) {
+         // - name is required
+         if(empty($input['title'])) {
+            Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
+            return array();
+         }
 
-      // - comment is required
-      if(empty($input['comment'])) {
-         Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
+         // - comment is required
+         if(empty($input['comment'])) {
+            Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
+            return array();
+         }
 
-      $input['name'] = plugin_formcreator_encode($input['title']);
+         $input['name'] = plugin_formcreator_encode($input['title']);
 
-      if ($CFG_GLPI['use_rich_text']) {
-         $input['comment'] = Html::entity_decode_deep($input['comment']);
-      }
+         if ($CFG_GLPI['use_rich_text']) {
+            $input['comment'] = Html::entity_decode_deep($input['comment']);
+         }
 
-      switch ($input['destination_entity']) {
-         case 'specific' :
-            $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
-            break;
-         case 'user' :
-            $input['destination_entity_value'] = $input['_destination_entity_value_user'];
-            break;
-         case 'entity' :
-            $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
-            break;
-         default :
-            $input['destination_entity_value'] = 'NULL';
-            break;
-      }
+         switch ($input['destination_entity']) {
+            case 'specific' :
+               $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
+               break;
+            case 'user' :
+               $input['destination_entity_value'] = $input['_destination_entity_value_user'];
+               break;
+            case 'entity' :
+               $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
+               break;
+            default :
+               $input['destination_entity_value'] = 'NULL';
+               break;
+         }
 
-      switch ($input['urgency_rule']) {
-         case 'answer':
-            $input['urgency_question'] = $input['_urgency_question'];
-            break;
-         default:
-            $input['urgency_question'] = '0';
-      }
+         switch ($input['urgency_rule']) {
+            case 'answer':
+               $input['urgency_question'] = $input['_urgency_question'];
+               break;
+            default:
+               $input['urgency_question'] = '0';
+         }
 
-      $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-         $input['tag_questions'] = (!empty($input['_tag_questions']))
-                                    ? implode(',', $input['_tag_questions'])
-                                    : '';
-         $input['tag_specifics'] = (!empty($input['_tag_specifics']))
-                                    ? implode(',', $input['_tag_specifics'])
-                                    : '';
+         $plugin = new Plugin();
+         if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+            $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                       ? implode(',', $input['_tag_questions'])
+                                       : '';
+            $input['tag_specifics'] = (!empty($input['_tag_specifics']))
+                                       ? implode(',', $input['_tag_specifics'])
+                                       : '';
+         }
       }
 
       return $input;
@@ -1084,9 +1089,9 @@ EOS;
    /**
     * Save form datas to the target
     *
-    * @param  PluginFormcreatorFormanswer $formanswer    Answers previously saved
+    * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
-   public function save(PluginFormcreatorFormanswer $formanswer)
+   public function save(PluginFormcreatorForm_Answer $formanswer)
    {
       global $DB;
 
@@ -1166,6 +1171,12 @@ EOS;
          unset($datas['_users_id_requester_notif']);
       }
 
+      $requesters_id = $formanswer->fields['requester_id'];
+      if ($datas['_users_id_requester']) {
+         $requesters_id = $datas['_users_id_requester'];
+      }
+
+
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
@@ -1218,7 +1229,7 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_forms_anwers_id = '.$formanswer->fields['id'].
                                      ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1234,7 +1245,7 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_forms_anwers_id = '.$formanswer->fields['id'].
                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1249,7 +1260,7 @@ EOS;
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('`plugin_formcreator_formanwers_id` = '.$formanswer->fields['id'].
+         $found  = $answer->find('`plugin_formcreator_forms_anwers_id` = '.$formanswer->fields['id'].
                                  ' AND `plugin_formcreator_question_id` = '.$this->fields['due_date_question']);
          $date   = array_shift($found);
       } else {
@@ -1278,8 +1289,8 @@ EOS;
       // Define urgency
       $formAnswerId = $formanswer->fields['id'];
       $urgencyQuestion = $this->fields['urgency_question'];
-      $found  = $answer->find("`plugin_formcreator_formanwers_id` = '$formAnswerId'
-                               AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
+      $found  = $answer->find("`plugin_formcreator_forms_anwers_id` = '$formAnswerId'
+                                AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
       $urgency = array_shift($found);
       switch ($this->fields['urgency_rule']) {
          case 'answer':
@@ -1322,7 +1333,7 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanwers_id` = " . $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_forms_anwers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1357,13 +1368,13 @@ EOS;
       // Add link between Ticket and FormAnswer
       $itemlink = new Item_Ticket();
       $itemlink->add(array(
-         'itemtype'   => 'PluginFormcreatorFormanswer',
+         'itemtype'   => 'PluginFormcreatorForm_Answer',
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ));
 
       // Attach documents to ticket
-      $found = $docItem->find("itemtype = 'PluginFormcreatorFormanswer'
+      $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
                                AND items_id = ".$formanswer->getID());
       if(count($found) > 0) {
          foreach ($found as $document) {
@@ -1400,10 +1411,10 @@ EOS;
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  String $content                            String to be parsed
-    * @param  PluginFormcreatorFormanswer $formanswer    Formanswer object where answers are stored
+    * @param  PluginFormcreatorForm_Answer $formanswer    Formanswer object where answers are stored
     * @return String                                     Parsed string with tags replaced by form values
     */
-   private function parseTags($content, PluginFormcreatorFormanswer $formanswer, $fullform = "") {
+   private function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
       global $DB, $CFG_GLPI;
 
       if ($fullform == "") {
@@ -1424,7 +1435,7 @@ EOS;
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
                                ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
-                               AND `plugin_formcreator_formanwers_id` = ".$formanswer->getID()."
+                               AND `plugin_formcreator_forms_anwers_id` = ".$formanswer->getID()."
                              WHERE `questions`.`plugin_formcreator_sections_id` IN (".implode(', ', $tab_section).")
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
@@ -1535,6 +1546,14 @@ EOS;
       return true;
    }
 
+   public static function uninstall()
+   {
+      global $DB;
+
+      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
+      return $DB->query($query) or die($DB->error());
+   }
+
    /**
     * find all actors and prepare data for the ticket being created
     */
@@ -1634,6 +1653,130 @@ EOS;
 
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
       return $DB->query($query) or die($DB->error());
+   }
+
+   private static function getDeleteImage($id) {
+      global $CFG_GLPI;
+
+      $link  = ' &nbsp;<a href="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php?delete_actor=' . $id . '">';
+      $link .= '<img src="../../../pics/delete.png" alt="' . __('Delete') . '" title="' . __('Delete') . '" />';
+      $link .= '</a>';
+      return $link;
+   }
+   /**
+    * Import a form's targetticket into the db
+    * @see PluginFormcreatorTarget::import
+    *
+    * @param  integer $targettickets_id  curent id
+    * @param  array   $target_data the targetticket data (match the targetticket table)
+    * @return integer the targetticket's id
+    */
+   public static function import($targetitems_id = 0, $target_data = array()) {
+      global $DB;
+
+      $item = new self;
+
+      $target_data['_skip_checks'] = true;
+      $target_data['id'] = $targetitems_id;
+
+      // convert question uuid into id
+      $targetTicket = new PluginFormcreatorTargetTicket();
+      $targetTicket->getFromDB($targetitems_id);
+      $formId        = $targetTicket->getForm()->getID();
+      $section       = new PluginFormcreatorSection();
+      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
+            "`order` ASC");
+      $tab_section = array();
+      foreach($found_section as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if(!empty($tab_section)) {
+         $sectionList = "'" . implode(', ', $tab_section) . "'";
+         $question = new PluginFormcreatorQuestion();
+         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
+         foreach ($rows as $id => $question_line) {
+            $uuid  = $question_line['uuid'];
+
+            $content = $target_data['name'];
+            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
+            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
+            $target_data['name'] = $content;
+
+            $content = $target_data['comment'];
+            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
+            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
+            $target_data['comment'] = $content;
+         }
+      }
+
+      // update target ticket
+      $item->update($target_data);
+
+      if ($targetitems_id
+          && isset($target_data['_actors'])) {
+         foreach($target_data['_actors'] as $actor) {
+            PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+         }
+      }
+
+      return $targetitems_id;
+   }
+
+   /**
+    * Export in an array all the data of the current instanciated targetticket
+    * @return array the array with all data (with sub tables)
+    */
+   public function export() {
+      global $DB;
+
+      if (!$this->getID()) {
+         return false;
+      }
+
+      $target_data = $this->fields;
+
+      // replace dropdown ids
+      if ($target_data['tickettemplates_id'] > 0) {
+         $target_data['_tickettemplate']
+            = Dropdown::getDropdownName('glpi_tickettemplates',
+                                        $target_data['tickettemplates_id']);
+      }
+
+      // convert questions ID into uuid for ticket description
+      $formId        = $this->getForm()->getID();
+      $section       = new PluginFormcreatorSection();
+      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
+            "`order` ASC");
+      $tab_section = array();
+      foreach($found_section as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if(!empty($tab_section)) {
+         $sectionList = "'" . implode(', ', $tab_section) . "'";
+         $question = new PluginFormcreatorQuestion();
+         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
+         foreach ($rows as $id => $question_line) {
+            $uuid  = $question_line['uuid'];
+
+            $content = $target_data['name'];
+            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
+            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
+            $target_data['name'] = $content;
+
+            $content = $target_data['comment'];
+            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
+            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
+            $target_data['comment'] = $content;
+             }
+      }
+
+      // remove key and fk
+      unset($target_data['id'],
+            $target_data['tickettemplates_id']);
+
+      return $target_data;
    }
 
    private static function getDeleteImage($id) {
