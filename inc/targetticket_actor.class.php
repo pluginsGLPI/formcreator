@@ -54,7 +54,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
             $DB->query($query) or die($DB->error());
          }
 
-         $current_enum_role = PluginFormcreatorCommon::getEnumValues($table, 'actor_type');
+         $current_enum_role = PluginFormcreatorCommon::getEnumValues($table, 'actor_role');
          if (count($current_enum_role) != count(self::getEnumRole())) {
             $query = "ALTER TABLE `$table`
             CHANGE COLUMN `actor_role` `actor_role`
