@@ -101,6 +101,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
+      // if ticket(s) exist(s), show it/them
+      $options['_item'] = $item;
+      $item = $this->getTicketsForDisplay($options);
+
       $item->addDivForTabs();
 
     }
@@ -145,36 +149,56 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // Header if the item + link to the list of items
       $this->showNavigationHeader($options);
 
-      // Timeline
+      // retrieve associated tickets
+      $options['_item'] = $item;
+      $item = $this->getTicketsForDisplay($options);
+
+      // force recall of ticket in layout
+      $old_layout = $_SESSION['glpilayout'];
+      $_SESSION['glpilayout'] = "lefttab";
+
+      if ($item instanceof Ticket) {
+         //Tickets without form associated or single ticket for an answer
+         echo "<div class='timeline_box'>";
+         $rand = mt_rand();
+         $item->showTimelineForm($rand);
+         $item->showTimeline($rand);
+         echo "</div>";
+      } else {
+         // No ticket asociated to this issue or multiple tickets
+         // Show the form answers
+         echo '<div class"center">';
+         $item->addDivForTabs();
+         echo '</div>';
+      }
+
+      // restore layout
+      $_SESSION['glpilayout'] = $old_layout;
+   }
+
+   /**
+    * Retrieve how many ticket associated to the current answer
+    * @param  array $options must contains at least an _item key, instance for answer
+    * @return the provide _item key replaced if needed
+    */
+   public function getTicketsForDisplay($options) {
+      $item = $options['_item'];
       $formanswerId = $options['id'];
       $item_ticket = new Item_Ticket();
       $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer'
                                   AND `items_id` = $formanswerId", "`tickets_id` ASC");
 
-      // force recall of ticket
-      $old_layout = $_SESSION['glpilayout'];
-      $_SESSION['glpilayout'] = "lefttab";
-
-      if ($item instanceof Ticket) {
-         if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
-            //Tickets without form associated
-            echo "<div class='timeline_box'>";
-            $rand = mt_rand();
-            $item->showTimelineForm($rand);
-            $item->showTimeline($rand);
-            echo "</div>";
-         } else {
-            $item->addDivForTabs();
-         }
-
-      } else if (count($rows) == 0) {
-         // No ticket asociated to this issue
-         // Show the form answers
-         echo '<div class"center">';
-         $item->showForm($item->getID(), $options);
-         echo '</div>';
+       if (count($rows) == 1) {
+         // one ticket, replace item
+         $ticket = array_shift($rows);
+         $item = new Ticket;
+         $item->getFromDB($ticket['tickets_id']);
+      } else if (count($rows) > 1) {
+         // multiple tickets, force ticket tab in form anser
+         Session::setActiveTab('PluginFormcreatorForm_Answer', 'Ticket$1');
       }
-      $_SESSION['glpilayout'] = $old_layout;
+
+      return $item;
    }
 
       /**
