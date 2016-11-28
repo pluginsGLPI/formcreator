@@ -37,9 +37,10 @@ if ($plugin->isActivated("formcreator")) {
       Html::back();
 
    } elseif (isset($_GET['delete_actor'])) {
-      $query = "DELETE FROM glpi_plugin_formcreator_targettickets_actors
-                WHERE id = " . (int) $_GET['delete_actor'];
-      $DB->query($query);
+      $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
+      $targetTicket_actor->delete(array(
+            'id'                                   => (int) $_GET['delete_actor']
+      ));
       Html::back();
 
    // Show target ticket form
