@@ -1414,6 +1414,14 @@ span.fc_list_icon {
       float: none !important;
    }
 
+   .plugin_formcreator_entityProfile {
+      width: initial;
+   }
+
+   .toggle_menu #c_menu li label {
+      display: inline-block;
+   }
+
    #formcreator_servicecatalogue_ticket_summary {
       width: 100%;
       display: block;
