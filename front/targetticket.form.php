@@ -26,13 +26,14 @@ if ($plugin->isActivated("formcreator")) {
                      ? $_POST['actor_value_' . $_POST['actor_type']]
                      : '';
       $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
-      $query = "INSERT INTO glpi_plugin_formcreator_targettickets_actors SET
-                  `plugin_formcreator_targettickets_id` = $id,
-                  `actor_role`                          = '" . $_POST['actor_role'] . "',
-                  `actor_type`                          = '" . $_POST['actor_type'] . "',
-                  `actor_value`                         = " . (int) $actor_value . ",
-                  `use_notification`                    = " . (int) $use_notification;
-      $DB->query($query);
+      $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
+      $targetTicket_actor->add(array(
+            'plugin_formcreator_targettickets_id'  => $id,
+            'actor_role'                           => $_POST['actor_role'],
+            'actor_type'                           => $_POST['actor_type'],
+            'actor_value'                          => $actor_value,
+            'use_notification'                     => $use_notification,
+      ));
       Html::back();
 
    } elseif (isset($_GET['delete_actor'])) {

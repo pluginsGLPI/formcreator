@@ -77,7 +77,17 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
          $obj->update(array('id'   => $actors_id,
                             'uuid' => plugin_formcreator_getUuid()));
       }
+   }
 
+   public function prepareInputForAdd($input) {
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
    }
 
    public static function uninstall()
