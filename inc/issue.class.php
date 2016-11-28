@@ -396,109 +396,86 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $all_status;
    }
 
-   static function getTicketSummary($full = true) {
+   static function getIncomingCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'process',
+                              'value'      => 'notold']],
+              'reset'    => 'reset'];
+   }
+
+   static function getWaitingCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'process',
+                              'value'      => Ticket::WAITING]],
+              'reset'    => 'reset'];
+   }
+
+   static function getValidateCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'process',
+                              'value'      => 'notclosed',
+                              'link'       => 'AND'],
+                             ['field' => 9,
+                              'searchtype' => 'equals',
+                              'value'      => 'process',
+                              'value'      => $_SESSION['glpiID'],
+                              'link'       => 'AND'],
+                             ['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'process',
+                              'value'      => 'notclosed',
+                              'link'       => 'OR'],
+                             ['field' => 11,
+                              'searchtype' => 'equals',
+                              'value'      => 'process',
+                              'value'      => $_SESSION['glpiID'],
+                              'link'       => 'AND']],
+              'reset'    => 'reset'];
+   }
+
+   static function getSolvedCriteria() {
+      return ['criteria' => [['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'old']],
+              'reset'    => 'reset'];
+   }
+
+   static function getTicketSummary() {
       global $DB;
 
-      $table = self::getTable();
-      $can_group = Session::haveRight(Ticket::$rightname, Ticket::READGROUP)
-                     && isset($_SESSION["glpigroups"])
-                     && count($_SESSION["glpigroups"]);
+      $status = [
+         Ticket::INCOMING => 0,
+         Ticket::WAITING => 0,
+         'to_validate' => 0,
+         Ticket::SOLVED => 0
+      ];
 
-      // construct query
-      $query = "SELECT $table.status,
-                       COUNT(DISTINCT $table.id) AS COUNT
-                FROM $table
-                LEFT JOIN glpi_tickets_users
-                  ON $table.id = glpi_tickets_users.tickets_id
-                  AND glpi_tickets_users.type IN('".CommonITILActor::REQUESTER."',
-                                                 '".CommonITILActor::OBSERVER."')";
-      if ($can_group) {
-         $query .= "
-                LEFT JOIN glpi_groups_tickets
-                  ON $table.id = glpi_groups_tickets.tickets_id
-                  AND glpi_groups_tickets.type IN('".CommonITILActor::REQUESTER."',
-                                                  '".CommonITILActor::OBSERVER."')";
-      }
-      $query .= getEntitiesRestrictRequest(" WHERE", "$table");
-      $query .= " AND (
-                     glpi_tickets_users.users_id = '".Session::getLoginUserID()."'
-                     OR $table.requester_id = '".Session::getLoginUserID()."'";
-
-      if ($can_group) {
-         $groups = implode(",",$_SESSION['glpigroups']);
-         $query .= " OR glpi_groups_tickets.groups_id IN (".$groups.") ";
-      }
-      $query.= ")
-         GROUP BY status";
-
-
-      $status = array();
-      $status_labels = self::getAllStatusArray();
-      foreach ($status_labels as $key => $label) {
-         $status[$key] = 0;
+      $searchIncoming = Search::getDatas('PluginFormcreatorIssue',
+                                         self::getIncomingCriteria());
+      if ($searchIncoming['data']['totalcount'] > 0) {
+         $status[Ticket::INCOMING] = $searchIncoming['data']['totalcount'];
       }
 
-      $result = $DB->query($query);
-      if ($DB->numrows($result) > 0) {
-         while ($data = $DB->fetch_assoc($result)) {
-            $status[$data["status"]] = $data["COUNT"];
-         }
+      $searchWaiting = Search::getDatas('PluginFormcreatorIssue',
+                                         self::getWaitingCriteria());
+      if ($searchWaiting['data']['totalcount'] > 0) {
+         $status[Ticket::WAITING] = $searchWaiting['data']['totalcount'];
       }
 
-      // retrieve also validation tickets
-      $status['to_validate'] = 0;
-      $query = "SELECT COUNT(DISTINCT $table.id) AS COUNT
-                FROM $table
-                INNER JOIN `glpi_tickets`
-                  ON $table.original_id = `glpi_tickets`.`id`
-                  AND `glpi_tickets`.`global_validation` = ".CommonITILValidation::WAITING."
-                INNER JOIN `glpi_ticketvalidations`
-                  ON `$table`.`original_id` = `glpi_ticketvalidations`.`tickets_id`
-                  AND `glpi_ticketvalidations`.`users_id_validate` = '".Session::getLoginUserID()."'
-                WHERE ".getEntitiesRestrictRequest(" ", "$table");
-      $searchResult = Search::getDatas('PluginFormcreatorIssue',
-            array('criteria' => array(array(
-                              'field'      => 4,
-                              'searchtype' => 'equals',
-                              'value'      => 'notclosed',
-                              'link'       => 'AND',
-                  ), array(
-                              'field'        => 9,
-                              'searchtype'   => 'equals',
-                              'value'        => $_SESSION['glpiID'],
-                              'link'         => 'ANd',
-                  ), array(
-                              'field'        => 4,
-                              'searchtype'   => 'equals',
-                              'value'        => 'notclosed',
-                              'link'         => 'OR',
-                  ), array(
-                              'field'        => 11,
-                              'searchtype'   => 'equals',
-                              'value'        => $_SESSION['glpiID'],
-                              'link'         => 'AND',
-                  )),
-            )
-      );
-      if ($searchResult['data']['totalcount'] > 0) {
-         $status['to_validate'] = $searchResult['data']['totalcount'];
+      $searchValidate = Search::getDatas('PluginFormcreatorIssue',
+                                         self::getValidateCriteria());
+      if ($searchValidate['data']['totalcount'] > 0) {
+         $status['to_validate'] = $searchValidate['data']['totalcount'];
       }
 
-      if (!$full) {
-         $status[Ticket::INCOMING] = $status[Ticket::INCOMING]
-                                   + $status[Ticket::ASSIGNED]
-                                   + $status[Ticket::WAITING]
-                                   + $status[Ticket::PLANNED]
-                                   + $status['accepted']
-                                   + $status['waiting'];
-         $status[Ticket::SOLVED]  = $status[Ticket::SOLVED]
-                                  + $status[Ticket::CLOSED];
-
-         unset($status[Ticket::CLOSED],
-               $status[Ticket::PLANNED],
-               $status[Ticket::ASSIGNED]);
+      $searchSolved = Search::getDatas('PluginFormcreatorIssue',
+                                         self::getSolvedCriteria());
+      if ($searchSolved['data']['totalcount'] > 0) {
+         $status[Ticket::SOLVED] = $searchSolved['data']['totalcount'];
       }
-
 
       return $status;
    }
