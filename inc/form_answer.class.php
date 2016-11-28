@@ -546,7 +546,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             }
 
             $answerID = $answer->add(array(
-               'plugin_formcreator_forms_answwers_id' => $id,
+               'plugin_formcreator_forms_answers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
                'answer'                           => $question_answer,
             ), array(), 0);
