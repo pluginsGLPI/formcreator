@@ -666,7 +666,7 @@ EOS;
 
       echo '<p align="center">';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="hidden" name="uuid" value="' . $target->fields['uuid'] . '" />';
+      echo '<input type="hidden" name="uuid" value="' . $target['uuid'] . '" />';
       echo '<input type="hidden" name="actor_role" value="requester" />';
       echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
