@@ -299,7 +299,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                           FROM `glpi_plugin_formcreator_questions` AS `questions`
                           LEFT JOIN `glpi_plugin_formcreator_answers` AS `answers`
                             ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
-                            AND `answers`.`plugin_formcreator_forms_anwers_id` = '$ID'
+                            AND `answers`.`plugin_formcreator_forms_answers_id` = '$ID'
                           INNER JOIN `glpi_plugin_formcreator_sections` AS `sections`
                             ON `questions`.`plugin_formcreator_sections_id` = `sections`.`id`
                             AND `plugin_formcreator_forms_id` = ".$form->getID()."
@@ -421,7 +421,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $form->getFromDB($datas['formcreator_form']);
 
-      $formanwers_id = isset($datas['id'])
+      $formanswers_id = isset($datas['id'])
                         ?intval($datas['id'])
                         :-1;
 
@@ -430,7 +430,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                 LEFT JOIN glpi_plugin_formcreator_sections s
                   ON s.`id` = q.`plugin_formcreator_sections_id`
                 LEFT JOIN `glpi_plugin_formcreator_answers` AS a
-                  ON a.`plugin_formcreator_forms_anwers_id` = $formanwers_id
+                  ON a.`plugin_formcreator_forms_answers_id` = $formanswers_id
                   AND a.`plugin_formcreator_question_id` = q.`id`
                 WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
       $result = $DB->query($query);
@@ -439,7 +439,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       if (isset($datas['save_formanswer'])) {
          $status = $datas['status'];
          $this->update(array(
-            'id'                          => $formanwers_id,
+            'id'                          => $formanswers_id,
             'status'                      => $status,
             'comment'                     => isset($datas['comment']) ? $datas['comment'] : 'NULL'
          ));
@@ -546,7 +546,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             }
 
             $answerID = $answer->add(array(
-               'plugin_formcreator_forms_anwers_id' => $id,
+               'plugin_formcreator_forms_answwers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],
                'answer'                           => $question_answer,
             ), array(), 0);
@@ -701,7 +701,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       // retrieve answers
       $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find('`plugin_formcreator_forms_anwers_id` = '.$this->getID());
+      $answers = $answer->find('`plugin_formcreator_forms_answers_id` = '.$this->getID());
       $answers_values = array();
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
@@ -714,7 +714,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                           FROM `glpi_plugin_formcreator_questions` AS questions
                           INNER JOIN `glpi_plugin_formcreator_answers` AS answers
                             ON answers.`plugin_formcreator_question_id` = questions.`id`
-                            AND answers.`plugin_formcreator_forms_anwers_id` = ".$this->getID()."
+                            AND answers.`plugin_formcreator_forms_answers_id` = ".$this->getID()."
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`
                             AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
@@ -808,7 +808,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       global $DB;
 
       $table = getTableForItemType('PluginFormcreatorAnswer');
-      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_forms_anwers_id` = {$this->getID()};";
+      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_forms_answers_id` = {$this->getID()};";
       $DB->query($query);
 
       // If the form was waiting for validation

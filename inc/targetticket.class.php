@@ -1167,8 +1167,6 @@ EOS;
                '_users_id_requester'         => $datas['_users_id_requester'],
                '_users_id_requester_notif'   => true,
          );
-         unset($datas['_users_id_requester']);
-         unset($datas['_users_id_requester_notif']);
       }
 
       $requesters_id = $formanswer->fields['requester_id'];
@@ -1229,7 +1227,7 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_forms_anwers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
                                      ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1245,7 +1243,7 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_forms_anwers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1260,7 +1258,7 @@ EOS;
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('`plugin_formcreator_forms_anwers_id` = '.$formanswer->fields['id'].
+         $found  = $answer->find('`plugin_formcreator_forms_answers_id` = '.$formanswer->fields['id'].
                                  ' AND `plugin_formcreator_question_id` = '.$this->fields['due_date_question']);
          $date   = array_shift($found);
       } else {
@@ -1289,7 +1287,7 @@ EOS;
       // Define urgency
       $formAnswerId = $formanswer->fields['id'];
       $urgencyQuestion = $this->fields['urgency_question'];
-      $found  = $answer->find("`plugin_formcreator_forms_anwers_id` = '$formAnswerId'
+      $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
                                 AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
       $urgency = array_shift($found);
       switch ($this->fields['urgency_rule']) {
@@ -1333,7 +1331,7 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_forms_anwers_id` = " . $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_forms_answers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1435,7 +1433,7 @@ EOS;
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
                                ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
-                               AND `plugin_formcreator_forms_anwers_id` = ".$formanswer->getID()."
+                               AND `plugin_formcreator_forms_answers_id` = ".$formanswer->getID()."
                              WHERE `questions`.`plugin_formcreator_sections_id` IN (".implode(', ', $tab_section).")
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
@@ -1588,7 +1586,7 @@ EOS;
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
                $answer->getFromDBByQuery("WHERE `plugin_formcreator_question_id` = '$actorValue'
-                                          AND `plugin_formcreator_formanwers_id` = '$formanswerId'");
+                                          AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
 
                if ($answer->isNewItem()) {
                   continue;
@@ -1602,7 +1600,7 @@ EOS;
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
                $answer->getFromDBByQuery("WHERE `plugin_formcreator_question_id` = '$actorValue'
-                                          AND `plugin_formcreator_formanwers_id` = '$formanswerId'");
+                                          AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
 
                if ($answer->isNewItem()) {
                   continue;
