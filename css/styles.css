@@ -521,7 +521,18 @@ form.formcreator_form {
 #formcreator_servicecatalogue_ticket_summary {
    margin: 5px 60px 0 5px;
    height: inherit;
+   position: absolute;
+   z-index: 15;
+   left: 150px;
+   width: 260px;
+   top: 10px;
+   transition: .4s;
 }
+
+.toggle_menu #formcreator_servicecatalogue_ticket_summary {
+   left: 100px;
+}
+
 #formcreator_servicecatalogue_ticket_summary .status {
    min-width: 60px;
    display: inline-block;
@@ -1063,11 +1074,11 @@ a.plugin_formcreator_formTile_title {
    left: 100px;
    top: 15px;
    z-index: 15;
+   transition: .4s;
 }
 
 .toggle_menu #formcreator-toggle-nav-desktop ~ .formcreator-nav-button {
    left: 50px;
-   transition: .4s;
 }
 
 #formcreator-toggle-nav-desktop,
@@ -1193,9 +1204,14 @@ span.fc_list_icon {
 
 .plugin_formcreator_entityProfile {
    float: right;
+   width: 190px;
+   height: 40px;
 }
 .plugin_formcreator_entityProfile > li {
-   line-height: 45px;
+   float: none !important;
+   display: inline-block;
+   line-height: normal;
+   top: 20%;
 }
 .plugin_formcreator_entityProfile .select2-container {
    margin-top: 12px;
@@ -1204,7 +1220,8 @@ span.fc_list_icon {
 .plugin_formcreator_entityProfile .select2-container,
 .plugin_formcreator_entityProfile .entity_select {
    color:  #FFF;
-   margin-right: 10px;
+   margin: 0 10px 0 0;
+   white-space: nowrap;
 }
 
 .plugin_formcreator_serviceCatalogIcon span.fc_list_icon {
@@ -1474,6 +1491,10 @@ span.fc_list_icon {
 
    .plugin_formcreator_page #formcreator_servicecatalogue {
       width: 100%;
+   }
+
+   #formcreator_servicecatalogue_ticket_summary {
+      left: 100px;
    }
 
    .plugin_formcreator_page #plugin_formcreator_wizard_categories {
