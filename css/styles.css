@@ -534,7 +534,7 @@ form.formcreator_form {
 }
 
 #formcreator_servicecatalogue_ticket_summary .status {
-   min-width: 60px;
+   min-width: 2.3rem;
    display: inline-block;
    margin-right: 5px;
    margin-top: -5px;
