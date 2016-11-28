@@ -527,6 +527,7 @@ form.formcreator_form {
    width: 260px;
    top: 10px;
    transition: .4s;
+   height: 1rem;
 }
 
 .toggle_menu #formcreator_servicecatalogue_ticket_summary {
