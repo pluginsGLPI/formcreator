@@ -1022,13 +1022,14 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_container .plugin_formcreator_leftHeader#header {
    float: left;
    height: 100%;
-   position: fixed;
+   position: relative;
 }
 
 #plugin_formcreator_serviceCatalog #header_top {
    height: 45px;
    line-height: 45px;
    position: relative;
+   z-index: 10;
 }
 .formcreator_header_top#header_top {
    margin-left:  300px;
@@ -1057,8 +1058,16 @@ a.plugin_formcreator_formTile_title {
    -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 #formcreator-toggle-nav-desktop ~ .formcreator-nav-button {
- float: left;
- margin: 10px 0 0 10px;
+   margin: 10px 0 0 10px;
+   position: absolute;
+   left: 100px;
+   top: 15px;
+   z-index: 15;
+}
+
+.toggle_menu #formcreator-toggle-nav-desktop ~ .formcreator-nav-button {
+   left: 50px;
+   transition: .4s;
 }
 
 #formcreator-toggle-nav-desktop,

@@ -45,6 +45,11 @@ class PluginFormcreatorWizard {
 
 
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
+
+      // menu toggle (desktop mode)
+      echo "<input type='checkbox' id='formcreator-toggle-nav-desktop'>";
+      echo "<label for='formcreator-toggle-nav-desktop' class='formcreator-nav-button'></label>";
+
       echo '<div id="header_top">';
       echo '<div id="c_logo"></div>';
       echo '</div>';
@@ -141,10 +146,6 @@ class PluginFormcreatorWizard {
 
    public static function showHeaderTopContent() {
       global $CFG_GLPI;
-
-      // menu toggle (desktop mode)
-      echo "<input type='checkbox' id='formcreator-toggle-nav-desktop'>";
-      echo "<label for='formcreator-toggle-nav-desktop' class='formcreator-nav-button'></label>";
 
       // show ticket summary
       $options = array('criteria' => array(array('field'      => 4,
