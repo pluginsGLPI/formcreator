@@ -834,7 +834,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $migration->renameTable('glpi_plugin_formcreator_formanswers', $table);
          $itemTicket_table = Item_Ticket::getTable();
          $itemtype = __CLASS__;
-         $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
+         $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
          $DB->query($query) or die ($DB->error());
       }
 
@@ -882,7 +882,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          // valdiator_id should not be set for waiting form answers
          $query = "UPDATE $table
                SET `validator_id` = '0' WHERE `status`='waiting'";
-         $DB->query($query);
+         $DB->query($query) or die ($DB->error());
       }
 
       // Create standard search options
