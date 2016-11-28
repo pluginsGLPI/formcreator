@@ -26,19 +26,21 @@ if ($plugin->isActivated("formcreator")) {
       ? $_POST['actor_value_' . $_POST['actor_type']]
       : '';
       $use_notification = ($_POST['use_notification'] == 0) ? 0 : 1;
-      $query = "INSERT INTO glpi_plugin_formcreator_targetchanges_actors SET
-      `plugin_formcreator_targetchanges_id` = $id,
-      `actor_role`                          = '" . $_POST['actor_role'] . "',
-                  `actor_type`                          = '" . $_POST['actor_type'] . "',
-                  `actor_value`                         = " . (int) $actor_value . ",
-                  `use_notification`                    = " . (int) $use_notification;
-      $DB->query($query);
+      $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
+      $targetChange_actor->add(array(
+            'plugin_formcreator_targetchanges_id'  => $id,
+            'actor_role'                           => $_POST['actor_role'],
+            'actor_type'                           => $_POST['actor_type'],
+            'actor_value'                          => $actor_value,
+            'use_notification'                     => $use_notification
+      ));
       Html::back();
 
    } elseif (isset($_GET['delete_actor'])) {
-      $query = "DELETE FROM glpi_plugin_formcreator_targetchanges_actors
-                WHERE id = " . (int) $_GET['delete_actor'];
-      $DB->query($query);
+      $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
+      $targetChange_actor->delete(array(
+            'id'                                   => (int) $_GET['delete_actor']
+      ));
       Html::back();
 
       // Show target ticket form
