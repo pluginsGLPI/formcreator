@@ -1068,12 +1068,10 @@ a.plugin_formcreator_formTile_title {
 }
 
 #c_menu li label {
-   animation: .3s fadeIn;
-   opacity: 1;
+   display: inline-block;
 }
 .toggle_menu #c_menu li label {
-   animation: .3s fadeOut;
-   opacity: 0;
+   display: none;
 }
 .toggle_menu .plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {
    width: 53px;
