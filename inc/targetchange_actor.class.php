@@ -31,6 +31,17 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
       }
    }
 
+   public function prepareInputForAdd($input) {
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
    public static function uninstall()
    {
       global $DB;
