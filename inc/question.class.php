@@ -597,8 +597,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $obj   = new self();
-      $table = $obj->getTable();
+      $table = self::getTable();
 
       if (!TableExists($table)) {
          $migration->displayMessage("Installing $table");
@@ -942,8 +941,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $obj = new self();
-      $DB->query('DROP TABLE IF EXISTS `' . $obj->getTable() . '`');
+      $table = self::getTable();
+      $DB->query("DROP TABLE IF EXISTS `$table`");
 
       // Delete logs of the plugin
       $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '" . __CLASS__ . "'");
