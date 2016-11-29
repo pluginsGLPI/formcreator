@@ -118,7 +118,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       // redo an id key
       if (!FieldExists($table, 'id', false)) {
          $DB->query("ALTER TABLE $table DROP PRIMARY KEY");
-         $migration->addField($table, 'id', 'integer');
+         $migration->addField($table, 'id', 'autoincrement');
          $migration->addKey($table, 'id', 'id', 'PRIMARY KEY');
          $migration->addKey($table, array('plugin_formcreator_forms_id',
                                           'profiles_id'),
