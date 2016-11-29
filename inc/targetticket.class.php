@@ -1136,6 +1136,20 @@ EOS;
       // Get predefined Fields
       $ttp                  = new TicketTemplatePredefinedField();
       $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
+
+      if (isset($predefined_fields['_users_id_requester'])) {
+         $this->addActor('requester', $predefined_fields['_users_id_requester'], true);
+         unset($predefined_fields['_users_id_requester']);
+      }
+      if (isset($predefined_fields['_users_id_observer'])) {
+         $this->addActor('observer', $predefined_fields['_users_id_observer'], true);
+         unset($predefined_fields['_users_id_observer']);
+      }
+      if (isset($predefined_fields['_users_id_assign'])) {
+         $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
+         unset($predefined_fields['_users_id_assign']);
+      }
+
       $datas                = array_merge($datas, $predefined_fields);
 
       // Parse datas
@@ -1146,34 +1160,23 @@ EOS;
       $datas['content']               = htmlentities($this->parseTags($this->fields['comment'],
                                                                       $formanswer,
                                                                       $fullform));
-      $datas['_users_id_requester']   = 0;
+
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
       $this->prepareActors($form, $formanswer);
-      $additionalActors = null;
+
       if (count($this->requesters['_users_id_requester']) == 0) {
-         $datas['_users_id_requester'] = 0;
+         $this->addActor('requester', $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
-      } else if (count($this->requesters['_users_id_requester']) == 1) {
-         $requesters_id = $this->requesters['_users_id_requester'][0];
-         if ($requesters_id == 0) {
+      } else if (count($this->requesters['_users_id_requester']) >= 1) {
+         if ($this->requesters['_users_id_requester'][0] == 0) {
+            $this->addActor('requester', $formanswer->fields['requester_id'], true);
             $requesters_id = $formanswer->fields['requester_id'];
+         } else {
+            $requesters_id = $this->requesters['_users_id_requester'][0];
          }
-         $this->requesters['_users_id_requester'] = $this->requesters['_users_id_requester'][0];
-      } else if (count($this->requesters['_users_id_requester']) > 1) {
-         $requesters_id = $formanswer->fields['requester_id'];
-         $additionalActors = array(
-               '_users_id_requester'         => $datas['_users_id_requester'],
-               '_users_id_requester_notif'   => true,
-         );
       }
-
-      $requesters_id = $formanswer->fields['requester_id'];
-      if ($datas['_users_id_requester']) {
-         $requesters_id = $datas['_users_id_requester'];
-      }
-
 
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
@@ -1301,19 +1304,51 @@ EOS;
          $datas['urgency'] = $urgency;
       }
 
-      $datas = $this->requesters + $this->observers + $this->assigned + $datas;
+      if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
+         $datas['_users_id_requester'] = $requesters_id;
+      } else {
+         $datas = $this->requesters + $this->observers + $this->assigned + $datas;
+      }
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
          return false;
       }
 
-      // Add additional actors (requesters)
-      if ($additionalActors !== null) {
-         $ticket->update(array(
-               'id'     => $ticketID,
-               '_additional_requesters' => $additionalActors['_users_id_requester']
-         ));
+      if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
+         // update ticket with actors
+
+         // user actors
+         foreach ($this->requesters['_users_id_requester'] as $index => $userId) {
+            $ticket_user = new Ticket_User();
+            $ticket_user->add(array(
+                  'tickets_id'       => $ticketID,
+                  'users_id'         => $userId,
+                  'type'             => CommonITILActor::REQUESTER,
+                  'use_notification' => $this->requesters['_users_id_requester_notif']['use_notification'][$index],
+            ));
+         }
+         foreach ($this->observers['_users_id_observer'] as $index => $userId) {
+            $ticket_user = new Ticket_User();
+            $ticket_user->add(array(
+                  'tickets_id'       => $ticketID,
+                  'users_id'         => $userId,
+                  'type'             => CommonITILActor::OBSERVER,
+                  'use_notification' => $this->observers['_users_id_observer_notif']['use_notification'][$index],
+            ));
+         }
+         foreach ($this->assigned['_users_id_assign'] as $index => $userId) {
+            $ticket_user = new Ticket_User();
+            $ticket_user->add(array(
+                  'tickets_id'       => $ticketID,
+                  'users_id'         => $userId,
+                  'type'             => CommonITILActor::ASSIGN,
+                  'use_notification' => $this->assigned['_users_id_assign_notif']['use_notification'][$index],
+            ));
+         }
+
+         // group actors
+         // TODO :
       }
 
       // Add tag if presents
@@ -1611,8 +1646,24 @@ EOS;
                break;
          }
 
-         foreach ($userIds as $userIdOrEmail) {
-            $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
+         switch ($actor['actor_type']) {
+            case 'creator' :
+            case 'validator' :
+            case 'person' :
+            case 'question_person' :
+            case 'question_actors':
+               foreach ($userIds as $userIdOrEmail) {
+                  $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
+               }
+               break;
+            case 'group' :
+            case 'question_group' :
+               // TODO :
+               break;
+            case 'supplier' :
+            case 'question_supplier' :
+               // TODO :
+               break;
          }
       }
    }
