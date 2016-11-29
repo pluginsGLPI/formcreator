@@ -1,7 +1,5 @@
 <?php
-require_once('dropdown-field.class.php');
-
-class tagField extends dropdownField
+class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
 {
    const IS_MULTIPLE    = true;
 

@@ -1,5 +1,5 @@
 <?php
-class floatField extends PluginFormcreatorField
+class PluginFormcreatorFloatField extends PluginFormcreatorField
 {
    public function isValid($value)
    {

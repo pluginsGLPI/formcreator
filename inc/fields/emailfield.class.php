@@ -1,5 +1,5 @@
 <?php
-class emailField extends PluginFormcreatorField
+class PluginFormcreatorEmailField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {

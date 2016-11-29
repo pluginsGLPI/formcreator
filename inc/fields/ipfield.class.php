@@ -1,12 +1,12 @@
 <?php
-class hiddenField extends PluginFormcreatorField
+class PluginFormcreatorIpField extends PluginFormcreatorField
 {
    public function show($canEdit = true)
    {
       echo '<input type="hidden" class="form-control"
                name="formcreator_field_' . $this->fields['id'] . '"
                id="formcreator_field_' . $this->fields['id'] . '"
-               value="' . $this->fields['default_values'] . '" />' . PHP_EOL;
+               value="' . $_SERVER["REMOTE_ADDR"] . '" />' . PHP_EOL;
    }
 
    public function isValid($value)
@@ -16,14 +16,14 @@ class hiddenField extends PluginFormcreatorField
 
    public static function getName()
    {
-      return _n('Hidden field', 'Hidden fields', 1);
+      return _n('IP address', 'Adresses IP', 1);
    }
 
    public static function getPrefs()
    {
       return array(
          'required'       => 0,
-         'default_values' => 1,
+         'default_values' => 0,
          'values'         => 0,
          'range'          => 0,
          'show_empty'     => 0,
@@ -38,6 +38,6 @@ class hiddenField extends PluginFormcreatorField
    public static function getJSFields()
    {
       $prefs = self::getPrefs();
-      return "tab_fields_fields['hidden'] = 'showFields(" . implode(', ', $prefs) . ");';";
+      return "tab_fields_fields['ip'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

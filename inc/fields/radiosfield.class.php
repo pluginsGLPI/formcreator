@@ -1,5 +1,5 @@
 <?php
-class radiosField extends PluginFormcreatorField
+class PluginFormcreatorRadiosField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {

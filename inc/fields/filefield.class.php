@@ -1,5 +1,5 @@
 <?php
-class fileField extends PluginFormcreatorField
+class PluginFormcreatorFileField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {
