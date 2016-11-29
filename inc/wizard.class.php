@@ -45,6 +45,13 @@ class PluginFormcreatorWizard {
 
 
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
+
+      // menu toggle (desktop mode)
+      echo "<input type='checkbox' id='formcreator-toggle-nav-desktop'>";
+      echo "<label for='formcreator-toggle-nav-desktop' class='formcreator-nav-button'></label>";
+
+      self::showTicketSummary();
+
       echo '<div id="header_top">';
       echo '<div id="c_logo"></div>';
       echo '</div>';
@@ -142,10 +149,46 @@ class PluginFormcreatorWizard {
    public static function showHeaderTopContent() {
       global $CFG_GLPI;
 
-      // menu toggle (desktop mode)
-      echo "<input type='checkbox' id='formcreator-toggle-nav-desktop'>";
-      echo "<label for='formcreator-toggle-nav-desktop' class='formcreator-nav-button'></label>";
+      // icons
+      echo '</ul>';
+      echo '<ul class="plugin_formcreator_userMenu_icons">';
+      // preferences
+      echo '<li id="plugin_formcreator_preferences_icon">';
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
+            __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
+      echo '</a></li>';
+      // Logout
+      echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
+      if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
+         echo '?noAUTO=1';
+      }
+      echo '" title="'.__s('Logout').'">';
+      echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
+      echo '</li>';
 
+      echo '</ul>';
+
+      // avatar
+      echo '<span id="plugin_formcreator_avatar">';
+      $user = new User;
+      $user->getFromDB($_SESSION['glpiID']);
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php"
+               title="'.formatUserName (0, $_SESSION["glpiname"],
+                                           $_SESSION["glpirealname"],
+                                           $_SESSION["glpifirstname"], 0, 20).'">
+            <img src="'.User::getThumbnailURLForPicture($user->fields['picture']).'"/>
+            </a>
+            </span>';
+
+      // Profile and entity selection
+      echo '<ul class="plugin_formcreator_entityProfile">';
+      if (Session::getLoginUserID()) {
+         Html::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
+      }
+      echo "</ul>";
+   }
+
+   public static function showTicketSummary() {
       // show ticket summary
       $options = array('criteria' => array(array('field'      => 4,
                                                  'searchtype' => 'equals',
@@ -226,44 +269,6 @@ class PluginFormcreatorWizard {
       }
 
       echo '</span>'; #formcreator_servicecatalogue_ticket_summary
-
-      // icons
-      echo '</ul>';
-      echo '<ul class="plugin_formcreator_userMenu_icons">';
-      // preferences
-      echo '<li id="plugin_formcreator_preferences_icon">';
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
-            __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
-      echo '</a></li>';
-      // Logout
-      echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
-      if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
-         echo '?noAUTO=1';
-      }
-      echo '" title="'.__s('Logout').'">';
-      echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
-      echo '</li>';
-
-      echo '</ul>';
-
-      // avatar
-      echo '<span id="plugin_formcreator_avatar">';
-      $user = new User;
-      $user->getFromDB($_SESSION['glpiID']);
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php"
-               title="'.formatUserName (0, $_SESSION["glpiname"],
-                                           $_SESSION["glpirealname"],
-                                           $_SESSION["glpifirstname"], 0, 20).'">
-            <img src="'.User::getThumbnailURLForPicture($user->fields['picture']).'"/>
-            </a>
-            </span>';
-
-      // Profile and entity selection
-      echo '<ul class="plugin_formcreator_entityProfile">';
-      if (Session::getLoginUserID()) {
-         Html::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
-      }
-      echo "</ul>";
    }
 
    protected static function findActiveMenuItem() {
