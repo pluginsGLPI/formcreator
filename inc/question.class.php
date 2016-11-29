@@ -563,24 +563,29 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       global $DB;
 
-      $query = "UPDATE `{$this->getTable()}` SET
+      $table = self::getTable();
+      $question_condition_table = PluginFormcreatorQuestion_Condition::getTable();
+
+      $order = $this->fields['order'];
+      $query = "UPDATE `$table` SET
                 `order` = `order` - 1
-                WHERE `order` > {$this->fields['order']}
+                WHERE `order` > '$order'
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
       $DB->query($query);
 
       $questionId = $this->fields['id'];
-      $query = "UPDATE `glpi_plugin_formcreator_questions` SET `show_rule`='always'
+      $query = "UPDATE `$table` SET `show_rule`='always'
             WHERE `id` IN (
-                  SELECT `plugin_formcreator_questions_id` FROM `glpi_plugin_formcreator_questions_conditions`
+                  SELECT `plugin_formcreator_questions_id` FROM `$question_condition_table`
                   WHERE `show_field` = '$questionId'
             )";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
 
-      $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
+
+      $query = "DELETE FROM `$question_condition_table`
             WHERE `plugin_formcreator_questions_id` = '$questionId'
             OR `show_field` = '$questionId'";
-      $GLOBALS['DB']->query($query);
+      $DB->query($query);
    }
 
    /**
