@@ -90,8 +90,9 @@ class UrgencyTest extends SuperAdminTestCase
 
    /**
     * @depends testInitCreateForm
+    * @param PluginFormcreatorForm $urgencyQuestions
     */
-   public function testInitCreateTargetTicket($form) {
+   public function testInitCreateTargetTicket(PluginFormcreatorForm $form) {
       $urgencyQuestions = array();
       $formId = $form->getID();
       foreach ($this->targetTicketData as $targetData) {
@@ -147,9 +148,9 @@ class UrgencyTest extends SuperAdminTestCase
    /**
     * @depends testInitCreateForm
     * @depends testInitCreateTargetTicket
-    * @param unknown $urgencyQuestions
+    * @param PluginFormcreatorForm $urgencyQuestions
     */
-   public function testSendForm($form, $urgencyQuestions) {
+   public function testSendForm(PluginFormcreatorForm $form, $urgencyQuestions) {
       $formId = $form->getID();
       $_POST = array('formcreator_form' => $form->getID());
       foreach($urgencyQuestions as $question) {

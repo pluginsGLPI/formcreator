@@ -107,7 +107,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
       );
 
       foreach($dataset as &$data) {
-         $data['field'] = new integerField($data['fields'], $data['data']);
+         $data['field'] = new PluginFormcreatorIntegerField($data['fields'], $data['data']);
       }
 
       return $dataset;

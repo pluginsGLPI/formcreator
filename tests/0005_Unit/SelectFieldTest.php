@@ -86,7 +86,7 @@ class SelectFieldTest extends SuperAdminTestCase {
       );
 
       foreach($dataset as &$data) {
-         $data['field'] = new selectField($data['fields'], $data['data']);
+         $data['field'] = new PluginFormcreatorSelectField($data['fields'], $data['data']);
       }
 
       return $dataset;
