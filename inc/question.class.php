@@ -581,7 +581,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             )";
       $DB->query($query);
 
-
       $query = "DELETE FROM `$question_condition_table`
             WHERE `plugin_formcreator_questions_id` = '$questionId'
             OR `show_field` = '$questionId'";
