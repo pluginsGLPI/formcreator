@@ -476,23 +476,26 @@ class PluginFormcreatorQuestion extends CommonDBChild
           && isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
+            $oldId = $this->fields['plugin_formcreator_sections_id'];
+            $newId = $input['plugin_formcreator_sections_id'];
+            $order = $this->fields['order'];
             // Reorder other questions from the old section
-            $query = "UPDATE `{$this->getTable()}` SET
+            $table = self::getTable();
+            $query = "UPDATE `$table` SET
                 `order` = `order` - 1
-                WHERE `order` > {$this->fields['order']}
-                AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
+                WHERE `order` > '$order'
+                AND plugin_formcreator_sections_id = '$oldId'";
             $DB->query($query);
 
             // Get the order for the new section
-            $obj    = new self();
             $query  = "SELECT MAX(`order`) AS `order`
-                       FROM `{$obj->getTable()}`
-                       WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
-            $result = $GLOBALS['DB']->query($query);
-            $line   = $GLOBALS['DB']->fetch_array($result);
+                       FROM `$table`
+                       WHERE `plugin_formcreator_sections_id` = '$newId'";
+            $result = $DB->query($query);
+            $line   = $DB->fetch_array($result);
             $input['order'] = $line['order'] + 1;
          }
-         
+
          $input = $this->serializeDefaultValue($input);
       }
 
@@ -502,30 +505,30 @@ class PluginFormcreatorQuestion extends CommonDBChild
    protected function serializeDefaultValue($input) {
       // Load field types
       PluginFormcreatorFields::getTypes();
-   
+
       // actor field only
       // TODO : generalize to all other field types
       if ($input['fieldtype'] == 'actor') {
          $actorField = new ActorField($input, $input['default_values']);
          $input['default_values'] = $actorField->serializeValue($input['default_values']);
       }
-   
+
       return $input;
    }
-   
+
    protected function deserializeDefaultValue($input) {
       // Load field types
       PluginFormcreatorFields::getTypes();
-   
+
       // Actor field only
       if ($input['fieldtype'] == 'actor') {
          $actorField = new ActorField($input, $input['default_values']);
          $input['default_values'] = $actorField->deserializeValue($input['default_values']);
       }
-   
+
       return $input;
    }
-    
+
    public function updateConditions($input) {
       global $DB;
 
