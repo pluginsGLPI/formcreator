@@ -8,6 +8,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    protected $assigned;
 
+   protected $assignedSuppliers;
+
+   protected $requesterGroups;
+
+   protected $observerGroups;
+
+   protected $assignedGroups;
+
    static function getEnumDestinationEntity() {
       return array(
          'current'   => __("Current active entity", 'formcreator'),
@@ -1091,8 +1099,7 @@ EOS;
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
-   public function save(PluginFormcreatorForm_Answer $formanswer)
-   {
+   public function save(PluginFormcreatorForm_Answer $formanswer) {
       global $DB;
 
       // Prepare actors structures for creation of the ticket
@@ -1116,6 +1123,26 @@ EOS;
                   'use_notification'      => array(),
                   'alternative_email'     => array(),
             ),
+      );
+
+      $this->assignedSuppliers = array(
+            '_suppliers_id_assign'        => array(),
+            '_suppliers_id_assign_notif'  => array(
+                  'use_notification'      => array(),
+                  'alternative_email'     => array(),
+            )
+      );
+
+      $this->requesterGroups = array(
+            '_groups_id_requester'        => array(),
+      );
+
+      $this->observerGroups = array(
+            '_groups_id_observer'         => array(),
+      );
+
+      $this->assignedGroups = array(
+            '_groups_id_assign'           => array(),
       );
 
       $datas   = array();
@@ -1148,6 +1175,19 @@ EOS;
       if (isset($predefined_fields['_users_id_assign'])) {
          $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
          unset($predefined_fields['_users_id_assign']);
+      }
+
+      if (isset($predefined_fields['_groups_id_requester'])) {
+         $this->addGroupActor('assigned', $predefined_fields['_groups_id_requester']);
+         unset($predefined_fields['_groups_id_requester']);
+      }
+      if (isset($predefined_fields['_groups_id_observer'])) {
+         $this->addGroupActor('assigned', $predefined_fields['_groups_id_observer']);
+         unset($predefined_fields['_groups_id_observer']);
+      }
+      if (isset($predefined_fields['_groups_id_assign'])) {
+         $this->addGroupActor('assigned', $predefined_fields['_groups_id_assign']);
+         unset($predefined_fields['_groups_id_assign']);
       }
 
       $datas                = array_merge($datas, $predefined_fields);
@@ -1307,7 +1347,7 @@ EOS;
       if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
          $datas['_users_id_requester'] = $requesters_id;
       } else {
-         $datas = $this->requesters + $this->observers + $this->assigned + $datas;
+         $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
       }
 
       // Create the target ticket
@@ -1346,9 +1386,41 @@ EOS;
                   'use_notification' => $this->assigned['_users_id_assign_notif']['use_notification'][$index],
             ));
          }
+         foreach ($this->assignedSuppliers['_suppliers_id_assign'] as $index => $userId) {
+            $supplier_ticket = new Supplier_Ticket();
+            $supplier_ticket->add(array(
+                  'tickets_id'       => $ticketID,
+                  'users_id'         => $userId,
+                  'type'             => CommonITILActor::ASSIGN,
+                  'use_notification' => $this->assigned['_suppliers_id_assign']['use_notification'][$index],
+            ));
+         }
+      }
 
-         // group actors
-         // TODO :
+      // Not GLPI version dependent
+      foreach ($this->requesterGroups['_groups_id_requester'] as $index => $groupId) {
+         $group_ticket = new Group_Ticket();
+         $group_ticket->add(array(
+               'tickets_id'       => $ticketID,
+               'groups_id'        => $groupId,
+               'type'             => CommonITILActor::REQUESTER,
+         ));
+      }
+      foreach ($this->observerGroups['_groups_id_observer'] as $index => $groupId) {
+         $group_ticket = new Group_Ticket();
+         $group_ticket->add(array(
+               'tickets_id'       => $ticketID,
+               'groups_id'        => $groupId,
+               'type'             => CommonITILActor::OBSERVER,
+         ));
+      }
+      foreach ($this->assignedGroups['_groups_id_assign'] as $index => $groupId) {
+         $group_ticket = new Group_Ticket();
+         $group_ticket->add(array(
+               'tickets_id'       => $ticketID,
+               'groups_id'        => $groupId,
+               'type'             => CommonITILActor::ASSIGN,
+         ));
       }
 
       // Add tag if presents
@@ -1658,7 +1730,9 @@ EOS;
                break;
             case 'group' :
             case 'question_group' :
-               // TODO :
+               foreach ($userIds as $groupId) {
+                  $this->addGroupActor($actor['actor_role'], $groupId);
+               }
                break;
             case 'supplier' :
             case 'question_supplier' :
@@ -1679,19 +1753,38 @@ EOS;
 
       switch ($role) {
          case 'requester':
-            $this->requesters['_users_id_requester'][]   = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][] = ($notify === true);
-            $this->requesters['_users_id_requester_notif']['alternative_email'][]= $alternativeEmail;
+            $this->requesters['_users_id_requester'][]                              = $userId;
+            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify === true);
+            $this->requesters['_users_id_requester_notif']['alternative_email'][]   = $alternativeEmail;
             break;
          case 'observer' :
-            $this->observers['_users_id_observer'][]     = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]   = ($notify === true);
-            $this->observers['_users_id_observer_notif']['alternative_email'][]  = $alternativeEmail;
+            $this->observers['_users_id_observer'][]                                = $userId;
+            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify === true);
+            $this->observers['_users_id_observer_notif']['alternative_email'][]     = $alternativeEmail;
             break;
          case 'assigned' :
-            $this->assigned['_users_id_assign'][]        = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]      = ($notify === true);
-            $this->assigned['_users_id_assign_notif']['alternative_email'][]     = $alternativeEmail;
+            $this->assigned['_users_id_assign'][]                                   = $userId;
+            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify === true);
+            $this->assigned['_users_id_assign_notif']['alternative_email'][]        = $alternativeEmail;
+            break;
+         case 'supplier' :
+            $this->assignedSuppliers['_suppliers_id_assign'][]                      = $userId;
+            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify === true);
+            $this->assignedSuppliers['_suppliers_id_assign']['alternative_email'][] = $alternativeEmail;
+            break;
+      }
+   }
+
+   protected function addGroupActor($role, $group) {
+      switch ($role) {
+         case 'requester':
+            $this->requesterGroupss['_groups_id_requester'][]  = $group;
+            break;
+         case 'observer' :
+            $this->observerGroups['_groups_id_observer'][]     = $group;
+            break;
+         case 'assigned' :
+            $this->assignedGroups['_groups_id_assign'][]       = $group;
             break;
       }
    }
