@@ -1348,6 +1348,7 @@ EOS;
          $datas['_users_id_requester'] = $requesters_id;
       } else {
          $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
+         $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
       }
 
       // Create the target ticket
@@ -1395,32 +1396,31 @@ EOS;
                   'use_notification' => $this->assigned['_suppliers_id_assign']['use_notification'][$index],
             ));
          }
-      }
 
-      // Not GLPI version dependent
-      foreach ($this->requesterGroups['_groups_id_requester'] as $index => $groupId) {
-         $group_ticket = new Group_Ticket();
-         $group_ticket->add(array(
-               'tickets_id'       => $ticketID,
-               'groups_id'        => $groupId,
-               'type'             => CommonITILActor::REQUESTER,
-         ));
-      }
-      foreach ($this->observerGroups['_groups_id_observer'] as $index => $groupId) {
-         $group_ticket = new Group_Ticket();
-         $group_ticket->add(array(
-               'tickets_id'       => $ticketID,
-               'groups_id'        => $groupId,
-               'type'             => CommonITILActor::OBSERVER,
-         ));
-      }
-      foreach ($this->assignedGroups['_groups_id_assign'] as $index => $groupId) {
-         $group_ticket = new Group_Ticket();
-         $group_ticket->add(array(
-               'tickets_id'       => $ticketID,
-               'groups_id'        => $groupId,
-               'type'             => CommonITILActor::ASSIGN,
-         ));
+         foreach ($this->requesterGroups['_groups_id_requester'] as $index => $groupId) {
+            $group_ticket = new Group_Ticket();
+            $group_ticket->add(array(
+                  'tickets_id'       => $ticketID,
+                  'groups_id'        => $groupId,
+                  'type'             => CommonITILActor::REQUESTER,
+            ));
+         }
+         foreach ($this->observerGroups['_groups_id_observer'] as $index => $groupId) {
+            $group_ticket = new Group_Ticket();
+            $group_ticket->add(array(
+                  'tickets_id'       => $ticketID,
+                  'groups_id'        => $groupId,
+                  'type'             => CommonITILActor::OBSERVER,
+            ));
+         }
+         foreach ($this->assignedGroups['_groups_id_assign'] as $index => $groupId) {
+            $group_ticket = new Group_Ticket();
+            $group_ticket->add(array(
+                  'tickets_id'       => $ticketID,
+                  'groups_id'        => $groupId,
+                  'type'             => CommonITILActor::ASSIGN,
+            ));
+         }
       }
 
       // Add tag if presents
