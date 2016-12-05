@@ -66,7 +66,9 @@ if ($plugin->isActivated("formcreator")) {
          }
 
          // Save form
-         $form->saveForm();
+         if (!$form->saveForm()) {
+            Html::back();
+         }
          $form->increaseUsageCount();
 
          // If user was not authenticated, remove temporary user

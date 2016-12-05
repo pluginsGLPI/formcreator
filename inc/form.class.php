@@ -1113,13 +1113,13 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
          $_SESSION['formcreator']['datas'] = $datas;
-         Html::back();
-
       // Save form
       } else {
          $formanswer = new PluginFormcreatorForm_Answer();
          $formanswer->saveAnswers($datas);
       }
+
+      return $valid;
    }
 
    public function increaseUsageCount() {
