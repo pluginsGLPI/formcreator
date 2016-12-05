@@ -1346,6 +1346,18 @@ EOS;
 
       if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
          $datas['_users_id_requester'] = $requesters_id;
+         // Remove first requester
+         array_shift($this->requesters['_users_id_requester']);
+         array_shift($this->requesters['_users_id_requester_notif']['use_notification']);
+         array_shift($this->requesters['_users_id_requester_notif']['alternative_email']);
+         $this->requesters = array(
+               '_users_id_requester'         => array(),
+               '_users_id_requester_notif'   => array(
+                     'use_notification'      => array(),
+                     'alternative_email'     => array(),
+               ),
+         );
+
       } else {
          $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
          $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
