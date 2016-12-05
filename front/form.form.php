@@ -66,7 +66,9 @@ if ($plugin->isActivated("formcreator")) {
          }
 
          // Save form
-         $form->saveForm();
+         if (!$form->saveForm()) {
+            Html::back();
+         }
          $form->update([
                'id' => $form->getID(),
                'usage_count' => $form->getField('usage_count') + 1,
