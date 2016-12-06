@@ -55,18 +55,18 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $table = self::getTable();
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-         `id`                                int(11)                NOT NULL AUTO_INCREMENT,
-         `plugin_formcreator_questions_id`   int(11)                NOT NULL DEFAULT '0',
-         `show_field`                        int(11)                NULL     DEFAULT NULL,
-         `show_condition`                    enum('==','!=','<','>','<=','>=') NULL DEFAULT NULL,
-         `show_value`                        varchar(255)           NULL     DEFAULT NULL ,
-         `show_logic`                        enum('AND','OR','XOR') NULL     DEFAULT NULL,
-         `uuid`                              varchar(255)           NULL     DEFAULT NULL
-         PRIMARY KEY (`id`)
-         )
-         ENGINE = MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;";
+                  `id`                                int(11)                NOT NULL AUTO_INCREMENT,
+                  `plugin_formcreator_questions_id`   int(11)                NOT NULL DEFAULT '0',
+                  `show_field`                        int(11)                NULL     DEFAULT NULL,
+                  `show_condition`                    enum('==','!=','<','>','<=','>=') NULL DEFAULT NULL,
+                  `show_value`                        varchar(255)           NULL     DEFAULT NULL ,
+                  `show_logic`                        enum('AND','OR','XOR') NULL     DEFAULT NULL,
+                  `uuid`                              varchar(255)           NULL     DEFAULT NULL
+                  PRIMARY KEY (`id`)
+                  )
+                  ENGINE = MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;";
+         $DB->query($query) or die ($DB->error());
       }
-      $DB->query($query) or die ($DB->error());
 
       // Migration 0.85-1.0 => 0.85-1.1
       $question_table = 'glpi_plugin_formcreator_questions';
