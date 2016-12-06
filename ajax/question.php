@@ -342,12 +342,18 @@ $rand = mt_rand();
                // ===============================================================
                // TODO : Mettre en place l'interface multi-conditions
                // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
-               $sql = "SELECT `show_field`, `show_condition`, `show_value`
-                       FROM glpi_plugin_formcreator_questions_conditions
-                       WHERE `plugin_formcreator_questions_id` = $question_id
-                       LIMIT 0, 1";
-               $result = $DB->query($sql);
-               list($show_field, $show_condition, $show_value) = $DB->fetch_array($result);
+               $question_condition = new PluginFormcreatorQuestion_Condition();
+               $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$question_id'");
+               if (count($rows) < 1) {
+                  $show_field       = '';
+                  $show_condition   = '==';
+                  $show_value       = '';
+               } else {
+                  $row = array_shift($rows);
+                  $show_field       = $row['show_field'];
+                  $show_condition   = $row['show_condition'];
+                  $show_value       = $row['show_value'];
+               }
                // ===============================================================
 
                $table_question = getTableForItemtype('PluginFormcreatorQuestion');

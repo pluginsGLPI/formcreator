@@ -532,9 +532,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
    public function updateConditions($input) {
       global $DB;
 
-      $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
-                WHERE `plugin_formcreator_questions_id` = {$input['id']}";
-      $DB->query($query);
+      $question_condition = new PluginFormcreatorQuestion_Condition();
+      $question_condition->deleteByCriteria(array('plugin_formcreator_questions_id' => $input['id']));
 
       if ($input['show_rule'] != 'always') {
          // ===============================================================
@@ -543,12 +542,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $value      = plugin_formcreator_encode($input['show_value']);
          $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
          $show_condition = plugin_formcreator_decode($input['show_condition']);
-         $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
-                     `plugin_formcreator_questions_id` = {$input['id']},
-                     `show_field`     = $show_field,
-                     `show_condition` = '" . $show_condition . "',
-                     `show_value`     = '" . $value . "'";
-         $DB->query($query);
+         $question_condition = new PluginFormcreatorQuestion_Condition();
+         $question_condition->add([
+               'plugin_formcreator_questions_id'   => $input['id'],
+               'show_field'                        => $show_field,
+               'show_condition'                    => $show_condition,
+               'show_value'                        => $value,
+         ]);
          // ===============================================================
       }
    }

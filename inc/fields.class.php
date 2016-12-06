@@ -133,11 +133,10 @@ class PluginFormcreatorFields
       if ($fields['show_rule'] == 'always') return true;
 
       // Get conditions to show or hide field
-      $query = "SELECT `show_logic`, `show_field`, `show_condition`, `show_value`
-                FROM `glpi_plugin_formcreator_questions_conditions`
-                WHERE `plugin_formcreator_questions_id` = ".$fields['id'];
-      $result = $DB->query($query);
-      while ($line = $DB->fetch_array($result)) {
+      $questionId = $fields['id'];
+      $question_condition = new PluginFormcreatorQuestion_Condition();
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$questionId'");
+      foreach ($rows as $line) {
          $conditions[] = array(
                'multiple' => in_array($fields['fieldtype'], array('checkboxes', 'multiselect')),
                'logic'    => $line['show_logic'],
