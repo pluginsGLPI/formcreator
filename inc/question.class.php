@@ -789,69 +789,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
                          ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
                $DB->query($query) or die ($DB->error());
             }
-
-            // Create new table for conditionnal show of questions
-            $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
-                       `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                       `plugin_formcreator_questions_id` int(11) NOT NULL,
-                       `show_field` int(11) DEFAULT NULL,
-                       `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
-                       `show_value` varchar(255) DEFAULT NULL,
-                       `show_logic` enum('AND','OR','XOR') DEFAULT NULL
-                     )
-                     ENGINE = MyISAM
-                     DEFAULT CHARACTER SET = utf8
-                     COLLATE = utf8_unicode_ci";
-            $DB->query($query) or die ($DB->error());
-
-            // Migrate date from "questions" table to "questions_conditions" table
-            $query  = "SELECT `id`, `show_type`, `show_field`, `show_condition`, `show_value`
-                       FROM $table";
-            $result = $DB->query($query);
-            while ($line = $DB->fetch_array($result)) {
-               switch ($line['show_type']) {
-                  case 'hide' :
-                     $show_rule = 'hidden';
-                     break;
-                  default:
-                     $show_rule = 'always';
-               }
-               switch ($line['show_condition']) {
-                  case 'notequal' :
-                     $show_condition = '!=';
-                     break;
-                  case 'lower' :
-                     $show_condition = '<';
-                     break;
-                  case 'greater' :
-                     $show_condition = '>';
-                     break;
-                  default:
-                     $show_condition = '==';
-               }
-
-               $show_field = empty($line['show_field']) ? 'NULL' : $line['show_field'];
-
-               $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
-                                 `show_rule` = '$show_rule'
-                               WHERE `id` = " . $line['id'];
-               $DB->query($query_udate) or die ($DB->error());
-
-               $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
-                                  `plugin_formcreator_questions_id` = {$line['id']},
-                                  `show_field`     = $show_field,
-                                  `show_condition` = '$show_condition',
-                                  `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
-               $DB->query($query_udate) or die ($DB->error());
-            }
-
-            // Delete old fields
-            $query = "ALTER TABLE `$table`
-                      DROP `show_type`,
-                      DROP `show_field`,
-                      DROP `show_condition`,
-                      DROP `show_value`;";
-            $DB->query($query) or die ($DB->error());
          }
 
          /**
@@ -870,17 +807,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
                                `default_values` = '" . plugin_formcreator_encode($line['default_values']) . "',
                                `description`    = '" . plugin_formcreator_encode($line['description']) . "'
                              WHERE `id` = " . $line['id'];
-            $DB->query($query_update) or die ($DB->error());
-         }
-
-         // Migrate "question_conditions" table
-         $query  = "SELECT `id`, `show_value`
-                    FROM `glpi_plugin_formcreator_questions_conditions`";
-         $result = $DB->query($query);
-         while ($line = $DB->fetch_array($result)) {
-            $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
-                               `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
-                             WHERE `id` = " . (int) $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
 
@@ -912,21 +838,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          foreach($all_questions as $questions_id => $question) {
             $obj->update(array('id' => $questions_id));
          }
-
-         // add uuid to questions conditions
-         if (!FieldExists("glpi_plugin_formcreator_questions_conditions", 'uuid', false)) {
-            $migration->addField("glpi_plugin_formcreator_questions_conditions", 'uuid', 'string');
-            $migration->migrationOneTable("glpi_plugin_formcreator_questions_conditions");
-         }
-
-         // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
-         $condition_obj = new PluginFormcreatorQuestion_Condition;
-         $all_conditions = $condition_obj->find("uuid IS NULL");
-         foreach($all_conditions as $conditions_id => $condition) {
-            $condition_obj->update(array('id'   => $conditions_id,
-                                         'uuid' => plugin_formcreator_getUuid()));
-         }
-
       }
 
       return true;
