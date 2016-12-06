@@ -1072,16 +1072,11 @@ class PluginFormcreatorForm extends CommonDBTM
          $className = 'PluginFormcreator' . ucfirst($fields['fieldtype']) . 'Field';
          $filePath  = dirname(__FILE__) . '/fields/' . $fields['fieldtype'] . '-field.class.php';
 
-         if(is_file($filePath)) {
-            include_once ($filePath);
-            if (class_exists($className)) {
-               $obj = new $className($fields, $datas);
-               if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas[$id])) {
-                  $valid = false;
-               }
+         if (class_exists($className)) {
+            $obj = new $className($fields, $datas);
+            if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas[$id])) {
+               $valid = false;
             }
-         } else {
-            $valid = false;
          }
       }
       if (isset($_POST) && is_array($_POST)) {
