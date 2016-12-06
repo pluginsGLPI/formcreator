@@ -293,20 +293,20 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       echo '<div class="form_section">';
 
       // Display all fields of the section
-      $query_questions = "SELECT sections.`name` as section_name,
-                                 questions.*,
-                                 answers.`answer`
-                          FROM `glpi_plugin_formcreator_questions` AS questions
-                          LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
-                            ON answers.`plugin_formcreator_question_id` = questions.`id`
-                            AND answers.`plugin_formcreator_forms_answers_id` = $ID
-                          INNER JOIN `glpi_plugin_formcreator_sections` as sections
-                            ON questions.`plugin_formcreator_sections_id` = sections.`id`
-                            AND plugin_formcreator_forms_id = ".$form->getID()."
-                          GROUP BY questions.`id`
-                          ORDER BY sections.`order` ASC,
-                                   sections.`id` ASC,
-                                   questions.`order` ASC";
+      $query_questions = "SELECT `sections`.`name` AS `section_name`,
+                                 `questions`.*,
+                                 `answers`.`answer`
+                          FROM `glpi_plugin_formcreator_questions` AS `questions`
+                          LEFT JOIN `glpi_plugin_formcreator_answers` AS `answers`
+                            ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                            AND `answers`.`plugin_formcreator_forms_answers_id` = '$ID'
+                          INNER JOIN `glpi_plugin_formcreator_sections` AS `sections`
+                            ON `questions`.`plugin_formcreator_sections_id` = `sections`.`id`
+                            AND `plugin_formcreator_forms_id` = ".$form->getID()."
+                          GROUP BY `questions`.`id`
+                          ORDER BY `sections`.`order` ASC,
+                                   `sections`.`id` ASC,
+                                   `questions`.`order` ASC";
       $res_questions = $DB->query($query_questions);
       $last_section = "";
       $questionsCount = $DB->numrows($res_questions);

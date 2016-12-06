@@ -133,7 +133,7 @@ class CommonDBTestCase extends PHPUnit_Framework_TestCase {
 
       $LOADED_PLUGINS = null;
       $_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;       // Prevents notice in execution of GLPI_ROOT . /inc/includes.php
-      require_once (GLPI_ROOT . "/inc/includes.php");
+      require (GLPI_ROOT . "/inc/includes.php");
 
       $DB = new DB();
 

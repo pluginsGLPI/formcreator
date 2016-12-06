@@ -1122,6 +1122,14 @@ class PluginFormcreatorForm extends CommonDBTM
       return $valid;
    }
 
+   public function increaseUsageCount() {
+      // Increase usage count of the form
+      $this->update([
+            'id' => $this->getID(),
+            'usage_count' => $this->getField('usage_count') + 1,
+      ]);
+   }
+
    /**
     * Database table installation for the item type
     *
