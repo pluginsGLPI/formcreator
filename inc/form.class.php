@@ -1077,6 +1077,8 @@ class PluginFormcreatorForm extends CommonDBTM
             if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas[$id])) {
                $valid = false;
             }
+         } else {
+            $valid = false;
          }
       }
       if (isset($_POST) && is_array($_POST)) {
@@ -1115,6 +1117,14 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       return $valid;
+   }
+
+   public function increaseUsageCount() {
+      // Increase usage count of the form
+      $this->update([
+            'id' => $this->getID(),
+            'usage_count' => $this->getField('usage_count') + 1,
+      ]);
    }
 
    /**

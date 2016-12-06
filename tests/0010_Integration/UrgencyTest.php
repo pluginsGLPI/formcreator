@@ -148,9 +148,10 @@ class UrgencyTest extends SuperAdminTestCase
    /**
     * @depends testInitCreateForm
     * @depends testInitCreateTargetTicket
-    * @param PluginFormcreatorForm $urgencyQuestions
+    * @param PluginFormcreatorForm $form
+    * @param array $urgencyQuestions
     */
-   public function testSendForm(PluginFormcreatorForm $form, $urgencyQuestions) {
+   public function testSendForm($form, $urgencyQuestions) {
       $formId = $form->getID();
       $_POST = array('formcreator_form' => $form->getID());
       foreach($urgencyQuestions as $question) {

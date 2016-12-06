@@ -84,10 +84,16 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
 }
 
 
-function plugin_formcreator_getCondition($table) {
-   if (Session::haveRight('config', UPDATE)
-      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+function plugin_formcreator_canValidate() {
+   return Session::haveRight('config', UPDATE)
+          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
+}
+
+function plugin_formcreator_getCondition($itemtype) {
+   $table = getTableForItemType($itemtype);
+   if ($itemtype == "PluginFormcreatorForm_Answer"
+       && plugin_formcreator_canValidate()) {
       $condition = " 1=1 ";
 
    } else {
@@ -108,20 +114,16 @@ function plugin_formcreator_addDefaultWhere($itemtype)
    $table = getTableForItemType($itemtype);
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
-         $condition_fanwser = plugin_formcreator_getCondition($table);
-         if ($condition_fanwser == " 1=1 ") {
-            $condition = $condition_fanwser;
-         } else {
-            $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorForm_Answer'
-                          AND ($condition_fanwser) OR ";
-            $condition = Search::addDefaultWhere("Ticket");
-            $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
-            $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
-         }
+         $condition_fanwser = plugin_formcreator_getCondition("PluginFormcreatorForm_Answer");
+         $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorForm_Answer'
+                       AND ($condition_fanwser) OR ";
+         $condition = Search::addDefaultWhere("Ticket");
+         $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
+         $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          break;
 
       case "PluginFormcreatorForm_Answer" :
-         $condition = plugin_formcreator_getCondition($table);
+         $condition = plugin_formcreator_getCondition($itemtype);
          break;
    }
    return $condition;
@@ -154,12 +156,16 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
    switch ($table.".".$field) {
       case "glpi_plugin_formcreator_issues.status" :
-         if ($val == 'all') {
-            return "";
-         }
          $tocheck = array();
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
+               case 'all':
+                  $tocheck = array_merge($item->getNewStatusArray(),
+                                         $item->getProcessStatusArray(),
+                                         $item->getSolvedStatusArray(),
+                                         $item->getClosedStatusArray());
+                  break;
+
                case Ticket::INCOMING:
                   $tocheck = $item->getNewStatusArray();
                   break;
