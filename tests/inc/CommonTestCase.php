@@ -27,7 +27,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       // Reset error logs
       file_put_contents(GLPI_LOG_DIR."/sql-errors.log", '');
       file_put_contents(GLPI_LOG_DIR."/php-errors.log", '');
-    }
+   }
 
    protected function tearDown() {
       $GLPIlog = new GLPIlogs();

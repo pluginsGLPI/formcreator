@@ -13,5 +13,3 @@ if($plugin->isActivated("formcreator")) {
       PluginFormcreatorWizard::footer();
    }
 }
-
-?>

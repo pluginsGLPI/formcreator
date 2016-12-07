@@ -10,25 +10,25 @@ class integerField extends PluginFormcreatorField
          Session::addMessageAfterRedirect(__('This is not an integer:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
-      // Min range not set or text length longer than min length
-      } elseif (!empty($this->fields['range_min']) && ($value < $this->fields['range_min'])) {
+      } else if (!empty($this->fields['range_min']) && ($value < $this->fields['range_min'])) {
+         // Min range not set or text length longer than min length
          $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $this->fields['range_min']);
          Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
-      // Max range not set or text length shorter than max length
-      } elseif (!empty($this->fields['range_max']) && ($value > $this->fields['range_max'])) {
+      } else if (!empty($this->fields['range_max']) && ($value > $this->fields['range_max'])) {
+         // Max range not set or text length shorter than max length
          $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $this->fields['range_max']);
          Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
-      // Specific format not set or well match
-      } elseif (!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
+      } else if (!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
+         // Specific format not set or well match
          Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
-      // All is OK
       } else {
+         // All is OK
          return true;
       }
    }

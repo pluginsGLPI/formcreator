@@ -67,7 +67,7 @@ class SelectFieldTest extends SuperAdminTestCase {
                   'data'            => null,
                   'expectedValue'   => '1',
                   'expectedIsValid' => false
-            ),
+             ),
              array(
                   'fields'          => array(
                         'fieldtype'       => 'select',
@@ -82,7 +82,7 @@ class SelectFieldTest extends SuperAdminTestCase {
                   'data'            => null,
                   'expectedValue'   => '',
                   'expectedIsValid' => false
-            ),
+             ),
       );
 
       foreach($dataset as &$data) {

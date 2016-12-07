@@ -17,9 +17,9 @@ if ($plugin->isActivated("formcreator")) {
          $question->updateConditions($_POST);
       }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+   } else if(isset($_POST["update"])) {
 
-   // Edit an existing Question
-   } elseif(isset($_POST["update"])) {
+      // Edit an existing Question
       Session::checkRight("entity", UPDATE);
       if ($question->update($_POST)) {
          Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
@@ -27,20 +27,20 @@ if ($plugin->isActivated("formcreator")) {
       }
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Delete a Question
-   } elseif(isset($_POST["delete_question"])) {
+   } else if(isset($_POST["delete_question"])) {
+      // Delete a Question
       Session::checkRight("entity", UPDATE);
       $question->delete($_POST);
 
-   // Set a Question required
-   } elseif(isset($_POST["set_required"])) {
+   } else if(isset($_POST["set_required"])) {
+      // Set a Question required
       global $DB;
       Session::checkRight("entity", UPDATE);
       $table = getTableForItemtype('PluginFormcreatorQuestion');
       $DB->query("UPDATE $table SET `required` = " . $_POST['value'] . " WHERE id = " . $_POST['id']);
 
-   // Move a Question
-   } elseif(isset($_POST["move"])) {
+   } else if(isset($_POST["move"])) {
+      // Move a Question
       global $DB;
 
       Session::checkRight("entity", UPDATE);
@@ -65,12 +65,12 @@ if ($plugin->isActivated("formcreator")) {
          }
       }
 
-   // Return to form list
    } else {
+      // Return to form list
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.php');
    }
 
-// Or display a "Not found" error
 } else {
+   // Or display a "Not found" error
    Html::displayNotFoundError();
 }

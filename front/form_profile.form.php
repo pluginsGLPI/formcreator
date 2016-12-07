@@ -32,8 +32,7 @@ if ($plugin->isActivated("formcreator")) {
    } else {
       Html::back();
    }
-
-// Or display a "Not found" error
-}else{
+} else {
+   // Or display a "Not found" error
    Html::displayNotFoundError();
 }
