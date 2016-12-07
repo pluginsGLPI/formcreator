@@ -78,7 +78,10 @@ function plugin_init_formcreator ()
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+   if (Session::checkValidSessionId()
+       && isset($_SESSION['glpiactiveentities_string'])
+       && $plugin->isInstalled('formcreator')
+       && $plugin->isActivated('formcreator')) {
 
       // Redirect to helpdesk replacement
       if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
