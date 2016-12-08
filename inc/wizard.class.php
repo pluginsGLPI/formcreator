@@ -43,7 +43,6 @@ class PluginFormcreatorWizard {
       echo "<input type='checkbox' id='formcreator-toggle-nav-responsive'>";
       echo "<label for='formcreator-toggle-nav-responsive' class='formcreator-nav-button'></label>";
 
-
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
 
       // menu toggle (desktop mode)
@@ -55,7 +54,6 @@ class PluginFormcreatorWizard {
       echo '<div id="header_top">';
       echo '<div id="c_logo"></div>';
       echo '</div>';
-
 
       // Left vertical menu
       echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
@@ -96,7 +94,6 @@ class PluginFormcreatorWizard {
          echo '</a></li>';
       }
 
-
       $query = "SELECT `glpi_bookmarks`.*,
                        `glpi_bookmarks_users`.`id` AS IS_DEFAULT
                 FROM `glpi_bookmarks`
@@ -115,7 +112,8 @@ class PluginFormcreatorWizard {
             Ajax::createIframeModalWindow('loadbookmark',
                   $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
                   array('title'         => __('Load a bookmark'),
-                        'reloadonclose' => true));
+                        'reloadonclose' => true)
+            );
             echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
             echo '<span class="fc_list_icon" title="'.__('Load a bookmark').'"></span>';
             echo '<label>'.__('Load a bookmark').'</label>';
@@ -132,8 +130,6 @@ class PluginFormcreatorWizard {
       echo '<div id="header_top" class="formcreator_header_top">';
       self::showHeaderTopContent();
       echo '</div>'; //.formcreator_header_top
-
-
 
       echo '<div id="page" class="plugin_formcreator_page">';
 

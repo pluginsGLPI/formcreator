@@ -15,14 +15,14 @@ class multiSelectField extends selectField
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
-      // Min range not set or number of selected item lower than min
-      } elseif (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
+      } else if (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
+         // Min range not set or number of selected item lower than min
          $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $this->fields['range_min']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
-      // Max range not set or number of selected item greater than max
-      } elseif (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
+      } else if (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
+         // Max range not set or number of selected item greater than max
          $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
@@ -54,7 +54,7 @@ class multiSelectField extends selectField
 
       if (is_array($value)) {
          $tab_values = $value;
-      } elseif (is_array(json_decode($value))) {
+      } else if (is_array(json_decode($value))) {
          $tab_values = json_decode($value);
       } else {
          $tab_values = array($value);

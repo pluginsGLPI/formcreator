@@ -630,7 +630,8 @@ EOS;
       Dropdown::showFromArray('actor_type',
          $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorRequester(this.value)'
-      ));
+         )
+      );
 
       echo '<div id="block_requester_user" style="display:none">';
       User::dropdown(array(
@@ -1510,7 +1511,7 @@ EOS;
             $message.= "\n".addslashes($formanswer->fields['comment']);
          }
 
-        $query = "INSERT INTO `glpi_ticketfollowups` SET
+         $query = "INSERT INTO `glpi_ticketfollowups` SET
                      `tickets_id` = $ticketID,
                      `date`       = NOW(),
                      `users_id`   = {$_SESSION['glpiID']},
@@ -1913,7 +1914,7 @@ EOS;
             $content = str_replace("##question_$id##", "##question_$uuid##", $content);
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['comment'] = $content;
-             }
+         }
       }
 
       // remove key and fk
