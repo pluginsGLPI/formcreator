@@ -78,8 +78,7 @@ function plugin_init_formcreator ()
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    $plugin = new Plugin();
-   if (Session::checkValidSessionId()
-       && isset($_SESSION['glpiactiveentities_string'])
+   if (isset($_SESSION['glpiactiveentities_string'])
        && $plugin->isInstalled('formcreator')
        && $plugin->isActivated('formcreator')) {
 
