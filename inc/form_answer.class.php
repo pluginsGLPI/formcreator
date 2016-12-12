@@ -8,6 +8,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    static public $itemtype = "PluginFormcreatorForm";
    static public $items_id = "plugin_formcreator_forms_id";
 
+   const SOPTION_ANSWER = 900000;
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -46,58 +48,90 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     */
    public function getSearchOptions()
    {
-      $tab = array(
-         '1' => array(
-            'table'         => self::getTable(),
-            'field'         => 'status',
-            'name'          => _n('Status', 'Statuses', 1),
-            'searchtype'    => array('equals', 'notequals'),
-            'datatype'      => 'specific',
-            'massiveaction' => false,
-         ),
-         '2' => array(
-            'table'         => self::getTable(),
-            'field'         => 'id',
-            'name'          => __('ID'),
-            'searchtype'    => 'contains',
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-         ),
-         '3' => array(
+      $tab = [];
+
+      $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
+                          && $_SESSION['formcreator']['form_search_answers'];
+
+      $tab['1'] = [
+         'table'         => self::getTable(),
+         'field'         => 'status',
+         'name'          => _n('Status', 'Statuses', 1),
+         'searchtype'    => array('equals', 'notequals'),
+         'datatype'      => 'specific',
+         'massiveaction' => false,
+      ];
+      $tab['2'] = [
+         'table'         => self::getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'searchtype'    => 'contains',
+         'datatype'      => 'itemlink',
+         'massiveaction' => false,
+      ];
+      if (!$display_for_form) {
+         $tab['3'] = [
             'table'         => getTableForItemType('PluginFormcreatorForm'),
             'field'         => 'name',
             'name'          => PluginFormcreatorForm::getTypeName(1),
             'searchtype'    => 'contains',
             'datatype'      => 'string',
             'massiveaction' => false,
+         ];
+      }
+      $tab['4'] = [
+         'table'         => getTableForItemType('User'),
+         'field'         => 'name',
+         'name'          => __('Requester', 'formcreator'),
+         'datatype'      => 'itemlink',
+         'massiveaction' => false,
+         'linkfield'     => 'requester_id',
+      ];
+      $tab['5'] = [
+         'table'         => getTableForItemType('User'),
+         'field'         => 'name',
+         'name'          => __('Validator', 'formcreator'),
+         'datatype'      => 'itemlink',
+         'massiveaction' => false,
+         'linkfield'     => 'validator_id',
+      ];
+      $tab['6'] = [
+         'table'         => self::getTable(),
+         'field'         => 'request_date',
+         'name'          => __('Creation date'),
+         'datatype'      => 'datetime',
+         'massiveaction' => false,
+      ];
 
-         ),
-         '4' => array(
-            'table'         => getTableForItemType('User'),
-            'field'         => 'name',
-            'name'          => __('Requester', 'formcreator'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-            'linkfield'     => 'requester_id',
+      if ($display_for_form) {
+         $optindex = self::SOPTION_ANSWER;
+         $section  = new PluginFormcreatorSection;
+         $question = new PluginFormcreatorQuestion;
+         $sections = $section->find("`".PluginFormcreatorSection::$items_id."` = ".
+                                    $_SESSION['formcreator']['form_search_answers']);
+         foreach ($sections as $sections_id => $current_section) {
+            $questions = $question->find("`".PluginFormcreatorQuestion::$items_id."` = ".
+                                         $sections_id);
 
-         ),
-         '5' => array(
-            'table'         => getTableForItemType('User'),
-            'field'         => 'name',
-            'name'          => __('Validator', 'formcreator'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-            'linkfield'     => 'validator_id',
+            foreach($questions as $questions_id => $current_question) {
+               $tab[$optindex] = [
+                  'table'         => PluginFormcreatorAnswer::getTable(),
+                  'field'         => 'answer',
+                  'name'          => $current_question['name'],
+                  'datatype'      => 'string',
+                  'massiveaction' => false,
+                  'nosearch'      => true,
+                  'joinparams'    => [
+                     'jointype'  => 'child',
+                     'condition' => "AND NEWTABLE.`plugin_formcreator_question_id` = $questions_id",
+                  ]
+               ];
 
-         ),
-         '6' => array(
-            'table'         => self::getTable(),
-            'field'         => 'request_date',
-            'name'          => __('Creation date'),
-            'datatype'      => 'datetime',
-            'massiveaction' => false,
-         ),
-      );
+               $optindex++;
+            }
+         }
+      }
+
       return $tab;
    }
 
@@ -180,7 +214,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
    {
-      $item->showForm($item->fields['id']);
+      if ($item instanceof PluginFormcreatorForm) {
+         self::showForForm($item);
+      } else {
+         $item->showForm($item->fields['id']);
+      }
    }
 
    public function defineTabs($options = array())
@@ -206,7 +244,33 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
    {
-      return $this->getTypeName();
+      if ($item instanceof PluginFormcreatorForm) {
+         $number  = count($this->find("`".self::$items_id."` = ".$item->getID()));
+         return self::createTabEntry(self::getTypeName($number), $number);
+      } else {
+         return $this->getTypeName();
+      }
+   }
+
+   static function showForForm(PluginFormcreatorForm $form, $params = []) {
+      // set a session var to tweak search results
+      $_SESSION['formcreator']['form_search_answers'] = $form->getID();
+
+      // prepare params for search
+      $item          = new Self;
+      $soptions      = $item->getSearchOptions();
+      $sopt_keys     = array_keys($soptions);
+      $forcedisplay  = array_combine($sopt_keys, $sopt_keys);
+
+      // do search
+      $params = Search::manageParams(__CLASS__, $params);
+      $data   = Search::prepareDatasForSearch(__CLASS__, $params, $forcedisplay);
+      Search::constructSQL($data);
+      Search::constructDatas($data);
+      Search::displayDatas($data);
+
+      // remove previous session var (restore default view)
+      unset($_SESSION['formcreator']['form_search_answers']);
    }
 
    /**

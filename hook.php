@@ -121,7 +121,13 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          break;
 
       case "PluginFormcreatorForm_Answer" :
-         $condition = plugin_formcreator_getCondition($itemtype);
+         if (isset($_SESSION['formcreator']['form_search_answers'])
+             && $_SESSION['formcreator']['form_search_answers']) {
+            $condition = "`$table`.`".PluginFormcreatorForm_Answer::$items_id."` = ".
+                         $_SESSION['formcreator']['form_search_answers'];
+         } else {
+            $condition = plugin_formcreator_getCondition($itemtype);
+         }
          break;
    }
    return $condition;
@@ -252,4 +258,26 @@ function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
    }
 
    return "";
+}
+
+
+function plugin_formcreator_dynamicReport($params) {
+   switch ($params['item_type']) {
+      case "PluginFormcreatorForm_Answer";
+         if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
+            if (strpos($url['path'],
+                       Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {
+               parse_str($url['query'], $query);
+               if (isset($query['id'])) {
+                  $item = new PluginFormcreatorForm;
+                  $item->getFromDB($query['id']);
+                  PluginFormcreatorForm_Answer::showForForm($item, $params);
+                  return true;
+               }
+            }
+         }
+         break;
+   }
+
+   return false;
 }

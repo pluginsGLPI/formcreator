@@ -493,6 +493,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->addStandardTab('PluginFormcreatorForm_Profile', $ong, $options);
       $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
+      $this->addStandardTab('PluginFormcreatorForm_Answer', $ong, $options);
       return $ong;
    }
 
