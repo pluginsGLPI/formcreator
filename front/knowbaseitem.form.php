@@ -22,4 +22,3 @@ if (isset($_GET["id"])) {
    PluginFormcreatorWizard::footer();
 
 }
-?>

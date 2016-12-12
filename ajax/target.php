@@ -15,6 +15,7 @@ echo '<td width="30%">';
 Dropdown::showFromArray('itemtype', array(
    ''                              => '-----',
    'PluginFormcreatorTargetTicket' => __('Ticket'),
+   'PluginFormcreatorTargetChange' => __('Change'),
 ));
 echo '</td>';
 echo '</tr>';
