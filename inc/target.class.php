@@ -56,14 +56,8 @@ class PluginFormcreatorTarget extends CommonDBTM
       foreach ($found_targets as $target) {
          $i++;
          echo '<tr class="line'.($i % 2).'">';
-         switch ($target['itemtype']) {
-            case 'PluginFormcreatorTargetChange':
-               echo '<td onclick="document.location=\'../front/targetchange.form.php?id=' . $target['items_id'] . '\'" style="cursor: pointer">';
-               break;
-            case 'PluginFormcreatorTargetTicket':
-               echo '<td onclick="document.location=\'../front/targetticket.form.php?id=' . $target['items_id'] . '\'" style="cursor: pointer">';
-               break;
-         }
+         $targetItemUrl = Toolbox::getItemTypeFormURL($target['itemtype']) . '?id=' . $target['items_id'];
+         echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
 
          echo $target['name'];
          echo '</td>';
@@ -71,15 +65,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          echo '<td align="center" width="32">';
          echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/pencil.png"
                   alt="*" title="'.__('Edit');
-         switch ($target['itemtype']) {
-            case 'PluginFormcreatorTargetChange':
-               echo 'onclick="document.location=\'../front/targetticket.form.php?id='.$target['items_id'].'\'" align="absmiddle" style="cursor: pointer" /> ';
-               break;
-            case 'PluginFormcreatorTargetTicket':
-               echo ' "onclick="document.location=\'../front/targetticket.form.php?id=' . $target['items_id'] . '\'" align="absmiddle" style="cursor: pointer" /> ';
-               break;
-         }
-
+         echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
          echo '</td>';
 
          echo '<td align="center" width="32">';
@@ -117,7 +103,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param $input datas used to add the item
     *
     * @return the modified $input array
-   **/
+    **/
    public function prepareInputForAdd($input)
    {
       global $DB;
@@ -130,80 +116,80 @@ class PluginFormcreatorTarget extends CommonDBTM
       // Control fields values :
       // - name is required
       if(isset($input['name'])
-         && empty($input['name'])) {
-         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
-      // - field type is required
-      if(isset($input['itemtype'])) {
-         if (empty($input['itemtype'])) {
-            Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
-         }
-
-         switch ($input['itemtype']) {
-            case 'PluginFormcreatorTargetTicket':
-               $targetticket      = new PluginFormcreatorTargetTicket();
-               $id_targetticket   = $targetticket->add(array(
-                  'name'    => $input['name'],
-                  'comment' => '##FULLFORM##'
-               ));
-               $input['items_id'] = $id_targetticket;
-
-               if (!isset($input['_skip_create_actors'])
-                   || !$input['_skip_create_actors']) {
-                  $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
-                  $targetTicket_actor->add(array(
-                        'plugin_formcreator_targettickets_id'  => $id_targetticket,
-                        'actor_role'                           => 'requester',
-                        'actor_type'                           => 'creator',
-                        'use_notification'                     => '1'
-                  ));
-                  $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
-                  $targetTicket_actor->add(array(
-                        'plugin_formcreator_targettickets_id'  => $id_targetticket,
-                        'actor_role'                           => 'observer',
-                        'actor_type'                           => 'validator',
-                        'use_notification'                     => '1'
-                  ));
+            && empty($input['name'])) {
+               Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+               return array();
+            }
+            // - field type is required
+            if(isset($input['itemtype'])) {
+               if (empty($input['itemtype'])) {
+                  Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
+                  return array();
                }
-               break;
-            case 'PluginFormcreatorTargetChange':
-               $targetchange      = new PluginFormcreatorTargetChange();
-               $id_targetchange   = $targetticket->add(array(
-                     'name'    => $input['name'],
-                     'comment' => '##FULLFORM##'
-               ));
-               $input['items_id'] = $id_targetchange;
 
-               if (!isset($input['_skip_create_actors'])
-                   || !$input['_skip_create_actors']) {
-                  $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
-                  $targetChange_actor->add(array(
-                        'plugin_formcreator_targetchanges_id'  => $id_targetchange,
-                        'actor_role'                           => 'requester',
-                        'actor_type'                           => 'creator',
-                        'use_notification'                     => '1',
-                  ));
-                  $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
-                  $targetChange_actor->add(array(
-                        'plugin_formcreator_targetchanges_id'  => $id_targetchange,
-                        'actor_role'                           => 'observer',
-                        'actor_type'                           => 'validator',
-                        'use_notification'                     => '1',
-                  ));
+               switch ($input['itemtype']) {
+                  case 'PluginFormcreatorTargetTicket':
+                     $targetticket      = new PluginFormcreatorTargetTicket();
+                     $id_targetticket   = $targetticket->add(array(
+                           'name'    => $input['name'],
+                           'comment' => '##FULLFORM##'
+                     ));
+                     $input['items_id'] = $id_targetticket;
+
+                     if (!isset($input['_skip_create_actors'])
+                           || !$input['_skip_create_actors']) {
+                              $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
+                              $targetTicket_actor->add(array(
+                                    'plugin_formcreator_targettickets_id'  => $id_targetticket,
+                                    'actor_role'                           => 'requester',
+                                    'actor_type'                           => 'creator',
+                                    'use_notification'                     => '1'
+                              ));
+                              $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
+                              $targetTicket_actor->add(array(
+                                    'plugin_formcreator_targettickets_id'  => $id_targetticket,
+                                    'actor_role'                           => 'observer',
+                                    'actor_type'                           => 'validator',
+                                    'use_notification'                     => '1'
+                              ));
+                           }
+                           break;
+                  case 'PluginFormcreatorTargetChange':
+                     $targetchange      = new PluginFormcreatorTargetChange();
+                     $id_targetchange   = $targetchange->add(array(
+                           'name'    => $input['name'],
+                           'comment' => '##FULLFORM##'
+                     ));
+                     $input['items_id'] = $id_targetchange;
+
+                     if (!isset($input['_skip_create_actors'])
+                           || !$input['_skip_create_actors']) {
+                              $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
+                              $targetChange_actor->add(array(
+                                    'plugin_formcreator_targetchanges_id'  => $id_targetchange,
+                                    'actor_role'                           => 'requester',
+                                    'actor_type'                           => 'creator',
+                                    'use_notification'                     => '1',
+                              ));
+                              $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
+                              $targetChange_actor->add(array(
+                                    'plugin_formcreator_targetchanges_id'  => $id_targetchange,
+                                    'actor_role'                           => 'observer',
+                                    'actor_type'                           => 'validator',
+                                    'use_notification'                     => '1',
+                              ));
+                           }
+                           break;
                }
-               break;
-         }
-      }
+            }
 
-      // generate a uniq id
-      if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
+            // generate a uniq id
+            if (!isset($input['uuid'])
+                  || empty($input['uuid'])) {
+                     $input['uuid'] = plugin_formcreator_getUuid();
+                  }
 
-      return $input;
+                  return $input;
    }
 
    /**
@@ -212,7 +198,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param $input datas used to add the item
     *
     * @return the modified $input array
-   **/
+    **/
    public function prepareInputForUpdate($input)
    {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -222,11 +208,11 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       // generate a uniq id
       if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
+            || empty($input['uuid'])) {
+               $input['uuid'] = plugin_formcreator_getUuid();
+            }
 
-      return $input;
+            return $input;
    }
 
    public function pre_deleteItem() {
@@ -242,16 +228,16 @@ class PluginFormcreatorTarget extends CommonDBTM
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `plugin_formcreator_forms_id` int(11) NOT NULL,
-                     `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
-                     `items_id` int(11) NOT NULL DEFAULT 0,
-                     `name` varchar(255) NOT NULL DEFAULT '',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
-                  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+         `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+         `plugin_formcreator_forms_id` int(11) NOT NULL,
+         `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
+         `items_id` int(11) NOT NULL DEFAULT 0,
+         `name` varchar(255) NOT NULL DEFAULT '',
+         `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
 
-      // Migration from previous version
+         // Migration from previous version
       } else{
          // Migration to 0.85-1.2.5
          if (FieldExists($table, 'plugin_formcreator_forms_id', false)) {
@@ -264,14 +250,14 @@ class PluginFormcreatorTarget extends CommonDBTM
             // Migration from version 1.5 to 1.6
             if (!FieldExists($table, 'type', false)) {
                $query = "ALTER TABLE `$table`
-                         ADD `type` tinyint(1) NOT NULL default '2';";
+               ADD `type` tinyint(1) NOT NULL default '2';";
                $DB->query($query);
             }
 
             // Add new column for link with target items
             $query = "ALTER TABLE `$table`
-                        ADD `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
-                        ADD `items_id` int(11) NOT NULL DEFAULT 0;";
+            ADD `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
+            ADD `items_id` int(11) NOT NULL DEFAULT 0;";
             $DB->query($query);
 
             // Create ticket template for each configuration in DB
@@ -288,9 +274,9 @@ class PluginFormcreatorTarget extends CommonDBTM
 
                $template    = new TicketTemplate();
                $template_id = $template->add(array(
-                  'name'         => 'Template Formcreator '.$i,
-                  'entities_id'  => $ligne['entities_id'],
-                  'is_recursive' => 1,
+                     'name'         => 'Template Formcreator '.$i,
+                     'entities_id'  => $ligne['entities_id'],
+                     'is_recursive' => 1,
                ));
 
                $predefinedField = new TicketTemplatePredefinedField();
@@ -298,36 +284,36 @@ class PluginFormcreatorTarget extends CommonDBTM
                // Urgency
                if(!empty($ligne['urgency'])) {
                   $predefinedField->add(array(
-                     'tickettemplates_id' => $template_id,
-                     'num'                => 10,
-                     'value'              => $ligne['urgency'],
+                        'tickettemplates_id' => $template_id,
+                        'num'                => 10,
+                        'value'              => $ligne['urgency'],
                   ));
                }
 
                // Priority
                if(!empty($ligne['priority'])) {
                   $predefinedField->add(array(
-                     'tickettemplates_id' => $template_id,
-                     'num'                => 3,
-                     'value'              => $ligne['priority'],
+                        'tickettemplates_id' => $template_id,
+                        'num'                => 3,
+                        'value'              => $ligne['priority'],
                   ));
                }
 
                // Category
                if(!empty($ligne['itilcategories_id'])) {
                   $predefinedField->add(array(
-                     'tickettemplates_id' => $template_id,
-                     'num'                => 7,
-                     'value'              => $ligne['itilcategories_id'],
+                        'tickettemplates_id' => $template_id,
+                        'num'                => 7,
+                        'value'              => $ligne['itilcategories_id'],
                   ));
                }
 
                // Type
                if(!empty($ligne['type'])) {
                   $predefinedField->add(array(
-                     'tickettemplates_id' => $template_id,
-                     'num'                => 14,
-                     'value'              => $ligne['type'],
+                        'tickettemplates_id' => $template_id,
+                        'num'                => 14,
+                        'value'              => $ligne['type'],
                   ));
                }
 
@@ -352,7 +338,7 @@ class PluginFormcreatorTarget extends CommonDBTM
             while ($line = $DB->fetch_array($result)) {
                // Insert target ticket
                $query_insert = "INSERT INTO `$table_targetticket` SET
-                                 `name` = '".htmlspecialchars($line['name'])."',
+               `name` = '".htmlspecialchars($line['name'])."',
                                  `tickettemplates_id` = ".$line['tickettemplates_id'].",
                                  `comment` = '".htmlspecialchars($line['content'])."'";
                $DB->query($query_insert);
@@ -360,7 +346,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
                // Update target with target ticket id
                $query_update = "UPDATE `$table`
-                                SET `items_id` = ".$targetticket_id."
+               SET `items_id` = ".$targetticket_id."
                                 WHERE `id` = ".$line['id'];
                $DB->query($query_update);
             }
@@ -376,11 +362,11 @@ class PluginFormcreatorTarget extends CommonDBTM
              */
             if (FieldExists($table_targetticket, 'comment')) {
                $query  = "SELECT `id`, `comment`
-                          FROM `$table_targetticket`";
+               FROM `$table_targetticket`";
                $result = $DB->query($query);
                while ($line = $DB->fetch_array($result)) {
                   $query_update = "UPDATE `$table_targetticket` SET
-                                     `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                  `comment` = '".plugin_formcreator_encode($line['comment'])."'
                                    WHERE `id` = ".$line['id'];
                   $DB->query($query_update) or die ($DB->error());
                }
