@@ -1573,9 +1573,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
    /**
     * Export in an array all the data of the current instanciated form
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   function export() {
+   function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -1609,7 +1611,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_sections = $form_section->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_sections as $sections_id => $section) {
          $form_section->getFromDB($sections_id);
-         $form['_sections'][] = $form_section->export();
+         $form['_sections'][] = $form_section->export($remove_uuid);
       }
 
       // get validators
@@ -1617,7 +1619,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_validators = $form_validator->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_validators as $validators_id => $validator) {
          $form_validator->getFromDB($validators_id);
-         $form['_validators'][] = $form_validator->export();
+         $form['_validators'][] = $form_validator->export($remove_uuid);
       }
 
       // get targets
@@ -1625,7 +1627,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_target = $form_target->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_target as $targets_id => $target) {
          $form_target->getFromDB($targets_id);
-         $form['_targets'][] = $form_target->export();
+         $form['_targets'][] = $form_target->export($remove_uuid);
       }
 
       // get profiles
@@ -1633,7 +1635,11 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_profiles = $form_profile->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_profiles as $profiles_id => $profile) {
          $form_profile->getFromDB($profiles_id);
-         $form['_profiles'][] = $form_profile->export();
+         $form['_profiles'][] = $form_profile->export($remove_uuid);
+      }
+
+      if ($remove_uuid) {
+         $form['uuid'] = '';
       }
 
       return $form;

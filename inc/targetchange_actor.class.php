@@ -116,9 +116,11 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
 
    /**
     * Export in an array all the data of the current instanciated actor
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -164,6 +166,10 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
                unset($target_actor['actor_value']);
             }
             break;
+      }
+
+      if ($remove_uuid) {
+         $target_actor['uuid'] = '';
       }
 
       return $target_actor;

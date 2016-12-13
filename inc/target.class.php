@@ -434,9 +434,11 @@ class PluginFormcreatorTarget extends CommonDBTM
 
    /**
     * Export in an array all the data of the current instanciated target
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -463,8 +465,12 @@ class PluginFormcreatorTarget extends CommonDBTM
       $all_target_actors = $form_target_actor->find("`plugin_formcreator_targettickets_id` = '$targetId'");
       foreach($all_target_actors as $target_actors_id => $target_actor) {
          if ($form_target_actor->getFromDB($target_actors_id)) {
-            $target['_data']['_actors'][] = $form_target_actor->export();
+            $target['_data']['_actors'][] = $form_target_actor->export($remove_uuid);
          }
+      }
+
+      if ($remove_uuid) {
+         $target['uuid'] = '';
       }
 
       return $target;

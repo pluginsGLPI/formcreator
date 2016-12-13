@@ -271,9 +271,11 @@ class PluginFormcreatorSection extends CommonDBChild
 
    /**
     * Export in an array all the data of the current instanciated section
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -290,8 +292,12 @@ class PluginFormcreatorSection extends CommonDBChild
       $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
       foreach($all_questions as $questions_id => $question) {
          if ($form_question->getFromDB($questions_id)) {
-            $section['_questions'][] = $form_question->export();
+            $section['_questions'][] = $form_question->export($remove_uuid);
          }
+      }
+
+      if ($remove_uuid) {
+         $section['uuid'] = '';
       }
 
       return $section;
