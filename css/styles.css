@@ -200,8 +200,6 @@ form.formcreator_form {
 .formcreator_form .form-group > label {
    display: block;
    font-size: 1.2em;
-   display: inline-block;
-   width: 300px;
    line-height: 32px;
 }
 .formcreator_form .form-group:after {
