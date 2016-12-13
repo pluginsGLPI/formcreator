@@ -39,7 +39,7 @@ class CloneTest extends SuperAdminTestCase {
       plugin_formcreator_getFromDBByField($section, 'name', "test clone section");
 
       //clone it
-      $new_sections_id = $section->clone(['id' => $section->getID()]);
+      $new_sections_id = $section->cloneItem(['id' => $section->getID()]);
       $this->assertNotFalse($new_sections_id);
 
       // check uuid
@@ -74,7 +74,7 @@ class CloneTest extends SuperAdminTestCase {
       plugin_formcreator_getFromDBByField($question, 'name', "test clone question 1");
 
       //clone it
-      $new_questions_id = $question->clone(['id' => $question->getID()]);
+      $new_questions_id = $question->cloneItem(['id' => $question->getID()]);
       $this->assertNotFalse($new_questions_id);
 
       // check uuid

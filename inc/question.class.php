@@ -871,7 +871,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *                       - id the id of the question to clone
     * @return integer the question id of the new clone
     */
-   public function clone($input = []) {
+   public function cloneItem($input = []) {
       global $DB;
 
       if ($DB->isSlave()) {

@@ -35,7 +35,7 @@ if ($plugin->isActivated("formcreator")) {
    // Clone a Question
    } elseif(isset($_POST["clone_question"])) {
       Session::checkRight("entity", UPDATE);
-      $question->clone($_POST);
+      $question->cloneItem($_POST);
 
    // Set a Question required
    } elseif(isset($_POST["set_required"])) {

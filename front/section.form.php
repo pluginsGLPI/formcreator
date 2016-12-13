@@ -29,7 +29,7 @@ if ($plugin->isActivated("formcreator")) {
    // Duplicate a Section
    } elseif(isset($_POST["duplicate_section"])) {
       Session::checkRight("entity", UPDATE);
-      $section->clone($_POST);
+      $section->cloneItem($_POST);
 
    // Move a Section
    } elseif(isset($_POST["move"])) {
