@@ -166,6 +166,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
             echo "</span>";
 
+            echo "<span class='form_control pointer'>";
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
+                     title="' . __('Clone question', 'formcreator') . '"
+                     onclick="cloneQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
+            echo "</span>";
+
             if ($fields['required'] != 0) {
                $required_pic = ($question['required'] ? "required": "not-required");
                echo "<span class='form_control pointer'>";
@@ -854,6 +860,29 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
+    * Clone a question
+    * @param  array  $input with these keys
+    *                       - id the id of the question to clone
+    * @return integer the question id of the new clone
+    */
+   public function clone($input = []) {
+      global $DB;
+
+      if ($DB->isSlave()) {
+         return false;
+      }
+
+      if (!$this->getFromDB($input[static::getIndexName()])) {
+         return false;
+      }
+
+      // export and import the current question without uuid in order to clone it
+      return $this->import($this->getField('plugin_formcreator_sections_id'),
+                           $this->export(true));
+   }
+
+
+   /**
     * Import a section's question into the db
     * @see PluginFormcreatorSection::import
     *
@@ -890,9 +919,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
    /**
     * Export in an array all the data of the current instanciated question
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -909,8 +940,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $all_conditions = $form_question_condition->find("plugin_formcreator_questions_id = ".$this->getID());
       foreach($all_conditions as $conditions_id => $condition) {
          if ($form_question_condition->getFromDB($conditions_id)) {
-            $question['_conditions'][] = $form_question_condition->export();
+            $question['_conditions'][] = $form_question_condition->export($remove_uuid);
          }
+      }
+
+      if ($remove_uuid) {
+         $question['uuid'] = '';
       }
 
       return $question;

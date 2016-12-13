@@ -413,6 +413,19 @@ function deleteQuestion(items_id, token, question_id) {
    }
 }
 
+function cloneQuestion(items_id, token, question_id) {
+   jQuery.ajax({
+     url: urlFrontQuestion,
+     type: "POST",
+     data: {
+         id: question_id,
+         clone_question: 1,
+         plugin_formcreator_forms_id: items_id,
+         _glpi_csrf_token: token
+      }
+   }).done(reloadTab);
+}
+
 
 // === SECTIONS ===
 var urlSection      = rootDoc + "/plugins/formcreator/ajax/section.php";
