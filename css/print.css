@@ -1,0 +1,136 @@
+.print_button {
+   display: none;
+}
+
+#page {
+   text-align: left;
+   margin: 10px;
+}
+
+.form_section {
+   margin-left: 10px;
+}
+
+.form-group {
+   margin:  20px 10px;
+   break-inside: avoid-page;
+}
+
+.form_field {
+   margin-top: 5px;
+}
+
+.select2-container,
+input,
+textarea,
+.mce-edit-area {
+   border: 1px solid #AAA;
+   padding: 5px;
+   min-height: 15px;
+   width: 80%;
+}
+
+.select2-container a {
+   display: none;
+}
+
+.mce-toolbar {
+   display: none;
+}
+
+input[type=submit] {
+   display: none;
+}
+
+label[for] {
+   font-weight: bold;
+}
+
+/** FORM ANSWER */
+.form_answer .headerRow,
+.form_answer .help-block,
+.form_answer .accepted_header {
+   display: none;
+}
+
+
+/** GLPI COMPONENTS */
+.tab_cadre_fixe,
+.tab_cadre_fixe th {
+   border: 0;
+   margin: 0;
+   font-size: 13px;
+}
+
+.glpi_tabs {
+   display: none;
+}
+
+/** CHECKBOXES */
+.form-group-checkbox {
+   position:relative;
+   width: 16px;
+   height: 16px;
+   margin: 0 auto;
+   display: inline-block;
+   margin: 5px;
+}
+
+.label-checkbox {
+   cursor:pointer;
+   width: 16px;
+   height: 16px;
+   display: block;
+}
+
+.label-checkbox span {
+   display:block;
+   position:absolute;
+   left:0;
+}
+
+.label-checkbox .box {
+   top: -2px;
+   border: 1px solid #222;
+   border-radius: 3px;
+   height:16px;
+   width:16px;
+}
+
+
+/** RADIO BUTTONS */
+
+.formcreator_radios input[type = radio] {
+   display: none;
+}
+.formcreator_radios input[type = radio] + label {
+   cursor: pointer;
+   padding-left: 22px;
+   position: relative;
+   display: block;
+   height: 26px;
+}
+.formcreator_radios input[type = radio] + label:before,
+.formcreator_radios input[type = radio] + label:after {
+   position: absolute;
+   content: "";
+   border-radius: 50%;
+   transition: all 0.3s ease;
+}
+.formcreator_radios input[type = radio] + label:before {
+   top: -1px;
+   left: 0;
+   width: 15px;
+   height: 15px;
+   background-color: #727272;
+   box-shadow: inset 0 0 0 13px #FFF;
+   border: 2px solid #727272;
+}
+.formcreator_radios input[type = radio] + label:after {
+   top: 40%;
+   left: 9px;
+   width: 54px;
+   height: 54px;
+   background-color: rgba(50, 50, 50, 0.1);
+   transform: translate(-50%, -50%) scale(0);
+}

@@ -135,6 +135,7 @@ form.formcreator_form {
    width: 850px;
 }
 
+.form_answer h1,
 .formcreator_form > h1 {
    text-align: center;
    font-weight: bold;
