@@ -1,7 +1,5 @@
 <?php
-require_once('select-field.class.php');
-
-class ldapselectField extends selectField
+class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 {
    public function getAvailableValues()
    {

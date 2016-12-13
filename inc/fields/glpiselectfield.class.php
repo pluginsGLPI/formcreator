@@ -1,6 +1,5 @@
 <?php
-require_once ('dropdown-field.class.php');
-class glpiselectField extends dropdownField
+class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 {
    public static function getName()
    {

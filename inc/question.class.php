@@ -155,7 +155,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
 
             $question_types = PluginFormcreatorFields::getTypes();
-            $classname = $question['fieldtype'] . 'Field';
+            $classname = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
             $fields = $classname::getPrefs();
 
             // avoid quote js error

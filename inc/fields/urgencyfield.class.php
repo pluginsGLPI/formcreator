@@ -1,6 +1,6 @@
 <?php
 
-class urgencyField extends PluginFormcreatorField
+class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {

@@ -1,5 +1,5 @@
 <?php
-class integerField extends PluginFormcreatorField
+class PluginFormcreatorIntegerField extends PluginFormcreatorField
 {
    public function isValid($value)
    {

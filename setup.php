@@ -82,6 +82,8 @@ function plugin_init_formcreator ()
        && $plugin->isInstalled('formcreator')
        && $plugin->isActivated('formcreator')) {
 
+      spl_autoload_register('plugin_formcreator_autoload');
+
       // Redirect to helpdesk replacement
       if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
          if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
@@ -272,5 +274,27 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $val
       return $item->getID();
    } else {
       return false;
+   }
+}
+
+/**
+ * Autoloader
+ * @param unknown $classname
+ */
+function plugin_formcreator_autoload($classname) {
+   if (strpos($classname, 'PluginFormcreator') === 0) {
+      // Search first for field clases
+      $filename = __DIR__ . '/inc/fields/' . strtolower(str_replace('PluginFormcreator', '', $classname)) . '.class.php';
+      if (is_readable($filename) && is_file($filename)) {
+         include_once($filename);
+         return true;
+      }
+
+      // useful only for installer GLPi autoloader already handles inc/ folder
+      $filename = __DIR__ . '/inc/' . strtolower(str_replace('PluginFormcreator', '', $classname)). '.class.php';
+      if (is_readable($filename) && is_file($filename)) {
+         include_once($filename);
+         return true;
+      }
    }
 }

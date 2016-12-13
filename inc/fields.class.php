@@ -11,11 +11,9 @@ class PluginFormcreatorFields
    {
       $tab_field_types     = array();
 
-      foreach (glob(dirname(__FILE__).'/fields/*-field.class.php') as $class_file) {
-         preg_match("/fields.(.+)-field\.class.php/", $class_file, $matches);
-         $classname = $matches[1].'Field';
-
-         include_once($class_file);
+      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
          if(class_exists($classname)) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
@@ -42,7 +40,7 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname                         = $field_type.'Field';
+         $classname                         = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
             continue;
@@ -69,7 +67,7 @@ class PluginFormcreatorFields
       if(is_file($class_file)) {
          include_once ($class_file);
 
-         $classname = $field['fieldtype'].'Field';
+         $classname = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
          if(class_exists($classname)) {
             $obj = new $classname($field, $value);
             return $obj->getAnswer();
@@ -86,7 +84,7 @@ class PluginFormcreatorFields
 
       // Get field types preference for JS
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname = $field_type.'Field';
+         $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if(method_exists($classname, 'getJSFields')) {
             echo PHP_EOL.'            '.$classname::getJSFields();
@@ -100,7 +98,7 @@ class PluginFormcreatorFields
       $tab_field_types = self::getTypes();
 
       if(array_key_exists($field['fieldtype'], $tab_field_types)) {
-         $fieldClass = $field['fieldtype'].'Field';
+         $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
 
          $plugin = new Plugin();
          if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {

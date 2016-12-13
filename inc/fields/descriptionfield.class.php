@@ -1,5 +1,5 @@
 <?php
-class descriptionField extends PluginFormcreatorField
+class PluginFormcreatorDescriptionField extends PluginFormcreatorField
 {
    public function show($canEdit = true)
    {

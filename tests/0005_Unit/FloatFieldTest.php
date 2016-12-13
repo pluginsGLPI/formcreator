@@ -90,7 +90,7 @@ class FloatFieldTest extends SuperAdminTestCase {
       );
 
       foreach($dataset as &$data) {
-         $data['field'] = new floatField($data['fields'], $data['data']);
+         $data['field'] = new PluginFormcreatorFloatField($data['fields'], $data['data']);
       }
 
       return $dataset;

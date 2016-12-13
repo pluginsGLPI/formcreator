@@ -92,7 +92,7 @@ class MultielectFieldTest extends SuperAdminTestCase {
       );
 
       foreach($dataset as &$data) {
-         $data['field'] = new multiSelectField($data['fields'], $data['data']);
+         $data['field'] = new PluginFormcreatorMultiSelectField($data['fields'], $data['data']);
       }
 
       return $dataset;

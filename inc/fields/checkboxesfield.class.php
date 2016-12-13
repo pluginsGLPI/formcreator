@@ -1,5 +1,5 @@
 <?php
-class checkboxesField extends PluginFormcreatorField
+class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 {
    const IS_MULTIPLE    = true;
    public function displayField($canEdit = true)

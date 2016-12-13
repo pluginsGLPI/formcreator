@@ -101,7 +101,7 @@ class CheckboxFieldTest extends SuperAdminTestCase {
       );
 
       foreach($dataset as &$data) {
-         $data['field'] = new checkboxesField($data['fields'], $data['data']);
+         $data['field'] = new PluginFormcreatorCheckboxesField($data['fields'], $data['data']);
       }
 
       return $dataset;

@@ -1,5 +1,5 @@
 <?php
-class datetimeField extends PluginFormcreatorField
+class PluginFormcreatorDateField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {
@@ -7,7 +7,7 @@ class datetimeField extends PluginFormcreatorField
          $required = ($canEdit && $this->fields['required']) ? ' required' : '';
          $rand     = mt_rand();
 
-         Html::showDateTimeField('formcreator_field_' . $this->fields['id'], array(
+         Html::showDateField('formcreator_field_' . $this->fields['id'], array(
             'value' => $this->getValue(),
             'rand'  => $rand,
          ));
@@ -39,7 +39,7 @@ class datetimeField extends PluginFormcreatorField
 
    public function getAnswer()
    {
-      return Html::convDateTime($this->getValue());
+      return Html::convDate($this->getValue());
    }
 
    public function isValid($value)
@@ -59,7 +59,7 @@ class datetimeField extends PluginFormcreatorField
 
    public static function getName()
    {
-      return __('Datetime', 'formcreator');
+      return __('Date');
    }
 
    public static function getPrefs()
@@ -81,6 +81,6 @@ class datetimeField extends PluginFormcreatorField
    public static function getJSFields()
    {
       $prefs = self::getPrefs();
-      return "tab_fields_fields['datetime'] = 'showFields(" . implode(', ', $prefs) . ");';";
+      return "tab_fields_fields['date'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 }

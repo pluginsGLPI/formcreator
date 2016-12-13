@@ -1,5 +1,5 @@
 <?php
-class textareaField extends PluginFormcreatorField
+class PluginFormcreatorTextareaField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {

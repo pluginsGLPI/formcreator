@@ -1,7 +1,5 @@
 <?php
-require_once('select-field.class.php');
-
-class multiSelectField extends selectField
+class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
 {
    const IS_MULTIPLE    = true;
 

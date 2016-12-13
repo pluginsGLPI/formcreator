@@ -1,5 +1,5 @@
 <?php
-class dropdownField extends PluginFormcreatorField
+class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true)
    {

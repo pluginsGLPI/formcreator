@@ -1,6 +1,5 @@
 <?php
-require_once ('dropdown-field.class.php');
-class actorField extends PluginFormcreatorField
+class PluginFormcreatorActorField extends PluginFormcreatorField
 {
    const IS_MULTIPLE    = true;
 
