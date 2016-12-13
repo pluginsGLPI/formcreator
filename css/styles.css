@@ -1361,6 +1361,17 @@ span.fc_list_icon {
    padding-top: 15px;
 }
 
+.section_row,
+.section_row th {
+   background-color: #CCC;
+}
+
+.form_control {
+   width: 23px;
+   float: right;
+   min-height: 1px;
+}
+
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
    form.formcreator_form {

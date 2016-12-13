@@ -97,40 +97,37 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $token            = Session::getNewCSRFToken();
       foreach ($found_sections as $section) {
          $tab_sections[] = $section['id'];
-         echo '<tr id="section_row_' . $section['id'] . '">';
-         echo '<th>' . $section['name'] . '</th>';
-         echo '<th align="center" width="32">&nbsp;</th>';
-
-         echo '<th align="center" width="32">';
-         if($section['order'] != 1) {
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up2.png"
-                     alt="*" title="' . __('Bring up') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
-         } else {
-            echo '&nbsp;';
-         }
-         echo '</th>';
-         echo '<th align="center" width="32">';
-         if($section['order'] != $section_number) {
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down2.png"
-                     alt="*" title="' . __('Bring down') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
-         } else {
-            echo '&nbsp;';
-         }
+         echo '<tr class="section_row" id="section_row_' . $section['id'] . '">';
+         echo '<th onclick="editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')">';
+         echo "<a href='#'>";
+         echo $section['name'];
+         echo '</a>';
          echo '</th>';
 
-         echo '<th align="center" width="32">';
-         echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/pencil.png"
-                  alt="*" title="' . __('Edit') . '"
-                  onclick="editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
-         echo '</th>';
+         echo '<th align="center">';
 
-         echo '<th align="center" width="32">';
+         echo "<span class='form_control pointer'>";
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
-                  alt="*" title="' . __('Delete', 'formcreator') . '"
-                  onclick="deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"
-                  align="absmiddle" style="cursor: pointer" /> ';
+                  title="' . __('Delete', 'formcreator') . '"
+                  onclick="deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"> ';
+         echo "</span>";
+
+         echo "<span class='form_control pointer'>";
+         if($section['order'] != $section_number) {
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
+                     title="' . __('Bring down') . '"
+                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'down\');" >';
+         }
+         echo "</span>";
+
+         echo "<span class='form_control pointer'>";
+         if($section['order'] != 1) {
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
+                     title="' . __('Bring up') . '"
+                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');"> ';
+         }
+         echo "</span>";
+
          echo '</th>';
          echo '</tr>';
 
@@ -144,9 +141,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $i++;
             $tab_questions[] = $question['id'];
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
-            echo '<td onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')" style="cursor: pointer">';
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-' . $question['fieldtype'] . '-field.png" alt="" title="" /> ';
+            echo '<td onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
+            echo "<a href='#'>";
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-' . $question['fieldtype'] . '-field.png" title="" /> ';
             echo $question['name'];
+            echo "<a>";
             echo '</td>';
 
             echo '<td align="center">';
@@ -161,45 +160,37 @@ class PluginFormcreatorQuestion extends CommonDBChild
             // avoid quote js error
             $question['name'] = htmlspecialchars_decode($question['name'], ENT_QUOTES);
 
-            if ($fields['required'] == 0) {
-               echo '&nbsp;';
-            } elseif($question['required']) {
-               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/required.png"
-                        alt="*" title="' . __('Required', 'formcreator') . '"
-                        onclick="setRequired(\'' . $token . '\', ' . $question['id'] . ', 0)" align="absmiddle" style="cursor: pointer" /> ';
-            } else {
-               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/not-required.png"
-                        alt="*" title="' . __('Required', 'formcreator') . '"
-                        onclick="setRequired(\'' . $token . '\', ' . $question['id'] . ', 1)" align="absmiddle" style="cursor: pointer" /> ';
+            echo "<span class='form_control pointer'>";
+            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
+                     title="' . __('Delete', 'formcreator') . '"
+                     onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
+            echo "</span>";
+
+            if ($fields['required'] != 0) {
+               $required_pic = ($question['required'] ? "required": "not-required");
+               echo "<span class='form_control pointer'>";
+               echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/formcreator/pics/$required_pic.png'
+                        title='" . __('Required', 'formcreator') . "'
+                        onclick='setRequired(\"".$token."\", ".$question['id'].", ".($question['required']?0:1).")' > ";
+               echo "</span>";
             }
-            echo '</td>';
-            echo '<td align="center">';
+
+            echo "<span class='form_control pointer'>";
             if($question['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
-                        alt="*" title="' . __('Bring up') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'up\');" align="absmiddle" style="cursor: pointer" /> ';
-            } else {
-               echo '&nbsp;';
+                        title="' . __('Bring up') . '"
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'up\');" align="absmiddle"> ';
             }
-            echo '</td>';
-            echo '<td align="center">';
+            echo "</span>";
+
+            echo "<span class='form_control pointer'>";
             if($question['order'] != $question_number) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
-                        alt="*" title="' . __('Bring down') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'down\');" align="absmiddle" style="cursor: pointer" /> ';
-            } else {
-               echo '&nbsp;';
+                        title="' . __('Bring down') . '"
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'down\');"> ';
             }
-            echo '</td>';
-            echo '<td align="center">';
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/pencil.png"
-                     alt="*" title="' . __('Edit') . '"
-                     onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
-            echo '</td>';
-            echo '<td align="center">';
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
-                     alt="*" title="' . __('Delete', 'formcreator') . '"
-                     onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')" align="absmiddle" style="cursor: pointer" /> ';
+            echo "</span>";
+
             echo '</td>';
             echo '</tr>';
          }
@@ -208,20 +199,21 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo '<tr class="line' . (($i + 1) % 2) . '">';
          echo '<td colspan="6" id="add_question_td_' . $section['id'] . '" class="add_question_tds">';
          echo '<a href="javascript:addQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ');">
-                   <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
+                   <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+"/>
                    '.__('Add a question', 'formcreator').'
                </a>';
          echo '</td>';
          echo '</tr>';
       }
 
-      echo '<tr class="line1">';
-      echo '<th colspan="6" id="add_section_th">';
+      echo '<tr class="line1 section_row">';
+      echo '<th id="add_section_th">';
       echo '<a href="javascript:addSection(' . $item->getId() . ', \'' . $token . '\');">
-                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
+                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+">
                 '.__('Add a section', 'formcreator').'
             </a>';
       echo '</th>';
+      echo '<th></th>';
       echo '</tr>';
 
       echo "</table>";
