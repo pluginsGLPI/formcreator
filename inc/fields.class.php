@@ -79,6 +79,7 @@ class PluginFormcreatorFields
 
    public static function printAllTabFieldsForJS()
    {
+      $tabFieldsForJS = '';
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
@@ -87,9 +88,10 @@ class PluginFormcreatorFields
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if(method_exists($classname, 'getJSFields')) {
-            echo PHP_EOL.'            '.$classname::getJSFields();
+            $tabFieldsForJS .= PHP_EOL.'            '.$classname::getJSFields();
          }
       }
+      return $tabFieldsForJS;
    }
 
    public static function showField($field, $datas = null, $edit = true)

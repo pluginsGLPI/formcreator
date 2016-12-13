@@ -986,6 +986,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
       echo '</tr>';
       $rootDoc = $CFG_GLPI['root_doc'];
+      $allTabFields = PluginFormcreatorFields::printAllTabFieldsForJS();
       echo <<<JS
       <script type="text/javascript">
       function changeQuestionType() {
@@ -993,7 +994,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          if(value != "") {
             var tab_fields_fields = [];
-            <?php PluginFormcreatorFields::printAllTabFieldsForJS(); ?>
+            $allTabFields
 
                   eval(tab_fields_fields[value]);
                } else {
