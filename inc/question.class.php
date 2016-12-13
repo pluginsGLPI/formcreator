@@ -587,6 +587,581 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query($query);
    }
 
+   public function showform($ID, $options=array()) {
+      global $DB, $CFG_GLPI;
+
+      $form_id = (int) $_REQUEST['form_id'];
+      $rand = mt_rand();
+      $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
+      echo '<form name="form_question" method="post" action="'.$action.'">';
+
+      echo '<table class="tab_cadre_fixe">';
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo (0 == $ID) ? __('Add a question', 'formcreator') : __('Edit a question', 'formcreator');
+      echo '</th>';
+      echo '</tr>';
+
+      echo '<tr class="line0">';
+      echo '<td width="20%">';
+      echo '<label for="name" id="label_name">';
+      echo  __('Title');
+      echo '<span style="color:red;">*</span>';
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td width="30%">';
+      echo '<input type="text" name="name" id="name" style="width:90%;" autofocus value="'.$this->fields['name'].'" class="required"';
+      echo '</td>';
+
+      echo '<td width="20%">';
+      echo '<label for="dropdown_fieldtype'.$rand.'" id="label_fieldtype">';
+      echo _n('Type', 'Types', 1);
+      echo '<span style="color:red;">*</span>';
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td width="30%">';
+      $fieldtypes = PluginFormcreatorFields::getNames();
+      Dropdown::showFromArray('fieldtype', $fieldtypes, array(
+            'value'       => $this->fields['fieldtype'],
+            'on_change'   => 'changeQuestionType();',
+            'rand'        => $rand,
+      ));
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1">';
+      echo '<td>';
+      echo '<label for="dropdown_plugin_formcreator_sections_id'.$rand.'" id="label_name">';
+      echo  _n('Section', 'Sections', 1, 'formcreator');
+      echo '<span style="color:red;">*</span>';
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td>';
+      $table = getTableForItemtype('PluginFormcreatorSection');
+      $sections = array();
+      $sql = "SELECT `id`, `name`
+              FROM $table
+              WHERE `plugin_formcreator_forms_id` = $form_id
+              ORDER BY `order`";
+      $result = $DB->query($sql);
+      while ($section = $DB->fetch_array($result)) {
+         $sections[$section['id']] = $section['name'];
+      }
+      Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, array(
+            'value' => ($this->fields['plugin_formcreator_sections_id']) ?:intval($_REQUEST['section_id']),
+            'rand'  => $rand,
+      ));
+      echo '</td>';
+
+      echo '<td>';
+      echo '<label for="dropdown_dropdown_values'.$rand.'" id="label_dropdown_values">';
+      echo _n('Dropdown', 'Dropdowns', 1);
+      echo '</label>';
+      echo '<label for="dropdown_glpi_objects<?php'.$rand.'" id="label_glpi_objects">';
+      echo _n('GLPI object', 'GLPI objects', 1, 'formcreator');
+      echo '</label>';
+      echo '<label for="dropdown_ldap_auth<?php'.$rand.'" id="label_glpi_ldap">';
+      echo _n('LDAP directory', 'LDAP directories', 1);
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<div id="dropdown_values_field">';
+      $optgroup = Dropdown::getStandardDropdownItemTypes();
+      array_unshift($optgroup, '---');
+      Dropdown::showFromArray('dropdown_values', $optgroup, array(
+            'value'     => $this->fields['values'],
+            'rand'      => $rand,
+            'on_change' => 'change_dropdown();',
+      ));
+      echo '</div>';
+      echo '<div id="glpi_objects_field">';
+      $optgroup = array(
+            __("Assets") => array(
+                  'Computer'           => _n("Computer", "Computers", 2),
+                  'Monitor'            => _n("Monitor", "Monitors", 2),
+                  'Software'           => _n("Software", "Software", 2),
+                  'Networkequipment'   => _n("Network", "Networks", 2),
+                  'Peripheral'         => _n("Device", "Devices", 2),
+                  'Printer'            => _n("Printer", "Printers", 2),
+                  'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
+                  'Consumableitem'     => _n("Consumable", "Consumables", 2),
+                  'Phone'              => _n("Phone", "Phones", 2)),
+            __("Assistance") => array(
+                  'Ticket'             => _n("Ticket", "Tickets", 2),
+                  'Problem'            => _n("Problem", "Problems", 2),
+                  'TicketRecurrent'    => __("Recurrent tickets")),
+            __("Management") => array(
+                  'Budget'             => _n("Budget", "Budgets", 2),
+                  'Supplier'           => _n("Supplier", "Suppliers", 2),
+                  'Contact'            => _n("Contact", "Contacts", 2),
+                  'Contract'           => _n("Contract", "Contracts", 2),
+                  'Document'           => _n("Document", "Documents", 2)),
+            __("Tools") => array(
+                  'Reminder'           => __("Notes"),
+                  'RSSFeed'            => __("RSS feed")),
+            __("Administration") => array(
+                  'User'               => _n("User", "Users", 2),
+                  'Group'              => _n("Group", "Groups", 2),
+                  'Entity'             => _n("Entity", "Entities", 2),
+                  'Profile'            => _n("Profile", "Profiles", 2))
+      );;
+      array_unshift($optgroup, '---');
+      Dropdown::showFromArray('glpi_objects', $optgroup, array(
+            'value'     => $this->fields['values'],
+            'rand'      => $rand,
+            'on_change' => 'change_glpi_objects();',
+      ));
+      echo '</div>';
+      echo '<div id="glpi_ldap_field">';
+      $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
+      if ($ldap_values === null) {
+         $ldap_values = array();
+      }
+      Dropdown::show('AuthLDAP', array(
+            'name'      => 'ldap_auth',
+            'rand'      => $rand,
+            'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
+            'on_change' => 'change_LDAP(this)',
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line0" id="required_tr">';
+      echo '<td>';
+      echo '<label for="dropdown_required'.$rand.'" id="label_required">';
+      echo __('Required', 'formcreator');
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td>';
+      dropdown::showYesNo('required', $this->fields['required'], -1, array(
+            'rand'  => $rand,
+      ));
+      echo '</td>';
+
+      echo '<td>';
+      echo '<label for="dropdown_show_empty<?php'.$rand.'" id="label_show_empty">';
+      echo __('Show empty', 'formcreator');
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<div id="show_empty">';
+      dropdown::showYesNo('show_empty', $this->fields['show_empty'], -1, array(
+            'rand'  => $rand,
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1" id="values_tr">';
+      echo '<td>';
+      echo '<label for="dropdown_default_values'.$rand.'" id="label_default_values">';
+      echo __('Default values');
+      echo '<small>('.__('One per line for lists', 'formcreator').')</small>';
+      echo '</label>';
+      echo '<label for="dropdown_dropdown_default_value'.$rand.'" id="label_dropdown_default_value">';
+      echo __('Default value');
+      echo '</label>';
+      echo '</td>';
+      echo '<td>';
+      echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
+            .'style="width: 90%">'.$this->fields['default_values'].'</textarea>';
+      echo '<div id="dropdown_default_value_field">';
+      if((($this->fields['fieldtype'] == 'dropdown')
+            || ($this->fields['fieldtype'] == 'glpiselect'))
+            && !empty($this->fields['values'])
+            && class_exists($this->fields['values'])) {
+         Dropdown::show($this->fields['values'], array(
+               'name'  => 'dropdown_default_value',
+               'value' => $this->fields['default_values'],
+               'rand'  => $rand,
+         ));
+      }
+      echo '</div>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<label for="values" id="label_values">';
+      echo __('Values', 'formcreator');
+      echo '<small>('.__('One per line', 'formcreator').')</small>';
+      echo '</label>';
+      echo '</td>';
+      echo '<td>';
+      echo '<textarea name="values" id="values" rows="4" cols="40"'
+           .'style="width: 90%">'.$this->fields['values'].'</textarea>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1" id="ldap_tr">';
+      echo '<td>';
+      echo '<label for="ldap_filter">';
+      echo __('Filter', 'formcreator');
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"'
+           .'value="'.(isset($ldap_values['ldap_filter']) ? $ldap_values['ldap_filter'] : '').'" />';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<label for="ldap_attribute">';
+      echo __('Attribute', 'formcreator');
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td>';
+      $rand2 = mt_rand();
+      Dropdown::show('RuleRightParameter', array(
+            'name'  => 'ldap_attribute',
+            'rand'  => $rand2,
+            'value' => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
+      ));
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line0" id="ldap_tr2">';
+      echo '<td>';
+      echo '</td>';
+      echo '<td>';
+      echo '</td>';
+      echo '<td colspan="2">&nbsp;</td>';
+      echo '</tr>';
+
+      echo '<tr class="line0" id="range_tr">';
+      echo '<td>';
+      echo '<span id="label_range">'.__('Range', 'formcreator').'</span>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<label for="range_min" id="label_range_min">';
+      echo __('Min', 'formcreator');
+      echo '</label>';
+      echo '<input type="text" name="range_min" id="range_min" class="small_text"'
+           .'style="width: 90px" value="'.$this->fields['range_min'].'" />';
+      echo '&nbsp;';
+      echo '<label for="range_max" id="label_range_max">';
+      echo __('Max', 'formcreator');
+      echo '</label>';
+      echo '<input type="text" name="range_max" id="range_max" class="small_text"'
+           .'style="width: 90px" value="'.$this->fields['range_max'].'" />';
+      echo '</td>';
+
+      echo '<td colspan="2">&nbsp;</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1" id="description_tr">';
+      echo '<td>';
+      echo '<label for="description" id="label_description">';
+      echo __('Description');
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td width="80%" colspan="3">';
+      echo '<textarea name="description" id="description" rows="6" cols="108"'
+           .'style="width: 97%">'.$this->fields['description'].'</textarea>';
+      Html::initEditorSystem('description');
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line0" id="regex_tr">';
+      echo '<td>';
+      echo '<label for="regex" id="label_regex">';
+      echo __('Additional validation', 'formcreator');
+      echo '<small>';
+      echo '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
+      echo '('.__('Regular expression', 'formcreator').')';
+      echo '</small>';
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td width="80%" colspan="3">';
+      echo '<input type="text" name="regex" id="regex" style="width:98%;"'
+           .'value="'.$this->fields['regex'].'" />';
+      echo '<em>';
+      echo __('Specify the additional validation conditions in the description of the question to help users.', 'formcreator');
+      echo '</em>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
+      echo __('Show field', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+
+      echo '<tr>';
+      echo '<td>';
+      Dropdown::showFromArray('show_rule', array(
+            'always'    => __('Always displayed', 'formcreator'),
+            'hidden'    => __('Hidden unless', 'formcreator'),
+            'shown'     => __('Displayed unless', 'formcreator'),
+      ), array(
+            'value'     => $this->fields['show_rule'],
+            'on_change' => 'toggleCondition(this);',
+            'rand'      => $rand,
+      ));
+      $hide = (empty($this->fields['show_rule']) || ($this->fields['show_rule'] == 'always')) ? ' style="display:none"' : '';
+      echo '</td>';
+
+      echo '<td colspan="3">';
+      echo '<div id="div_show_condition"'.$hide.'>';
+      // ===============================================================
+      // TODO : Mettre en place l'interface multi-conditions
+      // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
+      $question_condition = new PluginFormcreatorQuestion_Condition();
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$ID'");
+      if (count($rows) < 1) {
+         $show_field       = '';
+         $show_condition   = '==';
+         $show_value       = '';
+      } else {
+         $row = array_shift($rows);
+         $show_field       = $row['show_field'];
+         $show_condition   = $row['show_condition'];
+         $show_value       = $row['show_value'];
+      }
+      // ===============================================================
+
+      $table_question = getTableForItemtype('PluginFormcreatorQuestion');
+      $table_section  = getTableForItemtype('PluginFormcreatorSection');
+      $questions_tab  = array();
+      $sql = "SELECT q.`id`, q.`name`
+              FROM $table_question q
+              LEFT JOIN $table_section s ON q.`plugin_formcreator_sections_id` = s.`id`
+              WHERE s.`plugin_formcreator_forms_id` = '$form_id'
+              AND q.`id` != '$ID'
+              ORDER BY s.`order`, q.`order`";
+      $result = $DB->query($sql);
+      while ($line = $DB->fetch_array($result)) {
+         $questions_tab[$line['id']] = (strlen($line['name']) < 30)
+         ? $line['name']
+         : substr($line['name'], 0, strrpos(substr($line['name'], 0, 30), ' ')) . '...';
+      }
+      echo '<div id="div_show_condition_field">';
+      Dropdown::showFromArray('show_field', $questions_tab, array(
+            'value' => $show_field
+      ));
+      echo '</div>';
+
+      echo '<div id="div_show_condition_operator">';
+      Dropdown::showFromArray('show_condition', array(
+            '=='    => '=',
+            '!='    => '&ne;',
+            '<'     => '&lt;',
+            '>'     => '&gt;',
+            '<='    => '&le;',
+            '>='    => '&ge;',
+      ), array(
+            'value' => $show_condition,
+            'rand'  => $rand,
+      ));
+      echo '</div>';
+      echo '<div id="div_show_condition_value">';
+      echo '<input type="text" name="show_value" id="show_value" class="small_text"'
+           .'value="'.$show_value.'" size="8">';
+      echo '</div>';
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1">';
+      echo '<td colspan="4" class="center">';
+      echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
+      echo '<input type="hidden" name="id" value="'.$ID.'" />';
+      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($form_id).'" />';
+      if (0 == $ID) {
+         echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
+      } else {
+         echo '<input type="submit" name="update" class="submit_button" value="'.__('Save').'" />';
+      }
+      echo '</td>';
+      echo '</tr>';
+      $rootDoc = $CFG_GLPI['root_doc'];
+      echo <<<JS
+      <script type="text/javascript">
+      function changeQuestionType() {
+         var value = document.getElementById('dropdown_fieldtype$rand').value;
+
+         if(value != "") {
+            var tab_fields_fields = [];
+            <?php PluginFormcreatorFields::printAllTabFieldsForJS(); ?>
+
+                  eval(tab_fields_fields[value]);
+               } else {
+                  showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+               }
+            }
+            changeQuestionType();
+
+            function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
+               if(required) {
+                  document.getElementById('dropdown_required$rand').style.display   = 'inline';
+                  document.getElementById('label_required').style.display                          = 'inline';
+               } else {
+                  document.getElementById('dropdown_required$rand').style.display   = 'none';
+                  document.getElementById('label_required').style.display                          = 'none';
+               }
+               if(default_values) {
+                  document.getElementById('default_values').style.display                          = 'inline';
+                  document.getElementById('label_default_values').style.display                    = 'inline';
+               } else {
+                  document.getElementById('default_values').style.display                          = 'none';
+                  document.getElementById('label_default_values').style.display                    = 'none';
+               }
+               if(show_type) {
+                  document.getElementById('dropdown_show_rule$rand').style.display  = 'inline';
+                  document.getElementById('label_show_type').style.display                         = 'inline';
+               } else {
+                  document.getElementById('dropdown_show_rule$rand').style.display  = 'none';
+                  document.getElementById('label_show_type').style.display                         = 'none';
+               }
+               if(values) {
+                  document.getElementById('values').style.display                                  = 'inline';
+                  document.getElementById('label_values').style.display                            = 'inline';
+               } else {
+                  document.getElementById('values').style.display                                  = 'none';
+                  document.getElementById('label_values').style.display                            = 'none';
+               }
+               if(dropdown_value) {
+                  document.getElementById('dropdown_values_field').style.display = 'inline';
+                  document.getElementById('label_dropdown_values').style.display                   = 'inline';
+               } else {
+                  document.getElementById('dropdown_values_field').style.display = 'none';
+                  document.getElementById('label_dropdown_values').style.display                   = 'none';
+               }
+               if(glpi_object) {
+                  document.getElementById('glpi_objects_field').style.display = 'inline';
+                  document.getElementById('label_glpi_objects').style.display                   = 'inline';
+               } else {
+                  document.getElementById('glpi_objects_field').style.display = 'none';
+                  document.getElementById('label_glpi_objects').style.display                   = 'none';
+               }
+               if (dropdown_value || glpi_object) {
+                  document.getElementById('dropdown_default_value_field').style.display = 'inline';
+                  document.getElementById('label_dropdown_default_value').style.display            = 'inline';
+               } else {
+                  document.getElementById('dropdown_default_value_field').style.display = 'none';
+                  document.getElementById('label_dropdown_default_value').style.display            = 'none';
+               }
+               if(range) {
+                  document.getElementById('range_min').style.display                               = 'inline';
+                  document.getElementById('range_max').style.display                               = 'inline';
+                  document.getElementById('label_range_min').style.display                         = 'inline';
+                  document.getElementById('label_range_max').style.display                         = 'inline';
+                  document.getElementById('label_range').style.display                             = 'inline';
+                  document.getElementById('range_tr').style.display                                = 'table-row';
+               } else {
+                  document.getElementById('range_min').style.display                               = 'none';
+                  document.getElementById('range_max').style.display                               = 'none';
+                  document.getElementById('label_range_min').style.display                         = 'none';
+                  document.getElementById('label_range_max').style.display                         = 'none';
+                  document.getElementById('label_range').style.display                             = 'none';
+                  document.getElementById('range_tr').style.display                                = 'none';
+               }
+               if(show_empty) {
+                  document.getElementById('show_empty').style.display = 'inline';
+                  document.getElementById('label_show_empty').style.display                        = 'inline';
+               } else {
+                  document.getElementById('show_empty').style.display = 'none';
+                  document.getElementById('label_show_empty').style.display                        = 'none';
+               }
+               if(regex) {
+                  document.getElementById('regex').style.display                                   = 'inline';
+                  document.getElementById('label_regex').style.display                             = 'inline';
+                  document.getElementById('regex_tr').style.display                                = 'table-row';
+               } else {
+                  document.getElementById('regex').style.display                                   = 'none';
+                  document.getElementById('label_regex').style.display                             = 'none';
+                  document.getElementById('regex_tr').style.display                                = 'none';
+               }
+               if(values || default_values || dropdown_value || glpi_object) {
+                  document.getElementById('values_tr').style.display                               = 'table-row';
+               } else {
+                  document.getElementById('values_tr').style.display                               = 'none';
+               }
+               if(required || show_empty) {
+                  document.getElementById('required_tr').style.display                             = 'table-row';
+               } else {
+                  document.getElementById('required_tr').style.display                             = 'none';
+               }
+               if(ldap_values) {
+                  document.getElementById('glpi_ldap_field').style.display                         = 'inline';
+                  document.getElementById('label_glpi_ldap').style.display                         = 'inline';
+                  document.getElementById('ldap_tr').style.display                                 = 'table-row';
+               } else {
+                  document.getElementById('glpi_ldap_field').style.display                         = 'none';
+                  document.getElementById('label_glpi_ldap').style.display                         = 'none';
+                  document.getElementById('ldap_tr').style.display                                 = 'none';
+               }
+            }
+
+            function toggleCondition(field) {
+               if(field.value == "always") {
+                  document.getElementById("div_show_condition").style.display = "none";
+               } else {
+                  document.getElementById("div_show_condition").style.display = "block";
+               }
+            }
+
+            function change_dropdown() {
+               dropdown_type = document.getElementById('dropdown_dropdown_values$rand').value;
+
+               jQuery.ajax({
+                  url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
+                  type: "GET",
+                  data: {
+                     dropdown_itemtype: dropdown_type,
+                     rand: "$rand"
+                  },
+               }).done(function(response){
+                  jQuery("#dropdown_default_value_field").html(response);
+               });
+            }
+
+            function change_glpi_objects() {
+               glpi_object = document.getElementById('dropdown_glpi_objects$rand').value;
+
+               jQuery.ajax({
+                  url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
+                  type: "GET",
+                  data: {
+                     dropdown_itemtype: glpi_object,
+                     rand: "$rand"
+                  },
+               }).done(function(response){
+                  jQuery("#dropdown_default_value_field").html(response);
+               });
+            }
+
+            function change_LDAP(ldap) {
+               var ldap_directory = ldap.value;
+
+               jQuery.ajax({
+                 url: "$rootDoc/plugins/formcreator/ajax/ldap_filter.php",
+                 type: "POST",
+                 data: {
+                     value: ldap_directory,
+                     _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
+                  },
+               }).done(function(response){
+                  document.getElementById('ldap_filter').value = response;
+               });
+            }
+         </script>
+JS;
+      echo '</table>';
+      Html::closeForm();
+   }
+
    /**
     * Database table installation for the item type
     *
