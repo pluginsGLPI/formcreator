@@ -57,7 +57,7 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
             Html::helpFooter();
          }
 
-      } elseif(!empty($_SESSION['glpiactiveprofile'])) {
+      } else if(!empty($_SESSION['glpiactiveprofile'])) {
          Html::header(
             __('Form Creator', 'formcreator'),
             $_SERVER['PHP_SELF'],
@@ -91,7 +91,7 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
       unset($_SESSION['glpiname']);
    }
 
-// Or display a "Not found" error
 } else {
+   // Or display a "Not found" error
    Html::displayNotFoundError();
 }

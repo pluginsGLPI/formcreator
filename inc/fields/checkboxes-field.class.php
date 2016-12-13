@@ -52,7 +52,7 @@ class checkboxesField extends PluginFormcreatorField
          if (!empty($answer)) {
             if (is_array($answer)) {
                echo implode("<br />", $answer);
-            } elseif (is_array(json_decode($answer))) {
+            } else if (is_array(json_decode($answer))) {
                echo implode("<br />", json_decode($answer));
             } else {
                echo $this->getAnswer();
@@ -63,7 +63,7 @@ class checkboxesField extends PluginFormcreatorField
       }
    }
 
-	public function isValid($value)
+   public function isValid($value)
    {
       $value = json_decode($value);
       if (is_null($value)) $value = array();
@@ -76,23 +76,23 @@ class checkboxesField extends PluginFormcreatorField
             ERROR);
          return false;
 
-      // Min range not set or number of selected item lower than min
-      } elseif (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
+      } else if (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
+         // Min range not set or number of selected item lower than min
          $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $this->fields['range_min']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
-      // Max range not set or number of selected item greater than max
-      } elseif (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
+      } else if (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
+         // Max range not set or number of selected item greater than max
          $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
-      // All is OK
       } else {
+         // All is OK
          return true;
       }
-	}
+   }
 
    public static function getName()
    {

@@ -120,4 +120,3 @@ if (isset($_POST["update"])) {
 }
 
 PluginFormcreatorWizard::footer();
-?>

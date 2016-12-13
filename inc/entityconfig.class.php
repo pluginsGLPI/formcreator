@@ -60,7 +60,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       }
 
-
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
 

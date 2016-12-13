@@ -13,26 +13,26 @@ if ($plugin->isActivated("formcreator")) {
       $formanswer->update($_POST);
       Html::back();
 
-   } elseif(isset($_POST['refuse_formanswer'])) {
+   } else if(isset($_POST['refuse_formanswer'])) {
 
       $formanswer->getFromDB(intval($_POST['id']));
       $formanswer->refuseAnswers($_POST);
       $formanswer->redirectToList();
 
-   } elseif(isset($_POST['accept_formanswer'])) {
+   } else if(isset($_POST['accept_formanswer'])) {
 
       $formanswer->getFromDB(intval($_POST['id']));
       $formanswer->acceptAnswers($_POST);
       $formanswer->redirectToList();
 
-   } elseif(isset($_POST['save_formanswer'])) {
+   } else if(isset($_POST['save_formanswer'])) {
       $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
       $_POST['status']                      = 'waiting';
       $formanswer->saveAnswers($_POST);
       $formanswer->redirectToList();
 
-   // Show target ticket form
    } else {
+      // Show target ticket form
       if (plugin_formcreator_replaceHelpdesk()) {
          PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
       } else {
@@ -53,14 +53,14 @@ if ($plugin->isActivated("formcreator")) {
 
       $formanswer->display($_REQUEST);
 
-   if (plugin_formcreator_replaceHelpdesk()) {
-      PluginFormcreatorWizard::footer();
-   } else {
-      Html::footer();
+      if (plugin_formcreator_replaceHelpdesk()) {
+         PluginFormcreatorWizard::footer();
+      } else {
+         Html::footer();
+      }
    }
-}
 
-// Or display a "Not found" error
 } else {
+   // Or display a "Not found" error
    Html::displayNotFoundError();
 }

@@ -132,14 +132,14 @@ function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $link
    $join = "";
    switch ($itemtype) {
       case 'PluginFormcreatorIssue':
-            if ($new_table == 'glpi_ticketvalidations') {
-               foreach ($already_link_tables as $table) {
-                  if (strpos($table, $new_table) === 0) {
-                     $AS = $table;
-                  }
+         if ($new_table == 'glpi_ticketvalidations') {
+            foreach ($already_link_tables as $table) {
+               if (strpos($table, $new_table) === 0) {
+                  $AS = $table;
                }
-               $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
             }
+            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
+         }
       break;
    }
 

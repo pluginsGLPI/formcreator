@@ -11,7 +11,6 @@ class CommonDBTestCase extends PHPUnit_Framework_TestCase {
 
       $cmd = 'echo "DROP DATABASE IF EXISTS \`'.$dbdefault .'\`; CREATE DATABASE \`'.$dbdefault.'\`" | ' . $cmd ." 2>&1";
 
-
       $returncode = 0;
       $output = array();
       exec(
@@ -42,7 +41,6 @@ class CommonDBTestCase extends PHPUnit_Framework_TestCase {
       }
 
       $cmd = $result . " " . $dbdefault . " < ". $file ." 2>&1";
-
 
       $returncode = 0;
       $output = array();

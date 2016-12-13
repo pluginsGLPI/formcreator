@@ -14,20 +14,20 @@ if ($plugin->isActivated("formcreator")) {
       $section->add($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Edit an existing Section
-   } elseif(isset($_POST["update"])) {
+   } else if(isset($_POST["update"])) {
+      // Edit an existing Section
       Session::checkRight("entity", UPDATE);
       $section->update($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Delete a Section
-   } elseif(isset($_POST["delete_section"])) {
+   } else if(isset($_POST["delete_section"])) {
+      // Delete a Section
       Session::checkRight("entity", UPDATE);
       $section->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Move a Section
-   } elseif(isset($_POST["move"])) {
+   } else if(isset($_POST["move"])) {
+      // Move a Section
       global $DB;
 
       Session::checkRight("entity", UPDATE);
@@ -54,12 +54,12 @@ if ($plugin->isActivated("formcreator")) {
 
       // Page refresh handled by Javascript
 
-   // Return to form list
    } else {
+      // Return to form list
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.php');
    }
 
-// Or display a "Not found" error
 } else {
+   // Or display a "Not found" error
    Html::displayNotFoundError();
 }

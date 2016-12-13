@@ -881,8 +881,8 @@ class PluginFormcreatorForm extends CommonDBTM
                $validators[$validator['id']] = $validator['completename'];
             }
 
-         // Users
          } else {
+            // Users
             $query = "SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
                       FROM `glpi_users` u
                       LEFT JOIN `$table_form_validator` fv ON fv.`items_id` = u.`id` AND fv.itemtype = 'User'
@@ -1101,7 +1101,7 @@ class PluginFormcreatorForm extends CommonDBTM
                foreach($value as $key2 => $value2) {
                   $datas[$key][$key2] = plugin_formcreator_encode($value2);
                }
-            } elseif(is_array(json_decode($value))) {
+            } else if(is_array(json_decode($value))) {
                $value = json_decode($value);
                foreach($value as $key2 => $value2) {
                   $value[$key2] = plugin_formcreator_encode($value2);
@@ -1113,8 +1113,8 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
          $_SESSION['formcreator']['datas'] = $datas;
-      // Save form
       } else {
+         // Save form
          $formanswer = new PluginFormcreatorForm_Answer();
          $formanswer->saveAnswers($datas);
       }
@@ -1242,7 +1242,6 @@ class PluginFormcreatorForm extends CommonDBTM
       $migration->addField($table, 'is_default', 'bool', array('after' => 'usage_count',
                                                                'value' => '0'));
 
-
       // Create standard search options
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
@@ -1257,7 +1256,6 @@ class PluginFormcreatorForm extends CommonDBTM
                   (NULL, '" . __CLASS__ . "', 8, 5, 0),
                   (NULL, '" . __CLASS__ . "', 9, 6, 0);";
       $DB->query($query) or die ($DB->error());
-
 
       // add uuid to forms
       if (!FieldExists($table, 'uuid', false)) {
@@ -1476,7 +1474,7 @@ class PluginFormcreatorForm extends CommonDBTM
             ));
             echo '<br /><br />' . Html::submit(_x('button','Post'), array('name' => 'massiveaction'));
             return true;
-    }
+      }
       return parent::showMassiveActionsSubForm($ma);
    }
 
@@ -1739,7 +1737,6 @@ class PluginFormcreatorForm extends CommonDBTM
          // create new form
          $forms_id = $form_obj->add($form);
       }
-
 
       // import form's sections
       if ($forms_id
