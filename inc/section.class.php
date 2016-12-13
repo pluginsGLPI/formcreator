@@ -235,6 +235,29 @@ class PluginFormcreatorSection extends CommonDBChild
    }
 
    /**
+    * Clone a section
+    * @param  array  $input with these keys
+    *                       - id the id of the section to clone
+    * @return integer the section id of the new clone
+    */
+   public function clone($input = []) {
+      global $DB;
+
+      if ($DB->isSlave()) {
+         return false;
+      }
+
+      if (!$this->getFromDB($input[static::getIndexName()])) {
+         return false;
+      }
+
+      // export and import the current section without uuid in order to clone it
+      return $this->import($this->getField('plugin_formcreator_forms_id'),
+                           $this->export(true));
+   }
+
+
+   /**
     * Import a form's section into the db
     * @see PluginFormcreatorForm::importJson
     *

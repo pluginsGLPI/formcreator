@@ -113,6 +113,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
+         echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
+                  title="' . _sx('button', "Duplicate") . '"
+                  onclick="duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"> ';
+         echo "</span>";
+
+         echo "<span class='form_control pointer'>";
          if($section['order'] != $section_number) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                      title="' . __('Bring down') . '"
@@ -168,7 +174,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
-                     title="' . __('Clone question', 'formcreator') . '"
+                     title="' . _sx('button', "Duplicate") . '"
                      onclick="cloneQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
             echo "</span>";
 

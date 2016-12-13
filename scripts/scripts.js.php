@@ -446,6 +446,19 @@ function editSection(items_id, token ,section) {
    }).dialog("open");
 }
 
+function duplicateSection(items_id, token, section_id) {
+   jQuery.ajax({
+     url: urlFrontSection,
+     type: "POST",
+     data: {
+         duplicate_section: 1,
+         id: section_id,
+         plugin_formcreator_forms_id: items_id,
+         _glpi_csrf_token: token
+      }
+   }).done(reloadTab);
+}
+
 function deleteSection(items_id, token, section_id) {
    if(confirm("<?php echo __('Are you sure you want to delete this section?', 'formcreator'); ?> ")) {
       jQuery.ajax({

@@ -26,6 +26,11 @@ if ($plugin->isActivated("formcreator")) {
       $section->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
+   // Duplicate a Section
+   } elseif(isset($_POST["duplicate_section"])) {
+      Session::checkRight("entity", UPDATE);
+      $section->clone($_POST);
+
    // Move a Section
    } elseif(isset($_POST["move"])) {
       global $DB;
