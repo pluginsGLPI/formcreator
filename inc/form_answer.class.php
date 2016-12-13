@@ -250,6 +250,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
       $options = array('canedit' => false);
 
+      // Print css media
+      echo Html::css(FORMCREATOR_ROOTDOC."/css/print.css", array('media' => 'print'));
+
+      // start form
+      echo "<div class='form_answer'>";
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
@@ -266,11 +271,16 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
       // Form Header
+      echo '<div class="form_header">';
+      echo "<h1>";
+      echo $form->fields['name']."&nbsp;";
+      echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
+                 title='".__("Print this form", 'formcreator')."' onclick='window.print();'>";
+      echo "</h1>";
       if (!empty($form->fields['content'])) {
-         echo '<div class="form_header">';
          echo html_entity_decode($form->fields['content']);
-         echo '</div>';
       }
+      echo '</div>';
 
       if ($this->fields['status'] == 'refused') {
          echo '<div class="refused_header">';
@@ -379,6 +389,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       echo '</td></tr>';
 
       $this->showFormButtons($options);
+      echo "</div>"; // .form_answer
       return true;
    }
 
