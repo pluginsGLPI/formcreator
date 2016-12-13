@@ -920,11 +920,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
          // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
-         $condition_obj = new PluginFormcreatorQuestion_Condition;
-         $all_conditions = $condition_obj->find("uuid IS NULL");
-         foreach($all_conditions as $conditions_id => $condition) {
-            $condition_obj->update(array('id'   => $conditions_id,
-                                         'uuid' => plugin_formcreator_getUuid()));
+         $query = "SELECT `id`
+                   FROM `glpi_plugin_formcreator_questions_conditions`
+                   WHERE `uuid` IS NULL";
+         $result = $DB->query($query);
+         while ($row = $DB->fetch_assoc($result)) {
+            $newUuid = plugin_formcreator_getUuid();
+            $conditionId = $row['id'];
+            $DB->query("UPDATE `glpi_plugin_formcreator_questions_conditions`
+                        SET `uuid` = '$newUuid'
+                        WHERE `id` = '$conditionId'");
          }
 
       }
