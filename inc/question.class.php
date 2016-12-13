@@ -587,7 +587,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query($query);
    }
 
-   public function showform($ID, $options=array()) {
+   public function showForm($ID, $options=array()) {
       global $DB, $CFG_GLPI;
 
       $form_id = (int) $_REQUEST['form_id'];
