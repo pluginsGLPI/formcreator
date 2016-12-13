@@ -100,17 +100,15 @@ class CheckboxFieldTest extends SuperAdminTestCase {
             ),
       );
 
-      foreach($dataset as &$data) {
-         $data['field'] = new PluginFormcreatorCheckboxesField($data['fields'], $data['data']);
-      }
-
       return $dataset;
    }
 
    /**
     * @dataProvider provider
     */
-   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorCheckboxesField($fields, $data);
+
       $availableValues = $fieldInstance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
 
@@ -124,7 +122,9 @@ class CheckboxFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorCheckboxesField($fields, $data);
+
       $value = $fieldInstance->getValue();
       $this->assertEquals(count($expectedValue), count($value));
       foreach ($expectedValue as $expectedSubValue) {
@@ -135,7 +135,9 @@ class CheckboxFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorCheckboxesField($fields, $data);
+
       $values = json_encode(explode("\r\n", $fields['default_values']), JSON_OBJECT_AS_ARRAY);
       $isValid = $fieldInstance->isValid($values);
       $this->assertEquals($expectedValidity, $isValid);

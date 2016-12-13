@@ -91,17 +91,15 @@ class MultielectFieldTest extends SuperAdminTestCase {
             ),
       );
 
-      foreach($dataset as &$data) {
-         $data['field'] = new PluginFormcreatorMultiSelectField($data['fields'], $data['data']);
-      }
-
       return $dataset;
    }
 
    /**
     * @dataProvider provider
     */
-   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorMultiSelectField($fields, $data);
+
       $availableValues = $fieldInstance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
 
@@ -115,7 +113,9 @@ class MultielectFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorMultiSelectField($fields, $data);
+
       $value = $fieldInstance->getValue();
       $this->assertEquals(count($expectedValue), count($value));
       foreach ($expectedValue as $expectedSubValue) {
@@ -126,7 +126,9 @@ class MultielectFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorMultiSelectField($fields, $data);
+
       $values = json_encode(explode("\r\n", $fields['default_values']), JSON_OBJECT_AS_ARRAY);
       $isValid = $fieldInstance->isValid($values);
       $this->assertEquals($expectedValidity, $isValid);

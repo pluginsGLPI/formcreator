@@ -78,98 +78,97 @@ function plugin_init_formcreator ()
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    $plugin = new Plugin();
-   if (isset($_SESSION['glpiactiveentities_string'])
-       && $plugin->isInstalled('formcreator')
-       && $plugin->isActivated('formcreator')) {
-
+   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
       spl_autoload_register('plugin_formcreator_autoload');
 
-      // Redirect to helpdesk replacement
-      if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
-         if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
-            // Not changing profile or active entity
-            if (isset($_SESSION['glpiactiveprofile']['interface'])
-                  && isset($_SESSION['glpiactive_entity'])) {
-               // Interface and active entity are set in session
-               if (plugin_formcreator_replaceHelpdesk()) {
-                  Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+      if (isset($_SESSION['glpiactiveentities_string'])) {
+         // Redirect to helpdesk replacement
+         if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
+            if (!isset($_POST['newprofile']) && !isset($_GET['active_entity'])) {
+               // Not changing profile or active entity
+               if (isset($_SESSION['glpiactiveprofile']['interface'])
+                     && isset($_SESSION['glpiactive_entity'])) {
+                  // Interface and active entity are set in session
+                  if (plugin_formcreator_replaceHelpdesk()) {
+                     Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
+                  }
                }
             }
          }
-      }
 
-      // Massive Action definition
-      $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
+         // Massive Action definition
+         $PLUGIN_HOOKS['use_massive_action']['formcreator'] = 1;
 
-      // Load menu entries if user is logged in and if he has access to at least one form
-      if (isset($_SESSION['glpiID'])) {
-         // If user have acces to one form or more, add link
-         if (PluginFormcreatorForm::countAvailableForm() > 0) {
-            $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
+         // Load menu entries if user is logged in and if he has access to at least one form
+         if (isset($_SESSION['glpiID'])) {
+            // If user have acces to one form or more, add link
+            if (PluginFormcreatorForm::countAvailableForm() > 0) {
+               $PLUGIN_HOOKS['menu_toadd']['formcreator']['helpdesk'] = 'PluginFormcreatorFormlist';
+            }
+
+            // Add a link in the main menu plugins for technician and admin panel
+            $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
+
+            // Config page
+            $links  = array();
+            if (Session::haveRight('entity', UPDATE)) {
+               $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
+               $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
+               $links['config'] = '/plugins/formcreator/front/form.php';
+               $links['add']    = '/plugins/formcreator/front/form.form.php';
+            }
+            $img = '<img  src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
+                        title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
+
+            $links[$img] = '/plugins/formcreator/front/formanswer.php';
+
+            // Set options for pages (title, links, buttons...)
+            $links['search'] = '/plugins/formcreator/front/formlist.php';
+            $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
+               'config'       => array('title'  => __('Setup'),
+                                       'page'   => '/plugins/formcreator/front/form.php',
+                                       'links'  => $links),
+               'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
+                                       'links'  => $links),
+            );
          }
 
-         // Add a link in the main menu plugins for technician and admin panel
-         $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
+         // Load JS and CSS files if we are on a page witch need them
+         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
+             || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
+             || isset($_SESSION['glpiactiveprofile']) &&
+                $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
 
-         // Config page
-         $links  = array();
-         if (Session::haveRight('entity', UPDATE)) {
-            $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
-            $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
-            $links['config'] = '/plugins/formcreator/front/form.php';
-            $links['add']    = '/plugins/formcreator/front/form.form.php';
+             // Add specific CSS
+            $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
+
+            $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
+
+            // Add specific JavaScript
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
          }
-         $img = '<img  src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
-                     title="' . __('Forms waiting for validation', 'formcreator') . '" alt="Waiting forms list" />';
 
-         $links[$img] = '/plugins/formcreator/front/formanswer.php';
+         if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
+               || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
+               || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
+               || strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false) {
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
 
-         // Set options for pages (title, links, buttons...)
-         $links['search'] = '/plugins/formcreator/front/formlist.php';
-         $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
-            'config'       => array('title'  => __('Setup'),
-                                    'page'   => '/plugins/formcreator/front/form.php',
-                                    'links'  => $links),
-            'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                                    'links'  => $links),
-         );
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
+         }
+
+         // Load field class and all its method to manage fields
+         Plugin::registerClass('PluginFormcreatorFields');
+
+         // Notification
+         Plugin::registerClass('PluginFormcreatorForm_Answer', array(
+            'notificationtemplates_types' => true
+         ));
+
+         Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
       }
-
-      // Load JS and CSS files if we are on a page witch need them
-      if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
-          || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
-          || isset($_SESSION['glpiactiveprofile']) &&
-             $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-          // Add specific CSS
-         $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
-
-         $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
-
-         // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
-      }
-
-      if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
-            || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
-            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
-            || strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false) {
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
-
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
-      }
-
-      // Load field class and all its method to manage fields
-      Plugin::registerClass('PluginFormcreatorFields');
-
-      // Notification
-      Plugin::registerClass('PluginFormcreatorForm_Answer', array(
-         'notificationtemplates_types' => true
-      ));
-
-      Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
    }
 }
 

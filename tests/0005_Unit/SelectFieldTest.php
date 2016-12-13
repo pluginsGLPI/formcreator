@@ -85,17 +85,15 @@ class SelectFieldTest extends SuperAdminTestCase {
             ),
       );
 
-      foreach($dataset as &$data) {
-         $data['field'] = new PluginFormcreatorSelectField($data['fields'], $data['data']);
-      }
-
       return $dataset;
    }
 
    /**
     * @dataProvider provider
     */
-   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorSelectField($fields, $data);
+
       $availableValues = $fieldInstance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
 
@@ -109,7 +107,9 @@ class SelectFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorSelectField($fields, $data);
+
       $value = $fieldInstance->getValue();
       $this->assertEquals($expectedValue, $value);
    }
@@ -117,7 +117,9 @@ class SelectFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorSelectField($fields, $data);
+
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->assertEquals($expectedValidity, $isValid);
    }
