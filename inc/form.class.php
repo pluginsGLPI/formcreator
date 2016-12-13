@@ -433,7 +433,6 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->showFormButtons($options);
    }
 
-
    /**
     * Return the name of the tab for item including forms like the config page
     *
