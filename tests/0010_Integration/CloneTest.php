@@ -32,8 +32,9 @@ class CloneTest extends SuperAdminTestCase {
     * @cover PluginFormcreatorSection::clone
     */
    public function testCloneSection() {
-      $section     = new PluginFormcreatorSection;
-      $new_section = new PluginFormcreatorSection;
+      $section       = new PluginFormcreatorSection;
+      $new_section   = new PluginFormcreatorSection;
+      $form_question = new PluginFormcreatorQuestion;
 
       //get section
       plugin_formcreator_getFromDBByField($section, 'name', "test clone section");
