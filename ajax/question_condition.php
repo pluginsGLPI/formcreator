@@ -10,5 +10,5 @@ $questionId = (int) $_REQUEST['plugin_formcreator_questions_id'];
 if (isset($_REQUEST['_empty'])) {
    // get an empty condition HTML table row
    $questionCondition = new PluginFormcreatorQuestion_Condition();
-   echo $questionCondition->getEmptyConditionHtml($questionId);
+   echo $questionCondition->getConditionHtml($questionId);
 }

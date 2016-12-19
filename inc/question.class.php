@@ -537,11 +537,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $question_condition->deleteByCriteria(array('plugin_formcreator_questions_id' => $input['id']));
 
       if ($input['show_rule'] != 'always') {
-         if (count($input['show_field']) == count($input['show_condition'])
+         if (! (count($input['show_field']) == count($input['show_condition'])
                && count($input['show_value']) == count($input['show_logic'])
-               && count($input['show_field']) == count($input['show_value'])) {
+               && count($input['show_field']) == count($input['show_value']))) {
+            // TODO : add error message ?
+         } else {
             // Arrays all have the same count
+            $order = 0;
             while (count($input['show_field']) > 0) {
+               $order++;
                $value            = plugin_formcreator_encode(array_shift($input['show_value']));
                $showField       = (int) array_shift($input['show_field']);
                $showCondition   = plugin_formcreator_decode(array_shift($input['show_condition']));
@@ -553,6 +557,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      'show_condition'                    => $showCondition,
                      'show_value'                        => $value,
                      'show_logic'                        => $showLogic,
+                     'order'                             => $order,
                ]);
             }
          }
@@ -918,8 +923,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
       }
 
-      $question_condition = new PluginFormcreatorQuestion_Condition();
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$ID'");
       echo '<tr">';
       echo '<td colspan="4">';
       Dropdown::showFromArray('show_rule', array(
@@ -934,59 +937,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '</td>';
       echo '</tr>';
-//       foreach ($rows as $row) {
-//          $show_field       = $row['show_field'];
-//          $show_condition   = $row['show_condition'];
-//          $show_value       = $row['show_value'];
-//          $show_logic       = $row['show_logic'];
-
-//          echo '<tr class="plugin_formcreator_logicRow" data-order="0" style="display:none">';
-//          echo '<td colspan="4">';
-//          echo '<div id="div_show_condition">';
-
-//          // ===============================================================
-//          // TODO : Mettre en place l'interface multi-conditions
-//          // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
-
-//          echo '<div id="div_show_condition_field">';
-//          Dropdown::showFromArray('show_field[]', $questions_tab, array(
-//                'used'         => array($ID => ''),
-//                'value'        => $show_field,
-//                'rand'         => $rand,
-//          ));
-//          echo '</div>';
-
-//          echo '<div id="div_show_condition_operator">';
-//          Dropdown::showFromArray('show_condition[]', array(
-//                '=='           => '=',
-//                '!='           => '&ne;',
-//                '<'            => '&lt;',
-//                '>'            => '&gt;',
-//                '<='           => '&le;',
-//                '>='           => '&ge;',
-//          ), array(
-//                'value'        => $show_condition,
-//                'rand'         => $rand,
-//          ));
-//          echo '</div>';
-//          echo '<div id="div_show_condition_value">';
-//          echo '<input type="text" name="show_value[]" id="show_value" class="small_text"'
-//               .'value="'.$show_value.'" size="8">';
-//          echo '</div>';
-//          echo '<div id="div_show_condition_logic">';
-//                Dropdown::showFromArray('show_logic[]',
-//                PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
-//                array(
-//                      'value'                 => $show_logic,
-//                      'on_change'             => 'toggleLogic(this);',
-//                      'display_emptychoice'   => true,
-//                      'rand'                  => $rand,
-//                ));
-//          echo '</div>';
-//          echo '</div>';
-//          echo '</td>';
-//          echo '</tr>';
-//       }
+      $questionCondition = new PluginFormcreatorQuestion_Condition();
+      $questionConditions = $questionCondition->getConditionsFromQuestion($ID);
+      foreach ($questionConditions as $questionCondition) {
+         echo $questionCondition->getConditionHtml();
+      }
       echo '<tr class="line1">';
       echo '<td colspan="4" class="center">';
       echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
