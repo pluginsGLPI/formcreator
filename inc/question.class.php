@@ -540,7 +540,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          if (count($input['show_field']) == count($input['show_condition'])
                && count($input['show_value']) == count($input['show_logic'])
                && count($input['show_field']) == count($input['show_value'])) {
-            // Arrays all have the same couht
+            // Arrays all have the same count
             while (count($input['show_field']) > 0) {
                $value            = plugin_formcreator_encode(array_shift($input['show_value']));
                $showField       = (int) array_shift($input['show_field']);
