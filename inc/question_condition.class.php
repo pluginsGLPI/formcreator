@@ -4,6 +4,16 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    static public $itemtype = "PluginFormcreatorQuestion";
    static public $items_id = "plugin_formcreator_questions_id";
 
+   public function prepareInputForAdd($input) {
+      // generate a uniq id
+      if (!isset($input['uuid'])
+            || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
    public static function getEnumShowLogic() {
       return array(
             'AND'    => 'AND',
