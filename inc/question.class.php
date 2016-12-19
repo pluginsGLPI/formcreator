@@ -536,29 +536,33 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $question_condition->deleteByCriteria(array('plugin_formcreator_questions_id' => $input['id']));
 
-      if ($input['show_rule'] != 'always') {
-         if (! (count($input['show_field']) == count($input['show_condition'])
-               && count($input['show_value']) == count($input['show_logic'])
-               && count($input['show_field']) == count($input['show_value']))) {
-            // TODO : add error message ?
-         } else {
-            // Arrays all have the same count
-            $order = 0;
-            while (count($input['show_field']) > 0) {
-               $order++;
-               $value            = plugin_formcreator_encode(array_shift($input['show_value']));
-               $showField       = (int) array_shift($input['show_field']);
-               $showCondition   = plugin_formcreator_decode(array_shift($input['show_condition']));
-               $showLogic        = array_shift($input['show_logic']);
-               $question_condition = new PluginFormcreatorQuestion_Condition();
-               $question_condition->add([
-                     'plugin_formcreator_questions_id'   => $input['id'],
-                     'show_field'                        => $showField,
-                     'show_condition'                    => $showCondition,
-                     'show_value'                        => $value,
-                     'show_logic'                        => $showLogic,
-                     'order'                             => $order,
-               ]);
+      if (isset($input['show_field']) && isset($input['show_condition'])
+            && isset($input['show_value']) && isset($input['show_logic'])) {
+         // All arays of condition exists
+         if ($input['show_rule'] != 'always') {
+            if (! (count($input['show_field']) == count($input['show_condition'])
+                  && count($input['show_value']) == count($input['show_logic'])
+                  && count($input['show_field']) == count($input['show_value']))) {
+               // TODO : add error message ?
+            } else {
+               // Arrays all have the same count and ahve at least one item
+               $order = 0;
+               while (count($input['show_field']) > 0) {
+                  $order++;
+                  $value            = plugin_formcreator_encode(array_shift($input['show_value']));
+                  $showField       = (int) array_shift($input['show_field']);
+                  $showCondition   = plugin_formcreator_decode(array_shift($input['show_condition']));
+                  $showLogic        = array_shift($input['show_logic']);
+                  $question_condition = new PluginFormcreatorQuestion_Condition();
+                  $question_condition->add([
+                        'plugin_formcreator_questions_id'   => $input['id'],
+                        'show_field'                        => $showField,
+                        'show_condition'                    => $showCondition,
+                        'show_value'                        => $value,
+                        'show_logic'                        => $showLogic,
+                        'order'                             => $order,
+                  ]);
+               }
             }
          }
       }

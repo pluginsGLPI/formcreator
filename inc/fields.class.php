@@ -128,6 +128,7 @@ class PluginFormcreatorFields
       $fields     = $question->fields;
       $conditions = array();
       $return     = false;
+      $prevLogic  = 'OR';
 
       // If the field is always shown
       if ($fields['show_rule'] == 'always') return true;
@@ -136,13 +137,18 @@ class PluginFormcreatorFields
       $questionId = $fields['id'];
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$questionId'");
-      foreach ($rows as $line) {
+      $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
+      if (count($questionConditions) < 1) {
+         // No condition defined, then always show the question
+         return true;
+      }
+      foreach ($questionConditions as $question_condition) {
          $conditions[] = array(
                'multiple' => in_array($fields['fieldtype'], array('checkboxes', 'multiselect')),
-               'logic'    => $line['show_logic'],
-               'field'    => $line['show_field'],
-               'operator' => $line['show_condition'],
-               'value'    => $line['show_value']
+               'logic'    => $question_condition->getField('show_logic'),
+               'field'    => $question_condition->getField('show_field'),
+               'operator' => $question_condition->getField('show_condition'),
+               'value'    => $question_condition->getField('show_value')
             );
       }
 
@@ -192,12 +198,15 @@ class PluginFormcreatorFields
                     .$condition['operator'].' "'.$condition['value'].'";');
                }
          }
-         switch ($condition['logic']) {
+         switch ($prevLogic) {
             case 'AND' :   $return &= $value; break;
             case 'OR'  :   $return |= $value; break;
             case 'XOR' :   $return ^= $value; break;
             default :      $return = $value;
          }
+
+         // Use current show_logic operator for next condition, if any
+         $prevLogic = $condition['logic'];
       }
 
       // If the field is hidden by default, show it if condition is true

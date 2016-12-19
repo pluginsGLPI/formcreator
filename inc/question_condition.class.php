@@ -190,8 +190,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
 
       if ($this->isNewItem()) {
          $show_field       = '';
-         $show_condition   = '';
-         $show_value       = '=';
+         $show_condition   = '==';
+         $show_value       = '';
          $show_logic       = '';
       } else {
          $show_field       = $this->fields['show_field'];
