@@ -532,24 +532,30 @@ class PluginFormcreatorQuestion extends CommonDBChild
    public function updateConditions($input) {
       global $DB;
 
+      // Delete all existing conditions for the question
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $question_condition->deleteByCriteria(array('plugin_formcreator_questions_id' => $input['id']));
 
       if ($input['show_rule'] != 'always') {
-         // ===============================================================
-         // TODO : Mettre en place l'interface multi-conditions
-         // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
-         $value      = plugin_formcreator_encode($input['show_value']);
-         $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
-         $show_condition = plugin_formcreator_decode($input['show_condition']);
-         $question_condition = new PluginFormcreatorQuestion_Condition();
-         $question_condition->add([
-               'plugin_formcreator_questions_id'   => $input['id'],
-               'show_field'                        => $show_field,
-               'show_condition'                    => $show_condition,
-               'show_value'                        => $value,
-         ]);
-         // ===============================================================
+         if (count($input['show_field']) == count($input['show_condition'])
+               && count($input['show_value']) == count($input['show_logic'])
+               && count($input['show_field']) == count($input['show_value'])) {
+            // Arrays all have the same couht
+            while (count($input['show_field']) > 0) {
+               $value            = plugin_formcreator_encode(array_shift($input['show_value']));
+               $showField       = (int) array_shift($input['show_field']);
+               $showCondition   = plugin_formcreator_decode(array_shift($input['show_condition']));
+               $showLogic        = array_shift($input['show_logic']);
+               $question_condition = new PluginFormcreatorQuestion_Condition();
+               $question_condition->add([
+                     'plugin_formcreator_questions_id'   => $input['id'],
+                     'show_field'                        => $showField,
+                     'show_condition'                    => $showCondition,
+                     'show_value'                        => $value,
+                     'show_logic'                        => $showLogic,
+               ]);
+            }
+         }
       }
    }
 
@@ -590,6 +596,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    public function showForm($ID, $options=array()) {
       global $DB, $CFG_GLPI;
 
+      $rootDoc = $CFG_GLPI['root_doc'];
       $form_id = (int) $_REQUEST['form_id'];
       $rand = mt_rand();
       $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
@@ -898,81 +905,88 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</th>';
       echo '</tr>';
 
-      echo '<tr>';
-      echo '<td>';
-      Dropdown::showFromArray('show_rule', array(
-            'always'    => __('Always displayed', 'formcreator'),
-            'hidden'    => __('Hidden unless', 'formcreator'),
-            'shown'     => __('Displayed unless', 'formcreator'),
-      ), array(
-            'value'     => $this->fields['show_rule'],
-            'on_change' => 'toggleCondition(this);',
-            'rand'      => $rand,
-      ));
-      $hide = (empty($this->fields['show_rule']) || ($this->fields['show_rule'] == 'always')) ? ' style="display:none"' : '';
-      echo '</td>';
+      // get All questions of the form and prepare their label for display in a dropdown
+      $question = new static();
+      $questionsInForm = $question->getQuestionsFromForm($form_id);
+      foreach($questionsInForm as $question) {
+         if (strlen($question->getField('name')) > 30) {
+            $questions_tab[$question->getID()] = substr($question->getField('name'),
+                  0,
+                  strrpos(substr($question->getField('name'), 0, 30), ' ')) . '...';
+         } else {
+            $questions_tab[$question->getID()] = $question->getField('name');
+         }
+      }
 
-      echo '<td colspan="3">';
-      echo '<div id="div_show_condition"'.$hide.'>';
-      // ===============================================================
-      // TODO : Mettre en place l'interface multi-conditions
-      // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$ID'");
-      if (count($rows) < 1) {
-         $show_field       = '';
-         $show_condition   = '==';
-         $show_value       = '';
-      } else {
-         $row = array_shift($rows);
-         $show_field       = $row['show_field'];
-         $show_condition   = $row['show_condition'];
-         $show_value       = $row['show_value'];
-      }
-      // ===============================================================
-
-      $table_question = getTableForItemtype('PluginFormcreatorQuestion');
-      $table_section  = getTableForItemtype('PluginFormcreatorSection');
-      $questions_tab  = array();
-      $sql = "SELECT q.`id`, q.`name`
-              FROM $table_question q
-              LEFT JOIN $table_section s ON q.`plugin_formcreator_sections_id` = s.`id`
-              WHERE s.`plugin_formcreator_forms_id` = '$form_id'
-              AND q.`id` != '$ID'
-              ORDER BY s.`order`, q.`order`";
-      $result = $DB->query($sql);
-      while ($line = $DB->fetch_array($result)) {
-         $questions_tab[$line['id']] = (strlen($line['name']) < 30)
-         ? $line['name']
-         : substr($line['name'], 0, strrpos(substr($line['name'], 0, 30), ' ')) . '...';
-      }
-      echo '<div id="div_show_condition_field">';
-      Dropdown::showFromArray('show_field', $questions_tab, array(
-            'value' => $show_field
-      ));
-      echo '</div>';
-
-      echo '<div id="div_show_condition_operator">';
-      Dropdown::showFromArray('show_condition', array(
-            '=='    => '=',
-            '!='    => '&ne;',
-            '<'     => '&lt;',
-            '>'     => '&gt;',
-            '<='    => '&le;',
-            '>='    => '&ge;',
+      echo '<tr">';
+      echo '<td colspan="4">';
+      Dropdown::showFromArray('show_rule', array(
+            'always'       => __('Always displayed', 'formcreator'),
+            'hidden'       => __('Hidden unless', 'formcreator'),
+            'shown'        => __('Displayed unless', 'formcreator'),
       ), array(
-            'value' => $show_condition,
-            'rand'  => $rand,
+            'value'        => $this->fields['show_rule'],
+            'on_change'    => 'toggleCondition(this);',
+            'rand'         => $rand,
       ));
-      echo '</div>';
-      echo '<div id="div_show_condition_value">';
-      echo '<input type="text" name="show_value" id="show_value" class="small_text"'
-           .'value="'.$show_value.'" size="8">';
-      echo '</div>';
-      echo '</div>';
+
       echo '</td>';
       echo '</tr>';
+//       foreach ($rows as $row) {
+//          $show_field       = $row['show_field'];
+//          $show_condition   = $row['show_condition'];
+//          $show_value       = $row['show_value'];
+//          $show_logic       = $row['show_logic'];
 
+//          echo '<tr class="plugin_formcreator_logicRow" data-order="0" style="display:none">';
+//          echo '<td colspan="4">';
+//          echo '<div id="div_show_condition">';
+
+//          // ===============================================================
+//          // TODO : Mettre en place l'interface multi-conditions
+//          // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
+
+//          echo '<div id="div_show_condition_field">';
+//          Dropdown::showFromArray('show_field[]', $questions_tab, array(
+//                'used'         => array($ID => ''),
+//                'value'        => $show_field,
+//                'rand'         => $rand,
+//          ));
+//          echo '</div>';
+
+//          echo '<div id="div_show_condition_operator">';
+//          Dropdown::showFromArray('show_condition[]', array(
+//                '=='           => '=',
+//                '!='           => '&ne;',
+//                '<'            => '&lt;',
+//                '>'            => '&gt;',
+//                '<='           => '&le;',
+//                '>='           => '&ge;',
+//          ), array(
+//                'value'        => $show_condition,
+//                'rand'         => $rand,
+//          ));
+//          echo '</div>';
+//          echo '<div id="div_show_condition_value">';
+//          echo '<input type="text" name="show_value[]" id="show_value" class="small_text"'
+//               .'value="'.$show_value.'" size="8">';
+//          echo '</div>';
+//          echo '<div id="div_show_condition_logic">';
+//                Dropdown::showFromArray('show_logic[]',
+//                PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
+//                array(
+//                      'value'                 => $show_logic,
+//                      'on_change'             => 'toggleLogic(this);',
+//                      'display_emptychoice'   => true,
+//                      'rand'                  => $rand,
+//                ));
+//          echo '</div>';
+//          echo '</div>';
+//          echo '</td>';
+//          echo '</tr>';
+//       }
       echo '<tr class="line1">';
       echo '<td colspan="4" class="center">';
       echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
@@ -996,168 +1010,195 @@ class PluginFormcreatorQuestion extends CommonDBChild
             var tab_fields_fields = [];
             $allTabFields
 
-                  eval(tab_fields_fields[value]);
-               } else {
-                  showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-               }
+            eval(tab_fields_fields[value]);
+         } else {
+            showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+         }
+      }
+      changeQuestionType();
+
+      function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
+         if(required) {
+            document.getElementById('dropdown_required$rand').style.display   = 'inline';
+            document.getElementById('label_required').style.display                          = 'inline';
+         } else {
+            document.getElementById('dropdown_required$rand').style.display   = 'none';
+            document.getElementById('label_required').style.display                          = 'none';
+         }
+         if(default_values) {
+            document.getElementById('default_values').style.display                          = 'inline';
+            document.getElementById('label_default_values').style.display                    = 'inline';
+         } else {
+            document.getElementById('default_values').style.display                          = 'none';
+            document.getElementById('label_default_values').style.display                    = 'none';
+         }
+         if(show_type) {
+            document.getElementById('dropdown_show_rule$rand').style.display  = 'inline';
+            document.getElementById('label_show_type').style.display                         = 'inline';
+         } else {
+            document.getElementById('dropdown_show_rule$rand').style.display  = 'none';
+            document.getElementById('label_show_type').style.display                         = 'none';
+         }
+         if(values) {
+            document.getElementById('values').style.display                                  = 'inline';
+            document.getElementById('label_values').style.display                            = 'inline';
+         } else {
+            document.getElementById('values').style.display                                  = 'none';
+            document.getElementById('label_values').style.display                            = 'none';
+         }
+         if(dropdown_value) {
+            document.getElementById('dropdown_values_field').style.display = 'inline';
+            document.getElementById('label_dropdown_values').style.display                   = 'inline';
+         } else {
+            document.getElementById('dropdown_values_field').style.display = 'none';
+            document.getElementById('label_dropdown_values').style.display                   = 'none';
+         }
+         if(glpi_object) {
+            document.getElementById('glpi_objects_field').style.display = 'inline';
+            document.getElementById('label_glpi_objects').style.display                   = 'inline';
+         } else {
+            document.getElementById('glpi_objects_field').style.display = 'none';
+            document.getElementById('label_glpi_objects').style.display                   = 'none';
+         }
+         if (dropdown_value || glpi_object) {
+            document.getElementById('dropdown_default_value_field').style.display = 'inline';
+            document.getElementById('label_dropdown_default_value').style.display            = 'inline';
+         } else {
+            document.getElementById('dropdown_default_value_field').style.display = 'none';
+            document.getElementById('label_dropdown_default_value').style.display            = 'none';
+         }
+         if(range) {
+            document.getElementById('range_min').style.display                               = 'inline';
+            document.getElementById('range_max').style.display                               = 'inline';
+            document.getElementById('label_range_min').style.display                         = 'inline';
+            document.getElementById('label_range_max').style.display                         = 'inline';
+            document.getElementById('label_range').style.display                             = 'inline';
+            document.getElementById('range_tr').style.display                                = 'table-row';
+         } else {
+            document.getElementById('range_min').style.display                               = 'none';
+            document.getElementById('range_max').style.display                               = 'none';
+            document.getElementById('label_range_min').style.display                         = 'none';
+            document.getElementById('label_range_max').style.display                         = 'none';
+            document.getElementById('label_range').style.display                             = 'none';
+            document.getElementById('range_tr').style.display                                = 'none';
+         }
+         if(show_empty) {
+            document.getElementById('show_empty').style.display = 'inline';
+            document.getElementById('label_show_empty').style.display                        = 'inline';
+         } else {
+            document.getElementById('show_empty').style.display = 'none';
+            document.getElementById('label_show_empty').style.display                        = 'none';
+         }
+         if(regex) {
+            document.getElementById('regex').style.display                                   = 'inline';
+            document.getElementById('label_regex').style.display                             = 'inline';
+            document.getElementById('regex_tr').style.display                                = 'table-row';
+         } else {
+            document.getElementById('regex').style.display                                   = 'none';
+            document.getElementById('label_regex').style.display                             = 'none';
+            document.getElementById('regex_tr').style.display                                = 'none';
+         }
+         if(values || default_values || dropdown_value || glpi_object) {
+            document.getElementById('values_tr').style.display                               = 'table-row';
+         } else {
+            document.getElementById('values_tr').style.display                               = 'none';
+         }
+         if(required || show_empty) {
+            document.getElementById('required_tr').style.display                             = 'table-row';
+         } else {
+            document.getElementById('required_tr').style.display                             = 'none';
+         }
+         if(ldap_values) {
+            document.getElementById('glpi_ldap_field').style.display                         = 'inline';
+            document.getElementById('label_glpi_ldap').style.display                         = 'inline';
+            document.getElementById('ldap_tr').style.display                                 = 'table-row';
+         } else {
+            document.getElementById('glpi_ldap_field').style.display                         = 'none';
+            document.getElementById('label_glpi_ldap').style.display                         = 'none';
+            document.getElementById('ldap_tr').style.display                                 = 'none';
+         }
+      }
+
+      function toggleCondition(field) {
+         if (field.value == "always") {
+            $(".plugin_formcreator_logicRow").hide();
+         } else {
+            if ($(".plugin_formcreator_logicRow").length < 1) {
+               addEmptyCondition(field);
             }
-            changeQuestionType();
+            $(".plugin_formcreator_logicRow").show();
+         }
+      }
 
-            function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
-               if(required) {
-                  document.getElementById('dropdown_required$rand').style.display   = 'inline';
-                  document.getElementById('label_required').style.display                          = 'inline';
-               } else {
-                  document.getElementById('dropdown_required$rand').style.display   = 'none';
-                  document.getElementById('label_required').style.display                          = 'none';
-               }
-               if(default_values) {
-                  document.getElementById('default_values').style.display                          = 'inline';
-                  document.getElementById('label_default_values').style.display                    = 'inline';
-               } else {
-                  document.getElementById('default_values').style.display                          = 'none';
-                  document.getElementById('label_default_values').style.display                    = 'none';
-               }
-               if(show_type) {
-                  document.getElementById('dropdown_show_rule$rand').style.display  = 'inline';
-                  document.getElementById('label_show_type').style.display                         = 'inline';
-               } else {
-                  document.getElementById('dropdown_show_rule$rand').style.display  = 'none';
-                  document.getElementById('label_show_type').style.display                         = 'none';
-               }
-               if(values) {
-                  document.getElementById('values').style.display                                  = 'inline';
-                  document.getElementById('label_values').style.display                            = 'inline';
-               } else {
-                  document.getElementById('values').style.display                                  = 'none';
-                  document.getElementById('label_values').style.display                            = 'none';
-               }
-               if(dropdown_value) {
-                  document.getElementById('dropdown_values_field').style.display = 'inline';
-                  document.getElementById('label_dropdown_values').style.display                   = 'inline';
-               } else {
-                  document.getElementById('dropdown_values_field').style.display = 'none';
-                  document.getElementById('label_dropdown_values').style.display                   = 'none';
-               }
-               if(glpi_object) {
-                  document.getElementById('glpi_objects_field').style.display = 'inline';
-                  document.getElementById('label_glpi_objects').style.display                   = 'inline';
-               } else {
-                  document.getElementById('glpi_objects_field').style.display = 'none';
-                  document.getElementById('label_glpi_objects').style.display                   = 'none';
-               }
-               if (dropdown_value || glpi_object) {
-                  document.getElementById('dropdown_default_value_field').style.display = 'inline';
-                  document.getElementById('label_dropdown_default_value').style.display            = 'inline';
-               } else {
-                  document.getElementById('dropdown_default_value_field').style.display = 'none';
-                  document.getElementById('label_dropdown_default_value').style.display            = 'none';
-               }
-               if(range) {
-                  document.getElementById('range_min').style.display                               = 'inline';
-                  document.getElementById('range_max').style.display                               = 'inline';
-                  document.getElementById('label_range_min').style.display                         = 'inline';
-                  document.getElementById('label_range_max').style.display                         = 'inline';
-                  document.getElementById('label_range').style.display                             = 'inline';
-                  document.getElementById('range_tr').style.display                                = 'table-row';
-               } else {
-                  document.getElementById('range_min').style.display                               = 'none';
-                  document.getElementById('range_max').style.display                               = 'none';
-                  document.getElementById('label_range_min').style.display                         = 'none';
-                  document.getElementById('label_range_max').style.display                         = 'none';
-                  document.getElementById('label_range').style.display                             = 'none';
-                  document.getElementById('range_tr').style.display                                = 'none';
-               }
-               if(show_empty) {
-                  document.getElementById('show_empty').style.display = 'inline';
-                  document.getElementById('label_show_empty').style.display                        = 'inline';
-               } else {
-                  document.getElementById('show_empty').style.display = 'none';
-                  document.getElementById('label_show_empty').style.display                        = 'none';
-               }
-               if(regex) {
-                  document.getElementById('regex').style.display                                   = 'inline';
-                  document.getElementById('label_regex').style.display                             = 'inline';
-                  document.getElementById('regex_tr').style.display                                = 'table-row';
-               } else {
-                  document.getElementById('regex').style.display                                   = 'none';
-                  document.getElementById('label_regex').style.display                             = 'none';
-                  document.getElementById('regex_tr').style.display                                = 'none';
-               }
-               if(values || default_values || dropdown_value || glpi_object) {
-                  document.getElementById('values_tr').style.display                               = 'table-row';
-               } else {
-                  document.getElementById('values_tr').style.display                               = 'none';
-               }
-               if(required || show_empty) {
-                  document.getElementById('required_tr').style.display                             = 'table-row';
-               } else {
-                  document.getElementById('required_tr').style.display                             = 'none';
-               }
-               if(ldap_values) {
-                  document.getElementById('glpi_ldap_field').style.display                         = 'inline';
-                  document.getElementById('label_glpi_ldap').style.display                         = 'inline';
-                  document.getElementById('ldap_tr').style.display                                 = 'table-row';
-               } else {
-                  document.getElementById('glpi_ldap_field').style.display                         = 'none';
-                  document.getElementById('label_glpi_ldap').style.display                         = 'none';
-                  document.getElementById('ldap_tr').style.display                                 = 'none';
-               }
+      function toggleLogic(field) {
+         if (field.value == '0') {
+            $('#'+field.id).parents('tr').next().remove();
+         } else {
+            addEmptyCondition(field);
+         }
+      }
+
+      function addEmptyCondition(target) {
+         $.ajax({
+            url: '$rootDoc/plugins/formcreator/ajax/question_condition.php',
+            data: {
+               plugin_formcreator_questions_id: $ID,
+               _empty: ''
             }
+         }).done(function (data) {
+            $(target).parents('tr').after(data);
+         });
+      }
 
-            function toggleCondition(field) {
-               if(field.value == "always") {
-                  document.getElementById("div_show_condition").style.display = "none";
-               } else {
-                  document.getElementById("div_show_condition").style.display = "block";
-               }
-            }
+      function removeNextCondition(target) {
+         $(target).parents('tr').remove();
+      }
 
-            function change_dropdown() {
-               dropdown_type = document.getElementById('dropdown_dropdown_values$rand').value;
+      function change_dropdown() {
+         dropdown_type = document.getElementById('dropdown_dropdown_values$rand').value;
 
-               jQuery.ajax({
-                  url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
-                  type: "GET",
-                  data: {
-                     dropdown_itemtype: dropdown_type,
-                     rand: "$rand"
-                  },
-               }).done(function(response){
-                  jQuery("#dropdown_default_value_field").html(response);
-               });
-            }
+         jQuery.ajax({
+            url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
+            type: "GET",
+            data: {
+               dropdown_itemtype: dropdown_type,
+               rand: "$rand"
+            },
+         }).done(function(response){
+            jQuery("#dropdown_default_value_field").html(response);
+         });
+      }
 
-            function change_glpi_objects() {
-               glpi_object = document.getElementById('dropdown_glpi_objects$rand').value;
+      function change_glpi_objects() {
+         glpi_object = document.getElementById('dropdown_glpi_objects$rand').value;
 
-               jQuery.ajax({
-                  url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
-                  type: "GET",
-                  data: {
-                     dropdown_itemtype: glpi_object,
-                     rand: "$rand"
-                  },
-               }).done(function(response){
-                  jQuery("#dropdown_default_value_field").html(response);
-               });
-            }
+         jQuery.ajax({
+            url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
+            type: "GET",
+            data: {
+               dropdown_itemtype: glpi_object,
+               rand: "$rand"
+            },
+         }).done(function(response){
+            jQuery("#dropdown_default_value_field").html(response);
+         });
+      }
 
-            function change_LDAP(ldap) {
-               var ldap_directory = ldap.value;
+      function change_LDAP(ldap) {
+         var ldap_directory = ldap.value;
 
-               jQuery.ajax({
-                 url: "$rootDoc/plugins/formcreator/ajax/ldap_filter.php",
-                 type: "POST",
-                 data: {
-                     value: ldap_directory,
-                     _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
-                  },
-               }).done(function(response){
-                  document.getElementById('ldap_filter').value = response;
-               });
-            }
-         </script>
+         jQuery.ajax({
+           url: "$rootDoc/plugins/formcreator/ajax/ldap_filter.php",
+           type: "POST",
+           data: {
+               value: ldap_directory,
+               _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
+            },
+         }).done(function(response){
+            document.getElementById('ldap_filter').value = response;
+         });
+      }
+   </script>
 JS;
       echo '</table>';
       Html::closeForm();
@@ -1498,5 +1539,42 @@ JS;
       }
 
       return $question;
+   }
+
+   public function getForm() {
+
+   }
+
+   public function getQuestionsFromForm($formId) {
+      global $DB;
+
+      $questions = array();
+      $table_question = getTableForItemtype('PluginFormcreatorQuestion');
+      $table_section  = getTableForItemtype('PluginFormcreatorSection');
+      $result = $DB->query("SELECT `q`.*
+                            FROM $table_question `q`
+                            LEFT JOIN $table_section `s` ON `q`.`plugin_formcreator_sections_id` = `s`.`id`
+                            WHERE `s`.`plugin_formcreator_forms_id` = '$formId'
+                            ORDER BY `s`.`order`, `q`.`order`"
+      );
+      while ($row = $DB->fetch_assoc($result)) {
+         $question = new self();
+         $question->getFromDB($row['id']);
+         $questions[] = $question;
+      }
+
+      return $questions;
+   }
+
+   public function getQuestionsFromSection($sectionId) {
+      $questions = array();
+      $rows = $this->find("`plugin_formcreator_sections_id` = '$sectionId'", "`order` ASC");
+      foreach ($rows as $questionId => $row) {
+            $question = new self();
+            $question->getFromDB($questionId);
+            $questions[] = $question;
+      }
+
+      return $questions;
    }
 }

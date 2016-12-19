@@ -4,6 +4,14 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    static public $itemtype = "PluginFormcreatorQuestion";
    static public $items_id = "plugin_formcreator_questions_id";
 
+   public static function getEnumShowLogic() {
+      return array(
+            'AND'    => 'AND',
+            'OR'     => 'OR',
+            'XOR'    => 'XOR',
+      );
+   }
+
    /**
     * Import a question's condition into the db
     * @see PluginFormcreatorQuestion::import
@@ -147,6 +155,79 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       }
 
       return true;
+   }
+
+   public function getEmptyConditionHtml($questionId) {
+      global $CFG_GLPI;
+
+      $rootDoc = $CFG_GLPI['root_doc'];
+      $rand = mt_rand();
+
+      $form = new PluginFormcreatorForm();
+      $form->getByQuestionId($questionId);
+      $form_id = $form->getId();
+
+      $question = new PluginFormcreatorQuestion();
+      $questionsInForm = $question->getQuestionsFromForm($form_id);
+      foreach($questionsInForm as $question) {
+         if (strlen($question->getField('name')) > 30) {
+            $questions_tab[$question->getID()] = substr($question->getField('name'),
+                  0,
+                  strrpos(substr($question->getField('name'), 0, 30), ' ')) . '...';
+         } else {
+            $questions_tab[$question->getID()] = $question->getField('name');
+         }
+      }
+
+      $html = '';
+      $html.= '<tr class="plugin_formcreator_logicRow">';
+      $html.= '<td colspan="4">';
+      $html.= '<div class="div_show_condition">';
+
+      $html.= '<div class="div_show_condition_field">';
+      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, array(
+            'display'      => false,
+            'used'         => array($questionId => ''),
+            'value'        => '',
+            'rand'         => $rand,
+      ));
+      $html.= '</div>';
+
+      $html.= '<div class="div_show_condition_operator">';
+      $html.= Dropdown::showFromArray('show_condition[]', array(
+            '=='           => '=',
+            '!='           => '&ne;',
+            '<'            => '&lt;',
+            '>'            => '&gt;',
+            '<='           => '&le;',
+            '>='           => '&ge;',
+      ), array(
+            'display'      => false,
+            'value'        => '=',
+            'rand'         => $rand,
+      ));
+      $html.= '</div>';
+      $html.= '<div class="div_show_condition_value">';
+      $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'
+              .'value="" size="8">';
+      $html.= '</div>';
+      $html.= '<div class="div_show_condition_logic">';
+      $html.= Dropdown::showFromArray('show_logic[]',
+            PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
+            array(
+                  'display'               => false,
+                  'value'                 => '',
+                  'display_emptychoice'   => false,
+                  'rand'                  => $rand,
+            ));
+      $html.= '</div>';
+      $html.= '<div class="div_show_condition_add"><img src="../../../pics/plus.png" onclick="addEmptyCondition(this)"/></div>';
+      $html.= '<div class="div_show_condition_remove"><img src="../../../pics/moins.png" onclick="removeNextCondition(this)"/></div>';
+      $html.= '</div>';
+      $html.= '</td>';
+      $html.= '</tr>';
+
+      return $html;
    }
 
    public static function uninstall()

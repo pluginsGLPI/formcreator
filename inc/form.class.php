@@ -1280,6 +1280,19 @@ class PluginFormcreatorForm extends CommonDBTM
       return true;
    }
 
+   public  function getByQuestionId($questionId) {
+      $table_sections = PluginFormcreatorSection::getTable();
+      $table_questions = PluginFormcreatorQuestion::getTable();
+      $this->getFromDBByQuery(
+            "WHERE `id` = (
+                SELECT `plugin_formcreator_forms_id` FROM `$table_sections`
+                INNER JOIN `$table_questions`
+                   ON `$table_questions`.`plugin_formcreator_sections_id` = `$table_sections`.`id`
+                WHERE `$table_questions`.`id` = '$questionId'
+            )"
+      );
+   }
+
    /**
     * Database table uninstallation for the item type
     *
