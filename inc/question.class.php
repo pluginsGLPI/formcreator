@@ -543,11 +543,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $value      = plugin_formcreator_encode($input['show_value']);
          $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
          $show_condition = plugin_formcreator_decode($input['show_condition']);
+         $uuid = plugin_formcreator_getUuid();
          $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                      `plugin_formcreator_questions_id` = {$input['id']},
                      `show_field`     = $show_field,
                      `show_condition` = '" . $show_condition . "',
-                     `show_value`     = '" . $value . "'";
+                     `show_value`     = '" . $value . "',
+                     `uuid`           = '$uuid'";
          $DB->query($query);
          // ===============================================================
       }
