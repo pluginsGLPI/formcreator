@@ -1399,8 +1399,8 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach($rows as $targets_id => $target_values) {
          unset($target_values['id'],
                $target_values['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_targets_id = $target->add($row)) {
+         $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+         if (!$new_targets_id = $target->add($target_values)) {
             return false;
          }
 
@@ -1434,7 +1434,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          $update_target = "UPDATE `glpi_plugin_formcreator_targets` SET
                               `items_id` = " . $new_target_ticket_id . "
-                           WHERE `id` = " . $new_target_id;
+                           WHERE `id` = " . $new_targets_id;
          $DB->query($update_target);
 
          // Form target tickets actors
