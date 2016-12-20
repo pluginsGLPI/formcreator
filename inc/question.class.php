@@ -257,6 +257,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
       }
+      $input['name'] = addslashes($input['name']);
 
       // - field type is required
       if (isset($input['fieldtype'])
@@ -274,13 +275,27 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
       $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
-      if (isset($input['values'])
-          && empty($input['values']) && in_array($input['fieldtype'], $itemtypes)) {
-         Session::addMessageAfterRedirect(
-            __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR);
-         return array();
+      if (in_array($input['fieldtype'], $itemtypes)) {
+         if (isset($input['values'])) {
+            if (empty($input['values'])) {
+               Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+               return array();
+            } else {
+               $input['values'] = addslashes($input['values']);
+            }
+         }
+         if (isset($input['default_values'])) {
+            $input['default_values'] = addslashes($input['default_values']);
+         }
+      }
+
+      if ($input['fieldtype'] == 'textarea' || $input['fieldtype'] == 'text') {
+         if (isset($input['default_values'])) {
+            $input['default_values'] = addslashes($input['default_values']);
+         }
       }
 
       // Fields are differents for dropdown lists, so we need to replace these values into the good ones
@@ -313,14 +328,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
          // A description field should have a description
-         if ($input['fieldtype'] == 'description'
-             && isset($input['description'])
-             && empty($input['description'])) {
-               Session::addMessageAfterRedirect(
-                  __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
-               return array();
+         if ($input['fieldtype'] == 'description') {
+            if (isset($input['description'])) {
+               if (empty($input['description'])) {
+                  Session::addMessageAfterRedirect(
+                     __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
+                     false,
+                     ERROR);
+                  return array();
+               }
+            }
          }
 
          // format values for numbers
@@ -395,6 +412,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
          if (substr($input['regex'], -1, 1) != '/')
             if (substr($input['regex'], -1, 1)  != '$')  $input['regex'] = $input['regex'] . '$/';
             else                                         $input['regex'] = $input['regex'] . '/';
+      }
+      if (($input['fieldtype'] == 'urgency')) {
+         if (isset($input['values'])) {
+            $input['values'] = addslashes($input['values']);
+         }
+      }
+
+      if (isset($input['description'])) {
+         $input['description'] = addslashes($input['description']);
       }
 
       return $input;
@@ -802,10 +828,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `glpi_plugin_formcreator_questions` SET
-                               `name`           = '" . plugin_formcreator_encode($line['name']) . "',
-                               `values`         = '" . plugin_formcreator_encode($line['values']) . "',
-                               `default_values` = '" . plugin_formcreator_encode($line['default_values']) . "',
-                               `description`    = '" . plugin_formcreator_encode($line['description']) . "'
+                               `name`           = '" . addslashes(plugin_formcreator_encode($line['name'])) . "',
+                               `values`         = '" . addslashes(plugin_formcreator_encode($line['values'])) . "',
+                               `default_values` = '" . addslashes(plugin_formcreator_encode($line['default_values'])) . "',
+                               `description`    = '" . addslashes(plugin_formcreator_encode($line['description'])) . "'
                              WHERE `id` = " . $line['id'];
             $DB->query($query_update) or die ($DB->error());
          }
