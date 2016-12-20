@@ -127,8 +127,6 @@ class PluginFormcreatorFields
       $question->getFromDB($id);
       $fields     = $question->fields;
       $conditions = array();
-      $return     = false;
-      $prevLogic  = 'OR';
 
       // If the field is always shown
       if ($fields['show_rule'] == 'always') return true;
@@ -152,6 +150,10 @@ class PluginFormcreatorFields
             );
       }
 
+      $return                       = false;
+      $currentLogic                 = 'OR';
+      $lowPrecedenceReturnPart      = false;
+      $lowPrecedenceLogic           = 'OR';
       foreach ($conditions as $condition) {
          if (!isset($values[$condition['field']]))             return false;
          if (!self::isVisible($condition['field'], $values))   return false;
@@ -198,15 +200,41 @@ class PluginFormcreatorFields
                     .$condition['operator'].' "'.$condition['value'].'";');
                }
          }
-         switch ($prevLogic) {
-            case 'AND' :   $return &= $value; break;
-            case 'OR'  :   $return |= $value; break;
-            case 'XOR' :   $return ^= $value; break;
-            default :      $return = $value;
+
+         // Combine all condition with respect of operator precedence
+         // AND has precedence over OR and XOR
+         if ($currentLogic != 'AND' && $condition['logic'] == 'AND') {
+            // next condition has a higher precedence operator
+            // Save the current computed return and operator to use later
+            $lowPrecedenceReturnPart = $return;
+            $lowPrecedenceLogic = $currentLogic;
+            $return = $value;
+         } else {
+            switch ($currentLogic) {
+               case 'AND' :   $return &= $value; break;
+               case 'OR'  :   $return |= $value; break;
+               case 'XOR' :   $return ^= $value; break;
+               default :      $return = $value;
+            }
+         }
+
+         if ($currentLogic == 'AND' && $condition['logic'] != 'AND') {
+            if ($lowPrecedenceLogic == 'OR') {
+               $return |= $lowPrecedenceReturnPart;
+            } else {
+               $return ^= $lowPrecedenceReturnPart;
+            }
          }
 
          // Use current show_logic operator for next condition, if any
-         $prevLogic = $condition['logic'];
+         $currentLogic = $condition['logic'];
+      }
+
+      // Ensure the low precedence part is used if last condition has logic == AND
+      if ($lowPrecedenceLogic == 'OR') {
+         $return |= $lowPrecedenceReturnPart;
+      } else {
+         $return ^= $lowPrecedenceReturnPart;
       }
 
       // If the field is hidden by default, show it if condition is true
