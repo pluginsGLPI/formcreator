@@ -123,6 +123,16 @@ class PluginFormcreatorFields
    {
       global $DB;
 
+      /**
+       * Keep track of questions being evaluated to detect infinite loops
+       */
+      static $evalQuestion = array();
+      if (isset($evalQuestion[$id])) {
+         // TODO : how to deal a infinite loop while evaulating visibility of question ?
+         return true;
+      }
+      $evalQuestion[$id]   = $id;
+
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
       $fields     = $question->fields;
@@ -236,6 +246,8 @@ class PluginFormcreatorFields
       } else {
          $return ^= $lowPrecedenceReturnPart;
       }
+
+      unset($evalQuestion[$id]);
 
       // If the field is hidden by default, show it if condition is true
       if ($question->fields['show_rule'] == 'hidden') {
