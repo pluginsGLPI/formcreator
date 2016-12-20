@@ -235,6 +235,29 @@ class PluginFormcreatorSection extends CommonDBChild
    }
 
    /**
+    * Clone a section
+    * @param  array  $input with these keys
+    *                       - id the id of the section to clone
+    * @return integer the section id of the new clone
+    */
+   public function cloneItem($input = []) {
+      global $DB;
+
+      if ($DB->isSlave()) {
+         return false;
+      }
+
+      if (!$this->getFromDB($input[static::getIndexName()])) {
+         return false;
+      }
+
+      // export and import the current section without uuid in order to clone it
+      return $this->import($this->getField('plugin_formcreator_forms_id'),
+                           $this->export(true));
+   }
+
+
+   /**
     * Import a form's section into the db
     * @see PluginFormcreatorForm::importJson
     *
@@ -271,9 +294,11 @@ class PluginFormcreatorSection extends CommonDBChild
 
    /**
     * Export in an array all the data of the current instanciated section
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -290,8 +315,12 @@ class PluginFormcreatorSection extends CommonDBChild
       $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
       foreach($all_questions as $questions_id => $question) {
          if ($form_question->getFromDB($questions_id)) {
-            $section['_questions'][] = $form_question->export();
+            $section['_questions'][] = $form_question->export($remove_uuid);
          }
+      }
+
+      if ($remove_uuid) {
+         $section['uuid'] = '';
       }
 
       return $section;

@@ -33,9 +33,11 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
 
    /**
     * Export in an array all the data of the current instanciated condition
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -44,6 +46,10 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
 
       unset($condition['id'],
             $condition['plugin_formcreator_questions_id']);
+
+      if ($remove_uuid) {
+         $condition['uuid'] = '';
+      }
 
       return $condition;
    }

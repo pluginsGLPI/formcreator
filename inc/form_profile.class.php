@@ -186,9 +186,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
 
    /**
     * Export in an array all the data of the current instanciated form_profile
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -205,6 +207,10 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       unset($form_profile['id'],
             $form_profile['profiles_id'],
             $form_profile['plugin_formcreator_forms_id']);
+
+      if ($remove_uuid) {
+         $form_profile['uuid'] = '';
+      }
 
       return $form_profile;
    }
