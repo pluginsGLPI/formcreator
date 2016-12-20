@@ -1400,42 +1400,32 @@ class PluginFormcreatorForm extends CommonDBTM
          unset($target_values['id'],
                $target_values['uuid']);
          $target_values['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_targets_id = $target->add($target_values)) {
+         if (!$target->add($target_values)) {
             return false;
          }
 
-         $query_ttickets = "SELECT `id`, `name`, `tickettemplates_id`, `comment`, `due_date_rule`,
-                               `due_date_question`, `due_date_value`, `due_date_period`, `destination_entity`
-                            FROM `glpi_plugin_formcreator_targettickets`
-                            WHERE `id` = {$target_values['items_id']}";
-         $result_ttickets = $DB->query($query_ttickets);
-         $result_ttickets = $DB->fetch_array($result_ttickets);
-         if (!$result_ttickets) return false;
-
-         foreach ($tab_questions as $id => $value) {
-            $result_ttickets['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['name']);
-            $result_ttickets['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['name']);
-            $result_ttickets['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['comment']);
-            $result_ttickets['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['comment']);
+         if (!$target_ticket->getFromDB($target_values['items_id'])) {
+            return false;
          }
 
-         $insert_ttickets = "INSERT INTO `glpi_plugin_formcreator_targettickets` SET
-                               `name`               = '" . addslashes($result_ttickets['name']) . "',
-                               `tickettemplates_id` = " . (int) $result_ttickets['tickettemplates_id'] . ",
-                               `comment`            = '" . addslashes($result_ttickets['comment']) . "',
-                               `due_date_rule`      = '" . addslashes($result_ttickets['due_date_rule']) . "',
-                               `due_date_question`  = " . (int) $result_ttickets['due_date_question'] . ",
-                               `due_date_value`     = " . (int) $result_ttickets['due_date_value'] . ",
-                               `due_date_period`    = '" . addslashes($result_ttickets['due_date_period']) . "',
-                               `destination_entity` = '" . addslashes($result_ttickets['destination_entity']) . "'";
-         $DB->query($insert_ttickets);
-         $new_target_ticket_id = $DB->insert_id();
+         $update_target_ticket = $target_ticket->fields;
+         unset($update_target_ticket['id'], $update_target_ticket['uuid']);
+         foreach ($tab_questions as $id => $value) {
+            $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
+            $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
+            $update_target_ticket['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['comment']);
+            $update_target_ticket['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['comment']);
+         }
+
+         $new_target_ticket = new PluginFormcreatorTargetTicket();
+         $new_target_ticket->add($update_target_ticket);
+         $new_target_ticket_id = $new_target_ticket->getID();
          if (!$new_target_ticket_id) return false;
 
-         $update_target = "UPDATE `glpi_plugin_formcreator_targets` SET
-                              `items_id` = " . $new_target_ticket_id . "
-                           WHERE `id` = " . $new_targets_id;
-         $DB->query($update_target);
+         $target->update(array(
+               'id'        => $target->getID(),
+               'items_id'  => $new_target_ticket_id,
+         ));
 
          // Form target tickets actors
          $rows = $target_ticket_actor->find("`plugin_formcreator_targettickets_id` = '{$target_values['items_id']}'");
