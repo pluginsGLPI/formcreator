@@ -175,7 +175,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                      title="' . _sx('button', "Duplicate") . '"
-                     onclick="cloneQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
+                     onclick="duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
             echo "</span>";
 
             if ($fields['required'] != 0) {
@@ -866,25 +866,33 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Clone a question
-    * @param  array  $input with these keys
-    *                       - id the id of the question to clone
-    * @return integer the question id of the new clone
+    * Duplicate a question
+    *
+    * @return boolean
     */
-   public function cloneItem($input = []) {
-      global $DB;
+   public function duplicate() {
+      $oldQuestionId       = $this->getID();
+      $newQuestion         = new static();
+      $question_condition  = new PluginFormcreatorQuestion_Condition();
 
-      if ($DB->isSlave()) {
+      $row = $this->fields;
+      unset($row['id'],
+            $row['uuid']);
+      if (!$newQuestion->add($row)) {
          return false;
       }
 
-      if (!$this->getFromDB($input[static::getIndexName()])) {
-         return false;
+      // Form questions conditions
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$oldQuestionId')");
+      foreach($rows as $conditions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         $row['plugin_formcreator_questions_id'] = $newQuestion->getID();
+         if (!$new_conditions_id = $question_condition->add($row)) {
+            return false;
+         }
       }
 
-      // export and import the current question without uuid in order to clone it
-      return $this->import($this->getField('plugin_formcreator_sections_id'),
-                           $this->export(true));
    }
 
 
