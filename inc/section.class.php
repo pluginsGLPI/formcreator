@@ -284,6 +284,13 @@ class PluginFormcreatorSection extends CommonDBChild
 
       if ($sections_id
           && isset($section['_questions'])) {
+         // sort questions by order
+         usort($section['_questions'], function ($a, $b) {
+            if ($a['order'] == $b['order']) return 0;
+               return ($a['order'] < $b['order']) ? -1 : 1;
+            }
+         );
+
          foreach($section['_questions'] as $question) {
             PluginFormcreatorQuestion::import($sections_id, $question);
          }
