@@ -235,25 +235,56 @@ class PluginFormcreatorSection extends CommonDBChild
    }
 
    /**
-    * Clone a section
-    * @param  array  $input with these keys
-    *                       - id the id of the section to clone
-    * @return integer the section id of the new clone
+    * Duplicate a section
+    *
+    * @return boolean
     */
-   public function cloneItem($input = []) {
-      global $DB;
+   public function duplicate() {
+      $oldSectionId        = $this->getID();
+      $newSection          = new static();
+      $section_question    = new PluginFormcreatorQuestion();
+      $question_condition  = new PluginFormcreatorQuestion_Condition();
 
-      if ($DB->isSlave()) {
+      $tab_questions       = array();
+
+      $row = $this->fields;
+      unset($row['id'],
+            $row['uuid']);
+      if (!$newSection->add($row)) {
          return false;
       }
 
-      if (!$this->getFromDB($input[static::getIndexName()])) {
-         return false;
+      // Form questions
+      $rows = $section_question->find("`plugin_formcreator_sections_id` = '$oldSectionId'", "`order` ASC");
+      foreach($rows as $questions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         $row['plugin_formcreator_sections_id'] = $newSection->getID();
+         if (!$new_questions_id = $section_question->add($row)) {
+            return false;
+         }
+
+         $tab_questions[$questions_id] = $new_questions_id;
+
       }
 
-      // export and import the current section without uuid in order to clone it
-      return $this->import($this->getField('plugin_formcreator_forms_id'),
-                           $this->export(true));
+      // Form questions conditions
+      $questionIds = implode("', '", array_keys($tab_questions));
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+      foreach($rows as $conditions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         if (isset($tab_questions[$row['show_field']])) {
+            // update show_field if id in show_field belongs to the section being duplicated
+            $row['show_field'] = $tab_questions[$row['show_field']];
+         }
+         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+         if (!$new_conditions_id = $question_condition->add($row)) {
+            return false;
+         }
+      }
+
+      return true;
    }
 
 
