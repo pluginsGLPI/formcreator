@@ -538,7 +538,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       if (isset($input['show_field']) && isset($input['show_condition'])
             && isset($input['show_value']) && isset($input['show_logic'])) {
-         // All arays of condition exists
+         // All arrays of condition exists
          if ($input['show_rule'] != 'always') {
             if (! (count($input['show_field']) == count($input['show_condition'])
                   && count($input['show_value']) == count($input['show_logic'])
