@@ -64,7 +64,7 @@ class PluginFormcreatorTarget extends CommonDBTM
 
          echo '<td align="center" width="32">';
          echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/pencil.png"
-                  alt="*" title="'.__('Edit');
+                  alt="*" title="'.__('Edit').'" ';
          echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
          echo '</td>';
 
