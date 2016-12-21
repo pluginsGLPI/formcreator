@@ -80,6 +80,7 @@ class FormDuplicationTest extends SuperAdminTestCase
                $showFieldName = $questionData['show_field'];
                $showfield = new PluginFormcreatorQuestion();
                $showfield->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId' AND `name` = '$showFieldName'");
+               $questionData['show_field'] = $showfield->getID();
                $question->updateConditions($questionData);
             }
          }
