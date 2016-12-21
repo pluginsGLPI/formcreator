@@ -1749,8 +1749,6 @@ class PluginFormcreatorForm extends CommonDBTM
             PluginFormcreatorSection::import($forms_id, $section);
          }
       }
-      // Save all question conditions stored in memory
-      PluginFormcreatorQuestion_Condition::import(0, array(), false);
 
       // import form's validators
       if ($forms_id
