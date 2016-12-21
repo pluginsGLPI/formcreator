@@ -35,27 +35,13 @@ if ($plugin->isActivated("formcreator")) {
 
    // Move a Section
    } elseif(isset($_POST["move"])) {
-      global $DB;
-
       Session::checkRight("entity", UPDATE);
 
-      $table  = getTableForItemtype('PluginFormcreatorSection');
-      $result = $DB->query("SELECT `order`, `plugin_formcreator_forms_id` FROM $table WHERE id = " . $_POST['id']);
-      list($order, $form_id) = $DB->fetch_array($result);
-
-      if($_POST["way"] == 'up') {
-         $result = $DB->query("SELECT `id`, `order` FROM $table WHERE `order` < $order AND plugin_formcreator_forms_id = $form_id ORDER BY `order` DESC LIMIT 0, 1");
-         if($DB->numrows($result) != 0) {
-            list($id2, $order2) = $DB->fetch_array($result);
-            $DB->query("UPDATE $table SET `order` = $order2 WHERE `id` = " . (int) $_POST['id']);
-            $DB->query("UPDATE $table SET `order` = $order WHERE `id` = $id2");
-         }
-      } else {
-         $result = $DB->query("SELECT `id`, `order` FROM $table WHERE `order` > $order AND plugin_formcreator_forms_id = $form_id ORDER BY `order` ASC LIMIT 0, 1");
-         if($DB->numrows($result) != 0) {
-            list($id2, $order2) = $DB->fetch_array($result);
-            $DB->query("UPDATE $table SET `order` = $order2 WHERE `id` = " . (int) $_POST['id']);
-            $DB->query("UPDATE $table SET `order` = $order WHERE `id` = $id2");
+      if ($section->getFromDB((int) $_POST['id'])) {
+         if($_POST["way"] == 'up') {
+            $section->moveUp();
+         } else {
+            $section->moveDown();
          }
       }
 
