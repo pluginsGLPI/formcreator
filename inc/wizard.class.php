@@ -69,7 +69,7 @@ class PluginFormcreatorWizard {
       echo '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '')  . ' plugin_formcreator_myRequestsIcon">';
-      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php' . '">';
+      echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php?reset=reset' . '">';
       echo '<span class="fc_list_icon" title="'.__('My requests for assistance', 'formcreator').'"></span>';
       echo '<label>'.__('My requests for assistance', 'formcreator').'</label>';
       echo '</a></li>';
