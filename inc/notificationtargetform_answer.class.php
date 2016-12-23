@@ -1,6 +1,6 @@
 <?php
 
-class PluginFormcreatorNotificationTargetFormanswer extends NotificationTarget
+class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
 {
    const AUTHOR   = 101;
    const APPROVER = 102;
