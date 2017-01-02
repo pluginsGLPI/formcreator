@@ -1505,20 +1505,26 @@ EOS;
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration
-      // /!\ Followup is directly saved to the database to avoid double notification on ticket
-      //     creation and add followup
       if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
          $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
          if (!empty($formanswer->fields['comment'])) {
             $message.= "\n".addslashes($formanswer->fields['comment']);
          }
 
-        $query = "INSERT INTO `glpi_ticketfollowups` SET
-                     `tickets_id` = $ticketID,
-                     `date`       = NOW(),
-                     `users_id`   = {$_SESSION['glpiID']},
-                     `content`    = \"$message\"";
-         $DB->query($query);
+        // Disable mail notification
+        $use_mailing = $CFG_GLPI['use_mailing'];
+        $CFG_GLPI['use_mailing'] = '0';
+
+        $ticketFollowup = new TicketFollowup();
+        $ticketFollowup->add(array(
+              'tickets_id'       => $ticketID,
+              'date'             => date('Y-m-d H:i:s'),
+              'users_id'         => $_SESSION['glpiID'],
+              'content'          => $message
+        ));
+
+        // Restore mail notification setting
+        $CFG_GLPI['use_mailing'] = $use_mailing;
       }
 
       return true;
