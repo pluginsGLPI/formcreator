@@ -545,6 +545,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                $question_answer = '';
             }
 
+            if ($question['fieldtype'] != 'textarea') {
+               $question_answer = plugin_formcreator_encode($question_answer, false);
+            } else {
+               $question_answer = plugin_formcreator_encode(addslashes($question_answer), false, true);
+            }
             $answerID = $answer->add(array(
                'plugin_formcreator_forms_answers_id' => $id,
                'plugin_formcreator_question_id'   => $question['id'],

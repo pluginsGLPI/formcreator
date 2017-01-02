@@ -177,17 +177,19 @@ function plugin_init_formcreator ()
  * @param  String    $string  The string to encode
  * @return String             The encoded string
  */
-function plugin_formcreator_encode($string, $mode_legacy=true)
+function plugin_formcreator_encode($string, $mode_legacy=true, $keepNewLine=false)
 {
    if (!is_string($string)) {
       return $string;
    }
    if (!$mode_legacy) {
       $string = Html::clean(Html::entity_decode_deep($string));
-      $string = preg_replace('/\\r\\n/',' ',$string);
-      $string = preg_replace('/\\n/',' ',$string);
-      $string = preg_replace('/\\\\r\\\\n/',' ',$string);
-      $string = preg_replace('/\\\\n/',' ',$string);
+      if (!$keepNewLine) {
+         $string = preg_replace('/\\r\\n/',' ',$string);
+         $string = preg_replace('/\\n/',' ',$string);
+         $string = preg_replace('/\\\\r\\\\n/',' ',$string);
+         $string = preg_replace('/\\\\n/',' ',$string);
+      }
       $string = Toolbox::stripslashes_deep($string);
       $string = Toolbox::addslashes_deep($string);
    } else {
