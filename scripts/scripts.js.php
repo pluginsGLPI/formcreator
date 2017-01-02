@@ -178,7 +178,7 @@ function updateCategoriesView() {
          label: true
       });
       $('#plugin_formcreator_wizard_categories a.back').click(
-         function() {
+         function(event) {
             parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
             parentAnchor = $(parentItem).children('a')[0];
             updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
