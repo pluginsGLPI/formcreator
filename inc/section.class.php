@@ -185,6 +185,8 @@ class PluginFormcreatorSection extends CommonDBChild
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
+      $input['name'] = addslashes($input['name']);
+
       // Get next order
       $table  = self::getTable();
       $query  = "SELECT MAX(`order`) AS `order`
