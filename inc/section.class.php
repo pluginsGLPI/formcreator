@@ -281,7 +281,6 @@ class PluginFormcreatorSection extends CommonDBChild
          }
 
          $tab_questions[$questions_id] = $new_questions_id;
-
       }
 
       // Form questions conditions
