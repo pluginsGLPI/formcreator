@@ -1511,7 +1511,7 @@ EOS;
             $message.= "\n".addslashes($formanswer->fields['comment']);
          }
 
-        // Disable mail notification
+        // avoid double notification on ticket creation and add followup
         $use_mailing = $CFG_GLPI['use_mailing'];
         $CFG_GLPI['use_mailing'] = '0';
 
