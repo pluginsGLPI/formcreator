@@ -944,11 +944,22 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Control fields values :
       // - name is required
-      if(isset($input['name'])
-         && empty($input['name'])) {
-         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
+      if(isset($input['name'])) {
+         if (empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+            return array();
+         }
+         $input['name'] = addslashes($input['name']);
       }
+
+      if (isset($input['description'])) {
+         $input['description'] = addslashes($input['description']);
+      }
+
+      if (isset($input['content'])) {
+         $input['content'] = addslashes($input['content']);
+      }
+
 
       return $input;
    }

@@ -178,6 +178,7 @@ class PluginFormcreatorSection extends CommonDBChild
          Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
          return array();
       }
+      $input['name'] = addslashes($input['name']);
 
       // generate a uniq id
       if (!isset($input['uuid'])

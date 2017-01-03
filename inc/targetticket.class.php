@@ -1197,9 +1197,9 @@ EOS;
       $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
                                                                     $formanswer,
                                                                     $fullform));
-      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'],
+      $datas['content']               = htmlentities(addslashes($this->parseTags($this->fields['comment'],
                                                                       $formanswer,
-                                                                      $fullform));
+                                                                      $fullform)));
 
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
