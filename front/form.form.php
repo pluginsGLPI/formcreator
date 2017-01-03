@@ -13,7 +13,7 @@ if ($plugin->isActivated("formcreator")) {
 
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
-   // Edit an existinf form
+   // Edit an existing form
    } elseif(isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
       $form->update($_POST);
@@ -69,10 +69,7 @@ if ($plugin->isActivated("formcreator")) {
          if (!$form->saveForm()) {
             Html::back();
          }
-         $form->update([
-               'id' => $form->getID(),
-               'usage_count' => $form->getField('usage_count') + 1,
-         ]);
+         $form->increaseUsageCount();
 
          // If user was not authenticated, remove temporary user
          if($_SESSION['glpiname'] == 'formcreator_temp_user') {
@@ -98,6 +95,7 @@ if ($plugin->isActivated("formcreator")) {
          'option'
       );
 
+      $_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : -1;
       $form->display($_GET);
 
       Html::footer();

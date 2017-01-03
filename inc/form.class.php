@@ -1122,6 +1122,14 @@ class PluginFormcreatorForm extends CommonDBTM
       return $valid;
    }
 
+   public function increaseUsageCount() {
+      // Increase usage count of the form
+      $this->update([
+            'id' => $this->getID(),
+            'usage_count' => $this->getField('usage_count') + 1,
+      ]);
+   }
+
    /**
     * Database table installation for the item type
     *
@@ -1297,7 +1305,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return Boolean true if success, false toherwize.
     */
-   public function Duplicate()
+   public function duplicate()
    {
       global $DB;
 
@@ -1347,37 +1355,40 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Form sections
-      $rows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'");
-      foreach($rows as $sections_id => $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_sections_id = $form_section->add($row)) {
+      $sectionRows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'");
+      foreach($sectionRows as $sections_id => $sectionRow) {
+         unset($sectionRow['id'],
+               $sectionRow['uuid']);
+         $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
+         if (!$new_sections_id = $form_section->add($sectionRow)) {
             return false;
          }
 
          // Form questions
-         $rows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'");
-         foreach($rows as $questions_id => $row) {
-            unset($row['id'],
-                  $row['uuid']);
-            $row['plugin_formcreator_sections_id'] = $new_sections_id;
-            if (!$new_questions_id = $section_question->add($row)) {
+         $questionRows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'");
+         foreach($questionRows as $questions_id => $questionRow) {
+            unset($questionRow['id'],
+                  $questionRow['uuid']);
+            $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
+            if (!$new_questions_id = $section_question->add($questionRow)) {
                return false;
             }
 
+            // Map old question ID to new question ID
             $tab_questions[$questions_id] = $new_questions_id;
+         }
+      }
 
-            // Form questions conditions
-            $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$questions_id'");
-            foreach($rows as $conditions_id => $row) {
-               unset($row['id'],
-                     $row['uuid']);
-               $row['plugin_formcreator_questions_id'] = $new_questions_id;
-               if (!$new_conditions_id = $question_condition->add($row)) {
-                  return false;
-               }
-            }
+      // Form questions conditions
+      $questionIds = implode("', '", array_keys($tab_questions));
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+      foreach($rows as $conditions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         $row['show_field'] = $tab_questions[$row['show_field']];
+         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+         if (!$new_conditions_id = $question_condition->add($row)) {
+            return false;
          }
       }
 
@@ -1444,7 +1455,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return Boolean true if success, false otherwize.
     */
-   public function Transfer($entity)
+   public function transfer($entity)
    {
       global $DB;
 
@@ -1486,7 +1497,7 @@ class PluginFormcreatorForm extends CommonDBTM
       switch ($ma->getAction()) {
          case 'Duplicate' :
             foreach ($ids as $id) {
-               if ($item->getFromDB($id) && $item->Duplicate()) {
+               if ($item->getFromDB($id) && $item->duplicate()) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
                } else {
@@ -1497,7 +1508,7 @@ class PluginFormcreatorForm extends CommonDBTM
             return;
          case 'Transfert' :
             foreach ($ids as $id) {
-               if ($item->getFromDB($id) && $item->Transfer($ma->POST['entities_id'])) {
+               if ($item->getFromDB($id) && $item->transfer($ma->POST['entities_id'])) {
                   Session::addMessageAfterRedirect(sprintf(__('Form Transfered: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
                } else {

@@ -431,12 +431,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (!empty($input)) {
          // Get next order
          $table = self::getTable();
+         $sectionId = $input['plugin_formcreator_sections_id'];
          $query  = "SELECT MAX(`order`) AS `order`
                     FROM `$table`
-                    WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+                    WHERE `plugin_formcreator_sections_id` = '$sectionId'";
          $result = $DB->query($query);
          $line   = $DB->fetch_array($result);
          $input['order'] = $line['order'] + 1;
+
+         $input = $this->serializeDefaultValue($input);
       }
       return $input;
    }
@@ -473,22 +476,54 @@ class PluginFormcreatorQuestion extends CommonDBChild
           && isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
+            $oldId = $this->fields['plugin_formcreator_sections_id'];
+            $newId = $input['plugin_formcreator_sections_id'];
+            $order = $this->fields['order'];
             // Reorder other questions from the old section
             $table = self::getTable();
             $query = "UPDATE `$table` SET
                 `order` = `order` - 1
-                WHERE `order` > {$this->fields['order']}
-                AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
+                WHERE `order` > '$order'
+                AND plugin_formcreator_sections_id = '$oldId'";
             $DB->query($query);
 
             // Get the order for the new section
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `$table`
-                       WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
+                       WHERE `plugin_formcreator_sections_id` = '$newId'";
             $result = $DB->query($query);
             $line   = $DB->fetch_array($result);
             $input['order'] = $line['order'] + 1;
          }
+
+         $input = $this->serializeDefaultValue($input);
+      }
+
+      return $input;
+   }
+
+   protected function serializeDefaultValue($input) {
+      // Load field types
+      PluginFormcreatorFields::getTypes();
+
+      // actor field only
+      // TODO : generalize to all other field types
+      if ($input['fieldtype'] == 'actor') {
+         $actorField = new ActorField($input, $input['default_values']);
+         $input['default_values'] = $actorField->serializeValue($input['default_values']);
+      }
+
+      return $input;
+   }
+
+   protected function deserializeDefaultValue($input) {
+      // Load field types
+      PluginFormcreatorFields::getTypes();
+
+      // Actor field only
+      if ($input['fieldtype'] == 'actor') {
+         $actorField = new ActorField($input, $input['default_values']);
+         $input['default_values'] = $actorField->deserializeValue($input['default_values']);
       }
 
       return $input;
@@ -508,11 +543,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $value      = plugin_formcreator_encode($input['show_value']);
          $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
          $show_condition = plugin_formcreator_decode($input['show_condition']);
+         $uuid = plugin_formcreator_getUuid();
          $query = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                      `plugin_formcreator_questions_id` = {$input['id']},
                      `show_field`     = $show_field,
                      `show_condition` = '" . $show_condition . "',
-                     `show_value`     = '" . $value . "'";
+                     `show_value`     = '" . $value . "',
+                     `uuid`           = '$uuid'";
          $DB->query($query);
          // ===============================================================
       }
@@ -529,21 +566,24 @@ class PluginFormcreatorQuestion extends CommonDBChild
       global $DB;
 
       $table = self::getTable();
+      $question_condition_table = PluginFormcreatorQuestion_Condition::getTable();
+
+      $order = $this->fields['order'];
       $query = "UPDATE `$table` SET
                 `order` = `order` - 1
-                WHERE `order` > {$this->fields['order']}
+                WHERE `order` > '$order'
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
       $DB->query($query);
 
       $questionId = $this->fields['id'];
-      $query = "UPDATE `glpi_plugin_formcreator_questions` SET `show_rule`='always'
+      $query = "UPDATE `$table` SET `show_rule`='always'
             WHERE `id` IN (
-                  SELECT `plugin_formcreator_questions_id` FROM `glpi_plugin_formcreator_questions_conditions`
+                  SELECT `plugin_formcreator_questions_id` FROM `$question_condition_table`
                   WHERE `show_field` = '$questionId'
             )";
       $DB->query($query);
 
-      $query = "DELETE FROM `glpi_plugin_formcreator_questions_conditions`
+      $query = "DELETE FROM `$question_condition_table`
             WHERE `plugin_formcreator_questions_id` = '$questionId'
             OR `show_field` = '$questionId'";
       $DB->query($query);
@@ -882,11 +922,16 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
          // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
-         $condition_obj = new PluginFormcreatorQuestion_Condition;
-         $all_conditions = $condition_obj->find("uuid IS NULL");
-         foreach($all_conditions as $conditions_id => $condition) {
-            $condition_obj->update(array('id'   => $conditions_id,
-                                         'uuid' => plugin_formcreator_getUuid()));
+         $query = "SELECT `id`
+                   FROM `glpi_plugin_formcreator_questions_conditions`
+                   WHERE `uuid` IS NULL";
+         $result = $DB->query($query);
+         while ($row = $DB->fetch_assoc($result)) {
+            $newUuid = plugin_formcreator_getUuid();
+            $conditionId = $row['id'];
+            $DB->query("UPDATE `glpi_plugin_formcreator_questions_conditions`
+                        SET `uuid` = '$newUuid'
+                        WHERE `id` = '$conditionId'");
          }
 
       }

@@ -102,6 +102,8 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
       $formAnswer->getFromDB($newId);
       $this->assertFalse($formAnswer->isNewItem());
 
+      unset($_POST); // $_POST was populated but triggers CSRF check when runing next test
+
       return $formAnswer;
    }
 

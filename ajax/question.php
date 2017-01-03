@@ -13,7 +13,6 @@ if(empty($_REQUEST['question_id'])) {
 $form_id = (int) $_REQUEST['form_id'];
 
 $rand = mt_rand();
-
 ?>
 
 <form name="form_question" method="post"

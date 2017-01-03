@@ -1,11 +1,11 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', "0.90-1.4-beta6");
+define('PLUGIN_FORMCREATOR_VERSION', "0.90-1.4-beta7");
 // Minimal GLPI version, inclusive
 define ("PLUGIN_FORMCREATOR_GLPI_MIN_VERSION", "0.85");
 // Maximum GLPI version, exclusive
-define ("PLUGIN_FORMCREATOR_GLPI_MAX_VERSION", "0.91");
+define ("PLUGIN_FORMCREATOR_GLPI_MAX_VERSION", "9.2");
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc']."/plugins/formcreator");
 
@@ -78,7 +78,9 @@ function plugin_init_formcreator ()
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+   if (isset($_SESSION['glpiactiveentities_string'])
+       && $plugin->isInstalled('formcreator')
+       && $plugin->isActivated('formcreator')) {
 
       // Redirect to helpdesk replacement
       if (strpos($_SERVER['REQUEST_URI'], "front/helpdesk.public.php") !== false) {
