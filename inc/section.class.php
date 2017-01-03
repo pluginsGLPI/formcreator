@@ -206,10 +206,26 @@ class PluginFormcreatorSection extends CommonDBChild
    **/
    public function prepareInputForUpdate($input)
    {
-      if (!isset($input['plugin_formcreator_forms_id'])) {
-         $input['plugin_formcreator_forms_id'] = $this->fields['plugin_formcreator_forms_id'];
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
+      foreach ($input as $key => $value) {
+         $input[$key] = plugin_formcreator_encode($value);
       }
-      return $this->prepareInputForAdd($input);
+
+      // Control fields values :
+      // - name is required
+      if(isset($input['name'])
+            && empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
+         return array();
+      }
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+            || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
    }
 
 
@@ -286,6 +302,44 @@ class PluginFormcreatorSection extends CommonDBChild
       return true;
    }
 
+
+   public function moveUp() {
+      $order         = $this->fields['order'];
+      $formId        = $this->fields['plugin_formcreator_forms_id'];
+      $otherItem = new static();
+      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
+            AND `order` < '$order'
+            ORDER BY `order` DESC LIMIT 1");
+      if (!$otherItem->isNewItem()) {
+         $this->update(array(
+               'id'     => $this->getID(),
+               'order'  => $otherItem->getField('order'),
+         ));
+         $otherItem->update(array(
+               'id'     => $otherItem->getID(),
+               'order'  => $order,
+         ));
+      }
+   }
+
+   public function moveDown() {
+      $order         = $this->fields['order'];
+      $formId     = $this->fields['plugin_formcreator_forms_id'];
+      $otherItem = new static();
+      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
+            AND `order` > '$order'
+            ORDER BY `order` ASC LIMIT 1");
+      if (!$otherItem->isNewItem()) {
+         $this->update(array(
+               'id'     => $this->getID(),
+               'order'  => $otherItem->getField('order'),
+         ));
+         $otherItem->update(array(
+               'id'     => $otherItem->getID(),
+               'order'  => $order,
+         ));
+      }
+   }
 
    /**
     * Import a form's section into the db
