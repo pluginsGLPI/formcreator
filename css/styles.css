@@ -511,6 +511,7 @@ form.formcreator_form {
 #formcreator_servicecatalogue {
    position: absolute;
    width: 100%;
+   margin-top: 10px;
 }
 
 #formcreator_servicecatalogue_ticket_summary {
@@ -573,7 +574,7 @@ form.formcreator_form {
 
 
 .plugin_formcreator_page #plugin_formcreator_wizard {
-   height: 100%;
+   height: calc(100vh - 28px - 65px);
 }
 
 .plugin_formcreator_marginRight {
@@ -582,14 +583,14 @@ form.formcreator_form {
 
 #plugin_formcreator_wizard_categories {
    width: 275px;
-   min-height: 100vh;
+   min-height: calc(100vh - 28px - 65px);
    top: 0;
    bottom: 0;
    left: 0;
    float: left;
 }
 .plugin_formcreator_page #plugin_formcreator_wizard_categories {
-   height: 100vh;
+   height: calc(100vh - 28px - 65px);
    background-color: #f8f7f3;
    border-right: 1px solid #DDD;
    position: relative;
@@ -850,15 +851,11 @@ a.plugin_formcreator_formTile_title {
 
 #plugin_formcreator_wizard_right {
    min-width: 116px;
-   height: 100vh;
    overflow-x: hidden;
    overflow-y: auto;
    padding: 10px 0 3px 23px;
+   margin: -10px 0 -3px -23px;
    background-color: #FFFFFF;
-}
-
-.plugin_formcreator_page #plugin_formcreator_wizard_right {
-   height: calc(100vh - 28px);
 }
 
 #plugin_formcreator_wizard_forms {
@@ -1322,7 +1319,8 @@ span.fc_list_icon {
    max-height: 100%;
    top: 0;
    overflow-y: auto;
-   height: calc(100% - 28px);
+   height: calc(100% - 28px - 65px);
+   min-height: 0;
    width: calc(100% - 300px);
    z-index:  0;
    position: relative;
@@ -1493,9 +1491,9 @@ span.fc_list_icon {
    #page.plugin_formcreator_page {
       margin: 0;
       width: 100%;
-      height: inherit;
       margin-top: 60px;
       min-height: calc(100% - 100px);
+      overflow-x: hidden;
    }
 
    .toggle_menu #page.plugin_formcreator_page {
