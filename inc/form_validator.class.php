@@ -124,9 +124,11 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
 
    /**
     * Export in an array all the data of the current instanciated validator
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -149,6 +151,10 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
          }
       }
       unset($validator['items_id']);
+
+      if ($remove_uuid) {
+         $validator['uuid'] = '';
+      }
 
       return $validator;
    }

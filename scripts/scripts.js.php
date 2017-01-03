@@ -178,7 +178,7 @@ function updateCategoriesView() {
          label: true
       });
       $('#plugin_formcreator_wizard_categories a.back').click(
-         function() {
+         function(event) {
             parentItem = $(event.target).parentsUntil('#plugin_formcreator_wizard_categories > div', 'li')[1];
             parentAnchor = $(parentItem).children('a')[0];
             updateWizardFormsView(parentAnchor.getAttribute('data-parent-category-id'));
@@ -413,6 +413,19 @@ function deleteQuestion(items_id, token, question_id) {
    }
 }
 
+function duplicateQuestion(items_id, token, question_id) {
+   jQuery.ajax({
+     url: urlFrontQuestion,
+     type: "POST",
+     data: {
+         id: question_id,
+         duplicate_question: 1,
+         plugin_formcreator_forms_id: items_id,
+         _glpi_csrf_token: token
+      }
+   }).done(reloadTab);
+}
+
 
 // === SECTIONS ===
 var urlSection      = rootDoc + "/plugins/formcreator/ajax/section.php";
@@ -431,6 +444,19 @@ function editSection(items_id, token ,section) {
       form_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
+}
+
+function duplicateSection(items_id, token, section_id) {
+   jQuery.ajax({
+     url: urlFrontSection,
+     type: "POST",
+     data: {
+         duplicate_section: 1,
+         id: section_id,
+         plugin_formcreator_forms_id: items_id,
+         _glpi_csrf_token: token
+      }
+   }).done(reloadTab);
 }
 
 function deleteSection(items_id, token, section_id) {

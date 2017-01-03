@@ -492,6 +492,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $this->addStandardTab('PluginFormcreatorForm_Profile', $ong, $options);
       $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
+      $this->addStandardTab('PluginFormcreatorForm_Answer', $ong, $options);
       return $ong;
    }
 
@@ -943,11 +944,22 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Control fields values :
       // - name is required
-      if(isset($input['name'])
-         && empty($input['name'])) {
-         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
+      if(isset($input['name'])) {
+         if (empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+            return array();
+         }
+         $input['name'] = addslashes($input['name']);
       }
+
+      if (isset($input['description'])) {
+         $input['description'] = addslashes($input['description']);
+      }
+
+      if (isset($input['content'])) {
+         $input['content'] = addslashes($input['content']);
+      }
+
 
       return $input;
    }
@@ -1322,7 +1334,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return Boolean true if success, false toherwize.
     */
-   public function Duplicate()
+   public function duplicate()
    {
       global $DB;
 
@@ -1372,37 +1384,40 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Form sections
-      $rows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'");
-      foreach($rows as $sections_id => $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_sections_id = $form_section->add($row)) {
+      $sectionRows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'");
+      foreach($sectionRows as $sections_id => $sectionRow) {
+         unset($sectionRow['id'],
+               $sectionRow['uuid']);
+         $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
+         if (!$new_sections_id = $form_section->add($sectionRow)) {
             return false;
          }
 
          // Form questions
-         $rows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'");
-         foreach($rows as $questions_id => $row) {
-            unset($row['id'],
-                  $row['uuid']);
-            $row['plugin_formcreator_sections_id'] = $new_sections_id;
-            if (!$new_questions_id = $section_question->add($row)) {
+         $questionRows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'");
+         foreach($questionRows as $questions_id => $questionRow) {
+            unset($questionRow['id'],
+                  $questionRow['uuid']);
+            $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
+            if (!$new_questions_id = $section_question->add($questionRow)) {
                return false;
             }
 
+            // Map old question ID to new question ID
             $tab_questions[$questions_id] = $new_questions_id;
+         }
+      }
 
-            // Form questions conditions
-            $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$questions_id'");
-            foreach($rows as $conditions_id => $row) {
-               unset($row['id'],
-                     $row['uuid']);
-               $row['plugin_formcreator_questions_id'] = $new_questions_id;
-               if (!$new_conditions_id = $question_condition->add($row)) {
-                  return false;
-               }
-            }
+      // Form questions conditions
+      $questionIds = implode("', '", array_keys($tab_questions));
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+      foreach($rows as $conditions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         $row['show_field'] = $tab_questions[$row['show_field']];
+         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+         if (!$new_conditions_id = $question_condition->add($row)) {
+            return false;
          }
       }
 
@@ -1411,43 +1426,33 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach($rows as $targets_id => $target_values) {
          unset($target_values['id'],
                $target_values['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_targets_id = $target->add($row)) {
+         $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+         if (!$target->add($target_values)) {
             return false;
          }
 
-         $query_ttickets = "SELECT `id`, `name`, `tickettemplates_id`, `comment`, `due_date_rule`,
-                               `due_date_question`, `due_date_value`, `due_date_period`, `destination_entity`
-                            FROM `glpi_plugin_formcreator_targettickets`
-                            WHERE `id` = {$target_values['items_id']}";
-         $result_ttickets = $DB->query($query_ttickets);
-         $result_ttickets = $DB->fetch_array($result_ttickets);
-         if (!$result_ttickets) return false;
-
-         foreach ($tab_questions as $id => $value) {
-            $result_ttickets['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['name']);
-            $result_ttickets['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['name']);
-            $result_ttickets['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $result_ttickets['comment']);
-            $result_ttickets['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $result_ttickets['comment']);
+         if (!$target_ticket->getFromDB($target_values['items_id'])) {
+            return false;
          }
 
-         $insert_ttickets = "INSERT INTO `glpi_plugin_formcreator_targettickets` SET
-                               `name`               = '" . addslashes($result_ttickets['name']) . "',
-                               `tickettemplates_id` = " . (int) $result_ttickets['tickettemplates_id'] . ",
-                               `comment`            = '" . addslashes($result_ttickets['comment']) . "',
-                               `due_date_rule`      = '" . addslashes($result_ttickets['due_date_rule']) . "',
-                               `due_date_question`  = " . (int) $result_ttickets['due_date_question'] . ",
-                               `due_date_value`     = " . (int) $result_ttickets['due_date_value'] . ",
-                               `due_date_period`    = '" . addslashes($result_ttickets['due_date_period']) . "',
-                               `destination_entity` = '" . addslashes($result_ttickets['destination_entity']) . "'";
-         $DB->query($insert_ttickets);
-         $new_target_ticket_id = $DB->insert_id();
+         $update_target_ticket = $target_ticket->fields;
+         unset($update_target_ticket['id'], $update_target_ticket['uuid']);
+         foreach ($tab_questions as $id => $value) {
+            $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
+            $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
+            $update_target_ticket['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['comment']);
+            $update_target_ticket['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['comment']);
+         }
+
+         $new_target_ticket = new PluginFormcreatorTargetTicket();
+         $new_target_ticket->add($update_target_ticket);
+         $new_target_ticket_id = $new_target_ticket->getID();
          if (!$new_target_ticket_id) return false;
 
-         $update_target = "UPDATE `glpi_plugin_formcreator_targets` SET
-                              `items_id` = " . $new_target_ticket_id . "
-                           WHERE `id` = " . $new_target_id;
-         $DB->query($update_target);
+         $target->update(array(
+               'id'        => $target->getID(),
+               'items_id'  => $new_target_ticket_id,
+         ));
 
          // Form target tickets actors
          $rows = $target_ticket_actor->find("`plugin_formcreator_targettickets_id` = '{$target_values['items_id']}'");
@@ -1469,7 +1474,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return Boolean true if success, false otherwize.
     */
-   public function Transfer($entity)
+   public function transfer($entity)
    {
       global $DB;
 
@@ -1511,7 +1516,7 @@ class PluginFormcreatorForm extends CommonDBTM
       switch ($ma->getAction()) {
          case 'Duplicate' :
             foreach ($ids as $id) {
-               if ($item->getFromDB($id) && $item->Duplicate()) {
+               if ($item->getFromDB($id) && $item->duplicate()) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
                } else {
@@ -1522,7 +1527,7 @@ class PluginFormcreatorForm extends CommonDBTM
             return;
          case 'Transfert' :
             foreach ($ids as $id) {
-               if ($item->getFromDB($id) && $item->Transfer($ma->POST['entities_id'])) {
+               if ($item->getFromDB($id) && $item->transfer($ma->POST['entities_id'])) {
                   Session::addMessageAfterRedirect(sprintf(__('Form Transfered: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
                } else {
@@ -1585,9 +1590,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
    /**
     * Export in an array all the data of the current instanciated form
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   function export() {
+   function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -1621,7 +1628,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_sections = $form_section->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_sections as $sections_id => $section) {
          $form_section->getFromDB($sections_id);
-         $form['_sections'][] = $form_section->export();
+         $form['_sections'][] = $form_section->export($remove_uuid);
       }
 
       // get validators
@@ -1629,7 +1636,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_validators = $form_validator->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_validators as $validators_id => $validator) {
          $form_validator->getFromDB($validators_id);
-         $form['_validators'][] = $form_validator->export();
+         $form['_validators'][] = $form_validator->export($remove_uuid);
       }
 
       // get targets
@@ -1637,7 +1644,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_target = $form_target->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_target as $targets_id => $target) {
          $form_target->getFromDB($targets_id);
-         $form['_targets'][] = $form_target->export();
+         $form['_targets'][] = $form_target->export($remove_uuid);
       }
 
       // get profiles
@@ -1645,7 +1652,11 @@ class PluginFormcreatorForm extends CommonDBTM
       $all_profiles = $form_profile->find("plugin_formcreator_forms_id = ".$this->getID());
       foreach($all_profiles as $profiles_id => $profile) {
          $form_profile->getFromDB($profiles_id);
-         $form['_profiles'][] = $form_profile->export();
+         $form['_profiles'][] = $form_profile->export($remove_uuid);
+      }
+
+      if ($remove_uuid) {
+         $form['uuid'] = '';
       }
 
       return $form;

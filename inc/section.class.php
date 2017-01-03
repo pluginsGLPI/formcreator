@@ -178,6 +178,7 @@ class PluginFormcreatorSection extends CommonDBChild
          Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
          return array();
       }
+      $input['name'] = addslashes($input['name']);
 
       // generate a uniq id
       if (!isset($input['uuid'])
@@ -206,10 +207,26 @@ class PluginFormcreatorSection extends CommonDBChild
    **/
    public function prepareInputForUpdate($input)
    {
-      if (!isset($input['plugin_formcreator_forms_id'])) {
-         $input['plugin_formcreator_forms_id'] = $this->fields['plugin_formcreator_forms_id'];
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
+      foreach ($input as $key => $value) {
+         $input[$key] = plugin_formcreator_encode($value);
       }
-      return $this->prepareInputForAdd($input);
+
+      // Control fields values :
+      // - name is required
+      if(isset($input['name'])
+            && empty($input['name'])) {
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
+         return array();
+      }
+
+      // generate a uniq id
+      if (!isset($input['uuid'])
+            || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
    }
 
 
@@ -232,6 +249,97 @@ class PluginFormcreatorSection extends CommonDBChild
 
       $question = new PluginFormcreatorQuestion();
       $question->deleteByCriteria(array('plugin_formcreator_sections_id' => $this->getID()), 1);
+   }
+
+   /**
+    * Duplicate a section
+    *
+    * @return boolean
+    */
+   public function duplicate() {
+      $oldSectionId        = $this->getID();
+      $newSection          = new static();
+      $section_question    = new PluginFormcreatorQuestion();
+      $question_condition  = new PluginFormcreatorQuestion_Condition();
+
+      $tab_questions       = array();
+
+      $row = $this->fields;
+      unset($row['id'],
+            $row['uuid']);
+      if (!$newSection->add($row)) {
+         return false;
+      }
+
+      // Form questions
+      $rows = $section_question->find("`plugin_formcreator_sections_id` = '$oldSectionId'", "`order` ASC");
+      foreach($rows as $questions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         $row['plugin_formcreator_sections_id'] = $newSection->getID();
+         if (!$new_questions_id = $section_question->add($row)) {
+            return false;
+         }
+
+         $tab_questions[$questions_id] = $new_questions_id;
+      }
+
+      // Form questions conditions
+      $questionIds = implode("', '", array_keys($tab_questions));
+      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+      foreach($rows as $conditions_id => $row) {
+         unset($row['id'],
+               $row['uuid']);
+         if (isset($tab_questions[$row['show_field']])) {
+            // update show_field if id in show_field belongs to the section being duplicated
+            $row['show_field'] = $tab_questions[$row['show_field']];
+         }
+         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+         if (!$new_conditions_id = $question_condition->add($row)) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+
+   public function moveUp() {
+      $order         = $this->fields['order'];
+      $formId        = $this->fields['plugin_formcreator_forms_id'];
+      $otherItem = new static();
+      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
+            AND `order` < '$order'
+            ORDER BY `order` DESC LIMIT 1");
+      if (!$otherItem->isNewItem()) {
+         $this->update(array(
+               'id'     => $this->getID(),
+               'order'  => $otherItem->getField('order'),
+         ));
+         $otherItem->update(array(
+               'id'     => $otherItem->getID(),
+               'order'  => $order,
+         ));
+      }
+   }
+
+   public function moveDown() {
+      $order         = $this->fields['order'];
+      $formId     = $this->fields['plugin_formcreator_forms_id'];
+      $otherItem = new static();
+      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
+            AND `order` > '$order'
+            ORDER BY `order` ASC LIMIT 1");
+      if (!$otherItem->isNewItem()) {
+         $this->update(array(
+               'id'     => $this->getID(),
+               'order'  => $otherItem->getField('order'),
+         ));
+         $otherItem->update(array(
+               'id'     => $otherItem->getID(),
+               'order'  => $order,
+         ));
+      }
    }
 
    /**
@@ -261,6 +369,13 @@ class PluginFormcreatorSection extends CommonDBChild
 
       if ($sections_id
           && isset($section['_questions'])) {
+         // sort questions by order
+         usort($section['_questions'], function ($a, $b) {
+            if ($a['order'] == $b['order']) return 0;
+               return ($a['order'] < $b['order']) ? -1 : 1;
+            }
+         );
+
          foreach($section['_questions'] as $question) {
             PluginFormcreatorQuestion::import($sections_id, $question);
          }
@@ -271,9 +386,11 @@ class PluginFormcreatorSection extends CommonDBChild
 
    /**
     * Export in an array all the data of the current instanciated section
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -290,8 +407,12 @@ class PluginFormcreatorSection extends CommonDBChild
       $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
       foreach($all_questions as $questions_id => $question) {
          if ($form_question->getFromDB($questions_id)) {
-            $section['_questions'][] = $form_question->export();
+            $section['_questions'][] = $form_question->export($remove_uuid);
          }
+      }
+
+      if ($remove_uuid) {
+         $section['uuid'] = '';
       }
 
       return $section;
