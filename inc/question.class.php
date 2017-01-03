@@ -252,12 +252,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
    {
       // Control fields values :
       // - name is required
-      if (isset($input['name'])
-          && empty($input['name'])) {
-         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-         return array();
+      if (isset($input['name'])) {
+         if (empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
+            return array();
+         }
+         $input['name'] = addslashes($input['name']);
       }
-      $input['name'] = addslashes($input['name']);
 
       // - field type is required
       if (isset($input['fieldtype'])
