@@ -461,6 +461,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   } else {
                      $answer_value = '';
                   }
+                  if ($question['fieldtype'] != 'textarea') {
+                     $answer_value = plugin_formcreator_encode($answer_value, false);
+                  }
 
                   $answer->update(array(
                      'id'     => $question['answer_id'],
@@ -543,6 +546,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             } else {
                $question_answer = '';
+            }
+            if ($question['fieldtype'] != 'textarea') {
+               $question_answer = plugin_formcreator_encode($question_answer, false);
             }
 
             $answerID = $answer->add(array(
