@@ -40,11 +40,13 @@ class CloneTest extends SuperAdminTestCase {
       plugin_formcreator_getFromDBByField($section, 'name', "test clone section");
 
       //clone it
-      $new_sections_id = $section->cloneItem(['id' => $section->getID()]);
-      $this->assertNotFalse($new_sections_id);
+      $this->assertTrue($section->duplicate());
+
+      //get cloned section
+      $originalId = $section->getID();
+      $new_section->getFromDBByQuery("WHERE `name` = 'test clone section' AND `id` <> '$originalId'");
 
       // check uuid
-      $new_section->getFromDB($new_sections_id);
       $this->assertNotEquals($section->getField('uuid'),
                              $new_section->getField('uuid'));
 
@@ -75,11 +77,13 @@ class CloneTest extends SuperAdminTestCase {
       plugin_formcreator_getFromDBByField($question, 'name', "test clone question 1");
 
       //clone it
-      $new_questions_id = $question->cloneItem(['id' => $question->getID()]);
-      $this->assertNotFalse($new_questions_id);
+      $this->assertNotFalse($question->duplicate());
+
+      //get cloned section
+      $originalId = $question->getID();
+      $new_question->getFromDBByQuery("WHERE `name` = 'test clone question 1' AND `id` <> '$originalId'");
 
       // check uuid
-      $new_question->getFromDB($new_questions_id);
       $this->assertNotEquals($question->getField('uuid'),
                              $new_question->getField('uuid'));
    }
