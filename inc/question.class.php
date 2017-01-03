@@ -430,11 +430,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       if (!empty($input)) {
          // Get next order
-         $sectionId = $input['plugin_formcreator_sections_id'];
          $table = self::getTable();
          $query  = "SELECT MAX(`order`) AS `order`
                     FROM `$table`
-                    WHERE `plugin_formcreator_sections_id` = '$sectionId'";
+                    WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
          $result = $DB->query($query);
          $line   = $DB->fetch_array($result);
          $input['order'] = $line['order'] + 1;
@@ -474,21 +473,18 @@ class PluginFormcreatorQuestion extends CommonDBChild
           && isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
          if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
-            $oldSectionId = $this->fields['plugin_formcreator_sections_id'];
-            $sectionId = $input['plugin_formcreator_sections_id'];
-            $order = $this->fields['order'];
             // Reorder other questions from the old section
             $table = self::getTable();
             $query = "UPDATE `$table` SET
                 `order` = `order` - 1
-                WHERE `order` > '$order'
-                AND plugin_formcreator_sections_id = '$oldSectionId'";
+                WHERE `order` > {$this->fields['order']}
+                AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
             $DB->query($query);
 
             // Get the order for the new section
             $query  = "SELECT MAX(`order`) AS `order`
                        FROM `$table`
-                       WHERE `plugin_formcreator_sections_id` = '$sectionId'";
+                       WHERE `plugin_formcreator_sections_id` = {$input['plugin_formcreator_sections_id']}";
             $result = $DB->query($query);
             $line   = $DB->fetch_array($result);
             $input['order'] = $line['order'] + 1;
