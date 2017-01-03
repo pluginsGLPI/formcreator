@@ -16,19 +16,15 @@ if ($plugin->isActivated("formcreator")) {
          ));
       }
 
-      $form_profile = new PluginFormcreatorForm_Profile();
-      $form_profile->deleteByCriteria(array(
-            'plugin_formcreator_forms_id'    => (int) $_POST["form_id"],
-      ));
-      $table = PluginFormcreatorForm_Profile::getTable();
+      $table = getTableForItemType('PluginFormcreatorForm_Profile');
+      $DB->query("DELETE FROM $table WHERE plugin_formcreator_forms_id = " . (int) $_POST["form_id"]);
 
       foreach($_POST["profiles_id"] as $profile_id) {
          if ($profile_id != 0) {
-            $form_profile = new PluginFormcreatorForm_Profile();
-            $form_profile->add(array(
-                  'plugin_formcreator_forms_id' => (int) $_POST["form_id"],
-                  'profiles_id'                 => (int) $profile_id,
-            ));
+            $query = "INSERT IGNORE INTO $table SET
+                        `plugin_formcreator_forms_id` = " . (int) $_POST["form_id"] .",
+                        `profiles_id` = " . (int) $profile_id;
+            $DB->query($query);
          }
       }
       Html::back();

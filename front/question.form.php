@@ -48,13 +48,27 @@ if ($plugin->isActivated("formcreator")) {
 
    // Move a Question
    } elseif(isset($_POST["move"])) {
+      global $DB;
+
       Session::checkRight("entity", UPDATE);
 
-      if ($question->getFromDB((int) $_POST['id'])) {
-         if($_POST["way"] == 'up') {
-            $question->moveUp();
-         } else {
-            $question->moveDown();
+      $table  = getTableForItemtype('PluginFormcreatorQuestion');
+      $result = $DB->query("SELECT `order`, `plugin_formcreator_sections_id` FROM $table WHERE id = " . $_POST['id']);
+      list($order, $section_id) = $DB->fetch_array($result);
+
+      if($_POST["way"] == 'up') {
+         $result = $DB->query("SELECT `id`, `order` FROM $table WHERE `order` < $order AND plugin_formcreator_sections_id = $section_id ORDER BY `order` DESC LIMIT 0, 1");
+         if($DB->numrows($result) != 0) {
+            list($id2, $order2) = $DB->fetch_array($result);
+            $DB->query("UPDATE $table SET `order` = $order2 WHERE `id` = " . (int) $_POST['id']);
+            $DB->query("UPDATE $table SET `order` = $order WHERE `id` = $id2");
+         }
+      } else {
+         $result = $DB->query("SELECT `id`, `order` FROM $table WHERE `order` > $order AND plugin_formcreator_sections_id = $section_id ORDER BY `order` ASC LIMIT 0, 1");
+         if($DB->numrows($result) != 0) {
+            list($id2, $order2) = $DB->fetch_array($result);
+            $DB->query("UPDATE $table SET `order` = $order2 WHERE `id` = " . (int) $_POST['id']);
+            $DB->query("UPDATE $table SET `order` = $order WHERE `id` = $id2");
          }
       }
 

@@ -533,44 +533,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       return $input;
    }
 
-   public function moveUp() {
-      $order         = $this->fields['order'];
-      $sectionId     = $this->fields['plugin_formcreator_sections_id'];
-      $otherItem = new static();
-      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-                                        AND `order` < '$order'
-                                        ORDER BY `order` DESC LIMIT 1");
-      if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
-      }
-   }
-
-   public function moveDown() {
-      $order         = $this->fields['order'];
-      $sectionId     = $this->fields['plugin_formcreator_sections_id'];
-      $otherItem = new static();
-      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-            AND `order` > '$order'
-            ORDER BY `order` ASC LIMIT 1");
-      if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
-      }
-   }
-
    public function updateConditions($input) {
       global $DB;
 

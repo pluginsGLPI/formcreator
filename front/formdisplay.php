@@ -12,12 +12,14 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          Session::checkLoginUser();
       }
       if($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         $form_profile = new PluginFormcreatorForm_Profile();
-         $formId = $form->getID();
-         $activeProfileId = $_SESSION['glpiactiveprofile']['id'];
-         $rows = $form_profile->find("profiles_id = '$activeProfileId'
-                                      AND plugin_formcreator_forms_id = '$formId'", "", "1");
-         if(count($rows) == 0) {
+         $table = getTableForItemType('PluginFormcreatorForm_Profile');
+         $query = "SELECT *
+                   FROM $table
+                   WHERE profiles_id = {$_SESSION['glpiactiveprofile']['id']}
+                   AND plugin_formcreator_forms_id = {$form->fields['id']}";
+         $result = $DB->query($query);
+
+         if($DB->numrows($result) == 0) {
             Html::displayRightError();
             exit();
          }
