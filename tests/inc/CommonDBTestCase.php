@@ -146,7 +146,7 @@ class CommonDBTestCase extends PHPUnit_Framework_TestCase {
       ini_set("max_execution_time", "0");
 
       ini_set('session.use_cookies', 0); //disable session cookies
-      $_SESSION['MESSAGE_AFTER_REDIRECT'] = '';
+      $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
    }
 
    protected static function login($name, $password, $noauto = false) {
@@ -156,7 +156,7 @@ class CommonDBTestCase extends PHPUnit_Framework_TestCase {
       $_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;
       $auth = new Auth();
       $result = $auth->Login($name, $password, $noauto);
-      $_SESSION['MESSAGE_AFTER_REDIRECT'] = '';
+      $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
 
       return $result;
    }
