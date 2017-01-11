@@ -648,14 +648,13 @@ class PluginFormcreatorForm extends CommonDBTM
       $formList = array();
       if ($DB->numrows($result_forms) > 0) {
          while ($form = $DB->fetch_array($result_forms)) {
-            $formDescription = plugin_formcreator_encode($form['description']);
             $formList[] = [
                   'id'           => $form['id'],
                   'name'         => $form['name'],
-                  'description'  => $formDescription,
+                  'description'  => $form['description'],
                   'type'         => 'form',
                   'usage_count'  => $form['usage_count'],
-                  'is_default'   => $form['is_default']?"true":"false"
+                  'is_default'   => $form['is_default'] ? "true" : "false"
             ];
          }
       }
