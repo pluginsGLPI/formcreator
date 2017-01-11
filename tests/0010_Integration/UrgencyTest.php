@@ -139,7 +139,7 @@ class UrgencyTest extends SuperAdminTestCase
          $targetTicketData['title'] = $targetTicketData['name'];
          $targetTicketData['urgency_rule'] = $targetData['urgency_rule'];
          $targetTicketData['_urgency_question'] = $questionId;
-         $this->assertTrue($targetTicket->update($targetTicketData), Html::clean($_SESSION['MESSAGE_AFTER_REDIRECT']));
+         $this->assertTrue($targetTicket->update($targetTicketData));
       }
 
       return $urgencyQuestions;
