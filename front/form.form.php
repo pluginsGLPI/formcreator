@@ -95,6 +95,10 @@ if ($plugin->isActivated("formcreator")) {
          'option'
       );
 
+      if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
+         Html::requireJs('tinymce');
+      }
+
       $_GET['id'] = isset($_GET['id']) ? intval($_GET['id']) : -1;
       $form->display($_GET);
 
