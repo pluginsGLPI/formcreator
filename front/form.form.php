@@ -47,6 +47,11 @@ if ($plugin->isActivated("formcreator")) {
          'PluginFormcreatorForm',
          'option'
       );
+
+      if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
+         Html::requireJs('fileuplpad');
+      }
+
       $form->showImportForm();
       Html::footer();
 
