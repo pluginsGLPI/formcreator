@@ -134,7 +134,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
          }
       } else if (isset($actor['_group'])) {
          $group = new Group;
-         if ($groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $actor['_user'])) {
+         if ($groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $actor['_group'])) {
             $actor['actor_value'] = $groups_id;
          } else {
             return false;
