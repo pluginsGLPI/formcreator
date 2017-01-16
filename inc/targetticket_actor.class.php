@@ -141,7 +141,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
          }
       } else if (isset($actor['_supplier'])) {
          $supplier = new Supplier;
-         if ($suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $actor['_user'])) {
+         if ($suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $actor['_supplier'])) {
             $actor['actor_value'] = $suppliers_id;
          } else {
             return false;
