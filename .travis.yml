@@ -18,4 +18,4 @@ script:
   - cd plugins/formcreator
   - php tools/cliinstall.php --tests
   - phpunit --verbose
-  - vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ruleset.xml *.php install/ inc/ front/ ajax/ tests/
+  - vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php ajax/ front/ inc/ tests/ tools/
