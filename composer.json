@@ -1,0 +1,6 @@
+{
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.7",
+        "glpi-project/coding-standard": "0.5"
+    }
+}
