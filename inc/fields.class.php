@@ -139,7 +139,9 @@ class PluginFormcreatorFields
       $conditions = array();
 
       // If the field is always shown
-      if ($fields['show_rule'] == 'always') return true;
+      if ($fields['show_rule'] == 'always') {
+         return true;
+      }
 
       // Get conditions to show or hide field
       $questionId = $fields['id'];
@@ -165,8 +167,12 @@ class PluginFormcreatorFields
       $lowPrecedenceReturnPart      = false;
       $lowPrecedenceLogic           = 'OR';
       foreach ($conditions as $condition) {
-         if (!isset($values[$condition['field']]))             return false;
-         if (!self::isVisible($condition['field'], $values))   return false;
+         if (!isset($values[$condition['field']])) {
+            return false;
+         }
+         if (!self::isVisible($condition['field'], $values)) {
+            return false;
+         }
 
          switch ($condition['operator']) {
             case '!=' :
