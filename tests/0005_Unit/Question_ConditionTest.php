@@ -105,7 +105,111 @@ class Question_ConditionTest extends SuperAdminTestCase {
                   ),
                   false,
             ),
-      );
+            'multiple condition OR' => array(
+                  'hidden',
+                  array(
+                        'show_logic' => array(
+                              'OR',
+                              'OR',
+                        ),
+                        'show_field'   => array(
+                              0,
+                              1,
+                        ),
+                        'show_condition'  => array(
+                              '==',
+                              '==',
+                        ),
+                        'show_value' => array(
+                              'val1',
+                              'val2',
+                        ),
+                  ),
+                  array(
+                        0 => 'val1',
+                        1 => 'val2',
+                  ),
+                  true,
+            ),
+            'failed multiple condition OR' => array(
+                  'hidden',
+                  array(
+                        'show_logic' => array(
+                              'OR',
+                              'OR',
+                        ),
+                        'show_field'   => array(
+                              0,
+                              1,
+                        ),
+                        'show_condition'  => array(
+                              '==',
+                              '==',
+                        ),
+                        'show_value' => array(
+                              'val1',
+                              'val2',
+                        ),
+                  ),
+                  array(
+                        0 => 'val1',
+                        1 => 'not val2',
+                  ),
+                  true,
+            ),
+            'multiple condition AND' => array(
+                  'hidden',
+                  array(
+                        'show_logic' => array(
+                              'OR',
+                              'AND',
+                        ),
+                        'show_field'   => array(
+                              0,
+                              1,
+                        ),
+                        'show_condition'  => array(
+                              '==',
+                              '==',
+                        ),
+                        'show_value' => array(
+                              'val1',
+                              'val2',
+                        ),
+                  ),
+                  array(
+                        0 => 'val1',
+                        1 => 'val2',
+                  ),
+                  true,
+            ),
+            'failed multiple condition AND' => array(
+                  'hidden',
+                  array(
+                        'show_logic' => array(
+                              'OR',
+                              'AND',
+                        ),
+                        'show_field'   => array(
+                              0,
+                              1,
+                        ),
+                        'show_condition'  => array(
+                              '==',
+                              '==',
+                        ),
+                        'show_value' => array(
+                              'val1',
+                              'val2',
+                        ),
+                  ),
+                  array(
+                        0 => 'val1',
+                        1 => 'not val2',
+                  ),
+                  false,
+            ),
+         );
    }
 
    /**
