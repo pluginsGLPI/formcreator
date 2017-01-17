@@ -146,7 +146,6 @@ class PluginFormcreatorFields
       // Get conditions to show or hide field
       $questionId = $fields['id'];
       $question_condition = new PluginFormcreatorQuestion_Condition();
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$questionId'");
       $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
       if (count($questionConditions) < 1) {
          // No condition defined, then always show the question
@@ -227,10 +226,16 @@ class PluginFormcreatorFields
             $return = $value;
          } else {
             switch ($currentLogic) {
-               case 'AND' :   $return &= $value; break;
-               case 'OR'  :   $return |= $value; break;
-               case 'XOR' :   $return ^= $value; break;
-               default :      $return = $value;
+               case 'AND' :
+                  $return &= $value;
+                  break;
+
+               case 'OR'  :
+                  $return |= $value;
+                  break;
+
+               default :
+                  $return = $value;
             }
          }
 
