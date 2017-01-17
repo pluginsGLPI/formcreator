@@ -18,7 +18,6 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       return array(
             'AND'    => 'AND',
             'OR'     => 'OR',
-            'XOR'    => 'XOR',
       );
    }
 
@@ -76,6 +75,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    {
       global $DB;
 
+      $enum_logic = "'".implode("', '", array_keys(self::getEnumShowLogic()))."'";
       $table = self::getTable();
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
@@ -84,7 +84,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
                   `show_field`                        int(11)                NULL     DEFAULT NULL,
                   `show_condition`                    enum('==','!=','<','>','<=','>=') NULL DEFAULT NULL,
                   `show_value`                        varchar(255)           NULL     DEFAULT NULL ,
-                  `show_logic`                        enum('AND','OR','XOR') NULL     DEFAULT NULL,
+                  `show_logic`                        enum($enum_logic)      NULL     DEFAULT NULL,
                   `order`                             int(11)                NOT NULL DEFAULT '1',
                   `uuid`                              varchar(255)           NULL     DEFAULT NULL
                   PRIMARY KEY (`id`)
@@ -175,6 +175,16 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
          $condition_obj->update(array('id'   => $conditions_id,
                'uuid' => plugin_formcreator_getUuid()));
       }
+
+      $current_enum_show_logic = PluginFormcreatorCommon::getEnumValues($table, 'show_logic');
+      if (count($current_enum_show_logic) != count(self::getEnumShowLogic())) {
+         $query = "ALTER TABLE `$table`
+         CHANGE COLUMN `show_logic` `show_logic`
+         ENUM($enum_logic)
+         NULL DEFAULT NULL";
+         $DB->query($query) or die($DB->error());
+      }
+
 
       return true;
    }
