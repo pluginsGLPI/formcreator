@@ -231,6 +231,16 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<td colspan="4">';
       $html.= '<div class="div_show_condition">';
 
+      $html.= '<div class="div_show_condition_logic">';
+      $html.= Dropdown::showFromArray('show_logic[]',
+            PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
+            array(
+                  'display'               => false,
+                  'value'                 => $show_logic,
+                  'display_emptychoice'   => false,
+                  'rand'                  => $rand,
+            ));
+      $html.= '</div>';
       $html.= '<div class="div_show_condition_field">';
       $html.= Dropdown::showFromArray('show_field[]', $questions_tab, array(
             'display'      => false,
@@ -257,16 +267,6 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<div class="div_show_condition_value">';
       $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'
               .'value="'. $show_value . '" size="8">';
-      $html.= '</div>';
-      $html.= '<div class="div_show_condition_logic">';
-      $html.= Dropdown::showFromArray('show_logic[]',
-            PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
-            array(
-                  'display'               => false,
-                  'value'                 => $show_logic,
-                  'display_emptychoice'   => false,
-                  'rand'                  => $rand,
-            ));
       $html.= '</div>';
       $html.= '<div class="div_show_condition_add">';
       $html.= '<img src="../../../pics/plus.png" onclick="addEmptyCondition(this)"/>&nbsp;</div>';
