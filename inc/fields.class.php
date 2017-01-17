@@ -135,25 +135,26 @@ class PluginFormcreatorFields
 
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
-      $fields     = $question->fields;
       $conditions = array();
 
       // If the field is always shown
-      if ($fields['show_rule'] == 'always') {
+      if ($question->getField('show_rule') == 'always') {
+         unset($evalQuestion[$id]);
          return true;
       }
 
       // Get conditions to show or hide field
-      $questionId = $fields['id'];
+      $questionId = $question->getID();
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
       if (count($questionConditions) < 1) {
          // No condition defined, then always show the question
+         unset($evalQuestion[$id]);
          return true;
       }
+
       foreach ($questionConditions as $question_condition) {
          $conditions[] = array(
-               'multiple' => in_array($fields['fieldtype'], array('checkboxes', 'multiselect')),
                'logic'    => $question_condition->getField('show_logic'),
                'field'    => $question_condition->getField('show_field'),
                'operator' => $question_condition->getField('show_condition'),
@@ -161,15 +162,26 @@ class PluginFormcreatorFields
             );
       }
 
+      // Force the first logic operator to OR
+      $conditions[0]['logic']       = 'OR';
+
       $return                       = false;
-      $currentLogic                 = 'OR';
       $lowPrecedenceReturnPart      = false;
       $lowPrecedenceLogic           = 'OR';
-      foreach ($conditions as $condition) {
+      foreach ($conditions as $order => $condition) {
+         $currentLogic = $condition['logic'];
+         if (isset($conditions[$order + 1])) {
+            $nextLogic = $conditions[$order + 1]['logic'];
+         } else {
+            // To ensure the low precedence return part is used at the end of the whole evaluation
+            $nextLogic = 'OR';
+         }
          if (!isset($values[$condition['field']])) {
+            unset($evalQuestion[$id]);
             return false;
          }
          if (!self::isVisible($condition['field'], $values)) {
+            unset($evalQuestion[$id]);
             return false;
          }
 
@@ -188,6 +200,7 @@ class PluginFormcreatorFields
                   }
                }
                break;
+
             case '==' :
                if (empty($condition['value'])) {
                   $value = false;
@@ -202,6 +215,7 @@ class PluginFormcreatorFields
                   }
                }
                break;
+
             default:
                $decodedConditionField = json_decode($values[$condition['field']]);
                if (is_array($values[$condition['field']])) {
@@ -218,7 +232,7 @@ class PluginFormcreatorFields
 
          // Combine all condition with respect of operator precedence
          // AND has precedence over OR and XOR
-         if ($currentLogic != 'AND' && $condition['logic'] == 'AND') {
+         if ($currentLogic != 'AND' && $nextLogic == 'AND') {
             // next condition has a higher precedence operator
             // Save the current computed return and operator to use later
             $lowPrecedenceReturnPart = $return;
@@ -239,16 +253,13 @@ class PluginFormcreatorFields
             }
          }
 
-         if ($currentLogic == 'AND' && $condition['logic'] != 'AND') {
+         if ($currentLogic == 'AND' && $nextLogic != 'AND') {
             if ($lowPrecedenceLogic == 'OR') {
                $return |= $lowPrecedenceReturnPart;
             } else {
                $return ^= $lowPrecedenceReturnPart;
             }
          }
-
-         // Use current show_logic operator for next condition, if any
-         $currentLogic = $condition['logic'];
       }
 
       // Ensure the low precedence part is used if last condition has logic == AND
