@@ -1193,6 +1193,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       function removeNextCondition(target) {
          $(target).parents('tr').remove();
+         $(".plugin_formcreator_logicRow .div_show_condition_logic").first().hide();
       }
 
       function change_dropdown() {
