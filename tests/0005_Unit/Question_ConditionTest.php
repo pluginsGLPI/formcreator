@@ -209,7 +209,7 @@ class Question_ConditionTest extends SuperAdminTestCase {
                   ),
                   false,
             ),
-            'failed multiple condition AND' => array(
+            'operator priority' => array(
                   'hidden',
                   array(
                         'show_logic' => array(
