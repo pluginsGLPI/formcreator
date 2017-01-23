@@ -209,7 +209,43 @@ class Question_ConditionTest extends SuperAdminTestCase {
                   ),
                   false,
             ),
-         );
+            'failed multiple condition AND' => array(
+                  'hidden',
+                  array(
+                        'show_logic' => array(
+                              'OR',
+                              'AND',
+                              'OR',
+                              'AND',
+                        ),
+                        'show_field'   => array(
+                              0,
+                              1,
+                              2,
+                              3,
+                        ),
+                        'show_condition'  => array(
+                              '==',
+                              '==',
+                              '==',
+                              '==',
+                        ),
+                        'show_value' => array(
+                              'val1',
+                              'val2',
+                              'val3',
+                              'val4',
+                        ),
+                  ),
+                  array(
+                        0 => 'val1',
+                        1 => 'val2',
+                        2 => 'val8',
+                        3 => 'val9',
+                  ),
+                  true,
+            ),
+      );
    }
 
    /**
