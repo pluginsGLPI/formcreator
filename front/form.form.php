@@ -49,7 +49,7 @@ if ($plugin->isActivated("formcreator")) {
       );
 
       if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
-         Html::requireJs('fileuplpad');
+         Html::requireJs('fileupload');
       }
 
       $form->showImportForm();
