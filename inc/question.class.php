@@ -1019,6 +1019,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</tr>';
       $questionCondition = new PluginFormcreatorQuestion_Condition();
       $questionConditions = $questionCondition->getConditionsFromQuestion($ID);
+      reset($questionConditions);
+      $questionCondition = array_shift($questionConditions);
+      if ($questionCondition !== null) {
+            echo $questionCondition->getConditionHtml(0, true);
+      }
       foreach ($questionConditions as $questionCondition) {
          echo $questionCondition->getConditionHtml();
       }
@@ -1182,6 +1187,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             }
          }).done(function (data) {
             $(target).parents('tr').after(data);
+            $(".plugin_formcreator_logicRow .div_show_condition_logic").first().hide();
          });
       }
 

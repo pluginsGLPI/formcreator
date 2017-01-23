@@ -201,7 +201,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       return $questionConditions;
    }
 
-   public function getConditionHtml($questionId = 0) {
+   public function getConditionHtml($questionId = 0, $isFirst = false) {
       global $CFG_GLPI;
 
       if ($this->isNewItem()) {
@@ -241,7 +241,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<td colspan="4">';
       $html.= '<div class="div_show_condition">';
 
-      $html.= '<div class="div_show_condition_logic">';
+      $showLogic = $isFirst ? 'style="display: none"' : '';
+      $html.= '<div class="div_show_condition_logic"' . $showLogic . '>';
       $html.= Dropdown::showFromArray('show_logic[]',
             PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
             array(
