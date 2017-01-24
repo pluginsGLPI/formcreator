@@ -61,4 +61,6 @@ Fonctionnalités
 
 Pour plus d'informations, visitez [la page WIKI](https://github.com/TECLIB/formcreator/wiki)
 
-![Configuration](/screenshot.png "Configuration")
+![3.-Configuration](/screenshot.png "Configuration")
+
+![3.9.-Formcreators-helpdesk](/screenshot_2.png "Service catalog")
