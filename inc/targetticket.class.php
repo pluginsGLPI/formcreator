@@ -1689,7 +1689,7 @@ EOS;
                $notify  = $actor['use_notification'];
                break;
             case 'validator' :
-               $userIds = array($formanswer->fields['validator_id']);
+               $userIds = array($_SESSION['glpiID']);
                $notify  = $actor['use_notification'];
                break;
             case 'person' :
@@ -1736,16 +1736,8 @@ EOS;
             case 'person' :
             case 'question_person' :
             case 'question_actors':
-               $formId = $form->getID();
                foreach ($userIds as $userIdOrEmail) {
-                  $formValidator = new PluginFormcreatorForm_Validator();
-                  if ($formValidator->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId' AND `items_id` = '$userIdOrEmail'")) {
-                     if ($formValidator->getField('itemtype') == 'User') {
-                        $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
-                     } else if ($formValidator->getField('itemtype') == 'Group') {
-                        $this->addGroupActor($actor['actor_role'], $userIdOrEmail);
-                     }
-                  }
+                  $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
                }
                break;
             case 'group' :
