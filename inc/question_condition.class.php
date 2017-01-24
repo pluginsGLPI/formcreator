@@ -201,7 +201,17 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       return $questionConditions;
    }
 
-   public function getConditionHtml($questionId = 0, $isFirst = false) {
+   /**
+    *
+    * return HTML to show a condition line for a question
+    *
+    * @param integer $formId ID of the form of the condition
+    * @param integer $questionId ID of the question (or 0 for a new question)
+    * @param string $isFirst true if this is the first condition à all conditions aplied to a question
+    *
+    * @return string
+    */
+   public function getConditionHtml($form_id, $questionId = 0, $isFirst = false) {
       global $CFG_GLPI;
 
       if ($this->isNewItem()) {
@@ -218,10 +228,6 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       }
       $rootDoc = $CFG_GLPI['root_doc'];
       $rand = mt_rand();
-
-      $form = new PluginFormcreatorForm();
-      $form->getByQuestionId($questionId);
-      $form_id = $form->getId();
 
       $question = new PluginFormcreatorQuestion();
       $questionsInForm = $question->getQuestionsFromForm($form_id);

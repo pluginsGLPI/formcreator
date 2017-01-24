@@ -472,6 +472,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          $input = $this->serializeDefaultValue($input);
       }
+
+      if (!empty($input)) {
+         if (!isset($input['show_logic']) || !isset($input['show_field'])
+               || !isset($input['show_condition']) || !isset($input['show_value'])) {
+                  $input['show_rule'] = 'always';
+               }
+      }
+
       return $input;
    }
 
@@ -1022,10 +1030,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       reset($questionConditions);
       $questionCondition = array_shift($questionConditions);
       if ($questionCondition !== null) {
-            echo $questionCondition->getConditionHtml(0, true);
+            echo $questionCondition->getConditionHtml($form_id, 0, true);
       }
       foreach ($questionConditions as $questionCondition) {
-         echo $questionCondition->getConditionHtml();
+         echo $questionCondition->getConditionHtml($form_id);
       }
       echo '<tr class="line1">';
       echo '<td colspan="4" class="center">';
@@ -1183,6 +1191,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             url: '$rootDoc/plugins/formcreator/ajax/question_condition.php',
             data: {
                plugin_formcreator_questions_id: $ID,
+               plugin_formcreator_forms_id: $form_id,
                _empty: ''
             }
          }).done(function (data) {
