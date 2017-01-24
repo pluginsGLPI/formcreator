@@ -1689,7 +1689,7 @@ EOS;
                $notify  = $actor['use_notification'];
                break;
             case 'validator' :
-               $userIds = array($formanswer->fields['validator_id']);
+               $userIds = array($_SESSION['glpiID']);
                $notify  = $actor['use_notification'];
                break;
             case 'person' :
