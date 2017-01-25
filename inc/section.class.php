@@ -173,8 +173,8 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Control fields values :
       // - name is required
-      if(isset($input['name'])
-         && empty($input['name'])) {
+      if(!isset($input['name']) ||
+         (isset($input['name']) && empty($input['name'])) ) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
          return array();
       }
