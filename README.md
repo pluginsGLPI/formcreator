@@ -64,8 +64,8 @@ Fonctionnalités
 
 Pour plus d'informations, visitez [la page WIKI](https://github.com/TECLIB/formcreator/wiki)
 
-Mise à jour depuis 1.X vers 2.4.0
----------------------------------
+Mise à jour depuis 1.x vers 2.4.0 ou supérieur
+----------------------------------------------
 Après la mise à jour de FormCreator vers la version 0.90-1.4 ou supérieur, les utilisateurs peuvent rencontrer des problèmes d'affichage. Cela est dû aux changemetns majeurs de CSS dans le plugin. Vous pourriez avoir besoin de rafraichir le cache de votre navigateur avec Ctrl+R ou Ctrl+F5. Si vous prévoyez de communiquer à propos de la nouvelle présentation du plugin ou du catalogue de services, introduisez cette manipulation simple pour vous assurer que tous vos utilisateurs ont un cache à jour.
 
 ![3.-Configuration](/screenshot.png "Configuration")
