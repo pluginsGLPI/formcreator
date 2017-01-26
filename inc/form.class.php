@@ -642,7 +642,6 @@ class PluginFormcreatorForm extends CommonDBTM
                $table_form.description,
                $table_form.usage_count,
                $table_form.is_default
-      HAVING COUNT(`$table_target`.`plugin_formcreator_forms_id`) > 0
       ORDER BY $order";
       $result_forms = $DB->query($query_forms);
 
