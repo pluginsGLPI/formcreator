@@ -34,7 +34,7 @@ Join us on [Transifex](https://www.transifex.com/teclib/glpi-project-plugin-form
 
 Upgrade from 1.x to 2.4.0 or later
 ----------------------------------
-After upgrade of FormCreator to version 0.90-1.4 or later, users may encounteer display issues. This is due to major changes on CSS of the plugin. You may need to refresh the cache of your browser with Ctrl+R or Ctrl+F5. If you plan to communicate about the new presentation of the plugin or the service catalog, introduce this simple manipulation to ensure all your users have a clean cache.
+After upgrade of FormCreator to version 2.4.0 or later, users may encounteer display issues. This is due to major changes on CSS of the plugin. You may need to refresh the cache of your browser with Ctrl+R or Ctrl+F5. If you plan to communicate about the new presentation of the plugin or the service catalog, introduce this simple manipulation to ensure all your users have a clean cache.
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ Pour plus d'informations, visitez [la page WIKI](https://github.com/TECLIB/formc
 
 Mise à jour depuis 1.x vers 2.4.0 ou supérieur
 ----------------------------------------------
-Après la mise à jour de FormCreator vers la version 0.90-1.4 ou supérieur, les utilisateurs peuvent rencontrer des problèmes d'affichage. Cela est dû aux changemetns majeurs de CSS dans le plugin. Vous pourriez avoir besoin de rafraichir le cache de votre navigateur avec Ctrl+R ou Ctrl+F5. Si vous prévoyez de communiquer à propos de la nouvelle présentation du plugin ou du catalogue de services, introduisez cette manipulation simple pour vous assurer que tous vos utilisateurs ont un cache à jour.
+Après la mise à jour de FormCreator vers la version 2.4.0 ou supérieur, les utilisateurs peuvent rencontrer des problèmes d'affichage. Cela est dû aux changemetns majeurs de CSS dans le plugin. Vous pourriez avoir besoin de rafraichir le cache de votre navigateur avec Ctrl+R ou Ctrl+F5. Si vous prévoyez de communiquer à propos de la nouvelle présentation du plugin ou du catalogue de services, introduisez cette manipulation simple pour vous assurer que tous vos utilisateurs ont un cache à jour.
 
 ![3.-Configuration](/screenshot.png "Configuration")
 
