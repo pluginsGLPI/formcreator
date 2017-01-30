@@ -1217,6 +1217,7 @@ class PluginFormcreatorForm extends CommonDBTM
          $migration->addField($table, 'helpdesk_home', 'bool', array('value' => '0'));
          $migration->addField($table, 'is_deleted', 'bool', array('value' => '0'));
       }
+      $migration->migrationOneTable($table);
 
       /**
        * Migration of special chars from previous versions
