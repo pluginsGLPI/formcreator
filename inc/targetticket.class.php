@@ -1772,22 +1772,22 @@ EOS;
       switch ($role) {
          case 'requester':
             $this->requesters['_users_id_requester'][]                              = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify === true);
+            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify == true);
             $this->requesters['_users_id_requester_notif']['alternative_email'][]   = $alternativeEmail;
             break;
          case 'observer' :
             $this->observers['_users_id_observer'][]                                = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify === true);
+            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify == true);
             $this->observers['_users_id_observer_notif']['alternative_email'][]     = $alternativeEmail;
             break;
          case 'assigned' :
             $this->assigned['_users_id_assign'][]                                   = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify === true);
+            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify == true);
             $this->assigned['_users_id_assign_notif']['alternative_email'][]        = $alternativeEmail;
             break;
          case 'supplier' :
             $this->assignedSuppliers['_suppliers_id_assign'][]                      = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify === true);
+            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify == true);
             $this->assignedSuppliers['_suppliers_id_assign']['alternative_email'][] = $alternativeEmail;
             break;
       }
