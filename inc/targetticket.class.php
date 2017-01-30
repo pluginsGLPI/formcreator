@@ -1505,20 +1505,25 @@ EOS;
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration
-      // /!\ Followup is directly saved to the database to avoid double notification on ticket
-      //     creation and add followup
       if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
          $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
          if (!empty($formanswer->fields['comment'])) {
             $message.= "\n".addslashes($formanswer->fields['comment']);
          }
 
-        $query = "INSERT INTO `glpi_ticketfollowups` SET
-                     `tickets_id` = $ticketID,
-                     `date`       = NOW(),
-                     `users_id`   = {$_SESSION['glpiID']},
-                     `content`    = \"$message\"";
-         $DB->query($query);
+         // Disable email notification when adding a followup
+         $use_mailing = $CFG_GLPI['use_mailing'];
+         $CFG_GLPI['use_mailing'] = 0;
+
+         $ticketFollowup = new TicketFollowup();
+         $ticketFollowup->add(array(
+              'tickets_id'       => $ticketID,
+              'date'             => $_SESSION['glpi_currenttime'],
+              'users_id'         => $_SESSION['glpiID'],
+              'content'          => $message
+         ));
+
+         $CFG_GLPI['use_mailing'];
       }
 
       return true;
@@ -1766,22 +1771,22 @@ EOS;
       switch ($role) {
          case 'requester':
             $this->requesters['_users_id_requester'][]                              = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify === true);
+            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify == true);
             $this->requesters['_users_id_requester_notif']['alternative_email'][]   = $alternativeEmail;
             break;
          case 'observer' :
             $this->observers['_users_id_observer'][]                                = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify === true);
+            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify == true);
             $this->observers['_users_id_observer_notif']['alternative_email'][]     = $alternativeEmail;
             break;
          case 'assigned' :
             $this->assigned['_users_id_assign'][]                                   = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify === true);
+            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify == true);
             $this->assigned['_users_id_assign_notif']['alternative_email'][]        = $alternativeEmail;
             break;
          case 'supplier' :
             $this->assignedSuppliers['_suppliers_id_assign'][]                      = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify === true);
+            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify == true);
             $this->assignedSuppliers['_suppliers_id_assign']['alternative_email'][] = $alternativeEmail;
             break;
       }
