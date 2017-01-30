@@ -293,6 +293,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
             }
 
+            // Convert targets to ticket templates only if at least one target extsis 
             if ($i > 0) {
                // Prepare Mysql CASE For each ticket template
                $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
