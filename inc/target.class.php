@@ -293,37 +293,38 @@ class PluginFormcreatorTarget extends CommonDBTM
                $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
             }
 
-            // Prepare Mysql CASE For each ticket template
-            $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
-            foreach ($_SESSION["formcreator_tmp"]["ticket_template"] as $id => $value) {
-               $mysql_case_template .= " WHEN $id THEN $value ";
+            if ($i > 0) {
+               // Prepare Mysql CASE For each ticket template
+               $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
+               foreach ($_SESSION["formcreator_tmp"]["ticket_template"] as $id => $value) {
+                  $mysql_case_template .= " WHEN $id THEN $value ";
+               }
+               $mysql_case_template .= "END AS `tickettemplates_id`";
+   
+               // Create Target ticket
+               $version   = plugin_version_formcreator();
+               $migration = new Migration($version['version']);
+               require_once ('targetticket.class.php');
+               PluginFormcreatorTargetTicket::install($migration);
+               $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
+               $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
+               $result = $DB->query($query);
+               while ($line = $DB->fetch_array($result)) {
+                  // Insert target ticket
+                  $query_insert = "INSERT INTO `$table_targetticket` SET
+                                    `name` = '".htmlspecialchars($line['name'])."',
+                                    `tickettemplates_id` = ".$line['tickettemplates_id'].",
+                                    `comment` = '".htmlspecialchars($line['content'])."'";
+                  $DB->query($query_insert);
+                  $targetticket_id = $DB->insert_id();
+   
+                  // Update target with target ticket id
+                  $query_update = "UPDATE `$table`
+                                   SET `items_id` = ".$targetticket_id."
+                                   WHERE `id` = ".$line['id'];
+                  $DB->query($query_update);
+               }
             }
-            $mysql_case_template .= "END AS `tickettemplates_id`";
-
-            // Create Target ticket
-            $version   = plugin_version_formcreator();
-            $migration = new Migration($version['version']);
-            require_once ('targetticket.class.php');
-            PluginFormcreatorTargetTicket::install($migration);
-            $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
-            $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
-            $result = $DB->query($query);
-            while ($line = $DB->fetch_array($result)) {
-               // Insert target ticket
-               $query_insert = "INSERT INTO `$table_targetticket` SET
-                                 `name` = '".htmlspecialchars($line['name'])."',
-                                 `tickettemplates_id` = ".$line['tickettemplates_id'].",
-                                 `comment` = '".htmlspecialchars($line['content'])."'";
-               $DB->query($query_insert);
-               $targetticket_id = $DB->insert_id();
-
-               // Update target with target ticket id
-               $query_update = "UPDATE `$table`
-                                SET `items_id` = ".$targetticket_id."
-                                WHERE `id` = ".$line['id'];
-               $DB->query($query_update);
-            }
-
             // Remove useless column content
             $DB->query("ALTER TABLE `$table` DROP `content`;");
 
