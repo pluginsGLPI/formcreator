@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the GLPI - Resources plugin package.
 # 
 # Translators:
+# Andrejs <andrew.k2@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-14 09:54+0200\n"
-"PO-Revision-Date: 2016-10-14 07:54+0000\n"
-"Last-Translator: alexandre delaunay <delaunay.alexandre@gmail.com>\n"
+"POT-Creation-Date: 2016-11-29 10:01+0100\n"
+"PO-Revision-Date: 2016-11-29 09:00+0000\n"
+"Last-Translator: Johan Cwiklinski <trasher@x-tnd.be>\n"
 "Language-Team: Latvian (Latvia) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/lv_LV/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,191 +18,191 @@ msgstr ""
 "Language: lv_LV\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
-#: hook.php:56 inc/form.class.php:315 inc/header.class.php:7
+#: hook.php:57 inc/form.class.php:317 inc/header.class.php:7
 msgid "Header"
 msgid_plural "Headers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Galvenes"
+msgstr[1] "Galvene"
+msgstr[2] "Galvenes"
 
-#: hook.php:57 inc/category.class.php:9
+#: hook.php:58 inc/category.class.php:9
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Formas kategoriju"
+msgstr[1] "Formas kategorija"
+msgstr[2] "Formas kategorijas"
 
-#: setup.php:20 setup.php:146 ajax/homepage_forms.php:48
+#: setup.php:20 setup.php:129 ajax/homepage_forms.php:48
 #: ajax/homepage_link.php:6 inc/entityconfig.class.php:27
 #: inc/form.class.php:50 inc/formlist.class.php:14 scripts/scripts.js.php:18
 msgid "Form"
 msgid_plural "Forms"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Formas"
+msgstr[1] "Forma"
+msgstr[2] "Formas"
 
-#: setup.php:136 inc/form.class.php:58 inc/form.class.php:59
-#: inc/formlist.class.php:22 inc/formlist.class.php:23
+#: setup.php:119 inc/form.class.php:58 inc/formlist.class.php:22
+#: inc/formlist.class.php:23
 msgid "Forms waiting for validation"
-msgstr ""
+msgstr "Formas gaida apstiprinājumu"
 
 #: ajax/homepage_forms.php:52
 msgid "Forms without category"
-msgstr ""
+msgstr "Formas bez kategorijas"
 
 #: ajax/question.php:27 inc/question.class.php:212
 msgid "Add a question"
-msgstr ""
+msgstr "Pievienot jautājumu"
 
 #: ajax/question.php:28
 msgid "Edit a question"
-msgstr ""
+msgstr "Rediģēt jautājumu"
 
 #: ajax/question.php:64 inc/section.class.php:35
-#: inc/targetticket.class.php:879
+#: inc/targetticket.class.php:941
 msgid "Section"
 msgid_plural "Sections"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Sadaļas"
+msgstr[1] "Sadaļa"
+msgstr[2] "Sadaļas"
 
 #: ajax/question.php:91
 msgid "GLPI object"
 msgid_plural "GLPI objects"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "GLPI objekti"
+msgstr[1] "GLPI objekts"
+msgstr[2] "GLPI objekti"
 
 #: ajax/question.php:166 inc/question.class.php:168 inc/question.class.php:172
 msgid "Required"
-msgstr ""
+msgstr "Nepieciešams"
 
 #: ajax/question.php:178
 msgid "Show empty"
-msgstr ""
+msgstr "Parādīt tukšo"
 
 #: ajax/question.php:196
 msgid "One per line for lists"
-msgstr ""
+msgstr "Viens rindā sarakstiem"
 
 #: ajax/question.php:223
 msgid "Values"
-msgstr ""
+msgstr "Vērtības"
 
 #: ajax/question.php:224
 msgid "One per line"
-msgstr ""
+msgstr "Viens rindā"
 
 #: ajax/question.php:236
 msgid "Filter"
-msgstr ""
+msgstr "Filtrs"
 
 #: ajax/question.php:245
 msgid "Attribute"
-msgstr ""
+msgstr "Atribūts"
 
 #: ajax/question.php:269
 msgid "Range"
-msgstr ""
+msgstr "Diapazons"
 
 #: ajax/question.php:273
 msgid "Min"
-msgstr ""
+msgstr "Min"
 
 #: ajax/question.php:279
 msgid "Max"
-msgstr ""
+msgstr "Maks"
 
 #: ajax/question.php:303
 msgid "Additional validation"
-msgstr ""
+msgstr "Papildus apstiprināšana"
 
 #: ajax/question.php:306
 msgid "Regular expression"
-msgstr ""
+msgstr "Regulārā izteiksme"
 
 #: ajax/question.php:313
 msgid ""
 "Specify the additional validation conditions in the description of the "
 "question to help users."
-msgstr ""
+msgstr "Norādiet papildus kritērijus jautājuma aprakstā lai palīdzētu lietotājiem."
 
 #: ajax/question.php:320
 msgid "Show field"
-msgstr ""
+msgstr "Parādīt lauku"
 
 #: ajax/question.php:329
 msgid "Always displayed"
-msgstr ""
+msgstr "Vienmēr rādīt"
 
 #: ajax/question.php:330
 msgid "Hidden unless"
-msgstr ""
+msgstr "Paslēpts kamēr"
 
 #: ajax/question.php:331
 msgid "Displayed unless"
-msgstr ""
+msgstr "Rādīt kamēr"
 
-#: ajax/section.php:21 inc/question.class.php:222
+#: ajax/section.php:23 inc/question.class.php:222
 msgid "Add a section"
-msgstr ""
+msgstr "Pievienot sadaļu"
 
-#: ajax/section.php:23
+#: ajax/section.php:25
 msgid "Edit a section"
-msgstr ""
+msgstr "Rediģēt sadaļu"
 
 #: ajax/target.php:8 inc/target.class.php:85
 msgid "Add a destination"
-msgstr ""
+msgstr "Pievienot mērķi"
 
 #: front/category.form.php:13
 msgid ""
 "A category already exists with the same name! Category creation failed."
-msgstr ""
+msgstr "Kategorija ar ievadīto virsrakstu jau eksistē! Kategorijas izveide noraidīta."
 
-#: front/formanswer.form.php:43 front/formanswer.php:12
+#: front/form_answer.form.php:37 front/form_answer.php:12
 #: front/formdisplay.php:44 front/issue.form.php:20 front/issue.php:12
 #: front/knowbaseitem.form.php:10 front/reservation.form.php:10
 #: front/reservationitem.php:7 front/reservation.php:12
 #: front/wizardfeeds.php:11 front/wizard.php:13
 msgid "Service catalog"
-msgstr ""
+msgstr "Servisu katalogs"
 
-#: front/formanswer.form.php:47 front/formanswer.form.php:52
-#: front/formanswer.php:16 front/formanswer.php:21 front/formdisplay.php:62
+#: front/form_answer.form.php:41 front/form_answer.form.php:46
+#: front/form_answer.php:16 front/form_answer.php:21 front/formdisplay.php:62
 #: front/formdisplay.php:74 front/form.php:15 front/issue.php:16
 #: front/issue.php:21 front/targetticket.form.php:47
 msgid "Form Creator"
-msgstr ""
+msgstr "Formas Veidotājs"
 
 #: front/formdisplay.php:47 front/formlist.php:16 front/formlist.php:22
 msgid "Form list"
-msgstr ""
+msgstr "Formas saraksts"
 
 #: front/header.form.php:13 inc/header.class.php:34 inc/header.class.php:110
 msgid ""
 "An header already exists for this entity! You can have only one header per "
 "entity."
-msgstr ""
+msgstr "Galvene šai nodaļai jau eksistē! Jūs varat pievienot tikai vienu galveni katrai nodaļai."
 
 #: front/question.form.php:15
 msgid "The question has been successfully saved!"
-msgstr ""
+msgstr "Jautājums veiksmīgi saglabāts!"
 
 #: front/question.form.php:25
 msgid "The question has been successfully updated!"
-msgstr ""
+msgstr "Jautājums sekmīgi atjaunots!"
 
-#: inc/answer.class.php:35 inc/targetticket.class.php:878
+#: inc/answer.class.php:35 inc/targetticket.class.php:940
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Atbildes"
+msgstr[1] "Atbilde"
+msgstr[2] "Atbildes"
 
 #: inc/category.class.php:39
 msgid "Knowbase category"
-msgstr ""
+msgstr "Zināšanas bāzes kategorija"
 
 #: inc/entityconfig.class.php:65
 msgid "Helpdesk"
@@ -213,11 +214,11 @@ msgstr ""
 
 #: inc/entityconfig.class.php:75
 msgid "Service catalog simplified"
-msgstr ""
+msgstr "Vienkāršots servisu katalogs"
 
 #: inc/entityconfig.class.php:76
 msgid "Service catalog extended"
-msgstr ""
+msgstr "Izvērst servisu katalogs"
 
 #: inc/entityconfig.class.php:79
 msgid "Helpdesk mode"
@@ -225,211 +226,224 @@ msgstr ""
 
 #: inc/field.class.php:98 scripts/forms-validation.js.php:11
 msgid "A required field is empty:"
-msgstr ""
+msgstr "Nepieciešamais lauks tukšs:"
 
-#: inc/formanswer.class.php:39 inc/issue.class.php:271
+#: inc/form_answer.class.php:39 inc/issue.class.php:301
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Formas atbildes"
+msgstr[1] "Formas atbilde"
+msgstr[2] "Formas atbildes"
 
-#: inc/formanswer.class.php:78 inc/notificationtargetformanswer.class.php:51
+#: inc/form_answer.class.php:78 inc/notificationtargetformanswer.class.php:51
 msgid "Requester"
-msgstr ""
+msgstr "Pieteicējs"
 
-#: inc/formanswer.class.php:87 inc/notificationtargetformanswer.class.php:52
+#: inc/form_answer.class.php:87 inc/notificationtargetformanswer.class.php:52
 msgid "Validator"
-msgstr ""
+msgstr "Apstiprinātājs"
 
-#: inc/formanswer.class.php:153
+#: inc/form_answer.class.php:153
 msgid "waiting"
-msgstr ""
+msgstr "gaidīts"
 
-#: inc/formanswer.class.php:157
+#: inc/form_answer.class.php:157
 msgid "accepted"
-msgstr ""
+msgstr "akceptēts"
 
-#: inc/formanswer.class.php:161
+#: inc/form_answer.class.php:161
 msgid "refused"
-msgstr ""
+msgstr "noraidīts"
 
-#: inc/formanswer.class.php:277
+#: inc/form_answer.class.php:285
 msgid "Form accepted by validator."
-msgstr ""
+msgstr "Formu akceptēja apstiprinātājs."
 
-#: inc/formanswer.class.php:279
+#: inc/form_answer.class.php:287
 msgid "Form successfully saved."
-msgstr ""
+msgstr "Forma saglabāta veiksmīgi."
 
-#: inc/formanswer.class.php:336
+#: inc/form_answer.class.php:344
 msgid "Comment"
-msgstr ""
+msgstr "Komentārs"
 
-#: inc/formanswer.class.php:341
+#: inc/form_answer.class.php:349
 msgid "Required if refused"
-msgstr ""
+msgstr "Nepieciešams ja noraidīts"
 
-#: inc/formanswer.class.php:347
+#: inc/form_answer.class.php:355
 msgid "Refuse"
-msgstr ""
+msgstr "Noraidīt"
 
-#: inc/formanswer.class.php:350
+#: inc/form_answer.class.php:358
 msgid "Accept"
-msgstr ""
+msgstr "Akceptēt"
 
-#: inc/formanswer.class.php:365
+#: inc/form_answer.class.php:373
 msgid "Refused comment is required!"
-msgstr ""
+msgstr "Nepieciešams noraidīšanas komentārs!"
 
-#: inc/formanswer.class.php:604
+#: inc/form_answer.class.php:612
 msgid "Cannot generate targets!"
-msgstr ""
+msgstr "Nevar ģenerēt mērķi"
 
-#: inc/formanswer.class.php:616 inc/formanswer.class.php:633
+#: inc/form_answer.class.php:624 inc/form_answer.class.php:678
 msgid "The form has been successfully saved!"
+msgstr "Forma veiksmīgi saglabāta!"
+
+#: inc/form_answer.class.php:638 inc/form_answer.class.php:656
+msgid "You are not the validator of these answers"
 msgstr ""
 
-#: inc/formanswer.class.php:650 inc/formanswer.class.php:652
+#: inc/form_answer.class.php:695 inc/form_answer.class.php:697
 msgid "Form data"
+msgstr "Formas dati"
+
+#: inc/form.class.php:60
+msgid "Import forms"
 msgstr ""
 
-#: inc/form.class.php:92
+#: inc/form.class.php:94
 msgid "Description"
-msgstr ""
+msgstr "Apraksts"
 
-#: inc/form.class.php:120
+#: inc/form.class.php:122
 msgid "Homepage"
-msgstr ""
+msgstr "Sākumlapa"
 
-#: inc/form.class.php:128
+#: inc/form.class.php:130
 msgid "Access"
-msgstr ""
+msgstr "Piekļuve"
 
-#: inc/form.class.php:186 inc/form.class.php:200 inc/form.class.php:254
-#: inc/form.class.php:309
+#: inc/form.class.php:188 inc/form.class.php:202 inc/form.class.php:256
+#: inc/form.class.php:311
 msgid "All langages"
-msgstr ""
+msgstr "Visas valodas"
 
-#: inc/form.class.php:187 inc/form.class.php:241 inc/formprofiles.class.php:35
+#: inc/form.class.php:189 inc/form.class.php:243 inc/form_profile.class.php:35
 msgid "Public access"
-msgstr ""
+msgstr "Publiska pieeja"
 
-#: inc/form.class.php:188 inc/form.class.php:244 inc/formprofiles.class.php:36
+#: inc/form.class.php:190 inc/form.class.php:246 inc/form_profile.class.php:36
 msgid "Private access"
-msgstr ""
+msgstr "Privāta pieeja"
 
-#: inc/form.class.php:189 inc/form.class.php:247 inc/formprofiles.class.php:37
+#: inc/form.class.php:191 inc/form.class.php:249 inc/form_profile.class.php:37
 msgid "Restricted access"
-msgstr ""
+msgstr "Ierobežota pieeja"
 
-#: inc/form.class.php:294
+#: inc/form.class.php:296
 msgid "Direct access on homepage"
-msgstr ""
+msgstr "Tiešsaiste no sākumlapas"
 
-#: inc/form.class.php:321
+#: inc/form.class.php:323
 msgid "Need to be validate?"
-msgstr ""
+msgstr "Nepieciešama apstiprināšana?"
 
-#: inc/form.class.php:426
+#: inc/form.class.php:427
 msgid "Default form in service catalog"
-msgstr ""
+msgstr "Noklusēta forma servisu katalogā"
 
-#: inc/form.class.php:527
+#: inc/form.class.php:535
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Kategorijas"
+msgstr[1] "Kategorija"
+msgstr[2] "Kategorijas"
 
-#: inc/form.class.php:528
+#: inc/form.class.php:536
 msgid "see all"
-msgstr ""
+msgstr "skatīt visu"
 
-#: inc/form.class.php:545
+#: inc/form.class.php:554
 msgid "Popularity sort"
-msgstr ""
+msgstr "Sakārtot pēc popularitātes"
 
-#: inc/form.class.php:549
+#: inc/form.class.php:558
 msgid "Alphabetic sort"
-msgstr ""
+msgstr "Sakārtot alfabēta secībā"
 
-#: inc/form.class.php:710
+#: inc/form.class.php:732
 msgid "Please, describe your need here"
-msgstr ""
-
-#: inc/form.class.php:719
-msgid "My last forms (requester)"
-msgstr ""
-
-#: inc/form.class.php:729
-msgid "No form posted yet"
-msgstr ""
+msgstr "Lūdzu definējiet jūsu prasību"
 
 #: inc/form.class.php:741
-msgid "All my forms (requester)"
-msgstr ""
+msgid "My last forms (requester)"
+msgstr "Manas pēdējās formas (pieteicējs)"
 
 #: inc/form.class.php:751
+msgid "No form posted yet"
+msgstr "Nav nosūtītas formas"
+
+#: inc/form.class.php:763
+msgid "All my forms (requester)"
+msgstr "Visas manas formas (pieteicējs)"
+
+#: inc/form.class.php:773
 msgid "My last forms (validator)"
-msgstr ""
+msgstr "Manas pēdējās formas (apstiprinātājs)"
 
-#: inc/form.class.php:771
+#: inc/form.class.php:793
 msgid "No form waiting for validation"
-msgstr ""
+msgstr "Nav formas kuram nepieciešama apstiprināšana"
 
-#: inc/form.class.php:783
+#: inc/form.class.php:805
 msgid "All my forms (validator)"
-msgstr ""
+msgstr "Visas manas formas (Apstiprinātājs)"
 
-#: inc/form.class.php:874
+#: inc/form.class.php:897
 msgid "Choose a validator"
-msgstr ""
+msgstr "Izvēlēties apstiprinātāju"
 
-#: inc/form.class.php:910 inc/target.class.php:118
+#: inc/form.class.php:941 inc/target.class.php:119
 msgid "The name cannot be empty!"
-msgstr ""
+msgstr "Virsraksts nevar būt tukšs!"
 
-#: inc/form.class.php:1046
+#: inc/form.class.php:1093
 msgid "You must select validator !"
-msgstr ""
+msgstr "Jums nepieciešams izvēlēties apstiprinātāju !"
 
-#: inc/form.class.php:1270
+#: inc/form.class.php:1318
 msgid "Duplicate"
-msgstr ""
+msgstr "Dublikāts"
 
-#: inc/form.class.php:1465
+#: inc/form.class.php:1490
 #, php-format
 msgid "Form duplicated: %s"
-msgstr ""
+msgstr "Formas dublikāts: %s"
 
-#: inc/form.class.php:1476
+#: inc/form.class.php:1501
 #, php-format
 msgid "Form Transfered: %s"
+msgstr "Forma pārnesta: %s"
+
+#: inc/form.class.php:1686
+#, php-format
+msgid "Forms successfully imported from %s"
 msgstr ""
 
-#: inc/formprofiles.class.php:12
+#: inc/form_profile.class.php:12
 msgid "Target"
 msgid_plural "Targets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mērķi"
+msgstr[1] "Mērķis"
+msgstr[2] "Mērķi"
 
-#: inc/formprofiles.class.php:29
+#: inc/form_profile.class.php:29
 msgid "Access type"
-msgstr ""
+msgstr "Piekļuves tips"
 
-#: inc/formprofiles.class.php:44
+#: inc/form_profile.class.php:44
 msgid "Link to the form"
-msgstr ""
+msgstr "Saite uz formu"
 
-#: inc/formprofiles.class.php:52
+#: inc/form_profile.class.php:52
 msgid "Please active the form to view the link"
-msgstr ""
+msgstr "Lūdzu aktivizējiet formu lai parādīt saiti"
 
 #: inc/header.class.php:32 inc/header.class.php:48 inc/header.class.php:59
 msgid "Add an header"
-msgstr ""
+msgstr "Pievienot galveni"
 
 #: inc/header.class.php:51
 msgid ""
@@ -437,90 +451,90 @@ msgid ""
 "previous one."
 msgstr ""
 
-#: inc/issue.class.php:6 inc/issue.class.php:184
+#: inc/issue.class.php:6 inc/issue.class.php:187
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Problēmjautājumi"
+msgstr[1] "Problēmjautājums"
+msgstr[2] "Problēmjautājumi"
 
 #: inc/notificationtargetformanswer.class.php:12
 msgid "The form as been saved"
-msgstr ""
+msgstr "Forma saglabāta"
 
 #: inc/notificationtargetformanswer.class.php:13
 #: inc/notificationtargetformanswer.class.php:102
 msgid "A form need to be validate"
-msgstr ""
+msgstr "Formai jābūt apstiprinātai"
 
 #: inc/notificationtargetformanswer.class.php:14
 #: inc/notificationtargetformanswer.class.php:108
 msgid "The form is refused"
-msgstr ""
+msgstr "Forma noraidīta"
 
 #: inc/notificationtargetformanswer.class.php:15
 #: inc/notificationtargetformanswer.class.php:114
 msgid "The form is accepted"
-msgstr ""
+msgstr "Forma akceptēta"
 
 #: inc/notificationtargetformanswer.class.php:16
 #: inc/notificationtargetformanswer.class.php:120
 msgid "The form is deleted"
-msgstr ""
+msgstr "Forma izdzēsta"
 
 #: inc/notificationtargetformanswer.class.php:49
 msgid "Form #"
-msgstr ""
+msgstr "Forma #"
 
 #: inc/notificationtargetformanswer.class.php:50
 msgid "Form name"
-msgstr ""
+msgstr "Formas virsraksts"
 
 #: inc/notificationtargetformanswer.class.php:54
 msgid "Full form answers"
-msgstr ""
+msgstr "Pilnas formas atbildes"
 
 #: inc/notificationtargetformanswer.class.php:55
 msgid "Refused comment"
-msgstr ""
+msgstr "Noraidīts komentārs"
 
 #: inc/notificationtargetformanswer.class.php:56
 msgid "Validation link"
-msgstr ""
+msgstr "Apstiprināšanas links"
 
 #: inc/notificationtargetformanswer.class.php:57
 msgid "Request #"
-msgstr ""
+msgstr "Pieprasījums #"
 
 #: inc/notificationtargetformanswer.class.php:96
 msgid "A form has been created"
-msgstr ""
+msgstr "Forma izveidota"
 
 #: inc/notificationtargetformanswer.class.php:97
 msgid "Your request has been saved"
-msgstr ""
+msgstr "Jūsu pieprasījums saglabāts"
 
 #: inc/notificationtargetformanswer.class.php:98
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Sveicināti,\\nJūsu pieprasījums no GLPI veiksmīgi saglabāts ar numuru ##formcreator.request_id## un nodots helpdesk komandai.\\nJūs varat sekot līdzi sekojošā vietnē:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:103
 msgid "A form from GLPI need to be validate"
-msgstr ""
+msgstr "Formai no GLPI jābūt apstiprinātai"
 
 #: inc/notificationtargetformanswer.class.php:104
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Sveicināti,\\nFormai no GLPI jābūt apstiprinātai un jūs tika izvēlēti kā apstiprinātājs.\\nJūs varat piekļūt tam sekojošā vietnē:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:109
 msgid "Your form has been refused by the validator"
-msgstr ""
+msgstr "Jūsu formu noraidījis apstiprinātājs"
 
 #: inc/notificationtargetformanswer.class.php:110
 msgid ""
@@ -528,88 +542,88 @@ msgid ""
 "validator for the reason "
 "below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Sveicināti,\\nJūsu formu noraidīta apstiprinātājs ar sekojošo iemeslu:\\n##formcreator.validation_comment##\\n\\nJūs varat veikt izmaiņas un atkartoti iesniegt formu sekojošā vietnē:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetformanswer.class.php:115
-#: inc/targetticket.class.php:1329
+#: inc/targetticket.class.php:1421
 msgid "Your form has been accepted by the validator"
-msgstr ""
+msgstr "Jūsu formu akceptēja apstiprinātājs"
 
 #: inc/notificationtargetformanswer.class.php:116
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
-msgstr ""
+msgstr "Sveicināti,\\nInformējam, jūsu formu akceptēja apstiprinātājs.\\nJūsu pieteikums drīz tiks izskatīts."
 
 #: inc/notificationtargetformanswer.class.php:121
 msgid "Your form has been deleted by an administrator"
-msgstr ""
+msgstr "Jūsu formu izdzēsa administrators"
 
 #: inc/notificationtargetformanswer.class.php:122
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
-msgstr ""
+msgstr "Sveicināti,\\nInformējam, jūsu pieprasījums netiks izskatīts un tika izdzēsts."
 
-#: inc/question.class.php:35 inc/targetticket.class.php:356
-#: inc/targetticket.class.php:876
+#: inc/question.class.php:35 inc/targetticket.class.php:236
+#: inc/targetticket.class.php:417 inc/targetticket.class.php:938
 msgid "Question"
 msgid_plural "Questions"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Jautājums"
+msgstr[1] "Jautājums"
+msgstr[2] "Jautājumi"
 
 #: inc/question.class.php:131 inc/question.class.php:201
 #: inc/target.class.php:72
 msgid "Delete"
-msgstr ""
+msgstr "Izdzēst"
 
-#: inc/question.class.php:256 inc/section.class.php:163
+#: inc/question.class.php:257 inc/section.class.php:178
 msgid "The title is required"
-msgstr ""
+msgstr "Virsraksts ir nepieciešams"
 
-#: inc/question.class.php:262
+#: inc/question.class.php:264
 msgid "The field type is required"
-msgstr ""
+msgstr "Obligāti aizpildāms lauks"
 
-#: inc/question.class.php:268
+#: inc/question.class.php:271
 msgid "The section is required"
-msgstr ""
+msgstr "Sadaļa ir nepieciešama"
 
-#: inc/question.class.php:276 inc/question.class.php:286
-#: inc/question.class.php:299
+#: inc/question.class.php:280 inc/question.class.php:292
+#: inc/question.class.php:306
 msgid "The field value is required:"
-msgstr ""
+msgstr "Nepieciešams ievadīt lauka vērtību:"
 
-#: inc/question.class.php:311
+#: inc/question.class.php:320
 msgid "A description field should have a description:"
-msgstr ""
+msgstr "Apraksta laukam jābūt aizpildītam:"
 
-#: inc/question.class.php:362
+#: inc/question.class.php:375
 msgid "Cannot recover LDAP informations!"
-msgstr ""
+msgstr "Nevar piekļūt LDAP informācijai!"
 
 #: inc/target.class.php:26
 msgid "Destination"
 msgid_plural "Destinations"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mērķis"
+msgstr[1] "Mērķis"
+msgstr[2] "Mērķi"
 
 #: inc/target.class.php:48
 msgid "Destinations"
 msgid_plural "Destinations"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mērķis"
+msgstr[1] "Mērķis"
+msgstr[2] "Mērķi"
 
-#: inc/target.class.php:123
+#: inc/target.class.php:125
 msgid "The type cannot be empty!"
-msgstr ""
+msgstr "Tips nevar būt tukšs!"
 
 #: inc/targetticket.class.php:7
 msgid "Current active entity"
-msgstr ""
+msgstr "Tekoša aktīva nodaļa"
 
 #: inc/targetticket.class.php:8
 msgid "Default requester user's entity"
@@ -625,15 +639,15 @@ msgstr ""
 
 #: inc/targetticket.class.php:11
 msgid "The form entity"
-msgstr ""
+msgstr "Formas nodaļa"
 
 #: inc/targetticket.class.php:12
 msgid "Default entity of the validator"
-msgstr ""
+msgstr "Noklusēta apstiprinātāju nodaļa"
 
 #: inc/targetticket.class.php:13
 msgid "Specific entity"
-msgstr ""
+msgstr "Noteikta nodaļa"
 
 #: inc/targetticket.class.php:14
 msgid "Default entity of a user type question answer"
@@ -645,19 +659,19 @@ msgstr ""
 
 #: inc/targetticket.class.php:22
 msgid "Tags from questions"
-msgstr ""
+msgstr "Tagi no jautājumiem"
 
 #: inc/targetticket.class.php:23
 msgid "Specific tags"
-msgstr ""
+msgstr "Noteiktie tagi"
 
 #: inc/targetticket.class.php:24
 msgid "Tags from questions and specific tags"
-msgstr ""
+msgstr "Tagi no jautājumiem un noteiktiem tagiem"
 
 #: inc/targetticket.class.php:25
 msgid "Tags from questions or specific tags"
-msgstr ""
+msgstr "Tagi no jautājumiem vai noteiktiem tagiem"
 
 #: inc/targetticket.class.php:31
 msgid "equals to the answer to the question"
@@ -665,157 +679,165 @@ msgstr ""
 
 #: inc/targetticket.class.php:32
 msgid "calculated from the ticket creation date"
-msgstr ""
+msgstr "saskaitīts no pieteikuma izveidošanas datuma"
 
 #: inc/targetticket.class.php:33
 msgid "calculated from the answer to the question"
+msgstr "saskaitīts no atbildes uz jautājumu"
+
+#: inc/targetticket.class.php:40
+msgid "Equals to the answer to the question"
 msgstr ""
 
-#: inc/targetticket.class.php:59 inc/targetticket.class.php:101
+#: inc/targetticket.class.php:66 inc/targetticket.class.php:108
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Mērķa pieteikumi"
+msgstr[1] "Mērķa pieteikums"
+msgstr[2] "Mērķa pieteikumi"
 
-#: inc/targetticket.class.php:89
+#: inc/targetticket.class.php:96
 msgid "Edit a destination"
-msgstr ""
+msgstr "Rediģēt mērķi"
 
-#: inc/targetticket.class.php:104
+#: inc/targetticket.class.php:111
 msgid "Ticket title"
-msgstr ""
+msgstr "Pieteikumu virsraksts"
 
-#: inc/targetticket.class.php:249
+#: inc/targetticket.class.php:310
 msgid "User type question"
 msgstr ""
 
-#: inc/targetticket.class.php:250
+#: inc/targetticket.class.php:311
 msgid "Entity type question"
 msgstr ""
 
-#: inc/targetticket.class.php:314
+#: inc/targetticket.class.php:375
 msgid "Ticket tags"
-msgstr ""
+msgstr "Pieteikumu tagi"
 
-#: inc/targetticket.class.php:357
+#: inc/targetticket.class.php:418
 msgid "Tags"
-msgstr ""
+msgstr "Tagi"
 
-#: inc/targetticket.class.php:423
+#: inc/targetticket.class.php:484
 msgid "Add validation message as first ticket followup"
 msgstr ""
 
-#: inc/targetticket.class.php:437
+#: inc/targetticket.class.php:498
 msgid "Cancel"
-msgstr ""
+msgstr "Atcelt"
 
-#: inc/targetticket.class.php:511
+#: inc/targetticket.class.php:572
 msgid "Ticket actors"
-msgstr ""
+msgstr "Pieteikuma dalībnieki"
 
-#: inc/targetticket.class.php:551 inc/targetticket.class.php:607
-#: inc/targetticket.class.php:651 inc/targetticket.class.php:708
-#: inc/targetticket.class.php:751 inc/targetticket.class.php:821
+#: inc/targetticket.class.php:612 inc/targetticket.class.php:669
+#: inc/targetticket.class.php:713 inc/targetticket.class.php:770
+#: inc/targetticket.class.php:813 inc/targetticket.class.php:883
 msgid "Form requester"
-msgstr ""
+msgstr "Formas pieteicējs"
 
-#: inc/targetticket.class.php:552 inc/targetticket.class.php:610
-#: inc/targetticket.class.php:652 inc/targetticket.class.php:711
-#: inc/targetticket.class.php:752 inc/targetticket.class.php:824
+#: inc/targetticket.class.php:613 inc/targetticket.class.php:672
+#: inc/targetticket.class.php:714 inc/targetticket.class.php:773
+#: inc/targetticket.class.php:814 inc/targetticket.class.php:886
 msgid "Form validator"
-msgstr ""
+msgstr "Formas apstiprinātājs"
 
-#: inc/targetticket.class.php:553 inc/targetticket.class.php:653
-#: inc/targetticket.class.php:753
+#: inc/targetticket.class.php:614 inc/targetticket.class.php:715
+#: inc/targetticket.class.php:815
 msgid "Specific person"
-msgstr ""
+msgstr "Noteikta persona"
 
-#: inc/targetticket.class.php:554 inc/targetticket.class.php:620
-#: inc/targetticket.class.php:654 inc/targetticket.class.php:721
-#: inc/targetticket.class.php:754 inc/targetticket.class.php:834
+#: inc/targetticket.class.php:615 inc/targetticket.class.php:682
+#: inc/targetticket.class.php:716 inc/targetticket.class.php:783
+#: inc/targetticket.class.php:816 inc/targetticket.class.php:896
 msgid "Person from the question"
-msgstr ""
+msgstr "Persona no jautājuma"
 
-#: inc/targetticket.class.php:555 inc/targetticket.class.php:655
-#: inc/targetticket.class.php:755
+#: inc/targetticket.class.php:616 inc/targetticket.class.php:717
+#: inc/targetticket.class.php:817
 msgid "Specific group"
-msgstr ""
+msgstr "Noteikta grupa"
 
-#: inc/targetticket.class.php:556 inc/targetticket.class.php:631
-#: inc/targetticket.class.php:656 inc/targetticket.class.php:732
-#: inc/targetticket.class.php:756 inc/targetticket.class.php:845
+#: inc/targetticket.class.php:617 inc/targetticket.class.php:693
+#: inc/targetticket.class.php:718 inc/targetticket.class.php:794
+#: inc/targetticket.class.php:818 inc/targetticket.class.php:907
 msgid "Group from the question"
-msgstr ""
+msgstr "Grupa no jautājuma"
 
-#: inc/targetticket.class.php:757
+#: inc/targetticket.class.php:819
 msgid "Specific supplier"
-msgstr ""
+msgstr "Noteikts piegādātājs"
 
-#: inc/targetticket.class.php:758 inc/targetticket.class.php:856
+#: inc/targetticket.class.php:820 inc/targetticket.class.php:918
 msgid "Supplier from the question"
-msgstr ""
+msgstr "Piegādātājs no jautājuma"
 
-#: inc/targetticket.class.php:883
+#: inc/targetticket.class.php:945
 msgid "Full form"
-msgstr ""
+msgstr "Pilna forma"
 
-#: inc/targetticket.class.php:927
+#: inc/targetticket.class.php:992
 msgid "The title cannot be empty!"
-msgstr ""
+msgstr "Nosaukums nevar būt tukšs!"
 
-#: inc/targetticket.class.php:933
+#: inc/targetticket.class.php:998
 msgid "The description cannot be empty!"
-msgstr ""
+msgstr "Apraksts nevar būt tukšs!"
 
-#: inc/wizard.class.php:83
+#: inc/wizard.class.php:67 inc/wizard.class.php:68
 msgid "Seek assistance"
 msgstr ""
 
-#: inc/wizard.class.php:87
+#: inc/wizard.class.php:73 inc/wizard.class.php:74
 msgid "My requests for assistance"
 msgstr ""
 
-#: inc/wizard.class.php:98
+#: inc/wizard.class.php:85 inc/wizard.class.php:86
 msgid "Book an asset"
 msgstr ""
 
-#: inc/wizard.class.php:105
+#: inc/wizard.class.php:94 inc/wizard.class.php:95
 msgid "Consult feeds"
+msgstr ""
+
+#: inc/wizard.class.php:253
+msgid "To validate"
+msgstr ""
+
+#: inc/wizard.class.php:266
+msgid "Closed"
 msgstr ""
 
 #: scripts/combobox.js.php:54
 msgid "Show All Items"
-msgstr ""
+msgstr "Parādīt visas vienības"
 
 #: scripts/combobox.js.php:120
 msgid "didn't match any item"
 msgstr ""
 
-#: scripts/scripts.js.php:165
-msgid "Back"
-msgstr ""
-
-#: scripts/scripts.js.php:235
+#: scripts/scripts.js.php:250
 msgid "No form found. Please choose a form below instead"
 msgstr ""
 
-#: scripts/scripts.js.php:253
+#: scripts/scripts.js.php:268
 msgid "An error occured while querying forms"
 msgstr ""
 
-#: scripts/scripts.js.php:289
+#: scripts/scripts.js.php:304
 msgid "No form yet in this category"
-msgstr ""
+msgstr "Šajā kategorija nav pievienotas formas"
 
-#: scripts/scripts.js.php:382
+#: scripts/scripts.js.php:402
 msgid "Are you sure you want to delete this question?"
-msgstr ""
+msgstr "Vai jūs tiešām gribat izdzēst šo jautājumu?"
 
-#: scripts/scripts.js.php:417
+#: scripts/scripts.js.php:437
 msgid "Are you sure you want to delete this section?"
-msgstr ""
+msgstr "Vai jūs tiešām gribat izdzēst šo sadaļu?"
 
-#: scripts/scripts.js.php:454
+#: scripts/scripts.js.php:474
 msgid "Are you sure you want to delete this destination:"
-msgstr ""
+msgstr "Vai jūs tiešām gribat izdzēst šo mērķi:"
