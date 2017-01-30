@@ -1511,20 +1511,20 @@ EOS;
             $message.= "\n".addslashes($formanswer->fields['comment']);
          }
 
-        // avoid double notification on ticket creation and add followup
-        $use_mailing = $CFG_GLPI['use_mailing'];
-        $CFG_GLPI['use_mailing'] = '0';
+         // Disable email notification when adding a followup
+         $use_mailing = $CFG_GLPI['use_mailing'];
+         $CFG_GLPI['use_mailing'] = '0';
 
-        $ticketFollowup = new TicketFollowup();
-        $ticketFollowup->add(array(
+         $ticketFollowup = new TicketFollowup();
+         $ticketFollowup->add(array(
               'tickets_id'       => $ticketID,
-              'date'             => date('Y-m-d H:i:s'),
+              'date'             => $_SESSION['glpi_currenttime'],
               'users_id'         => $_SESSION['glpiID'],
               'content'          => $message
-        ));
+         ));
 
-        // Restore mail notification setting
-        $CFG_GLPI['use_mailing'] = $use_mailing;
+         // Restore mail notification setting
+         $CFG_GLPI['use_mailing'] = $use_mailing;
       }
 
       return true;
@@ -1772,22 +1772,22 @@ EOS;
       switch ($role) {
          case 'requester':
             $this->requesters['_users_id_requester'][]                              = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify == true);
+            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify === true);
             $this->requesters['_users_id_requester_notif']['alternative_email'][]   = $alternativeEmail;
             break;
          case 'observer' :
             $this->observers['_users_id_observer'][]                                = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify == true);
+            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify === true);
             $this->observers['_users_id_observer_notif']['alternative_email'][]     = $alternativeEmail;
             break;
          case 'assigned' :
             $this->assigned['_users_id_assign'][]                                   = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify == true);
+            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify === true);
             $this->assigned['_users_id_assign_notif']['alternative_email'][]        = $alternativeEmail;
             break;
          case 'supplier' :
             $this->assignedSuppliers['_suppliers_id_assign'][]                      = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify == true);
+            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify === true);
             $this->assignedSuppliers['_suppliers_id_assign']['alternative_email'][] = $alternativeEmail;
             break;
       }
