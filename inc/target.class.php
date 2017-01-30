@@ -320,6 +320,13 @@ class PluginFormcreatorTarget extends CommonDBTM
                $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
             }
 
+            // Install or upgrade of TargetTicket is a prerequisite 
+            $version   = plugin_version_formcreator();
+            $migration = new Migration($version['version']);
+            require_once ('targetticket.class.php');
+            PluginFormcreatorTargetTicket::install($migration);
+            $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
+
             // Convert targets to ticket templates only if at least one target extsis 
             if ($i > 0) {
                // Prepare Mysql CASE For each ticket template
@@ -330,11 +337,6 @@ class PluginFormcreatorTarget extends CommonDBTM
                $mysql_case_template .= "END AS `tickettemplates_id`";
 
                // Create Target ticket
-               $version   = plugin_version_formcreator();
-               $migration = new Migration($version['version']);
-               require_once ('targetticket.class.php');
-               PluginFormcreatorTargetTicket::install($migration);
-               $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
                $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
                $result = $DB->query($query);
                while ($line = $DB->fetch_array($result)) {
