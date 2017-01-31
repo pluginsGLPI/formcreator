@@ -1397,7 +1397,8 @@ EOS;
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  String $content                            String to be parsed
-    * @param  PluginFormcreatorForm_Answer $formanswer    Formanswer object where answers are stored
+    * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
+    * @param  String
     * @return String                                     Parsed string with tags replaced by form values
     */
    private function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
