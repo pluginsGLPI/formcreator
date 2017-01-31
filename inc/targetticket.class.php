@@ -1523,7 +1523,7 @@ EOS;
               'content'          => $message
          ));
 
-         $CFG_GLPI['use_mailing'];
+         $CFG_GLPI['use_mailing'] = $use_mailing;
       }
 
       return true;
