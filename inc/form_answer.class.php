@@ -782,7 +782,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
       }
 
-      // computer all questions
+      // compute all questions
       $query_questions = "SELECT sections.`name` as section_name,
                                  questions.*,
                                  answers.`answer`
