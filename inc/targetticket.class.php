@@ -50,7 +50,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    static function getEnumUrgencyRule() {
       return array(
-            'none'      => __('Urgency from template or Medium'),
+            'none'      => __('Urgency from template or Medium', 'formcreator'),
             'answer'    => __('Equals to the answer to the question', 'formcreator'),
       );
    }
