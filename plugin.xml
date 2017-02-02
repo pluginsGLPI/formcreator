@@ -144,6 +144,11 @@ Features
          <compatibility>0.90</compatibility>
          <compatibility>9.1</compatibility>
       </version>
+      <version>
+         <num>2.4.0</num>
+         <compatibility>0.90</compatibility>
+         <compatibility>9.1</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>cz_CZ</lang>

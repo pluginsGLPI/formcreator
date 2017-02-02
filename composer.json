@@ -1,0 +1,8 @@
+{
+    "require-dev": {
+        "consolidation/robo": "dev-master@dev",
+        "patchwork/jsqueeze": "~1.0",
+        "natxet/CssMin": "~3.0",
+        "glpi-project/coding-standard": "0.5"
+    }
+}
