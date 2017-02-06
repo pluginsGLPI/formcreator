@@ -55,6 +55,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       );
    }
 
+   static function getEnumCategoryRule() {
+      return array(
+            'none'      => __('Category from template or none', 'formcreator'),
+            'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      );
+   }
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -481,12 +488,67 @@ EOS;
          echo '</tr>';
       }
 
+      // -------------------------------------------------------------------------------------------
+      //  category of the target
+      // -------------------------------------------------------------------------------------------
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
+      echo '<td width="25%">';
+      Dropdown::showFromArray(
+            'category_rule',
+            self::getEnumCategoryRule(),
+            array(
+                  'value'     => $this->fields['category_rule'],
+                  'on_change' => 'change_category()',
+                  'rand'      => $rand,
+      ));
+      $script = <<<EOS
+         function change_category() {
+            $('#category_specific_question').hide();
+            $('#category_specific_value').hide();
+
+            switch($('#dropdown_category_rule$rand').val()) {
+               case 'answer' :
+                  $('#category_specific_title').show();
+                  $('#category_specific_value').show();
+                  break;
+            }
+         }
+         change_category();
+EOS;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="category_specific_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+      echo '<div id="category_specific_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT `q`.`id`, `q`.`name`, `q`.`values`
+                FROM `glpi_plugin_formcreator_questions` `q`
+                INNER JOIN `glpi_plugin_formcreator_sections` `s`
+                  ON `s`.`id` = `q`.`plugin_formcreator_sections_id`
+                INNER JOIN `glpi_plugin_formcreator_targets` `t`
+                  ON `s`.`plugin_formcreator_forms_id` = `t`.`plugin_formcreator_forms_id`
+                WHERE `t`.`items_id` = ".$this->getID()."
+                AND `q`.`fieldtype` = 'dropdown' AND `q`.`values`='ITILCategory'";
+      $result2 = $DB->query($query2);
+      $users_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_category_question', $users_questions, array(
+            'value' => $this->fields['category_question'],
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
 
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
       // -------------------------------------------------------------------------------------------
       if ($form->fields['validation_required']) {
-         echo '<tr class="line0">';
+         echo '<tr class="line1">';
          echo '<td colspan="4">';
          echo '<input type="hidden" name="validation_followup" value="0" />';
          echo '<input type="checkbox" name="validation_followup" id="validation_followup" value="1" ';
@@ -1071,6 +1133,14 @@ EOS;
                $input['urgency_question'] = '0';
          }
 
+         switch ($input['category_rule']) {
+            case 'answer':
+               $input['category_question'] = $input['_category_question'];
+               break;
+            default:
+               $input['category_question'] = '0';
+         }
+
          $plugin = new Plugin();
          if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
             $input['tag_questions'] = (!empty($input['_tag_questions']))
@@ -1328,21 +1398,9 @@ EOS;
       }
 
       // Define urgency
-      $formAnswerId = $formanswer->fields['id'];
-      $urgencyQuestion = $this->fields['urgency_question'];
-      $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
-                                AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
-      $urgency = array_shift($found);
-      switch ($this->fields['urgency_rule']) {
-         case 'answer':
-            $urgency = $urgency['answer'];
-            break;
-         default:
-            $urgency = null;
-      }
-      if (!is_null($urgency)) {
-         $datas['urgency'] = $urgency;
-      }
+      $datas = $this->setTargetUrgency($datas, $formanswer);
+
+      $datas = $this->setTargetCategory($datas, $formanswer);
 
       if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
          $datas['_users_id_requester'] = $requesters_id;
@@ -1530,6 +1588,48 @@ EOS;
       return true;
    }
 
+   protected function setTargetCategory($data, $formanswer) {
+      switch ($this->fields['category_rule']) {
+         case 'answer':
+            $answer  = new PluginFormcreatorAnswer();
+            $formAnswerId = $formanswer->fields['id'];
+            $categoryQuestion = $this->fields['category_question'];
+            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+                  AND `plugin_formcreator_question_id` = '$categoryQuestion'");
+            $category = array_shift($found);
+            $category = $category['answer'];
+            break;
+         default:
+            $category = null;
+      }
+      if ($category !== null) {
+         $data['itilcategories_id'] = $category;
+      }
+
+      return $data;
+   }
+
+   protected function setTargetUrgency($data, $formanswer) {
+      switch ($this->fields['urgency_rule']) {
+         case 'answer':
+            $answer  = new PluginFormcreatorAnswer();
+            $formAnswerId = $formanswer->fields['id'];
+            $urgencyQuestion = $this->fields['urgency_question'];
+            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+                  AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
+            $urgency = array_shift($found);
+            $urgency = $urgency['answer'];
+            break;
+         default:
+            $urgency = null;
+      }
+      if (!is_null($urgency)) {
+         $data['urgency'] = $urgency;
+      }
+
+      return $data;
+   }
+
    /**
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
@@ -1590,6 +1690,7 @@ EOS;
       $enum_tag_type           = "'".implode("', '", array_keys(self::getEnumTagType()))."'";
       $enum_due_date_rule      = "'".implode("', '", array_keys(self::getEnumDueDateRule()))."'";
       $enum_urgency_rule       = "'".implode("', '", array_keys(self::getEnumUrgencyRule()))."'";
+      $enum_category_rule      = "'".implode("', '", array_keys(self::getEnumCategoryRule()))."'";
 
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
@@ -1609,7 +1710,9 @@ EOS;
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                      `tag_questions` VARCHAR(255) NOT NULL,
-                     `tag_specifics` VARCHAR(255) NOT NULL
+                     `tag_specifics` VARCHAR(255) NOT NULL,
+                     `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none',
+                     `category_question` int(11) NOT NULL DEFAULT '0',
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
       } else {
@@ -1654,8 +1757,8 @@ EOS;
             $DB->query($query) or die($DB->error());
 
          } else {
-            $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'urgency_rule');
-            if (count($current_enum_destination_entity) != count(self::getEnumUrgencyRule())) {
+            $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues($table, 'urgency_rule');
+            if (count($current_enum_urgency_rule) != count(self::getEnumUrgencyRule())) {
                $query = "ALTER TABLE `$table`
                CHANGE COLUMN `urgency_rule` `urgency_rule`
                ENUM($enum_urgency_rule)
@@ -1664,6 +1767,23 @@ EOS;
             }
          }
          $migration->addField($table, 'urgency_question', 'integer', array('after' => 'urgency_rule'));
+
+         if (!FieldExists($table, 'category_rule', false)) {
+            $query = "ALTER TABLE `$table`
+            ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
+            $DB->query($query) or die($DB->error());
+         } else {
+            $current_enum_categoryy_rule = PluginFormcreatorCommon::getEnumValues($table, 'category_rule');
+            if (count($current_enum_categoryy_rule) != count(self::getEnumCategoryRule())) {
+               $query = "ALTER TABLE `$table`
+               CHANGE COLUMN `category_rule` `category_rule`
+               ENUM($enum_category_rule)
+               NOT NULL DEFAULT 'none'";
+               $DB->query($query) or die($DB->error());
+            }
+         }
+         $migration->addField($table, 'category_question', 'integer', array('after' => 'category_rule'));
+
       }
 
       return true;
