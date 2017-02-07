@@ -1712,7 +1712,7 @@ EOS;
                      `tag_questions` VARCHAR(255) NOT NULL,
                      `tag_specifics` VARCHAR(255) NOT NULL,
                      `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none',
-                     `category_question` int(11) NOT NULL DEFAULT '0',
+                     `category_question` int(11) NOT NULL DEFAULT '0'
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
       } else {
