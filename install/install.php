@@ -28,22 +28,34 @@ class PluginFormcreatorInstall {
     */
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
-      $fromVersion = $this->getSchemaVersion();
+      $fromSchemaVersion = $this->getSchemaVersion();
 
       $this->installSchema();
 
-      switch ($fromVersion) {
+      // All cases are run starting from the one matching the current schema version
+      switch ($fromSchemaVersion) {
          case '0.0':
             //Any schema version below 2.5
             require_once(__DIR__ . '/update_0.0_2.5.php');
-            plugin_formcreator_update_2_5($migration);
+            plugin_formcreator_update_2_5($this->migration);
 
          default:
-            $this->migration->executeMigration();
+            // Must be the last case
+            if ($this->endsWith(PLUGIN_FORMCREATOR_VERSION, "-dev")) {
+               if (is_readable(__DIR__ . "/update_dev.php") && is_file(__DIR__ . "/update_dev.php")) {
+                  include_once __DIR__ . "/update_dev.php";
+                  $updateDevFunction = 'plugin_formcreator_update_dev';
+                  if (function_exists($updateDevFunction)) {
+                     $updateDevFunction($this->migration);
+                  }
+               }
+            }
       }
+      $this->migration->executeMigration();
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      Config::setConfigurationValues('formcreator', array('schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION));
 
       return true;
    }
@@ -370,6 +382,16 @@ class PluginFormcreatorInstall {
 
       $displayPreference = new DisplayPreference();
       $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormCreatorIssue'));
+   }
+
+   /**
+    * http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
+    * @param unknown $haystack
+    * @param unknown $needle
+    */
+   protected function endsWith($haystack, $needle) {
+      // search forward starting from end minus needle length characters
+      return $needle === '' || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
    }
 
    /**

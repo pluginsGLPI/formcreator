@@ -8,6 +8,8 @@
 function plugin_formcreator_update_2_5(Migration $migration) {
    global $DB;
 
+   $migration->displayMessage("Upgrade to schema version 2.5");
+
    plugin_formcreator_updateAnswer($migration);
    plugin_formcreator_updateCategory($migration);
    plugin_formcreator_updateFormValidator($migration);
@@ -20,13 +22,15 @@ function plugin_formcreator_update_2_5(Migration $migration) {
    plugin_formcreator_updateTargetChange_Actor($migration);
    plugin_formcreator_updateTargetTicket_Actor($migration);
    plugin_formcreator_updateTargetTicket($migration);
+
+   $migration->executeMigration();
 }
 
 function plugin_formcreator_updateAnswer(Migration $migration) {
       global $DB;
 
    // Legacy upgrade of Answers
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_answers");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_answers");
    // Update field type from previous version (Need answer to be text since text can be WYSIWING).
    $query = "ALTER TABLE  `glpi_plugin_formcreator_answers` CHANGE  `answer` `answer` text;";
    $DB->query($query) or die ($DB->error());
@@ -57,7 +61,7 @@ function plugin_formcreator_updateCategory(Migration $migration) {
       global $DB;
 
    // Legacy upgrade of Categories
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_categories");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_categories");
 
    if (TableExists('glpi_plugin_formcreator_cats')) {
       $query = "INSERT IGNORE INTO `glpi_plugin_formcreator_categories` (`id`, `name`)
@@ -112,7 +116,7 @@ function plugin_formcreator_updateCategory(Migration $migration) {
    }
 
    // Legacy upgrade of Form_Answers
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_forms_answers");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
 
    if (TableExists("glpi_plugin_formcreator_formanswers")) {
       $migration->renameTable('glpi_plugin_formcreator_formanswers', 'glpi_plugin_formcreator_forms_answers');
@@ -146,7 +150,7 @@ function plugin_formcreator_updateCategory(Migration $migration) {
    $DB->query($query) or die ($DB->error());
 
    // Legacy upgrade of Form_Answers
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_forms_profiles");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_profiles");
 
    if (TableExists('glpi_plugin_formcreator_formprofiles')) {
       $migration->renameTable('glpi_plugin_formcreator_formprofiles', 'glpi_plugin_formcreator_forms_profiles');
@@ -189,7 +193,7 @@ function plugin_formcreator_updateFormValidator(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Form_Validators
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_forms_validators");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_validators");
 
    // Convert the old relation in glpi_plugin_formcreator_formvalidators table
    if (TableExists('glpi_plugin_formcreator_formvalidators')) {
@@ -227,7 +231,7 @@ function plugin_formcreator_updateForm(Migration $migration) {
       global $DB;
 
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_forms");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms");
 
    // Migration from previous version
    if (FieldExists('glpi_plugin_formcreator_forms', 'cat', false)
@@ -321,7 +325,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
       global $DB;
 
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_questions_conditions");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_questions_conditions");
 
    // Migration 0.85-1.0 => 0.85-1.1
    if (FieldExists('glpi_plugin_formcreator_questions', 'show_type', false)) {
@@ -419,7 +423,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
       global $DB;
 
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_questions");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_questions");
 
    // Migration 0.83-1.0 => 0.85-1.0
    if(!FieldExists('glpi_plugin_formcreator_questions', 'fieldtype', false)) {
@@ -620,7 +624,7 @@ function plugin_formcreator_updateSection(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_sections");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_sections");
 
    /**
     * Migration of special chars from previous versions
@@ -700,7 +704,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_targets");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targets");
 
    // Migration to 0.85-1.2.5
    if (FieldExists('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id', false)) {
@@ -856,7 +860,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
 
 function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_targetchanges_actors");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges_actors");
 
    // fill missing uuid
    $obj = new PluginFormcreatorTargetChange_Actor();
@@ -869,7 +873,7 @@ function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
 
 function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_targettickets_actors");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets_actors");
 
    $enum_actor_type = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket_Actor::getEnumActorType()))."'";
    $enum_actor_role = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket_Actor::getEnumRole()))."'";
@@ -909,7 +913,7 @@ function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
 
 function plugin_formcreator_updateTargetTicket(Migration $migration) {
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrading glpi_plugin_formcreator_targettickets");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets");
 
    $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDestinationEntity()))."'";
    $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumTagType()))."'";
