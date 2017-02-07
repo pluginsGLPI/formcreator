@@ -79,6 +79,7 @@ class PluginFormcreatorFields
 
    public static function printAllTabFieldsForJS()
    {
+      $tabFieldsForJS = '';
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
@@ -87,9 +88,10 @@ class PluginFormcreatorFields
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if(method_exists($classname, 'getJSFields')) {
-            echo PHP_EOL.'            '.$classname::getJSFields();
+            $tabFieldsForJS .= PHP_EOL.'            '.$classname::getJSFields();
          }
       }
+      return $tabFieldsForJS;
    }
 
    public static function showField($field, $datas = null, $edit = true)
@@ -121,32 +123,67 @@ class PluginFormcreatorFields
    {
       global $DB;
 
+      /**
+       * Keep track of questions being evaluated to detect infinite loops
+       */
+      static $evalQuestion = array();
+      if (isset($evalQuestion[$id])) {
+         // TODO : how to deal a infinite loop while evaulating visibility of question ?
+         return true;
+      }
+      $evalQuestion[$id]   = $id;
+
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
-      $fields     = $question->fields;
       $conditions = array();
-      $return     = false;
 
       // If the field is always shown
-      if ($fields['show_rule'] == 'always') return true;
+      if ($question->getField('show_rule') == 'always') {
+         unset($evalQuestion[$id]);
+         return true;
+      }
 
       // Get conditions to show or hide field
-      $questionId = $fields['id'];
+      $questionId = $question->getID();
       $question_condition = new PluginFormcreatorQuestion_Condition();
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` = '$questionId'");
-      foreach ($rows as $line) {
+      $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
+      if (count($questionConditions) < 1) {
+         // No condition defined, then always show the question
+         unset($evalQuestion[$id]);
+         return true;
+      }
+
+      foreach ($questionConditions as $question_condition) {
          $conditions[] = array(
-               'multiple' => in_array($fields['fieldtype'], array('checkboxes', 'multiselect')),
-               'logic'    => $line['show_logic'],
-               'field'    => $line['show_field'],
-               'operator' => $line['show_condition'],
-               'value'    => $line['show_value']
+               'logic'    => $question_condition->getField('show_logic'),
+               'field'    => $question_condition->getField('show_field'),
+               'operator' => $question_condition->getField('show_condition'),
+               'value'    => $question_condition->getField('show_value')
             );
       }
 
-      foreach ($conditions as $condition) {
-         if (!isset($values[$condition['field']]))             return false;
-         if (!self::isVisible($condition['field'], $values))   return false;
+      // Force the first logic operator to OR
+      $conditions[0]['logic']       = 'OR';
+
+      $return                       = false;
+      $lowPrecedenceReturnPart      = false;
+      $lowPrecedenceLogic           = 'OR';
+      foreach ($conditions as $order => $condition) {
+         $currentLogic = $condition['logic'];
+         if (isset($conditions[$order + 1])) {
+            $nextLogic = $conditions[$order + 1]['logic'];
+         } else {
+            // To ensure the low precedence return part is used at the end of the whole evaluation
+            $nextLogic = 'OR';
+         }
+         if (!isset($values[$condition['field']])) {
+            unset($evalQuestion[$id]);
+            return false;
+         }
+         if (!self::isVisible($condition['field'], $values)) {
+            unset($evalQuestion[$id]);
+            return false;
+         }
 
          switch ($condition['operator']) {
             case '!=' :
@@ -163,6 +200,7 @@ class PluginFormcreatorFields
                   }
                }
                break;
+
             case '==' :
                if (empty($condition['value'])) {
                   $value = false;
@@ -177,6 +215,7 @@ class PluginFormcreatorFields
                   }
                }
                break;
+
             default:
                $decodedConditionField = json_decode($values[$condition['field']]);
                if (is_array($values[$condition['field']])) {
@@ -190,13 +229,47 @@ class PluginFormcreatorFields
                     .$condition['operator'].' "'.$condition['value'].'";');
                }
          }
-         switch ($condition['logic']) {
-            case 'AND' :   $return &= $value; break;
-            case 'OR'  :   $return |= $value; break;
-            case 'XOR' :   $return ^= $value; break;
-            default :      $return = $value;
+
+         // Combine all condition with respect of operator precedence
+         // AND has precedence over OR and XOR
+         if ($currentLogic != 'AND' && $nextLogic == 'AND') {
+            // next condition has a higher precedence operator
+            // Save the current computed return and operator to use later
+            $lowPrecedenceReturnPart = $return;
+            $lowPrecedenceLogic = $currentLogic;
+            $return = $value;
+         } else {
+            switch ($currentLogic) {
+               case 'AND' :
+                  $return &= $value;
+                  break;
+
+               case 'OR'  :
+                  $return |= $value;
+                  break;
+
+               default :
+                  $return = $value;
+            }
+         }
+
+         if ($currentLogic == 'AND' && $nextLogic != 'AND') {
+            if ($lowPrecedenceLogic == 'OR') {
+               $return |= $lowPrecedenceReturnPart;
+            } else {
+               $return ^= $lowPrecedenceReturnPart;
+            }
          }
       }
+
+      // Ensure the low precedence part is used if last condition has logic == AND
+      if ($lowPrecedenceLogic == 'OR') {
+         $return |= $lowPrecedenceReturnPart;
+      } else {
+         $return ^= $lowPrecedenceReturnPart;
+      }
+
+      unset($evalQuestion[$id]);
 
       // If the field is hidden by default, show it if condition is true
       if ($question->fields['show_rule'] == 'hidden') {

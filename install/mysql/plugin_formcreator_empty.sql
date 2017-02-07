@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
   `show_condition` enum('==','!=','<','>','<=','>=') COLLATE utf8_unicode_ci DEFAULT NULL,
   `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `show_logic` enum('AND','OR','XOR') COLLATE utf8_unicode_ci DEFAULT NULL,
+  `order` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

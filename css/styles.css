@@ -428,30 +428,41 @@ form.formcreator_form {
    font-style: italic;
    margin: 0 4px;
 }
-#div_show_condition_field, #div_show_condition_operator, #div_show_condition_value {
-   float: left;
+.div_show_condition_field, .div_show_condition_operator, 
+.div_show_condition_value, .div_show_condition_logic,
+.div_show_condition_add, .div_show_condition_remove {
+   //float: left;
+   display: inline-block;
 }
-#div_show_condition_field .select2-container,
-#div_show_condition_operator .select2-container {
+.div_show_condition_field .select2-container,
+.div_show_condition_operator .select2-container,
+.div_show_condition_logic .select2-container {
    width: 95% !important;
    margin: 5px 0 0 !important;
 }
-#div_show_condition_value input {
-   width: 100% !important;
+
+.div_show_condition_value input {
+   width: 90% !important;
    margin: 5px 0 0 5px !important;
    padding: 2px 5px !important;
 }
 
-#div_show_condition_field {
+.div_show_condition_field {
    width: 300px !important;
 }
-#div_show_condition_operator {
-   width: 50px !important;
+.div_show_condition_operator {
+   width: 70px !important;
 }
-#div_show_condition_value {
-   width:  400px !important;
+.div_show_condition_value {
+   width:  300px !important;
 }
-
+.div_show_condition_logic {
+	width: 70px !important;
+}
+.div_show_condition_add img, .div_show_condition_remove img {
+   width: 12px;
+   vertical-align: middle;
+}
 /* jQuery UI Combobox*/
 .custom-combobox {
    position: relative;

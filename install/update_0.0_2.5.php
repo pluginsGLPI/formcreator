@@ -385,6 +385,21 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
       $DB->query($query_update) or die ($DB->error());
    }
 
+   if (!FieldExists('glpi_plugin_formcreator_questions_conditions', 'order', false)) {
+      $migration->addField('glpi_plugin_formcreator_questions_conditions', 'order', 'integer', array('after' => 'show_logic', 'value' => '1'));
+      $migration->migrationOneTable('glpi_plugin_formcreator_questions_conditions');
+   }
+
+   $enum_logic = "'".implode("', '", array_keys(PluginFormcreatorQuestion_Condition::getEnumShowLogic()))."'";
+   $current_enum_show_logic = PluginFormcreatorCommon::getEnumValues($table, 'show_logic');
+   if (count($current_enum_show_logic) != count(PluginFormcreatorQuestion_Condition::getEnumShowLogic())) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_questions_conditions`
+                CHANGE COLUMN `show_logic` `show_logic`
+                ENUM($enum_logic)
+                NULL DEFAULT NULL";
+      $DB->query($query) or die($DB->error());
+   }
+
    // add uuid to questions conditions
    if (!FieldExists('glpi_plugin_formcreator_questions_conditions', 'uuid', false)) {
       $migration->addField('glpi_plugin_formcreator_questions_conditions', 'uuid', 'string');

@@ -298,4 +298,19 @@ class PluginFormcreatorSection extends CommonDBChild
 
       return $section;
    }
+
+   /**
+    * get all sections in a form
+    */
+   public function getSectionsFromForm($formId) {
+      $sections = array();
+      $rows = $this->find("`plugin_formcreator_forms_id` = '$formId'", "`order` ASC");
+      foreach ($rows as $sectionId => $row) {
+         $section = new self();
+         $section->getFromDB($sectionId);
+         $sections[] = $section;
+      }
+
+      return $sections;
+   }
 }

@@ -4,6 +4,23 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    static public $itemtype = "PluginFormcreatorQuestion";
    static public $items_id = "plugin_formcreator_questions_id";
 
+   public function prepareInputForAdd($input) {
+      // generate a uniq id
+      if (!isset($input['uuid'])
+            || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
+   public static function getEnumShowLogic() {
+      return array(
+            'AND'    => 'AND',
+            'OR'     => 'OR',
+      );
+   }
+
    /**
     * Import a question's condition into the db
     * @see PluginFormcreatorQuestion::import
@@ -69,5 +86,112 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       }
 
       return $condition;
+   }
+
+   public function getConditionsFromQuestion($questionId) {
+      $questionConditions = array();
+      $rows = $this->find("`plugin_formcreator_questions_id` = '$questionId'", "`order` ASC");
+      foreach ($rows as $questionConditionId => $row) {
+         $questionCondition = new static();
+         $questionCondition->getFromDB($questionConditionId);
+         $questionConditions[] = $questionCondition;
+      }
+
+      return $questionConditions;
+   }
+
+   /**
+    *
+    * return HTML to show a condition line for a question
+    *
+    * @param integer $formId ID of the form of the condition
+    * @param integer $questionId ID of the question (or 0 for a new question)
+    * @param string $isFirst true if this is the first condition à all conditions aplied to a question
+    *
+    * @return string
+    */
+   public function getConditionHtml($form_id, $questionId = 0, $isFirst = false) {
+      global $CFG_GLPI;
+
+      if ($this->isNewItem()) {
+         $show_field       = '';
+         $show_condition   = '==';
+         $show_value       = '';
+         $show_logic       = '';
+      } else {
+         $show_field       = $this->fields['show_field'];
+         $show_condition   = $this->fields['show_condition'];
+         $show_value       = $this->fields['show_value'];
+         $show_logic       = $this->fields['show_logic'];
+         $questionId       = $this->fields['plugin_formcreator_questions_id'];
+      }
+      $rootDoc = $CFG_GLPI['root_doc'];
+      $rand = mt_rand();
+
+      $question = new PluginFormcreatorQuestion();
+      $questionsInForm = $question->getQuestionsFromForm($form_id);
+      $questions_tab = array();
+      foreach($questionsInForm as $question) {
+         if (strlen($question->getField('name')) > 30) {
+            $questions_tab[$question->getID()] = substr($question->getField('name'),
+                  0,
+                  strrpos(substr($question->getField('name'), 0, 30), ' ')) . '...';
+         } else {
+            $questions_tab[$question->getID()] = $question->getField('name');
+         }
+      }
+
+      $html = '';
+      $html.= '<tr class="plugin_formcreator_logicRow">';
+      $html.= '<td colspan="4">';
+      $html.= '<div class="div_show_condition">';
+
+      $showLogic = $isFirst ? 'style="display: none"' : '';
+      $html.= '<div class="div_show_condition_logic"' . $showLogic . '>';
+      $html.= Dropdown::showFromArray('show_logic[]',
+            PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
+            array(
+                  'display'               => false,
+                  'value'                 => $show_logic,
+                  'display_emptychoice'   => false,
+                  'rand'                  => $rand,
+            ));
+      $html.= '</div>';
+      $html.= '<div class="div_show_condition_field">';
+      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, array(
+            'display'      => false,
+            'used'         => array($questionId => ''),
+            'value'        => $show_field,
+            'rand'         => $rand,
+      ));
+      $html.= '</div>';
+
+      $html.= '<div class="div_show_condition_operator">';
+      $html.= Dropdown::showFromArray('show_condition[]', array(
+            '=='           => '=',
+            '!='           => '&ne;',
+            '<'            => '&lt;',
+            '>'            => '&gt;',
+            '<='           => '&le;',
+            '>='           => '&ge;',
+      ), array(
+            'display'      => false,
+            'value'        => $show_condition,
+            'rand'         => $rand,
+      ));
+      $html.= '</div>';
+      $html.= '<div class="div_show_condition_value">';
+      $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'
+              .'value="'. $show_value . '" size="8">';
+      $html.= '</div>';
+      $html.= '<div class="div_show_condition_add">';
+      $html.= '<img src="../../../pics/plus.png" onclick="addEmptyCondition(this)"/>&nbsp;</div>';
+      $html.= '<div class="div_show_condition_remove">';
+      $html.= '<img src="../../../pics/moins.png" onclick="removeNextCondition(this)"/></div>';
+      $html.= '</div>';
+      $html.= '</td>';
+      $html.= '</tr>';
+
+      return $html;
    }
 }
