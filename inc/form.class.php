@@ -959,6 +959,12 @@ class PluginFormcreatorForm extends CommonDBTM
          $input['content'] = addslashes($input['content']);
       }
 
+      if (!isset($input['requesttype'])) {
+         $requestType = new RequestType();
+         $requestType->getFromDBByQuery("WHERE `name` LIKE 'Formcreator'");
+         $input['requesttype'] = $requestType->getID();
+      }
+
 
       return $input;
    }
@@ -1143,175 +1149,6 @@ class PluginFormcreatorForm extends CommonDBTM
             'id' => $this->getID(),
             'usage_count' => $this->getField('usage_count') + 1,
       ]);
-   }
-
-   /**
-    * Database table installation for the item type
-    *
-    * @param Migration $migration
-    * @return boolean True on success
-    */
-   public static function install(Migration $migration)
-   {
-      global $DB;
-
-      $table = self::getTable();
-
-      // Create default request type
-      $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result = $DB->query($query) or die ($DB->error());
-      if ($DB->numrows($result) > 0) {
-         list($requesttype) = $DB->fetch_array($result);
-      } else {
-         $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
-         $DB->query($query) or die ($DB->error());
-         $requesttype = $DB->insert_id();
-      }
-
-      if (!TableExists($table)) {
-         $migration->displayMessage("Installing $table");
-
-         // Create Forms table
-         $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                     `entities_id` int(11) NOT NULL DEFAULT '0',
-                     `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
-                     `access_rights` tinyint(1) NOT NULL DEFAULT '1',
-                     `requesttype` int(11) NOT NULL DEFAULT '$requesttype',
-                     `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                     `description` varchar(255) COLLATE utf8_unicode_ci,
-                     `content` longtext COLLATE utf8_unicode_ci,
-                     `plugin_formcreator_categories_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-                     `is_active` tinyint(1) NOT NULL DEFAULT '0',
-                     `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-                     `helpdesk_home` tinyint(1) NOT NULL DEFAULT '0',
-                     `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
-                     `validation_required` tinyint(1) NOT NULL DEFAULT '0',
-                     `usage_count` int(11) NOT NULL DEFAULT '0',
-                     `is_default` tinyint(1) NOT NULL DEFAULT '0',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
-                  )
-                  ENGINE = MyISAM
-                  DEFAULT CHARACTER SET = utf8
-                  COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
-      }
-
-      // Migration from previous version
-      if (FieldExists($table, 'cat', false)
-          || !FieldExists($table, 'plugin_formcreator_categories_id', false)) {
-         $migration->addField($table, 'plugin_formcreator_categories_id',
-                              'integer', array('value' => '0'));
-      }
-
-      // Migration from previous version
-      if (!FieldExists($table, 'validation_required', false)) {
-         $migration->addField($table, 'validation_required', 'bool', array('value' => '0'));
-      }
-
-      // Migration from previous version
-      if (!FieldExists($table, 'requesttype', false)) {
-         $migration->addField($table, 'access_rights', 'bool', array('value' => '1'));
-         $migration->addField($table, 'requesttype', 'integer', array('value' => '1'));
-         $migration->addField($table, 'description', 'string');
-         $migration->addField($table, 'helpdesk_home', 'bool', array('value' => '0'));
-         $migration->addField($table, 'is_deleted', 'bool', array('value' => '0'));
-      }
-      $migration->migrationOneTable($table);
-
-      /**
-       * Migration of special chars from previous versions
-       *
-       * @since 0.85-1.2.3
-       */
-      $query  = "SELECT `id`, `name`, `description`, `content`
-                 FROM `$table`";
-      $result = $DB->query($query);
-      while ($line = $DB->fetch_array($result)) {
-         $query_update = "UPDATE `$table` SET
-                            `name`        = '" . plugin_formcreator_encode($line['name']) . "',
-                            `description` = '" . plugin_formcreator_encode($line['description']) . "',
-                            `content`     = '" . plugin_formcreator_encode($line['content']) . "'
-                          WHERE `id` = " . (int) $line['id'];
-         $DB->query($query_update) or die ($DB->error());
-      }
-
-      /**
-       * Add natural language search
-       * Add form usage counter
-       *
-       * @since 0.90-1.4
-       */
-      // An error may occur if the Search index does not exists
-      // This is not critical as we need to (re) create it
-      If (isIndex('glpi_plugin_formcreator_forms', 'Search')) {
-         $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`";
-         $DB->query($query);
-      }
-
-      // Re-add FULLTEXT index
-      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-      $DB->query($query) or die ($DB->error());
-
-      $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required',
-                                                                   'value' => '0'));
-      $migration->addField($table, 'is_default', 'bool', array('after' => 'usage_count',
-                                                               'value' => '0'));
-
-
-      // Create standard search options
-      $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
-
-      $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                  (`id`, `itemtype`, `num`, `rank`, `users_id`)
-               VALUES
-                  (NULL, '" . __CLASS__ . "', 30, 1, 0),
-                  (NULL, '" . __CLASS__ . "', 3, 2, 0),
-                  (NULL, '" . __CLASS__ . "', 10, 3, 0),
-                  (NULL, '" . __CLASS__ . "', 7, 4, 0),
-                  (NULL, '" . __CLASS__ . "', 8, 5, 0),
-                  (NULL, '" . __CLASS__ . "', 9, 6, 0);";
-      $DB->query($query) or die ($DB->error());
-
-
-      // add uuid to forms
-      if (!FieldExists($table, 'uuid', false)) {
-         $migration->addField($table, 'uuid', 'string', array('after' => 'is_default'));
-      }
-
-      $migration->migrationOneTable($table);
-
-      // fill missing uuid (force update of forms, see self::prepareInputForUpdate)
-      $obj = new self();
-      $all_forms = $obj->find("uuid IS NULL");
-      foreach($all_forms as $forms_id => $form) {
-         $obj->update(array('id' => $forms_id));
-      }
-
-      return true;
-   }
-
-   /**
-    * Database table uninstallation for the item type
-    *
-    * @return boolean True on success
-    */
-   public static function uninstall()
-   {
-      global $DB;
-
-      $DB->query('DROP TABLE IF EXISTS `'.self::getTable().'`');
-      $DB->query('DROP TABLE IF EXISTS `glpi_plugin_formcreator_questions_conditions`');
-
-      // Delete logs of the plugin
-      $log = new Log();
-      $log->deleteByCriteria(array('itemtype' => __CLASS__));
-
-      $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm'));
-
-      return true;
    }
 
    /**
