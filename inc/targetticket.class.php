@@ -1,4 +1,4 @@
-<?php
+:<?php
 class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
 
@@ -51,6 +51,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    static function getEnumUrgencyRule() {
       return array(
             'none'      => __('Urgency from template or Medium', 'formcreator'),
+            'specific'  => __('Specific urgency', 'formcreator'),
             'answer'    => __('Equals to the answer to the question', 'formcreator'),
       );
    }
@@ -58,6 +59,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    static function getEnumCategoryRule() {
       return array(
             'none'      => __('Category from template or none', 'formcreator'),
+            'specific'  => __('Specific category', 'formcreator'),
             'answer'    => __('Equals to the answer to the question', 'formcreator'),
       );
    }
@@ -241,9 +243,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          function change_urgency() {
             $('#urgency_specific_question').hide();
             $('#urgency_specific_value').hide();
+            $('#urgency_question_title').hide();
+            $('#urgency_question_value').hide();
 
             switch($('#dropdown_urgency_rule$rand').val()) {
                case 'answer' :
+                  $('#urgency_question_title').show();
+                  $('#urgency_question_value').show();
+                  break;
+               case 'specific':
                   $('#urgency_specific_title').show();
                   $('#urgency_specific_value').show();
                   break;
@@ -254,11 +262,18 @@ EOS;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="urgency_specific_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="urgency_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="urgency_specific_title" style="display: none">' . __('Urgency ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
 
       echo '<div id="urgency_specific_value" style="display: none">';
+      Ticket::dropdownUrgency(array(
+            'name' => '_urgency_specific',
+            'value' => $this->fields["urgency_question"],
+      ));
+      echo '</div>';
+      echo '<div id="urgency_question_value" style="display: none">';
       // select all user questions (GLPI Object)
       $query2 = "SELECT q.id, q.name, q.values
                 FROM glpi_plugin_formcreator_questions q
@@ -504,11 +519,17 @@ EOS;
       ));
       $script = <<<EOS
          function change_category() {
-            $('#category_specific_question').hide();
+            $('#category_specific_title').hide();
             $('#category_specific_value').hide();
+            $('#category_question_title').hide();
+            $('#category_question_value').hide();
 
             switch($('#dropdown_category_rule$rand').val()) {
                case 'answer' :
+                  $('#category_question_title').show();
+                  $('#category_question_value').show();
+                  break;
+               case 'specific' :
                   $('#category_specific_title').show();
                   $('#category_specific_value').show();
                   break;
@@ -519,10 +540,11 @@ EOS;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="category_specific_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
+      echo '<span id="category_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
-      echo '<div id="category_specific_value" style="display: none">';
+      echo '<div id="category_question_value" style="display: none">';
       // select all user questions (GLPI Object)
       $query2 = "SELECT `q`.`id`, `q`.`name`, `q`.`values`
                 FROM `glpi_plugin_formcreator_questions` `q`
@@ -539,6 +561,12 @@ EOS;
       }
       Dropdown::showFromArray('_category_question', $users_questions, array(
             'value' => $this->fields['category_question'],
+      ));
+      echo '</div>';
+      echo '<div id="category_specific_value" style="display: none">';
+      ITILCategory::dropdown(array(
+            'name'   => '_category_specific',
+            'value'  => $this->fields["category_question"],
       ));
       echo '</div>';
       echo '</td>';
@@ -1129,6 +1157,9 @@ EOS;
             case 'answer':
                $input['urgency_question'] = $input['_urgency_question'];
                break;
+            case 'specific':
+               $input['urgency_question'] = $input['_urgency_specific'];
+               break;
             default:
                $input['urgency_question'] = '0';
          }
@@ -1136,6 +1167,9 @@ EOS;
          switch ($input['category_rule']) {
             case 'answer':
                $input['category_question'] = $input['_category_question'];
+               break;
+            case 'specific':
+               $input['category_question'] = $input['_category_specific'];
                break;
             default:
                $input['category_question'] = '0';
@@ -1599,6 +1633,9 @@ EOS;
             $category = array_shift($found);
             $category = $category['answer'];
             break;
+         case 'specific':
+            $category = $this->fields['category_question'];
+            break;
          default:
             $category = null;
       }
@@ -1619,6 +1656,9 @@ EOS;
                   AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
             $urgency = array_shift($found);
             $urgency = $urgency['answer'];
+            break;
+         case 'specific':
+            $urgency = $this->fields['urgency_question'];
             break;
          default:
             $urgency = null;
@@ -1762,7 +1802,7 @@ EOS;
                $query = "ALTER TABLE `$table`
                CHANGE COLUMN `urgency_rule` `urgency_rule`
                ENUM($enum_urgency_rule)
-               NOT NULL DEFAULT 'requester'";
+               NOT NULL DEFAULT 'none'";
                $DB->query($query) or die($DB->error());
             }
          }
