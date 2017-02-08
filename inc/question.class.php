@@ -555,7 +555,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // actor field only
       // TODO : generalize to all other field types
       if ($input['fieldtype'] == 'actor') {
-         $actorField = new ActorField($input, $input['default_values']);
+         $actorField = new PluginFormcreatorActorField($input, $input['default_values']);
          $input['default_values'] = $actorField->serializeValue($input['default_values']);
       }
 
@@ -568,7 +568,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Actor field only
       if ($input['fieldtype'] == 'actor') {
-         $actorField = new ActorField($input, $input['default_values']);
+         $actorField = new PluginFormcreatorActorField($input, $input['default_values']);
          $input['default_values'] = $actorField->deserializeValue($input['default_values']);
       }
 
