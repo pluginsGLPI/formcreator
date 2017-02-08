@@ -12,6 +12,8 @@ function plugin_formcreator_update_2_5(Migration $migration) {
 
    plugin_formcreator_updateAnswer($migration);
    plugin_formcreator_updateCategory($migration);
+   plugin_formcreator_updateForm_Answer($migration);
+   plugin_formcreator_updateForm_Profile($migration);
    plugin_formcreator_updateFormValidator($migration);
    plugin_formcreator_updateForm($migration);
    plugin_formcreator_updateHeader($migration);
@@ -54,6 +56,9 @@ function plugin_formcreator_updateAnswer(Migration $migration) {
          'plugin_formcreator_formanwers_id',
          'plugin_formcreator_forms_answers_id',
          'integer');
+
+   $migration->addKey('glpi_plugin_formcreator_answers', 'plugin_formcreator_forms_answers_id');
+
    $migration->migrationOneTable('glpi_plugin_formcreator_answers');
 }
 
@@ -114,7 +119,9 @@ function plugin_formcreator_updateCategory(Migration $migration) {
       $query  = "UPDATE `glpi_plugin_formcreator_categories` SET `completename` = `name` WHERE `completename` = ''";
       $DB->query($query);
    }
+}
 
+function plugin_formcreator_updateForm_Answer(Migration $migration) {
    // Legacy upgrade of Form_Answers
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
 
@@ -149,7 +156,11 @@ function plugin_formcreator_updateCategory(Migration $migration) {
    SET `validator_id` = '0' WHERE `status`='waiting'";
    $DB->query($query) or die ($DB->error());
 
-   // Legacy upgrade of Form_Answers
+   $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_forms_id');
+   }
+
+function plugin_formcreator_updateForm_Profile(Migration $migration) {
+       // Legacy upgrade of Form_Answers
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_profiles");
 
    if (TableExists('glpi_plugin_formcreator_formprofiles')) {
