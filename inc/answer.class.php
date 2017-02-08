@@ -86,6 +86,8 @@ class PluginFormcreatorAnswer extends CommonDBChild
                                  'plugin_formcreator_formanwers_id',
                                  'plugin_formcreator_forms_answers_id',
                                  'integer');
+         $migration->addKey($table, 'plugin_formcreator_forms_answers_id');
+
          $migration->migrationOneTable($table);
       }
 

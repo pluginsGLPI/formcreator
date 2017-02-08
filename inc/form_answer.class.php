@@ -900,6 +900,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
       $DB->query($query) or die ($DB->error());
 
+      $migration->addKey($table, 'plugin_formcreator_forms_id');
+
       return true;
    }
 
