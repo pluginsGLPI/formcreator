@@ -179,8 +179,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          DEFAULT CHARACTER SET = utf8
          COLLATE = utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
-      } else {
-
       }
 
       $migration->displayMessage("Configuration of existing entities");

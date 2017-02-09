@@ -28,7 +28,7 @@ function plugin_formcreator_showWizardCategories($helpdesk = true) {
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
-function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords, $helpdeskHome = false) {
+function plugin_formcreator_showWizardForms($rootCategory, $keywords, $helpdeskHome) {
    $form = new PluginFormcreatorForm();
    $formList = $form->showFormList($rootCategory, $keywords, $helpdeskHome);
    echo json_encode($formList, JSON_UNESCAPED_SLASHES);

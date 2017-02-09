@@ -626,7 +626,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
             if (! (count($input['show_field']) == count($input['show_condition'])
                   && count($input['show_value']) == count($input['show_logic'])
                   && count($input['show_field']) == count($input['show_value']))) {
-               // TODO : add error message ?
+                  // TODO : add error message ?
+                  $is_cs_happy = true;
             } else {
                // Arrays all have the same count and ahve at least one item
                $order = 0;

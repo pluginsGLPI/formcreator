@@ -1129,9 +1129,6 @@ EOS;
             WHERE `glpi_profiles_users`.`users_id` = $requesters_id
             ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
-            while ($data_entities[] = $DB->fetch_array($res_entities)) {
-
-            }
             $first_entity = array_shift($data_entities);
             $datas['entities_id'] = $first_entity['entities_id'];
             break;
@@ -1467,8 +1464,6 @@ EOS;
          `tag_specifics` VARCHAR(255) NOT NULL
          ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
-      } else {
-
       }
 
       return true;
