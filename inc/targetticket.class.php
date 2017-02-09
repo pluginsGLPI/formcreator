@@ -60,8 +60,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -70,13 +69,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
-   public static function getTypeName($nb = 1)
-   {
+   public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
    }
 
@@ -88,8 +85,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=array())
-   {
+   public function showForm($options=array()) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -379,7 +375,6 @@ EOS;
 
       echo '</tr>';
 
-
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
@@ -481,7 +476,6 @@ EOS;
          echo '</tr>';
       }
 
-
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
       // -------------------------------------------------------------------------------------------
@@ -502,7 +496,6 @@ EOS;
       }
 
       echo '</table>';
-
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
@@ -721,7 +714,7 @@ EOS;
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-           break;
+            break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
@@ -791,7 +784,6 @@ EOS;
       echo "<hr>";
 
       Html::closeForm();
-
 
       // => List of saved observers
       foreach ($actors['observer'] as $id => $values) {
@@ -1023,21 +1015,20 @@ EOS;
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
       // Control fields values :
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
          // - name is required
-         if(empty($input['title'])) {
+         if (empty($input['title'])) {
             Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
             return array();
          }
 
          // - comment is required
-         if(empty($input['comment'])) {
+         if (empty($input['comment'])) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return array();
          }
@@ -1244,7 +1235,7 @@ EOS;
                       WHERE `glpi_profiles_users`.`users_id` = $requesters_id
                      ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
-            while($data_entities[] = $DB->fetch_array($res_entities)) {
+            while ($data_entities[] = $DB->fetch_array($res_entities)) {
 
             }
             $first_entity = array_shift($data_entities);
@@ -1493,7 +1484,7 @@ EOS;
       // Attach documents to ticket
       $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
                                AND items_id = ".$formanswer->getID());
-      if(count($found) > 0) {
+      if (count($found) > 0) {
          foreach ($found as $document) {
             $docItem->add(array(
                'documents_id' => $document['documents_id'],
@@ -1549,11 +1540,11 @@ EOS;
       $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
                                     '`order` ASC');
       $tab_section = array();
-      foreach($found as $section_item) {
+      foreach ($found as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $query_questions = "SELECT `questions`.*, `answers`.`answer`
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
@@ -1582,8 +1573,7 @@ EOS;
       return $content;
    }
 
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $enum_destination_entity = "'".implode("', '", array_keys(self::getEnumDestinationEntity()))."'";
@@ -1613,7 +1603,7 @@ EOS;
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
       } else {
-         if(!FieldExists($table, 'due_date_rule', false)) {
+         if (!FieldExists($table, 'due_date_rule', false)) {
             $query = "ALTER TABLE `$table`
                         ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
                         ADD `due_date_question` INT NULL DEFAULT NULL,
@@ -1624,7 +1614,7 @@ EOS;
          }
 
          // Migration to Formcreator 0.90-1.4
-         if(!FieldExists($table, 'destination_entity', false)) {
+         if (!FieldExists($table, 'destination_entity', false)) {
             $query = "ALTER TABLE `$table`
                         ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
@@ -1640,7 +1630,7 @@ EOS;
             }
          }
 
-         if(!FieldExists($table, 'tag_type', false)) {
+         if (!FieldExists($table, 'tag_type', false)) {
             $query = "ALTER TABLE `$table`
                          ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                          ADD `tag_questions` VARCHAR(255) NOT NULL,
@@ -1669,8 +1659,7 @@ EOS;
       return true;
    }
 
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
@@ -1687,7 +1676,9 @@ EOS;
 
       foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) continue;
+         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
+            continue;
+         }
 
          switch ($actor['actor_type']) {
             case 'creator' :
@@ -1840,11 +1831,11 @@ EOS;
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
       $tab_section = array();
-      foreach($found_section as $section_item) {
+      foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $sectionList = "'" . implode(', ', $tab_section) . "'";
          $question = new PluginFormcreatorQuestion();
          $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
@@ -1868,7 +1859,7 @@ EOS;
 
       if ($targetitems_id
           && isset($target_data['_actors'])) {
-         foreach($target_data['_actors'] as $actor) {
+         foreach ($target_data['_actors'] as $actor) {
             PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
          }
       }
@@ -1902,11 +1893,11 @@ EOS;
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
       $tab_section = array();
-      foreach($found_section as $section_item) {
+      foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $sectionList = "'" . implode(', ', $tab_section) . "'";
          $question = new PluginFormcreatorQuestion();
          $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
@@ -1922,7 +1913,7 @@ EOS;
             $content = str_replace("##question_$id##", "##question_$uuid##", $content);
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['comment'] = $content;
-             }
+         }
       }
 
       // remove key and fk

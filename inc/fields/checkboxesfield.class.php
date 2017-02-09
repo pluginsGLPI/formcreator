@@ -2,15 +2,14 @@
 class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 {
    const IS_MULTIPLE    = true;
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
          $values = array();
          $values = $this->getAvailableValues();
-         if(!empty($values)) {
+         if (!empty($values)) {
             echo '<div class="checkboxes">';
             $i = 0;
             foreach ($values as $value) {
@@ -52,7 +51,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          if (!empty($answer)) {
             if (is_array($answer)) {
                echo implode("<br />", $answer);
-            } elseif (is_array(json_decode($answer))) {
+            } else if (is_array(json_decode($answer))) {
                echo implode("<br />", json_decode($answer));
             } else {
                echo $this->getAnswer();
@@ -63,10 +62,11 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       }
    }
 
-	public function isValid($value)
-   {
+   public function isValid($value) {
       $value = json_decode($value);
-      if (is_null($value)) $value = array();
+      if (is_null($value)) {
+         $value = array();
+      }
 
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
@@ -76,31 +76,29 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             ERROR);
          return false;
 
-      // Min range not set or number of selected item lower than min
-      } elseif (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
+         // Min range not set or number of selected item lower than min
+      } else if (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
          $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $this->fields['range_min']);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
-      // Max range not set or number of selected item greater than max
-      } elseif (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
-         $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
-         Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
-         return false;
+         // Max range not set or number of selected item greater than max
+      } else if (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
+          $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
+          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+          return false;
 
-      // All is OK
+         // All is OK
       } else {
-         return true;
+          return true;
       }
-	}
+   }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('Checkboxes', 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 1,
@@ -115,8 +113,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['checkboxes'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

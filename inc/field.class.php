@@ -8,20 +8,18 @@ abstract class PluginFormcreatorField implements Field
 
    protected $fields = array();
 
-   public function __construct($fields, $datas = array())
-   {
+   public function __construct($fields, $datas = array()) {
       $this->fields           = $fields;
       $this->fields['answer'] = $datas;
    }
 
-   public function show($canEdit = true)
-   {
+   public function show($canEdit = true) {
       $required = ($canEdit && $this->fields['required']) ? ' required' : '';
 
       echo '<div class="form-group ' . $required . '" id="form-group-field' . $this->fields['id'] . '">';
       echo '<label for="formcreator_field_' . $this->fields['id'] . '">';
       echo $this->getLabel();
-      if($canEdit && $this->fields['required']) {
+      if ($canEdit && $this->fields['required']) {
          echo ' <span class="red">*</span>';
       }
       echo '</label>';
@@ -38,8 +36,7 @@ abstract class PluginFormcreatorField implements Field
          . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");</script>';
    }
 
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<input type="text" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '"
@@ -51,20 +48,17 @@ abstract class PluginFormcreatorField implements Field
       }
    }
 
-   public function getLabel()
-   {
+   public function getLabel() {
       return $this->fields['name'];
    }
 
-   public function getField()
-   {
+   public function getField() {
 
    }
 
-   public function getValue()
-   {
+   public function getValue() {
       if (isset($this->fields['answer'])) {
-         if(!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
+         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
             return json_decode($this->fields['answer']);
          }
          return $this->fields['answer'];
@@ -80,18 +74,15 @@ abstract class PluginFormcreatorField implements Field
       }
    }
 
-   public function getAnswer()
-   {
+   public function getAnswer() {
       return $this->getValue();
    }
 
-   public function getAvailableValues()
-   {
+   public function getAvailableValues() {
       return explode("\r\n", $this->fields['values']);
    }
 
-   public function isValid($value)
-   {
+   public function isValid($value) {
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
          Session::addMessageAfterRedirect(
@@ -105,8 +96,7 @@ abstract class PluginFormcreatorField implements Field
       return true;
    }
 
-   public function isRequired()
-   {
+   public function isRequired() {
       return $this->fields['required'];
    }
 

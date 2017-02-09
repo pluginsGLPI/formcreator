@@ -63,11 +63,11 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
     * @depends testInitCreateForm
     * @param PluginFormcreatorForm  $form
     */
-    public function testInitCreateValidator(PluginFormcreatorForm $form) {
+   public function testInitCreateValidator(PluginFormcreatorForm $form) {
       $formValidator = new PluginFormcreatorForm_Validator();
       $formValidator->add(
-            $this->userValidatorData
-            + array('plugin_formcreator_forms_id' => $form->getID())
+          $this->userValidatorData
+          + array('plugin_formcreator_forms_id' => $form->getID())
       );
       $this->assertFalse($formValidator->isNewItem());
 
@@ -78,8 +78,8 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
     * @depends testInitCreateForm
     * @param PluginFormcreatorForm $form
     */
-    public function testInitCreateFormAnswer(PluginFormcreatorForm $form) {
-       global $DB;
+   public function testInitCreateFormAnswer(PluginFormcreatorForm $form) {
+      global $DB;
 
       $this->formAnswersData['formcreator_form'] = $form->getID();
 
@@ -140,10 +140,10 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
     * @param PluginFormcreatorForm $form
     * @param PluginFormcreatorForm_Answer $formAnswer
     */
-    public function testUserValidates(User $user, PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formAnswer) {
-       // Login as glpi
-       $this->assertTrue(self::login('glpi', 'glpi', true));
+   public function testUserValidates(User $user, PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formAnswer) {
+      // Login as glpi
+      $this->assertTrue(self::login('glpi', 'glpi', true));
 
-       $this->assertTrue($formAnswer->canValidate($form, $formAnswer));
+      $this->assertTrue($formAnswer->canValidate($form, $formAnswer));
    }
 }

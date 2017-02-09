@@ -7,15 +7,14 @@ class PluginFormcreatorFields
     *
     * @return Array     field_type => File_path
     */
-   public static function getTypes()
-   {
+   public static function getTypes() {
       $tab_field_types     = array();
 
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
          preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
          $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
-         if(class_exists($classname)) {
+         if (class_exists($classname)) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
          }
       }
@@ -28,8 +27,7 @@ class PluginFormcreatorFields
     *
     * @return Array     field_type => Name
     */
-   public static function getNames()
-   {
+   public static function getNames() {
       // Get field types and file path
       $tab_field_types = self::getTypes();
       $plugin = new Plugin();
@@ -61,14 +59,13 @@ class PluginFormcreatorFields
     *
     * @return String          field_value
     */
-   public static function getValue($field, $value)
-   {
+   public static function getValue($field, $value) {
       $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'-field.class.php';
-      if(is_file($class_file)) {
+      if (is_file($class_file)) {
          include_once ($class_file);
 
          $classname = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
-         if(class_exists($classname)) {
+         if (class_exists($classname)) {
             $obj = new $classname($field, $value);
             return $obj->getAnswer();
          }
@@ -77,8 +74,7 @@ class PluginFormcreatorFields
    }
 
 
-   public static function printAllTabFieldsForJS()
-   {
+   public static function printAllTabFieldsForJS() {
       $tabFieldsForJS = '';
       // Get field types and file path
       $tab_field_types = self::getTypes();
@@ -87,19 +83,18 @@ class PluginFormcreatorFields
       foreach ($tab_field_types as $field_type => $class_file) {
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
-         if(method_exists($classname, 'getJSFields')) {
+         if (method_exists($classname, 'getJSFields')) {
             $tabFieldsForJS .= PHP_EOL.'            '.$classname::getJSFields();
          }
       }
       return $tabFieldsForJS;
    }
 
-   public static function showField($field, $datas = null, $edit = true)
-   {
+   public static function showField($field, $datas = null, $edit = true) {
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
-      if(array_key_exists($field['fieldtype'], $tab_field_types)) {
+      if (array_key_exists($field['fieldtype'], $tab_field_types)) {
          $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
 
          $plugin = new Plugin();
@@ -119,8 +114,7 @@ class PluginFormcreatorFields
     * @param   Array       $values     Array of current fields values (id => value)
     * @return  boolean                 Should be shown or not
     */
-   public static function isVisible($id, $values)
-   {
+   public static function isVisible($id, $values) {
       global $DB;
 
       /**
@@ -193,7 +187,7 @@ class PluginFormcreatorFields
                   $decodedConditionField = json_decode($values[$condition['field']]);
                   if (is_array($values[$condition['field']])) {
                      $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                      $value = !in_array($condition['value'], $decodedConditionField);
                   } else {
                      $value = $condition['value'] != $values[$condition['field']];
@@ -208,7 +202,7 @@ class PluginFormcreatorFields
                   $decodedConditionField = json_decode($values[$condition['field']]);
                   if (is_array($values[$condition['field']])) {
                      $value = in_array($condition['value'], $values[$condition['field']]);
-                  } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                      $value = in_array($condition['value'], $decodedConditionField);
                   } else {
                      $value = $condition['value'] == $values[$condition['field']];
@@ -221,7 +215,7 @@ class PluginFormcreatorFields
                if (is_array($values[$condition['field']])) {
                   eval('$value = "'.$condition['value'].'" '.$condition['operator']
                     .' Array('.implode(',', $values[$condition['field']]).');');
-               } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+               } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                   eval('$value = "'.$condition['value'].'" '.$condition['operator']
                     .' Array(' .implode(',', $decodedConditionField).');');
                } else {
@@ -275,7 +269,7 @@ class PluginFormcreatorFields
       if ($question->fields['show_rule'] == 'hidden') {
          return $return;
 
-      // else show it if condition is false
+         // else show it if condition is false
       } else {
          return !$return;
       }

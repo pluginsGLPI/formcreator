@@ -3,7 +3,7 @@ include ('../../../inc/includes.php');
 
 Session::checkRight("entity", UPDATE);
 
-if(empty($_REQUEST['section_id'])) {
+if (empty($_REQUEST['section_id'])) {
    $section_id    = 0;
    $name          = '';
    $uuid          = '';
@@ -19,7 +19,7 @@ echo '<form name="form_section" method="post" action="'.$CFG_GLPI['root_doc'].'/
 echo '<table class="tab_cadre_fixe">';
 echo '<tr>';
 echo '<th colspan="2">';
-if(0 == $section_id) {
+if (0 == $section_id) {
    echo  __('Add a section', 'formcreator');
 } else {
    echo  __('Edit a section', 'formcreator');
@@ -37,7 +37,7 @@ echo '<td colspan="2" class="center">';
 echo '<input type="hidden" name="id" value="'.$section_id.'" />';
 echo '<input type="hidden" name="uuid" value="'.$uuid.'" />';
 echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($_REQUEST['form_id']).'" />';
-if(0 == $section_id) {
+if (0 == $section_id) {
    echo '<input type="hidden" name="add" value="1" />';
    echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
 } else {

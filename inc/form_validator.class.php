@@ -35,8 +35,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
    }
 
 
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $obj   = new self();
@@ -80,14 +79,13 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
 
       // fill missing uuid
       $all_validators = $obj->find("uuid IS NULL");
-      foreach($all_validators as $validators_id => $validator) {
+      foreach ($all_validators as $validators_id => $validator) {
          $obj->update(array('id'   => $validators_id,
                             'uuid' => plugin_formcreator_getUuid()));
       }
    }
 
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       $table = self::getTable();

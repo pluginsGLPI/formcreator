@@ -6,8 +6,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
    const APPROVER = 102;
 
 
-   public function getEvents()
-   {
+   public function getEvents() {
       $events = array (
          'plugin_formcreator_form_created'    => __('The form as been saved', 'formcreator'),
          'plugin_formcreator_need_validation' => __('A form need to be validate', 'formcreator'),
@@ -18,8 +17,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       return $events;
    }
 
-   public function getDatasForTemplate($event, $options = array())
-   {
+   public function getDatasForTemplate($event, $options = array()) {
       global $CFG_GLPI;
 
       $form = new PluginFormcreatorForm();
@@ -43,8 +41,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       $this->datas['##formcreator.request_id##']         = $this->obj->fields['id'];
    }
 
-   public function getTags()
-   {
+   public function getTags() {
       $tags = array(
          'formcreator.form_id'            => __('Form #', 'formcreator'),
          'formcreator.form_name'          => __('Form name', 'formcreator'),
@@ -65,14 +62,12 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       }
    }
 
-   public function getAdditionalTargets($event='')
-   {
+   public function getAdditionalTargets($event='') {
       $this->addTarget(self::AUTHOR, __('Author'));
       $this->addTarget(self::APPROVER, __('Approver'));
    }
 
-   public function getSpecificTargets($data, $options)
-   {
+   public function getSpecificTargets($data, $options) {
       switch ($data['items_id']) {
          case self::AUTHOR :
             $this->getUserByField('requester_id', true);
@@ -82,15 +77,14 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
             $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
             if ($form->fields['validation_required'] == 1) {
                $this->getUserByField('validator_id', true);
-            } elseif ($form->fields['validation_required'] == 2) {
+            } else if ($form->fields['validation_required'] == 2) {
                $this->getAddressesByGroup(0, $this->obj->fields['validator_id']);
             }
             break;
       }
    }
 
-   public static function install()
-   {
+   public static function install() {
       $notifications = array(
          'plugin_formcreator_form_created' => array(
                'name'     => __('A form has been created', 'formcreator'),
@@ -129,8 +123,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       $notification_target = new NotificationTarget();
       $template            = new NotificationTemplate();
       $translation         = new NotificationTemplateTranslation();
-      foreach ($notifications as $event => $datas)
-      {
+      foreach ($notifications as $event => $datas) {
          // Check if notification allready exists
          $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
 
@@ -174,8 +167,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       }
    }
 
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       // Define DB tables

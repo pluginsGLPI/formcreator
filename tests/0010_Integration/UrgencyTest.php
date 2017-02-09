@@ -68,7 +68,7 @@ class UrgencyTest extends SuperAdminTestCase
          $section->add($sectionData);
          $this->assertFalse($section->isNewItem());
          $sectionId = $section->getID();
-         foreach($questionsData as $questionData) {
+         foreach ($questionsData as $questionData) {
             // Create question
             $questionData ['plugin_formcreator_sections_id'] = $section->getID();
             $question = new PluginFormcreatorQuestion();
@@ -154,7 +154,7 @@ class UrgencyTest extends SuperAdminTestCase
    public function testSendForm(PluginFormcreatorForm $form, $urgencyQuestions) {
       $formId = $form->getID();
       $_POST = array('formcreator_form' => $form->getID());
-      foreach($urgencyQuestions as $question) {
+      foreach ($urgencyQuestions as $question) {
          if ($question['question'] !== null) {
             $_POST['formcreator_field_' . $question['question']->getID()] = $question['expected'];
          }
@@ -163,7 +163,7 @@ class UrgencyTest extends SuperAdminTestCase
       unset($_POST);
 
       // Check urgency for each target ticket
-      foreach($urgencyQuestions as $question) {
+      foreach ($urgencyQuestions as $question) {
          $targetTicket = $question['targetTicket'];
          $targetName = $targetTicket->getField('name');
          $ticket = new Ticket();

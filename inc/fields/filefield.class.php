@@ -1,8 +1,7 @@
 <?php
 class PluginFormcreatorFileField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          $required = $this->isRequired() ? ' required' : '';
 
@@ -15,14 +14,13 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       } else {
          $doc = new Document();
          $answer = $this->getAnswer();
-         if($doc->getFromDB($answer)) {
+         if ($doc->getFromDB($answer)) {
             echo $doc->getDownloadLink();
          }
       }
    }
 
-   public function isValid($value)
-   {
+   public function isValid($value) {
       // If the field is required it can't be empty
       if ($this->isRequired() && (empty($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name'])
                                  || !is_file($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name']))) {
@@ -34,13 +32,11 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('File');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 0,
@@ -55,8 +51,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['file'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

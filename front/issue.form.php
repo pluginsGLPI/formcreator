@@ -3,13 +3,13 @@ require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if($plugin->isActivated('formcreator')) {
+if ($plugin->isActivated('formcreator')) {
    if (!isset($_REQUEST['sub_itemtype'])) {
       Html::displayNotFoundError();
    }
 
    $issue = new PluginFormcreatorIssue();
-   if(isset($_POST['save_formanswer'])) {
+   if (isset($_POST['save_formanswer'])) {
       $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
       $_POST['status']                      = 'waiting';
       $issue->saveAnswers($_POST);

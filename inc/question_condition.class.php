@@ -88,8 +88,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       return $condition;
    }
 
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $enum_logic = "'".implode("', '", array_keys(self::getEnumShowLogic()))."'";
@@ -188,7 +187,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       // fill missing uuid (force update of questions, see self::prepareInputForUpdate)
       $condition_obj = new self();
       $all_conditions = $condition_obj->find("uuid IS NULL");
-      foreach($all_conditions as $conditions_id => $condition) {
+      foreach ($all_conditions as $conditions_id => $condition) {
          $condition_obj->update(array('id'   => $conditions_id,
                'uuid' => plugin_formcreator_getUuid()));
       }
@@ -201,7 +200,6 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
          NULL DEFAULT NULL";
          $DB->query($query) or die($DB->error());
       }
-
 
       return true;
    }
@@ -249,7 +247,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $question = new PluginFormcreatorQuestion();
       $questionsInForm = $question->getQuestionsFromForm($form_id);
       $questions_tab = array();
-      foreach($questionsInForm as $question) {
+      foreach ($questionsInForm as $question) {
          if (strlen($question->getField('name')) > 30) {
             $questions_tab[$question->getID()] = substr($question->getField('name'),
                   0,
@@ -313,8 +311,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       return $html;
    }
 
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       $table = self::getTable();

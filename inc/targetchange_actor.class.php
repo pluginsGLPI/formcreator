@@ -2,8 +2,7 @@
 class PluginFormcreatorTargetChange_Actor extends CommonDBTM
 {
 
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $table = self::getTable();
@@ -25,7 +24,7 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
       // fill missing uuid
       $obj = new self();
       $all_actor = $obj->find("uuid IS NULL");
-      foreach($all_actor as $actors_id => $actor) {
+      foreach ($all_actor as $actors_id => $actor) {
          $obj->update(array('id'   => $actors_id,
                'uuid' => plugin_formcreator_getUuid()));
       }
@@ -42,8 +41,7 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
       return $input;
    }
 
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       $table = self::getTable();
@@ -73,9 +71,9 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
          if (plugin_formcreator_getFromDBByField($section, 'name', $exploded[0])
                && $questions_id = plugin_formcreator_getFromDBByField($question, 'name', $exploded[1])) {
                   $actor['actor_value'] = $questions_id;
-               } else{
-                  return false;
-               }
+         } else {
+            return false;
+         }
 
       } else if (isset($actor['_user'])) {
          $user = new User;
@@ -143,7 +141,7 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
                      "##$$##".
                      $question->fields['name'];
                      unset($target_actor['actor_value']);
-                  }
+            }
                   break;
          case 'person':
             $user = new User;

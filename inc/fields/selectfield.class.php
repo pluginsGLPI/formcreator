@@ -1,8 +1,7 @@
 <?php
 class PluginFormcreatorSelectField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          $rand       = mt_rand();
          $tab_values = array();
@@ -10,12 +9,16 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          $values     = $this->getAvailableValues();
 
          echo '<div class="form_field">';
-         if(!empty($this->fields['values'])) {
+         if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
-               if ((trim($value) != '')) $tab_values[$value] = $value;
+               if ((trim($value) != '')) {
+                  $tab_values[$value] = $value;
+               }
             }
 
-            if($this->fields['show_empty']) $tab_values = array('' => '-----') + $tab_values;
+            if ($this->fields['show_empty']) {
+               $tab_values = array('' => '-----') + $tab_values;
+            }
             Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, array(
                'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
                'values'    => static::IS_MULTIPLE ? $this->getValue() : array(),
@@ -39,20 +42,17 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
       }
    }
 
-   public function getAnswer()
-   {
+   public function getAnswer() {
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
       return in_array(Html::entities_deep($value), $values) ? $value : $this->fields['default_values'];
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('Select', 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 1,
@@ -67,8 +67,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['select'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

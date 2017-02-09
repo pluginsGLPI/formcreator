@@ -2,13 +2,11 @@
 class PluginFormcreatorHeader extends CommonDropdown
 {
 
-   public static function getTypeName($nb=1)
-   {
+   public static function getTypeName($nb=1) {
       return _n('Header', 'Headers', $nb, 'formcreator');
    }
 
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "PluginFormcreatorConfig":
             $env       = new self;
@@ -19,8 +17,7 @@ class PluginFormcreatorHeader extends CommonDropdown
       return '';
    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       $header  = new self();
@@ -71,8 +68,7 @@ class PluginFormcreatorHeader extends CommonDropdown
       Search::showList(__CLASS__, $params);
    }
 
-   public function showForm($ID, $options = array())
-   {
+   public function showForm($ID, $options = array()) {
       if (!$this->isNewID($ID)) {
          $this->check($ID, READ);
       } else {
@@ -96,14 +92,12 @@ class PluginFormcreatorHeader extends CommonDropdown
       echo "</td>";
       echo "</tr>";
 
-
       $this->showFormButtons($options);
 
       return true;
    }
 
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       $header = new self();
       $found = $header->find('entities_id = '.(int) $input['entities_id']);
       if (count($found) > 0) {
@@ -114,8 +108,7 @@ class PluginFormcreatorHeader extends CommonDropdown
       return $input;
    }
 
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $table = getTableForItemType(__CLASS__);
@@ -141,12 +134,10 @@ class PluginFormcreatorHeader extends CommonDropdown
          $DB->query("DROP TABLE glpi_plugin_formcreator_titles");
       }
 
-
       return true;
-      }
+   }
 
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";

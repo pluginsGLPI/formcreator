@@ -60,7 +60,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       }
 
-
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
 
@@ -91,7 +90,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
          echo "<input type='hidden' name='id' value='".$entity->fields["id"]."'>";
-         echo "<input type='submit' name='update' value=\""._sx('button','Save')."\" class='submit'>";
+         echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
@@ -163,8 +162,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     * @param Migration $migration
     * @return boolean True on success
     */
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $table = self::getTable();
@@ -205,8 +203,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     *
     * @return boolean True on success
     */
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB;
 
       $table = self::getTable();

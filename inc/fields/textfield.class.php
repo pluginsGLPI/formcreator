@@ -1,39 +1,38 @@
 <?php
 class PluginFormcreatorTextField extends PluginFormcreatorField
 {
-	public function isValid($value)
-   {
-      if (!parent::isValid($value)) return false;
+   public function isValid($value) {
+      if (!parent::isValid($value)) {
+         return false;
+      }
 
       $value = utf8_decode(stripcslashes($value));
 
       // Min range not set or text length longer than min length
-      if(!empty($this->fields['range_min']) && strlen($value) < $this->fields['range_min']) {
+      if (!empty($this->fields['range_min']) && strlen($value) < $this->fields['range_min']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $this->fields['range_min']) . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
-      // Max range not set or text length shorter than max length
-      } elseif(!empty($this->fields['range_max']) && strlen($value) > $this->fields['range_max']) {
+         // Max range not set or text length shorter than max length
+      } else if (!empty($this->fields['range_max']) && strlen($value) > $this->fields['range_max']) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $this->fields['range_max']) . ' ' . $this->fields['name'], false, ERROR);
          return false;
 
-      // Specific format not set or well match
-      } elseif(!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
-         Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
-         return false;
-		}
+         // Specific format not set or well match
+      } else if (!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
+          Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+          return false;
+      }
 
-      // All is OK
-		return true;
-	}
+       // All is OK
+      return true;
+   }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('Text', 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 1,
@@ -48,8 +47,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

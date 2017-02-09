@@ -68,7 +68,7 @@ class FormDuplicationTest extends SuperAdminTestCase
          $section->add($sectionData);
          $this->assertFalse($section->isNewItem());
          $sectionId = $section->getID();
-         foreach($questionsData as $questionData) {
+         foreach ($questionsData as $questionData) {
             // Create question
             $questionData ['plugin_formcreator_sections_id'] = $section->getID();
             $question = new PluginFormcreatorQuestion();
