@@ -43,7 +43,6 @@ class PluginFormcreatorWizard {
       echo "<input type='checkbox' id='formcreator-toggle-nav-responsive'>";
       echo "<label for='formcreator-toggle-nav-responsive' class='formcreator-nav-button'></label>";
 
-
       echo '<div id="header" class ="plugin_formcreator_leftHeader">';
 
       // menu toggle (desktop mode)
@@ -55,7 +54,6 @@ class PluginFormcreatorWizard {
       echo '<div id="header_top">';
       echo '<div id="c_logo"></div>';
       echo '</div>';
-
 
       // Left vertical menu
       echo '<div id="c_menu" class="plugin_formcreator_leftMenu">';
@@ -96,7 +94,6 @@ class PluginFormcreatorWizard {
          echo '</a></li>';
       }
 
-
       $query = "SELECT `glpi_bookmarks`.*,
                        `glpi_bookmarks_users`.`id` AS IS_DEFAULT
                 FROM `glpi_bookmarks`
@@ -110,7 +107,7 @@ class PluginFormcreatorWizard {
                      getEntitiesRestrictRequest("AND", "glpi_bookmarks", "", "", true);
 
       if ($result = $DB->query($query)) {
-         if($numrows = $DB->numrows($result)) {
+         if ($numrows = $DB->numrows($result)) {
             echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_bookmarksIcon">';
             Ajax::createIframeModalWindow('loadbookmark',
                   $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
@@ -132,8 +129,6 @@ class PluginFormcreatorWizard {
       echo '<div id="header_top" class="formcreator_header_top">';
       self::showHeaderTopContent();
       echo '</div>'; //.formcreator_header_top
-
-
 
       echo '<div id="page" class="plugin_formcreator_page">';
 
@@ -196,7 +191,7 @@ class PluginFormcreatorWizard {
       if (count($status_count[Ticket::INCOMING]) > 0) {
          echo "<span class='status status_incoming'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getIncomingCriteria(),'&amp;')."'>
+                       Toolbox::append_params(PluginFormcreatorIssue::getIncomingCriteria(), '&amp;')."'>
                <span class='status_number'>".
                $status_count[Ticket::INCOMING]."
                </span>
@@ -208,7 +203,7 @@ class PluginFormcreatorWizard {
       if (count($status_count[Ticket::WAITING]) > 0) {
          echo "<span class='status status_waiting'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getWaitingCriteria(),'&amp;')."'>
+                       Toolbox::append_params(PluginFormcreatorIssue::getWaitingCriteria(), '&amp;')."'>
                <span class='status_number'>".
                $status_count[Ticket::WAITING]."
                </span>
@@ -220,7 +215,7 @@ class PluginFormcreatorWizard {
       if (count($status_count['to_validate']) > 0) {
          echo "<span class='status status_validate'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(),'&amp;')."'>
+                       Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(), '&amp;')."'>
                <span class='status_number'>".
                $status_count['to_validate']."
                </span>
@@ -232,7 +227,7 @@ class PluginFormcreatorWizard {
       if (count($status_count[Ticket::SOLVED]) > 0) {
          echo "<span class='status status_solved'>
                <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(),'&amp;')."'>
+                       Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(), '&amp;')."'>
                <span class='status_number'>".
                $status_count[Ticket::SOLVED]."
                </span>
@@ -241,7 +236,7 @@ class PluginFormcreatorWizard {
                </span>";
       }
 
-      echo '</span>'; #formcreator_servicecatalogue_ticket_summary
+      echo '</span>'; // formcreator_servicecatalogue_ticket_summary
    }
 
    protected static function findActiveMenuItem() {

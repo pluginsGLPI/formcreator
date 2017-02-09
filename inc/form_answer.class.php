@@ -15,8 +15,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -25,8 +24,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
@@ -36,8 +34,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0)
-   {
+   public static function getTypeName($nb = 0) {
       return _n('Form answer', 'Form answers', $nb, 'formcreator');
    }
 
@@ -46,8 +43,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return Array Array of fields to show in search engine and options for each fields
     */
-   public function getSearchOptions()
-   {
+   public function getSearchOptions() {
       $tab = [];
 
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
@@ -113,7 +109,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             $questions = $question->find("`".PluginFormcreatorQuestion::$items_id."` = ".
                                          $sections_id);
 
-            foreach($questions as $questions_id => $current_question) {
+            foreach ($questions as $questions_id => $current_question) {
                $tab[$optindex] = [
                   'table'         => PluginFormcreatorAnswer::getTable(),
                   'field'         => 'answer',
@@ -143,8 +139,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param  Array  $options Options (optional)
     * @return Mixed           Value to be displayed
     */
-   public static function getSpecificValueToDisplay($field, $values, array $options=array())
-   {
+   public static function getSpecificValueToDisplay($field, $values, array $options=array()) {
       global $CFG_GLPI;
 
       if (!is_array($values)) {
@@ -172,8 +167,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return String                 Html string to be displayed for the form field
     **/
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array())
-   {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
       if (!is_array($values)) {
          $values = array($field => $values);
       }
@@ -212,8 +206,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
-   {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       if ($item instanceof PluginFormcreatorForm) {
          self::showForForm($item);
       } else {
@@ -221,8 +214,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
    }
 
-   public function defineTabs($options = array())
-   {
+   public function defineTabs($options = array()) {
       $ong = array();
       $this->addDefaultFormTab($ong);
       if ($this->fields['id'] > 0) {
@@ -242,8 +234,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
-   {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       if ($item instanceof PluginFormcreatorForm) {
          $number  = count($this->find("`".self::$items_id."` = ".$item->getID()));
          return self::createTabEntry(self::getTypeName($number), $number);
@@ -350,12 +341,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          echo '<div class="refused_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
-      } elseif($this->fields['status'] == 'accepted') {
+      } else if ($this->fields['status'] == 'accepted') {
          echo '<div class="accepted_header">';
          echo '<div>';
          if (!empty($this->fields['comment'])) {
             echo nl2br($this->fields['comment']);
-         } elseif($form->fields['validation_required']) {
+         } else if ($form->fields['validation_required']) {
             echo __('Form accepted by validator.', 'formcreator');
          } else {
             echo __('Form successfully saved.', 'formcreator');
@@ -410,8 +401,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          echo '</div>';
          echo '</div>';
 
-      // Display validation form
-      } elseif(($this->fields['status'] == 'waiting') && $canValidate) {
+         // Display validation form
+      } else if (($this->fields['status'] == 'waiting') && $canValidate) {
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<div class="form-group required line1">';
@@ -440,7 +431,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
 
       echo '</div>';
-//      echo '</form>';
+      //      echo '</form>';
       echo '<script type="text/javascript">
                function checkComment(field) {
                   if (document.getElementById("comment").value == "") {
@@ -465,8 +456,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
       $input['name'] = $form->getName();
@@ -482,13 +472,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       return $input;
    }
 
-   public function saveAnswers($datas)
-   {
+   public function saveAnswers($datas) {
       global $DB;
 
       $form   = new PluginFormcreatorForm();
@@ -541,7 +529,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'id'     => $question['answer_id'],
                      'answer' => $answer_value,
                   ), 0);
-               } elseif (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
+               } else if (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
                      && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
                   $doc    = new Document();
 
@@ -577,7 +565,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             }
          }
 
-      // Create new form answer object
+         // Create new form answer object
       } else {
          // Does the form need to be validate ?
          if ($form->fields['validation_required']) {
@@ -736,14 +724,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
 
-   public function generateTarget()
-   {
+   public function generateTarget() {
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
       $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       // Generate targets
-      foreach($found_targets as $target) {
+      foreach ($found_targets as $target) {
          $obj = new $target['itemtype'];
          $obj->getFromDB($target['items_id']);
          if (!$obj->save($this)) {
@@ -759,8 +746,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return String                                    Full form questions and answers to be print
     */
-   public function getFullForm()
-   {
+   public function getFullForm() {
       global $CFG_GLPI, $DB;
 
       $question_no = 0;
@@ -814,9 +800,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          }
 
          // Don't save tags in "full form"
-         if ($question_line['fieldtype'] == 'tag') continue;
+         if ($question_line['fieldtype'] == 'tag') {
+            continue;
+         }
 
-         if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) continue;
+         if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
+            continue;
+         }
 
          if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
             $question_no ++;
@@ -829,18 +819,18 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   if ($CFG_GLPI['use_rich_text']) {
                      $output_value = '<ul>';
                      foreach ($value as $choice) {
-                      $output_value .= '<li>' . $choice . '</li>';
+                        $output_value .= '<li>' . $choice . '</li>';
                      }
                      $output_value .= '</ul>';
                   } else {
                      $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
                   }
-               } elseif (is_array(json_decode($value))) {
+               } else if (is_array(json_decode($value))) {
                   if ($CFG_GLPI['use_rich_text']) {
                      $value = json_decode($value);
                      $output_value = '<ul>';
                      foreach ($value as $choice) {
-                      $output_value .= '<li>' . $choice . '</li>';
+                        $output_value .= '<li>' . $choice . '</li>';
                      }
                      $output_value .= '</ul>';
                   } else {
@@ -849,7 +839,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                } else {
                   $output_value = $value;
                }
-            } elseif ($question_line['fieldtype'] == 'textarea') {
+            } else if ($question_line['fieldtype'] == 'textarea') {
                if ($CFG_GLPI['use_rich_text']) {
                   $output_value = '<br /><blockquote>' . $value . '</blockquote>';
                } else {
@@ -878,8 +868,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return nothing
    **/
-   public function post_purgeItem()
-   {
+   public function post_purgeItem() {
       global $DB;
 
       $table = getTableForItemType('PluginFormcreatorAnswer');
@@ -899,8 +888,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param Migration $migration
     * @return boolean True on success
     */
-   public static function install(Migration $migration)
-   {
+   public static function install(Migration $migration) {
       global $DB;
 
       $table = self::getTable();
@@ -977,8 +965,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return boolean True on success
     */
-   public static function uninstall()
-   {
+   public static function uninstall() {
       global $DB, $CFG_GLPI;
 
       // Delete logs of the plugin

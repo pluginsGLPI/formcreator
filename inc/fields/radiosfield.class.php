@@ -1,14 +1,13 @@
 <?php
 class PluginFormcreatorRadiosField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
          $values = $this->getAvailableValues();
-         if(!empty($values)) {
+         if (!empty($values)) {
             echo '<div class="formcreator_radios">';
             $i = 0;
             foreach ($values as $value) {
@@ -43,13 +42,11 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       }
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('Radios', 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 1,
@@ -64,8 +61,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['radios'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

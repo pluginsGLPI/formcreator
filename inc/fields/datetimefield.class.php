@@ -1,8 +1,7 @@
 <?php
 class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          $required = ($canEdit && $this->fields['required']) ? ' required' : '';
          $rand     = mt_rand();
@@ -27,8 +26,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       }
    }
 
-   public function getValue()
-   {
+   public function getValue() {
       if (isset($this->fields['answer'])) {
          $date = $this->fields['answer'];
       } else {
@@ -37,13 +35,11 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return (strtotime($date) != '') ? $date : null;
    }
 
-   public function getAnswer()
-   {
+   public function getAnswer() {
       return Html::convDateTime($this->getValue());
    }
 
-   public function isValid($value)
-   {
+   public function isValid($value) {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($value) == '')) {
          Session::addMessageAfterRedirect(
@@ -57,13 +53,11 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('Datetime', 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 0,
@@ -78,8 +72,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['datetime'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

@@ -1,11 +1,10 @@
 <?php
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<div class="form_field">';
-         if(!empty($this->fields['values'])) {
+         if (!empty($this->fields['values'])) {
             $rand     = mt_rand();
             $required = $this->fields['required'] ? ' required' : '';
             $itemtype = $this->fields['values'];
@@ -34,8 +33,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
    }
 
-   public function getAnswer()
-   {
+   public function getAnswer() {
       $value = $this->getValue();
       if ($this->fields['values'] == 'User') {
          return getUserName($value);
@@ -44,13 +42,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return _n('Dropdown', 'Dropdowns', 1);
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 0,
@@ -65,8 +61,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['dropdown'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

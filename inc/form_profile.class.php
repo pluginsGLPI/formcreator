@@ -7,18 +7,15 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
    static public $itemtype_2 = 'Profile';
    static public $items_id_2 = 'profiles_id';
 
-   static function getTypeName($nb=0)
-   {
+   static function getTypeName($nb=0) {
       return _n('Target', 'Targets', $nb, 'formcreator');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
-   {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
          return self::getTypeName(2);
    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
-   {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $DB, $CFG_GLPI;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
@@ -65,7 +62,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
                      ON p.`id` = f.`profiles_id`
                      AND f.`plugin_formcreator_forms_id` = ".$item->fields['id'];
          $result = $DB->query($query);
-         while(list($id, $name, $profile) = $DB->fetch_array($result)) {
+         while (list($id, $name, $profile) = $DB->fetch_array($result)) {
             $checked = $profile ? ' checked' : '';
             echo '<tr><td colspan="2"><label>';
             echo '<input type="checkbox" name="profiles_id[]" value="'.$id.'" '.$checked.'> ';
@@ -86,8 +83,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       Html::closeForm();
    }
 
-   static function install(Migration $migration)
-   {
+   static function install(Migration $migration) {
       global $DB;
 
       $obj   = new self();
@@ -134,7 +130,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
 
       // fill missing uuid
       $all_form_profiles = $obj->find("uuid IS NULL");
-      foreach($all_form_profiles as $form_profiles_id => $form_profile) {
+      foreach ($all_form_profiles as $form_profiles_id => $form_profile) {
          $obj->update(array('id'   => $form_profiles_id,
                             'uuid' => plugin_formcreator_getUuid()));
       }
@@ -142,8 +138,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       return true;
    }
 
-   static function uninstall()
-   {
+   static function uninstall() {
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";

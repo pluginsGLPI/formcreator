@@ -1,8 +1,7 @@
 <?php
 class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 {
-   public function getAvailableValues()
-   {
+   public function getAvailableValues() {
       if (!empty($this->fields['values'])) {
          $ldap_values   = json_decode(plugin_formcreator_decode($this->fields['values']));
          $ldap_dropdown = new RuleRightParameter();
@@ -18,7 +17,9 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 
          if (!function_exists('warning_handler')) {
             function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
-               if (0 === error_reporting()) return false;
+               if (0 === error_reporting()) {
+                  return false;
+               }
                throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
             }
          }
@@ -40,8 +41,8 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
                $entries = ldap_get_entries($ds, $result);
                array_shift($entries);
 
-               foreach($entries as $id => $attr) {
-                  if(isset($attr[$attribute[0]])
+               foreach ($entries as $id => $attr) {
+                  if (isset($attr[$attribute[0]])
                      && !in_array($attr[$attribute[0]][0], $tab_values)) {
                      $tab_values[$id] = $attr[$attribute[0]][0];
                   }
@@ -51,11 +52,11 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
                   ldap_control_paged_result_response($ds, $result, $cookie);
                }
 
-            } while($cookie !== null && $cookie != '');
+            } while ($cookie !== null && $cookie != '');
 
             asort($tab_values);
             return $tab_values;
-         } catch(Exception $e) {
+         } catch (Exception $e) {
             return array();
          }
 
@@ -65,13 +66,11 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       }
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('LDAP Select', 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 0,
@@ -86,8 +85,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['ldapselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

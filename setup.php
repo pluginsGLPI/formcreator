@@ -14,8 +14,7 @@ define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc']."/plugins/formcreator");
  *
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
-function plugin_version_formcreator ()
-{
+function plugin_version_formcreator () {
    return array(
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
@@ -31,8 +30,7 @@ function plugin_version_formcreator ()
  *
  * @return boolean
  */
-function plugin_formcreator_check_prerequisites ()
-{
+function plugin_formcreator_check_prerequisites () {
    $success = true;
    if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
@@ -52,16 +50,14 @@ function plugin_formcreator_check_prerequisites ()
  * @param string $verbose Set true to show all messages (false by default)
  * @return boolean
  */
-function plugin_formcreator_check_config($verbose=false)
-{
+function plugin_formcreator_check_config($verbose=false) {
    return true;
 }
 
 /**
  * Initialize all classes and generic variables of the plugin
  */
-function plugin_init_formcreator ()
-{
+function plugin_init_formcreator () {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Hack for vertical display
@@ -178,17 +174,16 @@ function plugin_init_formcreator ()
  * @param  String    $string  The string to encode
  * @return String             The encoded string
  */
-function plugin_formcreator_encode($string, $mode_legacy=true)
-{
+function plugin_formcreator_encode($string, $mode_legacy=true) {
    if (!is_string($string)) {
       return $string;
    }
    if (!$mode_legacy) {
       $string = Html::clean(Html::entity_decode_deep($string));
-      $string = preg_replace('/\\r\\n/',' ',$string);
-      $string = preg_replace('/\\n/',' ',$string);
-      $string = preg_replace('/\\\\r\\\\n/',' ',$string);
-      $string = preg_replace('/\\\\n/',' ',$string);
+      $string = preg_replace('/\\r\\n/', ' ', $string);
+      $string = preg_replace('/\\n/', ' ', $string);
+      $string = preg_replace('/\\\\r\\\\n/', ' ', $string);
+      $string = preg_replace('/\\\\n/', ' ', $string);
       $string = Toolbox::stripslashes_deep($string);
       $string = Toolbox::addslashes_deep($string);
    } else {
@@ -206,8 +201,7 @@ function plugin_formcreator_encode($string, $mode_legacy=true)
  * @param  String    $string  The string to encode
  * @return String             The encoded string
  */
-function plugin_formcreator_decode($string)
-{
+function plugin_formcreator_decode($string) {
    $string = stripcslashes($string);
    $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
    $string = str_replace('&apos;', "'", $string);

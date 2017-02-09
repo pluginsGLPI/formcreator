@@ -1,10 +1,11 @@
 language: php
 
 php:
-  - '5.4'
   - '5.5'
   - '5.6'
   - '7.0'
+  - '7.1'
+  - nightly
 
 before_script:
   - git clone https://github.com/glpi-project/glpi -b 9.1 ../glpi && cd ../glpi
@@ -14,5 +15,15 @@ before_script:
 
 script:
   - cd plugins/formcreator
+  - composer install -o
+  - vendor/bin/robo --no-interaction code:cs
   - php tools/cliinstall.php --tests
   - phpunit --verbose
+
+matrix:
+  allow_failures:
+    - php: nightly
+
+cache:
+  directories:
+    - $HOME/.composer/cache
