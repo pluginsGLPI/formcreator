@@ -145,24 +145,25 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      $this->showDestinationEntitySetings();
+      $rand = mt_rand();
+      $this->showDestinationEntitySetings($rand);
 
-      $this->showTemplateAndDueDateSettings();
+      $this->showTemplateAndDueDateSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings();
+      $this->showCategorySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings();
+      $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings();
+      $this->showPluginTagsSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
@@ -1684,13 +1685,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return $target_data;
    }
 
-   protected function showDestinationEntitySetings() {
+   protected function showDestinationEntitySetings($rand) {
       global $DB;
 
       echo '<tr class="line1">';
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
-      $rand = mt_rand();
       Dropdown::showFromArray(
             'destination_entity',
             self::getEnumDestinationEntity(),
@@ -1789,7 +1789,7 @@ EOS;
       echo '</tr>';
    }
 
-   protected function showTemplateAndDueDateSettings() {
+   protected function showTemplateAndDueDateSettings($rand) {
       global $DB;
 
       // Ticket template
@@ -1875,7 +1875,7 @@ EOS;
 
    }
 
-   protected function showCategorySettings() {
+   protected function showCategorySettings($rand) {
       global $DB;
 
       echo '<tr class="line0">';
@@ -1945,7 +1945,7 @@ EOS;
       echo '</tr>';
    }
 
-   protected function showUrgencySettings() {
+   protected function showUrgencySettings($rand) {
       global $DB;
 
       echo '<tr class="line0">';
@@ -2013,7 +2013,7 @@ EOS;
       echo '</tr>';
    }
 
-   protected function showPluginTagsSettings() {
+   protected function showPluginTagsSettings($rand) {
       global $DB;
 
       $plugin = new Plugin();
