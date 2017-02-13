@@ -36,7 +36,7 @@ function plugin_formcreator_updateAnswer(Migration $migration) {
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_answers");
    // Update field type from previous version (Need answer to be text since text can be WYSIWING).
    $query = "ALTER TABLE  `glpi_plugin_formcreator_answers` CHANGE  `answer` `answer` text;";
-   $DB->query($query) or die ($DB->error());
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    /**
     * Migration of special chars from previous versions
@@ -49,7 +49,7 @@ function plugin_formcreator_updateAnswer(Migration $migration) {
       $query_update = "UPDATE `glpi_plugin_formcreator_answers` SET
       `answer` = '".plugin_formcreator_encode($line['answer'])."'
                           WHERE `id` = ".$line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    //rename foreign key, to match table plugin_formcreator_forms_answers name
@@ -89,7 +89,7 @@ function plugin_formcreator_updateCategory(Migration $migration) {
       `name`    = '".plugin_formcreator_encode($line['name'])."',
                             `comment` = '".plugin_formcreator_encode($line['comment'])."'
                           WHERE `id` = ".$line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    /**
@@ -136,7 +136,7 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
       $migration->renameTable('glpi_plugin_formcreator_formanswers', 'glpi_plugin_formcreator_forms_answers');
       $itemTicket_table = Item_Ticket::getTable();
       $query = "UPDATE `$itemTicket_table` SET `itemtype` = 'PluginFormcreatorForm_Answer' WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    /**
@@ -150,18 +150,18 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
       $query_update = "UPDATE `glpi_plugin_formcreator_forms_answers` SET
       `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
                           WHERE `id` = " . $line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    if (!FieldExists('glpi_plugin_formcreator_forms_answers', 'name')) {
       $query_update = 'ALTER TABLE `glpi_plugin_formcreator_forms_answers` ADD `name` VARCHAR(255) NOT NULL AFTER `id`';
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    // valdiator_id should not be set for waiting form answers
    $query = "UPDATE `glpi_plugin_formcreator_forms_answers`
              SET `validator_id` = '0' WHERE `status`='waiting'";
-   $DB->query($query) or die ($DB->error());
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_forms_id');
    }
@@ -227,7 +227,7 @@ function plugin_formcreator_updateFormValidator(Migration $migration) {
       FROM `$old_table`
       LEFT JOIN `$table_form` ON (`$table_form`.`id` = `$old_table`.`forms_id`)
       WHERE `validation_required` > 1";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       $migration->displayMessage('Backing up table glpi_plugin_formcreator_formvalidators');
       $migration->renameTable('glpi_plugin_formcreator_formvalidators', 'glpi_plugin_formcreator_formvalidators_backup');
    }
@@ -288,7 +288,7 @@ function plugin_formcreator_updateForm(Migration $migration) {
                       `description` = '" . plugin_formcreator_encode($line['description']) . "',
                       `content`     = '" . plugin_formcreator_encode($line['content']) . "'
                     WHERE `id` = " . (int) $line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    /**
@@ -306,7 +306,7 @@ function plugin_formcreator_updateForm(Migration $migration) {
 
    // Re-add FULLTEXT index
    $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-   $DB->query($query) or die ($DB->error());
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    $migration->addField('glpi_plugin_formcreator_forms', 'usage_count', 'integer', array(
          'after' => 'validation_required',
@@ -383,14 +383,14 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
          $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
          `show_rule` = '$show_rule'
          WHERE `id` = '$questionId'";
-         $DB->query($query_udate) or die ($DB->error());
+         $DB->query($query_udate) or plugin_formcreator_upgrade_error($migration);
 
          $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
          `plugin_formcreator_questions_id` = '$questionId',
          `show_field`     = '$show_field',
          `show_condition` = '$show_condition',
          `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
-         $DB->query($query_udate) or die ($DB->error());
+         $DB->query($query_udate) or plugin_formcreator_upgrade_error($migration);
       }
 
       // Delete old fields
@@ -408,7 +408,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
       $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
                        `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
                        WHERE `id` = " . $line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    if (!FieldExists('glpi_plugin_formcreator_questions_conditions', 'order', false)) {
@@ -423,7 +423,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
                 CHANGE COLUMN `show_logic` `show_logic`
                 ENUM($enum_logic)
                 NULL DEFAULT NULL";
-      $DB->query($query) or die($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    // add uuid to questions conditions
@@ -467,10 +467,10 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
       ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
       CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
       CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
       // order start from 1 instead of 0
-      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `order` = `order` + 1;") or die ($DB->error());
+      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `order` = `order` + 1;") or plugin_formcreator_upgrade_error($migration);
 
       // Match new type
       $query  = "SELECT `id`, `type`, `data`, `option`
@@ -574,7 +574,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
                                   `regex`          = '" . $regex . "',
                                   `required`       = " . (int) $required . "
                                WHERE `id` = " . $line['id'];
-         $DB->query($query_udate) or die ($DB->error());
+         $DB->query($query_udate) or plugin_formcreator_upgrade_error($migration);
       }
 
       $migration->dropField('glpi_plugin_formcreator_questions', 'type');
@@ -591,7 +591,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
          $query = "ALTER TABLE  `glpi_plugin_formcreator_questions`
                          CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
                          ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
 
@@ -611,7 +611,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
                                `default_values` = '" . addslashes(plugin_formcreator_encode($line['default_values'])) . "',
                                `description`    = '" . addslashes(plugin_formcreator_encode($line['description'])) . "'
                              WHERE `id` = " . $line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    /**
@@ -628,7 +628,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
 
    // Re-add FULLTEXT index
    $query = "ALTER TABLE `glpi_plugin_formcreator_questions` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-   $DB->query($query) or die ($DB->error());
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    // add uuid to questions
    if (!FieldExists('glpi_plugin_formcreator_questions', 'uuid', false)) {
@@ -664,7 +664,7 @@ function plugin_formcreator_updateSection(Migration $migration) {
       $query_update = "UPDATE `glpi_plugin_formcreator_sections` SET
                        `name` = '".plugin_formcreator_encode($line['name'])."'
                        WHERE `id` = ".$line['id'];
-      $DB->query($query_update) or die ($DB->error());
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
    // Migration from previous version => Remove useless target field
@@ -760,7 +760,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
                 FROM `glpi_plugin_formcreator_targets` t, `glpi_plugin_formcreator_forms` f
                 WHERE f.`id` = t.`plugin_formcreator_forms_id`
                 GROUP BY t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`";
-      $result = $DB->query($query) or die($DB->error());
+      $result = $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
       $i = 0;
       while ($ligne = $DB->fetch_array($result)) {
@@ -867,7 +867,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
             $query_update = "UPDATE `$table_targetticket` SET
             `comment` = '".plugin_formcreator_encode($line['comment'])."'
                                    WHERE `id` = ".$line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
          }
       }
    }
@@ -916,7 +916,7 @@ function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
                  CHANGE COLUMN `actor_type` `actor_type`
                  ENUM($enum_actor_type)
                  NOT NULL";
-       $DB->query($query) or die($DB->error());
+       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    $current_enum_role = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets_actors', 'actor_role');
@@ -925,7 +925,7 @@ function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
                  CHANGE COLUMN `actor_role` `actor_role`
                  ENUM($enum_actor_role)
                  NOT NULL";
-       $DB->query($query) or die($DB->error());
+       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    // add uuid to actor
@@ -961,7 +961,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       ADD `due_date_value` TINYINT NULL DEFAULT NULL,
       ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
       ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
-      $DB->query($query) or die($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    // Migration to Formcreator 0.90-1.4
@@ -969,7 +969,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
       ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
       ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
-      $DB->query($query) or die($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'destination_entity');
       if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetTicket::getEnumDestinationEntity())) {
@@ -977,7 +977,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
          CHANGE COLUMN `destination_entity` `destination_entity`
          ENUM($enum_destination_entity)
          NOT NULL DEFAULT 'requester'";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
 
@@ -986,13 +986,13 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
       ADD `tag_questions` VARCHAR(255) NOT NULL,
       ADD `tag_specifics` VARCHAR(255) NOT NULL;";
-      $DB->query($query) or die($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'urgency_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
       ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
-      $DB->query($query) or die($DB->error());
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    } else {
       $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'urgency_rule');
@@ -1001,7 +1001,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
          CHANGE COLUMN `urgency_rule` `urgency_rule`
          ENUM($enum_urgency_rule)
          NOT NULL DEFAULT 'requester'";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
    $migration->addField('glpi_plugin_formcreator_targettickets', 'urgency_question', 'integer', array('after' => 'urgency_rule'));
