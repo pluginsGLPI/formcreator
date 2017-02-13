@@ -1658,7 +1658,7 @@ EOS;
                $query = "ALTER TABLE `$table`
                CHANGE COLUMN `urgency_rule` `urgency_rule`
                ENUM($enum_urgency_rule)
-               NOT NULL DEFAULT 'requester'";
+               NOT NULL DEFAULT 'none'";
                $DB->query($query) or die($DB->error());
             }
          }
