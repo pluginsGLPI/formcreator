@@ -25,19 +25,9 @@ function plugin_formcreator_install()
  */
 function plugin_formcreator_uninstall()
 {
-   // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("#inc/(.+)\.class.php$#", $filepath, $matches)) {
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'uninstall')) {
-            $classname::uninstall();
-         }
-      }
-   }
-   return true ;
+   require_once(__DIR__ . '/install/install.php');
+   $install = new PluginFormcreatorInstall();
+   $install->uninstall();
 }
 
 /**

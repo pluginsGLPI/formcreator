@@ -330,8 +330,6 @@ class PluginFormcreatorInstall {
    protected function deleteTicketRelation() {
       global $DB, $CFG_GLPI;
 
-      $this->migration->displayMessage("Delete Ticket / Form_Answer relation");
-
       // Delete relations with tickets with email notifications disabled
       $use_mailing = $CFG_GLPI['use_mailing'];
       $CFG_GLPI['use_mailing'] = '0';
@@ -366,7 +364,6 @@ class PluginFormcreatorInstall {
 
       foreach ($itemtypes as $itemtype) {
          $table = getTableForItemType($itemtype);
-         $this->migration->displayMessage("Drop $table");
          $log = new Log();
          $log->deleteByCriteria(array('itemtype' => $itemtype));
 
@@ -377,7 +374,6 @@ class PluginFormcreatorInstall {
       }
 
       // Drop views
-      $this->migration->displayMessage("Drop glpi_plugin_formcreator_issues");
       $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
 
       $displayPreference = new DisplayPreference();
@@ -400,5 +396,8 @@ class PluginFormcreatorInstall {
    public function uninstall() {
       $this->deleteTicketRelation();
       $this->deleteTables();
+
+      $config = new Config();
+      $config->deleteByCriteria(array('context' => 'formcreator'));
    }
 }
