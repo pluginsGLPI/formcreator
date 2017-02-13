@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   `plugin_formcreator_forms_answers_id` int(11) NOT NULL,
   `plugin_formcreator_question_id` int(11) NOT NULL,
   `answer` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
+  INDEX `plugin_formcreator_question_id` (`plugin_formcreator_question_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
@@ -20,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   `ancestors_cache` longtext COLLATE utf8_unicode_ci,
   `knowbaseitemcategories_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `name` (`name`)
+  INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
+  INDEX `name` (`name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
@@ -48,6 +51,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `is_default` tinyint(1) NOT NULL DEFAULT '0',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  INDEX `entities_id` (`entities_id`),
+  INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -62,7 +67,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   `request_date` datetime NOT NULL,
   `status` enum('waiting','refused','accepted') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'waiting',
   `comment` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
@@ -91,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_headers` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `comment` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  KEY `name` (`name`)
+  INDEX `name` (`name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
@@ -111,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `show_rule` enum('always','hidden','shown') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'always',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_sections_id` (`plugin_formcreator_sections_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -123,7 +130,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
   `show_logic` enum('AND','OR','XOR') COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
@@ -132,7 +140,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
@@ -156,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `tag_questions` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `tag_specifics` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
+  INDEX `changetemplates_id` (`changetemplates_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
@@ -167,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
   `use_notification` tinyint(1) NOT NULL DEFAULT '1',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `plugin_formcreator_targetchanges_id` (`plugin_formcreator_targetchanges_id`)
+  INDEX `plugin_formcreator_targetchanges_id` (`plugin_formcreator_targetchanges_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
@@ -177,7 +187,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
   `items_id` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
@@ -199,7 +210,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `tag_specifics` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `category_rule` enum('none','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
   `category_question` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `tickettemplates_id` (`tickettemplates_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
@@ -211,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   `use_notification` tinyint(1) NOT NULL DEFAULT '1',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
+  INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS 
