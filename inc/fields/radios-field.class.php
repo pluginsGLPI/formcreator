@@ -64,6 +64,21 @@ class radiosField extends PluginFormcreatorField
       );
    }
 
+   public function getValue()
+   {
+      if (isset($this->fields['answer'])) {
+         if(!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
+            return json_decode($this->fields['answer']);
+         }
+         return $this->fields['answer'];
+      } else {
+         if (static::IS_MULTIPLE) {
+            return explode("\r\n", $this->fields['default_values']);
+         }
+         return $this->fields['default_values'];
+      }
+   }
+
    public static function getJSFields()
    {
       $prefs = self::getPrefs();
