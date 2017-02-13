@@ -969,6 +969,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       }
 
+      // Set show_logic to null : multiple conditions not implentned yet
+      $query = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET `show_logic`=NULL";
+      $DB->query($query);
+
       $migration->addKey($table, 'plugin_formcreator_sections_id');
 
       $migration->addKey('glpi_plugin_formcreator_questions_conditions', 'plugin_formcreator_questions_id');
