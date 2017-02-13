@@ -755,6 +755,21 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
+    * 
+    * @param unknown $formAnswerId
+    * @return string[]
+    */
+   public function getAnswers($formAnswerId) {
+      $answer = new PluginFormcreatorAnswer();
+      $answers = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'");
+      $answers_values = array();
+      foreach ($answers as $found_answer) {
+         $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
+      }
+      return $answers_values;
+   }
+
+   /**
     * Get entire form to be inserted into a target content
     *
     * @return String                                    Full form questions and answers to be print
@@ -775,14 +790,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
 
       // retrieve answers
-      $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find('`plugin_formcreator_forms_answers_id` = '.$this->getID());
-      $answers_values = array();
-      foreach ($answers as $found_answer) {
-         $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
-      }
+      $answers_values = $this->getAnswers($this->getID());
 
-      // computer all questions
+      // compute all questions
       $query_questions = "SELECT sections.`name` as section_name,
                                  questions.*,
                                  answers.`answer`

@@ -1534,7 +1534,8 @@ EOS;
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  String $content                            String to be parsed
-    * @param  PluginFormcreatorForm_Answer $formanswer    Formanswer object where answers are stored
+    * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
+    * @param  String
     * @return String                                     Parsed string with tags replaced by form values
     */
    private function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
@@ -1543,6 +1544,8 @@ EOS;
       if ($fullform == "") {
          $fullform = $formanswer->getFullForm();
       }
+      // retrieve answers
+      $answers_values = $formanswer->getAnswers($formanswer->getID());
 
       $content     = str_replace('##FULLFORM##', $fullform, $content);
       $section     = new PluginFormcreatorSection();
@@ -1564,8 +1567,13 @@ EOS;
          $res_questions = $DB->query($query_questions);
          while ($question_line = $DB->fetch_assoc($res_questions)) {
             $id    = $question_line['id'];
-            $name  = $question_line['name'];
-            $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
+               $name = '';
+               $value = '';
+            } else {
+               $name  = $question_line['name'];
+               $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+            }
             if (is_array($value)) {
                if ($CFG_GLPI['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);
