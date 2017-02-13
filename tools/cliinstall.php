@@ -73,7 +73,7 @@ if (!$plugin->getFromDBbyDir("formcreator")) {
    print("Failed : GLPi does not find the plugin");
    exit(1);
 }
-print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "... ");
+print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
 ob_end_clean();
