@@ -23,6 +23,11 @@ function plugin_formcreator_install()
          }
       }
    }
+
+   // Drop obsolete itemtype tables
+   $migration->dropTable('glpi_plugin_formcreator_titles');
+   $migration->dropTable('glpi_plugin_formcreator_headers');
+
    $migration->executeMigration();
 
    return true;
