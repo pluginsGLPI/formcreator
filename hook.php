@@ -46,7 +46,6 @@ function plugin_formcreator_uninstall()
 function plugin_formcreator_getDropdown()
 {
    return array(
-       'PluginFormcreatorHeader'   => _n('Header', 'Headers', 2, 'formcreator'),
        'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
    );
 }

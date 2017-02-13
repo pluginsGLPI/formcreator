@@ -60,16 +60,19 @@ jQuery(document).ready(function($) {
       }
    ?>
 
-   var NomDuFichier = document.location.href.substring(document.location.href.lastIndexOf("/") + 1);
+   if (location.pathname.indexOf("central.php") != -1
+       || location.pathname.indexOf("helpdesk.public.php") != -1) {
 
-   if (NomDuFichier == "central.php") {
-      $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-        if ($('#homepage_forms_container').length < 1){
-         showFormList()
-        }
+      $('.ui-tabs-panel:visible').ready(function() {
+         showHomepageFormList();
       });
-   } else if (NomDuFichier == "helpdesk.public.php") {
-      showFormList();
+
+      $('#tabspanel + div.ui-tabs').on("tabsload", function(event, ui) {
+         showHomepageFormList();
+      });
+
+      showHomepageFormList();
+
    } else if ($('#plugin_formcreator_wizard_categories').length > 0) {
       updateCategoriesView();
       updateWizardFormsView(0);
@@ -149,12 +152,18 @@ function fcInitMultiSelect() {
    });
 }
 
-function showFormList() {
+function showHomepageFormList() {
+   if ($('.homepage_forms_container').length) {
+      return;
+   }
+
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/homepage_forms.php',
       type: "GET"
    }).done(function(response){
-      $('.central > tbody:first').first().prepend(response);
+      if (!$('.homepage_forms_container').length) {
+         $('.central > tbody:first').first().prepend(response);
+      }
    });
 }
 

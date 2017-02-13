@@ -51,6 +51,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    static function getEnumUrgencyRule() {
       return array(
             'none'      => __('Urgency from template or Medium', 'formcreator'),
+            'specific'  => __('Specific urgency', 'formcreator'),
+            'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      );
+   }
+
+   static function getEnumCategoryRule() {
+      return array(
+            'none'      => __('Category from template or none', 'formcreator'),
+            'specific'  => __('Specific category', 'formcreator'),
             'answer'    => __('Equals to the answer to the question', 'formcreator'),
       );
    }
@@ -136,357 +145,31 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</td>';
       echo '</tr>';
 
-      // Ticket Template
-      echo '<tr class="line1">';
-      echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
-      echo '<td width="25%">';
-      Dropdown::show('TicketTemplate', array(
-         'name'  => 'tickettemplates_id',
-         'value' => $this->fields['tickettemplates_id']
-      ));
-      echo '</td>';
-      echo '<td width="15%">' . __('Due date') . '</td>';
-      echo '<td width="45%">';
+      $rand = mt_rand();
+      $this->showDestinationEntitySetings($rand);
+
+      $this->showTemplateAndDueDateSettings($rand);
 
       // -------------------------------------------------------------------------------------------
-      // Due date type selection
+      //  category of the target
       // -------------------------------------------------------------------------------------------
-      Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
-         array(
-            'value'     => $this->fields['due_date_rule'],
-            'on_change' => 'formcreatorChangeDueDate(this.value)',
-            'display_emptychoice' => true
-         )
-      );
-
-      // for each section ...
-      $questions_list = array(Dropdown::EMPTY_VALUE);
-      $query = "SELECT s.id, s.name
-                FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . $this->getID() . "
-                ORDER BY s.order";
-      $result = $DB->query($query);
-      while ($section = $DB->fetch_array($result)) {
-         // select all date and datetime questions
-         $query2 = "SELECT q.id, q.name
-                   FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s
-                     ON s.id = q.plugin_formcreator_sections_id
-                   WHERE s.id = {$section['id']}
-                   AND q.fieldtype IN ('date', 'datetime')";
-         $result2 = $DB->query($query2);
-         $section_questions = array();
-         while ($question = $DB->fetch_array($result2)) {
-            $section_questions[$question['id']] = $question['name'];
-         }
-         if (count($section_questions) > 0) {
-            $questions_list[$section['name']] = $section_questions;
-         }
-      }
-      // List questions
-      if ($this->fields['due_date_rule'] != 'answer'
-          && $this->fields['due_date_rule'] != 'calcul') {
-         echo '<div id="due_date_questions" style="display:none">';
-      } else {
-         echo '<div id="due_date_questions">';
-      }
-      Dropdown::showFromArray('due_date_question', $questions_list, array(
-         'value' => $this->fields['due_date_question']
-      ));
-      echo '</div>';
-
-      if ($this->fields['due_date_rule'] != 'ticket'
-          && $this->fields['due_date_rule'] != 'calcul') {
-         echo '<div id="due_date_time" style="display:none">';
-      } else {
-         echo '<div id="due_date_time">';
-      }
-      Dropdown::showNumber("due_date_value", array(
-         'value' => $this->fields['due_date_value'],
-         'min'   => -30,
-         'max'   => 30
-      ));
-      Dropdown::showFromArray('due_date_period', array(
-         'minute' => _n('Minute', 'Minutes', 2),
-         'hour'   => _n('Hour', 'Hours', 2),
-         'day'    => _n('Day', 'Days', 2),
-         'month'  => __('Month'),
-      ), array(
-         'value' => $this->fields['due_date_period']
-      ));
-      echo '</div>';
-      echo '</td>';
-      echo '</tr>';
+      $this->showCategorySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      echo '<tr class="line0">';
-      echo '<td width="15%">' . __('Urgency') . '</td>';
-      echo '<td width="45%">';
-      Dropdown::showFromArray('urgency_rule', self::getEnumUrgencyRule(), array(
-            'value'                 => $this->fields['urgency_rule'],
-            'on_change'             => 'change_urgency()',
-            'rand'                  => $rand
-      ));
-      $script = <<<EOS
-         function change_urgency() {
-            $('#urgency_specific_question').hide();
-            $('#urgency_specific_value').hide();
-
-            switch($('#dropdown_urgency_rule$rand').val()) {
-               case 'answer' :
-                  $('#urgency_specific_title').show();
-                  $('#urgency_specific_value').show();
-                  break;
-            }
-         }
-         change_urgency();
-EOS;
-      echo Html::scriptBlock($script);
-      echo '</td>';
-      echo '<td width="15%">';
-      echo '<span id="urgency_specific_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
-      echo '</td>';
-      echo '<td width="25%">';
-
-      echo '<div id="urgency_specific_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'urgency'";
-      $result2 = $DB->query($query2);
-      $users_questions = array();
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_urgency_question', $users_questions, array(
-            'value' => $this->fields['urgency_question'],
-      ));
-      echo '</div>';
-      echo '</td>';
-      echo '</tr>';
-
-      // -------------------------------------------------------------------------------------------
-      // Ticket Entity
-      // -------------------------------------------------------------------------------------------
-      echo '<tr class="line1">';
-      echo '<td width="15%">' . __('Destination entity') . '</td>';
-      echo '<td width="25%">';
-      $rand = mt_rand();
-      Dropdown::showFromArray(
-         'destination_entity',
-         self::getEnumDestinationEntity(),
-         array(
-            'value'     => $this->fields['destination_entity'],
-            'on_change' => 'change_entity()',
-            'rand'      => $rand,
-         )
-      );
-
-      $script = <<<EOS
-         function change_entity() {
-            $('#entity_specific_title').hide();
-            $('#entity_user_title').hide();
-            $('#entity_entity_title').hide();
-            $('#entity_specific_value').hide();
-            $('#entity_user_value').hide();
-            $('#entity_entity_value').hide();
-
-            switch($('#dropdown_destination_entity$rand').val()) {
-               case 'specific' :
-                  $('#entity_specific_title').show();
-                  $('#entity_specific_value').show();
-                  break;
-               case 'user' :
-                  $('#entity_user_title').show();
-                  $('#entity_user_value').show();
-                  break;
-               case 'entity' :
-                  $('#entity_entity_title').show();
-                  $('#entity_entity_value').show();
-                  break;
-            }
-         }
-         change_entity();
-EOS;
-
-      echo Html::scriptBlock($script);
-      echo '</td>';
-      echo '<td width="15%">';
-      echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
-      echo '<span id="entity_user_title" style="display: none">' . __('User type question', 'formcreator') . '</span>';
-      echo '<span id="entity_entity_title" style="display: none">' . __('Entity type question', 'formcreator') . '</span>';
-      echo '</td>';
-      echo '<td width="25%">';
-
-      echo '<div id="entity_specific_value" style="display: none">';
-      Entity::dropdown(array(
-         'name' => '_destination_entity_value_specific',
-         'value' => $this->fields['destination_entity_value'],
-      ));
-      echo '</div>';
-
-      echo '<div id="entity_user_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'User'";
-      $result2 = $DB->query($query2);
-      $users_questions = array();
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, array(
-         'value' => $this->fields['destination_entity_value'],
-      ));
-      echo '</div>';
-
-      echo '<div id="entity_entity_value" style="display: none">';
-      // select all entity questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'Entity'";
-      $result2 = $DB->query($query2);
-      $entities_questions = array();
-      while ($question = $DB->fetch_array($result2)) {
-         $entities_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, array(
-         'value' => $this->fields['destination_entity_value'],
-      ));
-      echo '</div>';
-
-      echo '</td>';
-
-      echo '</tr>';
-
+      $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-         echo '<tr class="line1">';
-         echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
-         echo '<td width="25%">';
-         $rand = mt_rand();
-         Dropdown::showFromArray('tag_type', self::getEnumTagType(),
-            array(
-               'value'     => $this->fields['tag_type'],
-               'on_change' => 'change_tag_type()',
-               'rand'      => $rand,
-            )
-         );
-
-         $script = <<<EOS
-            function change_tag_type() {
-               $('#tag_question_title').hide();
-               $('#tag_specific_title').hide();
-               $('#tag_question_value').hide();
-               $('#tag_specific_value').hide();
-
-               switch($('#dropdown_tag_type$rand').val()) {
-                  case 'questions' :
-                     $('#tag_question_title').show();
-                     $('#tag_question_value').show();
-                     break;
-                  case 'specifics' :
-                     $('#tag_specific_title').show();
-                     $('#tag_specific_value').show();
-                     break;
-                  case 'questions_and_specific' :
-                  case 'questions_or_specific' :
-                     $('#tag_question_title').show();
-                     $('#tag_specific_title').show();
-                     $('#tag_question_value').show();
-                     $('#tag_specific_value').show();
-                     break;
-               }
-            }
-            change_tag_type();
-EOS;
-
-         echo Html::scriptBlock($script);
-         echo '</td>';
-         echo '<td width="15%">';
-         echo '<div id="tag_question_title" style="display: none">' . _n('Question', 'Questions', 2, 'formcreator') . '</div>';
-         echo '<div id="tag_specific_title" style="display: none">' . __('Tags', 'tag') . '</div>';
-         echo '</td>';
-         echo '<td width="25%">';
-
-         // Tag questions
-         echo '<div id="tag_question_value" style="display: none">';
-         $query2 = "SELECT q.id, q.name, q.values
-                   FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s
-                     ON s.id = q.plugin_formcreator_sections_id
-                   INNER JOIN glpi_plugin_formcreator_targets t
-                     ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                   WHERE t.items_id = ".$this->getID()."
-                   AND q.fieldtype = 'tag'";
-         $result2 = $DB->query($query2);
-         $entities_questions = array();
-         while ($question = $DB->fetch_array($result2)) {
-            $entities_questions[$question['id']] = $question['name'];
-         }
-         Dropdown::showFromArray('_tag_questions', $entities_questions, array(
-            'values'   => explode(',', $this->fields['tag_questions']),
-            'multiple' => true,
-         ));
-         echo '</div>';
-
-         // Spécific tags
-         echo '<div id="tag_specific_value" style="display: none">';
-
-         $obj = new PluginTagTag();
-         $obj->getEmpty();
-
-         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
-         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
-
-         $result = $obj->find($where);
-         $values = array();
-         foreach ($result AS $id => $datas) {
-            $values[$id] = $datas['name'];
-         }
-
-         Dropdown::showFromArray('_tag_specifics', $values, array(
-            'values'   => explode(',', $this->fields['tag_specifics']),
-            'comments' => false,
-            'rand'     => $rand,
-            'multiple' => true,
-         ));
-         echo '</div>';
-
-         echo '</td>';
-         echo '</tr>';
-      }
-
+      $this->showPluginTagsSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
       // -------------------------------------------------------------------------------------------
       if ($form->fields['validation_required']) {
-         echo '<tr class="line0">';
+         echo '<tr class="line1">';
          echo '<td colspan="4">';
          echo '<input type="hidden" name="validation_followup" value="0" />';
          echo '<input type="checkbox" name="validation_followup" id="validation_followup" value="1" ';
@@ -1067,8 +750,22 @@ EOS;
             case 'answer':
                $input['urgency_question'] = $input['_urgency_question'];
                break;
+            case 'specific':
+               $input['urgency_question'] = $input['_urgency_specific'];
+               break;
             default:
                $input['urgency_question'] = '0';
+         }
+
+         switch ($input['category_rule']) {
+            case 'answer':
+               $input['category_question'] = $input['_category_question'];
+               break;
+            case 'specific':
+               $input['category_question'] = $input['_category_specific'];
+               break;
+            default:
+               $input['category_question'] = '0';
          }
 
          $plugin = new Plugin();
@@ -1328,21 +1025,9 @@ EOS;
       }
 
       // Define urgency
-      $formAnswerId = $formanswer->fields['id'];
-      $urgencyQuestion = $this->fields['urgency_question'];
-      $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
-                                AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
-      $urgency = array_shift($found);
-      switch ($this->fields['urgency_rule']) {
-         case 'answer':
-            $urgency = $urgency['answer'];
-            break;
-         default:
-            $urgency = null;
-      }
-      if (!is_null($urgency)) {
-         $datas['urgency'] = $urgency;
-      }
+      $datas = $this->setTargetUrgency($datas, $formanswer);
+
+      $datas = $this->setTargetCategory($datas, $formanswer);
 
       if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
          $datas['_users_id_requester'] = $requesters_id;
@@ -1530,11 +1215,60 @@ EOS;
       return true;
    }
 
+   protected function setTargetCategory($data, $formanswer) {
+      switch ($this->fields['category_rule']) {
+         case 'answer':
+            $answer  = new PluginFormcreatorAnswer();
+            $formAnswerId = $formanswer->fields['id'];
+            $categoryQuestion = $this->fields['category_question'];
+            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+                  AND `plugin_formcreator_question_id` = '$categoryQuestion'");
+            $category = array_shift($found);
+            $category = $category['answer'];
+            break;
+         case 'specific':
+            $category = $this->fields['category_question'];
+            break;
+         default:
+            $category = null;
+      }
+      if ($category !== null) {
+         $data['itilcategories_id'] = $category;
+      }
+
+      return $data;
+   }
+
+   protected function setTargetUrgency($data, $formanswer) {
+      switch ($this->fields['urgency_rule']) {
+         case 'answer':
+            $answer  = new PluginFormcreatorAnswer();
+            $formAnswerId = $formanswer->fields['id'];
+            $urgencyQuestion = $this->fields['urgency_question'];
+            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+                  AND `plugin_formcreator_question_id` = '$urgencyQuestion'");
+            $urgency = array_shift($found);
+            $urgency = $urgency['answer'];
+            break;
+         case 'specific':
+            $urgency = $this->fields['urgency_question'];
+            break;
+         default:
+            $urgency = null;
+      }
+      if (!is_null($urgency)) {
+         $data['urgency'] = $urgency;
+      }
+
+      return $data;
+   }
+
    /**
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  String $content                            String to be parsed
-    * @param  PluginFormcreatorForm_Answer $formanswer    Formanswer object where answers are stored
+    * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
+    * @param  String
     * @return String                                     Parsed string with tags replaced by form values
     */
    private function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
@@ -1543,6 +1277,8 @@ EOS;
       if ($fullform == "") {
          $fullform = $formanswer->getFullForm();
       }
+      // retrieve answers
+      $answers_values = $formanswer->getAnswers($formanswer->getID());
 
       $content     = str_replace('##FULLFORM##', $fullform, $content);
       $section     = new PluginFormcreatorSection();
@@ -1564,8 +1300,13 @@ EOS;
          $res_questions = $DB->query($query_questions);
          while ($question_line = $DB->fetch_assoc($res_questions)) {
             $id    = $question_line['id'];
-            $name  = $question_line['name'];
-            $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
+               $name = '';
+               $value = '';
+            } else {
+               $name  = $question_line['name'];
+               $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+            }
             if (is_array($value)) {
                if ($CFG_GLPI['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);
@@ -1835,5 +1576,434 @@ EOS;
             $target_data['tickettemplates_id']);
 
       return $target_data;
+   }
+
+   protected function showDestinationEntitySetings($rand) {
+      global $DB;
+
+      echo '<tr class="line1">';
+      echo '<td width="15%">' . __('Destination entity') . '</td>';
+      echo '<td width="25%">';
+      Dropdown::showFromArray(
+            'destination_entity',
+            self::getEnumDestinationEntity(),
+            array(
+                  'value'     => $this->fields['destination_entity'],
+                  'on_change' => 'change_entity()',
+                  'rand'      => $rand,
+            )
+            );
+
+      $script = <<<EOS
+         function change_entity() {
+            $('#entity_specific_title').hide();
+            $('#entity_user_title').hide();
+            $('#entity_entity_title').hide();
+            $('#entity_specific_value').hide();
+            $('#entity_user_value').hide();
+            $('#entity_entity_value').hide();
+
+            switch($('#dropdown_destination_entity$rand').val()) {
+               case 'specific' :
+                  $('#entity_specific_title').show();
+                  $('#entity_specific_value').show();
+                  break;
+               case 'user' :
+                  $('#entity_user_title').show();
+                  $('#entity_user_value').show();
+                  break;
+               case 'entity' :
+                  $('#entity_entity_title').show();
+                  $('#entity_entity_value').show();
+                  break;
+            }
+         }
+         change_entity();
+EOS;
+
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
+      echo '<span id="entity_user_title" style="display: none">' . __('User type question', 'formcreator') . '</span>';
+      echo '<span id="entity_entity_title" style="display: none">' . __('Entity type question', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="entity_specific_value" style="display: none">';
+      Entity::dropdown(array(
+            'name' => '_destination_entity_value_specific',
+            'value' => $this->fields['destination_entity_value'],
+      ));
+      echo '</div>';
+
+      echo '<div id="entity_user_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                AND q.fieldtype = 'glpiselect'
+                AND q.values = 'User'";
+      $result2 = $DB->query($query2);
+      $users_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, array(
+            'value' => $this->fields['destination_entity_value'],
+      ));
+      echo '</div>';
+
+      echo '<div id="entity_entity_value" style="display: none">';
+      // select all entity questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                AND q.fieldtype = 'glpiselect'
+                AND q.values = 'Entity'";
+      $result2 = $DB->query($query2);
+      $entities_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $entities_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, array(
+            'value' => $this->fields['destination_entity_value'],
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   protected function showTemplateAndDueDateSettings($rand) {
+      global $DB;
+
+      // Ticket template
+      echo '<tr class="line1">';
+      echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
+      echo '<td width="25%">';
+      Dropdown::show('TicketTemplate', array(
+            'name'  => 'tickettemplates_id',
+            'value' => $this->fields['tickettemplates_id']
+      ));
+      echo '</td>';
+      echo '<td width="15%">' . __('Due date') . '</td>';
+      echo '<td width="45%">';
+
+      // Due date type selection
+      Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
+            array(
+                  'value'     => $this->fields['due_date_rule'],
+                  'on_change' => 'formcreatorChangeDueDate(this.value)',
+                  'display_emptychoice' => true
+            )
+            );
+
+      // for each section ...
+      $questions_list = array(Dropdown::EMPTY_VALUE);
+      $query = "SELECT s.id, s.name
+                FROM glpi_plugin_formcreator_targets t
+                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = " . $this->getID() . "
+                ORDER BY s.order";
+      $result = $DB->query($query);
+      while ($section = $DB->fetch_array($result)) {
+         // select all date and datetime questions
+         $query2 = "SELECT q.id, q.name
+         FROM glpi_plugin_formcreator_questions q
+         INNER JOIN glpi_plugin_formcreator_sections s
+         ON s.id = q.plugin_formcreator_sections_id
+         WHERE s.id = {$section['id']}
+         AND q.fieldtype IN ('date', 'datetime')";
+         $result2 = $DB->query($query2);
+         $section_questions = array();
+         while ($question = $DB->fetch_array($result2)) {
+            $section_questions[$question['id']] = $question['name'];
+         }
+         if (count($section_questions) > 0) {
+            $questions_list[$section['name']] = $section_questions;
+         }
+      }
+      // List questions
+      if ($this->fields['due_date_rule'] != 'answer'
+            && $this->fields['due_date_rule'] != 'calcul') {
+               echo '<div id="due_date_questions" style="display:none">';
+            } else {
+               echo '<div id="due_date_questions">';
+            }
+            Dropdown::showFromArray('due_date_question', $questions_list, array(
+                  'value' => $this->fields['due_date_question']
+            ));
+            echo '</div>';
+
+            if ($this->fields['due_date_rule'] != 'ticket'
+                  && $this->fields['due_date_rule'] != 'calcul') {
+                     echo '<div id="due_date_time" style="display:none">';
+                  } else {
+                     echo '<div id="due_date_time">';
+                  }
+                  Dropdown::showNumber("due_date_value", array(
+                        'value' => $this->fields['due_date_value'],
+                        'min'   => -30,
+                        'max'   => 30
+                  ));
+                  Dropdown::showFromArray('due_date_period', array(
+                        'minute' => _n('Minute', 'Minutes', 2),
+                        'hour'   => _n('Hour', 'Hours', 2),
+                        'day'    => _n('Day', 'Days', 2),
+                        'month'  => __('Month'),
+                  ), array(
+                        'value' => $this->fields['due_date_period']
+                  ));
+                  echo '</div>';
+                  echo '</td>';
+                  echo '</tr>';
+
+   }
+
+   protected function showCategorySettings($rand) {
+      global $DB;
+
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
+      echo '<td width="25%">';
+      Dropdown::showFromArray(
+            'category_rule',
+            self::getEnumCategoryRule(),
+            array(
+                  'value'     => $this->fields['category_rule'],
+                  'on_change' => 'change_category()',
+                  'rand'      => $rand,
+            ));
+      $script = <<<EOS
+         function change_category() {
+            $('#category_specific_title').hide();
+            $('#category_specific_value').hide();
+            $('#category_question_title').hide();
+            $('#category_question_value').hide();
+
+            switch($('#dropdown_category_rule$rand').val()) {
+               case 'answer' :
+                  $('#category_question_title').show();
+                  $('#category_question_value').show();
+                  break;
+               case 'specific' :
+                  $('#category_specific_title').show();
+                  $('#category_specific_value').show();
+                  break;
+            }
+         }
+         change_category();
+EOS;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
+      echo '<span id="category_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+      echo '<div id="category_question_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT `q`.`id`, `q`.`name`, `q`.`values`
+                FROM `glpi_plugin_formcreator_questions` `q`
+                INNER JOIN `glpi_plugin_formcreator_sections` `s`
+                  ON `s`.`id` = `q`.`plugin_formcreator_sections_id`
+                INNER JOIN `glpi_plugin_formcreator_targets` `t`
+                  ON `s`.`plugin_formcreator_forms_id` = `t`.`plugin_formcreator_forms_id`
+                WHERE `t`.`items_id` = ".$this->getID()."
+                AND `q`.`fieldtype` = 'dropdown' AND `q`.`values`='ITILCategory'";
+      $result2 = $DB->query($query2);
+      $users_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_category_question', $users_questions, array(
+            'value' => $this->fields['category_question'],
+      ));
+      echo '</div>';
+      echo '<div id="category_specific_value" style="display: none">';
+      ITILCategory::dropdown(array(
+            'name'   => '_category_specific',
+            'value'  => $this->fields["category_question"],
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   protected function showUrgencySettings($rand) {
+      global $DB;
+
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Urgency') . '</td>';
+      echo '<td width="45%">';
+      Dropdown::showFromArray('urgency_rule', self::getEnumUrgencyRule(), array(
+            'value'                 => $this->fields['urgency_rule'],
+            'on_change'             => 'change_urgency()',
+            'rand'                  => $rand
+      ));
+      $script = <<<EOS
+         function change_urgency() {
+            $('#urgency_specific_question').hide();
+            $('#urgency_specific_value').hide();
+            $('#urgency_question_title').hide();
+            $('#urgency_question_value').hide();
+
+            switch($('#dropdown_urgency_rule$rand').val()) {
+               case 'answer' :
+                  $('#urgency_question_title').show();
+                  $('#urgency_question_value').show();
+                  break;
+               case 'specific':
+                  $('#urgency_specific_title').show();
+                  $('#urgency_specific_value').show();
+                  break;
+            }
+         }
+         change_urgency();
+EOS;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="urgency_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="urgency_specific_title" style="display: none">' . __('Urgency ', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="urgency_specific_value" style="display: none">';
+      Ticket::dropdownUrgency(array(
+            'name' => '_urgency_specific',
+            'value' => $this->fields["urgency_question"],
+      ));
+      echo '</div>';
+      echo '<div id="urgency_question_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                AND q.fieldtype = 'urgency'";
+      $result2 = $DB->query($query2);
+      $users_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_urgency_question', $users_questions, array(
+            'value' => $this->fields['urgency_question'],
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   protected function showPluginTagsSettings($rand) {
+      global $DB;
+
+      $plugin = new Plugin();
+      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         echo '<tr class="line1">';
+         echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
+         echo '<td width="25%">';
+         $rand = mt_rand();
+         Dropdown::showFromArray('tag_type', self::getEnumTagType(),
+               array(
+                     'value'     => $this->fields['tag_type'],
+                     'on_change' => 'change_tag_type()',
+                     'rand'      => $rand,
+               )
+               );
+
+         $script = <<<EOS
+            function change_tag_type() {
+               $('#tag_question_title').hide();
+               $('#tag_specific_title').hide();
+               $('#tag_question_value').hide();
+               $('#tag_specific_value').hide();
+
+               switch($('#dropdown_tag_type$rand').val()) {
+                  case 'questions' :
+                     $('#tag_question_title').show();
+                     $('#tag_question_value').show();
+                     break;
+                  case 'specifics' :
+                     $('#tag_specific_title').show();
+                     $('#tag_specific_value').show();
+                     break;
+                  case 'questions_and_specific' :
+                  case 'questions_or_specific' :
+                     $('#tag_question_title').show();
+                     $('#tag_specific_title').show();
+                     $('#tag_question_value').show();
+                     $('#tag_specific_value').show();
+                     break;
+               }
+            }
+            change_tag_type();
+EOS;
+
+         echo Html::scriptBlock($script);
+         echo '</td>';
+         echo '<td width="15%">';
+         echo '<div id="tag_question_title" style="display: none">' . _n('Question', 'Questions', 2, 'formcreator') . '</div>';
+         echo '<div id="tag_specific_title" style="display: none">' . __('Tags', 'tag') . '</div>';
+         echo '</td>';
+         echo '<td width="25%">';
+
+         // Tag questions
+         echo '<div id="tag_question_value" style="display: none">';
+         $query2 = "SELECT q.id, q.name, q.values
+                   FROM glpi_plugin_formcreator_questions q
+                   INNER JOIN glpi_plugin_formcreator_sections s
+                     ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_targets t
+                     ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                   WHERE t.items_id = ".$this->getID()."
+                   AND q.fieldtype = 'tag'";
+         $result2 = $DB->query($query2);
+         $entities_questions = array();
+         while ($question = $DB->fetch_array($result2)) {
+            $entities_questions[$question['id']] = $question['name'];
+         }
+         Dropdown::showFromArray('_tag_questions', $entities_questions, array(
+               'values'   => explode(',', $this->fields['tag_questions']),
+               'multiple' => true,
+         ));
+         echo '</div>';
+
+         // Spécific tags
+         echo '<div id="tag_specific_value" style="display: none">';
+
+         $obj = new PluginTagTag();
+         $obj->getEmpty();
+
+         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
+         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
+
+         $result = $obj->find($where);
+         $values = array();
+         foreach ($result AS $id => $datas) {
+            $values[$id] = $datas['name'];
+         }
+
+         Dropdown::showFromArray('_tag_specifics', $values, array(
+               'values'   => explode(',', $this->fields['tag_specifics']),
+               'comments' => false,
+               'rand'     => $rand,
+               'multiple' => true,
+         ));
+         echo '</div>';
+         echo '</td>';
+         echo '</tr>';
+      }
    }
 }
