@@ -24,6 +24,7 @@ function plugin_formcreator_update_2_5(Migration $migration) {
    plugin_formcreator_updateTargetChange_Actor($migration);
    plugin_formcreator_updateTargetTicket_Actor($migration);
    plugin_formcreator_updateTargetTicket($migration);
+   plugin_formcreator_updateTitles($migration);
 
    $migration->executeMigration();
 }
@@ -999,4 +1000,12 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
    }
    $migration->addField('glpi_plugin_formcreator_targettickets', 'urgency_question', 'integer', array('after' => 'urgency_rule'));
    $migration->addKey('glpi_plugin_formcreator_targettickets', 'tickettemplates_id');
+}
+
+function plugin_formcreator_updateTitle(Migration $migration) {
+   global $DB;
+
+   // Drop Headers table
+   $migration->displayMessage("Drop glpi_plugin_formcreator_titles");
+   $migration->dropTable('glpi_plugin_formcreator_titles');
 }
