@@ -649,6 +649,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always',
                      `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_sections_id` (`plugin_formcreator_sections_id`),
                      FULLTEXT INDEX `Search` (`description`, `name`)
                   )
                   ENGINE = MyISAM
@@ -658,13 +659,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // Create questions conditions table (since 0.85-1.1)
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
-                    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    `plugin_formcreator_questions_id` int(11) NOT NULL,
-                    `show_field` int(11) DEFAULT NULL,
-                    `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
-                    `show_value` varchar(255) DEFAULT NULL,
-                    `show_logic` enum('AND','OR','XOR') DEFAULT NULL,
-                    `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                     `plugin_formcreator_questions_id` int(11) NOT NULL,
+                     `show_field` int(11) DEFAULT NULL,
+                     `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
+                     `show_value` varchar(255) DEFAULT NULL,
+                     `show_logic` enum('AND','OR','XOR') DEFAULT NULL,
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -821,16 +824,19 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             // Create new table for conditionnal show of questions
             $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
-                       `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                       `plugin_formcreator_questions_id` int(11) NOT NULL,
-                       `show_field` int(11) DEFAULT NULL,
-                       `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
-                       `show_value` varchar(255) DEFAULT NULL,
-                       `show_logic` enum('AND','OR','XOR') DEFAULT NULL
-                     )
-                     ENGINE = MyISAM
-                     DEFAULT CHARACTER SET = utf8
-                     COLLATE = utf8_unicode_ci";
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                     `plugin_formcreator_questions_id` int(11) NOT NULL,
+                     `show_field` int(11) DEFAULT NULL,
+                     `show_condition` enum('==','!=','<','>','<=','>=') DEFAULT NULL,
+                     `show_value` varchar(255) DEFAULT NULL,
+                     `show_logic` enum('AND','OR','XOR') DEFAULT NULL,
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+                  )
+                  ENGINE = MyISAM
+                  DEFAULT CHARACTER SET = utf8
+                  COLLATE = utf8_unicode_ci";
             $DB->query($query) or die ($DB->error());
 
             // Migrate date from "questions" table to "questions_conditions" table
@@ -962,6 +968,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
 
       }
+
+      $migration->addKey($table, 'plugin_formcreator_sections_id');
+
+      $migration->addKey('glpi_plugin_formcreator_questions_conditions', 'plugin_formcreator_questions_id');
 
       return true;
    }

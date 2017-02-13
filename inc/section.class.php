@@ -53,11 +53,13 @@ class PluginFormcreatorSection extends CommonDBChild
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                      `order` int(11) NOT NULL DEFAULT '0',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -131,6 +133,8 @@ class PluginFormcreatorSection extends CommonDBChild
       foreach($all_sections as $sections_id => $section) {
          $obj->update(array('id' => $sections_id));
       }
+
+      $migration->addKey($table, 'plugin_formcreator_forms_id');
 
       return true;
    }

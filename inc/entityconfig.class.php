@@ -174,12 +174,13 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
          // Create Forms table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-         `id` int(11) NOT NULL  PRIMARY KEY,
-         `replace_helpdesk` int(11) NOT NULL DEFAULT '0'
-         )
-         ENGINE = MyISAM
-         DEFAULT CHARACTER SET = utf8
-         COLLATE = utf8_unicode_ci;";
+                     `id` int(11) NOT NULL,
+                     `replace_helpdesk` int(11) NOT NULL DEFAULT '0',
+                     PRIMARY KEY (`id`)
+                  )
+                  ENGINE = MyISAM
+                  DEFAULT CHARACTER SET = utf8
+                  COLLATE = utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
       } else {
 

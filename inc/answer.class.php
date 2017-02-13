@@ -52,10 +52,13 @@ class PluginFormcreatorAnswer extends CommonDBChild
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `plugin_formcreator_forms_answers_id` int(11) NOT NULL,
                      `plugin_formcreator_question_id` int(11) NOT NULL,
-                     `answer` text NOT NULL
+                     `answer` text NOT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
+                     INDEX `plugin_formcreator_question_id` (`plugin_formcreator_question_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -87,6 +90,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
                                  'plugin_formcreator_forms_answers_id',
                                  'integer');
          $migration->addKey($table, 'plugin_formcreator_forms_answers_id');
+         $migration->addKey($table, 'plugin_formcreator_question_id');
 
          $migration->migrationOneTable($table);
       }

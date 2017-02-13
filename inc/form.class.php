@@ -1167,7 +1167,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          // Create Forms table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `entities_id` int(11) NOT NULL DEFAULT '0',
                      `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
                      `access_rights` tinyint(1) NOT NULL DEFAULT '1',
@@ -1183,7 +1183,10 @@ class PluginFormcreatorForm extends CommonDBTM
                      `validation_required` tinyint(1) NOT NULL DEFAULT '0',
                      `usage_count` int(11) NOT NULL DEFAULT '0',
                      `is_default` tinyint(1) NOT NULL DEFAULT '0',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `entities_id` (`entities_id`),
+                     INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -1274,6 +1277,8 @@ class PluginFormcreatorForm extends CommonDBTM
          $migration->addField($table, 'uuid', 'string', array('after' => 'is_default'));
       }
 
+      $migration->addKey($table, 'entities_id');
+      $migration->addKey($table, 'plugin_formcreator_categories_id');
       $migration->migrationOneTable($table);
 
       // fill missing uuid (force update of forms, see self::prepareInputForUpdate)

@@ -146,7 +146,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                      `ancestors_cache` LONGTEXT NULL COLLATE 'utf8_unicode_ci',
                      `knowbaseitemcategories_id` INT(11) NOT NULL DEFAULT '0',
                      PRIMARY KEY (`id`),
-                     KEY `name` (`name`)
+                     INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
+                     INDEX `name` (`name`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
       }
@@ -192,6 +193,9 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
          $DB->query($query);
       }
+
+      $migration->addKey($table, 'knowbaseitemcategories_id');
+      $migration->migrationOneTable($table);
       return true;
    }
 

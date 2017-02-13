@@ -849,7 +849,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `entities_id` int(11) NOT NULL DEFAULT '0',
                      `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
@@ -858,7 +858,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      `validator_id` int(11) NULL,
                      `request_date` datetime NOT NULL,
                      `status` enum('waiting', 'refused', 'accepted') NOT NULL DEFAULT 'waiting',
-                     `comment` text NULL DEFAULT NULL
+                     `comment` text NULL DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8

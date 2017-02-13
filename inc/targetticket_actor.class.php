@@ -34,14 +34,15 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
       $table = self::getTable();
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    `id` int(11) NOT NULL AUTO_INCREMENT,
                     `plugin_formcreator_targettickets_id` int(11) NOT NULL,
                     `actor_role` enum($enum_actor_role) NOT NULL,
                     `actor_type` enum($enum_actor_type) NOT NULL,
                     `actor_value` int(11) DEFAULT NULL,
                     `use_notification` BOOLEAN NOT NULL DEFAULT TRUE,
                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-                    KEY `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
+                    PRIMARY KEY (`id`),
+                    INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
                   ) ENGINE=MyISAM DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
       } else {

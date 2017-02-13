@@ -1593,7 +1593,7 @@ EOS;
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `tickettemplates_id` int(11) NULL DEFAULT NULL,
                      `comment` text collate utf8_unicode_ci,
@@ -1608,7 +1608,9 @@ EOS;
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                      `tag_questions` VARCHAR(255) NOT NULL,
-                     `tag_specifics` VARCHAR(255) NOT NULL
+                     `tag_specifics` VARCHAR(255) NOT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `tickettemplates_id` (`tickettemplates_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or die($DB->error());
       } else {
@@ -1664,6 +1666,8 @@ EOS;
          }
          $migration->addField($table, 'urgency_question', 'integer', array('after' => 'urgency_rule'));
       }
+
+      $migration->addKey($table, 'tickettemplates_id');
 
       return true;
    }
