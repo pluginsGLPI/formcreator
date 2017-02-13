@@ -58,6 +58,7 @@ function plugin_formcreator_updateAnswer(Migration $migration) {
          'integer');
 
    $migration->addKey('glpi_plugin_formcreator_answers', 'plugin_formcreator_forms_answers_id');
+   $migration->addKey('glpi_plugin_formcreator_answers', 'plugin_formcreator_question_id');
 
    $migration->migrationOneTable('glpi_plugin_formcreator_answers');
 }
@@ -70,7 +71,7 @@ function plugin_formcreator_updateCategory(Migration $migration) {
 
    if (TableExists('glpi_plugin_formcreator_cats')) {
       $query = "INSERT IGNORE INTO `glpi_plugin_formcreator_categories` (`id`, `name`)
-      SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
+                SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
       $DB->query($query);
       $DB->query("DROP TABLE glpi_plugin_formcreator_cats");
    }
@@ -115,6 +116,8 @@ function plugin_formcreator_updateCategory(Migration $migration) {
       $migration->addField('glpi_plugin_formcreator_categories', 'knowbaseitemcategories_id', 'integer', array(
             'after' => 'ancestors_cache'
       ));
+
+      $migration->addKey('glpi_plugin_formcreator_categories', 'knowbaseitemcategories_id');
       $migration->migrationOneTable('glpi_plugin_formcreator_categories');
       $query  = "UPDATE `glpi_plugin_formcreator_categories` SET `completename` = `name` WHERE `completename` = ''";
       $DB->query($query);
@@ -157,6 +160,7 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
    $DB->query($query) or die ($DB->error());
 
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_forms_id');
+   $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_categories_id');
    }
 
 function plugin_formcreator_updateForm_Profile(Migration $migration) {
@@ -313,6 +317,8 @@ function plugin_formcreator_updateForm(Migration $migration) {
       $migration->addField('glpi_plugin_formcreator_forms', 'uuid', 'string', array('after' => 'is_default'));
    }
 
+   $migration->addKey('glpi_plugin_formcreator_forms', 'entities_id');
+   $migration->addKey('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id');
    $migration->migrationOneTable('glpi_plugin_formcreator_forms');
 
    // fill missing uuid (force update of forms, see PluginFormcreatorForm::prepareInputForUpdate)
@@ -420,6 +426,8 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
       $migration->addField('glpi_plugin_formcreator_questions_conditions', 'uuid', 'string');
       $migration->migrationOneTable('glpi_plugin_formcreator_questions_conditions');
    }
+
+   $migration->addKey('glpi_plugin_formcreator_questions_conditions', 'plugin_formcreator_questions_id');
 
    // fill missing uuid (force update of questions, see PluginFormcreatorQuestoin_Condition::prepareInputForUpdate)
    $condition_obj = new PluginFormcreatorQuestion_Condition();
@@ -623,6 +631,8 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
       $migration->migrationOneTable('glpi_plugin_formcreator_questions');
    }
 
+   $migration->addKey('glpi_plugin_formcreator_questions', 'plugin_formcreator_sections_id');
+
    // fill missing uuid (force update of questions, see PlugiinFormcreatorQuestion::prepareInputForUpdate)
    $obj = new PluginFormcreatorQuestion();
    $all_questions = $obj->find("uuid IS NULL");
@@ -702,6 +712,8 @@ function plugin_formcreator_updateSection(Migration $migration) {
       $migration->addField('glpi_plugin_formcreator_sections', 'uuid', 'string');
       $migration->migrationOneTable('glpi_plugin_formcreator_sections');
    }
+
+   $migration->addKey('glpi_plugin_formcreator_sections', 'plugin_formcreator_forms_id');
 
    // fill missing uuid (force update of sections, see PluginFormcreatorSection::prepareInputForUpdate)
    $obj = new PluginFormcreatorSection();
@@ -855,6 +867,8 @@ function plugin_formcreator_updateTarget(Migration $migration) {
       }
    }
 
+   $migration->addKey($table, 'plugin_formcreator_forms_id');
+
    // add uuid to targets
    if (!FieldExists('glpi_plugin_formcreator_targets', 'uuid', false)) {
       $migration->addField('glpi_plugin_formcreator_targets', 'uuid', 'string');
@@ -982,4 +996,5 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       }
    }
    $migration->addField('glpi_plugin_formcreator_targettickets', 'urgency_question', 'integer', array('after' => 'urgency_rule'));
+   $migration->addKey($table, 'tickettemplates_id');
 }
