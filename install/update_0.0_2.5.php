@@ -118,6 +118,7 @@ function plugin_formcreator_updateCategory(Migration $migration) {
       ));
 
       $migration->addKey('glpi_plugin_formcreator_categories', 'knowbaseitemcategories_id');
+      $migration->addKey('glpi_plugin_formcreator_categories', 'plugin_formcreator_categories_id');
       $migration->migrationOneTable('glpi_plugin_formcreator_categories');
       $query  = "UPDATE `glpi_plugin_formcreator_categories` SET `completename` = `name` WHERE `completename` = ''";
       $DB->query($query);
@@ -125,6 +126,8 @@ function plugin_formcreator_updateCategory(Migration $migration) {
 }
 
 function plugin_formcreator_updateForm_Answer(Migration $migration) {
+   global $DB;
+
    // Legacy upgrade of Form_Answers
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
 
@@ -156,11 +159,10 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
 
    // valdiator_id should not be set for waiting form answers
    $query = "UPDATE `glpi_plugin_formcreator_forms_answers`
-   SET `validator_id` = '0' WHERE `status`='waiting'";
+             SET `validator_id` = '0' WHERE `status`='waiting'";
    $DB->query($query) or die ($DB->error());
 
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_forms_id');
-   $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_categories_id');
    }
 
 function plugin_formcreator_updateForm_Profile(Migration $migration) {
@@ -867,7 +869,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
       }
    }
 
-   $migration->addKey($table, 'plugin_formcreator_forms_id');
+   $migration->addKey('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id');
 
    // add uuid to targets
    if (!FieldExists('glpi_plugin_formcreator_targets', 'uuid', false)) {
@@ -996,5 +998,5 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       }
    }
    $migration->addField('glpi_plugin_formcreator_targettickets', 'urgency_question', 'integer', array('after' => 'urgency_rule'));
-   $migration->addKey($table, 'tickettemplates_id');
+   $migration->addKey('glpi_plugin_formcreator_targettickets', 'tickettemplates_id');
 }

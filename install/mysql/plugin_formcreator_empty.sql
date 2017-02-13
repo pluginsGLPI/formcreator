@@ -22,8 +22,9 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   `ancestors_cache` longtext COLLATE utf8_unicode_ci,
   `knowbaseitemcategories_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
+  INDEX `name` (`name`),
   INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
-  INDEX `name` (`name`)
+  INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
@@ -164,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `tag_type` enum('none','questions','specifics','questions_and_specific','questions_or_specific') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
   `tag_questions` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `tag_specifics` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   INDEX `changetemplates_id` (`changetemplates_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
