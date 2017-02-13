@@ -107,7 +107,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
                      UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,
                                            `profiles_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // change fk for profiles
@@ -147,7 +147,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**

@@ -841,7 +841,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $itemTicket_table = Item_Ticket::getTable();
          $itemtype = __CLASS__;
          $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       if (!TableExists($table)) {
@@ -865,7 +865,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          /**
           * Migration of special chars from previous versions
@@ -879,18 +879,18 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             $query_update = "UPDATE `$table` SET
                                `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
                              WHERE `id` = " . $line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          if (!FieldExists($table, 'name')) {
             $query_update = 'ALTER TABLE `$table` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          // valdiator_id should not be set for waiting form answers
          $query = "UPDATE $table
                SET `validator_id` = '0' WHERE `status`='waiting'";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Create standard search options
@@ -900,7 +900,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 4, 4, 0),
                (NULL, '" . __CLASS__ . "', 5, 5, 0),
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
       $migration->addKey($table, 'plugin_formcreator_forms_id');
 

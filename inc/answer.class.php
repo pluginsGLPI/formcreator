@@ -63,11 +63,11 @@ class PluginFormcreatorAnswer extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          // Update field type from previous version (Need answer to be text since text can be WYSIWING).
          $query = "ALTER TABLE  `$table` CHANGE  `answer`  `answer` text;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
          /**
           * Migration of special chars from previous versions
@@ -81,7 +81,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
             $query_update = "UPDATE `$table` SET
                                `answer` = '".plugin_formcreator_encode($line['answer'])."'
                              WHERE `id` = ".$line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          //rename foreign key, to match table plugin_formcreator_forms_answers name

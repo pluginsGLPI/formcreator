@@ -64,7 +64,7 @@ class PluginFormcreatorSection extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          /**
           * Migration of special chars from previous versions
@@ -78,7 +78,7 @@ class PluginFormcreatorSection extends CommonDBChild
             $query_update = "UPDATE `$table` SET
                                `name` = '".plugin_formcreator_encode($line['name'])."'
                              WHERE `id` = ".$line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
       }
 

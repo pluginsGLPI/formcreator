@@ -129,7 +129,7 @@ class PluginFormcreatorHeader extends CommonDropdown
                      PRIMARY KEY (`id`),
                      KEY `name` (`name`)
                      ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Migration from previous version
@@ -150,6 +150,6 @@ class PluginFormcreatorHeader extends CommonDropdown
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 }
