@@ -167,7 +167,9 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
    }
 
 function plugin_formcreator_updateForm_Profile(Migration $migration) {
-       // Legacy upgrade of Form_Answers
+   global $DB;
+
+   // Legacy upgrade of Form_Answers
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_profiles");
 
    if (TableExists('glpi_plugin_formcreator_formprofiles')) {
@@ -246,7 +248,7 @@ function plugin_formcreator_updateFormValidator(Migration $migration) {
 }
 
 function plugin_formcreator_updateForm(Migration $migration) {
-      global $DB;
+   global $DB;
 
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms");
@@ -334,7 +336,7 @@ function plugin_formcreator_updateForm(Migration $migration) {
 }
 
 function plugin_formcreator_updateHeader(Migration $migration) {
-      global $DB;
+   global $DB;
 
    // Drop Headers table
    $migration->displayMessage("Drop glpi_plugin_formcreator_headers");
@@ -342,7 +344,7 @@ function plugin_formcreator_updateHeader(Migration $migration) {
 }
 
 function plugin_formcreator_updateQuestionCondition(Migration $migration) {
-      global $DB;
+   global $DB;
 
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_questions_conditions");
@@ -442,7 +444,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
 }
 
 function plugin_formcreator_updateQuestion(Migration $migration) {
-      global $DB;
+   global $DB;
 
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_questions");
@@ -900,6 +902,8 @@ function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
 }
 
 function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
+   global $DB;
+
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets_actors");
 
@@ -940,6 +944,8 @@ function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
 }
 
 function plugin_formcreator_updateTargetTicket(Migration $migration) {
+   global $DB;
+
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets");
 
@@ -1003,8 +1009,6 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
 }
 
 function plugin_formcreator_updateTitle(Migration $migration) {
-   global $DB;
-
    // Drop Headers table
    $migration->displayMessage("Drop glpi_plugin_formcreator_titles");
    $migration->dropTable('glpi_plugin_formcreator_titles');
