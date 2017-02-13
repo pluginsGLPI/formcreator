@@ -181,7 +181,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
 
       }
@@ -191,7 +191,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
             WHERE `id` NOT IN (
                SELECT `id` FROM `$table`
             )";
-      $result = $DB->query($query) or die ($DB->error());
+      $result = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       while ($row = $DB->fetch_assoc($result)) {
          $entityConfig = new self();
          $entityConfig->add([

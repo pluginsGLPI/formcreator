@@ -52,7 +52,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
                      UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`, `itemtype`, `items_id`)
                   )
                   ENGINE = MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Convert the old relation in glpi_plugin_formcreator_formvalidators table
@@ -67,7 +67,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
                FROM `$old_table`
                LEFT JOIN `$table_form` ON (`$table_form`.`id` = `$old_table`.`forms_id`)
                WHERE `validation_required` > 1";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          $migration->displayMessage('Backing up table glpi_plugin_formcreator_formvalidators');
          $migration->renameTable('glpi_plugin_formcreator_formvalidators', 'glpi_plugin_formcreator_formvalidators_backup');
       }
@@ -92,7 +92,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
 
       $table = self::getTable();
       $query = "DROP TABLE IF EXISTS `$table`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**

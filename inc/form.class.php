@@ -1153,12 +1153,12 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Create default request type
       $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result = $DB->query($query) or die ($DB->error());
+      $result = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       if ($DB->numrows($result) > 0) {
          list($requesttype) = $DB->fetch_array($result);
       } else {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          $requesttype = $DB->insert_id();
       }
 
@@ -1191,7 +1191,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Migration from previous version
@@ -1230,7 +1230,7 @@ class PluginFormcreatorForm extends CommonDBTM
                             `description` = '" . plugin_formcreator_encode($line['description']) . "',
                             `content`     = '" . plugin_formcreator_encode($line['content']) . "'
                           WHERE `id` = " . (int) $line['id'];
-         $DB->query($query_update) or die ($DB->error());
+         $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
       }
 
       /**
@@ -1248,7 +1248,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Re-add FULLTEXT index
       $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
       $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required',
                                                                    'value' => '0'));
@@ -1269,7 +1269,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   (NULL, '" . __CLASS__ . "', 7, 4, 0),
                   (NULL, '" . __CLASS__ . "', 8, 5, 0),
                   (NULL, '" . __CLASS__ . "', 9, 6, 0);";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
 
       // add uuid to forms
