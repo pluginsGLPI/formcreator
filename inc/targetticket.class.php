@@ -1155,7 +1155,7 @@ EOS;
 
       // Get default request type
       $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $DB->query($query) or die ($DB->error());
+      $result  = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       list($requesttypes_id) = $DB->fetch_array($result);
 
       $datas['requesttypes_id'] = $requesttypes_id;
@@ -1612,7 +1612,7 @@ EOS;
                      PRIMARY KEY (`id`),
                      INDEX `tickettemplates_id` (`tickettemplates_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          if(!FieldExists($table, 'due_date_rule', false)) {
             $query = "ALTER TABLE `$table`
@@ -1621,7 +1621,7 @@ EOS;
                         ADD `due_date_value` TINYINT NULL DEFAULT NULL,
                         ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
                         ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          // Migration to Formcreator 0.90-1.4
@@ -1629,7 +1629,7 @@ EOS;
             $query = "ALTER TABLE `$table`
                         ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
             if (count($current_enum_destination_entity) != count(self::getEnumDestinationEntity())) {
@@ -1637,7 +1637,7 @@ EOS;
                            CHANGE COLUMN `destination_entity` `destination_entity`
                            ENUM($enum_destination_entity)
                            NOT NULL DEFAULT 'requester'";
-               $DB->query($query) or die($DB->error());
+               $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
             }
          }
 
@@ -1646,13 +1646,13 @@ EOS;
                          ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                          ADD `tag_questions` VARCHAR(255) NOT NULL,
                          ADD `tag_specifics` VARCHAR(255) NOT NULL;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          if (!FieldExists($table, 'urgency_rule', false)) {
             $query = "ALTER TABLE `$table`
             ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'urgency_rule');
@@ -1661,7 +1661,7 @@ EOS;
                CHANGE COLUMN `urgency_rule` `urgency_rule`
                ENUM($enum_urgency_rule)
                NOT NULL DEFAULT 'none'";
-               $DB->query($query) or die($DB->error());
+               $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
             }
          }
          $migration->addField($table, 'urgency_question', 'integer', array('after' => 'urgency_rule'));
@@ -1677,7 +1677,7 @@ EOS;
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**

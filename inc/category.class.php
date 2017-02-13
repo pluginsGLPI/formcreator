@@ -149,7 +149,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                      INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
                      INDEX `name` (`name`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Migration from previous version
@@ -173,7 +173,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                             `name`    = '".plugin_formcreator_encode($line['name'])."',
                             `comment` = '".plugin_formcreator_encode($line['comment'])."'
                           WHERE `id` = ".$line['id'];
-         $DB->query($query_update) or die ($DB->error());
+         $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
       }
 
       /**
@@ -204,6 +204,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 }

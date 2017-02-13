@@ -655,7 +655,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
          // Create questions conditions table (since 0.85-1.1)
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
@@ -672,7 +672,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
       } else {
          // Migration 0.83-1.0 => 0.85-1.0
@@ -693,10 +693,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
                       ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                       CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
                       CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
-            $DB->query($query) or die ($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
             // order start from 1 instead of 0
-            $DB->query("UPDATE `$table` SET `order` = `order` + 1;") or die ($DB->error());
+            $DB->query("UPDATE `$table` SET `order` = `order` + 1;") or plugin_formcrerator_upgrade_error($migration);
 
             // Match new type
             $query  = "SELECT `id`, `type`, `data`, `option`
@@ -800,7 +800,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                                   `regex`          = '" . $regex . "',
                                   `required`       = " . (int) $required . "
                                WHERE `id` = " . $line['id'];
-               $DB->query($query_udate) or die ($DB->error());
+               $DB->query($query_udate) or plugin_formcrerator_upgrade_error($migration);
             }
 
             $query = "ALTER TABLE `$table`
@@ -808,7 +808,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                       DROP `data`,
                       DROP `option`,
                       DROP `plugin_formcreator_forms_id`;";
-            $DB->query($query) or die ($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          // Migration 0.85-1.0 => 0.85-1.1
@@ -819,7 +819,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                $query = "ALTER TABLE  `glpi_plugin_formcreator_questions`
                          CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
                          ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
-               $DB->query($query) or die ($DB->error());
+               $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
             }
 
             // Create new table for conditionnal show of questions
@@ -837,7 +837,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-            $DB->query($query) or die ($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
             // Migrate date from "questions" table to "questions_conditions" table
             $query  = "SELECT `id`, `show_type`, `show_field`, `show_condition`, `show_value`
@@ -870,14 +870,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
                $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
                                  `show_rule` = '$show_rule'
                                WHERE `id` = " . $line['id'];
-               $DB->query($query_udate) or die ($DB->error());
+               $DB->query($query_udate) or plugin_formcrerator_upgrade_error($migration);
 
                $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
                                   `plugin_formcreator_questions_id` = {$line['id']},
                                   `show_field`     = $show_field,
                                   `show_condition` = '$show_condition',
                                   `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
-               $DB->query($query_udate) or die ($DB->error());
+               $DB->query($query_udate) or plugin_formcrerator_upgrade_error($migration);
             }
 
             // Delete old fields
@@ -886,7 +886,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                       DROP `show_field`,
                       DROP `show_condition`,
                       DROP `show_value`;";
-            $DB->query($query) or die ($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          /**
@@ -905,7 +905,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                                `default_values` = '" . addslashes(plugin_formcreator_encode($line['default_values'])) . "',
                                `description`    = '" . addslashes(plugin_formcreator_encode($line['description'])) . "'
                              WHERE `id` = " . $line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          // Migrate "question_conditions" table
@@ -916,7 +916,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
                                `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
                              WHERE `id` = " . (int) $line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          /**
@@ -933,7 +933,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // Re-add FULLTEXT index
          $query = "ALTER TABLE `$table` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
          // add uuid to questions
          if (!FieldExists($table, 'uuid', false)) {

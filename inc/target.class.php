@@ -210,7 +210,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                      PRIMARY KEY (`id`),
                      INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
       // Migration from previous version
       } else{
@@ -240,7 +240,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                       FROM `glpi_plugin_formcreator_targets` t, `glpi_plugin_formcreator_forms` f
                       WHERE f.`id` = t.`plugin_formcreator_forms_id`
                       GROUP BY t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`";
-            $result = $DB->query($query) or die($DB->error());
+            $result = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
             $i = 0;
             while ($ligne = $DB->fetch_array($result)) {
@@ -347,7 +347,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                   $query_update = "UPDATE `$table_targetticket` SET
                                      `comment` = '".plugin_formcreator_encode($line['comment'])."'
                                    WHERE `id` = ".$line['id'];
-                  $DB->query($query_update) or die ($DB->error());
+                  $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
                }
             }
          }
@@ -376,7 +376,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**

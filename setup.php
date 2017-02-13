@@ -274,3 +274,11 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $val
       return false;
    }
 }
+
+function plugin_formcrerator_upgrade_error(Migration $migration) {
+   global $DB;
+
+   $error = $DB->error();
+   $migration->log($error . "\n" . Toolbox::backtrace(false, '', array('Toolbox::backtrace()')));
+   die($error . "<br><br> Please, check migration log");
+}

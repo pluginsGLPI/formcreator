@@ -44,7 +44,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
                     PRIMARY KEY (`id`),
                     INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
                   ) ENGINE=MyISAM DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          $current_enum_actor_type = PluginFormcreatorCommon::getEnumValues($table, 'actor_type');
          if (count($current_enum_actor_type) != count(self::getEnumActorType())) {
@@ -52,7 +52,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
             CHANGE COLUMN `actor_type` `actor_type`
             ENUM($enum_actor_type)
             NOT NULL";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          $current_enum_role = PluginFormcreatorCommon::getEnumValues($table, 'actor_role');
@@ -61,7 +61,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
             CHANGE COLUMN `actor_role` `actor_role`
             ENUM($enum_actor_role)
             NOT NULL";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
       }
 
@@ -97,7 +97,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
 
       $table = self::getTable();
       $query = "DROP TABLE IF EXISTS `$table`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**

@@ -25,7 +25,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                      (NULL, '$cls', 7, 6, 0),
                      (NULL, '$cls', 8, 7, 0)
                      ";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // create view who merge tickets and formanswers
@@ -75,7 +75,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          WHERE `tic`.`is_deleted` = 0
          GROUP BY `original_id`
          HAVING COUNT(`itic`.`items_id`) <= 1";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**
