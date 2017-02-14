@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
+  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `itemtype_items_id` (`itemtype`, `items_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

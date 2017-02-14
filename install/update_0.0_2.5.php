@@ -24,7 +24,7 @@ function plugin_formcreator_update_2_5(Migration $migration) {
    plugin_formcreator_updateTargetChange_Actor($migration);
    plugin_formcreator_updateTargetTicket_Actor($migration);
    plugin_formcreator_updateTargetTicket($migration);
-   plugin_formcreator_updateTitles($migration);
+   plugin_formcreator_updateTitle($migration);
 
    $migration->executeMigration();
 }
@@ -1004,7 +1004,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
          CHANGE COLUMN `urgency_rule` `urgency_rule`
          ENUM($enum_urgency_rule)
-         NOT NULL DEFAULT 'requester'";
+         NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
