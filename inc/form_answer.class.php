@@ -860,7 +860,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      `status` enum('waiting', 'refused', 'accepted') NOT NULL DEFAULT 'waiting',
                      `comment` text NULL DEFAULT NULL,
                      PRIMARY KEY (`id`),
-                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
+                     INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
+                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
+                     INDEX `requester_id` (`requester_id`),
+                     INDEX `validator_id` (`validator_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
@@ -902,7 +905,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
       $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
+      $migration->addKey($table, array('entities_id', 'is_recursive'));
       $migration->addKey($table, 'plugin_formcreator_forms_id');
+      $migration->addKey($table, 'requester_id');
+      $migration->addKey($table, 'validator_id');
 
       return true;
    }
