@@ -205,7 +205,11 @@ class PluginFormcreatorFields
                if (empty($condition['value'])) {
                   $value = false;
                } else {
-                  $decodedConditionField = json_decode($values[$condition['field']]);
+                  if (is_array($values[$condition['field']])) {
+                     $decodedConditionField = null;
+                  } else {
+                     $decodedConditionField = json_decode($values[$condition['field']]);
+                  }
                   if (is_array($values[$condition['field']])) {
                      $value = in_array($condition['value'], $values[$condition['field']]);
                   } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
