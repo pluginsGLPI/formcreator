@@ -69,7 +69,10 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   `status` enum('waiting','refused','accepted') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'waiting',
   `comment` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
+  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
+  INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
+  INDEX `requester_id` (`requester_id`),
+  INDEX `validator_id` (`validator_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
@@ -190,6 +193,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
+  INDEX `itemtype_items_id` (`itemtype`, `items_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (

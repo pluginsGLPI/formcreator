@@ -164,6 +164,9 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
    $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'plugin_formcreator_forms_id');
+   $migration->addKey('glpi_plugin_formcreator_forms_answers', array('entities_id', 'is_recursive'));
+   $migration->addKey('glpi_plugin_formcreator_forms_answers', 'requester_id');
+   $migration->addKey('glpi_plugin_formcreator_forms_answers', 'validator_id');
    }
 
 function plugin_formcreator_updateForm_Profile(Migration $migration) {
@@ -873,6 +876,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
    }
 
    $migration->addKey('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id');
+   $migration->addKey('glpi_plugin_formcreator_targets', array('itemtype', 'items_id'));
 
    // add uuid to targets
    if (!FieldExists('glpi_plugin_formcreator_targets', 'uuid', false)) {
