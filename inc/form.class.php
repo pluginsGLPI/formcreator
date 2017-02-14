@@ -1658,31 +1658,86 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showImportForm() {
       global $CFG_GLPI;
 
-      echo "<form name='form' method='post' action='".
-            PluginFormcreatorForm::getFormURL().
-            "?import_send=1' enctype=\"multipart/form-data\">";
+      $documentType = new DocumentType();
+      $jsonTypeExists = $documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'");
+      $jsonTypeEnabled = $jsonTypeExists && $documentType->getField('is_uploadable');
+      $canAddType = $documentType->canCreate();
+      $canUpdateType = $documentType->canUpdate();
 
-      echo "<div class='spaced' id='tabsbody'>";
-      echo "<table class='tab_cadre_fixe' id='mainformtable'>";
-      echo "<tr class='headerRow'>";
-      echo "<th>";
-      echo __("Import forms");
-      echo "</th>";
-      echo "</tr>";
-      echo "<tr>";
-      echo "<td>";
-      echo Html::file(array('name' => 'json_file'));
-      echo "</td>";
-      echo "</tr>";
-      echo "<td class='center'>";
-      echo Html::submit(_x('button','Send'), array('name' => 'import_send'));
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr>";
-      echo "</table>";
-      echo "</div>";
+      if (! ($jsonTypeExists && $jsonTypeEnabled)) {
+         if (!$jsonTypeExists) {
+            $message = __('Upload of JSON files not allowed.', 'formcreator');
+            if ($canAddType) {
+               $destination = PluginFormcreatorForm::getFormURL();
+               $message .= __('You may allow JSON files right now.', 'formcreator');
+               $button = Html::submit(_x('button','Create', 'formcreator'), array('name' => 'filetype_create'));
+            } else {
+               $destination = PluginFormcreatorForm::getSearchURL();
+               $message .= __('Please contact your GLPI administrator.', 'formcreator');
+               $button = Html::submit(_x('button','Back', 'formcreator'), array('name' => 'filetype_back'));
+            }
+         } else {
+            $message = __('Upload of JSON files not enabled.', 'formcreator');
+            if ($canUpdateType) {
+               $destination = PluginFormcreatorForm::getFormURL();
+               $message .= __('You may enable JSON files right now.', 'formcreator');
+               $button = Html::submit(_x('button','Enable', 'formcreator'), array('name' => 'filetype_enable'));
+            } else {
+               $destination = PluginFormcreatorForm::getSearchURL();
+               $message .= __('Please contact your GLPI administrator.', 'formcreator');
+               $button = Html::submit(_x('button','Back', 'formcreator'), array('name' => 'filetype_back'));
+            }
+         }
+         echo '<div class="spaced" id="tabsbody">';
+         echo "<form name='form' method='post' action='".
+               $destination."'>";
+         echo '<table class="tab_cadre_fixe" id="mainformtable">';
+         echo '<tr class="headerRow">';
+         echo '<th>';
+         echo __('Import forms');
+         echo '</th>';
+         echo '</tr>';
+         echo '<tr>';
+         echo '<td class="center">';
+         echo $message;
+         echo '</td>';
+         echo '</tr>';
+         echo '<td class="center">';
+         echo $button;
+         echo '</td>';
+         echo '</tr>';
+         echo '<tr>';
+         echo '</table>';
+         echo '</div>';
+         Html::closeForm();
+         echo '</div>';
+      } else {
+         echo "<form name='form' method='post' action='".
+               PluginFormcreatorForm::getFormURL().
+               "' enctype=\"multipart/form-data\">";
 
-      Html::closeForm();
+         echo "<div class='spaced' id='tabsbody'>";
+         echo "<table class='tab_cadre_fixe' id='mainformtable'>";
+         echo "<tr class='headerRow'>";
+         echo "<th>";
+         echo __("Import forms");
+         echo "</th>";
+         echo "</tr>";
+         echo "<tr>";
+         echo "<td>";
+         echo Html::file(array('name' => 'json_file'));
+         echo "</td>";
+         echo "</tr>";
+         echo "<td class='center'>";
+         echo Html::submit(_x('button','Send'), array('name' => 'import_send'));
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr>";
+         echo "</table>";
+         echo "</div>";
+
+         Html::closeForm();
+      }
    }
 
    /**
@@ -1786,5 +1841,33 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       return $forms_id;
+   }
+
+   public function createDocumentType() {
+      $documentType = new DocumentType();
+      $success = $documentType->add(array(
+            'name'            => 'JSON file',
+            'ext'             => 'json',
+            'icon'            => '',
+            'is_uploadable'   => '1'
+      ));
+      if (!$success) {
+         Session::addMessageAfterRedirect(__('Failed to create JSON document type', 'formcreator'));
+      }
+   }
+
+   public function enableDocumentType() {
+      $documentType = new DocumentType();
+      if (!$documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'")) {
+         Session::addMessageAfterRedirect(__('JSON document type not found', 'formcreator'));
+      } else {
+         $success = $documentType->update(array(
+               'id'              => $documentType->getID(),
+               'is_uploadable'   => '1'
+         ));
+         if (!$success) {
+            Session::addMessageAfterRedirect(__('Failed to update JSON document type', 'formcreator'));
+         }
+      }
    }
 }
