@@ -209,7 +209,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                      `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      PRIMARY KEY (`id`),
                      INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
-                     INDEX `itemtype_items_id` (`itemtype`, `items_id`),
+                     INDEX `itemtype_items_id` (`itemtype`, `items_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
          $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
