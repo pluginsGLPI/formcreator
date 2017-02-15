@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP VIEW `glpi_plugin_formcreator_issues`;
+DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`;
 CREATE VIEW `glpi_plugin_formcreator_issues` AS 
   select 
     distinct concat('f_',`fanswer`.`id`) AS `id`,

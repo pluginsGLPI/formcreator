@@ -93,10 +93,16 @@ class PluginDB extends PHPUnit_Framework_Assert{
          }
       }
 
+      $toIgnore = array();
       foreach($a_tables as $table) {
          $query = "SHOW CREATE TABLE ".$table;
          $result = $DB->query($query);
          while ($data=$DB->fetch_array($result)) {
+            if (!isset($data['Create Table'])) {
+               // This is not a table (a view for example)
+               $toIgnore[$table] = $table;
+               continue;
+            }
             $a_lines = explode("\n", $data['Create Table']);
 
             foreach ($a_lines as $line) {
@@ -123,7 +129,9 @@ class PluginDB extends PHPUnit_Framework_Assert{
 
       $a_tables_ref_tableonly = array();
       foreach ($a_tables_ref as $table=>$data) {
-         $a_tables_ref_tableonly[] = $table;
+         if (!isset($toIgnore[$table])) {
+            $a_tables_ref_tableonly[] = $table;
+         }
       }
       $a_tables_db_tableonly = array();
       foreach ($a_tables_db as $table=>$data) {

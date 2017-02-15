@@ -167,7 +167,7 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
    $migration->addKey('glpi_plugin_formcreator_forms_answers', array('entities_id', 'is_recursive'));
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'requester_id');
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'validator_id');
-   }
+}
 
 function plugin_formcreator_updateForm_Profile(Migration $migration) {
    global $DB;
@@ -420,7 +420,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
    }
 
    $enum_logic = "'".implode("', '", array_keys(PluginFormcreatorQuestion_Condition::getEnumShowLogic()))."'";
-   $current_enum_show_logic = PluginFormcreatorCommon::getEnumValues($table, 'show_logic');
+   $current_enum_show_logic = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_questions_conditions', 'show_logic');
    if (count($current_enum_show_logic) != count(PluginFormcreatorQuestion_Condition::getEnumShowLogic())) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_questions_conditions`
                 CHANGE COLUMN `show_logic` `show_logic`
@@ -671,7 +671,7 @@ function plugin_formcreator_updateSection(Migration $migration) {
    }
 
    // Migration from previous version => Remove useless target field
-   if(FieldExists('', 'plugin_formcreator_targets_id', false)) {
+   if(FieldExists('glpi_plugin_formcreator_sections', 'plugin_formcreator_targets_id', false)) {
       $migration->dropField('glpi_plugin_formcreator_sections', 'plugin_formcreator_targets_id');
    }
 
@@ -816,6 +816,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          }
 
          $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
+      }
 
       // Install or upgrade of TargetTicket is a prerequisite
       $version   = plugin_version_formcreator();
