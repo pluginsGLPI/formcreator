@@ -94,16 +94,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`itemtype`,`items_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_headers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `entities_id` int(11) NOT NULL DEFAULT '0',
-  `is_recursive` tinyint(1) NOT NULL DEFAULT '1',
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `comment` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`),
-  INDEX `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_sections_id` int(11) NOT NULL,
@@ -131,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
   `show_field` int(11) DEFAULT NULL,
   `show_condition` enum('==','!=','<','>','<=','>=') COLLATE utf8_unicode_ci DEFAULT NULL,
   `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `show_logic` enum('AND','OR','XOR') COLLATE utf8_unicode_ci DEFAULT NULL,
+  `show_logic` enum('AND','OR') COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -205,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `due_date_question` int(11) DEFAULT NULL,
   `due_date_value` tinyint(4) DEFAULT NULL,
   `due_date_period` enum('minute','hour','day','month') COLLATE utf8_unicode_ci DEFAULT NULL,
-  `urgency_rule` enum('none','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
+  `urgency_rule` enum('none','specific','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
   `urgency_question` int(11) NOT NULL DEFAULT '0',
   `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
   `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'requester',
@@ -231,7 +221,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS 
+DROP VIEW `glpi_plugin_formcreator_issues`;
+CREATE VIEW `glpi_plugin_formcreator_issues` AS 
   select 
     distinct concat('f_',`fanswer`.`id`) AS `id`,
     `fanswer`.`id` AS `original_id`,
