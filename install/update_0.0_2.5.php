@@ -816,13 +816,10 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          }
 
          $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
-      }
 
       // Install or upgrade of TargetTicket is a prerequisite
       $version   = plugin_version_formcreator();
-      $migration = new Migration($version['version']);
-      require_once ('targetticket.class.php');
-      PluginFormcreatorTargetTicket::install($migration);
+      plugin_formcreator_updateTarget($migration);
       $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
 
       // Convert targets to ticket templates only if at least one target extsis
