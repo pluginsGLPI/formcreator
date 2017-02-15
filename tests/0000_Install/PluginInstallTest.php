@@ -86,57 +86,7 @@ class PluginInstallTest extends CommonTestCase
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
-      $this->assertTrue($plugin->isActivated("flyvemdm"), "Cannot enable the plugin");
+      $this->assertTrue($plugin->isActivated("formcreator"), "Cannot enable the plugin");
 
-      // Force the MQTT backend's credentials
-      // Useful to force the credientials to be the same as a development database
-      // and not force broker's reconfiguration when launching tests on the test-dedicates DB
-      $mqttUser = new PluginFlyvemdmMqttuser();
-      if (!empty(PHPUNIT_FLYVEMDM_MQTT_PASSWD)) {
-         $mqttUser->getByUser('flyvemdm-backend');
-         $mqttUser->update([
-               'id'        => $mqttUser->getID(),
-               'password'  => PHPUNIT_FLYVEMDM_MQTT_PASSWD
-         ]);
-         Config::setConfigurationValues('flyvemdm', ['mqtt_passwd' => PHPUNIT_FLYVEMDM_MQTT_PASSWD]);
-      }
    }
-
-   public function testConfigurationExists() {
-      $config = Config::getConfigurationValues('flyvemdm');
-      $expected = [
-            'mqtt_broker_address',
-            'mqtt_broker_internal_address',
-            'mqtt_broker_port',
-            'mqtt_broker_tls',
-            'mqtt_use_client_cert',
-            'mqtt_broker_tls_ciphers',
-            'mqtt_user',
-            'mqtt_passwd',
-            'instance_id',
-            'registered_profiles_id',
-            'guest_profiles_id',
-            'service_profiles_id',
-            'debug_enrolment',
-            'debug_noexpire',
-            'ssl_cert_url',
-            'version',
-            'default_device_limit',
-            'default_agent_url',
-      ];
-      $diff = array_diff_key(array_flip($expected), $config);
-      $this->assertEquals(0, count($diff));
-
-      return $config;
-   }
-
-   /**
-    * @depends testConfigurationExists
-    */
-   public function testGuestProfileExists($config) {
-      $guestProfileId = $config['guest_profiles_id'];
-      $profile = new Profile();
-      $this->assertTrue($profile->getFromDB($guestProfileId));
-   }
-
 }
