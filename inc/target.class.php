@@ -327,7 +327,7 @@ class PluginFormcreatorTarget extends CommonDBTM
             PluginFormcreatorTargetTicket::install($migration);
             $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
 
-            // Convert targets to ticket templates only if at least one target extsis
+            // Convert targets to ticket templates only if at least one target exists
             if ($i > 0) {
                // Prepare Mysql CASE For each ticket template
                $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
