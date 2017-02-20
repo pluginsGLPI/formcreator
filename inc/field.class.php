@@ -25,12 +25,12 @@ abstract class PluginFormcreatorField implements Field
          echo ' <span class="red">*</span>';
       }
       echo '</label>';
+      echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
 
       echo '<div class="form_field">';
       $this->displayField($canEdit);
       echo '</div>';
 
-      echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
       echo '</div>';
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
       // $value = json_encode($this->getAnswer());
