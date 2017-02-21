@@ -607,12 +607,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             // If the answer is set, check if it is an array (then implode id).
             if (isset($datas[$question['id']])) {
                $question_answer = $datas[$question['id']];
-               if (is_array(json_decode($question_answer))) {
+               if (is_array(json_decode($question_answer, JSON_UNESCAPED_UNICODE))) {
                   $question_answer = json_decode($question_answer);
                   foreach ($question_answer as $key => $value) {
                      $question_answer[$key] = $value;
                   }
-                  $question_answer = json_encode($question_answer);
+                  $question_answer = json_encode($question_answer, JSON_UNESCAPED_UNICODE);
                } else {
                   $question_answer = $question_answer;
                }
