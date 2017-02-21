@@ -412,6 +412,24 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return $input;
    }
 
+   /**
+    * ACtions done before deleting an item. In case of failure, prevents
+    * actual deletion of the item
+    *
+    * @return boolean true if pre_delete actions succeeded, false if not
+    */
+   public function pre_deleteItem() {
+      $id = 'f_' . $this->getID();
+
+      $issue = new PluginFormcreatorIssue();
+      $issue->delete(array(
+            ''
+      ));
+
+      return true;
+   }
+
+
    public function saveAnswers($datas)
    {
       global $DB;
