@@ -1752,7 +1752,9 @@ EOS;
                }
                break;
             case 'supplier' :
-               $this->addActor('supplier', $userIdOrEmail, $notify);
+               foreach ($userIds as $userId) {
+                  $this->addActor('supplier', $userId, $notify);
+               }
                break;
             case 'question_supplier' :
                foreach ($userIds as $userId) {
