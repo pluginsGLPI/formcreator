@@ -10,7 +10,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
             'question_person'    => __("Person from the question", 'formcreator'),
             'group'              => __('Specific group', 'formcreator'),
             'question_group'     => __('Group from the question', 'formcreator'),
-            'supplier'           => __('Specific entity', 'formcreator'),
+            'supplier'           => __('Specific supplier', 'formcreator'),
             'question_supplier'  => __('Supplier from the question', 'formcreator'),
             'question_actors'    => __('Actors from the question', 'formcreator'),
       );
