@@ -5,7 +5,8 @@ include ('../../../inc/includes.php');
 $cat_table  = getTableForItemType('PluginFormcreatorCategory');
 $form_table = getTableForItemType('PluginFormcreatorForm');
 $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
-$where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
+$where      = getEntitiesRestrictRequest("", $form_table, "", "", true, false);
+$language   = $_SESSION['glpilanguage'];
 
 // Show form whithout table
 $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
@@ -14,7 +15,7 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                 AND $form_table.`is_active` = 1
                 AND $form_table.`is_deleted` = 0
                 AND $form_table.`helpdesk_home` = 1
-                AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` IN (0, '', NULL))
                 AND $where
                 AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                    SELECT plugin_formcreator_forms_id
@@ -33,7 +34,7 @@ $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                AND $form_table.`is_active` = 1
                AND $form_table.`is_deleted` = 0
                AND $form_table.`helpdesk_home` = 1
-               AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+               AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
                AND $where
                AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                   SELECT plugin_formcreator_forms_id
@@ -74,14 +75,15 @@ if ($DB->numrows($result) > 0 || $DB->numrows($result_forms) > 0) {
       // For each categories, show the list of forms the user can fill
       $i = 0;
       while ($category = $DB->fetch_array($result)) {
+         $categoryId = $category['id'];
          echo '<tr class="noHover"><th>' . $category['name'] . '</th></tr>';
          $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                          FROM $form_table
-                         WHERE $form_table.`plugin_formcreator_categories_id` = {$category['id']}
+                         WHERE $form_table.`plugin_formcreator_categories_id` = '$categoryId'
                          AND $form_table.`is_active` = 1
                          AND $form_table.`is_deleted` = 0
                          AND $form_table.`helpdesk_home` = 1
-                         AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` = '')
+                         AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
                          AND $where
                          AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                             SELECT plugin_formcreator_forms_id
