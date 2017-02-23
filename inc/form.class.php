@@ -1065,7 +1065,7 @@ class PluginFormcreatorForm extends CommonDBTM
          // If field was not post, it's value is empty
          if (isset($_POST['formcreator_field_' . $id])) {
             $datas[$id] = is_array($_POST['formcreator_field_' . $id])
-                           ? json_encode($_POST['formcreator_field_' . $id])
+                           ? json_encode($_POST['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
                            : $_POST['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
