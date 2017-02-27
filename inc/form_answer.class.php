@@ -423,7 +423,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $issue = new PluginFormcreatorIssue();
       $issue->delete(array(
-            ''
+            'id'     => $id,
       ));
 
       return true;
@@ -522,9 +522,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
+         $sinewFormAnswer = false;
 
-      // Create new form answer object
       } else {
+         // Create new form answer object
+
          // Does the form need to be validate ?
          if ($form->fields['validation_required']) {
             $status = 'waiting';
@@ -610,6 +612,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
+
+         $is_newFormAnswer = true;
       }
 
       if ($form->fields['validation_required'] || ($status == 'accepted')) {
@@ -630,6 +634,25 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
                } else {
                   NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
+               }
+
+               if ($is_newFormAnswer) {
+                  // This is a new answer for the form. Create an issue
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->add(array(
+                        'id'               => 'f_' . $id,
+                        'original_id'     => $id,
+                        'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+                        'name'            => $this->fields['name'],
+                        'status'          => $status,
+                        'date_creation'   => $this->fields['request_date'],
+                        'date_mod'        => $this->fields['request_date'],
+                        'entities_id'     => $this->fields['entities_id'],
+                        'is_recursive'    => $this->fields['is_recursive'],
+                        'requester_id'    => $this->fields['requester_id'],
+                        'validator_id'    => $this->fields['validator_id'],
+                        'comment'         => $this->fields['comment'],
+                  ));
                }
 
                if (!$this->generateTarget()) {
@@ -840,6 +863,38 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          // Notify the requester
          NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
       }
+   }
+
+   /**
+    * Actions done after update of an item
+    *
+    * @return void
+    */
+   public function post_updateItem($history = 1) {
+      $id = $this->getID();
+
+      $issue = new PluginFormcreatorISsue();
+      $issue->update(array(
+            'id'              => 'f_' .  $id,
+            'original_id'     => $id,
+            'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+            'name'            => $this->fields['name'],
+            'status'          => $this->fields['status'],
+            'date_creation'   => $this->fields['request_date'],
+            'date_mod'        => $this->fields['request_date'],
+            'entities_id'     => $this->fields['entities_id'],
+            'is_recursive'    => $this->fields['is_recursive'],
+            'requester_id'    => $this->fields['requester_id'],
+            'validator_id'    => $this->fields['validator_id'],
+            'comment'         => $this->fields['comment'],
+      ));
+   }
+
+   /**
+    *
+    */
+   public function post_addItem() {
+
    }
 
    /**

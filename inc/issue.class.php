@@ -108,9 +108,28 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $task = new CronTask();
       static::cronSyncIssues($task);
-
    }
 
+   /**
+    * get Cron description parameter for this class
+    *
+    * @param $name string name of the task
+    *
+    * @return array of string
+    */
+   static function cronInfo($name) {
+      switch ($name) {
+         case 'SyncIssues':
+            return array('description' => __('Update issue data from tickets and form answers', 'formcreator'));
+      }
+   }
+
+   /**
+    *
+    * @param unknown $task
+    *
+    * @return number
+    */
    public static function cronSyncIssues($task) {
       global $DB;
 
@@ -170,12 +189,17 @@ class PluginFormcreatorIssue extends CommonDBTM {
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
                $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
+               $volume = 1;
             }
          }
       }
       $task->setVolume($volume);
 
       return 1;
+   }
+
+   public static function hook_update_ticket(CommonDBTM $item) {
+
    }
 
    /**

@@ -5,6 +5,20 @@ include ("../../../inc/includes.php");
 $plugin = new Plugin();
 
 if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
+   if(!isset($_SESSION['glpiname'])) {
+      $plugin->load('formcreator', true);
+      $_SESSION["glpi_plugins"][] = 'formcreator';
+      // Add specific CSS
+      $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
+
+      $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
+      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
+
+      // Add specific JavaScript
+      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
+      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
+
+   }
    $form = new PluginFormcreatorForm();
    if($form->getFromDB((int) $_REQUEST['id'])) {
 
