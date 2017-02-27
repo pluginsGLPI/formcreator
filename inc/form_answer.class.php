@@ -891,13 +891,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
-    *
-    */
-   public function post_addItem() {
-
-   }
-
-   /**
     * Database table installation for the item type
     *
     * @param Migration $migration

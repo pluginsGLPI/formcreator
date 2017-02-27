@@ -253,3 +253,67 @@ function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
 
    return "";
 }
+
+function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $issue = new PluginFormcreatorIssue();
+      $issue->add(array(
+            'id'               => 't_' . $item->getID(),
+            'original_id'     => $item->getID(),
+            'sub_itemtype'    => 'Ticket',
+            'name'            => $item->fields['name'],
+            'status'          => $item->fields['status'],
+            'date_creation'   => $item->fields['date'],
+            'date_mod'        => $item->fields['date_mod'],
+            'entities_id'     => $item->fields['entities_id'],
+            'is_recursive'    => 0,
+            'requester_id'    => $item->fields['users_id_recipient'],
+            'validator_id'    => '',
+            'comment'         => $item->fields['comment'],
+      ));
+   }
+}
+
+function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorISsue();
+      $issue->update(array(
+            'id'              => 'f_' .  $id,
+            'original_id'     => $id,
+            'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+            'name'            => $item->fields['name'],
+            'status'          => $item->fields['status'],
+            'date_creation'   => $item->fields['request_date'],
+            'date_mod'        => $item->fields['request_date'],
+            'entities_id'     => $item->fields['entities_id'],
+            'is_recursive'    => $item->fields['is_recursive'],
+            'requester_id'    => $item->fields['requester_id'],
+            'validator_id'    => $item->fields['validator_id'],
+            'comment'         => $item->fields['comment'],
+      ));
+   }
+}
+
+function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorISsue();
+      $issue->delete(array(
+            'id'              => 't_' .  $id
+      ), 1);
+   }
+}
+
+function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorISsue();
+      $issue->delete(array(
+            'id'              => 't_' .  $id
+      ), 1);
+   }
+}
