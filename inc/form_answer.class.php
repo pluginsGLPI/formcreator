@@ -522,7 +522,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
-         $sinewFormAnswer = false;
+         $is_newFormAnswer = false;
 
       } else {
          // Create new form answer object
