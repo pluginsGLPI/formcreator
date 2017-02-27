@@ -636,11 +636,47 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
                }
 
+               if (!$this->generateTarget()) {
+                  Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
+
+                  $this->update(array(
+                     'id'     => $this->getID(),
+                     'status' => 'waiting',
+                  ));
+                  return false;
+               }
+               break;
+         }
+
+         // Update issues table
+         if ($status != 'refused') {
+
+            // If cannot get itemTicket from DB it happens either
+            // when no item exist
+            // when several rows matches
+            // Both are processed the same way
+            $formAnswerId = $this->getID();
+            $itemTicket = new Item_Ticket();
+            if (!$itemTicket->getFromDBByQuery("`itemtype` = 'Ticket' AND `items_id` = '$formAnswerId'")) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
                   $issue = new PluginFormcreatorIssue();
                   $issue->add(array(
-                        'id'               => 'f_' . $id,
+                        'original_id'     => $id,
+                        'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+                        'name'            => $this->fields['name'],
+                        'status'          => $status,
+                        'date_creation'   => $this->fields['request_date'],
+                        'date_mod'        => $this->fields['request_date'],
+                        'entities_id'     => $this->fields['entities_id'],
+                        'is_recursive'    => $this->fields['is_recursive'],
+                        'requester_id'    => $this->fields['requester_id'],
+                        'validator_id'    => $this->fields['validator_id'],
+                        'comment'         => '',
+                  ));
+               } else  {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->update(array(
                         'original_id'     => $id,
                         'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
                         'name'            => $this->fields['name'],
@@ -654,17 +690,41 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'comment'         => '',
                   ));
                }
-
-               if (!$this->generateTarget()) {
-                  Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
-
-                  $this->update(array(
-                     'id'     => $this->getID(),
-                     'status' => 'waiting',
+            } else {
+               if ($is_newFormAnswer) {
+                  $ticket = new Ticket();
+                  $ticket->getFromDB($itemTicket->getField('items_id'));
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->add(array(
+                        'original_id'     => $ticket->getID(),
+                        'sub_itemtype'    => 'Ticket',
+                        'name'            => $ticket->getField('name'),
+                        'status'          => $ticket->getField('status'),
+                        'date_creation'   => $ticket->getField('date'),
+                        'date_mod'        => $ticket->getField('date_mod'),
+                        'entities_id'     => $ticket->getField('entities_id'),
+                        'is_recursive'    => '0',
+                        'requester_id'    => $ticket->getField('users_id_recipient'),
+                        'validator_id'    => '',
+                        'comment'         => $ticket->getField('content'),
                   ));
-                  return false;
+               } else {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->update(array(
+                        'original_id'     => $ticket->getID(),
+                        'sub_itemtype'    => 'Ticket',
+                        'name'            => $ticket->getField('name'),
+                        'status'          => $ticket->getField('status'),
+                        'date_creation'   => $ticket->getField('date'),
+                        'date_mod'        => $ticket->getField('date_mod'),
+                        'entities_id'     => $ticket->getField('entities_id'),
+                        'is_recursive'    => '0',
+                        'requester_id'    => $ticket->getField('users_id_recipient'),
+                        'validator_id'    => '',
+                        'comment'         => $ticket->getField('content'),
+                  ));
                }
-               break;
+            }
          }
       }
 
@@ -710,20 +770,27 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
    public function generateTarget()
    {
+      global $CFG_GLPI;
+
+      $success = true;
+
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
       $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
+      $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
       foreach($found_targets as $target) {
          $obj = new $target['itemtype'];
          $obj->getFromDB($target['items_id']);
          if (!$obj->save($this)) {
-            return false;
+            $success = false;
+            break;
          }
       }
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
-      return true;
+      unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
+      return $success;
    }
 
    /**

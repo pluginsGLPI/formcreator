@@ -29,6 +29,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       // create view who merge tickets and formanswers
+      // 1 ticket not linked to a form_answer => 1 issue which is the ticket sub_itemtype
+      // 1 form_answer not linked to a ticket => 1 issue which is the form_answer sub_itemtype
+      // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
+      // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
       $query = "CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS
 
          SELECT DISTINCT
@@ -647,4 +651,34 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return true;
    }
 
+   /**
+    *
+    */
+   public function prepareInputForAdd($input) {
+      if (!isset($input['original_id']) || !isset($input['sub_itemtype'])) {
+         return false;
+      }
+
+      if ($input['sub_itemtype'] == 'PluginFormcreatorForm_Answer') {
+         $input['id'] = 'f_' . $input['original_id'];
+      } else if ($input['sub_itemtype'] == 'Ticket') {
+         $input['id'] = 't_' . $input['original_id'];
+      } else {
+         return false;
+      }
+   }
+
+   public function prepareInputForUpdate($input) {
+      if (!isset($input['original_id']) || !isset($input['sub_itemtype'])) {
+         return false;
+      }
+
+      if ($input['sub_itemtype'] == 'PluginFormcreatorForm_Answer') {
+         $input['id'] = 'f_' . $input['original_id'];
+      } else if ($input['sub_itemtype'] == 'Ticket') {
+         $input['id'] = 't_' . $input['original_id'];
+      } else {
+         return false;
+      }
+   }
 }
