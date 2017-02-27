@@ -1353,7 +1353,7 @@ class PluginFormcreatorForm extends CommonDBTM
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$form_validator->add($row)) {
+         if (!$form_profile->add($row)) {
             return false;
          }
       }
