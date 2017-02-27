@@ -269,7 +269,7 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
             'is_recursive'    => 0,
             'requester_id'    => $item->fields['users_id_recipient'],
             'validator_id'    => '',
-            'comment'         => $item->fields['comment'],
+            'comment'         => '',
       ));
    }
 }

@@ -651,7 +651,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'is_recursive'    => $this->fields['is_recursive'],
                         'requester_id'    => $this->fields['requester_id'],
                         'validator_id'    => $this->fields['validator_id'],
-                        'comment'         => $this->fields['comment'],
+                        'comment'         => '',
                   ));
                }
 
