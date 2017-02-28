@@ -304,8 +304,9 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
       $id = $item->getID();
 
       $issue = new PluginFormcreatorIssue();
-      $issue->delete(array(
-            'id'              => 't_' .  $id
+      $issue->deleteByCriteria(array(
+            'display_id'   => "t_$id",
+            'sub_itemtype' => 'Ticket'
       ), 1);
    }
 }
@@ -315,8 +316,9 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       $id = $item->getID();
 
       $issue = new PluginFormcreatorIssue();
-      $issue->delete(array(
-            'id'              => 't_' .  $id
+      $issue->deleteByCriteria(array(
+            'display_id'   => "t_$id",
+            'sub_itemtype' => 'Ticket'
       ), 1);
    }
 }
