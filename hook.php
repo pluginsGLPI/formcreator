@@ -269,9 +269,9 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
                'date_creation'   => $item->fields['date'],
                'date_mod'        => $item->fields['date_mod'],
                'entities_id'     => $item->fields['entities_id'],
-               'is_recursive'    => 0,
+               'is_recursive'    => '0',
                'requester_id'    => $item->fields['users_id_recipient'],
-               'validator_id'    => '',
+               'validator_id'    => '0',
                'comment'         => '',
          ));
       }
