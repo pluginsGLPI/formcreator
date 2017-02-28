@@ -285,8 +285,9 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       $issue = new PluginFormcreatorIssue();
       $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$id'");
       $issue->update(array(
-            'id'              => $id,
-            'original_id'     => "t_$id",
+            'id'              => $issue6>getID(),
+            'original_id'     => $id,
+            'display_id'      => "t_$id",
             'sub_itemtype'    => 'Ticket',
             'name'            => $item->fields['name'],
             'status'          => $item->fields['status'],
