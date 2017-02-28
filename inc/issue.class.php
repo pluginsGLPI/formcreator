@@ -95,7 +95,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
       $query = "SELECT DISTINCT
-                  CONCAT('f_',`fanswer`.`id`)    AS `id`,
+                  NULL                           AS `id`,
+                  CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
                   `fanswer`.`id`                 AS `original_id`,
                   'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
                   `f`.`name`                     AS `name`,
@@ -119,7 +120,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                UNION
 
                SELECT DISTINCT
-                  CONCAT('t_',`tic`.`id`)       AS `id`,
+                  NULL                          AS `id`,
+                  CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
                   `tic`.`name`                  AS `name`,
@@ -303,7 +305,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ),
          '2' => array(
             'table'         => self::getTable(),
-            'field'         => 'id',
+            'field'         => 'display_id',
             'name'          => __('ID'),
             'datatype'      => 'itemlink',
             'forcegroupby'  => true,
