@@ -739,14 +739,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    public function generateTarget()
    {
       // Get all targets
-      $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $target        = new PluginFormcreatorTarget();
+      $found_targets = $target->getTargetsForForm($form);
 
       // Generate targets
       foreach($found_targets as $target) {
-         $obj = new $target['itemtype'];
-         $obj->getFromDB($target['items_id']);
-         if (!$obj->save($this)) {
+         if (!$target->save($this)) {
             return false;
          }
       }
