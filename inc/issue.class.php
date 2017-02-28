@@ -6,78 +6,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return _n('Issue', 'Issues', $nb, 'formcreator');
    }
 
-   public static function install(Migration $migration) {
-      global $DB;
-
-      // Create standard search options
-      $cls = __CLASS__;
-      $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = '$cls'");
-      if (count($found_dprefs) == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                     (`id`, `itemtype`, `num`, `rank`, `users_id`)
-                  VALUES
-                     (NULL, '$cls', 1, 1, 0),
-                     (NULL, '$cls', 2, 2, 0),
-                     (NULL, '$cls', 4, 3, 0),
-                     (NULL, '$cls', 5, 4, 0),
-                     (NULL, '$cls', 6, 5, 0),
-                     (NULL, '$cls', 7, 6, 0),
-                     (NULL, '$cls', 8, 7, 0)
-                     ";
-         $DB->query($query) or die ($DB->error());
-      }
-
-      // create view who merge tickets and formanswers
-      $query = "CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS
-
-         SELECT DISTINCT
-            CONCAT('f_',`fanswer`.`id`)    AS `id`,
-            `fanswer`.`id`                 AS `original_id`,
-            'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
-            `f`.`name`                     AS `name`,
-            `fanswer`.`status`             AS `status`,
-            `fanswer`.`request_date`       AS `date_creation`,
-            `fanswer`.`request_date`       AS `date_mod`,
-            `fanswer`.`entities_id`        AS `entities_id`,
-            `fanswer`.`is_recursive`       AS `is_recursive`,
-            `fanswer`.`requester_id`       AS `requester_id`,
-            `fanswer`.`validator_id`       AS `validator_id`,
-            `fanswer`.`comment`            AS `comment`
-         FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
-         LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
-            ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
-         LEFT JOIN `glpi_items_tickets` AS `itic`
-            ON `itic`.`items_id` = `fanswer`.`id`
-            AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
-         GROUP BY `original_id`
-         HAVING COUNT(`itic`.`tickets_id`) != 1
-
-         UNION
-
-         SELECT DISTINCT
-            CONCAT('t_',`tic`.`id`)       AS `id`,
-            `tic`.`id`                    AS `original_id`,
-            'Ticket'                      AS `sub_itemtype`,
-            `tic`.`name`                  AS `name`,
-            `tic`.`status`                AS `status`,
-            `tic`.`date`                  AS `date_creation`,
-            `tic`.`date_mod`              AS `date_mod`,
-            `tic`.`entities_id`           AS `entities_id`,
-            0                             AS `is_recursive`,
-            `tic`.`users_id_recipient`    AS `requester_id`,
-            ''                            AS `validator_id`,
-            `tic`.`content`               AS `comment`
-         FROM `glpi_tickets` AS `tic`
-         LEFT JOIN `glpi_items_tickets` AS `itic`
-            ON `itic`.`tickets_id` = `tic`.`id`
-            AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
-         WHERE `tic`.`is_deleted` = 0
-         GROUP BY `original_id`
-         HAVING COUNT(`itic`.`items_id`) <= 1";
-      $DB->query($query) or die ($DB->error());
-   }
-
    /**
     * {@inheritDoc}
     * @see CommonGLPI::display()
@@ -506,21 +434,4 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       return $status;
    }
-
-   /**
-    * Database table uninstallation for the item type
-    *
-    * @return boolean True on success
-    */
-   public static function uninstall()
-   {
-      global $DB;
-
-      $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
-      $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormCreatorIssue'));
-
-      return true;
-   }
-
 }

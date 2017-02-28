@@ -3,10 +3,6 @@ class MultielectFieldTest extends SuperAdminTestCase {
 
    public function provider() {
 
-      // Force include of not autoloaded classes
-      // TODO : enhance the plugin to use autoloading
-      PluginFormcreatorFields::getTypes();
-
       $dataset = array(
             array(
                   'fields'          => array(

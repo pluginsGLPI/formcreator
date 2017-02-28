@@ -1446,52 +1446,6 @@ EOS;
       return $content;
    }
 
-   public static function install(Migration $migration)
-   {
-      global $DB;
-
-      $enum_destination_entity = "'".implode("', '", array_keys(self::getEnumDestinationEntity()))."'";
-      $enum_tag_type           = "'".implode("', '", array_keys(self::getEnumTagType()))."'";
-      $enum_due_date_rule      = "'".implode("', '", array_keys(self::getEnumDueDateRule()))."'";
-      $table = getTableForItemType(__CLASS__);
-      if (!TableExists($table)) {
-         $query = "CREATE TABLE IF NOT EXISTS `$table` (
-         `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-         `name` varchar(255) NOT NULL DEFAULT '',
-         `changetemplates_id` int(11) NULL DEFAULT NULL,
-         `comment` text collate utf8_unicode_ci,
-         `impactcontent` text collate utf8_unicode_ci,
-         `controlistcontent` text collate utf8_unicode_ci,
-         `rolloutplancontext` text collate utf8_unicode_ci,
-         `backoutplancontext` text collate utf8_unicode_ci,
-         `checklistcontent` text collate utf8_unicode_ci,
-         `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
-         `due_date_question` INT NULL DEFAULT NULL,
-         `due_date_value` TINYINT NULL DEFAULT NULL,
-         `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-         `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
-         `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
-         `destination_entity_value` int(11) NULL DEFAULT NULL,
-         `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-         `tag_questions` VARCHAR(255) NOT NULL,
-         `tag_specifics` VARCHAR(255) NOT NULL
-         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
-      } else {
-
-      }
-
-      return true;
-   }
-
-   public static function uninstall()
-   {
-      global $DB;
-
-      $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $DB->query($query) or die($DB->error());
-   }
-
    private static function getDeleteImage($id) {
       global $CFG_GLPI;
 

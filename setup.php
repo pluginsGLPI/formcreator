@@ -1,7 +1,10 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', "2.5");
+define('PLUGIN_FORMCREATOR_VERSION', "2.5.0");
+// Schema version of this version
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', "2.5");
+
 // Minimal GLPI version, inclusive
 define ("PLUGIN_FORMCREATOR_GLPI_MIN_VERSION", "9.1");
 // Maximum GLPI version, exclusive
@@ -296,4 +299,16 @@ function plugin_formcreator_autoload($classname) {
          return true;
       }
    }
+}
+
+/**
+ * Show the last SQL error, logs its backtrace and dies
+ * @param Migration $migration
+ */
+function plugin_formcreator_upgrade_error(Migration $migration) {
+   global $DB;
+
+   $error = $DB->error();
+   $migration->log($error . "\n" . Toolbox::backtrace(false, '', array('Toolbox::backtrace()')));
+   die($error . "<br><br> Please, check migration log");
 }

@@ -3,6 +3,8 @@ class ExportImporTest extends SuperAdminTestCase {
    public static function setUpBeforeClass() {
       parent::setupBeforeClass();
 
+      self::login('glpi', 'glpi');
+
       // instanciate classes
       $form           = new PluginFormcreatorForm;
       $form_section   = new PluginFormcreatorSection;

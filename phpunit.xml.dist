@@ -18,6 +18,7 @@
   </filter>
   <testsuites>
     <testsuite name="Install">
+        <file>./tests/0000_Install/PluginInstallTest.php</file>
         <file>./tests/0000_Install/SaveInstallTest.php</file>
     </testsuite>
    <testsuite name="Unit">

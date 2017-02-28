@@ -8,6 +8,8 @@ class Question_ConditionTest extends SuperAdminTestCase {
    public static function setUpBeforeClass() {
       parent::setupBeforeClass();
 
+      self::login('glpi', 'glpi');
+
       // create form
       $form = new PluginFormcreatorForm();
       $form->add(array(

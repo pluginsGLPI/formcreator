@@ -6,31 +6,16 @@
  */
 function plugin_formcreator_install()
 {
-   $version   = plugin_version_formcreator();
-   $migration = new Migration($version['version']);
-
    spl_autoload_register('plugin_formcreator_autoload');
 
-   // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("#inc/(.+)\.class.php$#", $filepath, $matches)) {
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'install')) {
-            $classname::install($migration);
-         }
-      }
+   $version   = plugin_version_formcreator();
+   $migration = new Migration($version['version']);
+   require_once(__DIR__ . '/install/install.php');
+   $install = new PluginFormcreatorInstall();
+   if (!$install->isPluginInstalled()) {
+      return $install->install($migration);
    }
-
-   // Drop obsolete itemtype tables
-   $migration->dropTable('glpi_plugin_formcreator_titles');
-   $migration->dropTable('glpi_plugin_formcreator_headers');
-
-   $migration->executeMigration();
-
-   return true;
+   return $install->upgrade($migration);
 }
 
 /**
@@ -40,19 +25,9 @@ function plugin_formcreator_install()
  */
 function plugin_formcreator_uninstall()
 {
-   // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("#inc/(.+)\.class.php$#", $filepath, $matches)) {
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'uninstall')) {
-            $classname::uninstall();
-         }
-      }
-   }
-   return true ;
+   require_once(__DIR__ . '/install/install.php');
+   $install = new PluginFormcreatorInstall();
+   $install->uninstall();
 }
 
 /**
