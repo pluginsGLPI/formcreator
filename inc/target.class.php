@@ -293,14 +293,14 @@ class PluginFormcreatorTarget extends CommonDBTM
                $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
             }
 
-            // Install or upgrade of TargetTicket is a prerequisite 
+            // Install or upgrade of TargetTicket is a prerequisite
             $version   = plugin_version_formcreator();
             $migration = new Migration($version['version']);
             require_once ('targetticket.class.php');
             PluginFormcreatorTargetTicket::install($migration);
             $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
 
-            // Convert targets to ticket templates only if at least one target extsis 
+            // Convert targets to ticket templates only if at least one target extsis
             if ($i > 0) {
                // Prepare Mysql CASE For each ticket template
                $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
@@ -308,7 +308,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                   $mysql_case_template .= " WHEN $id THEN $value ";
                }
                $mysql_case_template .= "END AS `tickettemplates_id`";
-   
+
                // Create Target ticket
                $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
                $result = $DB->query($query);
@@ -320,7 +320,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                                     `comment` = '".htmlspecialchars($line['content'])."'";
                   $DB->query($query_insert);
                   $targetticket_id = $DB->insert_id();
-   
+
                   // Update target with target ticket id
                   $query_update = "UPDATE `$table`
                                    SET `items_id` = ".$targetticket_id."
