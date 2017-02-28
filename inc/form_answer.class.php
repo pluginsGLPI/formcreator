@@ -676,7 +676,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   ));
                } else  {
                   $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
                   $issue->update(array(
+                        'id'              => $issue->getID(),
                         'original_id'     => $id,
                         'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
                         'name'            => $this->fields['name'],
@@ -691,14 +693,15 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   ));
                }
             } else {
+               $ticket = new Ticket();
+               reset($rows);
+               $itemTicket->getFromDB(key($rows));
+               $ticket->getFromDB($itemTicket->getField('tickets_id'));
+               $ticketId = $ticket->getID();
                if ($is_newFormAnswer) {
-                  $ticket = new Ticket();
-                  reset($rows);
-                  $itemTicket->getFromDB(key($rows));
-                  $ticket->getFromDB($itemTicket->getField('tickets_id'));
                   $issue = new PluginFormcreatorIssue();
                   $issue->add(array(
-                        'original_id'     => $ticket->getID(),
+                        'original_id'     => $ticketId,
                         'sub_itemtype'    => 'Ticket',
                         'name'            => $ticket->getField('name'),
                         'status'          => $ticket->getField('status'),
@@ -712,8 +715,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   ));
                } else {
                   $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
                   $issue->update(array(
-                        'original_id'     => $ticket->getID(),
+                        'id'              => $issue->getID(),
+                        'original_id'     => $ticketId,
                         'sub_itemtype'    => 'Ticket',
                         'name'            => $ticket->getField('name'),
                         'status'          => $ticket->getField('status'),

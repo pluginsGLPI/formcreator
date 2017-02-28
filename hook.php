@@ -283,18 +283,20 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       $id = $item->getID();
 
       $issue = new PluginFormcreatorIssue();
+      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$id'");
       $issue->update(array(
-            'original_id'     => $id,
+            'id'              => $id,
+            'original_id'     => "t_$id",
             'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
             'name'            => $item->fields['name'],
             'status'          => $item->fields['status'],
-            'date_creation'   => $item->fields['request_date'],
-            'date_mod'        => $item->fields['request_date'],
+            'date_creation'   => $item->fields['date'],
+            'date_mod'        => $item->fields['date_mod'],
             'entities_id'     => $item->fields['entities_id'],
-            'is_recursive'    => $item->fields['is_recursive'],
-            'requester_id'    => $item->fields['requester_id'],
-            'validator_id'    => $item->fields['validator_id'],
-            'comment'         => $item->fields['comment'],
+            'is_recursive'    => '0',
+            'requester_id'    => $item->fields['users_id_recipient'],
+            'validator_id'    => '0',
+            'comment'         => $item->fields['content'],
       ));
    }
 }
