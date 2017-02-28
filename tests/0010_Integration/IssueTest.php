@@ -181,6 +181,71 @@ class IssueTest extends SuperAdminTestCase {
          $rows = $form_answerIssue->find("`sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
          $this->assertCount(0, $rows);
       }
-
    }
+
+   /**
+    *
+    */
+   public function testDeleteTicket() {
+      $this->assertTrue(true);
+      $ticket = new Ticket();
+      $ticket->add(array(
+            'name'      => 'ticket to delete',
+            'content'   => 'My computer is down (again) !'
+      ));
+      $this->assertFalse($ticket->isNewItem());
+
+      $ticketId = $ticket->getID();
+      $issue = new PluginFormcreatorIssue();
+      // one and only one issue must exist. If several created, getFromDB will fail
+      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
+      $this->assertFalse($issue->isNewItem());
+
+      $ticket->delete(array(
+            'id'  => $ticketId
+      ));
+
+      $rows = $issue->find("`sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
+      $this->assertCount(0, $rows);
+   }
+
+   public function testDeleteFormAnswer() {
+      // create a form with a target ticket
+      $form = new PluginFormcreatorForm();
+      $form->add(array(
+            'entities_id'           => $_SESSION['glpiactive_entity'],
+            'name'                  => 'form with 1 target ticket',
+            'description'           => 'form description',
+            'content'               => 'a content',
+            'is_active'             => 1,
+            'validation_required'   => 0
+      ));
+      $this->assertFalse($form->isNewItem());
+
+      // answer the form (no matter it is empty)
+      $formId = $form->getID();
+      $_POST = array(
+            'formcreator_form'   => $formId,
+      );
+
+      // saveForm returns true if form data is valid
+      $this->assertTrue($form->saveForm());
+      unset($_POST); // Don't disturb next tests
+
+      // find the generated form answer
+      $form_answer = new PluginFormcreatorForm_Answer();
+      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $this->assertFalse($form_answer->isNewItem());
+
+      // check an issue was created for the form answer
+      $formanswerId = $form_answer->getID();
+      $form_answerIssue = new PluginFormcreatorIssue();
+      $rows = $form_answerIssue->find("`sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formanswerId'");
+      $this->assertCount(1, $rows);
+
+      $form_answer->delete(array(
+            'id'  => $formanswerId
+      ));
+   }
+
 }

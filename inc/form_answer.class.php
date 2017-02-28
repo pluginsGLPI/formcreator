@@ -419,11 +419,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @return boolean true if pre_delete actions succeeded, false if not
     */
    public function pre_deleteItem() {
-      $id = 'f_' . $this->getID();
-
       $issue = new PluginFormcreatorIssue();
-      $issue->delete(array(
-            'id'     => $id,
+      $issue->deleteByCriteria(array(
+            'original_id'     => $this->getID(),
+            'sub_itemtype'    => self::getType(),
       ));
 
       return true;
