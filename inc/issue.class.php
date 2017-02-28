@@ -28,15 +28,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $DB->query($query) or die ($DB->error());
       }
 
-      $result = $DB->query("SHOW FULL TABLES LIKE 'glpi_plugin_formcreator_issues'");
-      if ($DB->numrows($result) == 1) {
-         $row = $DB->fetch_assoc($result);
-         if ($row['Table_type'] == 'VIEW') {
-            // THe table is actually a view (version (v2.4.0) drop it
-            $migration->dropTable('glpi_plugin_formcreator_issues');
-            $migration->migrationOneTable('glpi_plugin_formcreator_issues');
-         }
-      }
+      $DB->query("DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`");
 
       $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
