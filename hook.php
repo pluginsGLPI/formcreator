@@ -287,7 +287,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       $issue->update(array(
             'id'              => $id,
             'original_id'     => "t_$id",
-            'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+            'sub_itemtype'    => 'Ticket',
             'name'            => $item->fields['name'],
             'status'          => $item->fields['status'],
             'date_creation'   => $item->fields['date'],
