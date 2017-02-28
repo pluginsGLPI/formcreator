@@ -657,7 +657,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             // Both are processed the same way
             $formAnswerId = $this->getID();
             $itemTicket = new Item_Ticket();
-            if (!$itemTicket->getFromDBByQuery("`itemtype` = 'Ticket' AND `items_id` = '$formAnswerId'")) {
+            if (!$itemTicket->getFromDBByQuery("WHERE `itemtype` = 'Ticket' AND `items_id` = '$formAnswerId'")) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
                   $issue = new PluginFormcreatorIssue();
