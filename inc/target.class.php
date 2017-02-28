@@ -446,4 +446,21 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       return $target;
    }
+
+   /**
+    * get all targets of a form
+    * @param PluginFormcreatorForm $form
+    */
+   public function getTargetsForForm(PluginFormcreatorForm $form) {
+      $targets = array();
+      $formId = $form->getID();
+      $foundTargets = $this->find("plugin_formcreator_forms_id = '$formId'");
+      foreach ($foundTargets as $id => $row) {
+         $target = getItemForItemtype($row['itemtype']);
+         $target->getFromDB($row['items_id']);
+         $targets[] = $target;
+      }
+
+      return $targets;
+   }
 }
