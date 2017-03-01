@@ -248,7 +248,7 @@ class IssueTest extends SuperAdminTestCase {
       ));
    }
 
-   public function testValidateFormAnswer() {
+   public function testValidateFormAnswerSingleTargetTicket() {
       // create a form with a target ticket
       $userId = $_SESSION['glpiID'];
       $form = new PluginFormcreatorForm();
@@ -324,4 +324,84 @@ class IssueTest extends SuperAdminTestCase {
       $this->assertCount(0, $rows);
    }
 
+   public function testValidateFormAnswerMultipleTargetTicket() {
+      // create a form with a target ticket
+      $userId = $_SESSION['glpiID'];
+      $form = new PluginFormcreatorForm();
+      $form->add(array(
+            'entities_id'           => $_SESSION['glpiactive_entity'],
+            'name'                  => 'form to validate with 2 target tickets',
+            'description'           => 'form description',
+            'content'               => 'a content',
+            'is_active'             => 1,
+            'validation_required'   => 1,
+            '_validator_users'      => array($userId)
+      ));
+      $this->assertFalse($form->isNewItem());
+
+      // create first target ticket
+      $target = new PluginFormcreatorTarget();
+      $target->add(array(
+            'name'                        => 'target 1',
+            'itemtype'                    => 'PluginFormcreatorTargetTicket',
+            'plugin_formcreator_forms_id' => $form->getID(),
+      ));
+      $this->assertFalse($target->isNewItem());
+
+      // create second target ticket
+      $target = new PluginFormcreatorTarget();
+      $target->add(array(
+            'name'                        => 'target 2',
+            'itemtype'                    => 'PluginFormcreatorTargetTicket',
+            'plugin_formcreator_forms_id' => $form->getID(),
+      ));
+      $this->assertFalse($target->isNewItem());
+
+      // answer the form (no matter it is empty)
+      $formId = $form->getID();
+      $_POST = array(
+            'formcreator_form'   => $formId,
+            'formcreator_validator' => $_SESSION['glpiID']
+      );
+
+      // saveForm returns true if form data is valid
+      $this->assertTrue($form->saveForm(), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+      unset($_POST); // Don't disturb next tests
+
+      // find the generated form answer
+      $form_answer = new PluginFormcreatorForm_Answer();
+      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $this->assertFalse($form_answer->isNewItem());
+      $formanswerId = $form_answer->getID();
+
+      // check an issue was created for the form answer
+      $form_answerIssue = new PluginFormcreatorIssue();
+      $rows = $form_answerIssue->find("`sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formanswerId'");
+      $this->assertCount(1, $rows);
+
+      // accept answers
+      $input = array(
+            'formcreator_form' => $formId
+      );
+      $form_answer->acceptAnswers($input);
+
+      // check there is still an issue for the form answer
+      $form_answerIssue = new PluginFormcreatorIssue();
+      $rows = $form_answerIssue->find("`sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formanswerId'");
+      $this->assertCount(1, $rows);
+
+      // find the generated tickets
+      $formanswerId = $form_answer->getID();
+      $item_ticket = new Item_Ticket();
+      $item_ticketRows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formanswerId'");
+      $this->assertCount(2, $item_ticketRows);
+
+      // check no issue was created for each generatred ticket
+      foreach ($item_ticketRows as $id => $row) {
+         $ticketId = $row['tickets_id'];
+         $rows = $form_answerIssue->find("`sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
+         $this->assertCount(0, $rows);
+      }
+
+   }
 }

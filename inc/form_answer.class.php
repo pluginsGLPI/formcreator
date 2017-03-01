@@ -677,6 +677,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                } else  {
                   $issue = new PluginFormcreatorIssue();
                   $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $id = $this->getID();
                   $issue->update(array(
                         'id'              => $issue->getID(),
                         'original_id'     => $id,
