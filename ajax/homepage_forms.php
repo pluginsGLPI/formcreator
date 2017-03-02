@@ -15,7 +15,7 @@ $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
                 AND $form_table.`is_active` = 1
                 AND $form_table.`is_deleted` = 0
                 AND $form_table.`helpdesk_home` = 1
-                AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` IN (0, '', NULL))
+                AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
                 AND $where
                 AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
                    SELECT plugin_formcreator_forms_id
