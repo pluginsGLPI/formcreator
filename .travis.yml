@@ -9,9 +9,12 @@ php:
 before_script:
   - git clone https://github.com/glpi-project/glpi --depth 50 -b 9.1 ../glpi && cd ../glpi
   - mv ../formcreator plugins/formcreator
-  - composer install --no-dev
+  - composer install
   - php tools/cliinstall.php --db=glpi-test --user=travis --tests
+  - cd plugins/formcreator && composer install
+  - cd ../..
 
 script:
   - cd plugins/formcreator
   - phpunit --verbose
+  - vendor/bin/phpcs -p --standard=vendor/glpi-project/coding-standard/GlpiStandard/ *.php ajax/ front/ inc/ tests/ tools/
