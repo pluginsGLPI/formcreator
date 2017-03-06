@@ -50,5 +50,4 @@ class SaveInstallTest extends CommonDBTestCase
       $length = $filestats[7];
       $this->assertGreaterThan(0, $length);
    }
-
 }

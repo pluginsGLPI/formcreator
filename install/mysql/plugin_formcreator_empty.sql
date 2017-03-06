@@ -221,42 +221,23 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`;
-CREATE VIEW `glpi_plugin_formcreator_issues` AS 
-  select 
-    distinct concat('f_',`fanswer`.`id`) AS `id`,
-    `fanswer`.`id` AS `original_id`,
-    'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
-    `f`.`name` AS `name`,
-    `fanswer`.`status` AS `status`,
-    `fanswer`.`request_date` AS `date_creation`,
-    `fanswer`.`request_date` AS `date_mod`,
-    `fanswer`.`entities_id` AS `entities_id`,
-    `fanswer`.`is_recursive` AS `is_recursive`,
-    `fanswer`.`requester_id` AS `requester_id`,
-    `fanswer`.`validator_id` AS `validator_id`,
-    `fanswer`.`comment` AS `comment` 
-  from ((`glpi_plugin_formcreator_forms_answers` `fanswer` 
-    left join `glpi_plugin_formcreator_forms` `f` on((`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`))) 
-    left join `glpi_items_tickets` `itic` on(((`itic`.`items_id` = `fanswer`.`id`) and (`itic`.`itemtype` = 'PluginFormcreatorForm_Answer')))) 
-    group by `fanswer`.`id` 
-    having (count(`itic`.`tickets_id`) <> 1) 
-  union 
-  select 
-    distinct concat('t_',`tic`.`id`) AS `id`,
-    `tic`.`id` AS `original_id`,
-    'Ticket' AS `sub_itemtype`,
-    `tic`.`name` AS `name`,
-    `tic`.`status` AS `status`,
-    `tic`.`date` AS `date_creation`,
-    `tic`.`date_mod` AS `date_mod`,
-    `tic`.`entities_id` AS `entities_id`,
-    0 AS `is_recursive`,
-    `tic`.`users_id_recipient` AS `requester_id`,
-    '' AS `validator_id`,
-    `tic`.`content` AS `comment` 
-  from (`glpi_tickets` `tic` 
-  left join `glpi_items_tickets` `itic` on(((`itic`.`tickets_id` = `tic`.`id`) and (`itic`.`itemtype` = 'PluginFormcreatorForm_Answer')))) 
-  where (`tic`.`is_deleted` = 0) 
-  group by `tic`.`id` 
-  having (count(`itic`.`items_id`) <= 1);
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `display_id` varchar(255) NOT NULL,
+  `original_id` int(11) NOT NULL DEFAULT '0',
+  `sub_itemtype` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `status` varchar(255) NOT NULL DEFAULT '',
+  `date_creation` datetime NOT NULL,
+  `date_mod` datetime NOT NULL,
+  `entities_id` int(11) NOT NULL DEFAULT '0',
+  `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+   `requester_id` int(11) NOT NULL DEFAULT '0',
+  `validator_id` int(11) NOT NULL DEFAULT '0',
+  `comment` text,
+  PRIMARY KEY (`id`),
+  INDEX `original_id_sub_itemtype` (`original_id`, `sub_itemtype`),
+  INDEX `entities_id` (`entities_id`),
+  INDEX `requester_id` (`requester_id`),
+  INDEX `validator_id` (`validator_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -360,6 +360,7 @@ class PluginFormcreatorInstall {
             'PluginFormcreatorTargetChange',
             'PluginFormcreatorTargetTicket_Actor',
             'PluginFormcreatorTargetTicket',
+            'PluginFormcreatorIssue',
       );
 
       foreach ($itemtypes as $itemtype) {
