@@ -941,8 +941,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                       WHERE `glpi_profiles_users`.`users_id` = $requesters_id
                      ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
-            while($data_entities[] = $DB->fetch_array($res_entities)) {
-
+            while ($entity = $DB->fetch_array($res_entities)) {
+               $data_entities[] = $entity;
             }
             $first_entity = array_shift($data_entities);
             $datas['entities_id'] = $first_entity['entities_id'];
