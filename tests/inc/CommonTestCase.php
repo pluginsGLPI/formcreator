@@ -27,11 +27,16 @@ abstract class CommonTestCase extends CommonDBTestCase
       // Reset error logs
       file_put_contents(GLPI_LOG_DIR."/sql-errors.log", '');
       file_put_contents(GLPI_LOG_DIR."/php-errors.log", '');
-    }
+   }
 
    protected function tearDown() {
-      $GLPIlog = new GLPIlogs();
-      $GLPIlog->testSQLlogs();
-      $GLPIlog->testPHPlogs();
+      // Check logs
+      $fileSqlContent = file_get_contents(GLPI_LOG_DIR."/sql-errors.log");
+      $filePhpContent = file_get_contents(GLPI_LOG_DIR."/php-errors.log");
+
+      self::resetGLPILogs();
+
+      $this->assertEquals('', $fileSqlContent, 'sql-errors.log not empty');
+      $this->assertEquals('', $filePhpContent, 'php-errors.log not empty');
    }
 }
