@@ -36,7 +36,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $options['_item'] = $item;
       $item = $this->getTicketsForDisplay($options);
 
-      $item->addDivForTabs();
+      $item->showTabsContent();
 
     }
 
@@ -99,7 +99,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          // No ticket asociated to this issue or multiple tickets
          // Show the form answers
          echo '<div class"center">';
-         $item->addDivForTabs();
+         $item->showTabsContent();
          echo '</div>';
       }
 
