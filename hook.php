@@ -253,3 +253,75 @@ function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
 
    return "";
 }
+
+function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
+   global $CFG_GLPI;
+
+   if ($item instanceof Ticket) {
+      if (!isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
+         // run this hok only if the plugin is not generating tickets
+         $issue = new PluginFormcreatorIssue();
+         $issue->add(array(
+               'original_id'     => $item->getID(),
+               'sub_itemtype'    => 'Ticket',
+               'name'            => $item->fields['name'],
+               'status'          => $item->fields['status'],
+               'date_creation'   => $item->fields['date'],
+               'date_mod'        => $item->fields['date_mod'],
+               'entities_id'     => $item->fields['entities_id'],
+               'is_recursive'    => '0',
+               'requester_id'    => $item->fields['users_id_recipient'],
+               'validator_id'    => '0',
+               'comment'         => '',
+         ));
+      }
+   }
+}
+
+function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$id'");
+      $issue->update(array(
+            'id'              => $issue->getID(),
+            'original_id'     => $id,
+            'display_id'      => "t_$id",
+            'sub_itemtype'    => 'Ticket',
+            'name'            => $item->fields['name'],
+            'status'          => $item->fields['status'],
+            'date_creation'   => $item->fields['date'],
+            'date_mod'        => $item->fields['date_mod'],
+            'entities_id'     => $item->fields['entities_id'],
+            'is_recursive'    => '0',
+            'requester_id'    => $item->fields['users_id_recipient'],
+            'validator_id'    => '0',
+            'comment'         => $item->fields['content'],
+      ));
+   }
+}
+
+function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorIssue();
+      $issue->deleteByCriteria(array(
+            'display_id'   => "t_$id",
+            'sub_itemtype' => 'Ticket'
+      ), 1);
+   }
+}
+
+function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorIssue();
+      $issue->deleteByCriteria(array(
+            'display_id'   => "t_$id",
+            'sub_itemtype' => 'Ticket'
+      ), 1);
+   }
+}

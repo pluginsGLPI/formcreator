@@ -28,54 +28,140 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
-      // create view who merge tickets and formanswers
-      $query = "CREATE OR REPLACE VIEW `glpi_plugin_formcreator_issues` AS
+      $DB->query("DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`");
 
-         SELECT DISTINCT
-            CONCAT('f_',`fanswer`.`id`)    AS `id`,
-            `fanswer`.`id`                 AS `original_id`,
-            'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
-            `f`.`name`                     AS `name`,
-            `fanswer`.`status`             AS `status`,
-            `fanswer`.`request_date`       AS `date_creation`,
-            `fanswer`.`request_date`       AS `date_mod`,
-            `fanswer`.`entities_id`        AS `entities_id`,
-            `fanswer`.`is_recursive`       AS `is_recursive`,
-            `fanswer`.`requester_id`       AS `requester_id`,
-            `fanswer`.`validator_id`       AS `validator_id`,
-            `fanswer`.`comment`            AS `comment`
-         FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
-         LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
-            ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
-         LEFT JOIN `glpi_items_tickets` AS `itic`
-            ON `itic`.`items_id` = `fanswer`.`id`
-            AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
-         GROUP BY `original_id`
-         HAVING COUNT(`itic`.`tickets_id`) != 1
+      $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `display_id` VARCHAR(255) NOT NULL,
+                  `original_id` INT(11) NOT NULL DEFAULT '0',
+                  `sub_itemtype` VARCHAR(100) NOT NULL DEFAULT '',
+                  `name` VARCHAR(244) NOT NULL DEFAULT '',
+                  `status` VARCHAR(244) NOT NULL DEFAULT '',
+                  `date_creation` DATETIME NOT NULL,
+                  `date_mod` DATETIME NOT NULL,
+                  `entities_id` INT(11) NOT NULL DEFAULT '0',
+                  `is_recursive` TINYINT(1) NOT NULL DEFAULT '0',
+                  `requester_id` INT(11) NOT NULL DEFAULT '0',
+                  `validator_id` INT(11) NOT NULL DEFAULT '0',
+                  `comment` TEXT NULL COLLATE 'utf8_unicode_ci',
+                  PRIMARY KEY (`id`),
+                  INDEX `original_id_sub_itemtype` (`original_id`, `sub_itemtype`),
+                  INDEX `entities_id` (`entities_id`),
+                  INDEX `requester_id` (`requester_id`),
+                  INDEX `validator_id` (`validator_id`)
+             )
+             COLLATE='utf8_unicode_ci'
+             ENGINE=MyISAM";
+      $DB->query($query) or die ($DB->error());
 
-         UNION
+      CronTask::Register('PluginFormcreatorIssue', 'SyncIssues', HOUR_TIMESTAMP,
+            array(
+                  'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
+                  'mode'      => CronTask::MODE_EXTERNAL
+            )
+      );
 
-         SELECT DISTINCT
-            CONCAT('t_',`tic`.`id`)       AS `id`,
-            `tic`.`id`                    AS `original_id`,
-            'Ticket'                      AS `sub_itemtype`,
-            `tic`.`name`                  AS `name`,
-            `tic`.`status`                AS `status`,
-            `tic`.`date`                  AS `date_creation`,
-            `tic`.`date_mod`              AS `date_mod`,
-            `tic`.`entities_id`           AS `entities_id`,
-            0                             AS `is_recursive`,
-            `tic`.`users_id_recipient`    AS `requester_id`,
-            ''                            AS `validator_id`,
-            `tic`.`content`               AS `comment`
-         FROM `glpi_tickets` AS `tic`
-         LEFT JOIN `glpi_items_tickets` AS `itic`
-            ON `itic`.`tickets_id` = `tic`.`id`
-            AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
-         WHERE `tic`.`is_deleted` = 0
-         GROUP BY `original_id`
-         HAVING COUNT(`itic`.`items_id`) <= 1";
-      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
+      $task = new CronTask();
+      static::cronSyncIssues($task);
+   }
+
+   /**
+    * get Cron description parameter for this class
+    *
+    * @param $name string name of the task
+    *
+    * @return array of string
+    */
+   static function cronInfo($name) {
+      switch ($name) {
+         case 'SyncIssues':
+            return array('description' => __('Update issue data from tickets and form answers', 'formcreator'));
+      }
+   }
+
+   /**
+    *
+    * @param unknown $task
+    *
+    * @return number
+    */
+   public static function cronSyncIssues($task) {
+      global $DB;
+
+      $task->log("Disable expired trial accounts");
+      $volume = 0;
+
+      // Request which merges tickets and formanswers
+      // 1 ticket not linked to a form_answer => 1 issue which is the ticket sub_itemtype
+      // 1 form_answer not linked to a ticket => 1 issue which is the form_answer sub_itemtype
+      // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
+      // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
+      $query = "SELECT DISTINCT
+                  NULL                           AS `id`,
+                  CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
+                  `fanswer`.`id`                 AS `original_id`,
+                  'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
+                  `f`.`name`                     AS `name`,
+                  `fanswer`.`status`             AS `status`,
+                  `fanswer`.`request_date`       AS `date_creation`,
+                  `fanswer`.`request_date`       AS `date_mod`,
+                  `fanswer`.`entities_id`        AS `entities_id`,
+                  `fanswer`.`is_recursive`       AS `is_recursive`,
+                  `fanswer`.`requester_id`       AS `requester_id`,
+                  `fanswer`.`validator_id`       AS `validator_id`,
+                  `fanswer`.`comment`            AS `comment`
+               FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
+               LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
+                  ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
+               LEFT JOIN `glpi_items_tickets` AS `itic`
+                  ON `itic`.`items_id` = `fanswer`.`id`
+                  AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+               GROUP BY `original_id`
+               HAVING COUNT(`itic`.`tickets_id`) != 1
+
+               UNION
+
+               SELECT DISTINCT
+                  NULL                          AS `id`,
+                  CONCAT('t_',`tic`.`id`)       AS `display_id`,
+                  `tic`.`id`                    AS `original_id`,
+                  'Ticket'                      AS `sub_itemtype`,
+                  `tic`.`name`                  AS `name`,
+                  `tic`.`status`                AS `status`,
+                  `tic`.`date`                  AS `date_creation`,
+                  `tic`.`date_mod`              AS `date_mod`,
+                  `tic`.`entities_id`           AS `entities_id`,
+                  0                             AS `is_recursive`,
+                  `tic`.`users_id_recipient`    AS `requester_id`,
+                  0                             AS `validator_id`,
+                  `tic`.`content`               AS `comment`
+               FROM `glpi_tickets` AS `tic`
+               LEFT JOIN `glpi_items_tickets` AS `itic`
+                  ON `itic`.`tickets_id` = `tic`.`id`
+                  AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+               WHERE `tic`.`is_deleted` = 0
+               GROUP BY `original_id`
+               HAVING COUNT(`itic`.`items_id`) <= 1";
+
+      $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
+      $result = $DB->query($countQuery);
+      if ($result !== false) {
+         $count = $DB->fetch_assoc($result);
+         $table = static::getTable();
+         if (countElementsInTable($table) != $count['cpt']) {
+            if ($DB->query("TRUNCATE `$table`")) {
+               $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
+               $volume = 1;
+            }
+         }
+      }
+      $task->setVolume($volume);
+
+      return 1;
+   }
+
+   public static function hook_update_ticket(CommonDBTM $item) {
+
    }
 
    /**
@@ -221,7 +307,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ),
          '2' => array(
             'table'         => self::getTable(),
-            'field'         => 'id',
+            'field'         => 'display_id',
             'name'          => __('ID'),
             'datatype'      => 'itemlink',
             'forcegroupby'  => true,
@@ -523,4 +609,38 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return true;
    }
 
+   /**
+    *
+    */
+   public function prepareInputForAdd($input) {
+      if (!isset($input['original_id']) || !isset($input['sub_itemtype'])) {
+         return false;
+      }
+
+      if ($input['sub_itemtype'] == 'PluginFormcreatorForm_Answer') {
+         $input['display_id'] = 'f_' . $input['original_id'];
+      } else if ($input['sub_itemtype'] == 'Ticket') {
+         $input['display_id'] = 't_' . $input['original_id'];
+      } else {
+         return false;
+      }
+
+      return $input;
+   }
+
+   public function prepareInputForUpdate($input) {
+      if (!isset($input['original_id']) || !isset($input['sub_itemtype'])) {
+         return false;
+      }
+
+      if ($input['sub_itemtype'] == 'PluginFormcreatorForm_Answer') {
+         $input['display_id'] = 'f_' . $input['original_id'];
+      } else if ($input['sub_itemtype'] == 'Ticket') {
+         $input['display_id'] = 't_' . $input['original_id'];
+      } else {
+         return false;
+      }
+
+      return $input;
+   }
 }

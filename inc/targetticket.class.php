@@ -1100,7 +1100,7 @@ EOS;
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = array(
