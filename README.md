@@ -36,7 +36,6 @@ Upgrade from 1.x to 2.4.0 or later
 ----------------------------------
 After upgrade of FormCreator to version 2.4.0 or later, users may encounteer display issues. This is due to major changes on CSS of the plugin. You may need to refresh the cache of your browser with Ctrl+R or Ctrl+F5. If you plan to communicate about the new presentation of the plugin or the service catalog, introduce this simple manipulation to ensure all your users have a clean cache.
 
-
 ------------------------------------------------------------------------------------------------------------------------
 
 Introduction

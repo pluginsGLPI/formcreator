@@ -80,6 +80,20 @@ function plugin_init_formcreator ()
    array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorForm_Answer');
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
+   // hook to update issues when an operation occurs on a ticket
+   $PLUGIN_HOOKS['item_add']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_add_ticket'
+   );
+   $PLUGIN_HOOKS['item_update']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_update_ticket'
+   );
+   $PLUGIN_HOOKS['item_delete']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_delete_ticket'
+   );
+   $PLUGIN_HOOKS['item_purge']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+   );
+
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
       spl_autoload_register('plugin_formcreator_autoload');

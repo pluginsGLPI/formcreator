@@ -17,6 +17,7 @@ function plugin_formcreator_update_2_5(Migration $migration) {
    plugin_formcreator_updateFormValidator($migration);
    plugin_formcreator_updateForm($migration);
    plugin_formcreator_updateHeader($migration);
+   plugin_formcreator_updateIssue($migration);
    plugin_formcreator_updateQuestionCondition($migration);
    plugin_formcreator_updateQuestion($migration);
    plugin_formcreator_updateSection($migration);
@@ -344,6 +345,44 @@ function plugin_formcreator_updateHeader(Migration $migration) {
    // Drop Headers table
    $migration->displayMessage("Drop glpi_plugin_formcreator_headers");
    $migration->dropTable('glpi_plugin_formcreator_headers');
+}
+
+function plugin_formcreator_updateIssue(Migratiohn $migration) {
+   global $DB;
+
+   $DB->query("DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`");
+
+   $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `display_id` VARCHAR(255) NOT NULL,
+                  `original_id` INT(11) NOT NULL DEFAULT '0',
+                  `sub_itemtype` VARCHAR(100) NOT NULL DEFAULT '',
+                  `name` VARCHAR(244) NOT NULL DEFAULT '',
+                  `status` VARCHAR(244) NOT NULL DEFAULT '',
+                  `date_creation` DATETIME NOT NULL,
+                  `date_mod` DATETIME NOT NULL,
+                  `entities_id` INT(11) NOT NULL DEFAULT '0',
+                  `is_recursive` TINYINT(1) NOT NULL DEFAULT '0',
+                  `requester_id` INT(11) NOT NULL DEFAULT '0',
+                  `validator_id` INT(11) NOT NULL DEFAULT '0',
+                  `comment` TEXT NULL COLLATE 'utf8_unicode_ci',
+                  PRIMARY KEY (`id`),
+                  INDEX `original_id_sub_itemtype` (`original_id`, `sub_itemtype`),
+                  INDEX `entities_id` (`entities_id`),
+                  INDEX `requester_id` (`requester_id`),
+                  INDEX `validator_id` (`validator_id`)
+             )
+             COLLATE='utf8_unicode_ci'
+             ENGINE=MyISAM";
+   $DB->query($query) or die ($DB->error());
+   CronTask::Register('PluginFormcreatorIssue', 'SyncIssues', HOUR_TIMESTAMP,
+         array(
+               'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
+               'mode'      => CronTask::MODE_EXTERNAL
+         )
+         );
+   $task = new CronTask();
+   static::cronSyncIssues($task);
 }
 
 function plugin_formcreator_updateQuestionCondition(Migration $migration) {

@@ -487,6 +487,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return $input;
    }
 
+   /**
+    * ACtions done before deleting an item. In case of failure, prevents
+    * actual deletion of the item
+    *
+    * @return boolean true if pre_delete actions succeeded, false if not
+    */
+   public function pre_deleteItem() {
+      $issue = new PluginFormcreatorIssue();
+      $issue->deleteByCriteria(array(
+            'original_id'     => $this->getID(),
+            'sub_itemtype'    => self::getType(),
+      ));
+
+      return true;
+   }
+
+
    public function saveAnswers($datas)
    {
       global $DB;
@@ -576,9 +593,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
+         $is_newFormAnswer = false;
 
-      // Create new form answer object
       } else {
+         // Create new form answer object
+
          // Does the form need to be validate ?
          if ($form->fields['validation_required']) {
             $status = 'waiting';
@@ -661,6 +680,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
+
+         $is_newFormAnswer = true;
       }
 
       if ($form->fields['validation_required'] || ($status == 'accepted')) {
@@ -693,6 +714,94 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   return false;
                }
                break;
+         }
+
+         // Update issues table
+         if ($status != 'refused') {
+
+            // If cannot get itemTicket from DB it happens either
+            // when no item exist
+            // when several rows matches
+            // Both are processed the same way
+            $formAnswerId = $this->getID();
+            $itemTicket = new Item_Ticket();
+            $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formAnswerId'");
+            if (count($rows) != 1) {
+               if ($is_newFormAnswer) {
+                  // This is a new answer for the form. Create an issue
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->add(array(
+                        'original_id'     => $id,
+                        'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+                        'name'            => $this->fields['name'],
+                        'status'          => $status,
+                        'date_creation'   => $this->fields['request_date'],
+                        'date_mod'        => $this->fields['request_date'],
+                        'entities_id'     => $this->fields['entities_id'],
+                        'is_recursive'    => $this->fields['is_recursive'],
+                        'requester_id'    => $this->fields['requester_id'],
+                        'validator_id'    => $this->fields['validator_id'],
+                        'comment'         => '',
+                  ));
+               } else  {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $id = $this->getID();
+                  $issue->update(array(
+                        'id'              => $issue->getID(),
+                        'original_id'     => $id,
+                        'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+                        'name'            => $this->fields['name'],
+                        'status'          => $status,
+                        'date_creation'   => $this->fields['request_date'],
+                        'date_mod'        => $this->fields['request_date'],
+                        'entities_id'     => $this->fields['entities_id'],
+                        'is_recursive'    => $this->fields['is_recursive'],
+                        'requester_id'    => $this->fields['requester_id'],
+                        'validator_id'    => $this->fields['validator_id'],
+                        'comment'         => '',
+                  ));
+               }
+            } else {
+               $ticket = new Ticket();
+               reset($rows);
+               $itemTicket->getFromDB(key($rows));
+               $ticket->getFromDB($itemTicket->getField('tickets_id'));
+               $ticketId = $ticket->getID();
+               if ($is_newFormAnswer) {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->add(array(
+                        'original_id'     => $ticketId,
+                        'sub_itemtype'    => 'Ticket',
+                        'name'            => $ticket->getField('name'),
+                        'status'          => $ticket->getField('status'),
+                        'date_creation'   => $ticket->getField('date'),
+                        'date_mod'        => $ticket->getField('date_mod'),
+                        'entities_id'     => $ticket->getField('entities_id'),
+                        'is_recursive'    => '0',
+                        'requester_id'    => $ticket->getField('users_id_recipient'),
+                        'validator_id'    => '',
+                        'comment'         => $ticket->getField('content'),
+                  ));
+               } else {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->update(array(
+                        'id'              => $issue->getID(),
+                        'original_id'     => $ticketId,
+                        'sub_itemtype'    => 'Ticket',
+                        'name'            => $ticket->getField('name'),
+                        'status'          => $ticket->getField('status'),
+                        'date_creation'   => $ticket->getField('date'),
+                        'date_mod'        => $ticket->getField('date_mod'),
+                        'entities_id'     => $ticket->getField('entities_id'),
+                        'is_recursive'    => '0',
+                        'requester_id'    => $ticket->getField('users_id_recipient'),
+                        'validator_id'    => '',
+                        'comment'         => $ticket->getField('content'),
+                  ));
+               }
+            }
          }
       }
 
@@ -738,24 +847,31 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
    public function generateTarget()
    {
+      global $CFG_GLPI;
+
+      $success = true;
+
       // Get all targets
       $target_class    = new PluginFormcreatorTarget();
       $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
+      $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
       foreach($found_targets as $target) {
          $obj = new $target['itemtype'];
          $obj->getFromDB($target['items_id']);
          if (!$obj->save($this)) {
-            return false;
+            $success = false;
+            break;
          }
       }
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
-      return true;
+      unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
+      return $success;
    }
 
    /**
-    * 
+    *
     * @param unknown $formAnswerId
     * @return string[]
     */
@@ -902,4 +1018,30 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
       }
    }
+
+   /**
+    * Actions done after update of an item
+    *
+    * @return void
+    */
+   public function post_updateItem($history = 1) {
+      $id = $this->getID();
+
+      $issue = new PluginFormcreatorISsue();
+      $issue->update(array(
+            'id'              => 'f_' .  $id,
+            'original_id'     => $id,
+            'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+            'name'            => $this->fields['name'],
+            'status'          => $this->fields['status'],
+            'date_creation'   => $this->fields['request_date'],
+            'date_mod'        => $this->fields['request_date'],
+            'entities_id'     => $this->fields['entities_id'],
+            'is_recursive'    => $this->fields['is_recursive'],
+            'requester_id'    => $this->fields['requester_id'],
+            'validator_id'    => $this->fields['validator_id'],
+            'comment'         => $this->fields['comment'],
+      ));
+   }
+
 }
