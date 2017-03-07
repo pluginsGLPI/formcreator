@@ -881,7 +881,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          }
 
          if (!FieldExists($table, 'name')) {
-            $query_update = 'ALTER TABLE `$table` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
+            $query_update = 'ALTER TABLE `'.$table.'` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
             $DB->query($query_update) or die ($DB->error());
          }
 
