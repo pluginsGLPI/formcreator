@@ -173,6 +173,8 @@ function plugin_init_formcreator ()
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
       }
 
+      Plugin::registerClass('PluginFormcreatorForm', array('addtabon' => 'Central'));
+
       // Load field class and all its method to manage fields
       Plugin::registerClass('PluginFormcreatorFields');
 

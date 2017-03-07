@@ -60,8 +60,7 @@ jQuery(document).ready(function($) {
       }
    ?>
 
-   if (location.pathname.indexOf("central.php") != -1
-       || location.pathname.indexOf("helpdesk.public.php") != -1) {
+   if (location.pathname.indexOf("helpdesk.public.php") != -1) {
 
       $('.ui-tabs-panel:visible').ready(function() {
          showHomepageFormList();
