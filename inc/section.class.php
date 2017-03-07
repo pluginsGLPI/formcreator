@@ -179,7 +179,7 @@ class PluginFormcreatorSection extends CommonDBChild
       // - name is required
       if(!isset($input['name']) ||
          (isset($input['name']) && empty($input['name'])) ) {
-         Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
       }
       $input['name'] = addslashes($input['name']);
