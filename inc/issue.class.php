@@ -250,7 +250,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'table'         => self::getTable(),
             'field'         => 'display_id',
             'name'          => __('ID'),
-            'datatype'      => 'itemlink',
+            'datatype'      => 'string',
             'forcegroupby'  => true,
             'massiveaction' => false,
          ),
