@@ -781,7 +781,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'is_recursive'    => '0',
                         'requester_id'    => $ticket->getField('users_id_recipient'),
                         'validator_id'    => '',
-                        'comment'         => $ticket->getField('content'),
+                        'comment'         => addslashes($ticket->getField('content')),
                   ));
                } else {
                   $issue = new PluginFormcreatorIssue();
@@ -798,7 +798,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'is_recursive'    => '0',
                         'requester_id'    => $ticket->getField('users_id_recipient'),
                         'validator_id'    => '',
-                        'comment'         => $ticket->getField('content'),
+                        'comment'         => addslashes($ticket->getField('content')),
                   ));
                }
             }
