@@ -945,7 +945,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $obj = new self();
          $all_questions = $obj->find("uuid IS NULL");
          foreach($all_questions as $questions_id => $question) {
-            $obj->update(array('id' => $questions_id));
+            $obj->update(array(
+                  'id'           => $questions_id,
+                  '_skip_checks' => '',
+            ));
          }
 
          // add uuid to questions conditions
