@@ -1454,7 +1454,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          $update_target = "UPDATE `glpi_plugin_formcreator_targets` SET
                               `items_id` = " . $new_target_ticket_id . "
-                           WHERE `id` = " . $new_target_id;
+                           WHERE `id` = " . $new_targets_id;
          $DB->query($update_target);
 
          // Form target tickets actors
