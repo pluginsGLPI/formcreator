@@ -4,6 +4,7 @@ class FormDuplicationTest extends SuperAdminTestCase
 
    protected $formData;
    protected $sectionData;
+   protected $targetData;
 
    public function setUp() {
       parent::setUp();
@@ -50,6 +51,16 @@ class FormDuplicationTest extends SuperAdminTestCase
             ),
       );
 
+      $this->targetData = array(
+            array(
+                  'name'                  => 'target ticket 1',
+                  'itemtype'              => 'PluginFormcreatorTargetTicket',
+            ),
+            array(
+                  'name'                  => 'target ticket 2',
+                  'itemtype'              => 'PluginFormcreatorTargetTicket',
+            )
+      );
    }
 
    public function testInitCreateForm() {
@@ -84,6 +95,12 @@ class FormDuplicationTest extends SuperAdminTestCase
                $question->updateConditions($questionData);
             }
          }
+         foreach ($this->targetData as $targetData) {
+            $target = new PluginFormcreatorTarget();
+            $targetData['plugin_formcreator_forms_id'] = $formId;
+            $target->add($targetData);
+            $this->assertFalse($target->isNewItem());
+         }
       }
 
       return $form;
@@ -101,13 +118,13 @@ class FormDuplicationTest extends SuperAdminTestCase
       $newFormId = $form->getID();
       $this->assertNotEquals($sourceFormId, $newFormId);
 
-      // Check sections have been copied
+      // Check sections were copied
       $section = new PluginFormcreatorSection();
       $sourceRows = $section->find("`plugin_formcreator_forms_id` = '$sourceFormId'");
       $newRows = $section->find("`plugin_formcreator_forms_id` = '$newFormId'");
       $this->assertEquals(count($sourceRows), count ($newRows));
 
-      // Check questions have been copied
+      // Check questions were copied
       $table_section = PluginFormcreatorSection::getTable();
       $question = new PluginFormcreatorQuestion();
       $sourceRows = $question->find("`plugin_formcreator_sections_id` IN (
@@ -116,7 +133,22 @@ class FormDuplicationTest extends SuperAdminTestCase
       $newRows = $question->find("`plugin_formcreator_sections_id` IN (
             SELECT `id` FROM `$table_section` WHERE `$table_section`.`plugin_formcreator_forms_id` = '$newFormId'
       )");
-
       $this->assertEquals(count($sourceRows), count($newRows));
+
+      // check target were created
+      $target = new PluginFormcreatorTarget();
+      $sourceRows = $target->find("`plugin_formcreator_forms_id` = '$sourceFormId'");
+      $newRows = $target->find("`plugin_formcreator_forms_id` = '$sourceFormId'");
+      $this->assertEquals(count($sourceRows), count($newRows));
+
+      // check target tickets were created
+      foreach ($newRows as $targetId => $newTarget) {
+         if ($newTarget['itemtype'] == 'PluginFormcreatorTargetTicket') {
+            $targetTicket = new PluginFormcreatorTArgetTicket();
+            $targetTicket->getFromDB($newTarget['items_id']);
+            $this->assertFalse($targetTicket->isNewItem());
+         }
+      }
+
    }
 }
