@@ -133,7 +133,7 @@ class PluginFormcreatorSection extends CommonDBChild
       foreach($all_sections as $sections_id => $section) {
          $obj->update(array(
                'id' => $sections_id,
-               '_skip_checks' => '',
+               '_skip_checks' => true,
          ));
       }
 

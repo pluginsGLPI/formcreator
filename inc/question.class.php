@@ -947,7 +947,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          foreach($all_questions as $questions_id => $question) {
             $obj->update(array(
                   'id'           => $questions_id,
-                  '_skip_checks' => '',
+                  '_skip_checks' => true,
             ));
          }
 
