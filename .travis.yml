@@ -11,7 +11,8 @@ before_script:
   - mv ../formcreator plugins/formcreator
   - composer install --no-dev
   - php tools/cliinstall.php --db=glpi-test --user=travis --tests
+  - cd plugins/formcreator
+  - composer install
 
 script:
-  - cd plugins/formcreator
-  - phpunit --verbose
+  - vendor/bin/phpunit --verbose
