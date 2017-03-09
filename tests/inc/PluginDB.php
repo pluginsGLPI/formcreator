@@ -40,7 +40,7 @@
    ------------------------------------------------------------------------
  */
 
-class PluginDB extends PHPUnit_Framework_Assert{
+class PluginDB extends PHPUnit\Framework\Assert{
 
    public function checkInstall($pluginname='', $when='') {
       global $DB;
