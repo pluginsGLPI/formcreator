@@ -6,39 +6,55 @@ $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
    $form = new PluginFormcreatorForm();
 
-   // Add a new Form
    if(isset($_POST["add"])) {
+      // Add a new Form
       Session::checkRight("entity", UPDATE);
       $newID = $form->add($_POST);
 
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
-   // Edit an existing form
    } elseif(isset($_POST["update"])) {
+      // Edit an existing form
       Session::checkRight("entity", UPDATE);
       $form->update($_POST);
       Html::back();
 
-   // Delete a form (is_deleted = true)
    } elseif(isset($_POST["delete"])) {
+      // Delete a form (is_deleted = true)
       Session::checkRight("entity", UPDATE);
       $form->delete($_POST);
       $form->redirectToList();
 
-   // Restore a deleteted form (is_deleted = false)
    } elseif(isset($_POST["restore"])) {
+      // Restore a deleteted form (is_deleted = false)
       Session::checkRight("entity", UPDATE);
       $form->restore($_POST);
       $form->redirectToList();
 
-   // Delete defenitively a form from DB and all its datas
    } elseif(isset($_POST["purge"])) {
+      // Delete defenitively a form from DB and all its datas
       Session::checkRight("entity", UPDATE);
       $form->delete($_POST,1);
       $form->redirectToList();
 
-   // Import form
-   } elseif(isset($_GET["import_form"])) {
+   } elseif (isset($_POST['filetype_create'])) {
+      $documentType = new DocumentType();
+      $canAddType = $documentType->canCreate();
+      if ($canAddType) {
+         $form->createDocumentType();
+      }
+      Html::back();
+   } elseif (isset($_POST['filetype_enable'])) {
+
+      $documentType = new DocumentType();
+      $canUpdateType = $documentType->canUpdate();
+      if ($canUpdateType) {
+         $form->enableDocumentType();
+      }
+      Html::back();
+
+   } elseif (isset($_GET["import_form"])) {
+      // Import form
       Session::checkRight("entity", UPDATE);
       Html::header(
          PluginFormcreatorForm::getTypeName(2),
@@ -55,14 +71,14 @@ if ($plugin->isActivated("formcreator")) {
       $form->showImportForm();
       Html::footer();
 
-   // Import form
-   } elseif(isset($_GET["import_send"])) {
+   } elseif(isset($_POST["import_send"])) {
+      // Import form
       Session::checkRight("entity", UPDATE);
       $form->importJson($_REQUEST);
       Html::back();
 
-   // Save form to target
    } elseif (isset($_POST['submit_formcreator'])) {
+      // Save form to target
       if($form->getFromDB($_POST['formcreator_form'])) {
 
          // If user is not authenticated, create temporary user
@@ -87,9 +103,8 @@ if ($plugin->isActivated("formcreator")) {
          }
       }
 
-
-   // Show forms form
    } else {
+      // Show forms form
       Session::checkRight("entity", UPDATE);
 
       Html::header(
@@ -110,7 +125,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::footer();
    }
 
-// Or display a "Not found" error
 } else {
+   // Or display a "Not found" error
    Html::displayNotFoundError();
 }

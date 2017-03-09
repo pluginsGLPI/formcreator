@@ -1634,6 +1634,34 @@ class PluginFormcreatorForm extends CommonDBTM
       return $forms_id;
    }
 
+   public function createDocumentType() {
+      $documentType = new DocumentType();
+      $success = $documentType->add(array(
+            'name'            => 'JSON file',
+            'ext'             => 'json',
+            'icon'            => '',
+            'is_uploadable'   => '1'
+      ));
+      if (!$success) {
+         Session::addMessageAfterRedirect(__('Failed to create JSON document type', 'formcreator'));
+      }
+   }
+
+   public function enableDocumentType() {
+      $documentType = new DocumentType();
+      if (!$documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'")) {
+         Session::addMessageAfterRedirect(__('JSON document type not found', 'formcreator'));
+      } else {
+         $success = $documentType->update(array(
+               'id'              => $documentType->getID(),
+               'is_uploadable'   => '1'
+         ));
+         if (!$success) {
+            Session::addMessageAfterRedirect(__('Failed to update JSON document type', 'formcreator'));
+         }
+      }
+   }
+
    /**
     * show list of available forms
     */

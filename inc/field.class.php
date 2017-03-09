@@ -34,8 +34,14 @@ abstract class PluginFormcreatorField implements Field
       echo '</div>';
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
       // $value = json_encode($this->getAnswer());
-      echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-         . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");</script>';
+      if ($this->fields['fieldtype'] == 'dropdown') {
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "'
+               . str_replace("\r\n", "\\r\\n", addslashes($this->fields['answer'])) . '");</script>';
+
+      } else {
+         echo '<script type="text/javascript">formcreatorAddValueOf(' . $this->fields['id'] . ', "'
+            . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");</script>';
+      }
    }
 
    public function displayField($canEdit = true)
