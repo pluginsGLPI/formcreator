@@ -40,7 +40,7 @@
    ------------------------------------------------------------------------
  */
 
-class GLPIlogs extends PHPUnit_Framework_TestCase {
+class GLPIlogs extends PHPUnit\Framework\TestCase {
 
    public function testSQLlogs() {
 
