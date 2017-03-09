@@ -1287,7 +1287,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          $target->update(array(
                'id'        => $target->getID(),
-               'items_id'  => $new_targets_ticket_id,
+               'items_id'  => $new_target_ticket_id,
          ));
 
          // Form target tickets actors
