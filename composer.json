@@ -3,6 +3,7 @@
         "consolidation/robo": "dev-master@dev",
         "patchwork/jsqueeze": "~1.0",
         "natxet/CssMin": "~3.0",
-        "glpi-project/coding-standard": "0.5"
+        "glpi-project/coding-standard": "0.5",
+        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.0"
     }
 }
