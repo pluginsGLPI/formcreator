@@ -14,5 +14,6 @@ before_script:
 
 script:
   - cd plugins/formcreator
+  - composer install
   - php tools/cliinstall.php --tests
-  - phpunit --verbose
+  - vendor/bin/phpunit --verbose
