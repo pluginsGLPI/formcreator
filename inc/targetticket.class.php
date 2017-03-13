@@ -1415,6 +1415,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       } else {
          $userId = intval($user);
          $alternativeEmail = '';
+         if ($userId == '0') {
+            // there is no actor
+            return;
+         }
       }
 
       switch ($role) {
