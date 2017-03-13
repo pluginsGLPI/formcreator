@@ -4,8 +4,10 @@
  *
  * @see http://robo.li/
  */
-require_once 'RoboFilePlugin.php';
-class RoboFile extends RoboFilePlugin
+
+require_once 'vendor/autoload.php';
+
+class RoboFile extends Glpi\Tools\RoboFile
 {
     //Own plugin's robo stuff
 }
