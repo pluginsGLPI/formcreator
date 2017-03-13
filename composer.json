@@ -1,6 +1,6 @@
 {
     "require-dev": {
-        "consolidation/robo": "0.7.2",
+        "consolidation/robo": "^0.7",
         "patchwork/jsqueeze": "~1.0",
         "natxet/CssMin": "~3.0",
         "glpi-project/coding-standard": "0.5",
