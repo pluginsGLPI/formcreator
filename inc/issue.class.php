@@ -245,13 +245,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
+            'additionalfields' => array('display_id'),
          ),
          '2' => array(
             'table'         => self::getTable(),
             'field'         => 'display_id',
             'name'          => __('ID'),
             'datatype'      => 'string',
-            'forcegroupby'  => true,
             'massiveaction' => false,
          ),
          '3' => array(
@@ -389,8 +389,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $table=$searchopt[$ID]["table"];
       $field=$searchopt[$ID]["field"];
 
-      if (isset($data['raw']['id'])) {
-         $id = substr($data['raw']['id'], 2);
+      if (isset($data['raw']['ITEM_0_display_id'])) {
+         $id = substr($data['raw']['ITEM_0_display_id'], 2);
       }
 
       switch ("$table.$field") {
