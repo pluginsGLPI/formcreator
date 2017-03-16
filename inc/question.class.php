@@ -633,7 +633,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                $order = 0;
                while (count($input['show_field']) > 0) {
                   $order++;
-                  $value            = plugin_formcreator_encode(array_shift($input['show_value']));
+                  $value            = plugin_formcreator_encode(array_shift($input['show_value']), false);
                   $showField       = (int) array_shift($input['show_field']);
                   $showCondition   = plugin_formcreator_decode(array_shift($input['show_condition']));
                   $showLogic        = array_shift($input['show_logic']);

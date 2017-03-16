@@ -880,7 +880,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $answers = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'");
       $answers_values = array();
       foreach ($answers as $found_answer) {
-         $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
+         $answers_values[$found_answer['plugin_formcreator_question_id']] = stripslashes($found_answer['answer']);
       }
       return $answers_values;
    }
