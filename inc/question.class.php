@@ -567,7 +567,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // ===============================================================
          // TODO : Mettre en place l'interface multi-conditions
          // Ci-dessous une solution temporaire qui affiche uniquement la 1ere condition
-         $value      = plugin_formcreator_encode($input['show_value']);
+         $value      = plugin_formcreator_encode($input['show_value'], false);
          $show_field = empty($input['show_field']) ? 'NULL' : (int) $input['show_field'];
          $show_condition = plugin_formcreator_decode($input['show_condition']);
          $uuid = plugin_formcreator_getUuid();
