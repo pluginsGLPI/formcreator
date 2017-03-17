@@ -3,12 +3,16 @@ include ("../../../inc/includes.php");
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-$form   = new PluginFormcreatorForm();
 
+if(!$plugin->isActivated("formcreator")) {
+   Html::displayNotFoundError();
+}
+
+$form = new PluginFormcreatorForm();
 PluginFormcreatorForm::header();
 
-if($plugin->isActivated("formcreator")
-   && isset($_REQUEST['id'])
+
+if(isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
 
    if($form->getFromDB((int) $_REQUEST['id'])) {
@@ -56,8 +60,6 @@ if($plugin->isActivated("formcreator")
 } elseif (isset($_GET['answer_saved'])) {
    $message = __("The form has been successfully saved!");
    Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
-} else {
-   Html::displayNotFoundError();
 }
 
 PluginFormcreatorForm::footer();
