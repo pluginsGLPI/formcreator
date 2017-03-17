@@ -618,7 +618,7 @@ msgstr "Le texte est trop court (minimum de %d caractères):"
 #: inc/fields/textarea-field.class.php:40 inc/fields/text-field.class.php:17
 #, php-format
 msgid "The text is too long (maximum %d characters):"
-msgstr "Le teste est trop long (maximum de %d caractères):"
+msgstr "Le texte est trop long (maximum de %d caractères):"
 
 #: inc/fields/textarea-field.class.php:55
 msgid "Textarea"
