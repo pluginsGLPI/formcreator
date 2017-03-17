@@ -1419,8 +1419,8 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach($rows as $targets_id => $target_values) {
          unset($target_values['id'],
                $target_values['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_targets_id = $target->add($row)) {
+         $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+         if (!$new_targets_id = $target->add($target_values)) {
             return false;
          }
 
