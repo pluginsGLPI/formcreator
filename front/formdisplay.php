@@ -11,7 +11,6 @@ if(!$plugin->isActivated("formcreator")) {
 $form = new PluginFormcreatorForm();
 PluginFormcreatorForm::header();
 
-
 if(isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
 
