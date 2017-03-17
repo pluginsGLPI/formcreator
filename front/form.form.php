@@ -95,7 +95,7 @@ if ($plugin->isActivated("formcreator")) {
          // If user was not authenticated, remove temporary user
          if($_SESSION['glpiname'] == 'formcreator_temp_user') {
             unset($_SESSION['glpiname']);
-            Html::back();
+            Html::redirect('formdisplay.php?answer_saved');
          } else if (plugin_formcreator_replaceHelpdesk()) {
             Html::redirect('issue.php');
          } else {
