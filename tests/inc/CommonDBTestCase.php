@@ -146,7 +146,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       ini_set("memory_limit", "-1");
       ini_set("max_execution_time", "0");
 
-      ini_set('session.use_cookies', 0); //disable session cookies
+      //ini_set('session.use_cookies', 0); //disable session cookies
       $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
    }
 
