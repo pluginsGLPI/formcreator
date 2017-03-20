@@ -6,6 +6,7 @@
   processIsolation="false"
   backupGlobals="false"
   colors="true"
+  stderr="true"
   >
   <logging>
     <log type="junit" target="./tests/logs/junit_install.xml" logIncompleteSkipped="true" />
