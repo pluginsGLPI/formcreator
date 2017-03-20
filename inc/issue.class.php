@@ -160,10 +160,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return 1;
    }
 
-   public static function hook_update_ticket(CommonDBTM $item) {
-
-   }
-
    /**
     * {@inheritDoc}
     * @see CommonGLPI::display()
