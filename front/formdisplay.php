@@ -4,8 +4,16 @@ include ("../../../inc/includes.php");
 // Check if plugin is activated...
 $plugin = new Plugin();
 
-if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
-   $form = new PluginFormcreatorForm();
+if(!$plugin->isActivated("formcreator")) {
+   Html::displayNotFoundError();
+}
+
+$form = new PluginFormcreatorForm();
+PluginFormcreatorForm::header();
+
+if(isset($_REQUEST['id'])
+   && is_numeric($_REQUEST['id'])) {
+
    if($form->getFromDB((int) $_REQUEST['id'])) {
 
       if($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
@@ -36,49 +44,7 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          }
       }
 
-      if (isset($_SESSION['glpiactiveprofile']['interface'])
-            && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
-         if (plugin_formcreator_replaceHelpdesk()) {
-            PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-         } else {
-            Html::helpHeader(
-               __('Form list', 'formcreator'),
-               $_SERVER['PHP_SELF']
-            );
-         }
-
-         $form->displayUserForm($form);
-
-         if (plugin_formcreator_replaceHelpdesk()) {
-            PluginFormcreatorWizard::footer();
-         } else {
-            Html::helpFooter();
-         }
-
-      } elseif(!empty($_SESSION['glpiactiveprofile'])) {
-         Html::header(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF'],
-            'helpdesk',
-            'PluginFormcreatorFormlist'
-         );
-
-         $form->displayUserForm($form);
-
-         Html::footer();
-
-      } else {
-         Html::nullHeader(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
-
-         Html::displayMessageAfterRedirect();
-
-         $form->displayUserForm($form);
-
-         Html::nullFooter();
-      }
+      $form->displayUserForm($form);
 
    } else {
       Html::displayNotFoundError();
@@ -90,6 +56,9 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
    }
 
 // Or display a "Not found" error
-} else {
-   Html::displayNotFoundError();
+} elseif (isset($_GET['answer_saved'])) {
+   $message = __("The form has been successfully saved!");
+   Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
 }
+
+PluginFormcreatorForm::footer();

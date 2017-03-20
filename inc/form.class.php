@@ -1795,4 +1795,53 @@ class PluginFormcreatorForm extends CommonDBTM
          </script>';
       }
    }
+
+   static function getInterface() {
+      if (isset($_SESSION['glpiactiveprofile']['interface'])
+            && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
+         if (plugin_formcreator_replaceHelpdesk()) {
+            return 'servicecatalog';
+         } else {
+            return 'self-service';
+         }
+
+      } elseif(!empty($_SESSION['glpiactiveprofile'])) {
+         return 'central';
+      }
+
+      return 'public';
+   }
+
+   static function header() {
+      switch (self::getInterface()) {
+         case "servicecatalog";
+            return PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
+         case "self-service";
+            return Html::helpHeader(__('Form list', 'formcreator'), $_SERVER['PHP_SELF']);
+         case "central";
+            return Html::header(
+               __('Form Creator', 'formcreator'),
+               $_SERVER['PHP_SELF'],
+               'helpdesk',
+               'PluginFormcreatorFormlist'
+            );
+         case "public";
+         default:
+            return Html::nullHeader(__('Form Creator', 'formcreator'), $_SERVER['PHP_SELF']);
+      }
+   }
+
+   static function footer() {
+      switch (self::getInterface()) {
+         case "servicecatalog";
+            return PluginFormcreatorWizard::footer();
+         case "self-service";
+            return Html::helpFooter();
+         case "central";
+            return Html::footer();
+         case "public";
+         default:
+            return Html::nullFooter();
+      }
+   }
 }
