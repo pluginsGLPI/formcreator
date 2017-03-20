@@ -247,7 +247,7 @@ form.formcreator_form {
    box-sizing: border-box;
 }
 .formcreator_form .form-group .form_field input.hasDatepicker {
-   width: 115px;
+   width: 125px;
 }
 .formcreator_form .form-group img {
    vertical-align: middle;
