@@ -308,7 +308,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 
       // mark form_answers as deleted
       $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer AND `tickets_id` = '$id'");
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
          $form_answer = new PluginFormcreatorForm_Answer();
          $form_answer->update(array(
@@ -331,7 +331,7 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
       $id = $item->getID();
 
       $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer AND `tickets_id` = '$id'");
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
          $form_answer = new PluginFormcreatorForm_Answer();
          $form_answer->update(array(
