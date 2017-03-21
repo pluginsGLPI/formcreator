@@ -139,7 +139,7 @@ class PluginFormcreatorWizard {
 
       // call static function callcron() every 5min
       CronTask::callCron();
-
+      Html::displayMessageAfterRedirect();
    }
 
    public static function footer() {
