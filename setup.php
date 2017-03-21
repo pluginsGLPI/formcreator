@@ -87,7 +87,10 @@ function plugin_init_formcreator ()
    $PLUGIN_HOOKS['item_delete']['formcreator'] = array(
          'Ticket' => 'plugin_formcreator_hook_delete_ticket'
    );
-   $PLUGIN_HOOKS['item_purge']['formcreator'] = array(
+   $PLUGIN_HOOKS['item_restore']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_restore_ticket'
+   );
+    $PLUGIN_HOOKS['item_purge']['formcreator'] = array(
          'Ticket' => 'plugin_formcreator_hook_purge_ticket'
    );
 

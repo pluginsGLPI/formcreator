@@ -1000,6 +1000,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      `request_date` datetime NOT NULL,
                      `status` enum('waiting', 'refused', 'accepted') NOT NULL DEFAULT 'waiting',
                      `comment` text NULL DEFAULT NULL,
+                     `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
                      PRIMARY KEY (`id`),
                      INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
                      INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
@@ -1050,6 +1051,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $migration->addKey($table, 'plugin_formcreator_forms_id');
       $migration->addKey($table, 'requester_id');
       $migration->addKey($table, 'validator_id');
+      $migration->addField($table, 'is_deleted', 'bool');
 
       return true;
    }
