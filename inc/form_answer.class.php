@@ -409,6 +409,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    **/
    public function prepareInputForUpdate($input)
    {
+      if (isset($input['ticket_tco'])) {
+         // Prevent cascaded update from ticket update (for tco)
+         return false;
+      }
       return $input;
    }
 
@@ -950,10 +954,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $issue = new PluginFormcreatorISsue();
       $issue->update(array(
-            'id'              => 'f_' .  $id,
-            'original_id'     => $id,
+            'id'              => $id,
+            'original_id'     => 'f_' . $id,
             'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
-            'name'            => $this->fields['name'],
+            'name'            => addslashes($this->fields['name']),
             'status'          => $this->fields['status'],
             'date_creation'   => $this->fields['request_date'],
             'date_mod'        => $this->fields['request_date'],
@@ -961,7 +965,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             'is_recursive'    => $this->fields['is_recursive'],
             'requester_id'    => $this->fields['requester_id'],
             'validator_id'    => $this->fields['validator_id'],
-            'comment'         => $this->fields['comment'],
+            'comment'         => addslashes($this->fields['comment']),
       ));
    }
 
