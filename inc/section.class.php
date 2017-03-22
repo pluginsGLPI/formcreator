@@ -131,7 +131,10 @@ class PluginFormcreatorSection extends CommonDBChild
       $obj = new self();
       $all_sections = $obj->find("uuid IS NULL");
       foreach($all_sections as $sections_id => $section) {
-         $obj->update(array('id' => $sections_id));
+         $obj->update(array(
+               'id' => $sections_id,
+               '_skip_checks' => true,
+         ));
       }
 
       $migration->addKey($table, 'plugin_formcreator_forms_id');
