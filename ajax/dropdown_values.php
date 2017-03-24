@@ -3,13 +3,14 @@ include ('../../../inc/includes.php');
 
 Session::checkRight("entity", UPDATE);
 
-if(class_exists($_REQUEST['dropdown_itemtype'])) {
-   Dropdown::show($_REQUEST['dropdown_itemtype'], array(
-      'name' => 'dropdown_default_value',
-      'rand' => mt_rand(),
-   ));
+if($_REQUEST['dropdown_itemtype'] == '0' || !class_exists($_REQUEST['dropdown_itemtype'])) {
+   $options = array(
+         'display_emptychoice'   => true,
+   );
+   Dropdown::showFromArray("dropdown_default_value", array(), $options);
 } else {
-   echo '<select name="dropdown_dropdown_default_value<?php echo $rand; ?>">
-            <option value="">---</option>
-         </select>';
+   Dropdown::show($_REQUEST['dropdown_itemtype'], array(
+         'name' => 'dropdown_default_value',
+         'rand' => mt_rand(),
+   ));
 }
