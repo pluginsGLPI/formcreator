@@ -14,7 +14,7 @@ foreach ($currentValues as &$value) {
       }
       $value = json_encode($tab);
    } else {
-      $value = plugin_formcreator_encode($value);
+      $value = stripslashes($value);
    }
 }
 unset ($value);
