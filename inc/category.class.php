@@ -171,8 +171,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $result = $DB->query($query);
       while ($line = $DB->fetch_array($result)) {
          $query_update = "UPDATE `$table` SET
-                            `name`    = '".plugin_formcreator_encode($line['name'])."',
-                            `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                            `name`    = '".plugin_formcreator_encode($line['name'], false)."',
+                            `comment` = '".plugin_formcreator_encode($line['comment'], false)."'
                           WHERE `id` = ".$line['id'];
          $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
       }

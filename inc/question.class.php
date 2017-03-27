@@ -914,7 +914,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
-                               `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
+                               `show_value` = '" . plugin_formcreator_encode($line['show_value'], false) . "'
                              WHERE `id` = " . (int) $line['id'];
             $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
