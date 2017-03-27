@@ -251,7 +251,7 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
          $issue->add(array(
                'original_id'     => $item->getID(),
                'sub_itemtype'    => 'Ticket',
-               'name'            => $item->fields['name'],
+               'name'            => addslashes($item->fields['name']),
                'status'          => $item->fields['status'],
                'date_creation'   => $item->fields['date'],
                'date_mod'        => $item->fields['date_mod'],
@@ -276,7 +276,7 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
             'original_id'     => $id,
             'display_id'      => "t_$id",
             'sub_itemtype'    => 'Ticket',
-            'name'            => $item->fields['name'],
+            'name'            => addslashes($item->fields['name']),
             'status'          => $item->fields['status'],
             'date_creation'   => $item->fields['date'],
             'date_mod'        => $item->fields['date_mod'],
