@@ -87,8 +87,8 @@ function plugin_formcreator_updateCategory(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_categories` SET
-      `name`    = '".plugin_formcreator_encode($line['name'])."',
-                            `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                              `name`    = '".plugin_formcreator_encode($line['name'], false)."',
+                              `comment` = '".plugin_formcreator_encode($line['comment'], false)."'
                           WHERE `id` = ".$line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
@@ -448,7 +448,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
-                       `show_value` = '" . plugin_formcreator_encode($line['show_value']) . "'
+                       `show_value` = '" . plugin_formcreator_encode($line['show_value'], false) . "'
                        WHERE `id` = " . $line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
