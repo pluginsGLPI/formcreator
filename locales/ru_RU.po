@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-31 16:47+0100\n"
-"PO-Revision-Date: 2017-01-31 15:52+0000\n"
+"POT-Creation-Date: 2017-03-27 16:03+0200\n"
+"PO-Revision-Date: 2017-03-27 14:17+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -22,9 +22,10 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: scripts/scripts.js.php:18 setup.php:20 setup.php:131
-#: inc/entityconfig.class.php:27 inc/formlist.class.php:14
-#: inc/form.class.php:50 ajax/homepage_link.php:6 ajax/homepage_forms.php:48
+#: setup.php:20 setup.php:148 ajax/homepage_link.php:6
+#: inc/formlist.class.php:14 inc/entityconfig.class.php:27
+#: inc/form.class.php:50 inc/form.class.php:458 inc/form.class.php:1932
+#: scripts/scripts.js.php:18
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Форма"
@@ -32,84 +33,7 @@ msgstr[1] "Формы"
 msgstr[2] "Формы"
 msgstr[3] "Формы"
 
-#: scripts/scripts.js.php:250
-msgid "No form found. Please choose a form below instead"
-msgstr "Не найдена форма. Пожалуйста, выберите форму ниже вместо этой"
-
-#: scripts/scripts.js.php:268
-msgid "An error occured while querying forms"
-msgstr "Произошла ошибка во время выполнения запроса форм"
-
-#: scripts/scripts.js.php:304
-msgid "No form yet in this category"
-msgstr "Нет формы еще в этой категории"
-
-#: scripts/scripts.js.php:402
-msgid "Are you sure you want to delete this question?"
-msgstr "Вы уверены, что хотите удалить этот вопрос?"
-
-#: scripts/scripts.js.php:437
-msgid "Are you sure you want to delete this section?"
-msgstr "Вы уверены, что хотите удалить эту секцию?"
-
-#: scripts/scripts.js.php:474
-msgid "Are you sure you want to delete this destination:"
-msgstr "Вы уверены, что хотите удалить это назначение:"
-
-#: scripts/combobox.js.php:54
-msgid "Show All Items"
-msgstr "Показать всё"
-
-#: scripts/combobox.js.php:120
-msgid "didn't match any item"
-msgstr "не соответствует ни одному"
-
-#: scripts/forms-validation.js.php:11 inc/field.class.php:98
-#: inc/fields/actor-field.class.php:153 inc/fields/datetime-field.class.php:50
-#: inc/fields/multiselect-field.class.php:15
-#: inc/fields/date-field.class.php:50 inc/fields/checkboxes-field.class.php:74
-msgid "A required field is empty:"
-msgstr "Требуемое поле пустое:"
-
-#: front/formdisplay.php:44 front/form_answer.php:12 front/reservation.php:12
-#: front/form_answer.form.php:37 front/knowbaseitem.form.php:10
-#: front/reservation.form.php:10 front/reservationitem.php:7
-#: front/issue.form.php:20 front/wizard.php:13 front/wizardfeeds.php:11
-#: front/issue.php:12
-msgid "Service catalog"
-msgstr "Каталог услуг"
-
-#: front/formdisplay.php:47 front/formlist.php:16 front/formlist.php:22
-msgid "Form list"
-msgstr "Список форм"
-
-#: front/formdisplay.php:62 front/formdisplay.php:74 front/form_answer.php:16
-#: front/form_answer.php:21 front/targetticket.form.php:49 front/form.php:15
-#: front/form_answer.form.php:41 front/form_answer.form.php:46
-#: front/issue.php:16 front/issue.php:21
-msgid "Form Creator"
-msgstr "Форма создания заявки"
-
-#: front/question.form.php:15
-msgid "The question has been successfully saved!"
-msgstr "Вопрос успешно сохранен!"
-
-#: front/question.form.php:25
-msgid "The question has been successfully updated!"
-msgstr "Вопрос успешно обновлен!"
-
-#: front/header.form.php:13 inc/header.class.php:34 inc/header.class.php:110
-msgid ""
-"An header already exists for this entity! You can have only one header per "
-"entity."
-msgstr "Такой заголовок уже существует в этой организации! Заголовок должен быть уникальным."
-
-#: front/category.form.php:13
-msgid ""
-"A category already exists with the same name! Category creation failed."
-msgstr "Категория с таким названием уже существует! Категория не создана."
-
-#: setup.php:121 inc/formlist.class.php:22 inc/formlist.class.php:23
+#: setup.php:138 inc/formlist.class.php:22 inc/formlist.class.php:23
 #: inc/form.class.php:58
 msgid "Forms waiting for validation"
 msgstr "Формы ожидающие согласования"
@@ -130,41 +54,122 @@ msgstr[1] "Категории формы"
 msgstr[2] "Категории формы"
 msgstr[3] "Категории формы"
 
-#: inc/form_profile.class.php:12
-msgid "Target"
-msgid_plural "Targets"
-msgstr[0] "Цель"
-msgstr[1] "Цели"
-msgstr[2] "Цели"
-msgstr[3] "Цели"
+#: ajax/target.php:8 inc/target.class.php:85
+msgid "Add a destination"
+msgstr "Добавить назначение"
 
-#: inc/form_profile.class.php:29
-msgid "Access type"
-msgstr "Тип доступа"
+#: ajax/section.php:23 inc/question.class.php:222
+msgid "Add a section"
+msgstr "Добавить раздел"
 
-#: inc/form_profile.class.php:35 inc/form.class.php:189 inc/form.class.php:243
-msgid "Public access"
-msgstr "Публичный доступ"
+#: ajax/section.php:25
+msgid "Edit a section"
+msgstr "Изменить раздел"
 
-#: inc/form_profile.class.php:36 inc/form.class.php:190 inc/form.class.php:246
-msgid "Private access"
-msgstr "Личный доступ"
+#: ajax/question.php:26 inc/question.class.php:212
+msgid "Add a question"
+msgstr "Добавить вопрос"
 
-#: inc/form_profile.class.php:37 inc/form.class.php:191 inc/form.class.php:249
-msgid "Restricted access"
-msgstr "Доступ запрещен"
+#: ajax/question.php:27
+msgid "Edit a question"
+msgstr "Изменить вопрос"
 
-#: inc/form_profile.class.php:44
-msgid "Link to the form"
-msgstr "Ссылка на форму"
+#: ajax/question.php:63 inc/section.class.php:35
+#: inc/targetticket.class.php:984
+msgid "Section"
+msgid_plural "Sections"
+msgstr[0] "Секция"
+msgstr[1] "Секции"
+msgstr[2] "Секции"
+msgstr[3] "Секции"
 
-#: inc/form_profile.class.php:52
-msgid "Please active the form to view the link"
-msgstr "Пожалуйста, активную форму можно увидеть по ссылке"
+#: ajax/question.php:90 inc/fields/glpiselect-field.class.php:7
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "Объект GLPI"
+msgstr[1] "Объекты GLPI"
+msgstr[2] "Объекты GLPI"
+msgstr[3] "Объекты GLPI"
+
+#: ajax/question.php:165 inc/question.class.php:168 inc/question.class.php:172
+msgid "Required"
+msgstr "Обязательный"
+
+#: ajax/question.php:177
+msgid "Show empty"
+msgstr "Показывать пустой"
+
+#: ajax/question.php:195
+msgid "One per line for lists"
+msgstr "По одному в каждой строке для списка"
+
+#: ajax/question.php:222
+msgid "Values"
+msgstr "Значения"
+
+#: ajax/question.php:223
+msgid "One per line"
+msgstr "По одному в каждой линии"
+
+#: ajax/question.php:235
+msgid "Filter"
+msgstr "Фильтр"
+
+#: ajax/question.php:244
+msgid "Attribute"
+msgstr "Атрибут"
+
+#: ajax/question.php:268
+msgid "Range"
+msgstr "Диапазон"
+
+#: ajax/question.php:272
+msgid "Min"
+msgstr "Минимум"
+
+#: ajax/question.php:278
+msgid "Max"
+msgstr "Максимум"
+
+#: ajax/question.php:302
+msgid "Additional validation"
+msgstr "Дополнительное согласование"
+
+#: ajax/question.php:305
+msgid "Regular expression"
+msgstr "Регулярное выражение"
+
+#: ajax/question.php:312
+msgid ""
+"Specify the additional validation conditions in the description of the "
+"question to help users."
+msgstr "Укажите дополнительные критерии согласования в описании вопроса для помощи пользователям."
+
+#: ajax/question.php:319
+msgid "Show field"
+msgstr "Показать поле"
+
+#: ajax/question.php:328
+msgid "Always displayed"
+msgstr "Всегда видим"
+
+#: ajax/question.php:329
+msgid "Hidden unless"
+msgstr "Скрытые исключения"
+
+#: ajax/question.php:330
+msgid "Displayed unless"
+msgstr "Показанные исключения"
 
 #: inc/header.class.php:32 inc/header.class.php:48 inc/header.class.php:59
 msgid "Add an header"
 msgstr "Добавить заголовок"
+
+#: inc/header.class.php:34 inc/header.class.php:110 front/header.form.php:13
+msgid ""
+"An header already exists for this entity! You can have only one header per "
+"entity."
+msgstr "Такой заголовок уже существует в этой организации! Заголовок должен быть уникальным."
 
 #: inc/header.class.php:51
 msgid ""
@@ -172,7 +177,7 @@ msgid ""
 "previous one."
 msgstr "Такой заголовок уже существует в родительской организации! Заголовок перезапишет предыдущий."
 
-#: inc/form_answer.class.php:39 inc/issue.class.php:328
+#: inc/form_answer.class.php:39 inc/issue.class.php:411
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Ответ в форме"
@@ -228,41 +233,53 @@ msgstr "Принять"
 msgid "Refused comment is required!"
 msgstr "Требуется комментарий для отклонения!"
 
-#: inc/form_answer.class.php:618
+#: inc/form_answer.class.php:643
 msgid "Cannot generate targets!"
 msgstr "Не удается выполнить задание!"
 
-#: inc/form_answer.class.php:630 inc/form_answer.class.php:684
+#: inc/form_answer.class.php:743 inc/form_answer.class.php:803
 msgid "The form has been successfully saved!"
 msgstr "Форма успешно сохранена!"
 
-#: inc/form_answer.class.php:644 inc/form_answer.class.php:662
+#: inc/form_answer.class.php:757 inc/form_answer.class.php:775
 msgid "You are not the validator of these answers"
 msgstr "Вы не согласующий этих ответов"
 
-#: inc/form_answer.class.php:701 inc/form_answer.class.php:703
+#: inc/form_answer.class.php:821 inc/form_answer.class.php:823
 msgid "Form data"
 msgstr "Форма данных"
 
-#: inc/entityconfig.class.php:65
-msgid "Helpdesk"
-msgstr "Служба поддержки"
+#: inc/form_profile.class.php:12
+msgid "Target"
+msgid_plural "Targets"
+msgstr[0] "Цель"
+msgstr[1] "Цели"
+msgstr[2] "Цели"
+msgstr[3] "Цели"
 
-#: inc/entityconfig.class.php:74
-msgid "GLPi's helpdesk"
-msgstr "Служба поддержки GLPI"
+#: inc/form_profile.class.php:29
+msgid "Access type"
+msgstr "Тип доступа"
 
-#: inc/entityconfig.class.php:75
-msgid "Service catalog simplified"
-msgstr "Упрощенный каталог услуг"
+#: inc/form_profile.class.php:35 inc/form.class.php:189 inc/form.class.php:243
+msgid "Public access"
+msgstr "Публичный доступ"
 
-#: inc/entityconfig.class.php:76
-msgid "Service catalog extended"
-msgstr "Расширенный каталог услуг"
+#: inc/form_profile.class.php:36 inc/form.class.php:190 inc/form.class.php:246
+msgid "Private access"
+msgstr "Личный доступ"
 
-#: inc/entityconfig.class.php:79
-msgid "Helpdesk mode"
-msgstr "Режим службы поддержки"
+#: inc/form_profile.class.php:37 inc/form.class.php:191 inc/form.class.php:249
+msgid "Restricted access"
+msgstr "Доступ запрещен"
+
+#: inc/form_profile.class.php:44
+msgid "Link to the form"
+msgstr "Ссылка на форму"
+
+#: inc/form_profile.class.php:52
+msgid "Please active the form to view the link"
+msgstr "Пожалуйста, активную форму можно увидеть по ссылке"
 
 #: inc/target.class.php:26
 msgid "Destination"
@@ -285,11 +302,7 @@ msgstr[3] "Назначения"
 msgid "Delete"
 msgstr "Удалить"
 
-#: inc/target.class.php:85 ajax/target.php:8
-msgid "Add a destination"
-msgstr "Добавить назначение"
-
-#: inc/target.class.php:119 inc/form.class.php:939
+#: inc/target.class.php:119 inc/form.class.php:946
 msgid "The name cannot be empty!"
 msgstr "Требуется указать название!"
 
@@ -297,18 +310,160 @@ msgstr "Требуется указать название!"
 msgid "The type cannot be empty!"
 msgstr "Требуется указать тип!"
 
-#: inc/section.class.php:35 inc/targetticket.class.php:984
-#: ajax/question.php:63
-msgid "Section"
-msgid_plural "Sections"
-msgstr[0] "Секция"
-msgstr[1] "Секции"
-msgstr[2] "Секции"
-msgstr[3] "Секции"
+#: inc/issue.class.php:6 inc/issue.class.php:297
+msgid "Issue"
+msgid_plural "Issues"
+msgstr[0] "Проблема"
+msgstr[1] "Проблема"
+msgstr[2] "Проблемы"
+msgstr[3] "Проблемы"
 
-#: inc/section.class.php:178 inc/question.class.php:257
+#: inc/issue.class.php:59
+msgid "Formcreator - Sync service catalog issues"
+msgstr ""
+
+#: inc/issue.class.php:78
+msgid "Update issue data from tickets and form answers"
+msgstr ""
+
+#: inc/field.class.php:104 inc/fields/multiselect-field.class.php:15
+#: inc/fields/actor-field.class.php:153
+#: inc/fields/checkboxes-field.class.php:74
+#: inc/fields/datetime-field.class.php:50 inc/fields/date-field.class.php:50
+#: scripts/forms-validation.js.php:11
+msgid "A required field is empty:"
+msgstr "Требуемое поле пустое:"
+
+#: inc/targetticket_actor.class.php:7 inc/targetticket.class.php:693
+#: inc/targetticket.class.php:803 inc/targetticket.class.php:920
+msgid "Form requester"
+msgstr "Запрашивающий форму"
+
+#: inc/targetticket_actor.class.php:8 inc/targetticket.class.php:696
+#: inc/targetticket.class.php:806 inc/targetticket.class.php:923
+msgid "Form validator"
+msgstr "Согласующий форму"
+
+#: inc/targetticket_actor.class.php:9
+msgid "Specific person"
+msgstr "Указанная персона"
+
+#: inc/targetticket_actor.class.php:10 inc/targetticket.class.php:706
+#: inc/targetticket.class.php:816 inc/targetticket.class.php:933
+msgid "Person from the question"
+msgstr "Персона из вопроса"
+
+#: inc/targetticket_actor.class.php:11
+msgid "Specific group"
+msgstr "Указанная группа"
+
+#: inc/targetticket_actor.class.php:12 inc/targetticket.class.php:717
+#: inc/targetticket.class.php:827 inc/targetticket.class.php:944
+msgid "Group from the question"
+msgstr "Группа из вопроса"
+
+#: inc/targetticket_actor.class.php:13
+msgid "Specific supplier"
+msgstr "Указанный поставщик"
+
+#: inc/targetticket_actor.class.php:14 inc/targetticket.class.php:961
+msgid "Supplier from the question"
+msgstr "Поставщик из вопроса"
+
+#: inc/targetticket_actor.class.php:15 inc/targetticket.class.php:723
+#: inc/targetticket.class.php:833 inc/targetticket.class.php:950
+msgid "Actors from the question"
+msgstr ""
+
+#: inc/answer.class.php:35 inc/targetticket.class.php:983
+msgid "Answer"
+msgid_plural "Answers"
+msgstr[0] "Ответ"
+msgstr[1] "Ответы"
+msgstr[2] "Ответы"
+msgstr[3] "Ответы"
+
+#: inc/category.class.php:39
+msgid "Knowbase category"
+msgstr "Категория базы знаний"
+
+#: inc/question.class.php:35 inc/targetticket.class.php:250
+#: inc/targetticket.class.php:431 inc/targetticket.class.php:981
+msgid "Question"
+msgid_plural "Questions"
+msgstr[0] "Вопрос"
+msgstr[1] "Вопросы"
+msgstr[2] "Вопросы"
+msgstr[3] "Вопросы"
+
+#: inc/question.class.php:257 inc/section.class.php:185
 msgid "The title is required"
 msgstr "Требуется указать название"
+
+#: inc/question.class.php:266
+msgid "The field type is required"
+msgstr "Требуется указать тип поля"
+
+#: inc/question.class.php:273
+msgid "The section is required"
+msgstr "Требуется указать секцию"
+
+#: inc/question.class.php:283 inc/question.class.php:302
+#: inc/question.class.php:316
+msgid "The field value is required:"
+msgstr "Требуется указать значение поля:"
+
+#: inc/question.class.php:330
+msgid "A description field should have a description:"
+msgstr "Поле с описанием должно содержать описание:"
+
+#: inc/question.class.php:386
+msgid "Cannot recover LDAP informations!"
+msgstr "Невозможно получить информацию из LDAP!"
+
+#: inc/wizard.class.php:67 inc/wizard.class.php:68
+msgid "Seek assistance"
+msgstr "Обратиться за помощью"
+
+#: inc/wizard.class.php:73 inc/wizard.class.php:74
+msgid "My requests for assistance"
+msgstr "Мои просьбы о помощи"
+
+#: inc/wizard.class.php:85 inc/wizard.class.php:86
+msgid "Book an asset"
+msgstr "Заказать актив"
+
+#: inc/wizard.class.php:94 inc/wizard.class.php:95
+msgid "Consult feeds"
+msgstr "Консультирующие каналы"
+
+#: inc/wizard.class.php:227
+msgid "To validate"
+msgstr "Согласовать"
+
+#: inc/wizard.class.php:239
+msgid "Closed"
+msgstr "Закрыто"
+
+#: inc/entityconfig.class.php:65
+msgid "Helpdesk"
+msgstr "Служба поддержки"
+
+#: inc/entityconfig.class.php:74
+msgid "GLPi's helpdesk"
+msgstr "Служба поддержки GLPI"
+
+#: inc/entityconfig.class.php:75
+msgid "Service catalog simplified"
+msgstr "Упрощенный каталог услуг"
+
+#: inc/entityconfig.class.php:76
+msgid "Service catalog extended"
+msgstr "Расширенный каталог услуг"
+
+#: inc/entityconfig.class.php:79
+msgid "Helpdesk mode"
+msgstr "Режим службы поддержки"
 
 #: inc/notificationtargetform_answer.class.php:12
 msgid "The form as been saved"
@@ -417,13 +572,164 @@ msgid ""
 "has been deleted by an administrator."
 msgstr "Здравствуйте,\\nМы сожалеем сообщить Вам, что Ваш запрос не может быть рассмотрена и была удалена администратором."
 
-#: inc/answer.class.php:35 inc/targetticket.class.php:983
-msgid "Answer"
-msgid_plural "Answers"
-msgstr[0] "Ответ"
-msgstr[1] "Ответы"
-msgstr[2] "Ответы"
-msgstr[3] "Ответы"
+#: inc/form.class.php:60
+msgid "Import forms"
+msgstr "Импорт форм"
+
+#: inc/form.class.php:94
+msgid "Description"
+msgstr "Описание"
+
+#: inc/form.class.php:122
+msgid "Homepage"
+msgstr "Домашняя страница"
+
+#: inc/form.class.php:130
+msgid "Access"
+msgstr "Доступ"
+
+#: inc/form.class.php:188 inc/form.class.php:202 inc/form.class.php:256
+#: inc/form.class.php:311
+msgid "All langages"
+msgstr "Все языки"
+
+#: inc/form.class.php:296
+msgid "Direct access on homepage"
+msgstr "Прямой доступ с домашней страницы"
+
+#: inc/form.class.php:323
+msgid "Need to be validate?"
+msgstr "Требуется согласование?"
+
+#: inc/form.class.php:427
+msgid "Default form in service catalog"
+msgstr "Форма по умолчанию в каталоге услуг"
+
+#: inc/form.class.php:542
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] "Категория"
+msgstr[1] "Категория"
+msgstr[2] "Категории"
+msgstr[3] "Категории"
+
+#: inc/form.class.php:543
+msgid "see all"
+msgstr "смотреть всё"
+
+#: inc/form.class.php:561
+msgid "Popularity sort"
+msgstr "По популярности"
+
+#: inc/form.class.php:565
+msgid "Alphabetic sort"
+msgstr "По алфавиту"
+
+#: inc/form.class.php:737
+msgid "Please, describe your need here"
+msgstr "Пожалуйста, опишите здесь, что Вам нужно"
+
+#: inc/form.class.php:746
+msgid "My last forms (requester)"
+msgstr "Мои последние формы (заказчик)"
+
+#: inc/form.class.php:756
+msgid "No form posted yet"
+msgstr "Еще не создано форм"
+
+#: inc/form.class.php:768
+msgid "All my forms (requester)"
+msgstr "Все мои формы (заказчик)"
+
+#: inc/form.class.php:778
+msgid "My last forms (validator)"
+msgstr "Мои последние формы (согласующий)"
+
+#: inc/form.class.php:798
+msgid "No form waiting for validation"
+msgstr "Нет форм для согласования"
+
+#: inc/form.class.php:810
+msgid "All my forms (validator)"
+msgstr "Все мои формы (согласующий)"
+
+#: inc/form.class.php:902
+msgid "Choose a validator"
+msgstr "Выбрать согласующего"
+
+#: inc/form.class.php:1109
+msgid "You must select validator !"
+msgstr "Вы должны выбрать согласующего!"
+
+#: inc/form.class.php:1348
+msgid "Duplicate"
+msgstr "Дублировать"
+
+#: inc/form.class.php:1523
+#, php-format
+msgid "Form duplicated: %s"
+msgstr "Форма дубликата: %s"
+
+#: inc/form.class.php:1534
+#, php-format
+msgid "Form Transfered: %s"
+msgstr "Форма передана: %s"
+
+#: inc/form.class.php:1676
+msgid "Upload of JSON files not allowed."
+msgstr ""
+
+#: inc/form.class.php:1679
+msgid "You may allow JSON files right now."
+msgstr ""
+
+#: inc/form.class.php:1680
+msgctxt "button"
+msgid "Create"
+msgstr ""
+
+#: inc/form.class.php:1683 inc/form.class.php:1694
+msgid "Please contact your GLPI administrator."
+msgstr ""
+
+#: inc/form.class.php:1684 inc/form.class.php:1695
+msgctxt "button"
+msgid "Back"
+msgstr ""
+
+#: inc/form.class.php:1687
+msgid "Upload of JSON files not enabled."
+msgstr ""
+
+#: inc/form.class.php:1690
+msgid "You may enable JSON files right now."
+msgstr ""
+
+#: inc/form.class.php:1691
+msgctxt "button"
+msgid "Enable"
+msgstr ""
+
+#: inc/form.class.php:1774
+#, php-format
+msgid "Forms successfully imported from %s"
+msgstr "Формы успешно импортированы из %s"
+
+#: inc/form.class.php:1862
+msgid "Failed to create JSON document type"
+msgstr ""
+
+#: inc/form.class.php:1869
+msgid "JSON document type not found"
+msgstr ""
+
+#: inc/form.class.php:1876
+msgid "Failed to update JSON document type"
+msgstr ""
+
+#: inc/form.class.php:1936
+msgid "Forms without category"
+msgstr "Формы без категорий"
 
 #: inc/targetticket.class.php:21
 msgid "Current active entity"
@@ -449,7 +755,7 @@ msgstr "Форма организации"
 msgid "Default entity of the validator"
 msgstr "Организация согласующего по умолчанию"
 
-#: inc/targetticket.class.php:27 inc/targetticket_actor.class.php:13
+#: inc/targetticket.class.php:27
 msgid "Specific entity"
 msgstr "Особая организация"
 
@@ -513,15 +819,6 @@ msgstr "Изменить назначение"
 msgid "Ticket title"
 msgstr "Заголовок заявки"
 
-#: inc/targetticket.class.php:250 inc/targetticket.class.php:431
-#: inc/targetticket.class.php:981 inc/question.class.php:35
-msgid "Question"
-msgid_plural "Questions"
-msgstr[0] "Вопрос"
-msgstr[1] "Вопросы"
-msgstr[2] "Вопросы"
-msgstr[3] "Вопросы"
-
 #: inc/targetticket.class.php:324
 msgid "User type question"
 msgstr "Отвечающий на запросы"
@@ -550,35 +847,6 @@ msgstr "Отменить"
 msgid "Ticket actors"
 msgstr "Участники заявки"
 
-#: inc/targetticket.class.php:691 inc/targetticket.class.php:801
-#: inc/targetticket.class.php:920 inc/targetticket_actor.class.php:7
-msgid "Form requester"
-msgstr "Запрашивающий форму"
-
-#: inc/targetticket.class.php:694 inc/targetticket.class.php:804
-#: inc/targetticket.class.php:923 inc/targetticket_actor.class.php:8
-msgid "Form validator"
-msgstr "Согласующий форму"
-
-#: inc/targetticket.class.php:704 inc/targetticket.class.php:814
-#: inc/targetticket.class.php:933 inc/targetticket_actor.class.php:10
-msgid "Person from the question"
-msgstr "Персона из вопроса"
-
-#: inc/targetticket.class.php:715 inc/targetticket.class.php:825
-#: inc/targetticket.class.php:944 inc/targetticket_actor.class.php:12
-msgid "Group from the question"
-msgstr "Группа из вопроса"
-
-#: inc/targetticket.class.php:721 inc/targetticket.class.php:831
-#: inc/targetticket.class.php:950 inc/targetticket_actor.class.php:15
-msgid "Actors from the question"
-msgstr ""
-
-#: inc/targetticket.class.php:961 inc/targetticket_actor.class.php:14
-msgid "Supplier from the question"
-msgstr "Поставщик из вопроса"
-
 #: inc/targetticket.class.php:988
 msgid "Full form"
 msgstr "Форма полностью"
@@ -591,82 +859,29 @@ msgstr "Требуется указать заголовок!"
 msgid "The description cannot be empty!"
 msgstr "Требуется указать описание!"
 
+#: inc/fields/file-field.class.php:29
+msgid "A required file is missing:"
+msgstr ""
+
+#: inc/fields/multiselect-field.class.php:20
+#: inc/fields/checkboxes-field.class.php:81
+#, php-format
+msgid "The following question needs of at least %d answers"
+msgstr ""
+
+#: inc/fields/multiselect-field.class.php:26
+#: inc/fields/checkboxes-field.class.php:87
+#, php-format
+msgid "The following question does not accept more than %d answers"
+msgstr ""
+
+#: inc/fields/multiselect-field.class.php:71
+msgid "Multiselect"
+msgstr ""
+
 #: inc/fields/radios-field.class.php:48
 msgid "Radios"
-msgstr "Переключатель"
-
-#: inc/fields/glpiselect-field.class.php:7 ajax/question.php:90
-msgid "GLPI object"
-msgid_plural "GLPI objects"
-msgstr[0] "Объект GLPI"
-msgstr[1] "Объекты GLPI"
-msgstr[2] "Объекты GLPI"
-msgstr[3] "Объекты GLPI"
-
-#: inc/fields/float-field.class.php:10
-msgid "This is not a number:"
-msgstr "Это не число:"
-
-#: inc/fields/float-field.class.php:15 inc/fields/integer-field.class.php:15
-#, php-format
-msgid "The following number must be greater than %d:"
-msgstr "Число должно быть больше, чем %d:"
-
-#: inc/fields/float-field.class.php:21 inc/fields/integer-field.class.php:21
-#, php-format
-msgid "The following number must be lower than %d:"
-msgstr "Число должно быть меньше, чем %d:"
-
-#: inc/fields/float-field.class.php:27 inc/fields/integer-field.class.php:27
-#: inc/fields/textarea-field.class.php:45 inc/fields/text-field.class.php:22
-msgid "Specific format does not match:"
-msgstr "Указанный формат не соотвутствует"
-
-#: inc/fields/float-field.class.php:38
-msgid "Float"
-msgstr "Плавающий"
-
-#: inc/fields/integer-field.class.php:10
-msgid "This is not an integer:"
-msgstr "Это не целое число:"
-
-#: inc/fields/integer-field.class.php:38
-msgid "Integer"
-msgstr "Целое число"
-
-#: inc/fields/textarea-field.class.php:35 inc/fields/text-field.class.php:12
-#, php-format
-msgid "The text is too short (minimum %d characters):"
-msgstr "Этот текст слишком короткий (минимум %d символов)"
-
-#: inc/fields/textarea-field.class.php:40 inc/fields/text-field.class.php:17
-#, php-format
-msgid "The text is too long (maximum %d characters):"
-msgstr "Этот текст слишком длинный (максимум %d символов)"
-
-#: inc/fields/textarea-field.class.php:55
-msgid "Textarea"
-msgstr "Текстовое поле"
-
-#: inc/fields/text-field.class.php:32
-msgid "Text"
-msgstr "Текст"
-
-#: inc/fields/email-field.class.php:25
-msgid "This is not a valid e-mail:"
-msgstr "Этот почтовый адрес ЭП неправильный:"
-
-#: inc/fields/actor-field.class.php:9
-msgid "Actor"
-msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-
-#: inc/fields/datetime-field.class.php:62
-msgid "Datetime"
-msgstr "Дата и время"
+msgstr ""
 
 #: inc/fields/tag-field.class.php:66
 msgid "Tag"
@@ -676,297 +891,142 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: inc/fields/multiselect-field.class.php:20
-#: inc/fields/checkboxes-field.class.php:81
+#: inc/fields/textarea-field.class.php:35 inc/fields/text-field.class.php:12
 #, php-format
-msgid "The following question needs of at least %d answers"
-msgstr "Вопрос должен содержать хотя бы %d ответ(ов)"
+msgid "The text is too short (minimum %d characters):"
+msgstr ""
 
-#: inc/fields/multiselect-field.class.php:26
-#: inc/fields/checkboxes-field.class.php:87
+#: inc/fields/textarea-field.class.php:40 inc/fields/text-field.class.php:17
 #, php-format
-msgid "The following question does not accept more than %d answers"
-msgstr "Вопрос должен содержать не более, чем %d ответ(ов)"
+msgid "The text is too long (maximum %d characters):"
+msgstr ""
 
-#: inc/fields/multiselect-field.class.php:71
-msgid "Multiselect"
-msgstr "Множественный выбор"
+#: inc/fields/textarea-field.class.php:45 inc/fields/float-field.class.php:27
+#: inc/fields/integer-field.class.php:27 inc/fields/text-field.class.php:22
+msgid "Specific format does not match:"
+msgstr ""
 
-#: inc/fields/file-field.class.php:29
-msgid "A required file is missing:"
-msgstr "Требуемое поле отсутствует:"
-
-#: inc/fields/ldapselect-field.class.php:72
-msgid "LDAP Select"
-msgstr "Выбор LDAP"
+#: inc/fields/textarea-field.class.php:55
+msgid "Textarea"
+msgstr ""
 
 #: inc/fields/select-field.class.php:51
 msgid "Select"
-msgstr "Выбор"
+msgstr ""
+
+#: inc/fields/actor-field.class.php:9
+msgid "Actor"
+msgid_plural "Actors"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: inc/fields/ldapselect-field.class.php:72
+msgid "LDAP Select"
+msgstr ""
+
+#: inc/fields/float-field.class.php:10
+msgid "This is not a number:"
+msgstr ""
+
+#: inc/fields/float-field.class.php:15 inc/fields/integer-field.class.php:15
+#, php-format
+msgid "The following number must be greater than %d:"
+msgstr ""
+
+#: inc/fields/float-field.class.php:21 inc/fields/integer-field.class.php:21
+#, php-format
+msgid "The following number must be lower than %d:"
+msgstr ""
+
+#: inc/fields/float-field.class.php:38
+msgid "Float"
+msgstr ""
 
 #: inc/fields/checkboxes-field.class.php:99
 msgid "Checkboxes"
-msgstr "Чекбокс"
+msgstr ""
 
-#: inc/wizard.class.php:67 inc/wizard.class.php:68
-msgid "Seek assistance"
-msgstr "Обратиться за помощью"
+#: inc/fields/datetime-field.class.php:62
+msgid "Datetime"
+msgstr ""
 
-#: inc/wizard.class.php:73 inc/wizard.class.php:74
-msgid "My requests for assistance"
-msgstr "Мои просьбы о помощи"
+#: inc/fields/integer-field.class.php:10
+msgid "This is not an integer:"
+msgstr ""
 
-#: inc/wizard.class.php:85 inc/wizard.class.php:86
-msgid "Book an asset"
-msgstr "Заказать актив"
+#: inc/fields/integer-field.class.php:38
+msgid "Integer"
+msgstr ""
 
-#: inc/wizard.class.php:94 inc/wizard.class.php:95
-msgid "Consult feeds"
-msgstr "Консультирующие каналы"
+#: inc/fields/text-field.class.php:32
+msgid "Text"
+msgstr ""
 
-#: inc/wizard.class.php:227
-msgid "To validate"
-msgstr "Согласовать"
+#: inc/fields/email-field.class.php:25
+msgid "This is not a valid e-mail:"
+msgstr ""
 
-#: inc/wizard.class.php:239
-msgid "Closed"
-msgstr "Закрыто"
+#: front/targetticket.form.php:49 front/form.php:15 front/issue.php:16
+#: front/issue.php:21 front/form_answer.php:16 front/form_answer.php:21
+#: front/formdisplay.php:76 front/formdisplay.php:88
+#: front/form_answer.form.php:41 front/form_answer.form.php:46
+msgid "Form Creator"
+msgstr "Форма создания заявки"
 
-#: inc/targetticket_actor.class.php:9
-msgid "Specific person"
-msgstr "Указанная персона"
+#: front/reservation.form.php:10 front/reservation.php:12 front/issue.php:12
+#: front/wizardfeeds.php:11 front/form_answer.php:12 front/formdisplay.php:58
+#: front/wizard.php:13 front/form_answer.form.php:37 front/issue.form.php:20
+#: front/knowbaseitem.form.php:10 front/reservationitem.php:7
+msgid "Service catalog"
+msgstr "Каталог услуг"
 
-#: inc/targetticket_actor.class.php:11
-msgid "Specific group"
-msgstr "Указанная группа"
-
-#: inc/category.class.php:39
-msgid "Knowbase category"
-msgstr "Категория базы знаний"
-
-#: inc/question.class.php:168 inc/question.class.php:172 ajax/question.php:165
-msgid "Required"
-msgstr "Обязательный"
-
-#: inc/question.class.php:212 ajax/question.php:26
-msgid "Add a question"
-msgstr "Добавить вопрос"
-
-#: inc/question.class.php:222 ajax/section.php:23
-msgid "Add a section"
-msgstr "Добавить раздел"
-
-#: inc/question.class.php:266
-msgid "The field type is required"
-msgstr "Требуется указать тип поля"
-
-#: inc/question.class.php:273
-msgid "The section is required"
-msgstr "Требуется указать секцию"
-
-#: inc/question.class.php:283 inc/question.class.php:302
-#: inc/question.class.php:316
-msgid "The field value is required:"
-msgstr "Требуется указать значение поля:"
-
-#: inc/question.class.php:330
-msgid "A description field should have a description:"
-msgstr "Поле с описанием должно содержать описание:"
-
-#: inc/question.class.php:386
-msgid "Cannot recover LDAP informations!"
-msgstr "Невозможно получить информацию из LDAP!"
-
-#: inc/form.class.php:60
-msgid "Import forms"
-msgstr "Импорт форм"
-
-#: inc/form.class.php:94
-msgid "Description"
-msgstr "Описание"
-
-#: inc/form.class.php:122
-msgid "Homepage"
-msgstr "Домашняя страница"
-
-#: inc/form.class.php:130
-msgid "Access"
-msgstr "Доступ"
-
-#: inc/form.class.php:188 inc/form.class.php:202 inc/form.class.php:256
-#: inc/form.class.php:311
-msgid "All langages"
-msgstr "Все языки"
-
-#: inc/form.class.php:296
-msgid "Direct access on homepage"
-msgstr "Прямой доступ с домашней страницы"
-
-#: inc/form.class.php:323
-msgid "Need to be validate?"
-msgstr "Требуется согласование?"
-
-#: inc/form.class.php:427
-msgid "Default form in service catalog"
-msgstr "Форма по умолчанию в каталоге услуг"
-
-#: inc/form.class.php:535
-msgid "Category"
-msgid_plural "Categories"
-msgstr[0] "Категория"
-msgstr[1] "Категория"
-msgstr[2] "Категории"
-msgstr[3] "Категории"
-
-#: inc/form.class.php:536
-msgid "see all"
-msgstr "смотреть всё"
-
-#: inc/form.class.php:554
-msgid "Popularity sort"
-msgstr "По популярности"
-
-#: inc/form.class.php:558
-msgid "Alphabetic sort"
-msgstr "По алфавиту"
-
-#: inc/form.class.php:730
-msgid "Please, describe your need here"
-msgstr "Пожалуйста, опишите здесь, что Вам нужно"
-
-#: inc/form.class.php:739
-msgid "My last forms (requester)"
-msgstr "Мои последние формы (заказчик)"
-
-#: inc/form.class.php:749
-msgid "No form posted yet"
-msgstr "Еще не создано форм"
-
-#: inc/form.class.php:761
-msgid "All my forms (requester)"
-msgstr "Все мои формы (заказчик)"
-
-#: inc/form.class.php:771
-msgid "My last forms (validator)"
-msgstr "Мои последние формы (согласующий)"
-
-#: inc/form.class.php:791
-msgid "No form waiting for validation"
-msgstr "Нет форм для согласования"
-
-#: inc/form.class.php:803
-msgid "All my forms (validator)"
-msgstr "Все мои формы (согласующий)"
-
-#: inc/form.class.php:895
-msgid "Choose a validator"
-msgstr "Выбрать согласующего"
-
-#: inc/form.class.php:1102
-msgid "You must select validator !"
-msgstr "Вы должны выбрать согласующего!"
-
-#: inc/form.class.php:1336
-msgid "Duplicate"
-msgstr "Дублировать"
-
-#: inc/form.class.php:1511
-#, php-format
-msgid "Form duplicated: %s"
-msgstr "Форма дубликата: %s"
-
-#: inc/form.class.php:1522
-#, php-format
-msgid "Form Transfered: %s"
-msgstr "Форма передана: %s"
-
-#: inc/form.class.php:1707
-#, php-format
-msgid "Forms successfully imported from %s"
-msgstr "Формы успешно импортированы из %s"
-
-#: inc/issue.class.php:6 inc/issue.class.php:214
-msgid "Issue"
-msgid_plural "Issues"
-msgstr[0] "Проблема"
-msgstr[1] "Проблема"
-msgstr[2] "Проблемы"
-msgstr[3] "Проблемы"
-
-#: ajax/question.php:27
-msgid "Edit a question"
-msgstr "Изменить вопрос"
-
-#: ajax/question.php:177
-msgid "Show empty"
-msgstr "Показывать пустой"
-
-#: ajax/question.php:195
-msgid "One per line for lists"
-msgstr "По одному в каждой строке для списка"
-
-#: ajax/question.php:222
-msgid "Values"
-msgstr "Значения"
-
-#: ajax/question.php:223
-msgid "One per line"
-msgstr "По одному в каждой линии"
-
-#: ajax/question.php:235
-msgid "Filter"
-msgstr "Фильтр"
-
-#: ajax/question.php:244
-msgid "Attribute"
-msgstr "Атрибут"
-
-#: ajax/question.php:268
-msgid "Range"
-msgstr "Диапазон"
-
-#: ajax/question.php:272
-msgid "Min"
-msgstr "Минимум"
-
-#: ajax/question.php:278
-msgid "Max"
-msgstr "Максимум"
-
-#: ajax/question.php:302
-msgid "Additional validation"
-msgstr "Дополнительное согласование"
-
-#: ajax/question.php:305
-msgid "Regular expression"
-msgstr "Регулярное выражение"
-
-#: ajax/question.php:312
+#: front/category.form.php:13
 msgid ""
-"Specify the additional validation conditions in the description of the "
-"question to help users."
-msgstr "Укажите дополнительные критерии согласования в описании вопроса для помощи пользователям."
+"A category already exists with the same name! Category creation failed."
+msgstr "Категория с таким названием уже существует! Категория не создана."
 
-#: ajax/question.php:319
-msgid "Show field"
-msgstr "Показать поле"
+#: front/formdisplay.php:61 front/formlist.php:16 front/formlist.php:22
+msgid "Form list"
+msgstr "Список форм"
 
-#: ajax/question.php:328
-msgid "Always displayed"
-msgstr "Всегда видим"
+#: front/question.form.php:15
+msgid "The question has been successfully saved!"
+msgstr "Вопрос успешно сохранен!"
 
-#: ajax/question.php:329
-msgid "Hidden unless"
-msgstr "Скрытые исключения"
+#: front/question.form.php:25
+msgid "The question has been successfully updated!"
+msgstr "Вопрос успешно обновлен!"
 
-#: ajax/question.php:330
-msgid "Displayed unless"
-msgstr "Показанные исключения"
+#: scripts/scripts.js.php:258
+msgid "No form found. Please choose a form below instead"
+msgstr "Не найдена форма. Пожалуйста, выберите форму ниже вместо этой"
 
-#: ajax/section.php:25
-msgid "Edit a section"
-msgstr "Изменить раздел"
+#: scripts/scripts.js.php:276
+msgid "An error occured while querying forms"
+msgstr "Произошла ошибка во время выполнения запроса форм"
 
-#: ajax/homepage_forms.php:52
-msgid "Forms without category"
-msgstr "Формы без категорий"
+#: scripts/scripts.js.php:312
+msgid "No form yet in this category"
+msgstr "Нет формы еще в этой категории"
+
+#: scripts/scripts.js.php:410
+msgid "Are you sure you want to delete this question?"
+msgstr "Вы уверены, что хотите удалить этот вопрос?"
+
+#: scripts/scripts.js.php:445
+msgid "Are you sure you want to delete this section?"
+msgstr "Вы уверены, что хотите удалить эту секцию?"
+
+#: scripts/scripts.js.php:482
+msgid "Are you sure you want to delete this destination:"
+msgstr "Вы уверены, что хотите удалить это назначение:"
+
+#: scripts/combobox.js.php:54
+msgid "Show All Items"
+msgstr "Показать всё"
+
+#: scripts/combobox.js.php:120
+msgid "didn't match any item"
+msgstr "не соответствует ни одному"
