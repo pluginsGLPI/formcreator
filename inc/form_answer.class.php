@@ -105,30 +105,25 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       if ($display_for_form) {
          $optindex = self::SOPTION_ANSWER;
-         $section  = new PluginFormcreatorSection;
          $question = new PluginFormcreatorQuestion;
-         $sections = $section->find("`".PluginFormcreatorSection::$items_id."` = ".
-                                    $_SESSION['formcreator']['form_search_answers']);
-         foreach ($sections as $sections_id => $current_section) {
-            $questions = $question->find("`".PluginFormcreatorQuestion::$items_id."` = ".
-                                         $sections_id);
+         $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
 
-            foreach($questions as $questions_id => $current_question) {
-               $tab[$optindex] = [
-                  'table'         => PluginFormcreatorAnswer::getTable(),
-                  'field'         => 'answer',
-                  'name'          => $current_question['name'],
-                  'datatype'      => 'string',
-                  'massiveaction' => false,
-                  'nosearch'      => true,
-                  'joinparams'    => [
-                     'jointype'  => 'child',
-                     'condition' => "AND NEWTABLE.`plugin_formcreator_question_id` = $questions_id",
-                  ]
-               ];
+         foreach($questions as $current_question) {
+            $questions_id = $question->getID();
+            $tab[$optindex] = [
+               'table'         => PluginFormcreatorAnswer::getTable(),
+               'field'         => 'answer',
+               'name'          => $current_question->getField('name'),
+               'datatype'      => 'string',
+               'massiveaction' => false,
+               'nosearch'      => false,
+               'joinparams'    => [
+                  'jointype'  => 'child',
+                  'condition' => "AND NEWTABLE.`plugin_formcreator_question_id` = $questions_id",
+               ]
+            ];
 
-               $optindex++;
-            }
+            $optindex++;
          }
       }
 
