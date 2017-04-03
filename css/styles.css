@@ -464,29 +464,6 @@ form.formcreator_form {
    vertical-align: middle;
 }
 /* jQuery UI Combobox*/
-.custom-combobox {
-   position: relative;
-   display: inline-block;
-}
-.custom-combobox-toggle {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   margin-left: -1px;
-   padding: 0;
-}
-.custom-combobox-input {
-   margin: 0;
-   padding: 5px 10px;
-}
-.custom-combobox .ui-state-default {
-   background-color: #fff;
-   background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
-   background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 50%);
-   background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 50%);
-   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
-   background-image: linear-gradient(top, #fff 0%, #eee 50%);
-}
 .pq-select-multiple {
    display: inline-block;
    width: 85% !important;
