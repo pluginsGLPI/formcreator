@@ -174,7 +174,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       switch ($field) {
          case 'is_active' :
-            return Dropdown::showFromArray('criteria[0][value]', array(
+            return Dropdown::showFromArray($name, array(
                '0' => __('Inactive'),
                '1' => __('Active'),
             ), array(
@@ -184,21 +184,20 @@ class PluginFormcreatorForm extends CommonDBTM
             ));
             break;
          case 'access_rights' :
-            return Dropdown::showFromArray('criteria[0][value]', array(
-               Dropdown::EMPTY_VALUE => '--- ' . __('All langages', 'formcreator') . ' ---',
+            return Dropdown::showFromArray($name, array(
                self::ACCESS_PUBLIC => __('Public access', 'formcreator'),
                self::ACCESS_PRIVATE => __('Private access', 'formcreator'),
                self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
             ), array(
                'value'               => $values[$field],
-               'display_emptychoice' => true,
+               'display_emptychoice' => false,
                'display'             => false
             ));
             break;
          case 'language' :
-            return Dropdown::showLanguages('criteria[0][value]', array(
+            return Dropdown::showLanguages($name, array(
                'value'               => $values[$field],
-               'display_emptychoice' => true,
+               'display_emptychoice' => false,
                'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
                'display'             => false
             ));
