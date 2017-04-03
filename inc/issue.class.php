@@ -138,7 +138,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       $item->showTabsContent();
 
-    }
+   }
 
    /**
     * {@inheritDoc}
@@ -219,7 +219,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer'
                                   AND `items_id` = $formanswerId", "`tickets_id` ASC");
 
-       if (count($rows) == 1) {
+      if (count($rows) == 1) {
          // one ticket, replace item
          $ticket = array_shift($rows);
          $item = new Ticket;
@@ -382,7 +382,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (Session::haveRight(self::$rightname, Ticket::READALL)) {
          $search['criteria'][0]['value'] = 'notold';
       }
-     return $search;
+      return $search;
    }
 
    public static function giveItem($itemtype, $ID, $data, $num) {
@@ -405,7 +405,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             break;
 
          case "glpi_plugin_formcreator_issues.status":
-            switch($data['raw']['sub_itemtype']) {
+            switch ($data['raw']['sub_itemtype']) {
                case 'Ticket':
                   $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
                   return "<img src='".Ticket::getStatusIconURL($data['raw']["ITEM_$num"])."'

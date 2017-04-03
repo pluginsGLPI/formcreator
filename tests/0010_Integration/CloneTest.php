@@ -59,10 +59,10 @@ class CloneTest extends SuperAdminTestCase {
 
       // check that all question uuid are new
       $uuids = $new_uuids = [];
-      foreach($all_questions as $question) {
+      foreach ($all_questions as $question) {
          $uuids[] = $question['uuid'];
       }
-      foreach($all_new_questions as $question) {
+      foreach ($all_new_questions as $question) {
          $new_uuids[] = $question['uuid'];
       }
       $this->assertEquals($new_uuids, array_diff($new_uuids, $uuids));

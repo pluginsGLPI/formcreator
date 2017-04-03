@@ -35,9 +35,9 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
          if (plugin_formcreator_getFromDBByField($section, 'name', $exploded[0])
                && $questions_id = plugin_formcreator_getFromDBByField($question, 'name', $exploded[1])) {
                   $actor['actor_value'] = $questions_id;
-               } else{
-                  return false;
-               }
+         } else {
+            return false;
+         }
 
       } else if (isset($actor['_user'])) {
          $user = new User;
@@ -105,7 +105,7 @@ class PluginFormcreatorTargetChange_Actor extends CommonDBTM
                      "##$$##".
                      $question->fields['name'];
                      unset($target_actor['actor_value']);
-                  }
+            }
                   break;
          case 'person':
             $user = new User;

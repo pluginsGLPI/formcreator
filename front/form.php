@@ -6,11 +6,11 @@ Session::checkRight("entity", UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
+if (!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if(PluginFormcreatorForm::canView()) {
+if (PluginFormcreatorForm::canView()) {
    Html::header(
       __('Form Creator', 'formcreator'),
       $_SERVER['PHP_SELF'],

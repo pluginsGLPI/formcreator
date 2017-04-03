@@ -2,8 +2,7 @@
 
 class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<div class="form_field">';
          $rand     = mt_rand();
@@ -26,20 +25,17 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       }
    }
 
-   public function getAnswer()
-   {
+   public function getAnswer() {
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
       return in_array($value, $values) ? $value : $this->fields['default_values'];
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return __('Urgency');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
             'required'       => 1,
             'default_values' => 1,
@@ -54,8 +50,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       );
    }
 
-   public function getAvailableValues()
-   {
+   public function getAvailableValues() {
       return array(
             _x('urgency', 'Very high'),
             _x('urgency', 'High'),
@@ -65,10 +60,9 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       );
    }
 
-   public function getValue()
-   {
+   public function getValue() {
       if (isset($this->fields['answer'])) {
-         if(!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
+         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
             return json_decode($this->fields['answer']);
          }
          return $this->fields['answer'];
@@ -77,8 +71,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       }
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['urgency'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

@@ -6,8 +6,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -16,18 +15,15 @@ class PluginFormcreatorTarget extends CommonDBTM
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
-   public static function getTypeName($nb = 1)
-   {
+   public static function getTypeName($nb = 1) {
       return _n('Destination', 'Destinations', $nb, 'formcreator');
    }
 
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "PluginFormcreatorForm":
             $env       = new self;
@@ -38,8 +34,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       return '';
    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       echo '<table class="tab_cadre_fixe">';
@@ -77,7 +72,6 @@ class PluginFormcreatorTarget extends CommonDBTM
          echo '</tr>';
       }
 
-
       // Display add target link...
       echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_row">';
       echo '<td colspan="3">';
@@ -104,8 +98,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     *
     * @return the modified $input array
    **/
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       global $DB;
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -115,13 +108,13 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       // Control fields values :
       // - name is required
-      if(isset($input['name'])
+      if (isset($input['name'])
          && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
       // - field type is required
-      if(isset($input['itemtype'])) {
+      if (isset($input['itemtype'])) {
          if (empty($input['itemtype'])) {
             Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
             return array();
@@ -199,8 +192,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
@@ -283,11 +275,10 @@ class PluginFormcreatorTarget extends CommonDBTM
             $target['plugin_formcreator_forms_id'],
             $target['tickettemplates_id']);
 
-
       // get target actors
       $target['_data']['_actors'] = [];
       $all_target_actors = $form_target_actor->find("`plugin_formcreator_targettickets_id` = '$targetId'");
-      foreach($all_target_actors as $target_actors_id => $target_actor) {
+      foreach ($all_target_actors as $target_actors_id => $target_actor) {
          if ($form_target_actor->getFromDB($target_actors_id)) {
             $target['_data']['_actors'][] = $form_target_actor->export($remove_uuid);
          }

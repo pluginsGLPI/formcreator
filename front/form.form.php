@@ -6,45 +6,45 @@ $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
    $form = new PluginFormcreatorForm();
 
-   if(isset($_POST["add"])) {
+   if (isset($_POST["add"])) {
       // Add a new Form
       Session::checkRight("entity", UPDATE);
       $newID = $form->add($_POST);
 
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
-   } elseif(isset($_POST["update"])) {
+   } else if (isset($_POST["update"])) {
       // Edit an existing form
       Session::checkRight("entity", UPDATE);
       $form->update($_POST);
       Html::back();
 
-   } elseif(isset($_POST["delete"])) {
+   } else if (isset($_POST["delete"])) {
       // Delete a form (is_deleted = true)
       Session::checkRight("entity", UPDATE);
       $form->delete($_POST);
       $form->redirectToList();
 
-   } elseif(isset($_POST["restore"])) {
+   } else if (isset($_POST["restore"])) {
       // Restore a deleteted form (is_deleted = false)
       Session::checkRight("entity", UPDATE);
       $form->restore($_POST);
       $form->redirectToList();
 
-   } elseif(isset($_POST["purge"])) {
+   } else if (isset($_POST["purge"])) {
       // Delete defenitively a form from DB and all its datas
       Session::checkRight("entity", UPDATE);
-      $form->delete($_POST,1);
+      $form->delete($_POST, 1);
       $form->redirectToList();
 
-   } elseif (isset($_POST['filetype_create'])) {
+   } else if (isset($_POST['filetype_create'])) {
       $documentType = new DocumentType();
       $canAddType = $documentType->canCreate();
       if ($canAddType) {
          $form->createDocumentType();
       }
       Html::back();
-   } elseif (isset($_POST['filetype_enable'])) {
+   } else if (isset($_POST['filetype_enable'])) {
 
       $documentType = new DocumentType();
       $canUpdateType = $documentType->canUpdate();
@@ -53,7 +53,7 @@ if ($plugin->isActivated("formcreator")) {
       }
       Html::back();
 
-   } elseif (isset($_GET["import_form"])) {
+   } else if (isset($_GET["import_form"])) {
       // Import form
       Session::checkRight("entity", UPDATE);
       Html::header(
@@ -71,18 +71,18 @@ if ($plugin->isActivated("formcreator")) {
       $form->showImportForm();
       Html::footer();
 
-   } elseif(isset($_POST["import_send"])) {
+   } else if (isset($_POST["import_send"])) {
       // Import form
       Session::checkRight("entity", UPDATE);
       $form->importJson($_REQUEST);
       Html::back();
 
-   } elseif (isset($_POST['submit_formcreator'])) {
+   } else if (isset($_POST['submit_formcreator'])) {
       // Save form to target
-      if($form->getFromDB($_POST['formcreator_form'])) {
+      if ($form->getFromDB($_POST['formcreator_form'])) {
 
          // If user is not authenticated, create temporary user
-         if(!isset($_SESSION['glpiname'])) {
+         if (!isset($_SESSION['glpiname'])) {
             $_SESSION['glpiname'] = 'formcreator_temp_user';
          }
 
@@ -93,7 +93,7 @@ if ($plugin->isActivated("formcreator")) {
          $form->increaseUsageCount();
 
          // If user was not authenticated, remove temporary user
-         if($_SESSION['glpiname'] == 'formcreator_temp_user') {
+         if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
             unset($_SESSION['glpiname']);
             Html::redirect('formdisplay.php?answer_saved');
          } else if (plugin_formcreator_replaceHelpdesk()) {

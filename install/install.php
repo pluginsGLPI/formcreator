@@ -248,8 +248,7 @@ class PluginFormcreatorInstall {
       $notification_target = new NotificationTarget();
       $template            = new NotificationTemplate();
       $translation         = new NotificationTemplateTranslation();
-      foreach ($notifications as $event => $datas)
-      {
+      foreach ($notifications as $event => $datas) {
          // Check if notification already exists
          $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
 

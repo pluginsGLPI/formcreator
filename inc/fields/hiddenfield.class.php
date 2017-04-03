@@ -1,26 +1,22 @@
 <?php
 class PluginFormcreatorHiddenField extends PluginFormcreatorField
 {
-   public function show($canEdit = true)
-   {
+   public function show($canEdit = true) {
       echo '<input type="hidden" class="form-control"
                name="formcreator_field_' . $this->fields['id'] . '"
                id="formcreator_field_' . $this->fields['id'] . '"
                value="' . $this->fields['default_values'] . '" />' . PHP_EOL;
    }
 
-   public function isValid($value)
-   {
+   public function isValid($value) {
       return true;
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return _n('Hidden field', 'Hidden fields', 1);
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 0,
          'default_values' => 1,
@@ -35,8 +31,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['hidden'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

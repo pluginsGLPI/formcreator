@@ -3,7 +3,7 @@ include ('../../../inc/includes.php');
 Session::checkRight("entity", UPDATE);
 
 $question = new PluginFormcreatorQuestion();
-if(empty($_REQUEST['question_id'])) {
+if (empty($_REQUEST['question_id'])) {
    $question_id = 0;
    $question->getEmpty();
 } else {

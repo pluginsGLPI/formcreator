@@ -15,7 +15,7 @@ var serviceCatalogEnabled = false;
 var link = '';
 link += '<li id="menu7">';
 link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
-link += "<?php echo _n('Form','Forms', 2, 'formcreator'); ?>";
+link += "<?php echo _n('Form', 'Forms', 2, 'formcreator'); ?>";
 link += '</a>';
 link += '</li>';
 
@@ -54,10 +54,10 @@ jQuery(document).ready(function($) {
    });
 
    <?php
-      if (isset($_SESSION['glpiactiveprofile']['interface'])
+   if (isset($_SESSION['glpiactiveprofile']['interface'])
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
-         echo "$('#c_menu #menu1:first-child').after(link);";
-      }
+      echo "$('#c_menu #menu1:first-child').after(link);";
+   }
    ?>
 
    if (location.pathname.indexOf("helpdesk.public.php") != -1) {

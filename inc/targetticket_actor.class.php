@@ -57,7 +57,7 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
          if (plugin_formcreator_getFromDBByField($section, 'name', $exploded[0])
              && $questions_id = plugin_formcreator_getFromDBByField($question, 'name', $exploded[1])) {
             $actor['actor_value'] = $questions_id;
-         } else{
+         } else {
             return false;
          }
 

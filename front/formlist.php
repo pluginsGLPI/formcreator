@@ -2,7 +2,7 @@
 include ('../../../inc/includes.php');
 
 $plugin = new Plugin();
-if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
+if (!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 

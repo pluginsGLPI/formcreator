@@ -206,7 +206,7 @@ function plugin_formcreator_updateForm_Profile(Migration $migration) {
    // fill missing uuid
    $obj = new PluginFormcreatorForm_Profile();
    $all_form_profiles = $obj->find("uuid IS NULL");
-   foreach($all_form_profiles as $form_profiles_id => $form_profile) {
+   foreach ($all_form_profiles as $form_profiles_id => $form_profile) {
       $obj->update(array(
             'id'   => $form_profiles_id,
             'uuid' => plugin_formcreator_getUuid()
@@ -246,7 +246,7 @@ function plugin_formcreator_updateFormValidator(Migration $migration) {
    // fill missing uuid
    $obj = new PluginFormcreatorForm_Validator();
    $all_validators = $obj->find("uuid IS NULL");
-   foreach($all_validators as $validators_id => $validator) {
+   foreach ($all_validators as $validators_id => $validator) {
       $obj->update(array('id'   => $validators_id,
             'uuid' => plugin_formcreator_getUuid()));
    }
@@ -334,7 +334,7 @@ function plugin_formcreator_updateForm(Migration $migration) {
    // fill missing uuid (force update of forms, see PluginFormcreatorForm::prepareInputForUpdate)
    $obj = new PluginFormcreatorForm();
    $all_forms = $obj->find("uuid IS NULL");
-   foreach($all_forms as $forms_id => $form) {
+   foreach ($all_forms as $forms_id => $form) {
       $obj->update(array('id' => $forms_id));
    }
    unset($obj);
@@ -480,7 +480,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
    // fill missing uuid (force update of questions, see PluginFormcreatorQuestoin_Condition::prepareInputForUpdate)
    $condition_obj = new PluginFormcreatorQuestion_Condition();
    $all_conditions = $condition_obj->find("uuid IS NULL");
-   foreach($all_conditions as $conditions_id => $condition) {
+   foreach ($all_conditions as $conditions_id => $condition) {
       $condition_obj->update(array('id'   => $conditions_id,
             'uuid' => plugin_formcreator_getUuid()));
    }
@@ -493,7 +493,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_questions");
 
    // Migration 0.83-1.0 => 0.85-1.0
-   if(!FieldExists('glpi_plugin_formcreator_questions', 'fieldtype', false)) {
+   if (!FieldExists('glpi_plugin_formcreator_questions', 'fieldtype', false)) {
       // Migration from previous version
       $query = "ALTER TABLE `glpi_plugin_formcreator_questions`
       ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
@@ -530,9 +530,11 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
          $required  = 0;
 
          if (isset($datas->value) && !empty($datas->value)) {
-            if(is_object($datas->value)) {
-               foreach($datas->value as $value) {
-                  if (!empty($value)) $values .= urldecode($value) . "\r\n";
+            if (is_object($datas->value)) {
+               foreach ($datas->value as $value) {
+                  if (!empty($value)) {
+                     $values .= urldecode($value) . "\r\n";
+                  }
                }
             } else {
                $values .= urldecode($datas->value);
@@ -557,8 +559,12 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
                      case '5':
                         $regex = urldecode($options->value);
                         // Add leading and trailing regex marker (automaticaly added in V1)
-                        if (substr($regex, 0, 1)  != '/') $regex = '/' . $regex;
-                        if (substr($regex, -1, 1) != '/') $regex = $regex . '/';
+                        if (substr($regex, 0, 1)  != '/') {
+                           $regex = '/' . $regex;
+                        }
+                        if (substr($regex, -1, 1) != '/') {
+                           $regex = $regex . '/';
+                        }
                         break;
                      case '6':
                         $fieldtype = 'email';
@@ -684,7 +690,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
    // fill missing uuid (force update of questions, see PlugiinFormcreatorQuestion::prepareInputForUpdate)
    $obj = new PluginFormcreatorQuestion();
    $all_questions = $obj->find("uuid IS NULL");
-   foreach($all_questions as $questions_id => $question) {
+   foreach ($all_questions as $questions_id => $question) {
       $obj->update(array('id' => $questions_id));
    }
 }
@@ -711,18 +717,18 @@ function plugin_formcreator_updateSection(Migration $migration) {
    }
 
    // Migration from previous version => Remove useless target field
-   if(FieldExists('glpi_plugin_formcreator_sections', 'plugin_formcreator_targets_id', false)) {
+   if (FieldExists('glpi_plugin_formcreator_sections', 'plugin_formcreator_targets_id', false)) {
       $migration->dropField('glpi_plugin_formcreator_sections', 'plugin_formcreator_targets_id');
    }
 
    // Migration from previous version => Rename "position" into "order" and start order from 1 instead of 0
-   if(FieldExists('glpi_plugin_formcreator_sections', 'position', false)) {
+   if (FieldExists('glpi_plugin_formcreator_sections', 'position', false)) {
       $DB->query("ALTER TABLE `glpi_plugin_formcreator_sections` CHANGE `position` `order` INT(11) NOT NULL DEFAULT '0';");
       $DB->query("UPDATE `glpi_plugin_formcreator_sections` SET `order` = `order` + 1;");
    }
 
    // Migration from previous version => Update Question table, then create a "description" question from content
-   if(FieldExists('glpi_plugin_formcreator_sections', 'content', false)) {
+   if (FieldExists('glpi_plugin_formcreator_sections', 'content', false)) {
       // Increment the order of questions which are in a section with a description
       $query = "UPDATE `PluginFormcreatorQuestion`
                 SET `order` = `order` + 1
@@ -766,7 +772,7 @@ function plugin_formcreator_updateSection(Migration $migration) {
    // fill missing uuid (force update of sections, see PluginFormcreatorSection::prepareInputForUpdate)
    $obj = new PluginFormcreatorSection();
    $all_sections = $obj->find("uuid IS NULL");
-   foreach($all_sections as $sections_id => $section) {
+   foreach ($all_sections as $sections_id => $section) {
       $obj->update(array('id' => $sections_id));
    }
 }
@@ -784,7 +790,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
       $DB->query($query);
    }
 
-   if(!FieldExists('glpi_plugin_formcreator_targets', 'itemtype', false)) {
+   if (!FieldExists('glpi_plugin_formcreator_targets', 'itemtype', false)) {
       // Migration from version 1.5 to 1.6
       if (!FieldExists('glpi_plugin_formcreator_targets', 'type', false)) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targets`
@@ -820,7 +826,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          $predefinedField = new TicketTemplatePredefinedField();
 
          // Urgency
-         if(!empty($ligne['urgency'])) {
+         if (!empty($ligne['urgency'])) {
             $predefinedField->add(array(
                   'tickettemplates_id' => $template_id,
                   'num'                => 10,
@@ -829,7 +835,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          }
 
          // Priority
-         if(!empty($ligne['priority'])) {
+         if (!empty($ligne['priority'])) {
             $predefinedField->add(array(
                   'tickettemplates_id' => $template_id,
                   'num'                => 3,
@@ -838,7 +844,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          }
 
          // Category
-         if(!empty($ligne['itilcategories_id'])) {
+         if (!empty($ligne['itilcategories_id'])) {
             $predefinedField->add(array(
                   'tickettemplates_id' => $template_id,
                   'num'                => 7,
@@ -847,7 +853,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          }
 
          // Type
-         if(!empty($ligne['type'])) {
+         if (!empty($ligne['type'])) {
             $predefinedField->add(array(
                   'tickettemplates_id' => $template_id,
                   'num'                => 14,
@@ -925,7 +931,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
    // fill missing uuid (force update of targets, see PluginFormcreatorTarget::prepareInputForUpdate)
    $obj   = new PluginFormcreatorTarget();
    $all_targets = $obj->find("uuid IS NULL");
-   foreach($all_targets as $targets_id => $target) {
+   foreach ($all_targets as $targets_id => $target) {
       $obj->update(array('id' => $targets_id));
    }
 }
@@ -937,7 +943,7 @@ function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
    // fill missing uuid
    $obj = new PluginFormcreatorTargetChange_Actor();
    $all_actor = $obj->find("uuid IS NULL");
-   foreach($all_actor as $actors_id => $actor) {
+   foreach ($all_actor as $actors_id => $actor) {
       $obj->update(array('id'   => $actors_id,
             'uuid' => plugin_formcreator_getUuid()));
    }
@@ -979,7 +985,7 @@ function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
    // fill missing uuid
    $obj = new PluginFormcreatorTargetTicket_Actor();
    $all_actor = $obj->find("uuid IS NULL");
-   foreach($all_actor as $actors_id => $actor) {
+   foreach ($all_actor as $actors_id => $actor) {
       $obj->update(array('id'   => $actors_id,
             'uuid' => plugin_formcreator_getUuid()));
    }
@@ -996,7 +1002,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
    $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDueDateRule()))."'";
    $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumUrgencyRule()))."'";
 
-   if(!FieldExists('glpi_plugin_formcreator_targettickets', 'due_date_rule', false)) {
+   if (!FieldExists('glpi_plugin_formcreator_targettickets', 'due_date_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
       ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
       ADD `due_date_question` INT NULL DEFAULT NULL,
@@ -1007,7 +1013,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
    }
 
    // Migration to Formcreator 0.90-1.4
-   if(!FieldExists('glpi_plugin_formcreator_targettickets', 'destination_entity', false)) {
+   if (!FieldExists('glpi_plugin_formcreator_targettickets', 'destination_entity', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
       ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
       ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
@@ -1023,7 +1029,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       }
    }
 
-   if(!FieldExists('glpi_plugin_formcreator_targettickets', 'tag_type', false)) {
+   if (!FieldExists('glpi_plugin_formcreator_targettickets', 'tag_type', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
       ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
       ADD `tag_questions` VARCHAR(255) NOT NULL,
