@@ -20,6 +20,8 @@ class UnitTestAutoload
 
 }
 
+ini_set('session.use_cookies', 0); //disable session cookies
+
 UnitTestAutoload::register();
 
 define('GLPI_ROOT', dirname(dirname(dirname(__DIR__))));

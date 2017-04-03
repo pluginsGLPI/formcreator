@@ -48,7 +48,7 @@ error_reporting(E_ALL | E_STRICT);
 // Prevent problem of execution time
 ini_set("max_execution_time", "0");
 ini_set("memory_limit", "-1");
-ini_set("session.use_cookies","0");
+ini_set("session.use_cookies", "0");
 
 $DB = new DB();
 if (!$DB->connected) {

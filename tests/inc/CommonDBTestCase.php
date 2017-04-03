@@ -1,7 +1,7 @@
 <?php
 class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
-   protected static function drop_database($dbuser='', $dbhost='', $dbdefault='', $dbpassword=''){
+   protected static function drop_database($dbuser='', $dbhost='', $dbdefault='', $dbpassword='') {
 
       $cmd = self::construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysql');
 
@@ -11,7 +11,6 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
       $cmd = 'echo "DROP DATABASE IF EXISTS \`'.$dbdefault .'\`; CREATE DATABASE \`'.$dbdefault.'\`" | ' . $cmd ." 2>&1";
 
-
       $returncode = 0;
       $output = array();
       exec(
@@ -19,7 +18,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
             $output,
             $returncode
             );
-      array_unshift($output,"Output of '{$cmd}'");
+      array_unshift($output, "Output of '{$cmd}'");
       return array(
             'returncode'=>$returncode,
             'output' => $output
@@ -43,7 +42,6 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
       $cmd = $result . " " . $dbdefault . " < ". $file ." 2>&1";
 
-
       $returncode = 0;
       $output = array();
       exec(
@@ -51,7 +49,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
             $output,
             $returncode
             );
-      array_unshift($output,"Output of '{$cmd}'");
+      array_unshift($output, "Output of '{$cmd}'");
       return array(
             'returncode'=>$returncode,
             'output' => $output
@@ -61,7 +59,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
    protected static function construct_mysql_options($dbuser='', $dbhost='', $dbpassword='', $cmd_base='mysql') {
       $cmd = array();
 
-      if ( empty($dbuser) || empty($dbhost)) {
+      if (empty($dbuser) || empty($dbhost)) {
          return array(
                'returncode' => 2,
                'output' => array("ERROR: missing mysql parameters (user='{$dbuser}', host='{$dbhost}')")
@@ -71,10 +69,10 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
       if (strpos($dbhost, ':') !== FALSE) {
          $dbhost = explode( ':', $dbhost);
-         if ( !empty($dbhost[0]) ) {
+         if (!empty($dbhost[0])) {
             $cmd[] = "--host ".$dbhost[0];
          }
-         if ( is_numeric($dbhost[1]) ) {
+         if (is_numeric($dbhost[1])) {
             $cmd[] = "--port ".$dbhost[1];
          } else {
             // The dbhost's second part is assumed to be a socket file if it is not numeric.
@@ -146,7 +144,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       ini_set("memory_limit", "-1");
       ini_set("max_execution_time", "0");
 
-      ini_set('session.use_cookies', 0); //disable session cookies
+      //ini_set('session.use_cookies', 0); //disable session cookies
       $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
    }
 

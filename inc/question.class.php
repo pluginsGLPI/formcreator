@@ -9,8 +9,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -19,8 +18,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
@@ -30,8 +28,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0)
-   {
+   public static function getTypeName($nb = 0) {
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
@@ -49,19 +46,18 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
-   {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       switch ($item->getType()) {
          case "PluginFormcreatorForm":
             $number      = 0;
             $section     = new PluginFormcreatorSection();
             $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
             $tab_section = array();
-            foreach($found as $section_item) {
+            foreach ($found as $section_item) {
                $tab_section[] = $section_item['id'];
             }
 
-            if(!empty($tab_section)) {
+            if (!empty($tab_section)) {
                $object  = new self;
                $found = $object->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')');
                $number  = count($found);
@@ -82,8 +78,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
-   {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $CFG_GLPI;
 
       echo '<table class="tab_cadre_fixe">';
@@ -119,7 +114,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
-         if($section['order'] != $section_number) {
+         if ($section['order'] != $section_number) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                      title="' . __('Bring down') . '"
                      onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'down\');" >';
@@ -127,7 +122,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
-         if($section['order'] != 1) {
+         if ($section['order'] != 1) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                      title="' . __('Bring up') . '"
                      onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');"> ';
@@ -136,7 +131,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          echo '</th>';
          echo '</tr>';
-
 
          // Get questions
          $question          = new PluginFormcreatorQuestion();
@@ -157,7 +151,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '<td align="center">';
 
             $question_type = $question['fieldtype'] . 'Field';
-
 
             $question_types = PluginFormcreatorFields::getTypes();
             $classname = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
@@ -188,7 +181,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             }
 
             echo "<span class='form_control pointer'>";
-            if($question['order'] != 1) {
+            if ($question['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                         title="' . __('Bring up') . '"
                         onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'up\');" align="absmiddle"> ';
@@ -196,7 +189,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo "</span>";
 
             echo "<span class='form_control pointer'>";
-            if($question['order'] != $question_number) {
+            if ($question['order'] != $question_number) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                         title="' . __('Bring down') . '"
                         onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'down\');"> ';
@@ -206,7 +199,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             echo '</td>';
             echo '</tr>';
          }
-
 
          echo '<tr class="line' . (($i + 1) % 2) . '">';
          echo '<td colspan="6" id="add_question_td_' . $section['id'] . '" class="add_question_tds">';
@@ -252,8 +244,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * @param  [type] $input [description]
     * @return [type]        [description]
     */
-   private function checkBeforeSave($input)
-   {
+   private function checkBeforeSave($input) {
       // Control fields values :
       // - name is required
       if (isset($input['name'])) {
@@ -328,14 +319,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
          // A description field should have a description
          if ($input['fieldtype'] == 'description') {
-             if (isset($input['description'])
+            if (isset($input['description'])
                  && empty($input['description'])) {
                Session::addMessageAfterRedirect(
-                  __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
-                  false,
-                  ERROR);
+                __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
+                false,
+                ERROR);
                return array();
-             }
+            }
          }
 
          // format values for numbers
@@ -357,7 +348,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          // LDAP fields validation
          if ($input['fieldtype'] == 'ldapselect') {
             // Fields are differents for dropdown lists, so we need to replace these values into the good ones
-            if(isset($input['ldap_auth'])
+            if (isset($input['ldap_auth'])
                && !empty($input['ldap_auth'])) {
 
                $config_ldap = new AuthLDAP();
@@ -374,7 +365,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
                // Set specific error handler to catch LDAP errors
                if (!function_exists('warning_handler')) {
                   function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
-                     if (0 === error_reporting()) return false;
+                     if (0 === error_reporting()) {
+                        return false;
+                     }
                      throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
                   }
                }
@@ -386,7 +379,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   ldap_control_paged_result($ds, 1);
                   $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
                   $entries       = ldap_get_entries($ds, $sn);
-               } catch(Exception $e) {
+               } catch (Exception $e) {
                   Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
                }
 
@@ -410,12 +403,20 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // Add leading and trailing regex marker automaticaly
       if (isset($input['regex'])
           && !empty($input['regex'])) {
-         if (substr($input['regex'], 0, 1)  != '/')
-            if (substr($input['regex'], 0, 1)  != '^')   $input['regex'] = '/^' . $input['regex'];
-            else                                         $input['regex'] = '/' . $input['regex'];
-         if (substr($input['regex'], -1, 1) != '/')
-            if (substr($input['regex'], -1, 1)  != '$')  $input['regex'] = $input['regex'] . '$/';
-            else                                         $input['regex'] = $input['regex'] . '/';
+         if (substr($input['regex'], 0, 1)  != '/') {
+            if (substr($input['regex'], 0, 1)  != '^') {
+               $input['regex'] = '/^' . $input['regex'];
+            } else {
+               $input['regex'] = '/' . $input['regex'];
+            }
+         }
+         if (substr($input['regex'], -1, 1) != '/') {
+            if (substr($input['regex'], -1, 1)  != '$') {
+               $input['regex'] = $input['regex'] . '$/';
+            } else {
+               $input['regex'] = $input['regex'] . '/';
+            }
+         }
       }
 
       if (($input['fieldtype'] == 'urgency')) {
@@ -439,8 +440,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       global $DB;
 
       $input = $this->checkBeforeSave($input);
@@ -477,7 +477,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          if (!isset($input['show_logic']) || !isset($input['show_field'])
                || !isset($input['show_condition']) || !isset($input['show_value'])) {
                   $input['show_rule'] = 'always';
-               }
+         }
       }
 
       return $input;
@@ -491,8 +491,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       global $DB;
 
       if (!isset($input['_skip_checks'])
@@ -514,7 +513,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (!empty($input)
           && isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
-         if($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
+         if ($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
             $oldId = $this->fields['plugin_formcreator_sections_id'];
             $newId = $input['plugin_formcreator_sections_id'];
             $order = $this->fields['order'];
@@ -624,11 +623,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
             && isset($input['show_value']) && isset($input['show_logic'])) {
          // All arrays of condition exists
          if ($input['show_rule'] != 'always') {
-            if (! (count($input['show_field']) == count($input['show_condition'])
+            if ((count($input['show_field']) == count($input['show_condition'])
                   && count($input['show_value']) == count($input['show_logic'])
                   && count($input['show_field']) == count($input['show_value']))) {
-               // TODO : add error message ?
-            } else {
                // Arrays all have the same count and ahve at least one item
                $order = 0;
                while (count($input['show_field']) > 0) {
@@ -658,8 +655,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return nothing
    **/
-   public function post_purgeItem()
-   {
+   public function post_purgeItem() {
       global $DB;
 
       $table = self::getTable();
@@ -873,7 +869,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
             .'style="width: 90%">'.$this->fields['default_values'].'</textarea>';
       echo '<div id="dropdown_default_value_field">';
-      if((($this->fields['fieldtype'] == 'dropdown')
+      if ((($this->fields['fieldtype'] == 'dropdown')
             || ($this->fields['fieldtype'] == 'glpiselect'))
             && !empty($this->fields['values'])
             && class_exists($this->fields['values'])) {
@@ -1001,7 +997,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       // get All questions of the form and prepare their label for display in a dropdown
       $question = new static();
       $questionsInForm = $question->getQuestionsFromForm($form_id);
-      foreach($questionsInForm as $question) {
+      foreach ($questionsInForm as $question) {
          if (strlen($question->getField('name')) > 30) {
             $questions_tab[$question->getID()] = substr($question->getField('name'),
                   0,
@@ -1274,7 +1270,7 @@ JS;
 
       // Form questions conditions
       $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$oldQuestionId')");
-      foreach($rows as $conditions_id => $row) {
+      foreach ($rows as $conditions_id => $row) {
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_questions_id'] = $newQuestion->getID();
@@ -1313,7 +1309,7 @@ JS;
 
       if ($questions_id
           && isset($question['_conditions'])) {
-         foreach($question['_conditions'] as $condition) {
+         foreach ($question['_conditions'] as $condition) {
             PluginFormcreatorQuestion_Condition::import($questions_id, $condition);
          }
       }
@@ -1342,7 +1338,7 @@ JS;
       // get question conditions
       $question['_conditions'] = [];
       $all_conditions = $form_question_condition->find("plugin_formcreator_questions_id = ".$this->getID());
-      foreach($all_conditions as $conditions_id => $condition) {
+      foreach ($all_conditions as $conditions_id => $condition) {
          if ($form_question_condition->getFromDB($conditions_id)) {
             $question['_conditions'][] = $form_question_condition->export($remove_uuid);
          }

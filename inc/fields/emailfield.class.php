@@ -1,8 +1,7 @@
 <?php
 class PluginFormcreatorEmailField extends PluginFormcreatorField
 {
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       if ($canEdit) {
          $required = $this->fields['required'] ? ' required' : '';
 
@@ -16,12 +15,13 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       }
    }
 
-   public function isValid($value)
-   {
-      if (!parent::isValid($value)) return false;
+   public function isValid($value) {
+      if (!parent::isValid($value)) {
+         return false;
+      }
 
       // Specific format not set or well match
-      if(!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+      if (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
          Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
          return false;
       }
@@ -30,13 +30,11 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getName()
-   {
+   public static function getName() {
       return _n('Email', 'Emails', 1);
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 0,
@@ -51,8 +49,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['email'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

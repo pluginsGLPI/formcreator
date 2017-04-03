@@ -4,21 +4,18 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
 
-   public static function getTypeName($nb = 1)
-   {
+   public static function getTypeName($nb = 1) {
       return _n('Form category', 'Form categories', $nb, 'formcreator');
    }
 
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-   {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $env       = new self;
       $found_env = $env->find();
       $nb        = count($found_env);
       return self::createTabEntry(self::getTypeName($nb), $nb);
    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-   {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if ($item->getType()==__CLASS__) {
@@ -30,13 +27,12 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * {@inheritDoc}
     * @see CommonTreeDropdown::getAdditionalFields()
     */
-   public function getAdditionalFields()
-   {
+   public function getAdditionalFields() {
       return [
             [
                   'name'      => 'knowbaseitemcategories_id',
                   'type'      => 'dropdownValue',
-                  'label'     => __('Knowbase category','formcreator'),
+                  'label'     => __('Knowbase category', 'formcreator'),
                   'list'      => false
             ],
             [
@@ -122,7 +118,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'id'              => $rootId,
             'subcategories'   => array()
       );
-      foreach($items as $categoryId => $categoryItem) {
+      foreach ($items as $categoryId => $categoryItem) {
          $children['subcategories'][] = self::getCategoryTree($categoryId);
       }
 

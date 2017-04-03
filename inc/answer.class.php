@@ -9,8 +9,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -19,8 +18,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
@@ -30,8 +28,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0)
-   {
+   public static function getTypeName($nb = 0) {
       return _n('Answer', 'Answers', $nb, 'formcreator');
    }
 
@@ -43,23 +40,22 @@ class PluginFormcreatorAnswer extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          if (is_array($value)) {
-            foreach($value as $key2 => $value2) {
+            foreach ($value as $key2 => $value2) {
                $input[$key][$key2] = plugin_formcreator_encode($value2, false);
             }
-         } elseif(is_array(json_decode($value))) {
+         } else if (is_array(json_decode($value))) {
             $value = json_decode($value);
-            foreach($value as $key2 => $value2) {
+            foreach ($value as $key2 => $value2) {
                $value[$key2] = plugin_formcreator_encode($value2, false);
             }
             // Verify the constant exits (included in PHP 5.4+)
             if (defined('JSON_UNESCAPED_UNICODE')) {
                $input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
-            // If PHP 5.3, don't use the constant, but bug with UTF-8 languages like Russian...
+               // If PHP 5.3, don't use the constant, but bug with UTF-8 languages like Russian...
             } else {
                $input[$key] = json_encode($value);
             }
@@ -79,8 +75,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       return $this->prepareInputForAdd($input);
    }
 }

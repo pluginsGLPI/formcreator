@@ -4,7 +4,7 @@ include ("../../../inc/includes.php");
 // Check if plugin is activated...
 $plugin = new Plugin();
 
-if($plugin->isActivated("formcreator")) {
+if ($plugin->isActivated("formcreator")) {
 
    if (! plugin_formcreator_replaceHelpdesk()) {
       Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/formlist.php");

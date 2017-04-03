@@ -1,5 +1,5 @@
 html, body {
-	height: 100%;
+    height: 100%;
 }
 
 @-moz-keyframes ripple {
@@ -428,7 +428,7 @@ form.formcreator_form {
    font-style: italic;
    margin: 0 4px;
 }
-.div_show_condition_field, .div_show_condition_operator, 
+.div_show_condition_field, .div_show_condition_operator,
 .div_show_condition_value, .div_show_condition_logic,
 .div_show_condition_add, .div_show_condition_remove {
    //float: left;
@@ -457,7 +457,7 @@ form.formcreator_form {
    width:  300px !important;
 }
 .div_show_condition_logic {
-	width: 70px !important;
+    width: 70px !important;
 }
 .div_show_condition_add img, .div_show_condition_remove img {
    width: 12px;
@@ -878,7 +878,7 @@ a.plugin_formcreator_formTile_title {
    clear: both;
 }
 #plugin_formcreator_wizard_forms > div {
-	text-align: center;
+    text-align: center;
 }
 
 #plugin_formcreator_searchBar {

@@ -9,7 +9,7 @@ if ($plugin->isActivated("formcreator")) {
    $targetticket = new PluginFormcreatorTargetTicket();
 
    // Edit an existing target ticket
-   if(isset($_POST["update"])) {
+   if (isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
 
       $target = new PluginFormcreatorTarget();
@@ -19,7 +19,7 @@ if ($plugin->isActivated("formcreator")) {
       $targetticket->update($_POST);
       Html::back();
 
-   } elseif (isset($_POST['actor_role'])) {
+   } else if (isset($_POST['actor_role'])) {
       Session::checkRight("entity", UPDATE);
       $id          = (int) $_POST['id'];
       $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
@@ -36,14 +36,14 @@ if ($plugin->isActivated("formcreator")) {
       ));
       Html::back();
 
-   } elseif (isset($_GET['delete_actor'])) {
+   } else if (isset($_GET['delete_actor'])) {
       $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
       $targetTicket_actor->delete(array(
             'id'                                   => (int) $_GET['delete_actor']
       ));
       Html::back();
 
-   // Show target ticket form
+      // Show target ticket form
    } else {
       Html::header(
          __('Form Creator', 'formcreator'),
@@ -68,7 +68,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::footer();
    }
 
-// Or display a "Not found" error
+   // Or display a "Not found" error
 } else {
    Html::displayNotFoundError();
 }

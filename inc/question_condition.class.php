@@ -131,7 +131,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $question = new PluginFormcreatorQuestion();
       $questionsInForm = $question->getQuestionsFromForm($form_id);
       $questions_tab = array();
-      foreach($questionsInForm as $question) {
+      foreach ($questionsInForm as $question) {
          if (strlen($question->getField('name')) > 30) {
             $questions_tab[$question->getID()] = substr($question->getField('name'),
                   0,

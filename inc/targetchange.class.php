@@ -39,8 +39,7 @@ class PluginFormcreatorTargetChange extends CommonDBTM
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -49,13 +48,11 @@ class PluginFormcreatorTargetChange extends CommonDBTM
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
-   public static function getTypeName($nb = 1)
-   {
+   public static function getTypeName($nb = 1) {
       return _n('Target change', 'Target changes', $nb, 'formcreator');
    }
 
@@ -67,8 +64,7 @@ class PluginFormcreatorTargetChange extends CommonDBTM
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=array())
-   {
+   public function showForm($options=array()) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -351,7 +347,6 @@ EOS;
 
       echo '</tr>';
 
-
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
@@ -451,7 +446,6 @@ EOS;
          echo '</tr>';
       }
 
-
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
       // -------------------------------------------------------------------------------------------
@@ -472,7 +466,6 @@ EOS;
       }
 
       echo '</table>';
-
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
@@ -741,7 +734,6 @@ EOS;
 
       Html::closeForm();
 
-
       // => List of saved observers
       foreach ($actors['observer'] as $id => $values) {
          echo '<div>';
@@ -959,17 +951,16 @@ EOS;
     *
     * @return the modified $input array
     **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       // Control fields values :
       // - name is required
-      if(empty($input['title'])) {
+      if (empty($input['title'])) {
          Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
 
       // - comment is required
-      if(empty($input['comment'])) {
+      if (empty($input['comment'])) {
          Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
          return array();
       }
@@ -1013,8 +1004,7 @@ EOS;
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
-   public function save(PluginFormcreatorForm_Answer $formanswer)
-   {
+   public function save(PluginFormcreatorForm_Answer $formanswer) {
       global $DB;
 
       $datas   = array();
@@ -1039,7 +1029,6 @@ EOS;
 
       // Parse datas
       $fullform = $formanswer->getFullForm();
-
 
       $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
             $formanswer,
@@ -1115,7 +1104,6 @@ EOS;
          $requesters_id = $datas['_users_id_requester'];
       }
 
-
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
@@ -1141,8 +1129,8 @@ EOS;
             WHERE `glpi_profiles_users`.`users_id` = $requesters_id
             ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
-            while($data_entities[] = $DB->fetch_array($res_entities)) {
-
+            while ($entity = $DB->fetch_array($res_entities)) {
+               $data_entities[] = $entity;
             }
             $first_entity = array_shift($data_entities);
             $datas['entities_id'] = $first_entity['entities_id'];
@@ -1243,33 +1231,33 @@ EOS;
                       WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
                       AND `plugin_formcreator_question_id` IN (" . $this->fields['tag_questions'] . ")";
                   $result = $DB->query($query);
-                  while ($line = $DB->fetch_array($result)) {
-                     $tab = json_decode($line['answer']);
-                     if (is_array($tab)) {
-                        $tags = array_merge($tags, $tab);
-                     }
-                  }
+            while ($line = $DB->fetch_array($result)) {
+               $tab = json_decode($line['answer']);
+               if (is_array($tab)) {
+                  $tags = array_merge($tags, $tab);
                }
+            }
+         }
 
                // Add specific tags
-               if ($this->fields['tag_type'] == 'specifics'
+         if ($this->fields['tag_type'] == 'specifics'
                      || $this->fields['tag_type'] == 'questions_and_specific'
                      || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
                      && (!empty($this->fields['tag_specifics']))) {
 
-                        $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
-                     }
+            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+         }
 
                      $tags = array_unique($tags);
 
                      // Save tags in DB
-                     foreach ($tags as $tag) {
-                        $tagObj->add(array(
-                              'plugin_tag_tags_id' => $tag,
-                              'items_id'           => $ticketID,
-                              'itemtype'           => 'Ticket',
-                        ));
-                     }
+         foreach ($tags as $tag) {
+            $tagObj->add(array(
+            'plugin_tag_tags_id' => $tag,
+            'items_id'           => $ticketID,
+            'itemtype'           => 'Ticket',
+            ));
+         }
       }
 
       // Add link between Ticket and FormAnswer
@@ -1287,10 +1275,14 @@ EOS;
       $result = $DB->query($query);
       while ($actor = $DB->fetch_array($result)) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) continue;
+         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
+            continue;
+         }
 
          // If there is only one requester, it have already been added, so continue to next actors
-         if ($solo_requester && ($actor['actor_role'] == 'requester'))                     continue;
+         if ($solo_requester && ($actor['actor_role'] == 'requester')) {
+            continue;
+         }
 
          switch ($actor['actor_role']) {
             case 'requester' : $role = CommonITILActor::REQUESTER;   break;
@@ -1362,7 +1354,7 @@ EOS;
       // Attach documents to ticket
       $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
                                AND items_id = ".$formanswer->getID());
-      if(count($found) > 0) {
+      if (count($found) > 0) {
          foreach ($found as $document) {
             $docItem->add(array(
                   'documents_id' => $document['documents_id'],
@@ -1413,11 +1405,11 @@ EOS;
       $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
             '`order` ASC');
       $tab_section = array();
-      foreach($found as $section_item) {
+      foreach ($found as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $query_questions = "SELECT `questions`.*, `answers`.`answer`
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers

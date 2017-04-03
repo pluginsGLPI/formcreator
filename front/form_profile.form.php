@@ -8,7 +8,7 @@ $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
    if (isset($_POST["profiles_id"]) && isset($_POST["form_id"])) {
 
-      if(isset($_POST['access_rights'])) {
+      if (isset($_POST['access_rights'])) {
          $form = new PluginFormcreatorForm();
          $form->update(array(
             'id'            => $_POST['form_id'],
@@ -22,7 +22,7 @@ if ($plugin->isActivated("formcreator")) {
       ));
       $table = PluginFormcreatorForm_Profile::getTable();
 
-      foreach($_POST["profiles_id"] as $profile_id) {
+      foreach ($_POST["profiles_id"] as $profile_id) {
          if ($profile_id != 0) {
             $form_profile = new PluginFormcreatorForm_Profile();
             $form_profile->add(array(
@@ -37,7 +37,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::back();
    }
 
-// Or display a "Not found" error
-}else{
+   // Or display a "Not found" error
+} else {
    Html::displayNotFoundError();
 }

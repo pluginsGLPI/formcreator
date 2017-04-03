@@ -17,7 +17,7 @@ if ($_REQUEST['wizard'] == 'categories') {
    $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
    $helpdeskHome = isset($_REQUEST['helpdeskHome']) ? $_REQUEST['helpdeskHome'] != '0' : false;
    plugin_formcreator_showWizardForms($categoriesId, $keywords, $helpdeskHome);
-} elseif ($_REQUEST['wizard'] == 'toggle_menu') {
+} else if ($_REQUEST['wizard'] == 'toggle_menu') {
    $_SESSION['plugin_formcreator_toggle_menu'] = isset($_SESSION['plugin_formcreator_toggle_menu'])
                                                    ? !$_SESSION['plugin_formcreator_toggle_menu']
                                                    : true;
@@ -28,7 +28,7 @@ function plugin_formcreator_showWizardCategories($helpdesk = true) {
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
-function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords, $helpdeskHome = false) {
+function plugin_formcreator_showWizardForms($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
    $form = new PluginFormcreatorForm();
    $formList = $form->showFormList($rootCategory, $keywords, $helpdeskHome);
    echo json_encode($formList, JSON_UNESCAPED_SLASHES);

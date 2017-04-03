@@ -1,13 +1,11 @@
 <?php
 class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 {
-   public static function getName()
-   {
+   public static function getName() {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
          'required'       => 1,
          'default_values' => 0,
@@ -22,8 +20,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['glpiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

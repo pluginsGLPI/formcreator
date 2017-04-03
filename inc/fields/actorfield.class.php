@@ -3,13 +3,11 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 {
    const IS_MULTIPLE    = true;
 
-   public static function getName()
-   {
+   public static function getName() {
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
 
-   public function displayField($canEdit = true)
-   {
+   public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
       $readonly = $canEdit ? 'false' : 'true';
@@ -96,7 +94,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
    public function deserializeValue($value) {
       $deserialized  = array();
-      $serialized = explode(',',$value);
+      $serialized = explode(',', $value);
       if ($serialized !== null) {
          foreach ($serialized as $item) {
             $item = trim($item);
@@ -123,7 +121,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $unknownUsers = array();
       $knownUsers = array();
       $idToCheck = array();
-      foreach($answerValue as $item) {
+      foreach ($answerValue as $item) {
          $item = trim($item);
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
             $unknownUsers[$item] = $item;
@@ -139,8 +137,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return $knownUsers + $unknownUsers;
    }
 
-   public function isValid($value)
-   {
+   public function isValid($value) {
       $sanitized = $this->sanitizeValue($value);
 
       // Ignore empty values
@@ -157,8 +154,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return count($sanitized) == count($value);
    }
 
-   public function getValue()
-   {
+   public function getValue() {
       if (isset($this->fields['answer'])) {
          $value = $this->sanitizeValue($this->fields['answer']);
       } else {
@@ -168,8 +164,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return implode(',', $value);
    }
 
-   public static function getPrefs()
-   {
+   public static function getPrefs() {
       return array(
             'required'       => 1,
             'default_values' => 1,
@@ -184,8 +179,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       );
    }
 
-   public static function getJSFields()
-   {
+   public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }

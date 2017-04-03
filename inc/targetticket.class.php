@@ -69,8 +69,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -79,13 +78,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
-   public static function getTypeName($nb = 1)
-   {
+   public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
    }
 
@@ -97,8 +94,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=array())
-   {
+   public function showForm($options=array()) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -185,7 +181,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       echo '</table>';
-
 
       // Buttons
       echo '<table class="tab_cadre_fixe">';
@@ -406,7 +401,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-           break;
+            break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
@@ -476,7 +471,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo "<hr>";
 
       Html::closeForm();
-
 
       // => List of saved observers
       foreach ($actors['observer'] as $id => $values) {
@@ -706,21 +700,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
       // Control fields values :
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
          // - name is required
-         if(empty($input['title'])) {
+         if (empty($input['title'])) {
             Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
             return array();
          }
 
          // - comment is required
-         if(empty($input['comment'])) {
+         if (empty($input['comment'])) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return array();
          }
@@ -941,8 +934,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                       WHERE `glpi_profiles_users`.`users_id` = $requesters_id
                      ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
-            while($data_entities[] = $DB->fetch_array($res_entities)) {
-
+            while ($entity = $DB->fetch_array($res_entities)) {
+               $data_entities[] = $entity;
             }
             $first_entity = array_shift($data_entities);
             $datas['entities_id'] = $first_entity['entities_id'];
@@ -1178,7 +1171,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // Attach documents to ticket
       $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
                                AND items_id = ".$formanswer->getID());
-      if(count($found) > 0) {
+      if (count($found) > 0) {
          foreach ($found as $document) {
             $docItem->add(array(
                'documents_id' => $document['documents_id'],
@@ -1285,11 +1278,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
                                     '`order` ASC');
       $tab_section = array();
-      foreach($found as $section_item) {
+      foreach ($found as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $query_questions = "SELECT `questions`.*, `answers`.`answer`
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
@@ -1333,7 +1326,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) continue;
+         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
+            continue;
+         }
 
          switch ($actor['actor_type']) {
             case 'creator' :
@@ -1492,11 +1487,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
       $tab_section = array();
-      foreach($found_section as $section_item) {
+      foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $sectionList = "'" . implode(', ', $tab_section) . "'";
          $question = new PluginFormcreatorQuestion();
          $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
@@ -1520,7 +1515,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       if ($targetitems_id
           && isset($target_data['_actors'])) {
-         foreach($target_data['_actors'] as $actor) {
+         foreach ($target_data['_actors'] as $actor) {
             PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
          }
       }
@@ -1554,11 +1549,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
       $tab_section = array();
-      foreach($found_section as $section_item) {
+      foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
-      if(!empty($tab_section)) {
+      if (!empty($tab_section)) {
          $sectionList = "'" . implode(', ', $tab_section) . "'";
          $question = new PluginFormcreatorQuestion();
          $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
@@ -1574,7 +1569,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             $content = str_replace("##question_$id##", "##question_$uuid##", $content);
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['comment'] = $content;
-             }
+         }
       }
 
       // remove key and fk
@@ -1741,20 +1736,20 @@ EOS;
       if ($this->fields['due_date_rule'] != 'answer'
             && $this->fields['due_date_rule'] != 'calcul') {
                echo '<div id="due_date_questions" style="display:none">';
-            } else {
-               echo '<div id="due_date_questions">';
-            }
+      } else {
+         echo '<div id="due_date_questions">';
+      }
             Dropdown::showFromArray('due_date_question', $questions_list, array(
                   'value' => $this->fields['due_date_question']
             ));
             echo '</div>';
 
-            if ($this->fields['due_date_rule'] != 'ticket'
+      if ($this->fields['due_date_rule'] != 'ticket'
                   && $this->fields['due_date_rule'] != 'calcul') {
-                     echo '<div id="due_date_time" style="display:none">';
-                  } else {
-                     echo '<div id="due_date_time">';
-                  }
+         echo '<div id="due_date_time" style="display:none">';
+      } else {
+         echo '<div id="due_date_time">';
+      }
                   Dropdown::showNumber("due_date_value", array(
                         'value' => $this->fields['due_date_value'],
                         'min'   => -30,

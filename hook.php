@@ -4,8 +4,7 @@
  *
  * @return boolean True if success
  */
-function plugin_formcreator_install()
-{
+function plugin_formcreator_install() {
    spl_autoload_register('plugin_formcreator_autoload');
 
    $version   = plugin_version_formcreator();
@@ -23,8 +22,7 @@ function plugin_formcreator_install()
  *
  * @return boolean True if success
  */
-function plugin_formcreator_uninstall()
-{
+function plugin_formcreator_uninstall() {
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
    $install->uninstall();
@@ -33,8 +31,7 @@ function plugin_formcreator_uninstall()
 /**
  * Define Dropdown tables to be manage in GLPI :
  */
-function plugin_formcreator_getDropdown()
-{
+function plugin_formcreator_getDropdown() {
    return array(
        'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
    );
@@ -87,8 +84,7 @@ function plugin_formcreator_getCondition($itemtype) {
  * @param  String $itemtype    Itemtype for the search engine
  * @return String          Specific search request
  */
-function plugin_formcreator_addDefaultWhere($itemtype)
-{
+function plugin_formcreator_addDefaultWhere($itemtype) {
    $condition = "";
    $table = getTableForItemType($itemtype);
    switch ($itemtype) {
@@ -119,14 +115,14 @@ function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $link
    $join = "";
    switch ($itemtype) {
       case 'PluginFormcreatorIssue':
-            if ($new_table == 'glpi_ticketvalidations') {
-               foreach ($already_link_tables as $table) {
-                  if (strpos($table, $new_table) === 0) {
-                     $AS = $table;
-                  }
+         if ($new_table == 'glpi_ticketvalidations') {
+            foreach ($already_link_tables as $table) {
+               if (strpos($table, $new_table) === 0) {
+                  $AS = $table;
                }
-               $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
             }
+            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
+         }
       break;
    }
 
@@ -196,17 +192,16 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
          if (count($tocheck)) {
             if ($nott) {
-               return $link." `$table`.`$field` NOT IN ('".implode("','",$tocheck)."')";
+               return $link." `$table`.`$field` NOT IN ('".implode("','", $tocheck)."')";
             }
-            return $link." `$table`.`$field` IN ('".implode("','",$tocheck)."')";
+            return $link." `$table`.`$field` IN ('".implode("','", $tocheck)."')";
          }
          break;
    }
 }
 
 
-function plugin_formcreator_AssignToTicket($types)
-{
+function plugin_formcreator_AssignToTicket($types) {
    $types['PluginFormcreatorForm_Answer'] = PluginFormcreatorForm_Answer::getTypeName();
 
    return $types;

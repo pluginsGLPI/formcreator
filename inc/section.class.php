@@ -9,8 +9,7 @@ class PluginFormcreatorSection extends CommonDBChild
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -19,8 +18,7 @@ class PluginFormcreatorSection extends CommonDBChild
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
@@ -30,8 +28,7 @@ class PluginFormcreatorSection extends CommonDBChild
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0)
-   {
+   public static function getTypeName($nb = 0) {
       return _n('Section', 'Sections', $nb, 'formcreator');
    }
 
@@ -43,8 +40,7 @@ class PluginFormcreatorSection extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForAdd($input)
-   {
+   public function prepareInputForAdd($input) {
       global $DB;
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -54,7 +50,7 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Control fields values :
       // - name is required
-      if(!isset($input['name']) ||
+      if (!isset($input['name']) ||
          (isset($input['name']) && empty($input['name'])) ) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
@@ -86,8 +82,7 @@ class PluginFormcreatorSection extends CommonDBChild
     *
     * @return the modified $input array
    **/
-   public function prepareInputForUpdate($input)
-   {
+   public function prepareInputForUpdate($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
@@ -95,7 +90,7 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Control fields values :
       // - name is required
-      if(isset($input['name'])
+      if (isset($input['name'])
             && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
@@ -117,8 +112,7 @@ class PluginFormcreatorSection extends CommonDBChild
     *
     * @return nothing
    **/
-   public function post_purgeItem()
-   {
+   public function post_purgeItem() {
       global $DB;
 
       $table = self::getTable();
@@ -154,7 +148,7 @@ class PluginFormcreatorSection extends CommonDBChild
 
       // Form questions
       $rows = $section_question->find("`plugin_formcreator_sections_id` = '$oldSectionId'", "`order` ASC");
-      foreach($rows as $questions_id => $row) {
+      foreach ($rows as $questions_id => $row) {
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_sections_id'] = $newSection->getID();
@@ -168,7 +162,7 @@ class PluginFormcreatorSection extends CommonDBChild
       // Form questions conditions
       $questionIds = implode("', '", array_keys($tab_questions));
       $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-      foreach($rows as $conditions_id => $row) {
+      foreach ($rows as $conditions_id => $row) {
          unset($row['id'],
                $row['uuid']);
          if (isset($tab_questions[$row['show_field']])) {
@@ -252,12 +246,14 @@ class PluginFormcreatorSection extends CommonDBChild
           && isset($section['_questions'])) {
          // sort questions by order
          usort($section['_questions'], function ($a, $b) {
-            if ($a['order'] == $b['order']) return 0;
-               return ($a['order'] < $b['order']) ? -1 : 1;
+            if ($a['order'] == $b['order']) {
+               return 0;
             }
+               return ($a['order'] < $b['order']) ? -1 : 1;
+         }
          );
 
-         foreach($section['_questions'] as $question) {
+         foreach ($section['_questions'] as $question) {
             PluginFormcreatorQuestion::import($sections_id, $question);
          }
       }
@@ -286,7 +282,7 @@ class PluginFormcreatorSection extends CommonDBChild
       // get questions
       $section['_questions'] = [];
       $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
-      foreach($all_questions as $questions_id => $question) {
+      foreach ($all_questions as $questions_id => $question) {
          if ($form_question->getFromDB($questions_id)) {
             $section['_questions'][] = $form_question->export($remove_uuid);
          }
@@ -328,7 +324,7 @@ class PluginFormcreatorSection extends CommonDBChild
       echo '<table class="tab_cadre_fixe">';
       echo '<tr>';
       echo '<th colspan="2">';
-      if($ID == 0) {
+      if ($ID == 0) {
          echo  __('Add a section', 'formcreator');
       } else {
          echo  __('Edit a section', 'formcreator');
@@ -346,7 +342,7 @@ class PluginFormcreatorSection extends CommonDBChild
       echo '<input type="hidden" name="id" value="'.$ID.'" />';
       echo '<input type="hidden" name="uuid" value="'.$uuid.'" />';
       echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($_REQUEST['form_id']).'" />';
-      if($ID == 0) {
+      if ($ID == 0) {
          echo '<input type="hidden" name="add" value="1" />';
          echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
       } else {

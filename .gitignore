@@ -1,0 +1,8 @@
+dist/
+vendor/
+.gh_token
+*.min.*
+.idea
+.settings
+.buildpath
+.project

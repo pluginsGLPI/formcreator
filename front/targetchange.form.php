@@ -9,7 +9,7 @@ if ($plugin->isActivated("formcreator")) {
    $targetticket = new PluginFormcreatorTargetChange();
 
    // Edit an existing target ticket
-   if(isset($_POST["update"])) {
+   if (isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
 
       $target = new PluginFormcreatorTarget();
@@ -19,7 +19,7 @@ if ($plugin->isActivated("formcreator")) {
       $targetticket->update($_POST);
       Html::back();
 
-   } elseif (isset($_POST['actor_role'])) {
+   } else if (isset($_POST['actor_role'])) {
       Session::checkRight("entity", UPDATE);
       $id          = (int) $_POST['id'];
       $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
@@ -36,7 +36,7 @@ if ($plugin->isActivated("formcreator")) {
       ));
       Html::back();
 
-   } elseif (isset($_GET['delete_actor'])) {
+   } else if (isset($_GET['delete_actor'])) {
       $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
       $targetChange_actor->delete(array(
             'id'                                   => (int) $_GET['delete_actor']
