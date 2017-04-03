@@ -13,6 +13,7 @@ before_script:
   - composer install --no-dev
   - php tools/cliinstall.php --db=glpi-test --user=travis --tests
   - cd plugins/formcreator
+  - rm composer.lock
   - composer install
 
 script:
