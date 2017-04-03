@@ -168,6 +168,7 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
    $migration->addKey('glpi_plugin_formcreator_forms_answers', array('entities_id', 'is_recursive'));
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'requester_id');
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'validator_id');
+   $migration->addField('glpi_plugin_formcreator_forms_answers', 'is_deleted', 'bool');
 }
 
 function plugin_formcreator_updateForm_Profile(Migration $migration) {

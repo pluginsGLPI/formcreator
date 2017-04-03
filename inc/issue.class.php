@@ -57,6 +57,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                LEFT JOIN `glpi_items_tickets` AS `itic`
                   ON `itic`.`items_id` = `fanswer`.`id`
                   AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+               WHERE `fanswer`.`is_deleted` = '0'
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`tickets_id`) != 1
 
