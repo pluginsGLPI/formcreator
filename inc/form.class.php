@@ -826,7 +826,7 @@ class PluginFormcreatorForm extends CommonDBTM
       // Display form
       echo "<form name='formcreator_form'".$item->getID()."' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc']."/plugins/formcreator/front/form.form.php'
-               class='formcreator_form form_horizontal' onsubmit='return validateForm(this);'>";
+               class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
       echo $item->fields['name']."&nbsp;";
       echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'

@@ -162,8 +162,7 @@ function plugin_init_formcreator () {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
 
             // Add specific JavaScript
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
+            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
          }
 
          if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
