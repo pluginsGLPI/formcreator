@@ -179,7 +179,7 @@ class PluginFormcreatorForm extends CommonDBTM
                '1' => __('Active'),
             ), array(
                'value'               => $values[$field],
-               'display_emptychoice' => true,
+               'display_emptychoice' => false,
                'display'             => false
             ));
             break;
