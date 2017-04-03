@@ -454,6 +454,9 @@ class PluginFormcreatorForm extends CommonDBTM
          case "PluginFormcreatorForm":
             return __('Preview');
             break;
+         case 'Central':
+            return _n('Form', 'Forms', 2, 'formcreator');
+            break;
       }
       return '';
    }
@@ -480,6 +483,10 @@ class PluginFormcreatorForm extends CommonDBTM
             echo '<div style="text-align: left">';
             $item->displayUserForm($item);
             echo '</div>';
+            break;
+         case 'central.php':
+            $form = new static();
+            $form->showForCentral();
             break;
       }
    }
@@ -1065,7 +1072,7 @@ class PluginFormcreatorForm extends CommonDBTM
          // If field was not post, it's value is empty
          if (isset($_POST['formcreator_field_' . $id])) {
             $datas[$id] = is_array($_POST['formcreator_field_' . $id])
-                           ? json_encode($_POST['formcreator_field_' . $id])
+                           ? json_encode($_POST['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
                            : $_POST['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
@@ -1153,12 +1160,12 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Create default request type
       $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result = $DB->query($query) or die ($DB->error());
+      $result = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       if ($DB->numrows($result) > 0) {
          list($requesttype) = $DB->fetch_array($result);
       } else {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          $requesttype = $DB->insert_id();
       }
 
@@ -1167,7 +1174,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          // Create Forms table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `entities_id` int(11) NOT NULL DEFAULT '0',
                      `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
                      `access_rights` tinyint(1) NOT NULL DEFAULT '1',
@@ -1183,12 +1190,15 @@ class PluginFormcreatorForm extends CommonDBTM
                      `validation_required` tinyint(1) NOT NULL DEFAULT '0',
                      `usage_count` int(11) NOT NULL DEFAULT '0',
                      `is_default` tinyint(1) NOT NULL DEFAULT '0',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `entities_id` (`entities_id`),
+                     INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Migration from previous version
@@ -1227,7 +1237,7 @@ class PluginFormcreatorForm extends CommonDBTM
                             `description` = '" . plugin_formcreator_encode($line['description']) . "',
                             `content`     = '" . plugin_formcreator_encode($line['content']) . "'
                           WHERE `id` = " . (int) $line['id'];
-         $DB->query($query_update) or die ($DB->error());
+         $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
       }
 
       /**
@@ -1245,7 +1255,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Re-add FULLTEXT index
       $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
       $migration->addField($table, 'usage_count', 'integer', array('after' => 'validation_required',
                                                                    'value' => '0'));
@@ -1266,7 +1276,7 @@ class PluginFormcreatorForm extends CommonDBTM
                   (NULL, '" . __CLASS__ . "', 7, 4, 0),
                   (NULL, '" . __CLASS__ . "', 8, 5, 0),
                   (NULL, '" . __CLASS__ . "', 9, 6, 0);";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
 
       // add uuid to forms
@@ -1274,6 +1284,8 @@ class PluginFormcreatorForm extends CommonDBTM
          $migration->addField($table, 'uuid', 'string', array('after' => 'is_default'));
       }
 
+      $migration->addKey($table, 'entities_id');
+      $migration->addKey($table, 'plugin_formcreator_categories_id');
       $migration->migrationOneTable($table);
 
       // fill missing uuid (force update of forms, see self::prepareInputForUpdate)
@@ -1348,7 +1360,7 @@ class PluginFormcreatorForm extends CommonDBTM
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$form_validator->add($row)) {
+         if (!$form_profile->add($row)) {
             return false;
          }
       }
@@ -1407,8 +1419,8 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach($rows as $targets_id => $target_values) {
          unset($target_values['id'],
                $target_values['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$new_targets_id = $target->add($row)) {
+         $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+         if (!$new_targets_id = $target->add($target_values)) {
             return false;
          }
 
@@ -1442,7 +1454,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
          $update_target = "UPDATE `glpi_plugin_formcreator_targets` SET
                               `items_id` = " . $new_target_ticket_id . "
-                           WHERE `id` = " . $new_target_id;
+                           WHERE `id` = " . $new_targets_id;
          $DB->query($update_target);
 
          // Form target tickets actors
@@ -1653,31 +1665,86 @@ class PluginFormcreatorForm extends CommonDBTM
    public function showImportForm() {
       global $CFG_GLPI;
 
-      echo "<form name='form' method='post' action='".
-            PluginFormcreatorForm::getFormURL().
-            "?import_send=1' enctype=\"multipart/form-data\">";
+      $documentType = new DocumentType();
+      $jsonTypeExists = $documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'");
+      $jsonTypeEnabled = $jsonTypeExists && $documentType->getField('is_uploadable');
+      $canAddType = $documentType->canCreate();
+      $canUpdateType = $documentType->canUpdate();
 
-      echo "<div class='spaced' id='tabsbody'>";
-      echo "<table class='tab_cadre_fixe' id='mainformtable'>";
-      echo "<tr class='headerRow'>";
-      echo "<th>";
-      echo __("Import forms");
-      echo "</th>";
-      echo "</tr>";
-      echo "<tr>";
-      echo "<td>";
-      echo Html::file(array('name' => 'json_file'));
-      echo "</td>";
-      echo "</tr>";
-      echo "<td class='center'>";
-      echo Html::submit(_x('button','Send'), array('name' => 'import_send'));
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr>";
-      echo "</table>";
-      echo "</div>";
+      if (! ($jsonTypeExists && $jsonTypeEnabled)) {
+         if (!$jsonTypeExists) {
+            $message = __('Upload of JSON files not allowed.', 'formcreator');
+            if ($canAddType) {
+               $destination = PluginFormcreatorForm::getFormURL();
+               $message .= __('You may allow JSON files right now.', 'formcreator');
+               $button = Html::submit(_x('button','Create', 'formcreator'), array('name' => 'filetype_create'));
+            } else {
+               $destination = PluginFormcreatorForm::getSearchURL();
+               $message .= __('Please contact your GLPI administrator.', 'formcreator');
+               $button = Html::submit(_x('button','Back', 'formcreator'), array('name' => 'filetype_back'));
+            }
+         } else {
+            $message = __('Upload of JSON files not enabled.', 'formcreator');
+            if ($canUpdateType) {
+               $destination = PluginFormcreatorForm::getFormURL();
+               $message .= __('You may enable JSON files right now.', 'formcreator');
+               $button = Html::submit(_x('button','Enable', 'formcreator'), array('name' => 'filetype_enable'));
+            } else {
+               $destination = PluginFormcreatorForm::getSearchURL();
+               $message .= __('Please contact your GLPI administrator.', 'formcreator');
+               $button = Html::submit(_x('button','Back', 'formcreator'), array('name' => 'filetype_back'));
+            }
+         }
+         echo '<div class="spaced" id="tabsbody">';
+         echo "<form name='form' method='post' action='".
+               $destination."'>";
+         echo '<table class="tab_cadre_fixe" id="mainformtable">';
+         echo '<tr class="headerRow">';
+         echo '<th>';
+         echo __('Import forms');
+         echo '</th>';
+         echo '</tr>';
+         echo '<tr>';
+         echo '<td class="center">';
+         echo $message;
+         echo '</td>';
+         echo '</tr>';
+         echo '<td class="center">';
+         echo $button;
+         echo '</td>';
+         echo '</tr>';
+         echo '<tr>';
+         echo '</table>';
+         echo '</div>';
+         Html::closeForm();
+         echo '</div>';
+      } else {
+         echo "<form name='form' method='post' action='".
+               PluginFormcreatorForm::getFormURL().
+               "' enctype=\"multipart/form-data\">";
 
-      Html::closeForm();
+         echo "<div class='spaced' id='tabsbody'>";
+         echo "<table class='tab_cadre_fixe' id='mainformtable'>";
+         echo "<tr class='headerRow'>";
+         echo "<th>";
+         echo __("Import forms");
+         echo "</th>";
+         echo "</tr>";
+         echo "<tr>";
+         echo "<td>";
+         echo Html::file(array('name' => 'json_file'));
+         echo "</td>";
+         echo "</tr>";
+         echo "<td class='center'>";
+         echo Html::submit(_x('button','Send'), array('name' => 'import_send'));
+         echo "</td>";
+         echo "</tr>";
+         echo "<tr>";
+         echo "</table>";
+         echo "</div>";
+
+         Html::closeForm();
+      }
    }
 
    /**
@@ -1781,5 +1848,167 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       return $forms_id;
+   }
+
+   public function createDocumentType() {
+      $documentType = new DocumentType();
+      $success = $documentType->add(array(
+            'name'            => 'JSON file',
+            'ext'             => 'json',
+            'icon'            => '',
+            'is_uploadable'   => '1'
+      ));
+      if (!$success) {
+         Session::addMessageAfterRedirect(__('Failed to create JSON document type', 'formcreator'));
+      }
+   }
+
+   public function enableDocumentType() {
+      $documentType = new DocumentType();
+      if (!$documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'")) {
+         Session::addMessageAfterRedirect(__('JSON document type not found', 'formcreator'));
+      } else {
+         $success = $documentType->update(array(
+               'id'              => $documentType->getID(),
+               'is_uploadable'   => '1'
+         ));
+         if (!$success) {
+            Session::addMessageAfterRedirect(__('Failed to update JSON document type', 'formcreator'));
+         }
+      }
+   }
+
+   /**
+    * show list of available forms
+    */
+   public function showForCentral() {
+      global $DB, $CFG_GLPI;
+
+      // Define tables
+      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
+      $form_table = getTableForItemType('PluginFormcreatorForm');
+      $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
+      $where      = getEntitiesRestrictRequest("", $form_table, "", "", true, false);
+      $language   = $_SESSION['glpilanguage'];
+
+      // Show form whithout table
+      $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+                      FROM $form_table
+                      WHERE $form_table.`plugin_formcreator_categories_id` = 0
+                      AND $form_table.`is_active` = 1
+                      AND $form_table.`is_deleted` = 0
+                      AND $form_table.`helpdesk_home` = 1
+                      AND ($form_table.`language` = '{$_SESSION['glpilanguage']}' OR $form_table.`language` IN (0, '', NULL))
+                      AND $where
+                      AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                         SELECT plugin_formcreator_forms_id
+                         FROM $table_fp
+                         WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
+                      ORDER BY $form_table.name ASC";
+      $result_forms = $DB->query($query_forms);
+
+      // Show categories wicth have at least one form user can access
+      $query  = "SELECT $cat_table.`name`, $cat_table.`id`
+                 FROM $cat_table
+                 WHERE 0 < (
+                 SELECT COUNT($form_table.id)
+                 FROM $form_table
+                 WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
+                 AND $form_table.`is_active` = 1
+                 AND $form_table.`is_deleted` = 0
+                 AND $form_table.`helpdesk_home` = 1
+                 AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
+                 AND $where
+                 AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+                    SELECT plugin_formcreator_forms_id
+                    FROM $table_fp
+                    WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
+                 )
+                 ORDER BY $cat_table.`name` ASC";
+      $result = $DB->query($query);
+      if ($DB->numrows($result) > 0 || $DB->numrows($result_forms) > 0) {
+         echo '<table class="tab_cadrehov homepage_forms_container" id="homepage_forms_container">';
+         echo '<tr class="noHover">';
+         echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
+         echo '</tr>';
+
+         if ($DB->numrows($result_forms) > 0) {
+            echo '<tr class="noHover"><th>' . __('Forms without category', 'formcreator') . '</th></tr>';
+            $i = 0;
+            while ($form = $DB->fetch_array($result_forms)) {
+               $i++;
+               echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
+               echo '<td>';
+               echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
+                   onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+               echo '&nbsp;';
+               echo '<a href="' . $CFG_GLPI['root_doc']
+               . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
+                  title="' . plugin_formcreator_encode($form['description']) . '">'
+                              . $form['name']
+                              . '</a></td>';
+                              echo '</tr>';
+                              echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
+                              echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
+                              echo '</tr>';
+            }
+         }
+
+         if ($DB->numrows($result) > 0) {
+            // For each categories, show the list of forms the user can fill
+            $i = 0;
+            while ($category = $DB->fetch_array($result)) {
+               $categoryId = $category['id'];
+               echo '<tr class="noHover"><th>' . $category['name'] . '</th></tr>';
+               $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
+               FROM $form_table
+               WHERE $form_table.`plugin_formcreator_categories_id` = '$categoryId'
+               AND $form_table.`is_active` = 1
+               AND $form_table.`is_deleted` = 0
+               AND $form_table.`helpdesk_home` = 1
+               AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
+               AND $where
+               AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
+               SELECT plugin_formcreator_forms_id
+               FROM $table_fp
+               WHERE profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
+               ORDER BY $form_table.name ASC";
+               $result_forms = $DB->query($query_forms);
+               $i = 0;
+               while ($form = $DB->fetch_array($result_forms)) {
+                  $i++;
+                  echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
+                  echo '<td>';
+                  echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/plus.png" alt="+" title=""
+                      onclick="showDescription(' . $form['id'] . ', this)" align="absmiddle" style="cursor: pointer">';
+                  echo '&nbsp;';
+                  echo '<a href="' . $CFG_GLPI['root_doc']
+                  . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
+                     title="' . plugin_formcreator_encode($form['description']) . '">'
+                                 . $form['name']
+                                 . '</a></td>';
+                                 echo '</tr>';
+                                 echo '<tr id="desc' . $form['id'] . '" class="line' . ($i % 2) . ' form_description">';
+                                 echo '<td><div>' . $form['description'] . '&nbsp;</div></td>';
+                                 echo '</tr>';
+               }
+            }
+         }
+         echo '</table>';
+         echo '<br />';
+         echo '<script type="text/javascript">
+            function showDescription(id, img){
+               if(img.alt == "+") {
+                 img.alt = "-";
+                 img.src = "' . $CFG_GLPI['root_doc'] . '/pics/moins.png";
+                 document.getElementById("desc" + id).style.display = "table-row";
+               } else {
+                 img.alt = "+";
+                 img.src = "' . $CFG_GLPI['root_doc'] . '/pics/plus.png";
+                 document.getElementById("desc" + id).style.display = "none";
+               }
+            }
+         </script>';
+      }
    }
 }

@@ -53,16 +53,18 @@ class PluginFormcreatorSection extends CommonDBChild
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
                      `order` int(11) NOT NULL DEFAULT '0',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          /**
           * Migration of special chars from previous versions
@@ -76,7 +78,7 @@ class PluginFormcreatorSection extends CommonDBChild
             $query_update = "UPDATE `$table` SET
                                `name` = '".plugin_formcreator_encode($line['name'])."'
                              WHERE `id` = ".$line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
       }
 
@@ -129,8 +131,13 @@ class PluginFormcreatorSection extends CommonDBChild
       $obj = new self();
       $all_sections = $obj->find("uuid IS NULL");
       foreach($all_sections as $sections_id => $section) {
-         $obj->update(array('id' => $sections_id));
+         $obj->update(array(
+               'id' => $sections_id,
+               '_skip_checks' => true,
+         ));
       }
+
+      $migration->addKey($table, 'plugin_formcreator_forms_id');
 
       return true;
    }
@@ -175,7 +182,7 @@ class PluginFormcreatorSection extends CommonDBChild
       // - name is required
       if(!isset($input['name']) ||
          (isset($input['name']) && empty($input['name'])) ) {
-         Session::addMessageAfterRedirect(__('The title is required', 'formcreato'), false, ERROR);
+         Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return array();
       }
       $input['name'] = addslashes($input['name']);

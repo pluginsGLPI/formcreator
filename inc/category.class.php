@@ -146,9 +146,11 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                      `ancestors_cache` LONGTEXT NULL COLLATE 'utf8_unicode_ci',
                      `knowbaseitemcategories_id` INT(11) NOT NULL DEFAULT '0',
                      PRIMARY KEY (`id`),
-                     KEY `name` (`name`)
+                     INDEX `name` (`name`),
+                     INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`),
+                     INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Migration from previous version
@@ -169,10 +171,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $result = $DB->query($query);
       while ($line = $DB->fetch_array($result)) {
          $query_update = "UPDATE `$table` SET
-                            `name`    = '".plugin_formcreator_encode($line['name'])."',
-                            `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                            `name`    = '".plugin_formcreator_encode($line['name'], false)."',
+                            `comment` = '".plugin_formcreator_encode($line['comment'], false)."'
                           WHERE `id` = ".$line['id'];
-         $DB->query($query_update) or die ($DB->error());
+         $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
       }
 
       /**
@@ -192,6 +194,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          $query  = "UPDATE $table SET `completename`=`name` WHERE `completename`=''";
          $DB->query($query);
       }
+
+      $migration->addKey($table, 'plugin_formcreator_categories_id');
+      $migration->addKey($table, 'knowbaseitemcategories_id');
+      $migration->migrationOneTable($table);
       return true;
    }
 
@@ -200,6 +206,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 }

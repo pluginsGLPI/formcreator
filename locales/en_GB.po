@@ -5,12 +5,13 @@
 # Translators:
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014-2016
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
+# Thierry Bugier Pineau <tbugier@teclib.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-31 16:47+0100\n"
-"PO-Revision-Date: 2017-01-31 15:52+0000\n"
+"PO-Revision-Date: 2017-04-03 07:47+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -29,15 +30,15 @@ msgstr[1] "Forms"
 
 #: scripts/scripts.js.php:250
 msgid "No form found. Please choose a form below instead"
-msgstr ""
+msgstr "No form found. Please choose a form below instead"
 
 #: scripts/scripts.js.php:268
 msgid "An error occured while querying forms"
-msgstr ""
+msgstr "An error occured while querying forms"
 
 #: scripts/scripts.js.php:304
 msgid "No form yet in this category"
-msgstr ""
+msgstr "No form yet in this category"
 
 #: scripts/scripts.js.php:402
 msgid "Are you sure you want to delete this question?"
@@ -72,7 +73,7 @@ msgstr "A required field is empty:"
 #: front/issue.form.php:20 front/wizard.php:13 front/wizardfeeds.php:11
 #: front/issue.php:12
 msgid "Service catalog"
-msgstr ""
+msgstr "Service catalog"
 
 #: front/formdisplay.php:47 front/formlist.php:16 front/formlist.php:22
 msgid "Form list"
@@ -87,11 +88,11 @@ msgstr "Form Creator"
 
 #: front/question.form.php:15
 msgid "The question has been successfully saved!"
-msgstr ""
+msgstr "The question has been successfully saved!"
 
 #: front/question.form.php:25
 msgid "The question has been successfully updated!"
-msgstr ""
+msgstr "The question has been successfully updated!"
 
 #: front/header.form.php:13 inc/header.class.php:34 inc/header.class.php:110
 msgid ""
@@ -145,11 +146,11 @@ msgstr "Restricted access"
 
 #: inc/form_profile.class.php:44
 msgid "Link to the form"
-msgstr ""
+msgstr "Link to the form"
 
 #: inc/form_profile.class.php:52
 msgid "Please active the form to view the link"
-msgstr ""
+msgstr "Please active the form to view the link"
 
 #: inc/header.class.php:32 inc/header.class.php:48 inc/header.class.php:59
 msgid "Add an header"
@@ -221,11 +222,11 @@ msgstr "Cannot generate targets!"
 
 #: inc/form_answer.class.php:630 inc/form_answer.class.php:684
 msgid "The form has been successfully saved!"
-msgstr ""
+msgstr "The form has been successfully saved!"
 
 #: inc/form_answer.class.php:644 inc/form_answer.class.php:662
 msgid "You are not the validator of these answers"
-msgstr ""
+msgstr "You are not the validator of these answers"
 
 #: inc/form_answer.class.php:701 inc/form_answer.class.php:703
 msgid "Form data"
@@ -233,23 +234,23 @@ msgstr "Form data"
 
 #: inc/entityconfig.class.php:65
 msgid "Helpdesk"
-msgstr ""
+msgstr "Helpdesk"
 
 #: inc/entityconfig.class.php:74
 msgid "GLPi's helpdesk"
-msgstr ""
+msgstr "GLPi's helpdesk"
 
 #: inc/entityconfig.class.php:75
 msgid "Service catalog simplified"
-msgstr ""
+msgstr "Service catalog simplified"
 
 #: inc/entityconfig.class.php:76
 msgid "Service catalog extended"
-msgstr ""
+msgstr "Service catalog extended"
 
 #: inc/entityconfig.class.php:79
 msgid "Helpdesk mode"
-msgstr ""
+msgstr "Helpdesk mode"
 
 #: inc/target.class.php:26
 msgid "Destination"
@@ -345,14 +346,14 @@ msgstr "A form has been created"
 
 #: inc/notificationtargetform_answer.class.php:97
 msgid "Your request has been saved"
-msgstr ""
+msgstr "Your request has been saved"
 
 #: inc/notificationtargetform_answer.class.php:98
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Hi,\\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can see your answers onto the following link:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetform_answer.class.php:103
 msgid "A form from GLPI need to be validate"
@@ -367,7 +368,7 @@ msgstr " Hi,\\nA form from GLPI need to be validate and you have been choosen as
 
 #: inc/notificationtargetform_answer.class.php:109
 msgid "Your form has been refused by the validator"
-msgstr ""
+msgstr "Your form has been refused by the validator"
 
 #: inc/notificationtargetform_answer.class.php:110
 msgid ""
@@ -375,28 +376,28 @@ msgid ""
 "validator for the reason "
 "below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
-msgstr ""
+msgstr "Hi,\\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetform_answer.class.php:115
 #: inc/targetticket.class.php:1509
 msgid "Your form has been accepted by the validator"
-msgstr ""
+msgstr "Your form has been accepted by the validator"
 
 #: inc/notificationtargetform_answer.class.php:116
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
-msgstr ""
+msgstr "Hi,\\nWe are pleased to inform you that your form has been accepted by the validator.\\nYour request will be considered soon."
 
 #: inc/notificationtargetform_answer.class.php:121
 msgid "Your form has been deleted by an administrator"
-msgstr ""
+msgstr "Your form has been deleted by an administrator"
 
 #: inc/notificationtargetform_answer.class.php:122
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
-msgstr ""
+msgstr "Hi,\\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator."
 
 #: inc/answer.class.php:35 inc/targetticket.class.php:983
 msgid "Answer"
@@ -406,19 +407,19 @@ msgstr[1] "Answers"
 
 #: inc/targetticket.class.php:21
 msgid "Current active entity"
-msgstr ""
+msgstr "Current active entity"
 
 #: inc/targetticket.class.php:22
 msgid "Default requester user's entity"
-msgstr ""
+msgstr "Default requester user's entity"
 
 #: inc/targetticket.class.php:23
 msgid "First dynamic requester user's entity (alphabetical)"
-msgstr ""
+msgstr "First dynamic requester user's entity (alphabetical)"
 
 #: inc/targetticket.class.php:24
 msgid "Last dynamic requester user's entity (alphabetical)"
-msgstr ""
+msgstr "Last dynamic requester user's entity (alphabetical)"
 
 #: inc/targetticket.class.php:25
 msgid "The form entity"
@@ -470,11 +471,11 @@ msgstr "calculated from the answer to the question"
 
 #: inc/targetticket.class.php:53
 msgid "Urgency from template or Medium"
-msgstr ""
+msgstr "Urgency from template or Medium"
 
 #: inc/targetticket.class.php:54
 msgid "Equals to the answer to the question"
-msgstr ""
+msgstr "Equals to the answer to the question"
 
 #: inc/targetticket.class.php:80 inc/targetticket.class.php:122
 msgid "Target ticket"
@@ -548,7 +549,7 @@ msgstr "Group from the question"
 #: inc/targetticket.class.php:721 inc/targetticket.class.php:831
 #: inc/targetticket.class.php:950 inc/targetticket_actor.class.php:15
 msgid "Actors from the question"
-msgstr ""
+msgstr "Actors from the question"
 
 #: inc/targetticket.class.php:961 inc/targetticket_actor.class.php:14
 msgid "Supplier from the question"
@@ -632,8 +633,8 @@ msgstr "This is not a valid e-mail:"
 #: inc/fields/actor-field.class.php:9
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Actor"
+msgstr[1] "Actors"
 
 #: inc/fields/datetime-field.class.php:62
 msgid "Datetime"
@@ -642,8 +643,8 @@ msgstr "Date & time"
 #: inc/fields/tag-field.class.php:66
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tag"
+msgstr[1] "Tags"
 
 #: inc/fields/multiselect-field.class.php:20
 #: inc/fields/checkboxes-field.class.php:81
@@ -679,27 +680,27 @@ msgstr "Checkboxes"
 
 #: inc/wizard.class.php:67 inc/wizard.class.php:68
 msgid "Seek assistance"
-msgstr ""
+msgstr "Seek assistance"
 
 #: inc/wizard.class.php:73 inc/wizard.class.php:74
 msgid "My requests for assistance"
-msgstr ""
+msgstr "My requests for assistance"
 
 #: inc/wizard.class.php:85 inc/wizard.class.php:86
 msgid "Book an asset"
-msgstr ""
+msgstr "Book an asset"
 
 #: inc/wizard.class.php:94 inc/wizard.class.php:95
 msgid "Consult feeds"
-msgstr ""
+msgstr "Consult feeds"
 
 #: inc/wizard.class.php:227
 msgid "To validate"
-msgstr ""
+msgstr "To validate"
 
 #: inc/wizard.class.php:239
 msgid "Closed"
-msgstr ""
+msgstr "Closed"
 
 #: inc/targetticket_actor.class.php:9
 msgid "Specific person"
@@ -711,7 +712,7 @@ msgstr "Specific group"
 
 #: inc/category.class.php:39
 msgid "Knowbase category"
-msgstr ""
+msgstr "Knowledge category"
 
 #: inc/question.class.php:168 inc/question.class.php:172 ajax/question.php:165
 msgid "Required"
@@ -748,7 +749,7 @@ msgstr "Cannot recover LDAP informations!"
 
 #: inc/form.class.php:60
 msgid "Import forms"
-msgstr ""
+msgstr "Import forms"
 
 #: inc/form.class.php:94
 msgid "Description"
@@ -777,29 +778,29 @@ msgstr "Need to be validate?"
 
 #: inc/form.class.php:427
 msgid "Default form in service catalog"
-msgstr ""
+msgstr "Default form in service catalog"
 
 #: inc/form.class.php:535
 msgid "Category"
 msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Category"
+msgstr[1] "Categories"
 
 #: inc/form.class.php:536
 msgid "see all"
-msgstr ""
+msgstr "see all"
 
 #: inc/form.class.php:554
 msgid "Popularity sort"
-msgstr ""
+msgstr "Popularity sort"
 
 #: inc/form.class.php:558
 msgid "Alphabetic sort"
-msgstr ""
+msgstr "Alphabetic sort"
 
 #: inc/form.class.php:730
 msgid "Please, describe your need here"
-msgstr ""
+msgstr "Please, describe your need here"
 
 #: inc/form.class.php:739
 msgid "My last forms (requester)"
@@ -850,13 +851,13 @@ msgstr "Form Transfered: %s"
 #: inc/form.class.php:1707
 #, php-format
 msgid "Forms successfully imported from %s"
-msgstr ""
+msgstr "Forms successfully imported from %s"
 
 #: inc/issue.class.php:6 inc/issue.class.php:214
 msgid "Issue"
 msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Issue"
+msgstr[1] "Issues"
 
 #: ajax/question.php:27
 msgid "Edit a question"

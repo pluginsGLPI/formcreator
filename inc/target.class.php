@@ -201,14 +201,17 @@ class PluginFormcreatorTarget extends CommonDBTM
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `plugin_formcreator_forms_id` int(11) NOT NULL,
                      `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
                      `items_id` int(11) NOT NULL DEFAULT 0,
                      `name` varchar(255) NOT NULL DEFAULT '',
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
+                     INDEX `itemtype_items_id` (`itemtype`, `items_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
       // Migration from previous version
       } else{
@@ -238,7 +241,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                       FROM `glpi_plugin_formcreator_targets` t, `glpi_plugin_formcreator_forms` f
                       WHERE f.`id` = t.`plugin_formcreator_forms_id`
                       GROUP BY t.`urgency`, t.`priority`, t.`itilcategories_id`, t.`type`, f.`entities_id`";
-            $result = $DB->query($query) or die($DB->error());
+            $result = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
             $i = 0;
             while ($ligne = $DB->fetch_array($result)) {
@@ -293,14 +296,14 @@ class PluginFormcreatorTarget extends CommonDBTM
                $_SESSION["formcreator_tmp"]["ticket_template"]["$id"] = $template_id;
             }
 
-            // Install or upgrade of TargetTicket is a prerequisite 
+            // Install or upgrade of TargetTicket is a prerequisite
             $version   = plugin_version_formcreator();
             $migration = new Migration($version['version']);
             require_once ('targetticket.class.php');
             PluginFormcreatorTargetTicket::install($migration);
             $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
 
-            // Convert targets to ticket templates only if at least one target extsis 
+            // Convert targets to ticket templates only if at least one target extsis
             if ($i > 0) {
                // Prepare Mysql CASE For each ticket template
                $mysql_case_template  = "CASE CONCAT(`urgency`, `priority`, `itilcategories_id`, `type`)";
@@ -308,7 +311,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                   $mysql_case_template .= " WHEN $id THEN $value ";
                }
                $mysql_case_template .= "END AS `tickettemplates_id`";
-   
+
                // Create Target ticket
                $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `$table`;";
                $result = $DB->query($query);
@@ -320,7 +323,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                                     `comment` = '".htmlspecialchars($line['content'])."'";
                   $DB->query($query_insert);
                   $targetticket_id = $DB->insert_id();
-   
+
                   // Update target with target ticket id
                   $query_update = "UPDATE `$table`
                                    SET `items_id` = ".$targetticket_id."
@@ -345,7 +348,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                   $query_update = "UPDATE `$table_targetticket` SET
                                      `comment` = '".plugin_formcreator_encode($line['comment'])."'
                                    WHERE `id` = ".$line['id'];
-                  $DB->query($query_update) or die ($DB->error());
+                  $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
                }
             }
          }
@@ -364,6 +367,9 @@ class PluginFormcreatorTarget extends CommonDBTM
          }
       }
 
+      $migration->addKey($table, 'plugin_formcreator_forms_id');
+      $migration->addKey($table, array('itemtype', 'items_id'));
+
       return true;
    }
 
@@ -372,7 +378,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**
@@ -445,5 +451,22 @@ class PluginFormcreatorTarget extends CommonDBTM
       }
 
       return $target;
+   }
+
+   /**
+    * get all targets of a form
+    * @param PluginFormcreatorForm $form
+    */
+   public function getTargetsForForm(PluginFormcreatorForm $form) {
+      $targets = array();
+      $formId = $form->getID();
+      $foundTargets = $this->find("plugin_formcreator_forms_id = '$formId'");
+      foreach ($foundTargets as $id => $row) {
+         $target = getItemForItemtype($row['itemtype']);
+         $target->getFromDB($row['items_id']);
+         $targets[] = $target;
+      }
+
+      return $targets;
    }
 }

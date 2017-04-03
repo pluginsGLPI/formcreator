@@ -630,6 +630,8 @@ EOS;
       echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       $dropdownItems = array('' => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      unset($dropdownItems['supplier']);
+      unset($dropdownItems['question_supplier']);
       Dropdown::showFromArray('actor_type',
          $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorRequester(this.value)'
@@ -846,8 +848,6 @@ EOS;
       echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
-      unset($dropdownItems['supplier']);
-      unset($dropdownItems['question_supplier']);
       Dropdown::showFromArray('actor_type',
          $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
@@ -1100,7 +1100,7 @@ EOS;
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = array(
@@ -1155,7 +1155,7 @@ EOS;
 
       // Get default request type
       $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $DB->query($query) or die ($DB->error());
+      $result  = $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       list($requesttypes_id) = $DB->fetch_array($result);
 
       $datas['requesttypes_id'] = $requesttypes_id;
@@ -1593,7 +1593,7 @@ EOS;
       $table = getTableForItemType(__CLASS__);
       if (!TableExists($table)) {
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `tickettemplates_id` int(11) NULL DEFAULT NULL,
                      `comment` text collate utf8_unicode_ci,
@@ -1608,9 +1608,11 @@ EOS;
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                      `tag_questions` VARCHAR(255) NOT NULL,
-                     `tag_specifics` VARCHAR(255) NOT NULL
+                     `tag_specifics` VARCHAR(255) NOT NULL,
+                     PRIMARY KEY (`id`),
+                     INDEX `tickettemplates_id` (`tickettemplates_id`)
                   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or die($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          if(!FieldExists($table, 'due_date_rule', false)) {
             $query = "ALTER TABLE `$table`
@@ -1619,7 +1621,7 @@ EOS;
                         ADD `due_date_value` TINYINT NULL DEFAULT NULL,
                         ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
                         ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          // Migration to Formcreator 0.90-1.4
@@ -1627,7 +1629,7 @@ EOS;
             $query = "ALTER TABLE `$table`
                         ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'destination_entity');
             if (count($current_enum_destination_entity) != count(self::getEnumDestinationEntity())) {
@@ -1635,7 +1637,7 @@ EOS;
                            CHANGE COLUMN `destination_entity` `destination_entity`
                            ENUM($enum_destination_entity)
                            NOT NULL DEFAULT 'requester'";
-               $DB->query($query) or die($DB->error());
+               $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
             }
          }
 
@@ -1644,13 +1646,13 @@ EOS;
                          ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                          ADD `tag_questions` VARCHAR(255) NOT NULL,
                          ADD `tag_specifics` VARCHAR(255) NOT NULL;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          }
 
          if (!FieldExists($table, 'urgency_rule', false)) {
             $query = "ALTER TABLE `$table`
             ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
-            $DB->query($query) or die($DB->error());
+            $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
 
          } else {
             $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues($table, 'urgency_rule');
@@ -1658,12 +1660,14 @@ EOS;
                $query = "ALTER TABLE `$table`
                CHANGE COLUMN `urgency_rule` `urgency_rule`
                ENUM($enum_urgency_rule)
-               NOT NULL DEFAULT 'requester'";
-               $DB->query($query) or die($DB->error());
+               NOT NULL DEFAULT 'none'";
+               $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
             }
          }
          $migration->addField($table, 'urgency_question', 'integer', array('after' => 'urgency_rule'));
       }
+
+      $migration->addKey($table, 'tickettemplates_id');
 
       return true;
    }
@@ -1673,7 +1677,7 @@ EOS;
       global $DB;
 
       $query = "DROP TABLE IF EXISTS `" . getTableForItemType(__CLASS__) . "`";
-      return $DB->query($query) or die($DB->error());
+      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**
@@ -1753,7 +1757,9 @@ EOS;
                break;
             case 'supplier' :
             case 'question_supplier' :
-               // TODO :
+               foreach ($userIds as $userId) {
+                  $this->addActor('supplier', $userId, $notify);
+               }
                break;
          }
       }
@@ -1766,28 +1772,32 @@ EOS;
       } else {
          $userId = intval($user);
          $alternativeEmail = '';
+         if ($userId == '0') {
+            // there is no actor
+            return;
+         }
       }
 
       switch ($role) {
          case 'requester':
-            $this->requesters['_users_id_requester'][]                              = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]    = ($notify == true);
-            $this->requesters['_users_id_requester_notif']['alternative_email'][]   = $alternativeEmail;
+            $this->requesters['_users_id_requester'][]                                    = $userId;
+            $this->requesters['_users_id_requester_notif']['use_notification'][]          = ($notify == true);
+            $this->requesters['_users_id_requester_notif']['alternative_email'][]         = $alternativeEmail;
             break;
          case 'observer' :
-            $this->observers['_users_id_observer'][]                                = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]      = ($notify == true);
-            $this->observers['_users_id_observer_notif']['alternative_email'][]     = $alternativeEmail;
+            $this->observers['_users_id_observer'][]                                      = $userId;
+            $this->observers['_users_id_observer_notif']['use_notification'][]            = ($notify == true);
+            $this->observers['_users_id_observer_notif']['alternative_email'][]           = $alternativeEmail;
             break;
          case 'assigned' :
-            $this->assigned['_users_id_assign'][]                                   = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]         = ($notify == true);
-            $this->assigned['_users_id_assign_notif']['alternative_email'][]        = $alternativeEmail;
+            $this->assigned['_users_id_assign'][]                                         = $userId;
+            $this->assigned['_users_id_assign_notif']['use_notification'][]               = ($notify == true);
+            $this->assigned['_users_id_assign_notif']['alternative_email'][]              = $alternativeEmail;
             break;
          case 'supplier' :
-            $this->assignedSuppliers['_suppliers_id_assign'][]                      = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign']['use_notification'][]  = ($notify == true);
-            $this->assignedSuppliers['_suppliers_id_assign']['alternative_email'][] = $alternativeEmail;
+            $this->assignedSuppliers['_suppliers_id_assign'][]                            = $userId;
+            $this->assignedSuppliers['_suppliers_id_assign_notif']['use_notification'][]  = ($notify == true);
+            $this->assignedSuppliers['_suppliers_id_assign_notif']['alternative_email'][] = $alternativeEmail;
             break;
       }
    }

@@ -1,7 +1,7 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', "2.4.0");
+define('PLUGIN_FORMCREATOR_VERSION', "2.4.1");
 // Minimal GLPI version, inclusive
 define ("PLUGIN_FORMCREATOR_GLPI_MIN_VERSION", "0.85");
 // Maximum GLPI version, exclusive
@@ -76,6 +76,23 @@ function plugin_init_formcreator ()
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
    array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorForm_Answer');
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
+
+   // hook to update issues when an operation occurs on a ticket
+   $PLUGIN_HOOKS['item_add']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_add_ticket'
+   );
+   $PLUGIN_HOOKS['item_update']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_update_ticket'
+   );
+   $PLUGIN_HOOKS['item_delete']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_delete_ticket'
+   );
+   $PLUGIN_HOOKS['item_restore']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_restore_ticket'
+   );
+    $PLUGIN_HOOKS['item_purge']['formcreator'] = array(
+         'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+   );
 
    $plugin = new Plugin();
    if (isset($_SESSION['glpiactiveentities_string'])
@@ -158,6 +175,8 @@ function plugin_init_formcreator ()
 
          $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
       }
+
+      Plugin::registerClass('PluginFormcreatorForm', array('addtabon' => 'Central'));
 
       // Load field class and all its method to manage fields
       Plugin::registerClass('PluginFormcreatorFields');
@@ -273,4 +292,12 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $val
    } else {
       return false;
    }
+}
+
+function plugin_formcrerator_upgrade_error(Migration $migration) {
+   global $DB;
+
+   $error = $DB->error();
+   $migration->log($error . "\n" . Toolbox::backtrace(false, '', array('Toolbox::backtrace()')), false);
+   die($error . "<br><br> Please, check migration log");
 }

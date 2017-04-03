@@ -200,8 +200,6 @@ form.formcreator_form {
 .formcreator_form .form-group > label {
    display: block;
    font-size: 1.2em;
-   display: inline-block;
-   width: 300px;
    line-height: 32px;
 }
 .formcreator_form .form-group:after {
@@ -252,7 +250,7 @@ form.formcreator_form {
    box-sizing: border-box;
 }
 .formcreator_form .form-group .form_field input.hasDatepicker {
-   width: 115px;
+   width: 125px;
 }
 .formcreator_form .form-group img {
    vertical-align: middle;
@@ -588,7 +586,6 @@ form.formcreator_form {
 
 #plugin_formcreator_wizard_categories {
    width: 275px;
-   min-height: calc(100vh - 28px - 65px);
    top: 0;
    bottom: 0;
    left: 0;
@@ -769,6 +766,12 @@ form.formcreator_form {
    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
                0 3px 1px -2px rgba(0,0,0,.2),
                0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.plugin_formcreator_card::after {
+   content: "";
+   display: block;
+   clear: both;
 }
 
 #plugin_formcreator_formlist {

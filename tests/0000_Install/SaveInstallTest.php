@@ -31,7 +31,7 @@ class SaveInstallTest extends CommonDBTestCase
 {
 
    public function should_restore_install() {
-      return FALSE;
+      return false;
    }
 
    public function testPluginIsActive() {
@@ -50,5 +50,4 @@ class SaveInstallTest extends CommonDBTestCase
       $length = $filestats[7];
       $this->assertGreaterThan(0, $length);
    }
-
 }

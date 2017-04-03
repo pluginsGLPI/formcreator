@@ -409,8 +409,29 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    **/
    public function prepareInputForUpdate($input)
    {
+      if (isset($input['ticket_tco'])) {
+         // Prevent cascaded update from ticket update (for tco)
+         return false;
+      }
       return $input;
    }
+
+   /**
+    * ACtions done before deleting an item. In case of failure, prevents
+    * actual deletion of the item
+    *
+    * @return boolean true if pre_delete actions succeeded, false if not
+    */
+   public function pre_deleteItem() {
+      $issue = new PluginFormcreatorIssue();
+      $issue->deleteByCriteria(array(
+            'original_id'     => $this->getID(),
+            'sub_itemtype'    => self::getType(),
+      ));
+
+      return true;
+   }
+
 
    public function saveAnswers($datas)
    {
@@ -504,9 +525,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
+         $is_newFormAnswer = false;
 
-      // Create new form answer object
       } else {
+         // Create new form answer object
+
          // Does the form need to be validate ?
          if ($form->fields['validation_required']) {
             $status = 'waiting';
@@ -535,12 +558,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             // If the answer is set, check if it is an array (then implode id).
             if (isset($datas[$question['id']])) {
                $question_answer = $datas[$question['id']];
-               if (is_array(json_decode($question_answer))) {
+               if (is_array(json_decode($question_answer, JSON_UNESCAPED_UNICODE))) {
                   $question_answer = json_decode($question_answer);
                   foreach ($question_answer as $key => $value) {
                      $question_answer[$key] = $value;
                   }
-                  $question_answer = json_encode($question_answer);
+                  $question_answer = json_encode($question_answer, JSON_UNESCAPED_UNICODE);
                } else {
                   $question_answer = $question_answer;
                }
@@ -592,6 +615,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          }
+
+         $is_newFormAnswer = true;
       }
 
       if ($form->fields['validation_required'] || ($status == 'accepted')) {
@@ -624,6 +649,94 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   return false;
                }
                break;
+         }
+
+         // Update issues table
+         if ($status != 'refused') {
+
+            // If cannot get itemTicket from DB it happens either
+            // when no item exist
+            // when several rows matches
+            // Both are processed the same way
+            $formAnswerId = $this->getID();
+            $itemTicket = new Item_Ticket();
+            $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formAnswerId'");
+            if (count($rows) != 1) {
+               if ($is_newFormAnswer) {
+                  // This is a new answer for the form. Create an issue
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->add(array(
+                        'original_id'     => $id,
+                        'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+                        'name'            => addslashes($this->fields['name']),
+                        'status'          => $status,
+                        'date_creation'   => $this->fields['request_date'],
+                        'date_mod'        => $this->fields['request_date'],
+                        'entities_id'     => $this->fields['entities_id'],
+                        'is_recursive'    => $this->fields['is_recursive'],
+                        'requester_id'    => $this->fields['requester_id'],
+                        'validator_id'    => $this->fields['validator_id'],
+                        'comment'         => '',
+                  ));
+               } else  {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $id = $this->getID();
+                  $issue->update(array(
+                        'id'              => $issue->getID(),
+                        'original_id'     => $id,
+                        'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+                        'name'            => addslashes($this->fields['name']),
+                        'status'          => $status,
+                        'date_creation'   => $this->fields['request_date'],
+                        'date_mod'        => $this->fields['request_date'],
+                        'entities_id'     => $this->fields['entities_id'],
+                        'is_recursive'    => $this->fields['is_recursive'],
+                        'requester_id'    => $this->fields['requester_id'],
+                        'validator_id'    => $this->fields['validator_id'],
+                        'comment'         => '',
+                  ));
+               }
+            } else {
+               $ticket = new Ticket();
+               reset($rows);
+               $itemTicket->getFromDB(key($rows));
+               $ticket->getFromDB($itemTicket->getField('tickets_id'));
+               $ticketId = $ticket->getID();
+               if ($is_newFormAnswer) {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->add(array(
+                        'original_id'     => $ticketId,
+                        'sub_itemtype'    => 'Ticket',
+                        'name'            => addslashes($ticket->getField('name')),
+                        'status'          => $ticket->getField('status'),
+                        'date_creation'   => $ticket->getField('date'),
+                        'date_mod'        => $ticket->getField('date_mod'),
+                        'entities_id'     => $ticket->getField('entities_id'),
+                        'is_recursive'    => '0',
+                        'requester_id'    => $ticket->getField('users_id_recipient'),
+                        'validator_id'    => '',
+                        'comment'         => addslashes($ticket->getField('content')),
+                  ));
+               } else {
+                  $issue = new PluginFormcreatorIssue();
+                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->update(array(
+                        'id'              => $issue->getID(),
+                        'original_id'     => $ticketId,
+                        'sub_itemtype'    => 'Ticket',
+                        'name'            => addslashes($ticket->getField('name')),
+                        'status'          => $ticket->getField('status'),
+                        'date_creation'   => $ticket->getField('date'),
+                        'date_mod'        => $ticket->getField('date_mod'),
+                        'entities_id'     => $ticket->getField('entities_id'),
+                        'is_recursive'    => '0',
+                        'requester_id'    => $ticket->getField('users_id_recipient'),
+                        'validator_id'    => '',
+                        'comment'         => addslashes($ticket->getField('content')),
+                  ));
+               }
+            }
          }
       }
 
@@ -669,20 +782,27 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
    public function generateTarget()
    {
-      // Get all targets
-      $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
+      global $CFG_GLPI;
 
+      $success = true;
+
+      // Get all targets
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $target        = new PluginFormcreatorTarget();
+      $found_targets = $target->getTargetsForForm($form);
+
+      $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
       foreach($found_targets as $target) {
-         $obj = new $target['itemtype'];
-         $obj->getFromDB($target['items_id']);
-         if (!$obj->save($this)) {
-            return false;
+         if (!$target->save($this)) {
+            $success = false;
+            break;
          }
       }
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
-      return true;
+      unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
+      return $success;
    }
 
    /**
@@ -710,7 +830,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $answers = $answer->find('`plugin_formcreator_forms_answers_id` = '.$this->getID());
       $answers_values = array();
       foreach ($answers as $found_answer) {
-         $answers_values[$found_answer['plugin_formcreator_question_id']] = $found_answer['answer'];
+         $answers_values[$found_answer['plugin_formcreator_question_id']] = stripslashes($found_answer['answer']);
       }
 
       // computer all questions
@@ -825,6 +945,31 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
+    * Actions done after update of an item
+    *
+    * @return void
+    */
+   public function post_updateItem($history = 1) {
+      $id = $this->getID();
+
+      $issue = new PluginFormcreatorISsue();
+      $issue->update(array(
+            'id'              => $id,
+            'original_id'     => 'f_' . $id,
+            'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+            'name'            => addslashes($this->fields['name']),
+            'status'          => $this->fields['status'],
+            'date_creation'   => $this->fields['request_date'],
+            'date_mod'        => $this->fields['request_date'],
+            'entities_id'     => $this->fields['entities_id'],
+            'is_recursive'    => $this->fields['is_recursive'],
+            'requester_id'    => $this->fields['requester_id'],
+            'validator_id'    => $this->fields['validator_id'],
+            'comment'         => addslashes($this->fields['comment']),
+      ));
+   }
+
+   /**
     * Database table installation for the item type
     *
     * @param Migration $migration
@@ -841,7 +986,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $itemTicket_table = Item_Ticket::getTable();
          $itemtype = __CLASS__;
          $query = "UPDATE `$itemTicket_table` SET `itemtype` = '$itemtype' WHERE `itemtype` = 'PluginFormcreatorFormanswer'";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       if (!TableExists($table)) {
@@ -849,7 +994,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Create questions table
          $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                     `id` int(11) NOT NULL AUTO_INCREMENT,
                      `name` varchar(255) NOT NULL DEFAULT '',
                      `entities_id` int(11) NOT NULL DEFAULT '0',
                      `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
@@ -858,12 +1003,18 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      `validator_id` int(11) NULL,
                      `request_date` datetime NOT NULL,
                      `status` enum('waiting', 'refused', 'accepted') NOT NULL DEFAULT 'waiting',
-                     `comment` text NULL DEFAULT NULL
+                     `comment` text NULL DEFAULT NULL,
+                     `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+                     PRIMARY KEY (`id`),
+                     INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
+                     INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
+                     INDEX `requester_id` (`requester_id`),
+                     INDEX `validator_id` (`validator_id`)
                   )
                   ENGINE = MyISAM
                   DEFAULT CHARACTER SET = utf8
                   COLLATE = utf8_unicode_ci";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       } else {
          /**
           * Migration of special chars from previous versions
@@ -877,18 +1028,18 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             $query_update = "UPDATE `$table` SET
                                `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
                              WHERE `id` = " . $line['id'];
-            $DB->query($query_update) or die ($DB->error());
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          if (!FieldExists($table, 'name')) {
-            $query_update = 'ALTER TABLE `$table` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;';
-            $DB->query($query_update) or die ($DB->error());
+            $query_update = "ALTER TABLE `$table` ADD `name` VARCHAR(255) NOT NULL AFTER `id`;";
+            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
          }
 
          // valdiator_id should not be set for waiting form answers
          $query = "UPDATE $table
                SET `validator_id` = '0' WHERE `status`='waiting'";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
       }
 
       // Create standard search options
@@ -898,7 +1049,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                (NULL, '" . __CLASS__ . "', 4, 4, 0),
                (NULL, '" . __CLASS__ . "', 5, 5, 0),
                (NULL, '" . __CLASS__ . "', 6, 6, 0);";
-      $DB->query($query) or die ($DB->error());
+      $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
+
+      $migration->addKey($table, array('entities_id', 'is_recursive'));
+      $migration->addKey($table, 'plugin_formcreator_forms_id');
+      $migration->addKey($table, 'requester_id');
+      $migration->addKey($table, 'validator_id');
+      $migration->addField($table, 'is_deleted', 'bool');
 
       return true;
    }
