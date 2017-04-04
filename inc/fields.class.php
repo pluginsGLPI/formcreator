@@ -235,12 +235,12 @@ class PluginFormcreatorFields
       foreach ($currentValues as &$value) {
          if (is_array($value)) {
             foreach ($value as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value);
+               $sub_value = plugin_formcreator_encode($sub_value, false);
             }
          } elseif (is_array(json_decode($value))) {
             $tab = json_decode($value);
             foreach ($tab as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value);
+               $sub_value = plugin_formcreator_encode($sub_value, false);
             }
             $value = json_encode($tab);
          } else {
