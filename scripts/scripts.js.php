@@ -309,12 +309,16 @@ function formcreatorChangeActorWatcher(value) {
    $('#block_watcher_group').hide();
    $('#block_watcher_question_user').hide();
    $('#block_watcher_question_group').hide();
+   $('#block_watcher_glpi_object_group').hide();
+   $('#objets_glpi_observer').hide();
+   $('#question_concernee_observer').hide();
 
    switch (value) {
       case 'person' :            $('#block_watcher_user').show();             break;
       case 'question_person' :   $('#block_watcher_question_user').show();    break;
       case 'group' :             $('#block_watcher_group').show();            break;
       case 'question_group' :    $('#block_watcher_question_group').show();   break;
+      case 'glpi_object_group' : $('#block_watcher_glpi_object_group').show();$('#objets_glpi_observer').show();$('#question_concernee_observer').show();  break;
    }
 }
 
@@ -323,14 +327,18 @@ function formcreatorChangeActorAssigned(value) {
    $('#block_assigned_group').hide();
    $('#block_assigned_question_user').hide();
    $('#block_assigned_question_group').hide();
+   $('#block_assigned_glpi_object_group').hide();
+   $('#objets_glpi_assign').hide();
    $('#block_assigned_supplier').hide();
    $('#block_assigned_question_supplier').hide();
+   $('#question_concernee_assign').hide();
 
    switch (value) {
       case 'person' :            $('#block_assigned_user').show();               break;
       case 'question_person' :   $('#block_assigned_question_user').show();      break;
       case 'group' :             $('#block_assigned_group').show();              break;
       case 'question_group' :    $('#block_assigned_question_group').show();     break;
+      case 'glpi_object_group' : $('#block_assigned_glpi_object_group').show();$('#objets_glpi_assign').show();;$('#question_concernee_assign').show();     break;
       case 'supplier' :          $('#block_assigned_supplier').show();           break;
       case 'question_supplier' : $('#block_assigned_question_supplier').show();  break;
    }

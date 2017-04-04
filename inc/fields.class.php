@@ -106,6 +106,10 @@ class PluginFormcreatorFields
          if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
             return;
          }
+         if ($field['values'] == 'Applications') {
+            $_SESSION[$field['values']]['id_fild'] = $field['id'];
+            //$_SESSION['matrices_process'] = TRUE;
+         }
 
          $obj = new $fieldClass($field, $datas);
          $obj->show($edit);
@@ -144,8 +148,46 @@ class PluginFormcreatorFields
                'value'    => $line['show_value']
             );
       }
+      // verifier si le fields est un objet GLPI de type applicatif
+      $query = "SELECT `fieldtype`, `values` FROM `glpi_plugin_formcreator_questions` WHERE `id` = " . (int) $fields['id'];
+      $result = $GLOBALS['DB']->query($query);
 
       foreach ($conditions as $condition) {
+
+         // verifier si le fields est un objet GLPI de type applicatif
+         $query = "SELECT `fieldtype`, `values` FROM `glpi_plugin_formcreator_questions` WHERE `id` = " . (int) $condition['field'];
+         $result = $GLOBALS['DB']->query($query);
+         while ($line = $GLOBALS['DB']->fetch_array($result)) {
+             $question_field = $line;
+         }
+
+         if ($question_field['fieldtype'] == 'glpiselect') {
+
+             // verifier si c'est un objet de type referentiel
+             $ref = strtolower($question_field['values']);
+             $data_base_tmp = $GLOBALS['DB']->dbdefault;
+             $query = "SELECT TABLE_NAME as GLPI_objects FROM INFORMATION_SCHEMA.TABLES "
+                     . "WHERE TABLE_SCHEMA='$data_base_tmp' "
+                     . "AND TABLE_NAME LIKE '%$ref%' GROUP BY GLPI_objects;";
+             $result = $GLOBALS['DB']->query($query);
+             while ($line = $GLOBALS['DB']->fetch_array($result)) {
+                 $glpi_object = $line['GLPI_objects'];
+                 if ($result->num_rows > 1) {
+                     break;
+                 }
+             }
+
+             // chercher le nom de l'application dans le référentiel
+             $query = "SELECT `name` FROM `$glpi_object` WHERE `id` = " . (int) $values[$condition['field']];
+             $result = $GLOBALS['DB']->query($query);
+             while ($line = $GLOBALS['DB']->fetch_array($result)) {
+                 $application_name = $line['name'];
+             }
+
+             if(!empty($application_name)){
+                 $values[$condition['field']] = $application_name;
+             }
+         }
          if (!isset($values[$condition['field']]))             return false;
          if (!self::isVisible($condition['field'], $values))   return false;
 
