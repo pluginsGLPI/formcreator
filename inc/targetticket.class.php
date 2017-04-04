@@ -16,6 +16,118 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    protected $assignedGroups;
 
+   /**
+    * Fonction postSaveTarget() permet de sauvegarder
+    * la configuration de la destination dans la
+    * table glpi_plugin_formcreator_targetsconditions
+    *
+    *
+    * */
+   static function postSaveTarget($input) {
+      // chercher les champs de la table targetconditions
+      $inputs = $input->input;
+
+      $data_base_tmp = $GLOBALS['DB']->dbdefault;
+      $query = "SELECT COLUMN_NAME as columns FROM INFORMATION_SCHEMA.COLUMNS "
+              . "WHERE TABLE_NAME ='glpi_plugin_formcreator_targetsconditions'"
+              . " AND TABLE_SCHEMA='$data_base_tmp' GROUP BY columns;";
+      $result = $GLOBALS['DB']->query($query);
+      while ($column = $GLOBALS['DB']->fetch_array($result)) {
+         $values[$column['columns']] = '';
+      }
+
+      $select = "SELECT * FROM glpi_plugin_formcreator_targetsconditions WHERE plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+      $select_result = $GLOBALS['DB']->query($select);
+
+
+      $condition_generation = $inputs['condition_generation'];
+      if ($condition_generation != 'objets_GLPI') {
+         $inputs['objets_glpi'] = $inputs['liste_referentiel'];
+      }
+      if ($condition_generation == 'questions') {
+         $inputs['question_nature_demande'] = $inputs['question_nature_demande1'];
+      }
+
+      if ($row = $GLOBALS['DB']->fetch_array($select_result)) {
+         // update
+         foreach ($values as $key => $val) {
+            if (array_key_exists($key, $inputs)) {
+               if ($key != 'plugin_formcreator_targets_id' && $key != 'id') {
+                  if ($condition_generation == 'ne_pas_generer') {
+                     if ($key != 'condition_generation') {
+                        $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = NULL WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                        $GLOBALS['DB']->query($update);
+                     } else {
+                        if ($inputs[$key] == '0') {
+                           $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = NULL WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                           $GLOBALS['DB']->query($update);
+                        } else {
+                           $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = '" . $inputs[$key] . "' WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                           $GLOBALS['DB']->query($update);
+                        }
+                     }
+                  } elseif ($condition_generation == 'none') {
+                     if ($inputs[$key] == '0') {
+                        $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = NULL WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                        $GLOBALS['DB']->query($update);
+                     } else {
+                        $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = '" . $inputs[$key] . "' WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                        $GLOBALS['DB']->query($update);
+                     }
+                  } elseif ($condition_generation == 'questions') {
+                     if ($key == 'colonnes_objet_glpi') {
+                        $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = NULL WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                        $GLOBALS['DB']->query($update);
+                     } else {
+                        if ($inputs[$key] == '0') {
+                           $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = NULL WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                           $GLOBALS['DB']->query($update);
+                        } else {
+                           $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `$key` = '" . $inputs[$key] . "' WHERE  plugin_formcreator_targets_id=" . $inputs['id'] . ";";
+                           $GLOBALS['DB']->query($update);
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      } else {
+         // insert
+         $colonne_name = 'plugin_formcreator_targets_id';
+         $colonne_value = "'" . $inputs['id'] . "'";
+         foreach ($values as $key => $val) {
+            if (array_key_exists($key, $inputs)) {
+               if ($inputs[$key] != '0' && $key != 'id') {
+                  $colonne_name .= ", " . $key;
+                  $colonne_value .= ", '" . $inputs[$key] . "'";
+               }
+            }
+         }
+
+         $insert = "INSERT INTO glpi_plugin_formcreator_targetsconditions ($colonne_name) VALUES ($colonne_value);";
+         $GLOBALS['DB']->query($insert);
+      }
+   }
+
+   static function getEnumCondition() {
+      return array(
+         'none' => __(Dropdown::EMPTY_VALUE),
+         'ne_pas_generer' => __('Ne pas générer', 'formcreator'),
+         'questions' => __('Questions', 'formcreator')
+      );
+   }
+
+   static function getEnumListeConditions() {
+      return array(
+         'est' => __('est', 'formcreator'),
+         'n_est_pas' => __('n\'est pas', 'formcreator'),
+         'contient' => __('contient', 'formcreator'),
+         'ne_contient_pas' => __('ne contient pas', 'formcreator'),
+         'commence_par' => __('commence par', 'formcreator'),
+         'termine_par' => __('termine par', 'formcreator')
+      );
+   }
+
    static function getEnumDestinationEntity() {
       return array(
          'current'   => __("Current active entity", 'formcreator'),
@@ -501,6 +613,123 @@ EOS;
          echo '</tr>';
       }
 
+      // *******************************************************************************************
+      //  Condition de génération de ticket
+      // *******************************************************************************************
+
+      $select = "SELECT * FROM glpi_plugin_formcreator_targetsconditions WHERE plugin_formcreator_targets_id=" . $this->fields['id'] . ";";
+      $select_result = $GLOBALS['DB']->query($select);
+      if (!empty($select_result)) {
+         $row = $GLOBALS['DB']->fetch_array($select_result);
+      }
+      echo '<tr class="line1">';
+      echo '<td width="15%">' . __('SLA') . '</td>';
+      echo '<td width="25%">';
+      $rand = mt_rand();
+      $select_SLA = 'SELECT `id`,`name` FROM `glpi_slas`;';
+      $result_SLA = $GLOBALS['DB']->query($select_SLA);
+      foreach ($result_SLA AS $id => $datas) {
+         $select_SLT = 'SELECT * FROM `glpi_slts` WHERE `slas_id` =' . $datas['id'] . ';';
+         $result_SLT = $GLOBALS['DB']->query($select_SLT);
+         if ($result_SLT->num_rows > 0) {
+            $values_SLA[plugin_formcreator_encode($datas['name'])] = plugin_formcreator_encode($datas['name']);
+         }
+      }
+      array_unshift($values_SLA, '-----');
+      Dropdown::showFromArray('slas', $values_SLA, array(
+         'value' => plugin_formcreator_encode($row['slas']),
+      ));
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="categorie">' . _n('Catégories', 'Catégories', 3) . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+      echo '<div id="categorie">';
+      // select all entity questions (GLPI Object)
+      $select_categorie = 'SELECT `completename` AS `name` FROM `glpi_itilcategories` ORDER BY `completename`;';
+      $result_categorie = $GLOBALS['DB']->query($select_categorie);
+      foreach ($result_categorie AS $id => $datas) {
+         $values_categorie[plugin_formcreator_encode($datas['name'])] = plugin_formcreator_encode($datas['name']);
+      }
+      array_unshift($values_categorie, '-----');
+      Dropdown::showFromArray('categorie', $values_categorie, array(
+         'value' => plugin_formcreator_encode($row['categorie']),
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+      echo '<tr class="line1">';
+      echo '<td width="15%">' . __('Condition de génération') . '</td>';
+      echo '<td width="25%">';
+      Dropdown::showFromArray(
+         'condition_generation', self::getEnumCondition(), array(
+            'value' => $row['condition_generation'],
+            'on_change' => 'change_condition()',
+            'rand' => $rand,
+         )
+      );
+
+      $script = <<<EOS
+         function change_condition() {
+            $('#questions_formulaire_title').hide();
+            $('#questions').hide();
+            $('#condition').hide();
+
+            switch($('#dropdown_condition_generation$rand').val()) {
+               case 'questions' :
+                  $('#questions_formulaire_title').show();
+                  $('#questions').show();
+                  $('#condition').show();
+                  break;
+            }
+         }
+         change_condition();
+EOS;
+
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="questions_formulaire_title" style="display: none">' . _n('Questions du formulaire', 'Questions du formulaire', 3) . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+      echo '<div id="questions">';
+      // select all entity questions (GLPI Object)
+      $table_questions = getTableForItemType('PluginFormcreatorQuestion');
+      $table_sections = getTableForItemType('PluginFormcreatorSection');
+      $query16 = "SELECT  q.`id`, q.`name` AS question
+                FROM $table_questions q
+                LEFT JOIN $table_sections s ON q.`plugin_formcreator_sections_id` = s.`id`
+                WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
+                ORDER BY s.`order`, q.`order`";
+      $result16 = $GLOBALS['DB']->query($query16);
+      foreach ($result16 AS $id => $datas) {
+         $values16[plugin_formcreator_encode($datas['question'])] = plugin_formcreator_encode($datas['question']);
+      }
+      array_unshift($values16, '-----');
+      Dropdown::showFromArray('questions', $values16, array(
+         'value' => plugin_formcreator_encode($row['questions']),
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1" id="condition">';
+      echo '<td width="15%">' . __('Condition') . '</td>';
+      echo '<td width="25%">';
+      echo '<div class="select2-container" id="s2id_Condition570664300">';
+      $rand = mt_rand();
+      Dropdown::showFromArray(
+         'conditions', self::getEnumListeConditions(), array(
+            'value' => $row['conditions'],
+            'on_change' => 'change_entity()',
+            'rand' => $rand,
+         )
+      );
+      echo '</div>';
+      echo '</td>';
+      echo '<td width="15%">' . __('Valeur') . '</td>';
+      echo '<td width="45%"><input type="text" name="valeur" style="width:204px;" value="' . $row['valeur'] . '"></textarea></td>';
+      echo '</tr>';
       echo '</table>';
 
 
@@ -746,6 +975,20 @@ EOS;
          $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
       ));
+      /*
+      Dropdown::showFromArray('actor_type', array(
+         ''                  => Dropdown::EMPTY_VALUE,
+         'creator'           => __('Form requester', 'formcreator'),
+         'validator'         => __('Form validator', 'formcreator'),
+         'person'            => __('Specific person', 'formcreator'),
+         'question_person'   => __('Person from the question', 'formcreator'),
+         'group'             => __('Specific group', 'formcreator'),
+         'question_group'    => __('Group from the question', 'formcreator'),
+         'glpi_object_group' => __('Groupe depuis un objet GLPI', 'formcreator'),
+      ), array(
+         'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
+      ));
+      */
 
       echo '<div id="block_watcher_user" style="display:none">';
       User::dropdown(array(
@@ -776,6 +1019,77 @@ EOS;
       echo '<div id="block_watcher_question_actors" style="display:none">';
       Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
             'value' => $this->fields['due_date_question'],
+      ));
+      echo '</div>';
+
+      echo '<div id="objets_glpi_observer" style="display:none">';
+      echo __('référentiels');
+      $data_base_tmp = $GLOBALS['DB']->dbdefault;
+
+      $query_referetiel = "SELECT TABLE_NAME as GLPI_objects FROM INFORMATION_SCHEMA.TABLES "
+                . "WHERE TABLE_SCHEMA='$data_base_tmp' "
+                . "AND TABLE_NAME LIKE 'glpi_plugin_formcreator_referentiel%' GROUP BY GLPI_objects;";
+      $result_referetiel = $GLOBALS['DB']->query($query_referetiel);
+      while ($table = $GLOBALS['DB']->fetch_array($result_referetiel)) {
+         $values_referetiel1[$table['GLPI_objects']] = $table['GLPI_objects'];
+      }
+      array_unshift($values_referetiel1, '-----');
+      Dropdown::showFromArray('objets_glpi_observer', $values_referetiel1, array(
+         'value' => $row['objets_glpi_observer'],
+      ));
+      echo '</div>';
+
+      echo '<div id="block_watcher_glpi_object_group" style="display:none">';
+      $data_base_tmp = $GLOBALS['DB']->dbdefault;
+
+      $query6 = "SELECT TABLE_NAME as GLPI_objects FROM INFORMATION_SCHEMA.TABLES "
+                . "WHERE TABLE_SCHEMA='$data_base_tmp' "
+                . "AND TABLE_NAME LIKE 'glpi_plugin_formcreator_referentiel%' GROUP BY GLPI_objects;";
+      $result6 = $GLOBALS['DB']->query($query6);
+
+      while ($tables1 = $GLOBALS['DB']->fetch_array($result6)) {
+         $values4[$tables1['GLPI_objects']] = array('' => '');
+      }
+      $_SESSION['observation'] = array('' => '');
+      // for
+      foreach ($values4 as $id => $tab) {
+         if ($id != Dropdown::EMPTY_VALUE) {
+            $query9 = "SELECT COLUMN_NAME as GLPI_objects_calumn FROM INFORMATION_SCHEMA.COLUMNS "
+                        . "WHERE TABLE_NAME ='$id'"
+                        . " AND TABLE_SCHEMA='$data_base_tmp' "
+                        . "AND (COLUMN_NAME LIKE 'gv%'"
+                        . " OR COLUMN_NAME LIKE 'gr%')"
+                        . "GROUP BY GLPI_objects_calumn;";
+            $result9 = $GLOBALS['DB']->query($query9);
+            while ($columns = $GLOBALS['DB']->fetch_array($result9)) {
+               array_push($_SESSION['observation'], html_entity_decode($columns['GLPI_objects_calumn']));
+               $values4[$id][$columns['GLPI_objects_calumn']] = $columns['GLPI_objects_calumn'];
+            }
+            unset($values4[$id]['']);
+         }
+      }
+      array_unshift($values4, '-----');
+      Dropdown::showFromArray('gv_conditions', $values4, array(
+         'value' => $this->fields['liste_objet_glpi_value'],
+      ));
+      echo '</div>';
+
+      echo '<div id="question_concernee_observer" style="display:none">';
+      echo __('Question concernée');
+      $table_questions = getTableForItemType('PluginFormcreatorQuestion');
+      $table_sections = getTableForItemType('PluginFormcreatorSection');
+      $query11 = "SELECT  q.`id`, q.`name` AS question
+                FROM $table_questions q
+                LEFT JOIN $table_sections s ON q.`plugin_formcreator_sections_id` = s.`id`
+                WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
+                ORDER BY s.`order`, q.`order`";
+      $result11 = $GLOBALS['DB']->query($query11);
+      foreach ($result11 AS $ids2 => $datas2) {
+         $values11[plugin_formcreator_encode($datas2['question'])] = plugin_formcreator_encode($datas2['question']);
+      }
+      array_unshift($values11, '-----');
+      Dropdown::showFromArray('question_concernee_observer', $values11, array(
+         'value' => plugin_formcreator_encode($row['question_concernee_observer']),
       ));
       echo '</div>';
 
@@ -833,6 +1147,12 @@ EOS;
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
+            case 'glpi_object_group' :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Groupe depuis un objet GLPI', 'formcreator')
+                  . '</b> "' . $row['gv_conditions'] . '"';
+               break;
          }
          echo $values['use_notification'] ? ' ' . $img_mail . ' ' : ' ' . $img_nomail . ' ';
          echo self::getDeleteImage($id);
@@ -852,6 +1172,22 @@ EOS;
          $dropdownItems, array(
          'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
       ));
+      /*
+      Dropdown::showFromArray('actor_type', array(
+         ''                  => Dropdown::EMPTY_VALUE,
+         'creator'           => __('Form requester', 'formcreator'),
+         'validator'         => __('Form validator', 'formcreator'),
+         'person'            => __('Specific person', 'formcreator'),
+         'question_person'   => __('Person from the question', 'formcreator'),
+         'group'             => __('Specific group', 'formcreator'),
+         'question_group'    => __('Group from the question', 'formcreator'),
+         'glpi_object_group' => __('Groupe depuis un objet GLPI', 'formcreator'),
+         'supplier'          => __('Specific supplier', 'formcreator'),
+         'question_supplier' => __('Supplier from the question', 'formcreator'),
+      ), array(
+         'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
+      ));
+      */
 
       echo '<div id="block_assigned_user" style="display:none">';
       User::dropdown(array(
@@ -888,6 +1224,76 @@ EOS;
       echo '<div id="block_assigned_question_actors" style="display:none">';
       Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
             'value' => $this->fields['due_date_question'],
+      ));
+      echo '</div>';
+
+      echo '<div id="objets_glpi_assign" style="display:none">';
+      echo __('référentiels');
+      $data_base_tmp = $GLOBALS['DB']->dbdefault;
+
+      $query_referetiel = "SELECT TABLE_NAME as GLPI_objects FROM INFORMATION_SCHEMA.TABLES "
+                . "WHERE TABLE_SCHEMA='$data_base_tmp' "
+                . "AND TABLE_NAME LIKE 'glpi_plugin_formcreator_referentiel%' GROUP BY GLPI_objects;";
+      $result_referetiel = $GLOBALS['DB']->query($query_referetiel);
+      while ($table = $GLOBALS['DB']->fetch_array($result_referetiel)) {
+         $values_referetiel[$table['GLPI_objects']] = $table['GLPI_objects'];
+      }
+      array_unshift($values_referetiel, '-----');
+      Dropdown::showFromArray('objets_glpi_assign', $values_referetiel, array(
+         'value' => $row['objets_glpi_assign'],
+      ));
+      echo '</div>';
+
+      echo '<div id="block_assigned_glpi_object_group" style="display:none">';
+      $data_base_tmp = $GLOBALS['DB']->dbdefault;
+
+      $query7 = "SELECT TABLE_NAME as GLPI_objects FROM INFORMATION_SCHEMA.TABLES "
+                . "WHERE TABLE_SCHEMA='$data_base_tmp' "
+                . "AND TABLE_NAME LIKE 'glpi_plugin_formcreator_referentiel%' GROUP BY GLPI_objects;";
+      $result7 = $GLOBALS['DB']->query($query7);
+      while ($tables2 = $GLOBALS['DB']->fetch_array($result7)) {
+         $values5[$tables2['GLPI_objects']] = array('' => '');
+      }
+      $_SESSION['assignation'] = array('' => '');
+      // for
+      foreach ($values5 as $id => $tab) {
+         if ($id != Dropdown::EMPTY_VALUE) {
+            $query8 = "SELECT COLUMN_NAME as GLPI_objects_calumn FROM INFORMATION_SCHEMA.COLUMNS "
+                        . "WHERE TABLE_NAME ='$id'"
+                        . " AND TABLE_SCHEMA='$data_base_tmp' "
+                        . "AND (COLUMN_NAME LIKE 'gv%'"
+                        . " OR COLUMN_NAME LIKE 'gr%')"
+                        . "GROUP BY GLPI_objects_calumn;";
+            $result8 = $GLOBALS['DB']->query($query8);
+            while ($columns = $GLOBALS['DB']->fetch_array($result8)) {
+               array_push($_SESSION['assignation'], html_entity_decode($columns['GLPI_objects_calumn']));
+               $values5[$id][$columns['GLPI_objects_calumn']] = $columns['GLPI_objects_calumn'];
+            }
+            unset($values5[$id]['']);
+         }
+      }
+      array_unshift($values5, '-----');
+      Dropdown::showFromArray('gr_conditions', $values5, array(
+         'value' => $this->fields['liste_objet_glpi_value'],
+      ));
+      echo '</div>';
+
+      echo '<div id="question_concernee_assign" style="display:none">';
+      echo __('Question concernée');
+      $table_questions = getTableForItemType('PluginFormcreatorQuestion');
+      $table_sections = getTableForItemType('PluginFormcreatorSection');
+      $query10 = "SELECT  q.`id`, q.`name` AS question
+                FROM $table_questions q
+                LEFT JOIN $table_sections s ON q.`plugin_formcreator_sections_id` = s.`id`
+                WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
+                ORDER BY s.`order`, q.`order`";
+      $result10 = $GLOBALS['DB']->query($query10);
+      foreach ($result10 AS $ids => $datas1) {
+         $values10[plugin_formcreator_encode($datas1['question'])] = plugin_formcreator_encode($datas1['question']);
+      }
+      array_unshift($values10, '-----');
+      Dropdown::showFromArray('question_concernee_assign', $values10, array(
+         'value' => plugin_formcreator_encode($row['question_concernee_assign']),
       ));
       echo '</div>';
 
@@ -949,6 +1355,12 @@ EOS;
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
+               break;
+            case 'glpi_object_group' :
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($values['actor_value']);
+               echo $img_group . ' <b>' . __('Groupe depuis un objet GLPI', 'formcreator')
+                  . '</b> "' . $row['gr_conditions'] . '"';
                break;
             case 'supplier' :
                $supplier = new Supplier();
@@ -1147,6 +1559,7 @@ EOS;
 
       $datas   = array();
       $ticket  = new Ticket();
+      $referentielticket = new PluginFormcreatorExtensionTicket();
       $docItem = new Document_Item();
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -1363,9 +1776,23 @@ EOS;
          $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
       }
 
-      // Create the target ticket
-      if (!$ticketID = $ticket->add($datas)) {
-         return false;
+      if (isset($_SESSION['referentiel_actif']) &&
+            ((!empty($_SESSION['referentiel_actif']['objets_glpi_gv']) || !empty($_SESSION['referentiel_actif']['objets_glpi_gr']))
+            || (!empty($_SESSION['referentiel_actif']['gv_conditions']) || !empty($_SESSION['referentiel_actif']['gr_conditions']))
+            || !empty($_SESSION['referentiel_actif']['slas']) || !empty($_SESSION['referentiel_actif']['categorie'])
+            || !empty($_SESSION['referentiel_actif']['groupe_specific']) )) {
+         // Create the target ticket
+         if (!$ticketID = $referentielticket->referentielAdd($datas)) {
+            unset($_SESSION['js']);
+            unset($_SESSION['referentiel_actif']);
+            return false;
+         }
+         unset($_SESSION['referentiel_actif']);
+      } else {
+         // Create the target ticket
+         if (!$ticketID = $ticket->add($datas)) {
+            return false;
+         }
       }
 
       if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {

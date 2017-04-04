@@ -17,6 +17,7 @@ if ($plugin->isActivated("formcreator")) {
       $found  = array_shift($found);
       $target->update(array('id' => $found['id'], 'name' => $_POST['name']));
       $targetticket->update($_POST);
+      $targetticket->postSaveTarget($targetticket);
       Html::back();
 
    } elseif (isset($_POST['actor_role'])) {
@@ -34,6 +35,84 @@ if ($plugin->isActivated("formcreator")) {
             'actor_value'                          => $actor_value,
             'use_notification'                     => $use_notification,
       ));
+
+      if (isset($_POST['objets_glpi_assign']) ||
+              isset($_POST['question_concernee_observer'])) {
+          $select = "SELECT * FROM glpi_plugin_formcreator_targetsconditions WHERE plugin_formcreator_targets_id=" . $id . ";";
+          $select_result = $DB->query($select);
+          if ($select_result->num_rows > 0) {
+              if (isset($_POST['objets_glpi_assign'])) {
+                  if ($_POST['objets_glpi_assign'] == "0") {
+                      $_POST['objets_glpi_assign'] = NULL;
+                  }
+                  $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `objets_glpi_assign` = '" . $_POST['objets_glpi_assign'] . "' WHERE  plugin_formcreator_targets_id=" . $id . ";";
+                  $DB->query($update);
+              }
+              if (isset($_POST['objets_glpi_observer'])) {
+                  if ($_POST['objets_glpi_observer'] == "0") {
+                      $_POST['objets_glpi_observer'] = NULL;
+                  }
+                  $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `objets_glpi_observer` = '" . $_POST['objets_glpi_observer'] . "' WHERE  plugin_formcreator_targets_id=" . $id . ";";
+                  $DB->query($update);
+              }
+              if (isset($_POST['gr_conditions'])) {
+                  if ($_POST['gr_conditions'] == "0") {
+                      $_POST['gr_conditions'] = NULL;
+                  }
+                  $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `gr_conditions` = '" . $_POST['gr_conditions'] . "' WHERE  plugin_formcreator_targets_id=" . $id . ";";
+                  $DB->query($update);
+              }
+              if (isset($_POST['gv_conditions'])) {
+                  if ($_POST['gv_conditions'] == "0") {
+                      $_POST['gv_conditions'] = NULL;
+                  }
+                  $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `gv_conditions` = '" . $_POST['gv_conditions'] . "' WHERE  plugin_formcreator_targets_id=" . $id . ";";
+                  $DB->query($update);
+              }
+              if (isset($_POST['question_concernee_observer'])) {
+                  if ($_POST['question_concernee_observer'] == "0") {
+                      $_POST['quesFtion_concernee_observer'] = NULL;
+                  }
+                  $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `question_concernee_observer` = '" . $_POST['question_concernee_observer'] . "' WHERE  plugin_formcreator_targets_id=" . $id . ";";
+                  $DB->query($update);
+              }
+              if (isset($_POST['question_concernee_assign'])) {
+                  if ($_POST['question_concernee_assign'] == "0") {
+                      $_POST['question_concernee_assign'] = NULL;
+                  }
+                  $update = "UPDATE glpi_plugin_formcreator_targetsconditions SET `question_concernee_assign` = '" . $_POST['question_concernee_assign'] . "' WHERE  plugin_formcreator_targets_id=" . $id . ";";
+                  $DB->query($update);
+              }
+          } else {
+              // insert
+              if ($_POST['question_concernee_observer'] == "0") {
+                  $_POST['question_concernee_observer'] = NULL;
+              }
+              if ($_POST['question_concernee_assign'] == "0") {
+                  $_POST['question_concernee_assign'] = NULL;
+              }
+              if ($_POST['gv_conditions'] == "0") {
+                  $_POST['gv_conditions'] = NULL;
+              }
+              if ($_POST['gr_conditions'] == "0") {
+                  $_POST['gr_conditions'] = NULL;
+              }
+              if ($_POST['objets_glpi_observer'] == "0") {
+                  $_POST['objets_glpi_observer'] = NULL;
+              }
+              if ($_POST['objets_glpi_assign'] == "0") {
+                  $_POST['objets_glpi_assign'] = NULL;
+              }
+              $insert = "INSERT INTO glpi_plugin_formcreator_targetsconditions "
+                      . "(plugin_formcreator_targets_id, question_concernee_assign, question_concernee_observer, "
+                      . "objets_glpi_assign, objets_glpi_observer, gr_conditions, gv_conditions) "
+                      . "VALUES (" . $id . ", '" . $_POST['question_concernee_assign'] . "','" . $_POST['question_concernee_observer'] . "','"
+                      . $_POST['objets_glpi_assign'] . "','" . $_POST['objets_glpi_observer'] . "','"
+                      . $_POST['gr_conditions'] . "','" . $_POST['gv_conditions'] . "');";
+              $GLOBALS['DB']->query($insert);
+          }
+      }
+
       Html::back();
 
    } elseif (isset($_GET['delete_actor'])) {

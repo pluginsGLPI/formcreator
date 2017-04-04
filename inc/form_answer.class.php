@@ -795,6 +795,28 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
       foreach($found_targets as $target) {
+         $obj = new $target['itemtype'];
+         $obj->getFromDB($target['items_id']);
+         $_SESSION['items_id'] = $target['items_id'];
+         $condition = PluginFormcreatorExtension::generationTicketControl($target);
+         if ($condition) {
+            if (!$obj->save($this)) {
+               return false;
+            }
+            $generated = true;
+         }
+      }
+      unset($_SESSION['element_id']);
+      if ($generated) {
+         Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
+      } else {
+            Session::addMessageAfterRedirect(__('Une erreur s’est produite : votre demande n’a pas généré de ticket et ne sera pas traitée. Veuillez contacter votre correspondant de la DSI habituel ou créer un ticket d’anomalie sur l’application SOSDSI en précisant
+que le groupe de résolution pour l’application n’est pas défini dans la matrice organisationnelle.
+', 'formcreator'), false, ERROR);
+      }
+      return true;
+      /* in 2.4.1
+      foreach($found_targets as $target) {
          if (!$target->save($this)) {
             $success = false;
             break;
@@ -803,6 +825,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
       unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
       return $success;
+      */
    }
 
    /**
@@ -942,6 +965,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          // Notify the requester
          NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
       }
+   }
+
+   static function generationTicketControl($options) {
+      /// TODO try to revert usage : Dropdown::show calling this function
+      /// TODO use this function instead of Dropdown::show
+      return true;
    }
 
    /**

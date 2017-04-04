@@ -108,6 +108,9 @@ $rand = mt_rand();
             <div id="glpi_objects_field">
                <?php
                   $optgroup = array(
+                                 __("Référentiel") => array(
+                                    'Applications'           => _n("Applications", "Applications", 2)
+                                 ),
                                  __("Assets") => array(
                                     'Computer'           => _n("Computer", "Computers", 2),
                                     'Monitor'            => _n("Monitor", "Monitors", 2),
@@ -203,6 +206,9 @@ $rand = mt_rand();
                style="width: 90%"><?php echo $question->fields['default_values']; ?></textarea>
             <div id="dropdown_default_value_field">
                <?php
+               if($question->fields['values'] == 'Applications'){
+                   $question->fields['values'] = 'PluginFormcreatorReferentielsApplications';
+               }
                if((($question->fields['fieldtype'] == 'dropdown')
                      || ($question->fields['fieldtype'] == 'glpiselect'))
                    && !empty($question->fields['values'])
