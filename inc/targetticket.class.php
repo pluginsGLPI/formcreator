@@ -1604,7 +1604,7 @@ EOS;
                      `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none',
                      `urgency_question` int(11) NOT NULL DEFAULT '0',
                      `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE,
-                     `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
+                     `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
                      `destination_entity_value` int(11) NULL DEFAULT NULL,
                      `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
                      `tag_questions` VARCHAR(255) NOT NULL,
@@ -1627,7 +1627,7 @@ EOS;
          // Migration to Formcreator 0.90-1.4
          if(!FieldExists($table, 'destination_entity', false)) {
             $query = "ALTER TABLE `$table`
-                        ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
+                        ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
                         ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
             $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
          } else {
@@ -1636,10 +1636,12 @@ EOS;
                $query = "ALTER TABLE `$table`
                            CHANGE COLUMN `destination_entity` `destination_entity`
                            ENUM($enum_destination_entity)
-                           NOT NULL DEFAULT 'requester'";
+                           NOT NULL DEFAULT 'current'";
                $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
             }
          }
+         $query = "ALTER TABLE `$table` ALTER COLUMN `destination_entity` SET DEFAULT 'current'";
+         $DB->query($query);
 
          if(!FieldExists($table, 'tag_type', false)) {
             $query = "ALTER TABLE `$table`
