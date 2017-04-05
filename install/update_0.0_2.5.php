@@ -1016,7 +1016,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
    // Migration to Formcreator 0.90-1.4
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'destination_entity', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-      ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'requester',
+      ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
       ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
@@ -1025,10 +1025,12 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
          CHANGE COLUMN `destination_entity` `destination_entity`
          ENUM($enum_destination_entity)
-         NOT NULL DEFAULT 'requester'";
+         NOT NULL DEFAULT 'current'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
+   $query = "ALTER TABLE `$table` ALTER COLUMN `destination_entity` SET DEFAULT 'current'";
+   $DB->query($query);
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'tag_type', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`

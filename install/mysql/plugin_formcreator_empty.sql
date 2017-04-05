@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `urgency_rule` enum('none','specific','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
   `urgency_question` int(11) NOT NULL DEFAULT '0',
   `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
-  `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'requester',
+  `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'current',
   `destination_entity_value` int(11) DEFAULT NULL,
   `tag_type` enum('none','questions','specifics','questions_and_specific','questions_or_specific') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
   `tag_questions` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
