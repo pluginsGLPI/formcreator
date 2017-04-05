@@ -301,6 +301,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
+            'forcegroupby'  => false,
             'additionalfields' => array('display_id'),
          ),
          '2' => array(
