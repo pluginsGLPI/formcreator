@@ -301,6 +301,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
             'name'          => __('Name'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,
+            'forcegroupby'  => true,
             'additionalfields' => array('display_id'),
          ),
          '2' => array(
@@ -440,18 +441,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
      return $search;
    }
 
-   public static function giveItem($itemtype, $ID, $data, $num) {
+   public static function giveItem($itemtype, $option_id, $data, $num) {
       $searchopt=&Search::getOptions($itemtype);
-      $table=$searchopt[$ID]["table"];
-      $field=$searchopt[$ID]["field"];
+      $table=$searchopt[$option_id]["table"];
+      $field=$searchopt[$option_id]["field"];
 
       if (isset($data['raw']['ITEM_0_display_id'])) {
-         $id = substr($data['raw']['ITEM_0_display_id'], 2);
+         preg_match('/[tf]+_([0-9]*)/', $data['raw']['ITEM_0_display_id'], $matches);
+         $id = $matches[1];
       }
 
       switch ("$table.$field") {
          case "glpi_plugin_formcreator_issues.name":
-            $name = $data['raw']["ITEM_$num"];
+            $name = $data[$num][0]['name'];
             return "<a href='".FORMCREATOR_ROOTDOC."/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype']."'>$name</a>";
             break;
 
