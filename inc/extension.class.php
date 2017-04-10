@@ -480,18 +480,18 @@ class PluginFormcreatorExtension {
                             }
                             break;
                         case 'ne_contient_pas':
-                            if (strpos(strtolower(html_entity_decode($_SESSION['answer'][$row['questions']])), strtolower($row['valeur'])) === TRUE) {
+                            if (strpos(strtolower($_SESSION['answer'][$row['questions']]), strtolower($row['valeur']))) {
                                 $condition = FALSE;
                             }
                             break;
                         case 'commence_par':
-                            if (substr(strtolower(html_entity_decode($_SESSION['answer'][$row['questions']])), 0, strlen($row['valeur'])) !== strtolower($row['valeur'])) {
+                            if (substr(strtolower($_SESSION['answer'][$row['questions']]), 0, strlen($row['valeur'])) !== strtolower($row['valeur'])) {
                                 $condition = FALSE;
                             }
                             break;
                         case 'termine_par':
                             $longueur = strlen($_SESSION['answer'][$row['questions']]) - strlen($row['valeur']);
-                            if (substr(strtolower(html_entity_decode($_SESSION['answer'][$row['questions']])), $longueur, strlen($_SESSION['answer'][$row['questions']])) !== strtolower($row['valeur'])) {
+                            if (substr(strtolower($_SESSION['answer'][$row['questions']]), $longueur, strlen($_SESSION['answer'][$row['questions']])) !== strtolower($row['valeur'])) {
                                 $condition = FALSE;
                             }
                             break;

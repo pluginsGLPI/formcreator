@@ -782,15 +782,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
    public function generateTarget()
    {
-      global $CFG_GLPI;
-
-      $success = true;
-
       // Get all targets
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
-      $target        = new PluginFormcreatorTarget();
-      $found_targets = $target->getTargetsForForm($form);
+      $target_class = new PluginFormcreatorTarget();
+      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
