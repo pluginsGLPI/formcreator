@@ -33,6 +33,11 @@ class actorField extends PluginFormcreatorField
                name="formcreator_field_' . $this->fields['id'] . '"
                id="actor_formcreator_field_' . $this->fields['id'] . '"
                value=" " />';
+      if (version_compare(GLPI_VERSION, '9.1') < 0) {
+         $method = 'GET';
+      } else {
+         $method = 'POST';
+      }
       echo '<script type="text/javascript">
                jQuery(document).ready(function() {
                   $("#actor_formcreator_field_' . $this->fields['id'] . '").select2({
@@ -41,6 +46,7 @@ class actorField extends PluginFormcreatorField
                      minimumInputLength: 0,
                      ajax: {
                         url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+                        type: "' . $method . '",
                         dataType: "json",
                         data: function (term, page) {
                            return {
