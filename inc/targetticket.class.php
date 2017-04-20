@@ -1375,37 +1375,41 @@ EOS;
          foreach ($this->requesters['_users_id_requester'] as $index => $userId) {
             $ticket_user = new Ticket_User();
             $ticket_user->add(array(
-                  'tickets_id'       => $ticketID,
-                  'users_id'         => $userId,
-                  'type'             => CommonITILActor::REQUESTER,
-                  'use_notification' => $this->requesters['_users_id_requester_notif']['use_notification'][$index],
+                  'tickets_id'         => $ticketID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::REQUESTER,
+                  'use_notification'   => $this->requesters['_users_id_requester_notif']['use_notification'][$index],
+                  'alternative_email'  => $this->requesters['_users_id_requester_notif']['alternative_email'][$index],
             ));
          }
          foreach ($this->observers['_users_id_observer'] as $index => $userId) {
             $ticket_user = new Ticket_User();
             $ticket_user->add(array(
-                  'tickets_id'       => $ticketID,
-                  'users_id'         => $userId,
-                  'type'             => CommonITILActor::OBSERVER,
-                  'use_notification' => $this->observers['_users_id_observer_notif']['use_notification'][$index],
+                  'tickets_id'         => $ticketID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::OBSERVER,
+                  'use_notification'   => $this->observers['_users_id_observer_notif']['use_notification'][$index],
+                  'alternative_email'  => $this->observers['_users_id_observer_notif']['alternative_email'][$index],
             ));
          }
          foreach ($this->assigned['_users_id_assign'] as $index => $userId) {
             $ticket_user = new Ticket_User();
             $ticket_user->add(array(
-                  'tickets_id'       => $ticketID,
-                  'users_id'         => $userId,
-                  'type'             => CommonITILActor::ASSIGN,
-                  'use_notification' => $this->assigned['_users_id_assign_notif']['use_notification'][$index],
+                  'tickets_id'         => $ticketID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::ASSIGN,
+                  'use_notification'   => $this->assigned['_users_id_assign_notif']['use_notification'][$index],
+                  'alternative_email'  => $this->assigned['_users_id_assign_notif']['alternative_email'][$index],
             ));
          }
          foreach ($this->assignedSuppliers['_suppliers_id_assign'] as $index => $userId) {
             $supplier_ticket = new Supplier_Ticket();
             $supplier_ticket->add(array(
-                  'tickets_id'       => $ticketID,
-                  'users_id'         => $userId,
-                  'type'             => CommonITILActor::ASSIGN,
-                  'use_notification' => $this->assigned['_suppliers_id_assign']['use_notification'][$index],
+                  'tickets_id'         => $ticketID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::ASSIGN,
+                  'use_notification'   => $this->assigned['_suppliers_id_assign']['use_notification'][$index],
+                  'alternative_email'  => $this->assigned['_suppliers_id_assign']['alternative_email'][$index],
             ));
          }
 
