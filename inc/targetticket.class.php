@@ -216,9 +216,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                    INNER JOIN glpi_plugin_formcreator_sections s
                      ON s.id = q.plugin_formcreator_sections_id
                    WHERE s.id = {$section['id']}
-                   AND (q.fieldtype = 'glpiselect'
+                   AND ((q.fieldtype = 'glpiselect'
                      AND q.values IN ('User', 'Group', 'Supplier'))
-                   OR (q.fieldtype = 'actor')";
+                     OR (q.fieldtype = 'actor'))";
          $result2 = $DB->query($query2);
          $section_questions_user       = array();
          $section_questions_group      = array();
