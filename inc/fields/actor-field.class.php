@@ -43,25 +43,22 @@ class actorField extends PluginFormcreatorField
                   $("#actor_formcreator_field_' . $this->fields['id'] . '").select2({
                      multiple: true,
                      tokenSeparators: [",", ";"],
-                     minimumInputLength: 2,
-                     query: function(query) {
-                        var items;
-                        if (query.term.length > 0) {
-                            $.ajax({
-                              url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
-                              data: {
-                                 all: 0,
-                                 right: "all",
-                                 entity_restrict: -1,
-                                 searchText: query.term,
-                                 page_limit: 20,
-                                 page: query.page
-                              },
-                              type: "' . $method . '",
-                              dataType: "json"
-                           }).done(function(response) { query.callback(response) });
-                        } else {
-                           query.callback({});
+                     minimumInputLength: 0,
+                     ajax: {
+                        url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+                        type: "' . $method . '",
+                        dataType: "json",
+                        data: function (term, page) {
+                           return {
+                              entity_restrict: -1,
+                              searchText: term,
+                              page_limit: 100,
+                              page: page
+                           }
+                        },
+                        results: function (data, page) {
+                           var more = (data.count >= 100);
+                           return {results: data.results, more: more};
                         }
                      },
                      createSearchChoice: function itemCreator(term, data) {
@@ -160,7 +157,11 @@ class actorField extends PluginFormcreatorField
       }
 
       // If an item has been removed by sanitization, then the data is not valid
-      return count($sanitized) == count($value);
+      if (count($sanitized) != count($value)) {
+         Session::addMessageAfterRedirect(__('Invalid value:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         return false;
+      }
+      return true;
    }
 
    public function getValue()
