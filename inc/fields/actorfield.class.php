@@ -151,7 +151,11 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       }
 
       // If an item has been removed by sanitization, then the data is not valid
-      return count($sanitized) == count($value);
+      if (count($sanitized) != count($value)) {
+         Session::addMessageAfterRedirect(__('Invalid value:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+         return false;
+      }
+      return true;
    }
 
    public function getValue() {
