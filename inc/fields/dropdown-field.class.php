@@ -19,7 +19,21 @@ class dropdownField extends PluginFormcreatorField
                $dparams['right'] = 'all';
             }
 
-            $itemtype::dropdown($dparams);
+            //verifier si on utilise un clone de l'objet GLPI
+            //replis à partir de la Referentiel
+            if (isset($itemtype)) {
+               if ($itemtype == 'Applications') {
+                  $itemtype = 'PluginFormcreatorReferentielsApplications';
+                  $_SESSION['js']['name'] = $this->fields['values'];
+                  $_SESSION['js']['value'] = $this->fields['id'];
+               }
+            }
+
+            if (isset($_SESSION['js'])) {
+               $itemtype= PluginFormcreatorExtension::dropdown($dparams);
+            } else {
+               $itemtype::dropdown($dparams);
+            }
          }
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">
@@ -37,6 +51,10 @@ class dropdownField extends PluginFormcreatorField
    public function getAnswer()
    {
       $value = $this->getValue();
+      if ($this->fields['values'] == 'Applications') {
+         $_SESSION['select_object_condition'] = [$this->fields['values']];
+         $this->fields['values'] = 'PluginFormcreatorReferentielsApplications';
+      }
       if ($this->fields['values'] == 'User') {
          return getUserName($value);
       } else {

@@ -1094,6 +1094,20 @@ class PluginFormcreatorForm extends CommonDBTM
                if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas[$id])) {
                   $valid = false;
                }
+               if ($fields['values'] == 'Applications') {
+                  //$_SESSION['id_element'] = $datas[$id];
+                  // $_SESSION['type_element'] = $fields['values'];
+                  $referentiel = 'glpi_plugin_formcreator_referentielsapplications';
+                  foreach ($_SESSION['Object_applications'] as $values) {
+                     if ($values['id'] == $datas[$id]) {
+                        $fields_app_id = $fields['id'];
+                        $_SESSION['element_name'] = $values['title'];
+                        $_SESSION['element_id'] = $values['id'];
+                     }
+                  }
+               }
+
+               $_SESSION['answer'][plugin_formcreator_decode($fields['name'])] = plugin_formcreator_decode($datas[$fields['id']]);
             }
          } else {
             $valid = false;
