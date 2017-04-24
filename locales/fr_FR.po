@@ -5,6 +5,7 @@
 # Translators:
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
+# gerald antoniolli <deeper26@gmail.com>, 2017
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014-2016
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 # Johan Cwiklinski <trasher@x-tnd.be>, 2016
@@ -13,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-27 16:03+0200\n"
-"PO-Revision-Date: 2017-03-27 14:37+0000\n"
+"POT-Creation-Date: 2017-04-24 15:44+0200\n"
+"PO-Revision-Date: 2017-04-24 13:48+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +26,7 @@ msgstr ""
 
 #: setup.php:20 setup.php:148 ajax/homepage_link.php:6
 #: inc/formlist.class.php:14 inc/entityconfig.class.php:27
-#: inc/form.class.php:50 inc/form.class.php:458 inc/form.class.php:1932
+#: inc/form.class.php:50 inc/form.class.php:457 inc/form.class.php:1931
 #: scripts/scripts.js.php:18
 msgid "Form"
 msgid_plural "Forms"
@@ -37,7 +38,7 @@ msgstr[1] "Formulaires"
 msgid "Forms waiting for validation"
 msgstr "Formulaire en attente de validation"
 
-#: hook.php:57 inc/header.class.php:7 inc/form.class.php:317
+#: hook.php:57 inc/header.class.php:7 inc/form.class.php:316
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Entête"
@@ -168,7 +169,7 @@ msgid ""
 "previous one."
 msgstr "Une entête existe pour une entité parente ! Ajouter une entête remplacera la précédente pour cette entité."
 
-#: inc/form_answer.class.php:39 inc/issue.class.php:411
+#: inc/form_answer.class.php:39 inc/issue.class.php:412
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Formulaire saisi"
@@ -248,15 +249,15 @@ msgstr[1] "Cibles"
 msgid "Access type"
 msgstr "Accès"
 
-#: inc/form_profile.class.php:35 inc/form.class.php:189 inc/form.class.php:243
+#: inc/form_profile.class.php:35 inc/form.class.php:188 inc/form.class.php:242
 msgid "Public access"
 msgstr "Accès public / anonyme"
 
-#: inc/form_profile.class.php:36 inc/form.class.php:190 inc/form.class.php:246
+#: inc/form_profile.class.php:36 inc/form.class.php:189 inc/form.class.php:245
 msgid "Private access"
 msgstr "Utilisateur GLPI authentifié"
 
-#: inc/form_profile.class.php:37 inc/form.class.php:191 inc/form.class.php:249
+#: inc/form_profile.class.php:37 inc/form.class.php:190 inc/form.class.php:248
 msgid "Restricted access"
 msgstr "Droits restreints (profils)"
 
@@ -285,7 +286,7 @@ msgstr[1] "Destinations"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: inc/target.class.php:119 inc/form.class.php:946
+#: inc/target.class.php:119 inc/form.class.php:945
 msgid "The name cannot be empty!"
 msgstr "Le nom ne doit pas être vide !"
 
@@ -305,10 +306,10 @@ msgstr "Formulaires - synchronisation des demandes du catalogue de service"
 
 #: inc/issue.class.php:78
 msgid "Update issue data from tickets and form answers"
-msgstr "Met à jour les informations sur les demandes à partir des tickets et des réponses aux formulaures"
+msgstr "Mettre à jour les informations sur les demandes à partir des tickets et des réponses aux formulaires"
 
 #: inc/field.class.php:104 inc/fields/multiselect-field.class.php:15
-#: inc/fields/actor-field.class.php:153
+#: inc/fields/actor-field.class.php:155
 #: inc/fields/checkboxes-field.class.php:74
 #: inc/fields/datetime-field.class.php:50 inc/fields/date-field.class.php:50
 #: scripts/forms-validation.js.php:11
@@ -354,7 +355,7 @@ msgstr "Fournisseur depuis la question"
 #: inc/targetticket_actor.class.php:15 inc/targetticket.class.php:723
 #: inc/targetticket.class.php:833 inc/targetticket.class.php:950
 msgid "Actors from the question"
-msgstr "Acteurs à partir de la question"
+msgstr "Acteurs depuis la question"
 
 #: inc/answer.class.php:35 inc/targetticket.class.php:983
 msgid "Answer"
@@ -529,7 +530,7 @@ msgid ""
 msgstr "Bonjour,\\\\nNous somme désolé de vous informer que votre demande a été refusé par le valideur pour les raisons suivantes :\\\\n##formcreator.validation_comment##\\\\n\\\\nVous pouvez toutefois modifier et renvoyer votre demande en cliquant sur le lien ci-dessous :\\\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetform_answer.class.php:115
-#: inc/targetticket.class.php:1509
+#: inc/targetticket.class.php:1513
 msgid "Your form has been accepted by the validator"
 msgstr "Votre formulaire a été accepté par le valideur"
 
@@ -565,144 +566,143 @@ msgstr "Page d'accueil"
 msgid "Access"
 msgstr "Accès"
 
-#: inc/form.class.php:188 inc/form.class.php:202 inc/form.class.php:256
-#: inc/form.class.php:311
+#: inc/form.class.php:201 inc/form.class.php:255 inc/form.class.php:310
 msgid "All langages"
 msgstr "Toutes les langues"
 
-#: inc/form.class.php:296
+#: inc/form.class.php:295
 msgid "Direct access on homepage"
 msgstr "Accès direct depuis la page d'accueil"
 
-#: inc/form.class.php:323
+#: inc/form.class.php:322
 msgid "Need to be validate?"
 msgstr "Validation requise ?"
 
-#: inc/form.class.php:427
+#: inc/form.class.php:426
 msgid "Default form in service catalog"
 msgstr "Formulaire par défaut dans le catalogue de service"
 
-#: inc/form.class.php:542
+#: inc/form.class.php:541
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Catégorie"
 msgstr[1] "Catégories"
 
-#: inc/form.class.php:543
+#: inc/form.class.php:542
 msgid "see all"
 msgstr "Voir tous"
 
-#: inc/form.class.php:561
+#: inc/form.class.php:560
 msgid "Popularity sort"
 msgstr "Tri par popularité"
 
-#: inc/form.class.php:565
+#: inc/form.class.php:564
 msgid "Alphabetic sort"
 msgstr "Tri alphabétique"
 
-#: inc/form.class.php:737
+#: inc/form.class.php:736
 msgid "Please, describe your need here"
 msgstr "Merci de décrire votre besoin ici"
 
-#: inc/form.class.php:746
+#: inc/form.class.php:745
 msgid "My last forms (requester)"
 msgstr "Mes derniers formulaires (Demandeur)"
 
-#: inc/form.class.php:756
+#: inc/form.class.php:755
 msgid "No form posted yet"
 msgstr "Aucun formulaire saisi pour le moment"
 
-#: inc/form.class.php:768
+#: inc/form.class.php:767
 msgid "All my forms (requester)"
 msgstr "Tous mes formulaires (Demandeur)"
 
-#: inc/form.class.php:778
+#: inc/form.class.php:777
 msgid "My last forms (validator)"
 msgstr "Mes derniers formulaires (Valideur)"
 
-#: inc/form.class.php:798
+#: inc/form.class.php:797
 msgid "No form waiting for validation"
 msgstr "Aucun formulaire en attente de validation"
 
-#: inc/form.class.php:810
+#: inc/form.class.php:809
 msgid "All my forms (validator)"
 msgstr "Tous mes formulaires (Valideur)"
 
-#: inc/form.class.php:902
+#: inc/form.class.php:901
 msgid "Choose a validator"
 msgstr "Choisissez un valideur"
 
-#: inc/form.class.php:1109
+#: inc/form.class.php:1108
 msgid "You must select validator !"
 msgstr "Vous devez choisir un valideur !"
 
-#: inc/form.class.php:1348
+#: inc/form.class.php:1347
 msgid "Duplicate"
 msgstr "COPIE"
 
-#: inc/form.class.php:1523
+#: inc/form.class.php:1522
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulaire duppliqué : %s"
 
-#: inc/form.class.php:1534
+#: inc/form.class.php:1533
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulaire transféré : %s"
 
-#: inc/form.class.php:1676
+#: inc/form.class.php:1675
 msgid "Upload of JSON files not allowed."
-msgstr "Le téléversement de fichiers JSON n'est pas autorisé."
+msgstr "La mise à jour de JSON n'est pas autorisé."
+
+#: inc/form.class.php:1678
+msgid "You may allow JSON files right now."
+msgstr "vous pouvez utiliser les fichiers json dès maintenant"
 
 #: inc/form.class.php:1679
-msgid "You may allow JSON files right now."
-msgstr "Vous pouvez autoriser le téléversement de fichiers JSON immédiatement."
-
-#: inc/form.class.php:1680
 msgctxt "button"
 msgid "Create"
 msgstr "Créer"
 
-#: inc/form.class.php:1683 inc/form.class.php:1694
+#: inc/form.class.php:1682 inc/form.class.php:1693
 msgid "Please contact your GLPI administrator."
 msgstr "Veuillez contacter votre administrateur GLPI."
 
-#: inc/form.class.php:1684 inc/form.class.php:1695
+#: inc/form.class.php:1683 inc/form.class.php:1694
 msgctxt "button"
 msgid "Back"
 msgstr "Retour"
 
-#: inc/form.class.php:1687
+#: inc/form.class.php:1686
 msgid "Upload of JSON files not enabled."
-msgstr "Le téléversement de fichiers JSON n'est pas activé."
+msgstr "La mise à jour de JSON n'est pas disponible"
+
+#: inc/form.class.php:1689
+msgid "You may enable JSON files right now."
+msgstr "vous pouvez activer JSON dès maintenant"
 
 #: inc/form.class.php:1690
-msgid "You may enable JSON files right now."
-msgstr "Vous pouvez activer le téléversement de fichiers JSON immédiatement."
-
-#: inc/form.class.php:1691
 msgctxt "button"
 msgid "Enable"
 msgstr "Activer"
 
-#: inc/form.class.php:1774
+#: inc/form.class.php:1773
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formulaire importé avec succès depuis %s"
 
-#: inc/form.class.php:1862
+#: inc/form.class.php:1861
 msgid "Failed to create JSON document type"
 msgstr "Échec de création du type de fichiers JSON"
 
-#: inc/form.class.php:1869
+#: inc/form.class.php:1868
 msgid "JSON document type not found"
 msgstr "Type de document JSON introuvable"
 
-#: inc/form.class.php:1876
+#: inc/form.class.php:1875
 msgid "Failed to update JSON document type"
 msgstr "Echec lors de la mise à jour du type de document JSON"
 
-#: inc/form.class.php:1936
+#: inc/form.class.php:1935
 msgid "Forms without category"
 msgstr "Formulaire(s) sans catégorie"
 
@@ -834,19 +834,19 @@ msgstr "La desciption ne doit pas être vide !"
 
 #: inc/fields/file-field.class.php:29
 msgid "A required file is missing:"
-msgstr "Un fichier requis est manquant: "
+msgstr "Un fichier requis est manquant:"
 
 #: inc/fields/multiselect-field.class.php:20
 #: inc/fields/checkboxes-field.class.php:81
 #, php-format
 msgid "The following question needs of at least %d answers"
-msgstr "La question suivante requiert au moins %d réponses"
+msgstr "LA question suivante requiert au moins %d réponses"
 
 #: inc/fields/multiselect-field.class.php:26
 #: inc/fields/checkboxes-field.class.php:87
 #, php-format
 msgid "The following question does not accept more than %d answers"
-msgstr "La question suivante ne permet pas plus de %d réponses"
+msgstr "La question suivante n'accepte pas plus de %d réponses"
 
 #: inc/fields/multiselect-field.class.php:71
 msgid "Multiselect"
@@ -865,12 +865,12 @@ msgstr[1] "Etiquettes"
 #: inc/fields/textarea-field.class.php:35 inc/fields/text-field.class.php:12
 #, php-format
 msgid "The text is too short (minimum %d characters):"
-msgstr "Le texte est trop court (minimum %d caractères):"
+msgstr "Le texte est trop court (minimum de %d caractères):"
 
 #: inc/fields/textarea-field.class.php:40 inc/fields/text-field.class.php:17
 #, php-format
 msgid "The text is too long (maximum %d characters):"
-msgstr "Le texte est trop long (maximum %d caractères):"
+msgstr "Le texte est trop long (maximum de %d caractères):"
 
 #: inc/fields/textarea-field.class.php:45 inc/fields/float-field.class.php:27
 #: inc/fields/integer-field.class.php:27 inc/fields/text-field.class.php:22
@@ -891,6 +891,10 @@ msgid_plural "Actors"
 msgstr[0] "Acteur"
 msgstr[1] "Acteurs"
 
+#: inc/fields/actor-field.class.php:161
+msgid "Invalid value:"
+msgstr "Valeur non valide :"
+
 #: inc/fields/ldapselect-field.class.php:72
 msgid "LDAP Select"
 msgstr "Sélection LDAP"
@@ -902,12 +906,12 @@ msgstr "Ce n'est pas un nombre:"
 #: inc/fields/float-field.class.php:15 inc/fields/integer-field.class.php:15
 #, php-format
 msgid "The following number must be greater than %d:"
-msgstr "Le nombre suivant doit être supérieur à %d:"
+msgstr "Le nombre suivant doit être supérieur à %d"
 
 #: inc/fields/float-field.class.php:21 inc/fields/integer-field.class.php:21
 #, php-format
 msgid "The following number must be lower than %d:"
-msgstr "Le nombre suivant doit être inférieur à %d:"
+msgstr "Le nombre suivant doit être inférieur à %d"
 
 #: inc/fields/float-field.class.php:38
 msgid "Float"
@@ -923,7 +927,7 @@ msgstr "Date et heure"
 
 #: inc/fields/integer-field.class.php:10
 msgid "This is not an integer:"
-msgstr "Ce n'est pas un entier: "
+msgstr "Ce n'est pas un entier:"
 
 #: inc/fields/integer-field.class.php:38
 msgid "Integer"

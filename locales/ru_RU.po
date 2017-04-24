@@ -6,14 +6,14 @@
 # Alexey Petukhov <lexx015@gmail.com>, 2014-2015
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014
 # Nikolay <techobsl@yandex.ru>, 2016
-# Nikolay <techobsl@yandex.ru>, 2017
+# Nikolay <techobsl@yandex.ru>, 2016-2017
 # Nikolay <techobsl@yandex.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-27 16:03+0200\n"
-"PO-Revision-Date: 2017-03-27 14:17+0000\n"
+"POT-Creation-Date: 2017-04-24 15:44+0200\n"
+"PO-Revision-Date: 2017-04-24 13:47+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: setup.php:20 setup.php:148 ajax/homepage_link.php:6
 #: inc/formlist.class.php:14 inc/entityconfig.class.php:27
-#: inc/form.class.php:50 inc/form.class.php:458 inc/form.class.php:1932
+#: inc/form.class.php:50 inc/form.class.php:457 inc/form.class.php:1931
 #: scripts/scripts.js.php:18
 msgid "Form"
 msgid_plural "Forms"
@@ -38,7 +38,7 @@ msgstr[3] "Формы"
 msgid "Forms waiting for validation"
 msgstr "Формы ожидающие согласования"
 
-#: hook.php:57 inc/header.class.php:7 inc/form.class.php:317
+#: hook.php:57 inc/header.class.php:7 inc/form.class.php:316
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Заголовок"
@@ -177,7 +177,7 @@ msgid ""
 "previous one."
 msgstr "Такой заголовок уже существует в родительской организации! Заголовок перезапишет предыдущий."
 
-#: inc/form_answer.class.php:39 inc/issue.class.php:411
+#: inc/form_answer.class.php:39 inc/issue.class.php:412
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Ответ в форме"
@@ -261,15 +261,15 @@ msgstr[3] "Цели"
 msgid "Access type"
 msgstr "Тип доступа"
 
-#: inc/form_profile.class.php:35 inc/form.class.php:189 inc/form.class.php:243
+#: inc/form_profile.class.php:35 inc/form.class.php:188 inc/form.class.php:242
 msgid "Public access"
 msgstr "Публичный доступ"
 
-#: inc/form_profile.class.php:36 inc/form.class.php:190 inc/form.class.php:246
+#: inc/form_profile.class.php:36 inc/form.class.php:189 inc/form.class.php:245
 msgid "Private access"
 msgstr "Личный доступ"
 
-#: inc/form_profile.class.php:37 inc/form.class.php:191 inc/form.class.php:249
+#: inc/form_profile.class.php:37 inc/form.class.php:190 inc/form.class.php:248
 msgid "Restricted access"
 msgstr "Доступ запрещен"
 
@@ -302,7 +302,7 @@ msgstr[3] "Назначения"
 msgid "Delete"
 msgstr "Удалить"
 
-#: inc/target.class.php:119 inc/form.class.php:946
+#: inc/target.class.php:119 inc/form.class.php:945
 msgid "The name cannot be empty!"
 msgstr "Требуется указать название!"
 
@@ -327,7 +327,7 @@ msgid "Update issue data from tickets and form answers"
 msgstr ""
 
 #: inc/field.class.php:104 inc/fields/multiselect-field.class.php:15
-#: inc/fields/actor-field.class.php:153
+#: inc/fields/actor-field.class.php:155
 #: inc/fields/checkboxes-field.class.php:74
 #: inc/fields/datetime-field.class.php:50 inc/fields/date-field.class.php:50
 #: scripts/forms-validation.js.php:11
@@ -364,7 +364,7 @@ msgstr "Группа из вопроса"
 
 #: inc/targetticket_actor.class.php:13
 msgid "Specific supplier"
-msgstr "Указанный поставщик"
+msgstr ""
 
 #: inc/targetticket_actor.class.php:14 inc/targetticket.class.php:961
 msgid "Supplier from the question"
@@ -552,7 +552,7 @@ msgid ""
 msgstr "Здравствуйте,\\nМы сожалеем сообщить Вам, что Ваша форма была отклонена согласующим по причине ниже:\\n##formcreator.validation_comment##\\n\\nВы можете все еще исправить и снова отправить кликнув по этой ссылке:\\n##formcreator.validation_link##"
 
 #: inc/notificationtargetform_answer.class.php:115
-#: inc/targetticket.class.php:1509
+#: inc/targetticket.class.php:1513
 msgid "Your form has been accepted by the validator"
 msgstr "Ваша форма была принята согласующим"
 
@@ -588,24 +588,23 @@ msgstr "Домашняя страница"
 msgid "Access"
 msgstr "Доступ"
 
-#: inc/form.class.php:188 inc/form.class.php:202 inc/form.class.php:256
-#: inc/form.class.php:311
+#: inc/form.class.php:201 inc/form.class.php:255 inc/form.class.php:310
 msgid "All langages"
 msgstr "Все языки"
 
-#: inc/form.class.php:296
+#: inc/form.class.php:295
 msgid "Direct access on homepage"
 msgstr "Прямой доступ с домашней страницы"
 
-#: inc/form.class.php:323
+#: inc/form.class.php:322
 msgid "Need to be validate?"
 msgstr "Требуется согласование?"
 
-#: inc/form.class.php:427
+#: inc/form.class.php:426
 msgid "Default form in service catalog"
 msgstr "Форма по умолчанию в каталоге услуг"
 
-#: inc/form.class.php:542
+#: inc/form.class.php:541
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Категория"
@@ -613,121 +612,121 @@ msgstr[1] "Категория"
 msgstr[2] "Категории"
 msgstr[3] "Категории"
 
-#: inc/form.class.php:543
+#: inc/form.class.php:542
 msgid "see all"
 msgstr "смотреть всё"
 
-#: inc/form.class.php:561
+#: inc/form.class.php:560
 msgid "Popularity sort"
 msgstr "По популярности"
 
-#: inc/form.class.php:565
+#: inc/form.class.php:564
 msgid "Alphabetic sort"
 msgstr "По алфавиту"
 
-#: inc/form.class.php:737
+#: inc/form.class.php:736
 msgid "Please, describe your need here"
 msgstr "Пожалуйста, опишите здесь, что Вам нужно"
 
-#: inc/form.class.php:746
+#: inc/form.class.php:745
 msgid "My last forms (requester)"
 msgstr "Мои последние формы (заказчик)"
 
-#: inc/form.class.php:756
+#: inc/form.class.php:755
 msgid "No form posted yet"
 msgstr "Еще не создано форм"
 
-#: inc/form.class.php:768
+#: inc/form.class.php:767
 msgid "All my forms (requester)"
 msgstr "Все мои формы (заказчик)"
 
-#: inc/form.class.php:778
+#: inc/form.class.php:777
 msgid "My last forms (validator)"
 msgstr "Мои последние формы (согласующий)"
 
-#: inc/form.class.php:798
+#: inc/form.class.php:797
 msgid "No form waiting for validation"
 msgstr "Нет форм для согласования"
 
-#: inc/form.class.php:810
+#: inc/form.class.php:809
 msgid "All my forms (validator)"
 msgstr "Все мои формы (согласующий)"
 
-#: inc/form.class.php:902
+#: inc/form.class.php:901
 msgid "Choose a validator"
 msgstr "Выбрать согласующего"
 
-#: inc/form.class.php:1109
+#: inc/form.class.php:1108
 msgid "You must select validator !"
 msgstr "Вы должны выбрать согласующего!"
 
-#: inc/form.class.php:1348
+#: inc/form.class.php:1347
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: inc/form.class.php:1523
+#: inc/form.class.php:1522
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Форма дубликата: %s"
 
-#: inc/form.class.php:1534
+#: inc/form.class.php:1533
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Форма передана: %s"
 
-#: inc/form.class.php:1676
+#: inc/form.class.php:1675
 msgid "Upload of JSON files not allowed."
 msgstr ""
 
-#: inc/form.class.php:1679
+#: inc/form.class.php:1678
 msgid "You may allow JSON files right now."
 msgstr ""
 
-#: inc/form.class.php:1680
+#: inc/form.class.php:1679
 msgctxt "button"
 msgid "Create"
 msgstr ""
 
-#: inc/form.class.php:1683 inc/form.class.php:1694
+#: inc/form.class.php:1682 inc/form.class.php:1693
 msgid "Please contact your GLPI administrator."
 msgstr ""
 
-#: inc/form.class.php:1684 inc/form.class.php:1695
+#: inc/form.class.php:1683 inc/form.class.php:1694
 msgctxt "button"
 msgid "Back"
 msgstr ""
 
-#: inc/form.class.php:1687
+#: inc/form.class.php:1686
 msgid "Upload of JSON files not enabled."
 msgstr ""
 
-#: inc/form.class.php:1690
+#: inc/form.class.php:1689
 msgid "You may enable JSON files right now."
 msgstr ""
 
-#: inc/form.class.php:1691
+#: inc/form.class.php:1690
 msgctxt "button"
 msgid "Enable"
 msgstr ""
 
-#: inc/form.class.php:1774
+#: inc/form.class.php:1773
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Формы успешно импортированы из %s"
 
-#: inc/form.class.php:1862
+#: inc/form.class.php:1861
 msgid "Failed to create JSON document type"
 msgstr ""
 
-#: inc/form.class.php:1869
+#: inc/form.class.php:1868
 msgid "JSON document type not found"
 msgstr ""
 
-#: inc/form.class.php:1876
+#: inc/form.class.php:1875
 msgid "Failed to update JSON document type"
 msgstr ""
 
-#: inc/form.class.php:1936
+#: inc/form.class.php:1935
 msgid "Forms without category"
 msgstr "Формы без категорий"
 
@@ -861,27 +860,27 @@ msgstr "Требуется указать описание!"
 
 #: inc/fields/file-field.class.php:29
 msgid "A required file is missing:"
-msgstr ""
+msgstr "Требуемое поле отсутствует:"
 
 #: inc/fields/multiselect-field.class.php:20
 #: inc/fields/checkboxes-field.class.php:81
 #, php-format
 msgid "The following question needs of at least %d answers"
-msgstr ""
+msgstr "Вопрос должен содержать хотя бы %d ответ(ов)"
 
 #: inc/fields/multiselect-field.class.php:26
 #: inc/fields/checkboxes-field.class.php:87
 #, php-format
 msgid "The following question does not accept more than %d answers"
-msgstr ""
+msgstr "Вопрос должен содержать не более, чем %d ответ(ов)"
 
 #: inc/fields/multiselect-field.class.php:71
 msgid "Multiselect"
-msgstr ""
+msgstr "Множественный выбор"
 
 #: inc/fields/radios-field.class.php:48
 msgid "Radios"
-msgstr ""
+msgstr "Переключатель"
 
 #: inc/fields/tag-field.class.php:66
 msgid "Tag"
@@ -894,25 +893,25 @@ msgstr[3] ""
 #: inc/fields/textarea-field.class.php:35 inc/fields/text-field.class.php:12
 #, php-format
 msgid "The text is too short (minimum %d characters):"
-msgstr ""
+msgstr "Этот текст слишком короткий (минимум %d символов)"
 
 #: inc/fields/textarea-field.class.php:40 inc/fields/text-field.class.php:17
 #, php-format
 msgid "The text is too long (maximum %d characters):"
-msgstr ""
+msgstr "Этот текст слишком длинный (максимум %d символов)"
 
 #: inc/fields/textarea-field.class.php:45 inc/fields/float-field.class.php:27
 #: inc/fields/integer-field.class.php:27 inc/fields/text-field.class.php:22
 msgid "Specific format does not match:"
-msgstr ""
+msgstr "Указанный формат не соотвутствует"
 
 #: inc/fields/textarea-field.class.php:55
 msgid "Textarea"
-msgstr ""
+msgstr "Текстовое поле"
 
 #: inc/fields/select-field.class.php:51
 msgid "Select"
-msgstr ""
+msgstr "Выбор"
 
 #: inc/fields/actor-field.class.php:9
 msgid "Actor"
@@ -922,51 +921,55 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+#: inc/fields/actor-field.class.php:161
+msgid "Invalid value:"
+msgstr ""
+
 #: inc/fields/ldapselect-field.class.php:72
 msgid "LDAP Select"
-msgstr ""
+msgstr "Выбор LDAP"
 
 #: inc/fields/float-field.class.php:10
 msgid "This is not a number:"
-msgstr ""
+msgstr "Это не число:"
 
 #: inc/fields/float-field.class.php:15 inc/fields/integer-field.class.php:15
 #, php-format
 msgid "The following number must be greater than %d:"
-msgstr ""
+msgstr "Число должно быть больше, чем %d:"
 
 #: inc/fields/float-field.class.php:21 inc/fields/integer-field.class.php:21
 #, php-format
 msgid "The following number must be lower than %d:"
-msgstr ""
+msgstr "Число должно быть меньше, чем %d:"
 
 #: inc/fields/float-field.class.php:38
 msgid "Float"
-msgstr ""
+msgstr "Плавающий"
 
 #: inc/fields/checkboxes-field.class.php:99
 msgid "Checkboxes"
-msgstr ""
+msgstr "Чекбокс"
 
 #: inc/fields/datetime-field.class.php:62
 msgid "Datetime"
-msgstr ""
+msgstr "Дата и время"
 
 #: inc/fields/integer-field.class.php:10
 msgid "This is not an integer:"
-msgstr ""
+msgstr "Это не целое число:"
 
 #: inc/fields/integer-field.class.php:38
 msgid "Integer"
-msgstr ""
+msgstr "Целое число"
 
 #: inc/fields/text-field.class.php:32
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 #: inc/fields/email-field.class.php:25
 msgid "This is not a valid e-mail:"
-msgstr ""
+msgstr "Этот почтовый адрес ЭП неправильный:"
 
 #: front/targetticket.form.php:49 front/form.php:15 front/issue.php:16
 #: front/issue.php:21 front/form_answer.php:16 front/form_answer.php:21

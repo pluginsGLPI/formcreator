@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-27 16:03+0200\n"
-"PO-Revision-Date: 2017-03-27 14:17+0000\n"
+"POT-Creation-Date: 2017-04-24 15:44+0200\n"
+"PO-Revision-Date: 2017-04-24 13:47+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: Catalan (Spain) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ca_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: setup.php:20 setup.php:148 ajax/homepage_link.php:6
 #: inc/formlist.class.php:14 inc/entityconfig.class.php:27
-#: inc/form.class.php:50 inc/form.class.php:458 inc/form.class.php:1932
+#: inc/form.class.php:50 inc/form.class.php:457 inc/form.class.php:1931
 #: scripts/scripts.js.php:18
 msgid "Form"
 msgid_plural "Forms"
@@ -32,7 +32,7 @@ msgstr[1] "Sol·licituds"
 msgid "Forms waiting for validation"
 msgstr "Sol·licituds pendents de validació"
 
-#: hook.php:57 inc/header.class.php:7 inc/form.class.php:317
+#: hook.php:57 inc/header.class.php:7 inc/form.class.php:316
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Capçalera"
@@ -163,7 +163,7 @@ msgid ""
 "previous one."
 msgstr "Ja hi ha una capçalera per a una entitat matriu! Una altra capçalera sobreescriurà l'anterior."
 
-#: inc/form_answer.class.php:39 inc/issue.class.php:411
+#: inc/form_answer.class.php:39 inc/issue.class.php:412
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Resposta del formulari"
@@ -243,15 +243,15 @@ msgstr[1] "Objectius"
 msgid "Access type"
 msgstr "Tipus d'accés"
 
-#: inc/form_profile.class.php:35 inc/form.class.php:189 inc/form.class.php:243
+#: inc/form_profile.class.php:35 inc/form.class.php:188 inc/form.class.php:242
 msgid "Public access"
 msgstr "Accés públic"
 
-#: inc/form_profile.class.php:36 inc/form.class.php:190 inc/form.class.php:246
+#: inc/form_profile.class.php:36 inc/form.class.php:189 inc/form.class.php:245
 msgid "Private access"
 msgstr "Accés privat"
 
-#: inc/form_profile.class.php:37 inc/form.class.php:191 inc/form.class.php:249
+#: inc/form_profile.class.php:37 inc/form.class.php:190 inc/form.class.php:248
 msgid "Restricted access"
 msgstr "Accés restringit"
 
@@ -280,7 +280,7 @@ msgstr[1] "Destins"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: inc/target.class.php:119 inc/form.class.php:946
+#: inc/target.class.php:119 inc/form.class.php:945
 msgid "The name cannot be empty!"
 msgstr "No es pot deixar el nom en blanc!"
 
@@ -303,7 +303,7 @@ msgid "Update issue data from tickets and form answers"
 msgstr ""
 
 #: inc/field.class.php:104 inc/fields/multiselect-field.class.php:15
-#: inc/fields/actor-field.class.php:153
+#: inc/fields/actor-field.class.php:155
 #: inc/fields/checkboxes-field.class.php:74
 #: inc/fields/datetime-field.class.php:50 inc/fields/date-field.class.php:50
 #: scripts/forms-validation.js.php:11
@@ -340,7 +340,7 @@ msgstr "Grup de la pregunta"
 
 #: inc/targetticket_actor.class.php:13
 msgid "Specific supplier"
-msgstr "Proveïdor específic"
+msgstr ""
 
 #: inc/targetticket_actor.class.php:14 inc/targetticket.class.php:961
 msgid "Supplier from the question"
@@ -524,7 +524,7 @@ msgid ""
 msgstr "Hola, \\nLa teva sol·licitud ha estat denegada pel validador a causa de: \\n ##formcreator.validation_comment##.\\n\\nEncara la pot modificar i tornar a enviar fent clic en aquest enllaç: \\n ##formcreator.validation_link##"
 
 #: inc/notificationtargetform_answer.class.php:115
-#: inc/targetticket.class.php:1509
+#: inc/targetticket.class.php:1513
 msgid "Your form has been accepted by the validator"
 msgstr "La teva sol·licitud ha estat acceptada pel validador"
 
@@ -560,144 +560,143 @@ msgstr "Pàgina d'inici"
 msgid "Access"
 msgstr "Accés"
 
-#: inc/form.class.php:188 inc/form.class.php:202 inc/form.class.php:256
-#: inc/form.class.php:311
+#: inc/form.class.php:201 inc/form.class.php:255 inc/form.class.php:310
 msgid "All langages"
 msgstr "Totes les llengües"
 
-#: inc/form.class.php:296
+#: inc/form.class.php:295
 msgid "Direct access on homepage"
 msgstr "Accés directe a la pàgina d'inici"
 
-#: inc/form.class.php:323
+#: inc/form.class.php:322
 msgid "Need to be validate?"
 msgstr "Necessita validació?"
 
-#: inc/form.class.php:427
+#: inc/form.class.php:426
 msgid "Default form in service catalog"
 msgstr "Formulari per defecte del catàleg de serveis"
 
-#: inc/form.class.php:542
+#: inc/form.class.php:541
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categoria"
 msgstr[1] "Categories"
 
-#: inc/form.class.php:543
+#: inc/form.class.php:542
 msgid "see all"
 msgstr "Veure-ho tot"
 
-#: inc/form.class.php:561
+#: inc/form.class.php:560
 msgid "Popularity sort"
 msgstr "Ordenar per popularitat"
 
-#: inc/form.class.php:565
+#: inc/form.class.php:564
 msgid "Alphabetic sort"
 msgstr "Ordenar alfabèticament"
 
-#: inc/form.class.php:737
+#: inc/form.class.php:736
 msgid "Please, describe your need here"
 msgstr "Si us plau, descriu què necessites aquí"
 
-#: inc/form.class.php:746
+#: inc/form.class.php:745
 msgid "My last forms (requester)"
 msgstr "Les meves darreres sol·licituds (sol·licitant)"
 
-#: inc/form.class.php:756
+#: inc/form.class.php:755
 msgid "No form posted yet"
 msgstr "Formulari no publicat"
 
-#: inc/form.class.php:768
+#: inc/form.class.php:767
 msgid "All my forms (requester)"
 msgstr "Totes les meves sol·licituds (sol·licitant)"
 
-#: inc/form.class.php:778
+#: inc/form.class.php:777
 msgid "My last forms (validator)"
 msgstr "Les meves darreres sol·licituds (validador)"
 
-#: inc/form.class.php:798
+#: inc/form.class.php:797
 msgid "No form waiting for validation"
 msgstr "No hi ha sol·licituds pendents de validació"
 
-#: inc/form.class.php:810
+#: inc/form.class.php:809
 msgid "All my forms (validator)"
 msgstr "Totes les meves sol·licituds (validador)"
 
-#: inc/form.class.php:902
+#: inc/form.class.php:901
 msgid "Choose a validator"
 msgstr "Escull un validador"
 
-#: inc/form.class.php:1109
+#: inc/form.class.php:1108
 msgid "You must select validator !"
 msgstr "Has de seleccionar un validador!"
 
-#: inc/form.class.php:1348
+#: inc/form.class.php:1347
 msgid "Duplicate"
 msgstr "Duplicada"
 
-#: inc/form.class.php:1523
+#: inc/form.class.php:1522
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Sol·licitud duplicada: %s"
 
-#: inc/form.class.php:1534
+#: inc/form.class.php:1533
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Sol·licitud transferida: %s"
 
-#: inc/form.class.php:1676
+#: inc/form.class.php:1675
 msgid "Upload of JSON files not allowed."
 msgstr ""
 
-#: inc/form.class.php:1679
+#: inc/form.class.php:1678
 msgid "You may allow JSON files right now."
 msgstr ""
 
-#: inc/form.class.php:1680
+#: inc/form.class.php:1679
 msgctxt "button"
 msgid "Create"
 msgstr ""
 
-#: inc/form.class.php:1683 inc/form.class.php:1694
+#: inc/form.class.php:1682 inc/form.class.php:1693
 msgid "Please contact your GLPI administrator."
 msgstr ""
 
-#: inc/form.class.php:1684 inc/form.class.php:1695
+#: inc/form.class.php:1683 inc/form.class.php:1694
 msgctxt "button"
 msgid "Back"
 msgstr ""
 
-#: inc/form.class.php:1687
+#: inc/form.class.php:1686
 msgid "Upload of JSON files not enabled."
 msgstr ""
 
-#: inc/form.class.php:1690
+#: inc/form.class.php:1689
 msgid "You may enable JSON files right now."
 msgstr ""
 
-#: inc/form.class.php:1691
+#: inc/form.class.php:1690
 msgctxt "button"
 msgid "Enable"
 msgstr ""
 
-#: inc/form.class.php:1774
+#: inc/form.class.php:1773
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formularis importats correctament de %s"
 
-#: inc/form.class.php:1862
+#: inc/form.class.php:1861
 msgid "Failed to create JSON document type"
 msgstr ""
 
-#: inc/form.class.php:1869
+#: inc/form.class.php:1868
 msgid "JSON document type not found"
 msgstr ""
 
-#: inc/form.class.php:1876
+#: inc/form.class.php:1875
 msgid "Failed to update JSON document type"
 msgstr ""
 
-#: inc/form.class.php:1936
+#: inc/form.class.php:1935
 msgid "Forms without category"
 msgstr "Formularis sense categoria"
 
@@ -885,6 +884,10 @@ msgid "Actor"
 msgid_plural "Actors"
 msgstr[0] "Ator"
 msgstr[1] "Actors"
+
+#: inc/fields/actor-field.class.php:161
+msgid "Invalid value:"
+msgstr ""
 
 #: inc/fields/ldapselect-field.class.php:72
 msgid "LDAP Select"
