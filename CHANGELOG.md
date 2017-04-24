@@ -1,10 +1,45 @@
 GLPI Formcreator ChangeLog
 ===============================
 
+Version 2.4.2
+-------------
+
+## Bugfixes:
+* Fix compatibility issue with GLPI 0.90 and actors field
+* Fix empty observer actor with the actors field
+* Fix dropdown when typing an actor
+* Fix actors field list may contain fields from other forms than the one being edited in destination gicket
+* Add error message if actors field does not validate
+
+Version 2.4.1
+-------------
+
+## Bugfixes:
+* better performance in the service catalog when the database contains hundreds of thousands of tickets
+* easy configuration of JSON document types for import feature
+* form duplication
+* upgrade from older versions
+* encoding problems with non latin characters
+* many other bugs
+
+Version 2.4.0
+-------------
+
+## Bugfixes:
+* character escaping issues
+* customization of notifications
+* validation from unauthorized validators
+* disable useless history entries
+* several bugs related to validation
+
+## Features:
+* Service catalog for simplified interface
+* JSON import / export between instances of GLPI (or backup)
+* New field types : actor and urgency
 
 
 Version 0.90-1.4-beta2
-------------------
+----------------------
 * form categories support parent / child relationship
 * new presentation of forms to requesters  
 * optional replacement of the simplified interface with a service catalog

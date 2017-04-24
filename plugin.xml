@@ -155,6 +155,12 @@ Features
          <compatibility>9.1</compatibility>
       </version>
    </versions>
+      <version>
+         <num>2.4.2</num>
+         <compatibility>0.90</compatibility>
+         <compatibility>9.1</compatibility>
+      </version>
+   </versions>
    <langs>
       <lang>ca_ES</lang>
       <lang>cs_CZ</lang>
