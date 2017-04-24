@@ -38,6 +38,7 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       self::$targetData = array();
 
+      self::login('glpi', 'glpi', true);
       self::$form = new PluginFormcreatorForm();
       $formId = self::$form->add(self::$formData);
 
@@ -86,9 +87,10 @@ class QuestionConditionTest extends SuperAdminTestCase
             array(
                   array(
                         'show_rule'       => 'hidden',
-                        'show_question'   => 'dummy',
-                        'show_condition'  => '==',
-                        'show_value'      => 'an accented è character',
+                        'show_question'   => ['dummy'],
+                        'show_condition'  => ['=='],
+                        'show_value'      => ['an accented è character'],
+                        'show_logic'      => ['AND'],
                   )
             ),
             /* This test currently fails due to Html::clean() in plugin_formcreator_encode()
@@ -96,17 +98,18 @@ class QuestionConditionTest extends SuperAdminTestCase
             array(
                   array(
                         'show_rule'       => 'hidden',
-                        'show_question'   => 'dummy',
-                        'show_condition'  => '==',
-                        'show_value'      => 'a doubled  space',
+                        'show_question'   => ['dummy'],
+                        'show_condition'  => ['=='],
+                        'show_value'      => ['a doubled  space'],
                   )
             ),*/
             array(
                   array(
                         'show_rule'       => 'hidden',
-                        'show_question'   => 'dummy',
-                        'show_condition'  => '==',
-                        'show_value'      => 'a euro € character',
+                        'show_question'   => ['dummy'],
+                        'show_condition'  => ['=='],
+                        'show_value'      => ['a euro € character'],
+                        'show_logic'      => ['AND'],
                   )
             ),
       );
@@ -123,16 +126,14 @@ class QuestionConditionTest extends SuperAdminTestCase
       $question = self::$questions[1];
       $firstQuestionId = self::$questions[0]->getID();
       $secondQuestionId = $question->getID();
-      $condition['show_field'] = self::$questions[0]->getID();
+      $condition['show_field'] = [self::$questions[0]->getID()];
       $condition['id'] = $secondQuestionId;
+      $question->update($condition + $question->fields);
       $question->updateConditions($condition);
 
       //Run the condition
-      $questionRow = $question->fields;
-      $questionRow['show_rule'] = $condition['show_rule'];
-      $question->update($questionRow);
       $currentValues = array(
-            $firstQuestionId  => $condition['show_value'] . " and now for something completely different",
+            $firstQuestionId  => $condition['show_value'][0] . " and now for something completely different",
             $secondQuestionId => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
@@ -147,7 +148,7 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       // Run the reversed condition
       $currentValues = array(
-            $firstQuestionId  => $condition['show_value'],
+            $firstQuestionId  => $condition['show_value'][0],
             $secondQuestionId => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
@@ -167,16 +168,14 @@ class QuestionConditionTest extends SuperAdminTestCase
       $question = self::$questions[1];
       $firstQuestionId = self::$questions[0]->getID();
       $secondQuestionId = $question->getID();
-      $condition['show_field'] = self::$questions[0]->getID();
+      $condition['show_field'] = [self::$questions[0]->getID()];
       $condition['id'] = $secondQuestionId;
+      $question->update($condition + $question->fields);
       $question->updateConditions($condition);
 
       //Run the condition
-      $questionRow = $question->fields;
-      $questionRow['show_rule'] = $condition['show_rule'];
-      $question->update($questionRow);
       $currentValues = array(
-            $firstQuestionId  => array($condition['show_value'] . " and now for something completely different"),
+            $firstQuestionId  => array($condition['show_value'][0] . " and now for something completely different"),
             $secondQuestionId => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
@@ -191,13 +190,12 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       // Run the reversed condition
       $currentValues = array(
-            $firstQuestionId  => array($condition['show_value']),
+            $firstQuestionId  => array($condition['show_value'][0]),
             $secondQuestionId => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
       $this->assertEquals(!$expected, $visibility[$secondQuestionId]);
-
    }
 }
