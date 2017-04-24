@@ -1,7 +1,7 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', "2.4.1");
+define('PLUGIN_FORMCREATOR_VERSION', "2.4.2");
 // Minimal GLPI version, inclusive
 define ("PLUGIN_FORMCREATOR_GLPI_MIN_VERSION", "0.85");
 // Maximum GLPI version, exclusive

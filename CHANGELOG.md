@@ -1,6 +1,16 @@
 GLPI Formcreator ChangeLog
 ===============================
 
+Version 2.4.2
+-------------
+
+## Bugfixes:
+* Fix compatibility issue with GLPI 0.90 and actors field
+* Fix empty observer actor with the actors field
+* Fix dropdown when typing an actor
+* Fix actors field list may contain fields from other forms than the one being edited in destination gicket
+* Add error message if actors field does not validate
+
 Version 2.4.1
 -------------
 
