@@ -149,19 +149,30 @@ Features
          <compatibility>0.90</compatibility>
          <compatibility>9.1</compatibility>
       </version>
+      <version>
+         <num>2.4.1</num>
+         <compatibility>0.90</compatibility>
+         <compatibility>9.1</compatibility>
+      </version>
    </versions>
    <langs>
-      <lang>cz_CZ</lang>
-      <lang>es_AR</lang>
+      <lang>ca_ES</lang>
+      <lang>cs_CZ</lang>
+      <lang>de_DE</lang>
       <lang>en_GB</lang>
-      <lang>es_MX</lang>
+      <lang>es_AR</lang>
+      <lang>es_ES</lang>
       <lang>fr_FR</lang>
       <lang>hu_HU</lang>
+      <lang>it_IT</lang>
+      <lang>lv_LV</lang>
       <lang>pl_PL</lang>
       <lang>pt_BR</lang>
       <lang>ro_RO</lang>
       <lang>ru_RU</lang>
+      <lang>sr_RS</lang>
       <lang>tr_TR</lang>
+      <lang>uk_UA</lang>
    </langs>
    <license>GPL v2+</license>
    <tags>
