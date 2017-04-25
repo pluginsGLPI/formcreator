@@ -907,11 +907,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $datas['requesttypes_id'] = $requesttypes_id;
 
-      // Get predefined Fields
-      $ttp                  = new TicketTemplatePredefinedField();
-      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
-      $datas                = array_merge($datas, $predefined_fields);
-
       // Parse datas
       $fullform = $formanswer->getFullForm();
 
@@ -1234,6 +1229,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       if ($fullform == "") {
          $fullform = $formanswer->getFullForm();
       }
+      // retrieve answers
+      $answers_values = $formanswer->getAnswers($formanswer->getID());
 
       $content     = str_replace('##FULLFORM##', $fullform, $content);
       $section     = new PluginFormcreatorSection();
