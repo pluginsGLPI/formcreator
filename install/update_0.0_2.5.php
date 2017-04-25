@@ -1029,7 +1029,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
-   $query = "ALTER TABLE `$table` ALTER COLUMN `destination_entity` SET DEFAULT 'current'";
+   $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets` ALTER COLUMN `destination_entity` SET DEFAULT 'current'";
    $DB->query($query);
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'tag_type', false)) {
