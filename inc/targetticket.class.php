@@ -971,7 +971,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
       $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
 
-
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
          return false;
