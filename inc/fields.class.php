@@ -301,7 +301,7 @@ class PluginFormcreatorFields
             foreach ($value as &$sub_value) {
                $sub_value = plugin_formcreator_encode($sub_value, false);
             }
-         } elseif (is_array(json_decode($value))) {
+         } else if (is_array(json_decode($value))) {
             $tab = json_decode($value);
             foreach ($tab as &$sub_value) {
                $sub_value = plugin_formcreator_encode($sub_value, false);
