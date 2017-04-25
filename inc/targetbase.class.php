@@ -28,6 +28,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    abstract protected function getItem_Item();
 
+   abstract protected function getTargetItemtypeName();
+
    static function getEnumDestinationEntity() {
       return array(
             'current'   => __("Current active entity", 'formcreator'),
@@ -596,5 +598,107 @@ EOS;
       echo '</div>';
       echo '</td>';
       echo '</tr>';
+   }
+
+
+   protected function showPluginTagsSettings($rand) {
+      global $DB;
+
+      $plugin = new Plugin();
+      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         echo '<tr class="line1">';
+         echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
+         echo '<td width="25%">';
+         Dropdown::showFromArray('tag_type', self::getEnumTagType(),
+               array(
+                     'value'     => $this->fields['tag_type'],
+                     'on_change' => 'change_tag_type()',
+                     'rand'      => $rand,
+               )
+         );
+
+         $script = <<<EOS
+            function change_tag_type() {
+               $('#tag_question_title').hide();
+               $('#tag_specific_title').hide();
+               $('#tag_question_value').hide();
+               $('#tag_specific_value').hide();
+
+               switch($('#dropdown_tag_type$rand').val()) {
+                  case 'questions' :
+                     $('#tag_question_title').show();
+                     $('#tag_question_value').show();
+                     break;
+                  case 'specifics' :
+                     $('#tag_specific_title').show();
+                     $('#tag_specific_value').show();
+                     break;
+                  case 'questions_and_specific' :
+                  case 'questions_or_specific' :
+                     $('#tag_question_title').show();
+                     $('#tag_specific_title').show();
+                     $('#tag_question_value').show();
+                     $('#tag_specific_value').show();
+                     break;
+               }
+            }
+            change_tag_type();
+EOS;
+
+         echo Html::scriptBlock($script);
+         echo '</td>';
+         echo '<td width="15%">';
+         echo '<div id="tag_question_title" style="display: none">' . _n('Question', 'Questions', 2, 'formcreator') . '</div>';
+         echo '<div id="tag_specific_title" style="display: none">' . __('Tags', 'tag') . '</div>';
+         echo '</td>';
+         echo '<td width="25%">';
+
+         // Tag questions
+         echo '<div id="tag_question_value" style="display: none">';
+         $query2 = "SELECT q.id, q.name, q.values
+                   FROM glpi_plugin_formcreator_questions q
+                   INNER JOIN glpi_plugin_formcreator_sections s
+                     ON s.id = q.plugin_formcreator_sections_id
+                   INNER JOIN glpi_plugin_formcreator_targets t
+                     ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                   WHERE t.items_id = ".$this->getID()."
+                   AND q.fieldtype = 'tag'";
+         $result2 = $DB->query($query2);
+         $entities_questions = array();
+         while ($question = $DB->fetch_array($result2)) {
+            $entities_questions[$question['id']] = $question['name'];
+         }
+         Dropdown::showFromArray('_tag_questions', $entities_questions, array(
+               'values'   => explode(',', $this->fields['tag_questions']),
+               'multiple' => true,
+         ));
+         echo '</div>';
+
+         // Spécific tags
+         echo '<div id="tag_specific_value" style="display: none">';
+
+         $obj = new PluginTagTag();
+         $obj->getEmpty();
+
+         $targetItemtype = $this->getTargetItemtypeName();
+         $where = "(`type_menu` LIKE '%\"$targetItemtype\"%' OR `type_menu` LIKE '0')";
+         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
+
+         $result = $obj->find($where);
+         $values = array();
+         foreach ($result AS $id => $datas) {
+            $values[$id] = $datas['name'];
+         }
+
+         Dropdown::showFromArray('_tag_specifics', $values, array(
+               'values'   => explode(',', $this->fields['tag_specifics']),
+               'comments' => false,
+               'rand'     => $rand,
+               'multiple' => true,
+         ));
+         echo '</div>';
+         echo '</td>';
+         echo '</tr>';
+      }
    }
 }
