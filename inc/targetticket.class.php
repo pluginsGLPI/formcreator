@@ -246,7 +246,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td valign="top">';
 
       // => Add requester form
-      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="'
+           . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       $dropdownItems = array('' => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
@@ -354,8 +355,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td valign="top">';
 
       // => Add observer form
-      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'.
-           $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'
+           . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
@@ -462,7 +463,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td valign="top">';
 
       // => Add assigned to form
-      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="'
+            . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       Dropdown::showFromArray('actor_type',

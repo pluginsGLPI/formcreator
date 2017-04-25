@@ -260,39 +260,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($rand);
 
-      // -------------------------------------------------------------------------------------------
-      //  Validation as ticket followup
-      // -------------------------------------------------------------------------------------------
-      if ($form->fields['validation_required']) {
-         echo '<tr class="line0">';
-         echo '<td colspan="4">';
-         echo '<input type="hidden" name="validation_followup" value="0" />';
-         echo '<input type="checkbox" name="validation_followup" id="validation_followup" value="1" ';
-         if (!isset($this->fields['validation_followup']) || ($this->fields['validation_followup'] == 1)) {
-            echo ' checked="checked"';
-         }
-         echo '/>';
-         echo ' <label for="validation_followup">';
-         echo __('Add validation message as first ticket followup', 'formcreator');
-         echo '</label>';
-         echo '</td>';
-         echo '</tr>';
-      }
-
-      echo '</table>';
-
-      // Buttons
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr class="line1">';
-      echo '<td colspan="5" class="center">';
-      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
-      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
-      echo '</td>';
-      echo '</tr>';
-
       echo '</table>';
       Html::closeForm();
 
@@ -368,7 +335,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="3">' . __('Ticket actors', 'formcreator') . '</th></tr>';
+      echo '<tr><th colspan="3">' . __('Change actors', 'formcreator') . '</th></tr>';
 
       echo '<tr>';
 
@@ -404,7 +371,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td valign="top">';
 
       // => Add requester form
-      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="'
+           . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
       $dropdownItems = array('' => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
@@ -511,8 +479,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td valign="top">';
 
       // => Add observer form
-      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="' .
-           $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'
+           . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
      $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
      unset($dropdownItems['supplier']);
@@ -619,7 +587,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td valign="top">';
 
       // => Add assigned to form
-      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
+      echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="'
+            . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
       $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       Dropdown::showFromArray('actor_type',

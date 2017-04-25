@@ -938,8 +938,31 @@ function plugin_formcreator_updateTarget(Migration $migration) {
 }
 
 function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
+   global $DB;
+
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges_actors");
+
+   $enum_actor_type = "'".implode("', '", array_keys(PluginFormcreatorTargetChange_Actor::getEnumActorType()))."'";
+   $enum_actor_role = "'".implode("', '", array_keys(PluginFormcreatorTargetChange_Actor::getEnumRole()))."'";
+
+   $current_enum_actor_type = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges_actors', 'actor_type');
+   if (count($current_enum_actor_type) != count(PluginFormcreatorTargetChange_Actor::getEnumActorType())) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges_actors`
+                CHANGE COLUMN `actor_type` `actor_type`
+                ENUM($enum_actor_type)
+                NOT NULL";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
+   $current_enum_role = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges_actors', 'actor_role');
+   if (count($current_enum_role) != count(PluginFormcreatorTargetChange_Actor::getEnumRole())) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges_actors`
+                CHANGE COLUMN `actor_role` `actor_role`
+                ENUM($enum_actor_role)
+                NOT NULL";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
 
    // fill missing uuid
    $obj = new PluginFormcreatorTargetChange_Actor();
@@ -948,6 +971,7 @@ function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
       $obj->update(array('id'   => $actors_id,
             'uuid' => plugin_formcreator_getUuid()));
    }
+
 }
 
 function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {

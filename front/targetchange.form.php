@@ -8,7 +8,7 @@ $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
    $targetticket = new PluginFormcreatorTargetChange();
 
-   // Edit an existing target ticket
+   // Edit an existing target change
    if (isset($_POST["update"])) {
       Session::checkRight("entity", UPDATE);
 
