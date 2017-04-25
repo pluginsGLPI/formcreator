@@ -53,7 +53,7 @@ class QuestionConditionTest extends SuperAdminTestCase
          $section->add($sectionData);
          self::$sections[] = $section;
          $sectionId = $section->getID();
-         foreach($questionsData as $questionData) {
+         foreach ($questionsData as $questionData) {
             // Create question
             $questionData['plugin_formcreator_sections_id'] = $section->getID();
             $question = new PluginFormcreatorQuestion();
@@ -73,7 +73,6 @@ class QuestionConditionTest extends SuperAdminTestCase
             $target = new PluginFormcreatorTarget();
             $targetData['plugin_formcreator_forms_id'] = $formId;
             $target->add($targetData);
-            $this->assertFalse($target->isNewItem());
          }
       }
 
