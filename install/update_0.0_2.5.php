@@ -22,6 +22,7 @@ function plugin_formcreator_update_2_5(Migration $migration) {
    plugin_formcreator_updateQuestion($migration);
    plugin_formcreator_updateSection($migration);
    plugin_formcreator_updateTarget($migration);
+   plugin_formcreator_updateTargetChange($migration);
    plugin_formcreator_updateTargetChange_Actor($migration);
    plugin_formcreator_updateTargetTicket_Actor($migration);
    plugin_formcreator_updateTargetTicket($migration);
@@ -1079,4 +1080,84 @@ function plugin_formcreator_updateTitle(Migration $migration) {
    // Drop Headers table
    $migration->displayMessage("Drop glpi_plugin_formcreator_titles");
    $migration->dropTable('glpi_plugin_formcreator_titles');
+}
+
+function plugin_formcreator_updateTargetChange($migration) {
+   global $DB;
+
+   // Legacy upgrade of Forms
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets");
+
+   $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDestinationEntity()))."'";
+   $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumTagType()))."'";
+   $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDueDateRule()))."'";
+   $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumUrgencyRule()))."'";
+   $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumCategoryRule()))."'";
+
+   if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'due_date_rule', false)) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+      ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
+      ADD `due_date_question` INT NULL DEFAULT NULL,
+      ADD `due_date_value` TINYINT NULL DEFAULT NULL,
+      ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
+   if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'destination_entity', false)) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+      ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
+      ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   } else {
+      $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'destination_entity');
+      if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetTicket::getEnumDestinationEntity())) {
+         $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+         CHANGE COLUMN `destination_entity` `destination_entity`
+         ENUM($enum_destination_entity)
+         NOT NULL DEFAULT 'current'";
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      }
+   }
+   $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges` ALTER COLUMN `destination_entity` SET DEFAULT 'current'";
+   $DB->query($query);
+
+   if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'tag_type', false)) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+      ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
+      ADD `tag_questions` VARCHAR(255) NOT NULL,
+      ADD `tag_specifics` VARCHAR(255) NOT NULL;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
+   if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'urgency_rule', false)) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+      ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   } else {
+      $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'urgency_rule');
+      if (count($current_enum_urgency_rule) != count(PluginFormcreatorTargetTicket::getEnumUrgencyRule())) {
+         $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+         CHANGE COLUMN `urgency_rule` `urgency_rule`
+         ENUM($enum_urgency_rule)
+         NOT NULL DEFAULT 'none'";
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      }
+   }
+   $migration->addField('glpi_plugin_formcreator_targetchanges', 'urgency_question', 'integer', array('after' => 'urgency_rule'));
+
+   if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'category_rule', false)) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+      ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   } else {
+      $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'category_rule');
+      if (count($current_enum_category_rule) != count(PluginFormcreatorTargetTicket::getEnumCategoryRule())) {
+         $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
+         CHANGE COLUMN `category_rule` `category_rule`
+         ENUM($current_enum_category_rule)
+         NOT NULL DEFAULT 'none'";
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      }
+   }
+   $migration->addField('glpi_plugin_formcreator_targetchanges', 'category_question', 'integer', array('after' => 'category_rule'));
 }

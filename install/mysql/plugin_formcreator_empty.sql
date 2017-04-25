@@ -153,12 +153,16 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `due_date_question` int(11) DEFAULT NULL,
   `due_date_value` tinyint(4) DEFAULT NULL,
   `due_date_period` enum('minute','hour','day','month') DEFAULT NULL,
+  `urgency_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `urgency_question` int(11) NOT NULL DEFAULT '0',
   `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
   `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') NOT NULL DEFAULT 'requester',
   `destination_entity_value` int(11) DEFAULT NULL,
   `tag_type` enum('none','questions','specifics','questions_and_specific','questions_or_specific') NOT NULL DEFAULT 'none',
   `tag_questions` varchar(255) NOT NULL,
   `tag_specifics` varchar(255) NOT NULL,
+  `category_rule` enum('none','answer') NOT NULL DEFAULT 'none',
+  `category_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `changetemplates_id` (`changetemplates_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

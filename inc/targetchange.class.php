@@ -1,5 +1,5 @@
 <?php
-class PluginFormcreatorTargetChange extends CommonDBTM
+class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 {
    public static function getTypeName($nb = 1) {
       return _n('Target change', 'Target changes', $nb, 'formcreator');
@@ -19,6 +19,114 @@ class PluginFormcreatorTargetChange extends CommonDBTM
 
    protected function getItem_Item() {
       return new Change_Item();
+   }
+
+   /**
+    * Export in an array all the data of the current instanciated targetticket
+    * @return array the array with all data (with sub tables)
+    */
+   public function export() {
+      global $DB;
+
+      if (!$this->getID()) {
+         return false;
+      }
+
+      $target_data = $this->fields;
+
+      // convert questions ID into uuid for change description
+      $formId        = $this->getForm()->getID();
+      $section       = new PluginFormcreatorSection();
+      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
+            "`order` ASC");
+      $tab_section = array();
+      foreach ($found_section as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if (!empty($tab_section)) {
+         $sectionList = "'" . implode(', ', $tab_section) . "'";
+         $question = new PluginFormcreatorQuestion();
+         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
+         foreach ($rows as $id => $question_line) {
+            $uuid  = $question_line['uuid'];
+
+            $content = $target_data['name'];
+            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
+            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
+            $target_data['name'] = $content;
+
+            $content = $target_data['comment'];
+            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
+            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
+            $target_data['comment'] = $content;
+         }
+      }
+
+      // remove key and fk
+      unset($target_data['id']);
+
+      return $target_data;
+   }
+
+   /**
+    * Import a form's targetchange into the db
+    * @see PluginFormcreatorTarget::import
+    *
+    * @param  integer $targetitems_id  current id
+    * @param  array   $target_data the targetticket data (match the targetticket table)
+    * @return integer the targetticket's id
+    */
+   public static function import($targetitems_id = 0, $target_data = array()) {
+      global $DB;
+
+      $item = new self;
+
+      $target_data['_skip_checks'] = true;
+      $target_data['id'] = $targetitems_id;
+
+      // convert question uuid into id
+      $targetTicket = new PluginFormcreatorTargetTicket();
+      $targetTicket->getFromDB($targetitems_id);
+      $formId        = $targetTicket->getForm()->getID();
+      $section       = new PluginFormcreatorSection();
+      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
+            "`order` ASC");
+      $tab_section = array();
+      foreach ($found_section as $section_item) {
+         $tab_section[] = $section_item['id'];
+      }
+
+      if (!empty($tab_section)) {
+         $sectionList = "'" . implode(', ', $tab_section) . "'";
+         $question = new PluginFormcreatorQuestion();
+         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
+         foreach ($rows as $id => $question_line) {
+            $uuid  = $question_line['uuid'];
+
+            $content = $target_data['name'];
+            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
+            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
+            $target_data['name'] = $content;
+
+            $content = $target_data['comment'];
+            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
+            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
+            $target_data['comment'] = $content;
+         }
+      }
+
+      // update target ticket
+      $item->update($target_data);
+
+      if ($targetitems_id
+            && isset($target_data['_actors'])) {
+               foreach ($target_data['_actors'] as $actor) {
+                  PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+               }
+            }
+
+            return $targetitems_id;
    }
 
    /**
@@ -125,180 +233,23 @@ class PluginFormcreatorTargetChange extends CommonDBTM
       echo '</td>';
       echo '</tr>';
 
-      echo '</td>';
-      echo '<td width="15%">' . __('Due date') . '</td>';
-      echo '<td width="45%">';
-
-      // -------------------------------------------------------------------------------------------
-      // Due date type selection
-      // -------------------------------------------------------------------------------------------
-      Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
-            array(
-                  'value'     => $this->fields['due_date_rule'],
-                  'on_change' => 'formcreatorChangeDueDate(this.value)',
-                  'display_emptychoice' => true
-            )
-      );
-      echo '<td colspan="2"></td>';
-
-      // for each section ...
-      $questions_list = array(Dropdown::EMPTY_VALUE);
-      $query = "SELECT s.id, s.name
-                FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
-                ORDER BY s.order";
-      $result = $DB->query($query);
-      while ($section = $DB->fetch_array($result)) {
-         // select all date and datetime questions
-         $query2 = "SELECT q.id, q.name
-         FROM glpi_plugin_formcreator_questions q
-         INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
-         WHERE s.id = {$section['id']}
-         AND q.fieldtype IN ('date', 'datetime')";
-         $result2 = $DB->query($query2);
-         $section_questions = array();
-         while ($question = $DB->fetch_array($result2)) {
-            $section_questions[$question['id']] = $question['name'];
-         }
-         if (count($section_questions) > 0) {
-            $questions_list[$section['name']] = $section_questions;
-         }
-      }
-      // List questions
-      if ($this->fields['due_date_rule'] != 'answer' && $this->fields['due_date_rule'] != 'calcul') {
-         echo '<div id="due_date_questions" style="display:none">';
-      } else {
-         echo '<div id="due_date_questions">';
-      }
-      Dropdown::showFromArray('due_date_question', $questions_list, array(
-            'value' => $this->fields['due_date_question']
-      ));
-      echo '</div>';
-
-      if ($this->fields['due_date_rule'] != 'ticket' && $this->fields['due_date_rule'] != 'calcul') {
-         echo '<div id="due_date_time" style="display:none">';
-      } else {
-         echo '<div id="due_date_time">';
-      }
-      Dropdown::showNumber("due_date_value", array(
-            'value' => $this->fields['due_date_value'],
-            'min'   => -30,
-            'max'   => 30
-      ));
-      Dropdown::showFromArray('due_date_period', array(
-            'minute' => _n('Minute', 'Minutes', 2),
-            'hour'   => _n('Hour', 'Hours', 2),
-            'day'    => _n('Day', 'Days', 2),
-            'month'  => __('Month'),
-      ), array(
-            'value' => $this->fields['due_date_period']
-      ));
-      echo '</div>';
-      echo '</td>';
-      echo '</tr>';
-
-      // -------------------------------------------------------------------------------------------
-      // Ticket Entity
-      // -------------------------------------------------------------------------------------------
-      echo '<tr class="line1">';
-      echo '<td width="15%">' . __('Destination entity') . '</td>';
-      echo '<td width="25%">';
       $rand = mt_rand();
-      Dropdown::showFromArray(
-            'destination_entity',
-            self::getEnumDestinationEntity(),
-            array(
-                  'value'     => $this->fields['destination_entity'],
-                  'on_change' => 'change_entity()',
-                  'rand'      => $rand,
-            )
-            );
+      $this->showDestinationEntitySetings($rand);
 
-      $script = <<<EOS
-         function change_entity() {
-            $('#entity_specific_title').hide();
-            $('#entity_user_title').hide();
-            $('#entity_entity_title').hide();
-            $('#entity_specific_value').hide();
-            $('#entity_user_value').hide();
-            $('#entity_entity_value').hide();
-
-            switch($('#dropdown_destination_entity$rand').val()) {
-               case 'specific' :
-                  $('#entity_specific_title').show();
-                  $('#entity_specific_value').show();
-                  break;
-               case 'user' :
-                  $('#entity_user_title').show();
-                  $('#entity_user_value').show();
-                  break;
-               case 'entity' :
-                  $('#entity_entity_title').show();
-                  $('#entity_entity_value').show();
-                  break;
-            }
-         }
-         change_entity();
-EOS;
-
-      echo Html::scriptBlock($script);
-      echo '</td>';
-      echo '<td width="15%">';
-      echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
-      echo '<span id="entity_user_title" style="display: none">' . __('User type question', 'formcreator') . '</span>';
-      echo '<span id="entity_entity_title" style="display: none">' . __('Entity type question', 'formcreator') . '</span>';
-      echo '</td>';
-      echo '<td width="25%">';
-
-      echo '<div id="entity_specific_value" style="display: none">';
-      Entity::dropdown(array(
-            'name' => '_destination_entity_value_specific',
-            'value' => $this->fields['destination_entity_value'],
-      ));
-      echo '</div>';
-
-      echo '<div id="entity_user_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'User'";
-      $result2 = $DB->query($query2);
-      $users_questions = array();
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, array(
-            'value' => $this->fields['destination_entity_value'],
-      ));
-      echo '</div>';
-
-      echo '<div id="entity_entity_value" style="display: none">';
-      // select all entity questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . (int) $this->getID() . "
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'Entity'";
-      $result2 = $DB->query($query2);
-      $entities_questions = array();
-      while ($question = $DB->fetch_array($result2)) {
-         $entities_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, array(
-            'value' => $this->fields['destination_entity_value'],
-      ));
-      echo '</div>';
-
-      echo '</td>';
-
+      echo '<tr class="line1">';
+      $this->showDueDateSettings($rand);
+      echo '<td colspan="2"></td>';
       echo '</tr>';
+
+      // -------------------------------------------------------------------------------------------
+      //  category of the target
+      // -------------------------------------------------------------------------------------------
+      $this->showCategorySettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      // Urgency selection
+      // -------------------------------------------------------------------------------------------
+      $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Tags
