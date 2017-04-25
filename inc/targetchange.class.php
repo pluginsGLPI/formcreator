@@ -1,61 +1,25 @@
 <?php
 class PluginFormcreatorTargetChange extends CommonDBTM
 {
-
-   static function getEnumDestinationEntity() {
-      return array(
-            'current'   => __("Current active entity", 'formcreator'),
-            'requester' => __("Default requester user's entity", 'formcreator'),
-            'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
-            'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
-            'form'      => __('The form entity', 'formcreator'),
-            'validator' => __('Default entity of the validator', 'formcreator'),
-            'specific'  => __('Specific entity', 'formcreator'),
-            'user'      => __('Default entity of a user type question answer', 'formcreator'),
-            'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
-      );
-   }
-
-   static function getEnumTagType() {
-      return array(
-            'none'                   => __("None"),
-            'questions'              => __('Tags from questions', 'formcreator'),
-            'specifics'              => __('Specific tags', 'formcreator'),
-            'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-            'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
-      );
-   }
-
-   static function getEnumDueDateRule() {
-      return array(
-            'answer' => __('equals to the answer to the question', 'formcreator'),
-            'change' => __('calculated from the change creation date', 'formcreator'),
-            'calcul' => __('calculated from the answer to the question', 'formcreator'),
-      );
-   }
-
-   /**
-    * Check if current user have the right to create and modify requests
-    *
-    * @return boolean True if he can create and modify requests
-    */
-   public static function canCreate() {
-      return true;
-   }
-
-   /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
-   public static function canView() {
-      return true;
-   }
-
    public static function getTypeName($nb = 1) {
       return _n('Target change', 'Target changes', $nb, 'formcreator');
    }
 
+   protected function getItem_User() {
+      return new Change_User();
+   }
+
+   protected function getItem_Group() {
+      return new Change_Group();
+   }
+
+   protected function getItem_Supplier() {
+      return new Change_Supplier();
+   }
+
+   protected function getItem_Item() {
+      return new Change_Item();
+   }
 
    /**
     * Show the Form edit form the the adminsitrator in the config page
@@ -110,7 +74,7 @@ class PluginFormcreatorTargetChange extends CommonDBTM
       }
       echo '</td>';
       echo '</tr>';
-      /* Modif G.DONAT ALFUN - Ajout des champs spécifiques aux changements */
+
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Impacts') . ' </strong></td>';
       echo '<td colspan="3">';
@@ -160,18 +124,7 @@ class PluginFormcreatorTargetChange extends CommonDBTM
       }
       echo '</td>';
       echo '</tr>';
-      /*Fin Modif G.DONAT ALFUN */
 
-      // Ticket Template
-      /**
-      echo '<tr class="line1">';
-      echo '<td width="15%">' . _n('Change template', 'Change templates', 1) . '</td>';
-      echo '<td width="25%">';
-      Dropdown::show('TicketTemplate', array(
-            'name'  => 'changetemplates_id',
-            'value' => $this->fields['changetemplates_id']
-      ));
-      */
       echo '</td>';
       echo '<td width="15%">' . __('Due date') . '</td>';
       echo '<td width="45%">';
@@ -952,48 +905,53 @@ EOS;
     * @return the modified $input array
     **/
    public function prepareInputForUpdate($input) {
+      global $CFG_GLPI;
+
       // Control fields values :
-      // - name is required
-      if (empty($input['title'])) {
-         Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
+      if (!isset($input['_skip_checks'])
+            || !$input['_skip_checks']) {
+         // - name is required
+         if (empty($input['title'])) {
+            Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
+            return array();
+         }
 
-      // - comment is required
-      if (empty($input['comment'])) {
-         Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
-      }
+         // - comment is required
+         if (empty($input['comment'])) {
+            Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
+            return array();
+         }
 
-      $input['name'] = plugin_formcreator_encode($input['title']);
+         $input['name'] = plugin_formcreator_encode($input['title']);
 
-      if ($GLOBALS['CFG_GLPI']['use_rich_text']) {
-         $input['comment'] = Html::entity_decode_deep($input['comment']);
-      }
+         if ($CFG_GLPI['use_rich_text']) {
+            $input['comment'] = Html::entity_decode_deep($input['comment']);
+         }
 
-      switch ($input['destination_entity']) {
-         case 'specific' :
-            $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
-            break;
-         case 'user' :
-            $input['destination_entity_value'] = $input['_destination_entity_value_user'];
-            break;
-         case 'entity' :
-            $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
-            break;
-         default :
-            $input['destination_entity_value'] = 'NULL';
-            break;
-      }
+         switch ($input['destination_entity']) {
+            case 'specific' :
+               $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
+               break;
+            case 'user' :
+               $input['destination_entity_value'] = $input['_destination_entity_value_user'];
+               break;
+            case 'entity' :
+               $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
+               break;
+            default :
+               $input['destination_entity_value'] = 'NULL';
+               break;
+         }
 
-      $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
-         $input['tag_questions'] = (!empty($input['_tag_questions']))
-         ? implode(',', $input['_tag_questions'])
-         : '';
-         $input['tag_specifics'] = (!empty($input['_tag_specifics']))
-         ? implode(',', $input['_tag_specifics'])
-         : '';
+         $plugin = new Plugin();
+         if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+            $input['tag_questions'] = (!empty($input['_tag_questions']))
+                                       ? implode(',', $input['_tag_questions'])
+                                       : '';
+            $input['tag_specifics'] = (!empty($input['_tag_specifics']))
+                                       ? implode(',', $input['_tag_specifics'])
+                                       : '';
+         }
       }
 
       return $input;
@@ -1005,11 +963,54 @@ EOS;
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
+
+      // Prepare actors structures for creation of the ticket
+      $this->requesters = array(
+            '_users_id_requester'         => array(),
+            '_users_id_requester_notif'   => array(
+                  'use_notification'      => array(),
+                  'alternative_email'     => array(),
+            ),
+      );
+      $this->observers = array(
+            '_users_id_observer'          => array(),
+            '_users_id_observer_notif'    => array(
+                  'use_notification'      => array(),
+                  'alternative_email'     => array(),
+            ),
+      );
+      $this->assigned = array(
+            '_users_id_assign'            => array(),
+            '_users_id_assign_notif'      => array(
+                  'use_notification'      => array(),
+                  'alternative_email'     => array(),
+            ),
+      );
+
+      $this->assignedSuppliers = array(
+            '_suppliers_id_assign'        => array(),
+            '_suppliers_id_assign_notif'  => array(
+                  'use_notification'      => array(),
+                  'alternative_email'     => array(),
+            )
+      );
+
+      $this->requesterGroups = array(
+            '_groups_id_requester'        => array(),
+      );
+
+      $this->observerGroups = array(
+            '_groups_id_observer'         => array(),
+      );
+
+      $this->assignedGroups = array(
+            '_groups_id_assign'           => array(),
+      );
 
       $datas   = array();
       $ticket  = new Change();
-      $docItem = new Document_Item();
+
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
 
@@ -1030,78 +1031,46 @@ EOS;
       // Parse datas
       $fullform = $formanswer->getFullForm();
 
-      $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
+      $datas['name']                = addslashes($this->parseTags($this->fields['name'],
             $formanswer,
             $fullform));
-      $datas['content']               = htmlentities($this->parseTags($this->fields['comment'],
+      $datas['content']             = htmlentities($this->parseTags($this->fields['comment'],
             $formanswer,
             $fullform));
-      $datas['impactcontent']               = htmlentities($this->parseTags($this->fields['impactcontent'],
-            $formanswer,
-            $fullform));
-
-      $datas['controlistcontent']               = htmlentities($this->parseTags($this->fields['controlistcontent'],
+      $datas['impactcontent']       = htmlentities($this->parseTags($this->fields['impactcontent'],
             $formanswer,
             $fullform));
 
-      $datas['rolloutplancontent']               = htmlentities($this->parseTags($this->fields['rolloutplancontent'],
+      $datas['controlistcontent']   = htmlentities($this->parseTags($this->fields['controlistcontent'],
             $formanswer,
             $fullform));
 
-      $datas['backoutplancontent']               = htmlentities($this->parseTags($this->fields['backoutplancontent'],
-            $formanswer,
-            $fullform));
-      $datas['checklistcontent']               = htmlentities($this->parseTags($this->fields['checklistcontent'],
+      $datas['rolloutplancontent']  = htmlentities($this->parseTags($this->fields['rolloutplancontent'],
             $formanswer,
             $fullform));
 
-      $datas['_users_id_requester']   = 0;
+      $datas['backoutplancontent']  = htmlentities($this->parseTags($this->fields['backoutplancontent'],
+            $formanswer,
+            $fullform));
+      $datas['checklistcontent']    = htmlentities($this->parseTags($this->fields['checklistcontent'],
+            $formanswer,
+            $fullform));
+
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
       $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
-      // Select ticket actors
-      $solo_requester = false;
-      $query_requester = "SELECT id, actor_type, actor_value, use_notification
-                          FROM glpi_plugin_formcreator_targetchanges_actors
-                          WHERE plugin_formcreator_targettickets_id = ".$this->getID()."
-                          AND actor_role = 'requester'";
-      $result_requester = $DB->query($query_requester);
+      $this->prepareActors($form, $formanswer);
 
-      // If there is only one requester add it on creation, otherwize we will add them later
-      if ($DB->numrows($result_requester) == 1) {
-         $actor = $DB->fetch_array($result_requester);
-         $solo_requester = true;
-         switch ($actor['actor_type']) {
-            case 'creator' :
-               $user_id = $formanswer->fields['requester_id'];
-               break;
-            case 'validator' :
-               $user_id = $formanswer->fields['validator_id'];
-               break;
-            case 'person' :
-            case 'group' :
-            case 'supplier' :
-               $user_id = $actor['actor_value'];
-               break;
-            case 'question_person' :
-            case 'question_group' :
-            case 'question_supplier' :
-               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
-               ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
-               $found   = array_shift($found);
-               if (empty($found['answer'])) {
-                  continue;
-               } else {
-                  $user_id = (int) $found['answer'];
-               }
-               break;
+      if (count($this->requesters['_users_id_requester']) == 0) {
+         $this->addActor('requester', $formanswer->fields['requester_id'], true);
+         $requesters_id = $formanswer->fields['requester_id'];
+      } else if (count($this->requesters['_users_id_requester']) >= 1) {
+         if ($this->requesters['_users_id_requester'][0] == 0) {
+            $this->addActor('requester', $formanswer->fields['requester_id'], true);
+            $requesters_id = $formanswer->fields['requester_id'];
+         } else {
+            $requesters_id = $this->requesters['_users_id_requester'][0];
          }
-         $datas['_users_id_requester'] = $user_id;
-      }
-
-      $requesters_id = $formanswer->fields['requester_id'];
-      if ($datas['_users_id_requester']) {
-         $requesters_id = $datas['_users_id_requester'];
       }
 
       // Computation of the entity
@@ -1185,9 +1154,13 @@ EOS;
       }
 
       // Define due date
-      $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-            ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
-      $date   = array_shift($found);
+      if ($this->fields['due_date_question'] !== null) {
+         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+                                 ' AND plugin_formcreator_question_id = '.$this->fields['due_date_question']);
+         $date   = array_shift($found);
+      } else {
+         $date = null;
+      }
       $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
 
       switch ($this->fields['due_date_rule']) {
@@ -1208,8 +1181,27 @@ EOS;
          $datas['due_date'] = $due_date;
       }
 
-      // Create the target ticket
-      if (!$ticketID = $ticket->add($datas)) {
+      if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
+         $datas['_users_id_requester'] = $requesters_id;
+         // Remove first requester
+         array_shift($this->requesters['_users_id_requester']);
+         array_shift($this->requesters['_users_id_requester_notif']['use_notification']);
+         array_shift($this->requesters['_users_id_requester_notif']['alternative_email']);
+         $this->requesters = array(
+               '_users_id_requester'         => array(),
+               '_users_id_requester_notif'   => array(
+                     'use_notification'      => array(),
+                     'alternative_email'     => array(),
+               ),
+         );
+
+      } else {
+         $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
+         $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
+      }
+
+      // Create the target change
+      if (!$changeID->add($datas)) {
          return false;
       }
 
@@ -1239,7 +1231,7 @@ EOS;
             }
          }
 
-               // Add specific tags
+         // Add specific tags
          if ($this->fields['tag_type'] == 'specifics'
                      || $this->fields['tag_type'] == 'questions_and_specific'
                      || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
@@ -1248,139 +1240,98 @@ EOS;
             $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
          }
 
-                     $tags = array_unique($tags);
+         $tags = array_unique($tags);
 
-                     // Save tags in DB
+         // Save tags in DB
          foreach ($tags as $tag) {
             $tagObj->add(array(
             'plugin_tag_tags_id' => $tag,
-            'items_id'           => $ticketID,
-            'itemtype'           => 'Ticket',
+            'items_id'           => $changeID,
+            'itemtype'           => Change::class,
             ));
          }
       }
 
-      // Add link between Ticket and FormAnswer
-      $itemlink = new Item_Ticket();
+      // Add link between Change and FormAnswer
+      $itemlink = $this->getItem_Item();
       $itemlink->add(array(
-            'itemtype'   => 'PluginFormcreatorForm_Answer',
-            'items_id'   => $formanswer->fields['id'],
-            'tickets_id' => $ticketID,
+            'itemtype'     => 'PluginFormcreatorForm_Answer',
+            'items_id'     => $formanswer->fields['id'],
+            'changess_id'  => $changeID,
       ));
 
-      // Add actors to ticket
-      $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
-                FROM glpi_plugin_formcreator_targetchanges_actors
-                WHERE plugin_formcreator_targettickets_id = " . $this->getID();
-      $result = $DB->query($query);
-      while ($actor = $DB->fetch_array($result)) {
-         // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
-            continue;
+      if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
+         // update ticket with actors
+
+         // user actors
+         foreach ($this->requesters['_users_id_requester'] as $index => $userId) {
+            $change_user = $this->getItem_User();
+            $change_user->add(array(
+                  'tickets_id'         => $changeID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::REQUESTER,
+                  'use_notification'   => $this->requesters['_users_id_requester_notif']['use_notification'][$index],
+                  'alternative_email'  => $this->requesters['_users_id_requester_notif']['alternative_email'][$index],
+            ));
+         }
+         foreach ($this->observers['_users_id_observer'] as $index => $userId) {
+            $change_user = $this->getItem_User();
+            $change_user->add(array(
+                  'tickets_id'         => $changeID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::OBSERVER,
+                  'use_notification'   => $this->observers['_users_id_observer_notif']['use_notification'][$index],
+                  'alternative_email'  => $this->observers['_users_id_observer_notif']['alternative_email'][$index],
+            ));
+         }
+         foreach ($this->assigned['_users_id_assign'] as $index => $userId) {
+            $change_user = $this->getItem_User();
+            $change_user->add(array(
+                  'tickets_id'         => $changeID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::ASSIGN,
+                  'use_notification'   => $this->assigned['_users_id_assign_notif']['use_notification'][$index],
+                  'alternative_email'  => $this->assigned['_users_id_assign_notif']['alternative_email'][$index],
+            ));
+         }
+         foreach ($this->assignedSuppliers['_suppliers_id_assign'] as $index => $userId) {
+            $change_supplier = $this->getItem_Supplier();
+            $change_supplier->add(array(
+                  'tickets_id'         => $changeID,
+                  'users_id'           => $userId,
+                  'type'               => CommonITILActor::ASSIGN,
+                  'use_notification'   => $this->assigned['_suppliers_id_assign']['use_notification'][$index],
+                  'alternative_email'  => $this->assigned['_suppliers_id_assign']['alternative_email'][$index],
+            ));
          }
 
-         // If there is only one requester, it have already been added, so continue to next actors
-         if ($solo_requester && ($actor['actor_role'] == 'requester')) {
-            continue;
+         foreach ($this->requesterGroups['_groups_id_requester'] as $index => $groupId) {
+            $change_group = $this->getItem_Group();
+            $change_group->add(array(
+                  'tickets_id'       => $changeID,
+                  'groups_id'        => $groupId,
+                  'type'             => CommonITILActor::REQUESTER,
+            ));
          }
-
-         switch ($actor['actor_role']) {
-            case 'requester' : $role = CommonITILActor::REQUESTER;   break;
-            case 'observer' :  $role = CommonITILActor::OBSERVER;    break;
-            case 'assigned' :  $role = CommonITILActor::ASSIGN;      break;
+         foreach ($this->observerGroups['_groups_id_observer'] as $index => $groupId) {
+            $change_group = $this->getItem_Group();
+            $change_group->add(array(
+                  'tickets_id'       => $changeID,
+                  'groups_id'        => $groupId,
+                  'type'             => CommonITILActor::OBSERVER,
+            ));
          }
-         switch ($actor['actor_type']) {
-            case 'creator' :
-               $user_id = $formanswer->fields['requester_id'];
-               break;
-            case 'validator' :
-               $user_id = $formanswer->fields['validator_id'];
-               break;
-            case 'person' :
-            case 'group' :
-            case 'supplier' :
-               $user_id = $actor['actor_value'];
-               break;
-            case 'question_person' :
-            case 'question_group' :
-            case 'question_supplier' :
-               $found   = $answer->find('`plugin_formcreator_question_id` = '.$actor['actor_value'].
-               ' AND `plugin_formcreator_formanwers_id` = '.$formanswer->fields['id']);
-               $found   = array_shift($found);
-
-               if (empty($found['answer'])) {
-                  continue;
-               } else {
-                  $user_id = (int) $found['answer'];
-               }
-               break;
-         }
-         switch ($actor['actor_type']) {
-            case 'creator' :
-            case 'validator' :
-            case 'person' :
-            case 'question_person' :
-               $obj = new Ticket_User();
-               $obj->add(array(
-                     'tickets_id'       => $ticketID,
-                     'users_id'         => $user_id,
-                     'type'             => $role,
-                     'use_notification' => $actor['use_notification'],
-               ));
-               break;
-            case 'group' :
-            case 'question_group' :
-               $obj = new Group_Ticket();
-               $obj->add(array(
-                     'tickets_id'       => $ticketID,
-                     'groups_id'        => $user_id,
-                     'type'             => $role,
-                     'use_notification' => $actor['use_notification'],
-               ));
-               break;
-            case 'supplier' :
-            case 'question_supplier' :
-               $obj = new Supplier_Ticket();
-               $obj->add(array(
-                     'tickets_id'       => $ticketID,
-                     'suppliers_id'     => $user_id,
-                     'type'             => $role,
-                     'use_notification' => $actor['use_notification'],
-               ));
-               break;
-         }
-      }
-
-      // Attach documents to ticket
-      $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
-                               AND items_id = ".$formanswer->getID());
-      if (count($found) > 0) {
-         foreach ($found as $document) {
-            $docItem->add(array(
-                  'documents_id' => $document['documents_id'],
-                  'itemtype'     => 'Ticket',
-                  'items_id'     => $ticketID
+         foreach ($this->assignedGroups['_groups_id_assign'] as $index => $groupId) {
+            $change_group = $this->getItem_Group();
+            $change_group->add(array(
+                  'tickets_id'       => $changeID,
+                  'groups_id'        => $groupId,
+                  'type'             => CommonITILActor::ASSIGN,
             ));
          }
       }
 
-      // Attach validation message as first ticket followup if validation is required and
-      // if is set in ticket target configuration
-      // /!\ Followup is directly saved to the database to avoid double notification on ticket
-      //     creation and add followup
-      if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
-         $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
-         if (!empty($formanswer->fields['comment'])) {
-            $message.= "\n".addslashes($formanswer->fields['comment']);
-         }
-
-         $query = "INSERT INTO `glpi_changevalidations` SET
-         `changes_id` = $ticketID,
-         `submission_date`       = NOW(),
-         `users_id`   = {$_SESSION['glpiID']},
-         `submission`    = \"$message\"";
-         $DB->query($query);
-      }
+      $this->attachDocument($formanswer->getID(), Change::class, $changeID);
 
       return true;
    }

@@ -1,53 +1,6 @@
 <?php
 class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
-
-   protected $requesters;
-
-   protected $observers;
-
-   protected $assigned;
-
-   protected $assignedSuppliers;
-
-   protected $requesterGroups;
-
-   protected $observerGroups;
-
-   protected $assignedGroups;
-
-   static function getEnumDestinationEntity() {
-      return array(
-         'current'   => __("Current active entity", 'formcreator'),
-         'requester' => __("Default requester user's entity", 'formcreator'),
-         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'form'      => __('The form entity', 'formcreator'),
-         'validator' => __('Default entity of the validator', 'formcreator'),
-         'specific'  => __('Specific entity', 'formcreator'),
-         'user'      => __('Default entity of a user type question answer', 'formcreator'),
-         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
-      );
-   }
-
-   static function getEnumTagType() {
-      return array(
-         'none'                   => __("None"),
-         'questions'              => __('Tags from questions', 'formcreator'),
-         'specifics'              => __('Specific tags', 'formcreator'),
-         'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-         'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
-      );
-   }
-
-   static function getEnumDueDateRule() {
-      return array(
-         'answer' => __('equals to the answer to the question', 'formcreator'),
-         'ticket' => __('calculated from the ticket creation date', 'formcreator'),
-         'calcul' => __('calculated from the answer to the question', 'formcreator'),
-      );
-   }
-
    static function getEnumUrgencyRule() {
       return array(
             'none'      => __('Urgency from template or Medium', 'formcreator'),
@@ -64,28 +17,25 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       );
    }
 
-   /**
-    * Check if current user have the right to create and modify requests
-    *
-    * @return boolean True if he can create and modify requests
-    */
-   public static function canCreate() {
-      return true;
-   }
-
-   /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
-   public static function canView() {
-      return true;
-   }
-
    public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
    }
 
+   protected function getItem_User() {
+      return new Ticket_User();
+   }
+
+   protected function getItem_Group() {
+      return new Group_Ticket();
+   }
+
+   protected function getItem_Supplier() {
+      return new Ticket_Supplier();
+   }
+
+   protected function getItem_Item() {
+      return new Item_Ticket();
+   }
 
    /**
     * Show the Form edit form the the adminsitrator in the config page
@@ -837,7 +787,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $datas   = array();
       $ticket  = new Ticket();
-      $docItem = new Document_Item();
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
 
@@ -1051,7 +1000,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
          // user actors
          foreach ($this->requesters['_users_id_requester'] as $index => $userId) {
-            $ticket_user = new Ticket_User();
+            $ticket_user = $this->getItem_User();
             $ticket_user->add(array(
                   'tickets_id'         => $ticketID,
                   'users_id'           => $userId,
@@ -1061,7 +1010,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             ));
          }
          foreach ($this->observers['_users_id_observer'] as $index => $userId) {
-            $ticket_user = new Ticket_User();
+            $ticket_user = $this->getItem_User();
             $ticket_user->add(array(
                   'tickets_id'         => $ticketID,
                   'users_id'           => $userId,
@@ -1071,7 +1020,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             ));
          }
          foreach ($this->assigned['_users_id_assign'] as $index => $userId) {
-            $ticket_user = new Ticket_User();
+            $ticket_user = $this->getItem_User();
             $ticket_user->add(array(
                   'tickets_id'         => $ticketID,
                   'users_id'           => $userId,
@@ -1081,7 +1030,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             ));
          }
          foreach ($this->assignedSuppliers['_suppliers_id_assign'] as $index => $userId) {
-            $supplier_ticket = new Supplier_Ticket();
+            $supplier_ticket = $this->getItem_Supplier();
             $supplier_ticket->add(array(
                   'tickets_id'         => $ticketID,
                   'users_id'           => $userId,
@@ -1092,7 +1041,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
 
          foreach ($this->requesterGroups['_groups_id_requester'] as $index => $groupId) {
-            $group_ticket = new Group_Ticket();
+            $group_ticket = $this->getItem_Group();
             $group_ticket->add(array(
                   'tickets_id'       => $ticketID,
                   'groups_id'        => $groupId,
@@ -1100,7 +1049,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             ));
          }
          foreach ($this->observerGroups['_groups_id_observer'] as $index => $groupId) {
-            $group_ticket = new Group_Ticket();
+            $group_ticket = $this->getItem_Group();
             $group_ticket->add(array(
                   'tickets_id'       => $ticketID,
                   'groups_id'        => $groupId,
@@ -1108,7 +1057,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             ));
          }
          foreach ($this->assignedGroups['_groups_id_assign'] as $index => $groupId) {
-            $group_ticket = new Group_Ticket();
+            $group_ticket = $this->getItem_Group();
             $group_ticket->add(array(
                   'tickets_id'       => $ticketID,
                   'groups_id'        => $groupId,
@@ -1159,31 +1108,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             $tagObj->add(array(
                'plugin_tag_tags_id' => $tag,
                'items_id'           => $ticketID,
-               'itemtype'           => 'Ticket',
+               'itemtype'           => Ticket::class,
             ));
          }
       }
 
       // Add link between Ticket and FormAnswer
-      $itemlink = new Item_Ticket();
+      $itemlink = $this->getItem_Item();
       $itemlink->add(array(
          'itemtype'   => 'PluginFormcreatorForm_Answer',
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ));
 
-      // Attach documents to ticket
-      $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
-                               AND items_id = ".$formanswer->getID());
-      if (count($found) > 0) {
-         foreach ($found as $document) {
-            $docItem->add(array(
-               'documents_id' => $document['documents_id'],
-               'itemtype'     => 'Ticket',
-               'items_id'     => $ticketID
-            ));
-         }
-      }
+      $this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration
@@ -1318,144 +1256,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       return $content;
-   }
-
-   /**
-    * find all actors and prepare data for the ticket being created
-    */
-   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formanswer) {
-      $targetTicketId = $this->getID();
-      $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
-      $rows = $targetTicketActor->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
-
-      foreach ($rows as $actor) {
-         // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
-            continue;
-         }
-
-         switch ($actor['actor_type']) {
-            case 'creator' :
-               $userIds = array($formanswer->fields['requester_id']);
-               $notify  = $actor['use_notification'];
-               break;
-            case 'validator' :
-               $userIds = array($_SESSION['glpiID']);
-               $notify  = $actor['use_notification'];
-               break;
-            case 'person' :
-            case 'group' :
-            case 'supplier' :
-               $userIds = array($actor['actor_value']);
-               $notify  = $actor['use_notification'];
-               break;
-            case 'question_person' :
-            case 'question_group' :
-            case 'question_supplier' :
-               $answer  = new PluginFormcreatorAnswer();
-               $actorValue = $actor['actor_value'];
-               $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_question_id` = '$actorValue'
-                                          AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
-
-               if ($answer->isNewItem()) {
-                  continue;
-               } else {
-                  $userIds = array($answer->getField('answer'));
-               }
-               $notify  = $actor['use_notification'];
-               break;
-            case 'question_actors':
-               $answer  = new PluginFormcreatorAnswer();
-               $actorValue = $actor['actor_value'];
-               $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_question_id` = '$actorValue'
-                                          AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
-
-               if ($answer->isNewItem()) {
-                  continue;
-               } else {
-                  $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
-               }
-               $notify = $actor['use_notification'];
-               break;
-         }
-
-         switch ($actor['actor_type']) {
-            case 'creator' :
-            case 'validator' :
-            case 'person' :
-            case 'question_person' :
-            case 'question_actors':
-               foreach ($userIds as $userIdOrEmail) {
-                  $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
-               }
-               break;
-            case 'group' :
-            case 'question_group' :
-               foreach ($userIds as $groupId) {
-                  $this->addGroupActor($actor['actor_role'], $groupId);
-               }
-               break;
-            case 'supplier' :
-            case 'question_supplier' :
-               foreach ($userIds as $userId) {
-                  $this->addActor('supplier', $userId, $notify);
-               }
-               break;
-         }
-      }
-   }
-
-   protected function addActor($role, $user, $notify) {
-      if (filter_var($user, FILTER_VALIDATE_EMAIL) !== false) {
-         $userId = 0;
-         $alternativeEmail = $user;
-      } else {
-         $userId = intval($user);
-         $alternativeEmail = '';
-         if ($userId == '0') {
-            // there is no actor
-            return;
-         }
-      }
-
-      switch ($role) {
-         case 'requester':
-            $this->requesters['_users_id_requester'][]                                    = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]          = ($notify == true);
-            $this->requesters['_users_id_requester_notif']['alternative_email'][]         = $alternativeEmail;
-            break;
-         case 'observer' :
-            $this->observers['_users_id_observer'][]                                      = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]            = ($notify == true);
-            $this->observers['_users_id_observer_notif']['alternative_email'][]           = $alternativeEmail;
-            break;
-         case 'assigned' :
-            $this->assigned['_users_id_assign'][]                                         = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]               = ($notify == true);
-            $this->assigned['_users_id_assign_notif']['alternative_email'][]              = $alternativeEmail;
-            break;
-         case 'supplier' :
-            $this->assignedSuppliers['_suppliers_id_assign'][]                            = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign_notif']['use_notification'][]  = ($notify == true);
-            $this->assignedSuppliers['_suppliers_id_assign_notif']['alternative_email'][] = $alternativeEmail;
-            break;
-      }
-   }
-
-   protected function addGroupActor($role, $group) {
-      switch ($role) {
-         case 'requester':
-            $this->requesterGroupss['_groups_id_requester'][]  = $group;
-            break;
-         case 'observer' :
-            $this->observerGroups['_groups_id_observer'][]     = $group;
-            break;
-         case 'assigned' :
-            $this->assignedGroups['_groups_id_assign'][]       = $group;
-            break;
-      }
    }
 
    private static function getDeleteImage($id) {
