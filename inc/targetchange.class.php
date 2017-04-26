@@ -125,12 +125,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       if ($targetitems_id
             && isset($target_data['_actors'])) {
-               foreach ($target_data['_actors'] as $actor) {
-                  PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
-               }
-            }
+         foreach ($target_data['_actors'] as $actor) {
+            PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+         }
+      }
 
-            return $targetitems_id;
+      return $targetitems_id;
    }
 
    /**
@@ -482,13 +482,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'
            . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
-     $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
-     unset($dropdownItems['supplier']);
-     unset($dropdownItems['question_supplier']);
-     Dropdown::showFromArray('actor_type',
-        $dropdownItems, array(
-              'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
-     ));
+      $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      unset($dropdownItems['supplier']);
+      unset($dropdownItems['question_supplier']);
+      Dropdown::showFromArray('actor_type',
+         $dropdownItems, array(
+               'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
+      ));
 
       echo '<div id="block_watcher_user" style="display:none">';
       User::dropdown(array(
