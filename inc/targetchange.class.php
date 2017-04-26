@@ -893,7 +893,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       );
 
       $datas   = array();
-      $ticket  = new Change();
+      $change  = new Change();
 
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -913,30 +913,29 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $datas['name']                = addslashes($this->parseTags($this->fields['name'],
             $formanswer,
             $fullform));
-      $datas['content']             = htmlentities($this->parseTags($this->fields['comment'],
+      $datas['content']             = htmlentities(addslashes($this->parseTags($this->fields['comment'],
             $formanswer,
-            $fullform));
-      $datas['impactcontent']       = htmlentities($this->parseTags($this->fields['impactcontent'],
+            $fullform)));
+      $datas['impactcontent']       = htmlentities(addslashes($this->parseTags($this->fields['impactcontent'],
             $formanswer,
-            $fullform));
+            $fullform)));
 
-      $datas['controlistcontent']   = htmlentities($this->parseTags($this->fields['controlistcontent'],
+      $datas['controlistcontent']   = htmlentities(addslashes($this->parseTags($this->fields['controlistcontent'],
             $formanswer,
-            $fullform));
+            $fullform)));
 
-      $datas['rolloutplancontent']  = htmlentities($this->parseTags($this->fields['rolloutplancontent'],
+      $datas['rolloutplancontent']  = htmlentities(addslashes($this->parseTags($this->fields['rolloutplancontent'],
             $formanswer,
-            $fullform));
+            $fullform)));
 
-      $datas['backoutplancontent']  = htmlentities($this->parseTags($this->fields['backoutplancontent'],
+      $datas['backoutplancontent']  = htmlentities(addslashes($this->parseTags($this->fields['backoutplancontent'],
             $formanswer,
-            $fullform));
-      $datas['checklistcontent']    = htmlentities($this->parseTags($this->fields['checklistcontent'],
+            $fullform)));
+      $datas['checklistcontent']    = htmlentities(addslashes($this->parseTags($this->fields['checklistcontent'],
             $formanswer,
-            $fullform));
+            $fullform)));
 
       $datas['_users_id_recipient']   = $_SESSION['glpiID'];
-      $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
       $this->prepareActors($form, $formanswer);
 
@@ -1080,7 +1079,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       }
 
       // Create the target change
-      if (!$changeID->add($datas)) {
+      if (!$changeID = $change->add($datas)) {
          return false;
       }
 
