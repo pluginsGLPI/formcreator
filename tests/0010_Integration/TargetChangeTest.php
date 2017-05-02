@@ -50,18 +50,18 @@ class TargetChangeTest extends SuperAdminTestCase {
     * @param PluginFormcreatorForm $form
     * @param PluginFormcreatorTarget $target
     */
-   public function testTargetTicket(PluginFormcreatorForm $form, PluginFormcreatorTarget $target) {
-      $targetTicket = $target->getField('items_id');
-      $targetTicket = new PluginFormcreatorTargetChange();
-      $targetTicket->getFromDB($target->getField('items_id'));
-      $this->assertFalse($targetTicket->isNewItem());
-      $this->assertEquals($target->getField('name'), $targetTicket->getField('name'));
+   public function testTargetChange(PluginFormcreatorForm $form, PluginFormcreatorTarget $target) {
+      $targetChange = $target->getField('items_id');
+      $targetChange = new PluginFormcreatorTargetChange();
+      $targetChange->getFromDB($target->getField('items_id'));
+      $this->assertFalse($targetChange->isNewItem());
+      $this->assertEquals($target->getField('name'), $targetChange->getField('name'));
 
-      return $targetTicket;
+      return $targetChange;
    }
 
    /**
-    * @depends testTargetTicket
+    * @depends testTargetChange
     * @param PluginFormcreatorTargetTicket $target
     */
    public function testTargetTicketActors(PluginFormcreatorTargetChange $targetChange) {
