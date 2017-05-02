@@ -210,9 +210,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="rolloutplancontext" style="width:700px;" rows="15">' . $this->fields['rolloutplancontext'] . '</textarea>';
+      echo '<textarea name="rolloutplancontent" style="width:700px;" rows="15">' . $this->fields['rolloutplancontent'] . '</textarea>';
       if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('rolloutplancontext');
+         Html::initEditorSystem('rolloutplancontent');
       }
       echo '</td>';
       echo '</tr>';
@@ -220,9 +220,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="backoutplancontext" style="width:700px;" rows="15">' . $this->fields['backoutplancontext'] . '</textarea>';
+      echo '<textarea name="backoutplancontent" style="width:700px;" rows="15">' . $this->fields['backoutplancontent'] . '</textarea>';
       if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('backoutplancontext');
+         Html::initEditorSystem('backoutplancontent');
       }
       echo '</td>';
       echo '</tr>';

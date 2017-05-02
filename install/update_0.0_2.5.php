@@ -88,9 +88,9 @@ function plugin_formcreator_updateCategory(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_categories` SET
-                              `name`    = '".plugin_formcreator_encode($line['name'], false)."',
-                              `comment` = '".plugin_formcreator_encode($line['comment'], false)."'
-                          WHERE `id` = ".$line['id'];
+                       `name`    = '".plugin_formcreator_encode($line['name'], false)."',
+                       `comment` = '".plugin_formcreator_encode($line['comment'], false)."'
+                       WHERE `id` = ".$line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
@@ -150,8 +150,8 @@ function plugin_formcreator_updateForm_Answer(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_forms_answers` SET
-      `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
-                          WHERE `id` = " . $line['id'];
+                       `comment` = '" . plugin_formcreator_encode($line['comment']) . "'
+                       WHERE `id` = " . $line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
@@ -193,9 +193,9 @@ function plugin_formcreator_updateForm_Profile(Migration $migration) {
       $migration->addField('glpi_plugin_formcreator_forms_profiles', 'id', 'autoincrement');
       $migration->addKey('glpi_plugin_formcreator_forms_profiles', 'id', 'id', 'PRIMARY KEY');
       $migration->addKey('glpi_plugin_formcreator_forms_profiles', array('plugin_formcreator_forms_id',
-            'profiles_id'),
-            'unicity',
-            'UNIQUE KEY');
+                                                                         'profiles_id'),
+                                                                         'unicity',
+                                                                         'UNIQUE KEY');
    }
 
    // add uuid to validator
@@ -226,13 +226,13 @@ function plugin_formcreator_updateFormValidator(Migration $migration) {
       $table_form = PluginFormcreatorForm::getTable();
       $old_table = 'glpi_plugin_formcreator_formvalidators';
       $query = "INSERT INTO `glpi_plugin_formcreator_forms_validators` (`plugin_formcreator_forms_id`, `itemtype`, `items_id`)
-      SELECT
-         `$old_table`.`forms_id`,
-      IF(`validation_required` = '".PluginFormcreatorForm_Validator::VALIDATION_USER."', 'User', 'Group'),
-         `$old_table`.`users_id`
-      FROM `$old_table`
-      LEFT JOIN `$table_form` ON (`$table_form`.`id` = `$old_table`.`forms_id`)
-      WHERE `validation_required` > 1";
+                SELECT
+                   `$old_table`.`forms_id`,
+                IF(`validation_required` = '".PluginFormcreatorForm_Validator::VALIDATION_USER."', 'User', 'Group'),
+                   `$old_table`.`users_id`
+                FROM `$old_table`
+                LEFT JOIN `$table_form` ON (`$table_form`.`id` = `$old_table`.`forms_id`)
+                WHERE `validation_required` > 1";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       $migration->displayMessage('Backing up table glpi_plugin_formcreator_formvalidators');
       $migration->renameTable('glpi_plugin_formcreator_formvalidators', 'glpi_plugin_formcreator_formvalidators_backup');
@@ -290,10 +290,10 @@ function plugin_formcreator_updateForm(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_forms` SET
-      `name`        = '" . plugin_formcreator_encode($line['name']) . "',
-                      `description` = '" . plugin_formcreator_encode($line['description']) . "',
-                      `content`     = '" . plugin_formcreator_encode($line['content']) . "'
-                    WHERE `id` = " . (int) $line['id'];
+                       `name`        = '" . plugin_formcreator_encode($line['name']) . "',
+                       `description` = '" . plugin_formcreator_encode($line['description']) . "',
+                       `content`     = '" . plugin_formcreator_encode($line['content']) . "'
+                       WHERE `id` = " . (int) $line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
@@ -382,7 +382,7 @@ function plugin_formcreator_updateIssue(Migration $migration) {
                'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
                'mode'      => CronTask::MODE_EXTERNAL
          )
-         );
+   );
    $task = new CronTask();
    PluginFormcreatorIssue::cronSyncIssues($task);
 }
@@ -397,7 +397,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
    if (FieldExists('glpi_plugin_formcreator_questions', 'show_type', false)) {
       // Migrate date from "questions" table to "questions_conditions" table
       $query  = "SELECT `id`, `show_type`, `show_field`, `show_condition`, `show_value`
-      FROM `glpi_plugin_formcreator_questions`";
+                 FROM `glpi_plugin_formcreator_questions`";
       $result = $DB->query($query);
       while ($line = $DB->fetch_array($result)) {
          $questionId = $line['id'];
@@ -425,15 +425,15 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
          $show_field = empty($line['show_field']) ? 'NULL' : $line['show_field'];
 
          $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
-         `show_rule` = '$show_rule'
-         WHERE `id` = '$questionId'";
+                         `show_rule` = '$show_rule'
+                         WHERE `id` = '$questionId'";
          $DB->query($query_udate) or plugin_formcreator_upgrade_error($migration);
 
          $query_udate = "INSERT INTO `glpi_plugin_formcreator_questions_conditions` SET
-         `plugin_formcreator_questions_id` = '$questionId',
-         `show_field`     = '$show_field',
-         `show_condition` = '$show_condition',
-         `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
+                         `plugin_formcreator_questions_id` = '$questionId',
+                         `show_field`     = '$show_field',
+                         `show_condition` = '$show_condition',
+                         `show_value`     = '" . Toolbox::addslashes_deep($line['show_value']) . "'";
          $DB->query($query_udate) or plugin_formcreator_upgrade_error($migration);
       }
 
@@ -446,7 +446,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
 
    // Migrate "question_conditions" table
    $query  = "SELECT `id`, `show_value`
-   FROM `glpi_plugin_formcreator_questions_conditions`";
+              FROM `glpi_plugin_formcreator_questions_conditions`";
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_questions_conditions` SET
@@ -483,7 +483,7 @@ function plugin_formcreator_updateQuestionCondition(Migration $migration) {
    $all_conditions = $condition_obj->find("uuid IS NULL");
    foreach ($all_conditions as $conditions_id => $condition) {
       $condition_obj->update(array('id'   => $conditions_id,
-            'uuid' => plugin_formcreator_getUuid()));
+                                   'uuid' => plugin_formcreator_getUuid()));
    }
 }
 
@@ -497,20 +497,20 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
    if (!FieldExists('glpi_plugin_formcreator_questions', 'fieldtype', false)) {
       // Migration from previous version
       $query = "ALTER TABLE `glpi_plugin_formcreator_questions`
-      ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
-      ADD `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
-      ADD `show_field` int(11) DEFAULT NULL,
-      ADD `show_condition` enum('equal','notequal','lower','greater') COLLATE utf8_unicode_ci DEFAULT NULL,
-      ADD `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-      ADD `required` tinyint(1) NOT NULL DEFAULT '0',
-      ADD `show_empty` tinyint(1) NOT NULL DEFAULT '0',
-      ADD `default_values` text COLLATE utf8_unicode_ci,
-      ADD `values` text COLLATE utf8_unicode_ci,
-      ADD `range_min` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-      ADD `range_max` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-      ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-      CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
-      CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
+                ADD `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
+                ADD `show_type` enum ('show', 'hide') NOT NULL DEFAULT 'show',
+                ADD `show_field` int(11) DEFAULT NULL,
+                ADD `show_condition` enum('equal','notequal','lower','greater') COLLATE utf8_unicode_ci DEFAULT NULL,
+                ADD `show_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                ADD `required` tinyint(1) NOT NULL DEFAULT '0',
+                ADD `show_empty` tinyint(1) NOT NULL DEFAULT '0',
+                ADD `default_values` text COLLATE utf8_unicode_ci,
+                ADD `values` text COLLATE utf8_unicode_ci,
+                ADD `range_min` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+                ADD `range_max` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+                ADD `regex` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                CHANGE `content` `description` text COLLATE utf8_unicode_ci NOT NULL,
+                CHANGE `position` `order` int(11) NOT NULL DEFAULT '0';";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
       // order start from 1 instead of 0
@@ -518,7 +518,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
 
       // Match new type
       $query  = "SELECT `id`, `type`, `data`, `option`
-      FROM `glpi_plugin_formcreator_questions`";
+                 FROM `glpi_plugin_formcreator_questions`";
       $result = $DB->query($query);
       while ($line = $DB->fetch_array($result)) {
          $datas    = json_decode($line['data']);
@@ -618,12 +618,12 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
          }
 
          $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
-         `fieldtype`      = '" . $fieldtype . "',
-                                  `values`         = '" . htmlspecialchars($values) . "',
-                                  `default_values` = '" . htmlspecialchars($default) . "',
-                                  `regex`          = '" . $regex . "',
-                                  `required`       = " . (int) $required . "
-                               WHERE `id` = " . $line['id'];
+                        `fieldtype`      = '" . $fieldtype . "',
+                        `values`         = '" . htmlspecialchars($values) . "',
+                        `default_values` = '" . htmlspecialchars($default) . "',
+                        `regex`          = '" . $regex . "',
+                        `required`       = " . (int) $required . "
+                        WHERE `id` = " . $line['id'];
          $DB->query($query_udate) or plugin_formcreator_upgrade_error($migration);
       }
 
@@ -639,8 +639,8 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
       // Fix type of section ID
       if (!FieldExists('glpi_plugin_formcreator_questions', 'show_rule')) {
          $query = "ALTER TABLE  `glpi_plugin_formcreator_questions`
-                         CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
-                         ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
+                   CHANGE `plugin_formcreator_sections_id` `plugin_formcreator_sections_id` INT NOT NULL,
+                   ADD `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
@@ -652,7 +652,7 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
     */
    // Migrate "questions" table
    $query  = "SELECT `id`, `name`, `values`, `default_values`, `description`
-                    FROM `glpi_plugin_formcreator_questions`";
+              FROM `glpi_plugin_formcreator_questions`";
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_questions` SET
@@ -708,7 +708,7 @@ function plugin_formcreator_updateSection(Migration $migration) {
     * @since 0.85-1.2.3
     */
    $query  = "SELECT `id`, `name`
-   FROM `glpi_plugin_formcreator_sections`";
+              FROM `glpi_plugin_formcreator_sections`";
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_sections` SET
@@ -787,7 +787,7 @@ function plugin_formcreator_updateTarget(Migration $migration) {
    // Migration to 0.85-1.2.5
    if (FieldExists('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targets`
-                       CHANGE `plugin_formcreator_forms_id` `plugin_formcreator_forms_id` INT NOT NULL;";
+                CHANGE `plugin_formcreator_forms_id` `plugin_formcreator_forms_id` INT NOT NULL;";
       $DB->query($query);
    }
 
@@ -880,21 +880,22 @@ function plugin_formcreator_updateTarget(Migration $migration) {
          $mysql_case_template .= "END AS `tickettemplates_id`";
 
          // Create Target ticket
-         $query  = "SELECT `id`, `name`, $mysql_case_template, `content` FROM `glpi_plugin_formcreator_targets`;";
+         $query  = "SELECT `id`, `name`, $mysql_case_template, `content`
+                    FROM `glpi_plugin_formcreator_targets`;";
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             // Insert target ticket
             $query_insert = "INSERT INTO `$table_targetticket` SET
-            `name` = '".htmlspecialchars($line['name'])."',
-                                    `tickettemplates_id` = ".$line['tickettemplates_id'].",
-                                    `comment` = '".htmlspecialchars($line['content'])."'";
+                             `name` = '".htmlspecialchars($line['name'])."',
+                             `tickettemplates_id` = ".$line['tickettemplates_id'].",
+                             `comment` = '".htmlspecialchars($line['content'])."'";
             $DB   ->query($query_insert);
             $targetticket_id = $DB->insert_id();
 
             // Update target with target ticket id
             $query_update = "UPDATE `glpi_plugin_formcreator_targets`
-            SET `items_id` = ".$targetticket_id."
-                                   WHERE `id` = ".$line['id'];
+                             SET `items_id` = ".$targetticket_id."
+                             WHERE `id` = ".$line['id'];
             $DB->query($query_update);
          }
       }
@@ -909,12 +910,12 @@ function plugin_formcreator_updateTarget(Migration $migration) {
        */
       if (FieldExists($table_targetticket, 'comment')) {
          $query  = "SELECT `id`, `comment`
-         FROM `$table_targetticket`";
+                    FROM `$table_targetticket`";
          $result = $DB->query($query);
          while ($line = $DB->fetch_array($result)) {
             $query_update = "UPDATE `$table_targetticket` SET
-            `comment` = '".plugin_formcreator_encode($line['comment'])."'
-                                   WHERE `id` = ".$line['id'];
+                             `comment` = '".plugin_formcreator_encode($line['comment'])."'
+                             WHERE `id` = ".$line['id'];
             $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
          }
       }
@@ -1030,27 +1031,27 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'due_date_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-      ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
-      ADD `due_date_question` INT NULL DEFAULT NULL,
-      ADD `due_date_value` TINYINT NULL DEFAULT NULL,
-      ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
-      ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
+                ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
+                ADD `due_date_question` INT NULL DEFAULT NULL,
+                ADD `due_date_value` TINYINT NULL DEFAULT NULL,
+                ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL,
+                ADD `validation_followup` BOOLEAN NOT NULL DEFAULT TRUE;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    // Migration to Formcreator 0.90-1.4
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'destination_entity', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-      ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
-      ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
+                ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
+                ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'destination_entity');
       if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetTicket::getEnumDestinationEntity())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-         CHANGE COLUMN `destination_entity` `destination_entity`
-         ENUM($enum_destination_entity)
-         NOT NULL DEFAULT 'current'";
+                   CHANGE COLUMN `destination_entity` `destination_entity`
+                   ENUM($enum_destination_entity)
+                   NOT NULL DEFAULT 'current'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
@@ -1059,23 +1060,23 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'tag_type', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-      ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-      ADD `tag_questions` VARCHAR(255) NOT NULL,
-      ADD `tag_specifics` VARCHAR(255) NOT NULL;";
+                ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
+                ADD `tag_questions` VARCHAR(255) NOT NULL,
+                ADD `tag_specifics` VARCHAR(255) NOT NULL;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'urgency_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-      ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
+                ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'urgency_rule');
       if (count($current_enum_urgency_rule) != count(PluginFormcreatorTargetTicket::getEnumUrgencyRule())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-         CHANGE COLUMN `urgency_rule` `urgency_rule`
-         ENUM($enum_urgency_rule)
-         NOT NULL DEFAULT 'none'";
+                   CHANGE COLUMN `urgency_rule` `urgency_rule`
+                   ENUM($enum_urgency_rule)
+                   NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
@@ -1083,15 +1084,15 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
 
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'category_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-      ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
+                ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'category_rule');
       if (count($current_enum_category_rule) != count(PluginFormcreatorTargetTicket::getEnumCategoryRule())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-         CHANGE COLUMN `category_rule` `category_rule`
-         ENUM($current_enum_category_rule)
-         NOT NULL DEFAULT 'none'";
+                   CHANGE COLUMN `category_rule` `category_rule`
+                   ENUM($current_enum_category_rule)
+                   NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
@@ -1110,35 +1111,67 @@ function plugin_formcreator_updateTargetChange($migration) {
    global $DB;
 
    // Legacy upgrade of Forms
-   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets");
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges");
 
-   $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDestinationEntity()))."'";
-   $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumTagType()))."'";
-   $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDueDateRule()))."'";
-   $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumUrgencyRule()))."'";
-   $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumCategoryRule()))."'";
+   if (!TableExists($tablename)) {
+      $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
+                 `id` int(11) NOT NULL AUTO_INCREMENT,
+                 `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+                 `changetemplates_id` int(11) DEFAULT NULL,
+                 `comment` text COLLATE utf8_unicode_ci,
+                 `impactcontent` text COLLATE utf8_unicode_ci,
+                 `controlistcontent` text COLLATE utf8_unicode_ci,
+                 `rolloutplancontent` text COLLATE utf8_unicode_ci,
+                 `backoutplancontent` text COLLATE utf8_unicode_ci,
+                 `checklistcontent` text COLLATE utf8_unicode_ci,
+                 `due_date_rule` enum('answer','change','calcul') COLLATE utf8_unicode_ci DEFAULT NULL,
+                 `due_date_question` int(11) DEFAULT NULL,
+                 `due_date_value` tinyint(4) DEFAULT NULL,
+                 `due_date_period` enum('minute','hour','day','month') COLLATE utf8_unicode_ci DEFAULT NULL,
+                 `urgency_rule` enum('none','specific','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
+                 `urgency_question` int(11) NOT NULL DEFAULT '0',
+                 `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
+                 `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'requester',
+                 `destination_entity_value` int(11) DEFAULT NULL,
+                 `tag_type` enum('none','questions','specifics','questions_and_specific','questions_or_specific') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
+                 `tag_questions` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                 `tag_specifics` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+                 `category_rule` enum('none','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
+                 `category_question` int(11) NOT NULL DEFAULT '0',
+                 PRIMARY KEY (`id`),
+                 INDEX `changetemplates_id` (`changetemplates_id`)
+               ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+            ";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
+   $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDestinationEntity()))."'";
+   $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumTagType()))."'";
+   $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDueDateRule()))."'";
+   $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumUrgencyRule()))."'";
+   $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumCategoryRule()))."'";
 
    if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'due_date_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-      ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
-      ADD `due_date_question` INT NULL DEFAULT NULL,
-      ADD `due_date_value` TINYINT NULL DEFAULT NULL,
-      ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL;";
+                ADD `due_date_rule` ENUM($enum_due_date_rule) NULL DEFAULT NULL,
+                ADD `due_date_question` INT NULL DEFAULT NULL,
+                ADD `due_date_value` TINYINT NULL DEFAULT NULL,
+                ADD `due_date_period` ENUM('minute', 'hour', 'day', 'month') NULL DEFAULT NULL;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'destination_entity', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-      ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
-      ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
+                ADD `destination_entity` ENUM($enum_destination_entity) NOT NULL DEFAULT 'current',
+                ADD `destination_entity_value` int(11) NULL DEFAULT NULL;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'destination_entity');
-      if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetTicket::getEnumDestinationEntity())) {
+      if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetChange::getEnumDestinationEntity())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-         CHANGE COLUMN `destination_entity` `destination_entity`
-         ENUM($enum_destination_entity)
-         NOT NULL DEFAULT 'current'";
+                   CHANGE COLUMN `destination_entity` `destination_entity`
+                   ENUM($enum_destination_entity)
+                   NOT NULL DEFAULT 'current'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
@@ -1147,23 +1180,23 @@ function plugin_formcreator_updateTargetChange($migration) {
 
    if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'tag_type', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-      ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
-      ADD `tag_questions` VARCHAR(255) NOT NULL,
-      ADD `tag_specifics` VARCHAR(255) NOT NULL;";
+                ADD `tag_type` ENUM($enum_tag_type) NOT NULL DEFAULT 'none',
+                ADD `tag_questions` VARCHAR(255) NOT NULL,
+                ADD `tag_specifics` VARCHAR(255) NOT NULL;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'urgency_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-      ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
+                ADD `urgency_rule` ENUM($enum_urgency_rule) NOT NULL DEFAULT 'none' AFTER `due_date_period`;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'urgency_rule');
-      if (count($current_enum_urgency_rule) != count(PluginFormcreatorTargetTicket::getEnumUrgencyRule())) {
+      if (count($current_enum_urgency_rule) != count(PluginFormcreatorTargetChange::getEnumUrgencyRule())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-         CHANGE COLUMN `urgency_rule` `urgency_rule`
-         ENUM($enum_urgency_rule)
-         NOT NULL DEFAULT 'none'";
+                   CHANGE COLUMN `urgency_rule` `urgency_rule`
+                   ENUM($enum_urgency_rule)
+                   NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
@@ -1171,15 +1204,15 @@ function plugin_formcreator_updateTargetChange($migration) {
 
    if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'category_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-      ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
+                ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    } else {
       $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'category_rule');
-      if (count($current_enum_category_rule) != count(PluginFormcreatorTargetTicket::getEnumCategoryRule())) {
+      if (count($current_enum_category_rule) != count(PluginFormcreatorTargetChange::getEnumCategoryRule())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
-         CHANGE COLUMN `category_rule` `category_rule`
-         ENUM($current_enum_category_rule)
-         NOT NULL DEFAULT 'none'";
+                   CHANGE COLUMN `category_rule` `category_rule`
+                   ENUM($current_enum_category_rule)
+                   NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
    }
