@@ -5,6 +5,22 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       return _n('Target change', 'Target changes', $nb, 'formcreator');
    }
 
+   static function getEnumUrgencyRule() {
+      return array(
+            'none'      => __('Medium', 'formcreator'),
+            'specific'  => __('Specific urgency', 'formcreator'),
+            'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      );
+   }
+
+   static function getEnumCategoryRule() {
+      return array(
+            'none'      => __('None', 'formcreator'),
+            'specific'  => __('Specific category', 'formcreator'),
+            'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      );
+   }
+
    protected function getItem_User() {
       return new Change_User();
    }

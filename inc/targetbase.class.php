@@ -470,7 +470,7 @@ EOS;
       echo '<td width="25%">';
       Dropdown::showFromArray(
             'category_rule',
-            self::getEnumCategoryRule(),
+            static::getEnumCategoryRule(),
             array(
                   'value'     => $this->fields['category_rule'],
                   'on_change' => 'change_category()',
@@ -538,7 +538,7 @@ EOS;
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
-      Dropdown::showFromArray('urgency_rule', self::getEnumUrgencyRule(), array(
+      Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), array(
             'value'                 => $this->fields['urgency_rule'],
             'on_change'             => 'change_urgency()',
             'rand'                  => $rand
