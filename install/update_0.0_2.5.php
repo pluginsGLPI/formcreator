@@ -944,6 +944,21 @@ function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges_actors");
 
+   if (!TableExists('glpi_plugin_formcreator_targetchanges_actors')) {
+      $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `plugin_formcreator_targetchanges_id` int(11) NOT NULL,
+                  `actor_role` enum('requester','observer','assigned') COLLATE utf8_unicode_ci NOT NULL,
+                  `actor_type` enum('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') COLLATE utf8_unicode_ci NOT NULL,
+                  `actor_value` int(11) DEFAULT NULL,
+                  `use_notification` tinyint(1) NOT NULL DEFAULT '1',
+                  `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                  PRIMARY KEY (`id`),
+                  INDEX `plugin_formcreator_targetchanges_id` (`plugin_formcreator_targetchanges_id`)
+                ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
    $enum_actor_type = "'".implode("', '", array_keys(PluginFormcreatorTargetChange_Actor::getEnumActorType()))."'";
    $enum_actor_role = "'".implode("', '", array_keys(PluginFormcreatorTargetChange_Actor::getEnumRole()))."'";
 

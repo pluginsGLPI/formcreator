@@ -30,6 +30,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    abstract protected function getTargetItemtypeName();
 
+   abstract public function getItem_Actor();
+
    static function getEnumDestinationEntity() {
       return array(
             'current'   => __("Current active entity", 'formcreator'),
@@ -121,9 +123,10 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
     * find all actors and prepare data for the ticket being created
     */
    protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formanswer) {
-      $targetTicketId = $this->getID();
-      $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
-      $rows = $targetTicketActor->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
+      $targetId = $this->getID();
+      $target_actor = $this->getItem_Actor();
+      $foreignKey = $this->getForeignKeyField();
+      $rows = $target_actor->find("`$foreignKey` = '$targetId'");
 
       foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors

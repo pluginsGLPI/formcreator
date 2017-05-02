@@ -259,12 +259,12 @@ class PluginFormcreatorTarget extends CommonDBTM
          return false;
       }
 
-      $form_target_actor = new PluginFormcreatorTargetTicket_Actor;
-      $target            = $this->fields;
-      $targetId = $this->getID();
+      $target_item         = new $this->fields['itemtype'];
+      $form_target_actor   = $target_item->getItem_Actor();
+      $target              = $this->fields;
+      $targetId            = $this->fields['items_id'];
 
       // get data from subclass (ex PluginFormcreatorTargetTicket)
-      $target_item = new $target['itemtype'];
       if ($target_item->getFromDB($target['items_id'])) {
          $target['_data'] = $target_item->export();
       }
@@ -277,7 +277,8 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       // get target actors
       $target['_data']['_actors'] = [];
-      $all_target_actors = $form_target_actor->find("`plugin_formcreator_targettickets_id` = '$targetId'");
+      $foreignKey = $target_item->getForeignKeyField();
+      $all_target_actors = $form_target_actor->find("`$foreignKey` = '$targetId'");
       foreach ($all_target_actors as $target_actors_id => $target_actor) {
          if ($form_target_actor->getFromDB($target_actors_id)) {
             $target['_data']['_actors'][] = $form_target_actor->export($remove_uuid);

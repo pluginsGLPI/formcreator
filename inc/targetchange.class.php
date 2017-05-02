@@ -41,6 +41,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       return Change::class;
    }
 
+   public function getItem_Actor() {
+      return new PluginFormcreatorTargetChange_Actor();
+   }
+
    /**
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)

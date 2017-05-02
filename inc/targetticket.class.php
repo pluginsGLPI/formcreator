@@ -25,6 +25,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return Ticket::class;
    }
 
+   public function getItem_Actor() {
+      return new PluginFormcreatorTargetticket_Actor();
+   }
+
    /**
     * Show the Form edit form the the adminsitrator in the config page
     *
