@@ -1001,11 +1001,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                $order_entities = "`glpi_profiles`.`name` DESC";
             }
             $query_entities = "SELECT `glpi_profiles_users`.`entities_id`
-            FROM `glpi_profiles_users`
-            LEFT JOIN `glpi_profiles`
-            ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
-            WHERE `glpi_profiles_users`.`users_id` = $requesters_id
-            ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
+                               FROM `glpi_profiles_users`
+                               LEFT JOIN `glpi_profiles`
+                               ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
+                               WHERE `glpi_profiles_users`.`users_id` = $requesters_id
+                               ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
             while ($entity = $DB->fetch_array($res_entities)) {
                $data_entities[] = $entity;
