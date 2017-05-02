@@ -21,7 +21,7 @@ class textareaField extends PluginFormcreatorField
          if ($CFG_GLPI["use_rich_text"]) {
             echo plugin_formcreator_decode($this->getAnswer());
          } else {
-            echo nl2br($this->getAnswer());
+            echo str_replace(array("\\r\\n", "\\r", "\\n"), "<br />", $this->getAnswer());
          }
       }
    }
