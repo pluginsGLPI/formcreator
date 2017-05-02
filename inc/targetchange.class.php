@@ -261,6 +261,21 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $this->showPluginTagsSettings($rand);
 
       echo '</table>';
+
+      // Buttons
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr class="line1">';
+      echo '<td colspan="5" class="center">';
+      echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
+               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
+      echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
+      echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</table>';
+
       Html::closeForm();
 
       // Get available questions for actors lists
