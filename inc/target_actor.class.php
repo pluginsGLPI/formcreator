@@ -29,12 +29,11 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
    public function prepareInputForAdd($input) {
 
       // generate a uniq id
-      if (!isset($input['uuid'])
-            || empty($input['uuid'])) {
-               $input['uuid'] = plugin_formcreator_getUuid();
-            }
+      if (!isset($input['uuid']) || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
 
-            return $input;
+      return $input;
    }
 
    /**
@@ -49,7 +48,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
    public static function import($targets_id = 0, $actor = array()) {
       $item = new static;
 
-      $foreignKeyField = $this->getTargetItem()->getForeignKeyField();
+      $foreignKeyField = $item->getTargetItem()->getForeignKeyField();
       $actor[$foreignKeyField] = $targets_id;
 
       // retrieve FK
