@@ -52,10 +52,8 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
       if (isset($actor['_question'])) {
          $section = new PluginFormcreatorSection;
          $question = new PluginFormcreatorQuestion;
-         $exploded = explode('##$$##', $actor['_question']);
 
-         if (plugin_formcreator_getFromDBByField($section, 'name', $exploded[0])
-             && $questions_id = plugin_formcreator_getFromDBByField($question, 'name', $exploded[1])) {
+         if ($questions_id = plugin_formcreator_getFromDBByField($question, 'uuid', $actor['_question'])) {
             $actor['actor_value'] = $questions_id;
          } else {
             return false;
@@ -119,13 +117,11 @@ class PluginFormcreatorTargetTicket_Actor extends CommonDBTM
          case 'question_person':
          case 'question_group':
          case 'question_supplier':
+         case 'question_actors':
             $question = new PluginFormcreatorQuestion;
             $section = new PluginFormcreatorSection;
-            if ($question->getFromDB($target_actor['actor_value'])
-                && $section->getFromDB($question->fields['plugin_formcreator_sections_id'])) {
-               $target_actor['_question'] = $section->fields['name'].
-                                            "##$$##".
-                                            $question->fields['name'];
+            if ($question->getFromDB($target_actor['actor_value'])) {
+               $target_actor['_question'] = $question->fields['uuid'];
                unset($target_actor['actor_value']);
             }
             break;
