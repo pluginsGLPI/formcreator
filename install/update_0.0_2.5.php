@@ -48,7 +48,7 @@ function plugin_formcreator_updateAnswer(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_answers` SET
-      `answer` = '".plugin_formcreator_encode($line['answer'])."'
+      `answer` = '".addslashes($line['answer'])."'
                           WHERE `id` = ".$line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
