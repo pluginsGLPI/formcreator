@@ -1106,7 +1106,7 @@ function plugin_formcreator_updateTargetTicket(Migration $migration) {
       if (count($current_enum_category_rule) != count(PluginFormcreatorTargetTicket::getEnumCategoryRule())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
                    CHANGE COLUMN `category_rule` `category_rule`
-                   ENUM($current_enum_category_rule)
+                   ENUM($enum_category_rule)
                    NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
@@ -1226,7 +1226,7 @@ function plugin_formcreator_updateTargetChange($migration) {
       if (count($current_enum_category_rule) != count(PluginFormcreatorTargetChange::getEnumCategoryRule())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                    CHANGE COLUMN `category_rule` `category_rule`
-                   ENUM($current_enum_category_rule)
+                   ENUM($enum_category_rule)
                    NOT NULL DEFAULT 'none'";
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
