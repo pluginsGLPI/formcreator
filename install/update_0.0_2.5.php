@@ -1128,7 +1128,7 @@ function plugin_formcreator_updateTargetChange($migration) {
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges");
 
-   if (!TableExists($tablename)) {
+   if (!TableExists('glpi_plugin_formcreator_targetchanges')) {
       $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
                  `id` int(11) NOT NULL AUTO_INCREMENT,
                  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
