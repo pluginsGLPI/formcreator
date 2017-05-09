@@ -1128,30 +1128,36 @@ function plugin_formcreator_updateTargetChange($migration) {
    // Legacy upgrade of Forms
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges");
 
+   $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDestinationEntity()))."'";
+   $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumTagType()))."'";
+   $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDueDateRule()))."'";
+   $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumUrgencyRule()))."'";
+   $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumCategoryRule()))."'";
+
    if (!TableExists('glpi_plugin_formcreator_targetchanges')) {
       $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                 `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+                 `name` varchar(255) NOT NULL DEFAULT '',
                  `changetemplates_id` int(11) DEFAULT NULL,
-                 `comment` text COLLATE utf8_unicode_ci,
-                 `impactcontent` text COLLATE utf8_unicode_ci,
-                 `controlistcontent` text COLLATE utf8_unicode_ci,
-                 `rolloutplancontent` text COLLATE utf8_unicode_ci,
-                 `backoutplancontent` text COLLATE utf8_unicode_ci,
-                 `checklistcontent` text COLLATE utf8_unicode_ci,
-                 `due_date_rule` enum('answer','change','calcul') COLLATE utf8_unicode_ci DEFAULT NULL,
+                 `comment` text,
+                 `impactcontent` text,
+                 `controlistcontent` text,
+                 `rolloutplancontent` text,
+                 `backoutplancontent` text,
+                 `checklistcontent` text,
+                 `due_date_rule` enum($enum_due_date_rule) DEFAULT NULL,
                  `due_date_question` int(11) DEFAULT NULL,
                  `due_date_value` tinyint(4) DEFAULT NULL,
-                 `due_date_period` enum('minute','hour','day','month') COLLATE utf8_unicode_ci DEFAULT NULL,
-                 `urgency_rule` enum('none','specific','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
+                 `due_date_period` enum('minute','hour','day','month') DEFAULT NULL,
+                 `urgency_rule` enum($enum_urgency_rule) NOT NULL DEFAULT 'none',
                  `urgency_question` int(11) NOT NULL DEFAULT '0',
                  `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
-                 `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'requester',
+                 `destination_entity` enum($enum_destination_entity) NOT NULL DEFAULT 'requester',
                  `destination_entity_value` int(11) DEFAULT NULL,
-                 `tag_type` enum('none','questions','specifics','questions_and_specific','questions_or_specific') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
-                 `tag_questions` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                 `tag_specifics` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-                 `category_rule` enum('none','answer') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none',
+                 `tag_type` enum($enum_tag_type) NOT NULL DEFAULT 'none',
+                 `tag_questions` varchar(255) NOT NULL,
+                 `tag_specifics` varchar(255) NOT NULL,
+                 `category_rule` enum($enum_category_rule) NOT NULL DEFAULT 'none',
                  `category_question` int(11) NOT NULL DEFAULT '0',
                  PRIMARY KEY (`id`),
                  INDEX `changetemplates_id` (`changetemplates_id`)
@@ -1159,12 +1165,6 @@ function plugin_formcreator_updateTargetChange($migration) {
             ";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
-
-   $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDestinationEntity()))."'";
-   $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumTagType()))."'";
-   $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDueDateRule()))."'";
-   $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumUrgencyRule()))."'";
-   $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumCategoryRule()))."'";
 
    if (!FieldExists('glpi_plugin_formcreator_targetchanges', 'due_date_rule', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
