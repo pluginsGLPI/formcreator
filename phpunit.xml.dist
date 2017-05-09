@@ -28,5 +28,8 @@
    <testsuite name="Integration">
         <directory suffix="Test.php">./tests/0010_Integration/</directory>
     </testsuite>
+   <testsuite name="Uninstall">
+        <directory suffix="Test.php">./tests/9000_Uninstall/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>
