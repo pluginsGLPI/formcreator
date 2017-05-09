@@ -1363,6 +1363,12 @@ span.fc_list_icon {
    min-height: 1px;
 }
 
+.form_header ul {
+   list-style-type: inherit;
+   margin: inherit;
+   padding: inherit;
+} 
+
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
    form.formcreator_form {
