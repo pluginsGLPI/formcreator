@@ -54,12 +54,12 @@ jQuery(document).ready(function($) {
    });
 
    <?php
-      if (isset($_SESSION['glpiactiveprofile']['interface'])
-          && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
-         if (PluginFormcreatorForm::countAvailableForm() > 0) {
-            echo "$('#c_menu #menu1:first-child').after(link);";
-         }
+   if (isset($_SESSION['glpiactiveprofile']['interface'])
+       && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
+      if (PluginFormcreatorForm::countAvailableForm() > 0) {
+         echo "$('#c_menu #menu1:first-child').after(link);";
       }
+   }
    ?>
 
    if (location.pathname.indexOf("helpdesk.public.php") != -1) {
