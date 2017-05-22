@@ -70,6 +70,13 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return __('LDAP Select', 'formcreator');
    }
 
+   public function getAnswer()
+   {
+      $values = $this->getAvailableValues();
+      $value  = $this->getValue();
+      return in_array($value, $values) ? $value : $this->fields['default_values'];
+   }
+
    public static function getPrefs() {
       return array(
          'required'       => 1,
