@@ -69,6 +69,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function getSearchOptions() {
       $tab = array(
+         'common'           => __('Characteristics'),
          '2' => array(
             'table'         => self::getTable(),
             'field'         => 'id',
