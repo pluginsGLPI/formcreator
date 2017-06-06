@@ -619,8 +619,8 @@ function plugin_formcreator_updateQuestion(Migration $migration) {
 
          $query_udate = "UPDATE `glpi_plugin_formcreator_questions` SET
                         `fieldtype`      = '" . $fieldtype . "',
-                        `values`         = '" . htmlspecialchars($values) . "',
-                        `default_values` = '" . htmlspecialchars($default) . "',
+                        `values`         = '" . addslashes(htmlspecialchars($values)) . "',
+                        `default_values` = '" . addslashes(htmlspecialchars($default)) . "',
                         `regex`          = '" . $regex . "',
                         `required`       = " . (int) $required . "
                         WHERE `id` = " . $line['id'];
