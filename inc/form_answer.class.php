@@ -49,6 +49,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
                           && $_SESSION['formcreator']['form_search_answers'];
 
+      $tab['common']     = __('Characteristics');
       $tab['1'] = [
          'table'         => self::getTable(),
          'field'         => 'status',
