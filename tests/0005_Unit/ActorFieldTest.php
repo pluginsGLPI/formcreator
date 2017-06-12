@@ -74,7 +74,7 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always'
                   ),
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => array('email@something.com'),
                   'expectedIsValid' => true
             ),
             array(
@@ -88,7 +88,7 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always'
                   ),
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => array('glpi', 'email@something.com'),
                   'expectedIsValid' => true
             ),
             array(
@@ -102,7 +102,7 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always'
                   ),
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => array('glpi', 'email@something.com'),
                   'expectedIsValid' => false
             ),
             array(
@@ -116,7 +116,7 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always'
                   ),
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => array('glpi', 'email@something.com'),
                   'expectedIsValid' => false
             ),
       );
@@ -131,10 +131,10 @@ class ActorFieldTest extends SuperAdminTestCase {
       $fieldInstance = new PluginFormcreatorActorField($fields, $data);
 
       $value = $fieldInstance->getValue();
-      $this->assertEquals(count($expectedValue), count($value));
+      $this->assertEquals(count($expectedValue), count(explode(',', $value)));
       foreach ($expectedValue as $expectedSubValue) {
          if (!empty($expectedSubValue)) {
-            $this->assertTrue(in_array($expectedSubValue, $value));
+            $this->assertTrue(in_array($expectedSubValue, explode(',', $value)));
          }
       }
    }
