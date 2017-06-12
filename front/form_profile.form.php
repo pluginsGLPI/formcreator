@@ -8,7 +8,7 @@ $plugin = new Plugin();
 if ($plugin->isActivated("formcreator")) {
    if (isset($_POST["profiles_id"]) && isset($_POST["form_id"])) {
 
-      if(isset($_POST['access_rights'])) {
+      if (isset($_POST['access_rights'])) {
          $form = new PluginFormcreatorForm();
          $form->update(array(
             'id'            => $_POST['form_id'],
@@ -16,15 +16,19 @@ if ($plugin->isActivated("formcreator")) {
          ));
       }
 
-      $table = getTableForItemType('PluginFormcreatorForm_Profile');
-      $DB->query("DELETE FROM $table WHERE plugin_formcreator_forms_id = " . (int) $_POST["form_id"]);
+      $form_profile = new PluginFormcreatorForm_Profile();
+      $form_profile->deleteByCriteria(array(
+            'plugin_formcreator_forms_id'    => (int) $_POST["form_id"],
+      ));
+      $table = PluginFormcreatorForm_Profile::getTable();
 
-      foreach($_POST["profiles_id"] as $profile_id) {
+      foreach ($_POST["profiles_id"] as $profile_id) {
          if ($profile_id != 0) {
-            $query = "INSERT IGNORE INTO $table SET
-                        `plugin_formcreator_forms_id` = " . (int) $_POST["form_id"] .",
-                        `profiles_id` = " . (int) $profile_id;
-            $DB->query($query);
+            $form_profile = new PluginFormcreatorForm_Profile();
+            $form_profile->add(array(
+                  'plugin_formcreator_forms_id' => (int) $_POST["form_id"],
+                  'profiles_id'                 => (int) $profile_id,
+            ));
          }
       }
       Html::back();
@@ -33,7 +37,7 @@ if ($plugin->isActivated("formcreator")) {
       Html::back();
    }
 
-// Or display a "Not found" error
-}else{
+   // Or display a "Not found" error
+} else {
    Html::displayNotFoundError();
 }

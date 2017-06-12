@@ -2,10 +2,6 @@
 class FloatFieldTest extends SuperAdminTestCase {
 
    public function provider() {
-      // Force include of not autoloaded classes
-      // TODO : enhance the plugin to use autoloading
-      PluginFormcreatorFields::getTypes();
-
       $dataset = array(
             array(
                   'fields'          => array(
@@ -89,17 +85,15 @@ class FloatFieldTest extends SuperAdminTestCase {
             ),
       );
 
-      foreach($dataset as &$data) {
-         $data['field'] = new floatField($data['fields'], $data['data']);
-      }
-
       return $dataset;
    }
 
    /**
     * @dataProvider provider
     */
-   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorFloatField($fields, $data);
+
       $value = $fieldInstance->getValue();
       $this->assertEquals($expectedValue, $value);
    }
@@ -107,7 +101,9 @@ class FloatFieldTest extends SuperAdminTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity, $fieldInstance) {
+   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+      $fieldInstance = new PluginFormcreatorFloatField($fields, $data);
+
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->assertEquals($expectedValidity, $isValid);
    }

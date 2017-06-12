@@ -16,4 +16,3 @@ if (isset($_POST['submit'])) {
 }
 
 PluginFormcreatorWizard::footer();
-?>

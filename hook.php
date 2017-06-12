@@ -4,26 +4,17 @@
  *
  * @return boolean True if success
  */
-function plugin_formcreator_install()
-{
+function plugin_formcreator_install() {
+   spl_autoload_register('plugin_formcreator_autoload');
+
    $version   = plugin_version_formcreator();
    $migration = new Migration($version['version']);
-
-   // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("/inc.(.+)\.class.php$/", $filepath, $matches)) {
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'install')) {
-            $classname::install($migration);
-         }
-      }
+   require_once(__DIR__ . '/install/install.php');
+   $install = new PluginFormcreatorInstall();
+   if (!$install->isPluginInstalled()) {
+      return $install->install($migration);
    }
-   $migration->executeMigration();
-
-   return true;
+   return $install->upgrade($migration);
 }
 
 /**
@@ -31,30 +22,17 @@ function plugin_formcreator_install()
  *
  * @return boolean True if success
  */
-function plugin_formcreator_uninstall()
-{
-   // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'uninstall')) {
-            $classname::uninstall();
-         }
-      }
-   }
-   return true ;
+function plugin_formcreator_uninstall() {
+   require_once(__DIR__ . '/install/install.php');
+   $install = new PluginFormcreatorInstall();
+   $install->uninstall();
 }
 
 /**
  * Define Dropdown tables to be manage in GLPI :
  */
-function plugin_formcreator_getDropdown()
-{
+function plugin_formcreator_getDropdown() {
    return array(
-       'PluginFormcreatorHeader'   => _n('Header', 'Headers', 2, 'formcreator'),
        'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
    );
 }
@@ -106,8 +84,7 @@ function plugin_formcreator_getCondition($itemtype) {
  * @param  String $itemtype    Itemtype for the search engine
  * @return String          Specific search request
  */
-function plugin_formcreator_addDefaultWhere($itemtype)
-{
+function plugin_formcreator_addDefaultWhere($itemtype) {
    $condition = "";
    $table = getTableForItemType($itemtype);
    switch ($itemtype) {
@@ -121,7 +98,13 @@ function plugin_formcreator_addDefaultWhere($itemtype)
          break;
 
       case "PluginFormcreatorForm_Answer" :
-         $condition = plugin_formcreator_getCondition($itemtype);
+         if (isset($_SESSION['formcreator']['form_search_answers'])
+             && $_SESSION['formcreator']['form_search_answers']) {
+            $condition = "`$table`.`".PluginFormcreatorForm_Answer::$items_id."` = ".
+                         $_SESSION['formcreator']['form_search_answers'];
+         } else {
+            $condition = plugin_formcreator_getCondition($itemtype);
+         }
          break;
    }
    return $condition;
@@ -132,14 +115,14 @@ function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $link
    $join = "";
    switch ($itemtype) {
       case 'PluginFormcreatorIssue':
-            if ($new_table == 'glpi_ticketvalidations') {
-               foreach ($already_link_tables as $table) {
-                  if (strpos($table, $new_table) === 0) {
-                     $AS = $table;
-                  }
+         if ($new_table == 'glpi_ticketvalidations') {
+            foreach ($already_link_tables as $table) {
+               if (strpos($table, $new_table) === 0) {
+                  $AS = $table;
                }
-               $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
             }
+            $join = " LEFT JOIN `$new_table` AS `$AS` ON (`$ref_table`.`tickets_id` = `$AS`.`tickets_id`) ";
+         }
       break;
    }
 
@@ -209,17 +192,16 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
          if (count($tocheck)) {
             if ($nott) {
-               return $link." `$table`.`$field` NOT IN ('".implode("','",$tocheck)."')";
+               return $link." `$table`.`$field` NOT IN ('".implode("','", $tocheck)."')";
             }
-            return $link." `$table`.`$field` IN ('".implode("','",$tocheck)."')";
+            return $link." `$table`.`$field` IN ('".implode("','", $tocheck)."')";
          }
          break;
    }
 }
 
 
-function plugin_formcreator_AssignToTicket($types)
-{
+function plugin_formcreator_AssignToTicket($types) {
    $types['PluginFormcreatorForm_Answer'] = PluginFormcreatorForm_Answer::getTypeName();
 
    return $types;
@@ -259,7 +241,7 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
 
    if ($item instanceof Ticket) {
       if (!isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
-         // run this hok only if the plugin is not generating tickets
+         // run this hook only if the plugin is not generating tickets
          $issue = new PluginFormcreatorIssue();
          $issue->add(array(
                'original_id'     => $item->getID(),
@@ -330,6 +312,7 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
    if ($item instanceof Ticket) {
       $id = $item->getID();
 
+      // Restore deletes form_answers
       $item_ticket = new Item_Ticket();
       $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
@@ -340,23 +323,20 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
          ));
       }
 
-      if (!isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
-         // run this hok only if the plugin is not generating tickets
-         $issue = new PluginFormcreatorIssue();
-         $issue->add(array(
-               'original_id'     => $item->getID(),
-               'sub_itemtype'    => 'Ticket',
-               'name'            => addslashes($item->fields['name']),
-               'status'          => $item->fields['status'],
-               'date_creation'   => $item->fields['date'],
-               'date_mod'        => $item->fields['date_mod'],
-               'entities_id'     => $item->fields['entities_id'],
-               'is_recursive'    => '0',
-               'requester_id'    => $item->fields['users_id_recipient'],
-               'validator_id'    => '0',
-               'comment'         => '',
-         ));
-      }
+      $issue = new PluginFormcreatorIssue();
+      $issue->add(array(
+            'original_id'     => $item->getID(),
+            'sub_itemtype'    => 'Ticket',
+            'name'            => addslashes($item->fields['name']),
+            'status'          => $item->fields['status'],
+            'date_creation'   => $item->fields['date'],
+            'date_mod'        => $item->fields['date_mod'],
+            'entities_id'     => $item->fields['entities_id'],
+            'is_recursive'    => '0',
+            'requester_id'    => $item->fields['users_id_recipient'],
+            'validator_id'    => '0',
+            'comment'         => '',
+      ));
    }
 }
 
@@ -370,4 +350,25 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
             'sub_itemtype' => 'Ticket'
       ), 1);
    }
+}
+
+function plugin_formcreator_dynamicReport($params) {
+   switch ($params['item_type']) {
+      case "PluginFormcreatorForm_Answer";
+         if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
+            if (strpos($url['path'],
+                       Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {
+               parse_str($url['query'], $query);
+               if (isset($query['id'])) {
+                  $item = new PluginFormcreatorForm;
+                  $item->getFromDB($query['id']);
+                  PluginFormcreatorForm_Answer::showForForm($item, $params);
+                  return true;
+               }
+            }
+         }
+         break;
+   }
+
+   return false;
 }

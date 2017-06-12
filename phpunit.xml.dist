@@ -6,6 +6,7 @@
   processIsolation="false"
   backupGlobals="false"
   colors="true"
+  stderr="true"
   >
   <logging>
     <log type="junit" target="./tests/logs/junit_install.xml" logIncompleteSkipped="true" />
@@ -18,6 +19,7 @@
   </filter>
   <testsuites>
     <testsuite name="Install">
+        <file>./tests/0000_Install/PluginInstallTest.php</file>
         <file>./tests/0000_Install/SaveInstallTest.php</file>
     </testsuite>
    <testsuite name="Unit">
@@ -25,6 +27,9 @@
     </testsuite>
    <testsuite name="Integration">
         <directory suffix="Test.php">./tests/0010_Integration/</directory>
+    </testsuite>
+   <testsuite name="Uninstall">
+        <directory suffix="Test.php">./tests/9000_Uninstall/</directory>
     </testsuite>
   </testsuites>
 </phpunit>

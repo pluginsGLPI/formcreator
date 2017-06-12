@@ -4,43 +4,35 @@ include ("../../../inc/includes.php");
 // Check if plugin is activated...
 $plugin = new Plugin();
 
-if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
-   if(!isset($_SESSION['glpiname'])) {
-      $plugin->load('formcreator', true);
-      $_SESSION["glpi_plugins"][] = 'formcreator';
-      // Add specific CSS
-      $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
+if (!$plugin->isActivated("formcreator")) {
+   Html::displayNotFoundError();
+}
 
-      $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
+$form = new PluginFormcreatorForm();
+PluginFormcreatorForm::header();
 
-      // Add specific JavaScript
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/forms-validation.js.php';
-      $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'scripts/scripts.js.php';
+if (isset($_REQUEST['id'])
+   && is_numeric($_REQUEST['id'])) {
 
-   }
-   $form = new PluginFormcreatorForm();
-   if($form->getFromDB((int) $_REQUEST['id'])) {
+   if ($form->getFromDB((int) $_REQUEST['id'])) {
 
-      if($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
+      if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
          Session::checkLoginUser();
       }
-      if($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         $table = getTableForItemType('PluginFormcreatorForm_Profile');
-         $query = "SELECT *
-                   FROM $table
-                   WHERE profiles_id = {$_SESSION['glpiactiveprofile']['id']}
-                   AND plugin_formcreator_forms_id = {$form->fields['id']}";
-         $result = $DB->query($query);
-
-         if($DB->numrows($result) == 0) {
+      if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
+         $form_profile = new PluginFormcreatorForm_Profile();
+         $formId = $form->getID();
+         $activeProfileId = $_SESSION['glpiactiveprofile']['id'];
+         $rows = $form_profile->find("profiles_id = '$activeProfileId'
+                                      AND plugin_formcreator_forms_id = '$formId'", "", "1");
+         if (count($rows) == 0) {
             Html::displayRightError();
             exit();
          }
       }
-      if(($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
+      if (($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_PUBLIC) && (!isset($_SESSION['glpiID']))) {
          // If user is not authenticated, create temporary user
-         if(!isset($_SESSION['glpiname'])) {
+         if (!isset($_SESSION['glpiname'])) {
             $_SESSION['formcreator_forms_id'] = $form->fields['id'];
             $_SESSION['glpiname'] = 'formcreator_temp_user';
             $_SESSION['valid_id'] = session_id();
@@ -52,60 +44,21 @@ if($plugin->isActivated("formcreator") && isset($_REQUEST['id']) && is_numeric($
          }
       }
 
-      if (isset($_SESSION['glpiactiveprofile']['interface'])
-            && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
-         if (plugin_formcreator_replaceHelpdesk()) {
-            PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
-         } else {
-            Html::helpHeader(
-               __('Form list', 'formcreator'),
-               $_SERVER['PHP_SELF']
-            );
-         }
-
-         $form->displayUserForm($form);
-
-         if (plugin_formcreator_replaceHelpdesk()) {
-            PluginFormcreatorWizard::footer();
-         } else {
-            Html::helpFooter();
-         }
-
-      } elseif(!empty($_SESSION['glpiactiveprofile'])) {
-         Html::header(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF'],
-            'helpdesk',
-            'PluginFormcreatorFormlist'
-         );
-
-         $form->displayUserForm($form);
-
-         Html::footer();
-
-      } else {
-         Html::nullHeader(
-            __('Form Creator', 'formcreator'),
-            $_SERVER['PHP_SELF']
-         );
-
-         Html::displayMessageAfterRedirect();
-
-         $form->displayUserForm($form);
-
-         Html::nullFooter();
-      }
+      $form->displayUserForm($form);
 
    } else {
       Html::displayNotFoundError();
    }
 
    // If user was not authenticated, remove temporary user
-   if($_SESSION['glpiname'] == 'formcreator_temp_user') {
+   if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
       unset($_SESSION['glpiname']);
    }
 
-// Or display a "Not found" error
-} else {
-   Html::displayNotFoundError();
+   // Or display a "Not found" error
+} else if (isset($_GET['answer_saved'])) {
+   $message = __("The form has been successfully saved!");
+   Html::displayTitle($CFG_GLPI['root_doc']."/pics/ok.png", $message, $message);
 }
+
+PluginFormcreatorForm::footer();

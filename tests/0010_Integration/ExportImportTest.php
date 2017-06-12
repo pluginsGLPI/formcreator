@@ -3,6 +3,8 @@ class ExportImporTest extends SuperAdminTestCase {
    public static function setUpBeforeClass() {
       parent::setupBeforeClass();
 
+      self::login('glpi', 'glpi');
+
       // instanciate classes
       $form           = new PluginFormcreatorForm;
       $form_section   = new PluginFormcreatorSection;
@@ -79,19 +81,19 @@ class ExportImporTest extends SuperAdminTestCase {
       $this->assertArrayHasKey('_targets', $export);
       $this->assertArrayHasKey('_profiles', $export);
 
-      foreach($export["_sections"] as $section) {
+      foreach ($export["_sections"] as $section) {
          $this->_checkSection($section);
       }
 
-      foreach($export["_validators"] as $validator) {
+      foreach ($export["_validators"] as $validator) {
          $this->_checkValidator($validator);
       }
 
-      foreach($export["_targets"] as $target) {
+      foreach ($export["_targets"] as $target) {
          $this->_checkTarget($target);
       }
 
-      foreach($export["_profiles"] as $form_profile) {
+      foreach ($export["_profiles"] as $form_profile) {
          $this->_checkFormProfile($form_profile);
       }
 
@@ -197,7 +199,7 @@ class ExportImporTest extends SuperAdminTestCase {
       $this->assertArrayHasKey('uuid', $section);
       $this->assertArrayHasKey('_questions', $section);
 
-      foreach($section["_questions"] as $question) {
+      foreach ($section["_questions"] as $question) {
          $this->_checkQuestion($question);
       }
    }
@@ -223,7 +225,7 @@ class ExportImporTest extends SuperAdminTestCase {
       $this->assertArrayHasKey('uuid', $question);
       $this->assertArrayHasKey('_conditions', $question);
 
-      foreach($question["_conditions"] as $condition) {
+      foreach ($question["_conditions"] as $condition) {
          $this->_checkCondition($condition);
       }
    }
@@ -260,7 +262,7 @@ class ExportImporTest extends SuperAdminTestCase {
          $this->_checkTargetTicket($target['_data']);
       }
 
-      foreach($target["_data"]['_actors'] as $actor) {
+      foreach ($target["_data"]['_actors'] as $actor) {
          $this->_checkActor($actor);
       }
    }

@@ -1,9 +1,8 @@
 {
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require-dev": {
-        "consolidation/robo": "^1.0",
-        "patchwork/jsqueeze": "~1.0",
-        "natxet/CssMin": "~3.0",
-        "glpi-project/coding-standard": "0.5",
-        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.0"
+        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.0",
+        "glpi-project/tools": "^0.1.0"
     }
 }

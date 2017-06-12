@@ -3,13 +3,13 @@ include ('../../../inc/includes.php');
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if(!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
+if (!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
 $form = new PluginFormcreatorForm;
 $export_array = ['forms' => []];
-foreach($_GET['plugin_formcreator_forms_id'] as $id) {
+foreach ($_GET['plugin_formcreator_forms_id'] as $id) {
    $form->getFromDB($id);
    $export_array['forms'][] = $form->export();
 }

@@ -70,3 +70,4 @@ Après la mise à jour de FormCreator vers la version 2.4.0 ou supérieur, les u
 ![3.-Configuration](/screenshot.png "Configuration")
 
 ![3.9.-Formcreators-helpdesk](/screenshot_2.png "Service catalog")
+

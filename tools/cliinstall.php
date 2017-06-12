@@ -48,7 +48,7 @@ error_reporting(E_ALL | E_STRICT);
 // Prevent problem of execution time
 ini_set("max_execution_time", "0");
 ini_set("memory_limit", "-1");
-ini_set("session.use_cookies","0");
+ini_set("session.use_cookies", "0");
 
 $DB = new DB();
 if (!$DB->connected) {
@@ -73,7 +73,7 @@ if (!$plugin->getFromDBbyDir("formcreator")) {
    print("Failed : GLPi does not find the plugin");
    exit(1);
 }
-print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "... ");
+print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
 ob_end_clean();

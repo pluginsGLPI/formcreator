@@ -9,8 +9,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     *
     * @return boolean True if he can create and modify requests
     */
-   public static function canCreate()
-   {
+   public static function canCreate() {
       return true;
    }
 
@@ -19,8 +18,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     *
     * @return boolean True if he can read requests
     */
-   public static function canView()
-   {
+   public static function canView() {
       return true;
    }
 
@@ -30,89 +28,54 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * @param number $nb Number of item(s)
     * @return string Itemtype name
     */
-   public static function getTypeName($nb = 0)
-   {
+   public static function getTypeName($nb = 0) {
       return _n('Answer', 'Answers', $nb, 'formcreator');
    }
 
    /**
-    * Database table installation for the item type
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
     *
-    * @param Migration $migration
-    * @return boolean True on success
-    */
-   public static function install(Migration $migration)
-   {
-      global $DB;
-
-      $table = self::getTable();
-
-      if (!TableExists($table)) {
-         $migration->displayMessage("Installing $table");
-
-         // Create questions table
-         $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` int(11) NOT NULL AUTO_INCREMENT,
-                     `plugin_formcreator_forms_answers_id` int(11) NOT NULL,
-                     `plugin_formcreator_question_id` int(11) NOT NULL,
-                     `answer` text NOT NULL,
-                     PRIMARY KEY (`id`),
-                     INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
-                     INDEX `plugin_formcreator_question_id` (`plugin_formcreator_question_id`)
-                  )
-                  ENGINE = MyISAM
-                  DEFAULT CHARACTER SET = utf8
-                  COLLATE = utf8_unicode_ci";
-         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
-      } else {
-         // Update field type from previous version (Need answer to be text since text can be WYSIWING).
-         $query = "ALTER TABLE  `$table` CHANGE  `answer`  `answer` text;";
-         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
-
-         /**
-          * Migration of special chars from previous versions
-          *
-          * @since 0.85-1.2.3
-          */
-         $query  = "SELECT `id`, `answer`
-                    FROM `$table`";
-         $result = $DB->query($query);
-         while ($line = $DB->fetch_array($result)) {
-            $query_update = "UPDATE `$table` SET
-                               `answer` = '".plugin_formcreator_encode($line['answer'])."'
-                             WHERE `id` = ".$line['id'];
-            $DB->query($query_update) or plugin_formcrerator_upgrade_error($migration);
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForAdd($input) {
+      // Decode (if already encoded) and encode strings to avoid problems with quotes
+      foreach ($input as $key => $value) {
+         if (is_array($value)) {
+            foreach ($value as $key2 => $value2) {
+               $input[$key][$key2] = plugin_formcreator_encode($value2, false);
+            }
+         } else if (is_array(json_decode($value))) {
+            $value = json_decode($value);
+            foreach ($value as $key2 => $value2) {
+               $value[$key2] = plugin_formcreator_encode($value2, false);
+            }
+            // Verify the constant exits (included in PHP 5.4+)
+            if (defined('JSON_UNESCAPED_UNICODE')) {
+               $input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
+               // If PHP 5.3, don't use the constant, but bug with UTF-8 languages like Russian...
+            } else {
+               $input[$key] = json_encode($value);
+            }
+         } else {
+            $input[$key] = plugin_formcreator_encode($value, false);
          }
-
-         //rename foreign key, to match table plugin_formcreator_forms_answers name
-         $migration->changeField($table,
-                                 'plugin_formcreator_formanwers_id',
-                                 'plugin_formcreator_forms_answers_id',
-                                 'integer');
-         $migration->addKey($table, 'plugin_formcreator_forms_answers_id');
-         $migration->addKey($table, 'plugin_formcreator_question_id');
-
-         $migration->migrationOneTable($table);
       }
 
-      return true;
+      return $input;
    }
 
    /**
-    * Database table uninstallation for the item type
+    * Prepare input datas for adding the question
+    * Check fields values and get the order for the new question
     *
-    * @return boolean True on success
-    */
-   public static function uninstall()
-   {
-      global $DB;
-
-      $table = self::getTable();
-      $DB->query("DROP TABLE IF EXISTS `$table`");
-
-      // Delete logs of the plugin
-      $DB->query("DELETE FROM `glpi_logs` WHERE itemtype = '".__CLASS__."'");
-
-      return true;
+    * @param $input datas used to add the item
+    *
+    * @return the modified $input array
+   **/
+   public function prepareInputForUpdate($input) {
+      return $this->prepareInputForAdd($input);
    }
 }

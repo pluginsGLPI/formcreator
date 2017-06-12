@@ -45,7 +45,6 @@ class PluginDB extends PHPUnit\Framework\Assert{
    public function checkInstall($pluginname='', $when='') {
       global $DB;
 
-
       if ($pluginname == '') {
          return;
       }
@@ -66,7 +65,7 @@ class PluginDB extends PHPUnit\Framework\Assert{
             $current_table = $matches[1];
          } else {
             if (preg_match("/^`/", trim($line))) {
-               $line = preg_replace('/\s+/', ' ',$line);
+               $line = preg_replace('/\s+/', ' ', $line);
                $s_line = explode("`", $line);
                $s_type = explode("COMMENT", $s_line[2]);
                $s_type[0] = trim($s_type[0]);
@@ -77,14 +76,14 @@ class PluginDB extends PHPUnit\Framework\Assert{
          }
       }
 
-     // * Get tables from MySQL
-     $a_tables_db = array();
-     $a_tables = array();
-     // SHOW TABLES;
-     $query = "SHOW TABLES";
-     $result = $DB->query($query);
-     while ($data=$DB->fetch_array($result)) {
-        if (strstr($data[0], "formcreator")) {
+      // * Get tables from MySQL
+      $a_tables_db = array();
+      $a_tables = array();
+      // SHOW TABLES;
+      $query = "SHOW TABLES";
+      $result = $DB->query($query);
+      while ($data=$DB->fetch_array($result)) {
+         if (strstr($data[0], "formcreator")) {
 
             $data[0] = str_replace(" COLLATE utf8_unicode_ci", "", $data[0]);
             $data[0] = str_replace("( ", "(", $data[0]);
@@ -93,10 +92,16 @@ class PluginDB extends PHPUnit\Framework\Assert{
          }
       }
 
-      foreach($a_tables as $table) {
+      $toIgnore = array();
+      foreach ($a_tables as $table) {
          $query = "SHOW CREATE TABLE ".$table;
          $result = $DB->query($query);
          while ($data=$DB->fetch_array($result)) {
+            if (!isset($data['Create Table'])) {
+               // This is not a table (a view for example)
+               $toIgnore[$table] = $table;
+               continue;
+            }
             $a_lines = explode("\n", $data['Create Table']);
 
             foreach ($a_lines as $line) {
@@ -107,17 +112,13 @@ class PluginDB extends PHPUnit\Framework\Assert{
                   $current_table = $matches[1];
                } else {
                   if (preg_match("/^`/", trim($line))) {
-                     $line = preg_replace('/\s+/', ' ',$line);
+                     $line = preg_replace('/\s+/', ' ', $line);
                      $s_line = explode("`", $line);
                      $s_type = explode("COMMENT", $s_line[2]);
                      $s_type[0] = trim($s_type[0]);
                      $s_type[0] = str_replace(" COLLATE utf8_unicode_ci", "", $s_type[0]);
                      $s_type[0] = str_replace(" CHARACTER SET utf8", "", $s_type[0]);
                      $s_type[0] = str_replace(",", "", $s_type[0]);
-                     if (trim($s_type[0]) == 'text'
-                        || trim($s_type[0]) == 'longtext') {
-                        $s_type[0] .= ' DEFAULT NULL';
-                     }
                      $a_tables_db[$current_table][$s_line[1]] = $s_type[0];
                   }
                }
@@ -127,7 +128,9 @@ class PluginDB extends PHPUnit\Framework\Assert{
 
       $a_tables_ref_tableonly = array();
       foreach ($a_tables_ref as $table=>$data) {
-         $a_tables_ref_tableonly[] = $table;
+         if (!isset($toIgnore[$table])) {
+            $a_tables_ref_tableonly[] = $table;
+         }
       }
       $a_tables_db_tableonly = array();
       foreach ($a_tables_db as $table=>$data) {
@@ -161,4 +164,3 @@ class PluginDB extends PHPUnit\Framework\Assert{
    }
 }
 
-?>

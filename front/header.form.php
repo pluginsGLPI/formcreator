@@ -3,13 +3,13 @@ include ('../../../inc/includes.php');
 
 Session::checkRight("entity", UPDATE);
 
-Plugin::load('formcreator',true);
+Plugin::load('formcreator', true);
 
 $dropdown = new PluginFormcreatorHeader();
 
-if(isset($_POST['add'])) {
+if (isset($_POST['add'])) {
    $found = $dropdown->find("entities_id = ".$_SESSION['glpiactive_entity']);
-   if(!empty($found)) {
+   if (!empty($found)) {
       Session::addMessageAfterRedirect(__('An header already exists for this entity! You can have only one header per entity.', 'formcreator'), false, ERROR);
       Html::back();
    }

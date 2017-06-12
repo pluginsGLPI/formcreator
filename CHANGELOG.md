@@ -1,6 +1,21 @@
 GLPI Formcreator ChangeLog
 ===============================
 
+Version 2.5.0
+-------------
+
+## Features:
+* forms can target tickets and changes
+* complex question conditions with multiple criterias
+* set ticket category and urgency from a form's field
+* show list of answers of a form
+* print answers of a form
+
+## Bugfixes:
+* single quotes upgrade issues 
+* LDAP field
+
+
 Version 2.4.2
 -------------
 

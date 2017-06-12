@@ -7,17 +7,14 @@ class PluginFormcreatorFields
     *
     * @return Array     field_type => File_path
     */
-   public static function getTypes()
-   {
+   public static function getTypes() {
       $tab_field_types     = array();
 
-      foreach (glob(dirname(__FILE__).'/fields/*-field.class.php') as $class_file) {
-         preg_match("/fields.(.+)-field\.class.php/", $class_file, $matches);
-         $classname = $matches[1].'Field';
+      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
-         include_once($class_file);
-
-         if(class_exists($classname)) {
+         if (class_exists($classname)) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
          }
       }
@@ -30,8 +27,7 @@ class PluginFormcreatorFields
     *
     * @return Array     field_type => Name
     */
-   public static function getNames()
-   {
+   public static function getNames() {
       // Get field types and file path
       $tab_field_types = self::getTypes();
       $plugin = new Plugin();
@@ -42,7 +38,7 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname                         = $field_type.'Field';
+         $classname                         = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
             continue;
@@ -63,14 +59,13 @@ class PluginFormcreatorFields
     *
     * @return String          field_value
     */
-   public static function getValue($field, $value)
-   {
+   public static function getValue($field, $value) {
       $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'-field.class.php';
-      if(is_file($class_file)) {
+      if (is_file($class_file)) {
          include_once ($class_file);
 
-         $classname = $field['fieldtype'].'Field';
-         if(class_exists($classname)) {
+         $classname = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
+         if (class_exists($classname)) {
             $obj = new $classname($field, $value);
             return $obj->getAnswer();
          }
@@ -79,28 +74,28 @@ class PluginFormcreatorFields
    }
 
 
-   public static function printAllTabFieldsForJS()
-   {
+   public static function printAllTabFieldsForJS() {
+      $tabFieldsForJS = '';
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
       // Get field types preference for JS
       foreach ($tab_field_types as $field_type => $class_file) {
-         $classname = $field_type.'Field';
+         $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
-         if(method_exists($classname, 'getJSFields')) {
-            echo PHP_EOL.'            '.$classname::getJSFields();
+         if (method_exists($classname, 'getJSFields')) {
+            $tabFieldsForJS .= PHP_EOL.'            '.$classname::getJSFields();
          }
       }
+      return $tabFieldsForJS;
    }
 
-   public static function showField($field, $datas = null, $edit = true)
-   {
+   public static function showField($field, $datas = null, $edit = true) {
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
-      if(array_key_exists($field['fieldtype'], $tab_field_types)) {
-         $fieldClass = $field['fieldtype'].'Field';
+      if (array_key_exists($field['fieldtype'], $tab_field_types)) {
+         $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
 
          $plugin = new Plugin();
          if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
@@ -119,37 +114,70 @@ class PluginFormcreatorFields
     * @param   Array       $values     Array of current fields values (id => value)
     * @return  boolean                 Should be shown or not
     */
-   public static function isVisible($id, $values)
-   {
+   public static function isVisible($id, $values) {
       global $DB;
+
+      /**
+       * Keep track of questions being evaluated to detect infinite loops
+       */
+      static $evalQuestion = array();
+      if (isset($evalQuestion[$id])) {
+         // TODO : how to deal a infinite loop while evaulating visibility of question ?
+         return true;
+      }
+      $evalQuestion[$id]   = $id;
 
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
-      $fields     = $question->fields;
       $conditions = array();
-      $return     = false;
 
       // If the field is always shown
-      if ($fields['show_rule'] == 'always') return true;
+      if ($question->getField('show_rule') == 'always') {
+         unset($evalQuestion[$id]);
+         return true;
+      }
 
       // Get conditions to show or hide field
-      $query = "SELECT `show_logic`, `show_field`, `show_condition`, `show_value`
-                FROM `glpi_plugin_formcreator_questions_conditions`
-                WHERE `plugin_formcreator_questions_id` = ".$fields['id'];
-      $result = $DB->query($query);
-      while ($line = $DB->fetch_array($result)) {
+      $questionId = $question->getID();
+      $question_condition = new PluginFormcreatorQuestion_Condition();
+      $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
+      if (count($questionConditions) < 1) {
+         // No condition defined, then always show the question
+         unset($evalQuestion[$id]);
+         return true;
+      }
+
+      foreach ($questionConditions as $question_condition) {
          $conditions[] = array(
-               'multiple' => in_array($fields['fieldtype'], array('checkboxes', 'multiselect')),
-               'logic'    => $line['show_logic'],
-               'field'    => $line['show_field'],
-               'operator' => $line['show_condition'],
-               'value'    => $line['show_value']
+               'logic'    => $question_condition->getField('show_logic'),
+               'field'    => $question_condition->getField('show_field'),
+               'operator' => $question_condition->getField('show_condition'),
+               'value'    => $question_condition->getField('show_value')
             );
       }
 
-      foreach ($conditions as $condition) {
-         if (!isset($values[$condition['field']]))             return false;
-         if (!self::isVisible($condition['field'], $values))   return false;
+      // Force the first logic operator to OR
+      $conditions[0]['logic']       = 'OR';
+
+      $return                       = false;
+      $lowPrecedenceReturnPart      = false;
+      $lowPrecedenceLogic           = 'OR';
+      foreach ($conditions as $order => $condition) {
+         $currentLogic = $condition['logic'];
+         if (isset($conditions[$order + 1])) {
+            $nextLogic = $conditions[$order + 1]['logic'];
+         } else {
+            // To ensure the low precedence return part is used at the end of the whole evaluation
+            $nextLogic = 'OR';
+         }
+         if (!isset($values[$condition['field']])) {
+            unset($evalQuestion[$id]);
+            return false;
+         }
+         if (!self::isVisible($condition['field'], $values)) {
+            unset($evalQuestion[$id]);
+            return false;
+         }
 
          switch ($condition['operator']) {
             case '!=' :
@@ -163,13 +191,14 @@ class PluginFormcreatorFields
                   }
                   if (is_array($values[$condition['field']])) {
                      $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                      $value = !in_array($condition['value'], $decodedConditionField);
                   } else {
                      $value = $condition['value'] != $values[$condition['field']];
                   }
                }
                break;
+
             case '==' :
                if (empty($condition['value'])) {
                   $value = false;
@@ -181,13 +210,14 @@ class PluginFormcreatorFields
                   }
                   if (is_array($values[$condition['field']])) {
                      $value = in_array($condition['value'], $values[$condition['field']]);
-                  } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                      $value = in_array($condition['value'], $decodedConditionField);
                   } else {
                      $value = $condition['value'] == $values[$condition['field']];
                   }
                }
                break;
+
             default:
                if (is_array($values[$condition['field']])) {
                   $decodedConditionField = null;
@@ -197,7 +227,7 @@ class PluginFormcreatorFields
                if (is_array($values[$condition['field']])) {
                   eval('$value = "'.$condition['value'].'" '.$condition['operator']
                     .' Array('.implode(',', $values[$condition['field']]).');');
-               } elseif ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
+               } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
                   eval('$value = "'.$condition['value'].'" '.$condition['operator']
                     .' Array(' .implode(',', $decodedConditionField).');');
                } else {
@@ -205,19 +235,53 @@ class PluginFormcreatorFields
                     .$condition['operator'].' "'.$condition['value'].'";');
                }
          }
-         switch ($condition['logic']) {
-            case 'AND' :   $return &= $value; break;
-            case 'OR'  :   $return |= $value; break;
-            case 'XOR' :   $return ^= $value; break;
-            default :      $return = $value;
+
+         // Combine all condition with respect of operator precedence
+         // AND has precedence over OR and XOR
+         if ($currentLogic != 'AND' && $nextLogic == 'AND') {
+            // next condition has a higher precedence operator
+            // Save the current computed return and operator to use later
+            $lowPrecedenceReturnPart = $return;
+            $lowPrecedenceLogic = $currentLogic;
+            $return = $value;
+         } else {
+            switch ($currentLogic) {
+               case 'AND' :
+                  $return &= $value;
+                  break;
+
+               case 'OR'  :
+                  $return |= $value;
+                  break;
+
+               default :
+                  $return = $value;
+            }
+         }
+
+         if ($currentLogic == 'AND' && $nextLogic != 'AND') {
+            if ($lowPrecedenceLogic == 'OR') {
+               $return |= $lowPrecedenceReturnPart;
+            } else {
+               $return ^= $lowPrecedenceReturnPart;
+            }
          }
       }
+
+      // Ensure the low precedence part is used if last condition has logic == AND
+      if ($lowPrecedenceLogic == 'OR') {
+         $return |= $lowPrecedenceReturnPart;
+      } else {
+         $return ^= $lowPrecedenceReturnPart;
+      }
+
+      unset($evalQuestion[$id]);
 
       // If the field is hidden by default, show it if condition is true
       if ($question->fields['show_rule'] == 'hidden') {
          return $return;
 
-      // else show it if condition is false
+         // else show it if condition is false
       } else {
          return !$return;
       }
@@ -237,7 +301,7 @@ class PluginFormcreatorFields
             foreach ($value as &$sub_value) {
                $sub_value = plugin_formcreator_encode($sub_value, false);
             }
-         } elseif (is_array(json_decode($value))) {
+         } else if (is_array(json_decode($value))) {
             $tab = json_decode($value);
             foreach ($tab as &$sub_value) {
                $sub_value = plugin_formcreator_encode($sub_value, false);

@@ -1,5 +1,5 @@
 html, body {
-	height: 100%;
+    height: 100%;
 }
 
 @-moz-keyframes ripple {
@@ -135,11 +135,11 @@ form.formcreator_form {
    width: 850px;
 }
 
+.form_answer h1,
 .formcreator_form > h1 {
    text-align: center;
    font-weight: bold;
-   font-size: 1.5em;
-   text-decoration: underline;
+   font-size: 1.8em;
    margin: 0 0 15px;
 }
 
@@ -201,6 +201,7 @@ form.formcreator_form {
    display: block;
    font-size: 1.2em;
    line-height: 32px;
+   font-weight: bold;
 }
 .formcreator_form .form-group:after {
    content: '';
@@ -208,10 +209,6 @@ form.formcreator_form {
 }
 .formcreator_form .form-group .form_field > input[type="file"] {
    height: 32px;
-}
-
-.formcreator_form .form-group.required > label {
-   font-weight: bold;
 }
 
 .formcreator_form .form-group .form_field {
@@ -431,54 +428,42 @@ form.formcreator_form {
    font-style: italic;
    margin: 0 4px;
 }
-#div_show_condition_field, #div_show_condition_operator, #div_show_condition_value {
-   float: left;
+.div_show_condition_field, .div_show_condition_operator,
+.div_show_condition_value, .div_show_condition_logic,
+.div_show_condition_add, .div_show_condition_remove {
+   //float: left;
+   display: inline-block;
 }
-#div_show_condition_field .select2-container,
-#div_show_condition_operator .select2-container {
+.div_show_condition_field .select2-container,
+.div_show_condition_operator .select2-container,
+.div_show_condition_logic .select2-container {
    width: 95% !important;
    margin: 5px 0 0 !important;
 }
-#div_show_condition_value input {
-   width: 100% !important;
+
+.div_show_condition_value input {
+   width: 90% !important;
    margin: 5px 0 0 5px !important;
    padding: 2px 5px !important;
 }
 
-#div_show_condition_field {
+.div_show_condition_field {
    width: 300px !important;
 }
-#div_show_condition_operator {
-   width: 50px !important;
+.div_show_condition_operator {
+   width: 70px !important;
 }
-#div_show_condition_value {
-   width:  400px !important;
+.div_show_condition_value {
+   width:  300px !important;
 }
-
+.div_show_condition_logic {
+    width: 70px !important;
+}
+.div_show_condition_add img, .div_show_condition_remove img {
+   width: 12px;
+   vertical-align: middle;
+}
 /* jQuery UI Combobox*/
-.custom-combobox {
-   position: relative;
-   display: inline-block;
-}
-.custom-combobox-toggle {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   margin-left: -1px;
-   padding: 0;
-}
-.custom-combobox-input {
-   margin: 0;
-   padding: 5px 10px;
-}
-.custom-combobox .ui-state-default {
-   background-color: #fff;
-   background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
-   background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 50%);
-   background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 50%);
-   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0);
-   background-image: linear-gradient(top, #fff 0%, #eee 50%);
-}
 .pq-select-multiple {
    display: inline-block;
    width: 85% !important;
@@ -870,7 +855,7 @@ a.plugin_formcreator_formTile_title {
    clear: both;
 }
 #plugin_formcreator_wizard_forms > div {
-	text-align: center;
+    text-align: center;
 }
 
 #plugin_formcreator_searchBar {
@@ -1365,6 +1350,23 @@ span.fc_list_icon {
 .tab_cadre_pager, .navigationheader {
    margin-top: 0;
    padding-top: 15px;
+}
+
+.section_row,
+.section_row th {
+   background-color: #CCC;
+}
+
+.form_control {
+   width: 23px;
+   float: right;
+   min-height: 1px;
+}
+
+.form_header ul {
+   list-style-type: inherit;
+   margin: inherit;
+   padding: inherit;
 }
 
 /* ################--------------- Responsive  ---------------#################### */

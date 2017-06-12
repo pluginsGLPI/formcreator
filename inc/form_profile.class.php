@@ -7,18 +7,15 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
    static public $itemtype_2 = 'Profile';
    static public $items_id_2 = 'profiles_id';
 
-   static function getTypeName($nb=0)
-   {
+   static function getTypeName($nb=0) {
       return _n('Target', 'Targets', $nb, 'formcreator');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0)
-   {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
          return self::getTypeName(2);
    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0)
-   {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $DB, $CFG_GLPI;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
@@ -65,7 +62,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
                      ON p.`id` = f.`profiles_id`
                      AND f.`plugin_formcreator_forms_id` = ".$item->fields['id'];
          $result = $DB->query($query);
-         while(list($id, $name, $profile) = $DB->fetch_array($result)) {
+         while (list($id, $name, $profile) = $DB->fetch_array($result)) {
             $checked = $profile ? ' checked' : '';
             echo '<tr><td colspan="2"><label>';
             echo '<input type="checkbox" name="profiles_id[]" value="'.$id.'" '.$checked.'> ';
@@ -84,70 +81,6 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
 
       echo "</table>";
       Html::closeForm();
-   }
-
-   static function install(Migration $migration)
-   {
-      global $DB;
-
-      $obj   = new self();
-      $table = getTableForItemType(__CLASS__);
-
-      if (TableExists('glpi_plugin_formcreator_formprofiles')) {
-         $migration->renameTable('glpi_plugin_formcreator_formprofiles', $table);
-      }
-
-      if (!TableExists($table)) {
-         $query = "CREATE TABLE IF NOT EXISTS `$table` (
-                     `id` INT(11) NOT NULL AUTO_INCREMENT,
-                     `plugin_formcreator_forms_id` INT(11) NOT NULL ,
-                     `profiles_id` INT(11) NOT NULL,
-                     `uuid` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-                     PRIMARY KEY (`id`),
-                     UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,
-                                           `profiles_id`)
-                  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-         $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
-      }
-
-      // change fk for profiles
-      if (FieldExists($table, 'plugin_formcreator_profiles_id', false)) {
-         $migration->changeField($table, 'plugin_formcreator_profiles_id', 'profiles_id', 'integer');
-      }
-
-      // redo an id key
-      if (!FieldExists($table, 'id', false)) {
-         $DB->query("ALTER TABLE $table DROP PRIMARY KEY");
-         $migration->addField($table, 'id', 'autoincrement');
-         $migration->addKey($table, 'id', 'id', 'PRIMARY KEY');
-         $migration->addKey($table, array('plugin_formcreator_forms_id',
-                                          'profiles_id'),
-                            'unicity',
-                            'UNIQUE KEY');
-      }
-
-      // add uuid to validator
-      if (!FieldExists($table, 'uuid', false)) {
-         $migration->addField($table, 'uuid', 'string');
-      }
-      $migration->migrationOneTable($table);
-
-      // fill missing uuid
-      $all_form_profiles = $obj->find("uuid IS NULL");
-      foreach($all_form_profiles as $form_profiles_id => $form_profile) {
-         $obj->update(array('id'   => $form_profiles_id,
-                            'uuid' => plugin_formcreator_getUuid()));
-      }
-
-      return true;
-   }
-
-   static function uninstall()
-   {
-      global $DB;
-
-      $query = "DROP TABLE IF EXISTS `".getTableForItemType(__CLASS__)."`";
-      return $DB->query($query) or plugin_formcrerator_upgrade_error($migration);
    }
 
    /**
@@ -186,9 +119,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
 
    /**
     * Export in an array all the data of the current instanciated form_profile
+    * @param boolean $remove_uuid remove the uuid key
+    *
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -205,6 +140,10 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       unset($form_profile['id'],
             $form_profile['profiles_id'],
             $form_profile['plugin_formcreator_forms_id']);
+
+      if ($remove_uuid) {
+         $form_profile['uuid'] = '';
+      }
 
       return $form_profile;
    }

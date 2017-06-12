@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "931c81ece17509992780f24f42525d2d",
+    "content-hash": "6bd2bddd060ab70475f15776c4c87303",
     "packages": [],
     "packages-dev": [
         {
@@ -353,6 +353,56 @@
                 "phpcs"
             ],
             "time": "2017-01-06T11:10:46+00:00"
+        },
+        {
+            "name": "glpi-project/tools",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/glpi-project/tools.git",
+                "reference": "55b3ba30c9c7f32acf5d9e8d6747e1e369809b13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/glpi-project/tools/zipball/55b3ba30c9c7f32acf5d9e8d6747e1e369809b13",
+                "reference": "55b3ba30c9c7f32acf5d9e8d6747e1e369809b13",
+                "shasum": ""
+            },
+            "require": {
+                "consolidation/robo": "dev-master@dev",
+                "glpi-project/coding-standard": "0.5",
+                "natxet/cssmin": "~3.0",
+                "patchwork/jsqueeze": "~1.0"
+            },
+            "bin": [
+                "tools/plugin-release",
+                "tools/extract_template.sh",
+                "tools/modify_headers.pl"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Glpi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Teclib'",
+                    "email": "glpi@teclib.com",
+                    "homepage": "https://teclib.com"
+                }
+            ],
+            "description": "Various tools for GLPI and its plugins",
+            "keywords": [
+                "glpi",
+                "plugins",
+                "tools"
+            ],
+            "time": "2017-03-03T14:40:45+00:00"
         },
         {
             "name": "league/container",
@@ -2329,11 +2379,9 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {
-        "consolidation/robo": 20
-    },
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
