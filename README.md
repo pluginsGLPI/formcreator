@@ -25,6 +25,8 @@ Features
 13. Preview form created directly in the configuration.
 14. An optional service catalog to browse for forms and FAQ in an unified interface.
 
+For more information you can visit the [documentation](http://glpi-plugins.readthedocs.io/en/latest/formcreator/)
+
 Translations
 ------------
 
