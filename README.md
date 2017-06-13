@@ -63,7 +63,7 @@ Fonctionnalités
 13. Prévisualisation du formulaire créé directement dans la configuration.
 14. Un catalogue de services optionnel pour consulter la FAQ et utiliser les formulaires dans une interface unifiée.
 
-Pour plus d'informations, visitez [la page WIKI](https://github.com/TECLIB/formcreator/wiki)
+Pour plus d'informations, visitez la [documentation (en anglais)](http://glpi-plugins.readthedocs.io/fr/latest/formcreator/)
 
 Mise à jour depuis 1.x vers 2.4.0 ou supérieur
 ----------------------------------------------
