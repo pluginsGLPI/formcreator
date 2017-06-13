@@ -6,11 +6,13 @@ define('PLUGIN_FORMCREATOR_VERSION', '2.5.0');
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.5');
 
 // Minimal GLPI version, inclusive
-define ("PLUGIN_FORMCREATOR_GLPI_MIN_VERSION", '9.1.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.1.2');
 // Maximum GLPI version, exclusive
-define ("PLUGIN_FORMCREATOR_GLPI_MAX_VERSION", '9.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.2');
+// Minimum version of PHP
+define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.6.0');
 
-define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc']."/plugins/formcreator");
+define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
 /**
  * Define the plugin's version and informations
@@ -39,9 +41,18 @@ function plugin_formcreator_check_prerequisites () {
       echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
       $success = false;
    }
-   if (! function_exists("utf8_decode")) {
-      echo "This plugin requires php-xml<br>";
+   if (! function_exists('utf8_decode')) {
+      echo 'This plugin requires php-xml<br>';
       $success = false;
+   }
+
+   if (version_compare(PHP_VERSION, PLUGIN_FORMCREATOR_PHP_MIN_VERSION, 'lt')) {
+      if (method_exists('Plugin', 'messageIncompatible')) {
+         echo Plugin::messageIncompatible('core', PLUGIN_FORMCREATOR_GLPI_MIN_VERSION) . '<br/>';
+      } else {
+         echo 'This plugin requires PHP >=' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
+      }
+      $prerequisitesSuccess = false;
    }
 
    return $success;
