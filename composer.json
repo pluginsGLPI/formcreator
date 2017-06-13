@@ -2,7 +2,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.0",
-        "glpi-project/tools": "^0.1.0"
+        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.0"
     }
 }
