@@ -247,7 +247,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $item          = new PluginFormcreatorForm_Answer();
       $soptions      = $item->getSearchOptions();
       $filteredOptions = [];
-      foreach($options as $key => $value) {
+      foreach ($options as $key => $value) {
          if (is_numeric($key)) {
             $filteredOptions[$key] = $value;
          }
