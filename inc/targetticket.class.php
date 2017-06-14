@@ -23,7 +23,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    protected function getTargetItemtypeName() {
       return 'Ticket';
-      //return Ticket::class;
    }
 
    public function getItem_Actor() {
@@ -1106,7 +1105,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                'plugin_tag_tags_id' => $tag,
                'items_id'           => $ticketID,
                'itemtype'           => 'Ticket',
-               //'itemtype'           => Ticket::class,
             ));
          }
       }
@@ -1120,7 +1118,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       ));
 
       $this->attachDocument($formanswer->getID(), 'Ticket', $ticketID);
-      //$this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration
