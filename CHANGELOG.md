@@ -1,6 +1,13 @@
 GLPI Formcreator ChangeLog
 ===============================
 
+Version 2.5.1
+-------------
+
+## Bugfixes:
+* restore compatibility with PHP 5.4
+
+
 Version 2.5.0
 -------------
 

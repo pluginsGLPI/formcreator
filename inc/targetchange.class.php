@@ -38,7 +38,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    protected function getTargetItemtypeName() {
-      return Change::class;
+      return 'Change';
    }
 
    public function getItem_Actor() {
@@ -1160,7 +1160,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             $tagObj->add(array(
             'plugin_tag_tags_id' => $tag,
             'items_id'           => $changeID,
-            'itemtype'           => Change::class,
+            'itemtype'           => 'Change',
             ));
          }
       }
@@ -1244,7 +1244,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
-      $this->attachDocument($formanswer->getID(), Change::class, $changeID);
+      $this->attachDocument($formanswer->getID(), 'Change', $changeID);
 
       return true;
    }
