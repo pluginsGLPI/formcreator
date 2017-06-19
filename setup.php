@@ -1,7 +1,7 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.5.0');
+define('PLUGIN_FORMCREATOR_VERSION', '2.5.1');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.5');
 
@@ -10,7 +10,7 @@ define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.1.2');
 // Maximum GLPI version, exclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.2');
 // Minimum version of PHP
-define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.6.0');
+define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.4.0');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
@@ -52,7 +52,7 @@ function plugin_formcreator_check_prerequisites () {
       } else {
          echo 'This plugin requires PHP >=' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
       }
-      $prerequisitesSuccess = false;
+      $success= false;
    }
 
    return $success;
