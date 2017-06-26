@@ -60,7 +60,7 @@ class PluginFormcreatorFields
     * @return String          field_value
     */
    public static function getValue($field, $value) {
-      $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'-field.class.php';
+      $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'field.class.php';
       if (is_file($class_file)) {
          include_once ($class_file);
 
