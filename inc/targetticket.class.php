@@ -14,7 +14,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getItem_Supplier() {
-      return new Ticket_Supplier();
+      return new Supplier_Ticket();
    }
 
    protected function getItem_Item() {
