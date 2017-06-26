@@ -106,7 +106,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
 
          foreach ($questions as $current_question) {
-            $questions_id = $question->getID();
+            $questions_id = $current_question->getID();
             $tab[$optindex] = [
                'table'         => PluginFormcreatorAnswer::getTable(),
                'field'         => 'answer',
