@@ -62,7 +62,15 @@ label[for] {
    font-size: 13px;
 }
 
-.glpi_tabs {
+.form_content {
+   display: none;
+}
+
+.ui-front-message-after-redirect {
+   display: none;
+}
+
+.pq-select-popup-cont {
    display: none;
 }
 

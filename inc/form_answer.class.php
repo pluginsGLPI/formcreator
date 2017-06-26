@@ -310,7 +310,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $options = array('canedit' => false);
 
       // Print css media
-      echo Html::css(FORMCREATOR_ROOTDOC."/css/print.css", array('media' => 'print'));
+      echo Html::css(FORMCREATOR_ROOTDOC."/css/print_form_answer.css", array('media' => 'print'));
 
       // start form
       echo "<div class='form_answer'>";
