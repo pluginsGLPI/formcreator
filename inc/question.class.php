@@ -87,11 +87,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $section          = new PluginFormcreatorSection();
       $found_sections = $section->find('plugin_formcreator_forms_id = ' . (int) $item->getId(), '`order`');
       $section_number   = count($found_sections);
-      $tab_sections     = array();
-      $tab_questions    = array();
       $token            = Session::getNewCSRFToken();
       foreach ($found_sections as $section) {
-         $tab_sections[] = $section['id'];
          echo '<tr class="section_row" id="section_row_' . $section['id'] . '">';
          echo '<th onclick="editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')">';
          echo "<a href='#'>";
@@ -139,7 +136,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $i = 0;
          foreach ($found_questions as $question) {
             $i++;
-            $tab_questions[] = $question['id'];
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
             echo '<td onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
             echo "<a href='#'>";
@@ -150,9 +146,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             echo '<td align="center">';
 
-            $question_type = $question['fieldtype'] . 'Field';
-
-            $question_types = PluginFormcreatorFields::getTypes();
             $classname = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
             $fields = $classname::getPrefs();
 
@@ -221,17 +214,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</tr>';
 
       echo "</table>";
-
-      $js_tab_sections   = "";
-      $js_tab_questions  = "";
-      $js_line_questions = "";
-      foreach ($tab_sections as $key) {
-         $js_tab_sections  .= "tab_sections[$key] = document.getElementById('section_row_$key').innerHTML;".PHP_EOL;
-         $js_tab_questions .= "tab_questions[$key] = document.getElementById('add_question_td_$key').innerHTML;".PHP_EOL;
-      }
-      foreach ($tab_questions as $key) {
-         $js_line_questions .= "line_questions[$key] = document.getElementById('question_row_$key').innerHTML;".PHP_EOL;
-      }
    }
 
    /**
@@ -241,8 +223,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return Array        The modified $input array
     *
-    * @param  [type] $input [description]
-    * @return [type]        [description]
+    * @param  array $input
+    * @return array
     */
    private function checkBeforeSave($input) {
       // Control fields values :
@@ -299,9 +281,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
       global $DB;
@@ -343,9 +325,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @array return the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       global $DB;
@@ -473,8 +455,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    public function updateConditions($input) {
-      global $DB;
-
       // Delete all existing conditions for the question
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $question_condition->deleteByCriteria(array('plugin_formcreator_questions_id' => $input['id']));
@@ -516,7 +496,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * Actions done after the PURGE of the item in the database
     * Reorder other questions
     *
-    * @return nothing
+    * @return void
    **/
    public function post_purgeItem() {
       global $DB;
@@ -857,19 +837,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</th>';
       echo '</tr>';
 
-      // get All questions of the form and prepare their label for display in a dropdown
-      $question = new static();
-      $questionsInForm = $question->getQuestionsFromForm($form_id);
-      foreach ($questionsInForm as $question) {
-         if (strlen($question->getField('name')) > 30) {
-            $questions_tab[$question->getID()] = substr($question->getField('name'),
-                  0,
-                  strrpos(substr($question->getField('name'), 0, 30), ' ')) . '...';
-         } else {
-            $questions_tab[$question->getID()] = $question->getField('name');
-         }
-      }
-
       echo '<tr">';
       echo '<td colspan="4">';
       Dropdown::showFromArray('show_rule', array(
@@ -1133,11 +1100,11 @@ JS;
 
       // Form questions conditions
       $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$oldQuestionId')");
-      foreach ($rows as $conditions_id => $row) {
+      foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_questions_id'] = $newQuestion->getID();
-         if (!$new_conditions_id = $question_condition->add($row)) {
+         if (!$question_condition->add($row)) {
             return false;
          }
       }
@@ -1201,8 +1168,8 @@ JS;
       // get question conditions
       $question['_conditions'] = [];
       $all_conditions = $form_question_condition->find("plugin_formcreator_questions_id = ".$this->getID());
-      foreach ($all_conditions as $conditions_id => $condition) {
-         if ($form_question_condition->getFromDB($conditions_id)) {
+      foreach ($all_conditions as $condition) {
+         if ($form_question_condition->getFromDB($condition['id'])) {
             $question['_conditions'][] = $form_question_condition->export($remove_uuid);
          }
       }

@@ -36,9 +36,9 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -71,9 +71,9 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       return $this->prepareInputForAdd($input);

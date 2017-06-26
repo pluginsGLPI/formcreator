@@ -8,7 +8,7 @@ class PluginFormcreatorWizard {
    const MENU_BOOKMARKS    = 5;
 
    public static function header($title) {
-      global $CFG_GLPI, $HEADER_LOADED, $PLUGIN_HOOKS, $DB;
+      global $CFG_GLPI, $HEADER_LOADED, $DB;
 
       // Print a nice HTML-head for help page
       if ($HEADER_LOADED) {
@@ -107,7 +107,7 @@ class PluginFormcreatorWizard {
                      getEntitiesRestrictRequest("AND", "glpi_bookmarks", "", "", true);
 
       if ($result = $DB->query($query)) {
-         if ($numrows = $DB->numrows($result)) {
+         if ($DB->numrows($result)) {
             echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_bookmarksIcon">';
             Ajax::createIframeModalWindow('loadbookmark',
                   $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",

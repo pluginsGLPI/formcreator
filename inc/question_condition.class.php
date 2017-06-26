@@ -91,9 +91,9 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    public function getConditionsFromQuestion($questionId) {
       $questionConditions = array();
       $rows = $this->find("`plugin_formcreator_questions_id` = '$questionId'", "`order` ASC");
-      foreach ($rows as $questionConditionId => $row) {
+      foreach ($rows as $row) {
          $questionCondition = new static();
-         $questionCondition->getFromDB($questionConditionId);
+         $questionCondition->getFromDB($row['id']);
          $questionConditions[] = $questionCondition;
       }
 
@@ -125,7 +125,6 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
          $show_logic       = $this->fields['show_logic'];
          $questionId       = $this->fields['plugin_formcreator_questions_id'];
       }
-      $rootDoc = $CFG_GLPI['root_doc'];
       $rand = mt_rand();
 
       $question = new PluginFormcreatorQuestion();

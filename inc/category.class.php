@@ -16,8 +16,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
-
       if ($item->getType()==__CLASS__) {
          $item->showChildren();
       }
@@ -45,7 +43,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    /**
-    * @param $rootId id of the subtree root
+    * @param integer $rootId id of the subtree root
     * @return array Tree of form categories as nested array
     */
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
@@ -118,8 +116,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'id'              => $rootId,
             'subcategories'   => array()
       );
-      foreach ($items as $categoryId => $categoryItem) {
-         $children['subcategories'][] = self::getCategoryTree($categoryId);
+      foreach ($items as $categoryItem) {
+         $children['subcategories'][] = self::getCategoryTree($categoryItem['id']);
       }
 
       return $children;

@@ -36,9 +36,9 @@ class PluginFormcreatorSection extends CommonDBChild
     * Prepare input datas for adding the section
     * Check fields values and get the order for the new section
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
       global $DB;
@@ -78,9 +78,9 @@ class PluginFormcreatorSection extends CommonDBChild
    /**
     * Prepare input datas for updating the form
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -110,7 +110,7 @@ class PluginFormcreatorSection extends CommonDBChild
     * Actions done after the PURGE of the item in the database
     * Reorder other sections
     *
-    * @return nothing
+    * @return void
    **/
    public function post_purgeItem() {
       global $DB;
@@ -162,7 +162,7 @@ class PluginFormcreatorSection extends CommonDBChild
       // Form questions conditions
       $questionIds = implode("', '", array_keys($tab_questions));
       $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-      foreach ($rows as $conditions_id => $row) {
+      foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
          if (isset($tab_questions[$row['show_field']])) {
@@ -170,7 +170,7 @@ class PluginFormcreatorSection extends CommonDBChild
             $row['show_field'] = $tab_questions[$row['show_field']];
          }
          $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-         if (!$new_conditions_id = $question_condition->add($row)) {
+         if (!$question_condition->add($row)) {
             return false;
          }
       }
@@ -282,8 +282,8 @@ class PluginFormcreatorSection extends CommonDBChild
       // get questions
       $section['_questions'] = [];
       $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
-      foreach ($all_questions as $questions_id => $question) {
-         if ($form_question->getFromDB($questions_id)) {
+      foreach ($all_questions as $question) {
+         if ($form_question->getFromDB($question['id'])) {
             $section['_questions'][] = $form_question->export($remove_uuid);
          }
       }
@@ -301,10 +301,10 @@ class PluginFormcreatorSection extends CommonDBChild
    public function getSectionsFromForm($formId) {
       $sections = array();
       $rows = $this->find("`plugin_formcreator_forms_id` = '$formId'", "`order` ASC");
-      foreach ($rows as $sectionId => $row) {
+      foreach ($rows as $row) {
          $section = new self();
-         $section->getFromDB($sectionId);
-         $sections[$sectionId] = $section;
+         $section->getFromDB($row['id']);
+         $sections[$row['id']] = $section;
       }
 
       return $sections;

@@ -642,9 +642,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    /**
     * Prepare input datas for updating the target ticket
     *
-    * @param $input datas used to add the item
+    * @param array $input datas used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       global $CFG_GLPI;

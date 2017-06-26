@@ -45,7 +45,6 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       $target_class    = new PluginFormcreatorTarget();
       $found_targets = $target_class->find('plugin_formcreator_forms_id = '.$item->getID());
-      $target_number   = count($found_targets);
       $token           = Session::getNewCSRFToken();
       $i = 0;
       foreach ($found_targets as $target) {
@@ -94,13 +93,11 @@ class PluginFormcreatorTarget extends CommonDBTM
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
-      global $DB;
-
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          $input[$key] = plugin_formcreator_encode($value);
@@ -188,9 +185,9 @@ class PluginFormcreatorTarget extends CommonDBTM
    /**
     * Prepare input datas for updating the form
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -279,8 +276,8 @@ class PluginFormcreatorTarget extends CommonDBTM
       $target['_data']['_actors'] = [];
       $foreignKey = $target_item->getForeignKeyField();
       $all_target_actors = $form_target_actor->find("`$foreignKey` = '$targetId'");
-      foreach ($all_target_actors as $target_actors_id => $target_actor) {
-         if ($form_target_actor->getFromDB($target_actors_id)) {
+      foreach ($all_target_actors as $target_actor) {
+         if ($form_target_actor->getFromDB($target_actor['id'])) {
             $target['_data']['_actors'][] = $form_target_actor->export($remove_uuid);
          }
       }
@@ -330,7 +327,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       $targets = array();
       $formId = $form->getID();
       $foundTargets = $this->find("plugin_formcreator_forms_id = '$formId'");
-      foreach ($foundTargets as $id => $row) {
+      foreach ($foundTargets as $row) {
          $target = getItemForItemtype($row['itemtype']);
          $target->getFromDB($row['items_id']);
          $targets[] = $target;
@@ -338,5 +335,4 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       return $targets;
    }
-
 }
