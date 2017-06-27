@@ -864,7 +864,9 @@ class PluginFormcreatorForm extends CommonDBTM
             PluginFormcreatorFields::showField($question_line, $answer);
          }
       }
-      echo '<script type="text/javascript">formcreatorShowFields();</script>';
+      echo '<script type="text/javascript">$(function() {
+               formcreatorShowFields();
+            })</script>';
 
       // Show validator selector
       if ($item->fields['validation_required'] > 0) {
