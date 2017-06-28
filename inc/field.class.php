@@ -33,12 +33,12 @@ abstract class PluginFormcreatorField implements Field
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
       // $value = json_encode($this->getAnswer());
       if ($this->fields['fieldtype'] == 'dropdown') {
-         Html::scriptBlock('$(function() {
+         echo Html::scriptBlock('$(function() {
             formcreatorAddValueOf(' . $this->fields['id'] . ', "'
             . str_replace("\r\n", "\\r\\n", addslashes($this->fields['answer'])) . '");
          })');
       } else {
-         Html::scriptBlock('$(function() {
+         echo Html::scriptBlock('$(function() {
             formcreatorAddValueOf(' . $this->fields['id'] . ', "'
          . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");
          })');

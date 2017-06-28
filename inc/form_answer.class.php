@@ -392,7 +392,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
          }
       }
-      Html::scriptBlock('$(function() {
+      echo Html::scriptBlock('$(function() {
          formcreatorShowFields();
       })');
 

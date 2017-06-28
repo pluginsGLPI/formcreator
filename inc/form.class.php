@@ -864,7 +864,7 @@ class PluginFormcreatorForm extends CommonDBTM
             PluginFormcreatorFields::showField($question_line, $answer);
          }
       }
-      Html::scriptBlock('$(function() {
+      echo Html::scriptBlock('$(function() {
                formcreatorShowFields();
             })');
 
