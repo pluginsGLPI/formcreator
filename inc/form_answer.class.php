@@ -392,10 +392,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
          }
       }
-
-      echo '<script type="text/javascript">
+      echo Html::scriptBlock('$(function() {
          formcreatorShowFields();
-      </script>';
+      })');
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {

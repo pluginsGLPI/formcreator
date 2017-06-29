@@ -664,4 +664,3 @@ function formcreatorChangeActorAssigned(value) {
       case 'question_supplier' : $('#block_assigned_question_supplier').show();  break;
    }
 }
-
