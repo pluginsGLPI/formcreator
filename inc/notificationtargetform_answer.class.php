@@ -17,7 +17,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       return $events;
    }
 
-   public function getDatasForTemplate($event, $options = array()) {
+   public function addDataForTemplate($event, $options = array()) {
       global $CFG_GLPI;
 
       $form = new PluginFormcreatorForm();
@@ -62,12 +62,12 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       }
    }
 
-   public function getAdditionalTargets($event='') {
+   public function addAdditionalTargets($event='') {
       $this->addTarget(self::AUTHOR, __('Author'));
       $this->addTarget(self::APPROVER, __('Approver'));
    }
 
-   public function getSpecificTargets($data, $options) {
+   public function addSpecificTargets($data, $options) {
       switch ($data['items_id']) {
          case self::AUTHOR :
             $this->getUserByField('requester_id', true);

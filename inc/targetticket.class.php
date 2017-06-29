@@ -1042,8 +1042,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
 
          // Disable email notification when adding a followup
-         $use_mailing = $CFG_GLPI['use_mailing'];
-         $CFG_GLPI['use_mailing'] = '0';
+         $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
+         PluginFormcreatorCommon::setNotification(false);
 
          $ticketFollowup = new TicketFollowup();
          $ticketFollowup->add(array(
@@ -1054,7 +1054,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          ));
 
          // Restore mail notification setting
-         $CFG_GLPI['use_mailing'] = $use_mailing;
+         PluginFormcreatorCommon::setNotification($use_mailing);
       }
 
       return true;
