@@ -77,7 +77,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
             if ($form->fields['validation_required'] == 1) {
                $this->addUserByField('validator_id', true);
             } else if ($form->fields['validation_required'] == 2) {
-               $this->addForGroup(0, $this->obj->fields['validator_id']);
+               $this->addForGroup(0, $this->obj->fields['users_id_validator']);
             }
             break;
       }

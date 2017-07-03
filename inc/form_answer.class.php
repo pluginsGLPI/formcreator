@@ -87,10 +87,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $tab['5'] = [
          'table'         => getTableForItemType('User'),
          'field'         => 'name',
-         'name'          => __('Validator', 'formcreator'),
+         'name'          => __('Validator user', 'formcreator'),
          'datatype'      => 'itemlink',
          'massiveaction' => false,
-         'linkfield'     => 'validator_id',
+         'linkfield'     => 'users_id_validator',
       ];
       $tab['6'] = [
          'table'         => self::getTable(),
@@ -100,6 +100,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'massiveaction' => false,
       ];
 
+      $tab['7'] = [
+            'table'         => getTableForItemType('User'),
+            'field'         => 'name',
+            'name'          => __('Validator group', 'formcreator'),
+            'datatype'      => 'itemlink',
+            'massiveaction' => false,
+            'linkfield'     => 'groups_id_validator',
+      ];
       if ($display_for_form) {
          $optindex = self::SOPTION_ANSWER;
          $question = new PluginFormcreatorQuestion;
@@ -269,7 +277,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $formId = $form->getID();
 
       if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER) {
-         $canValidate = ($userId == $form_answer->getField('validator_id'));
+         $canValidate = ($userId == $form_answer->getField('users_id_validator'));
       } else if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
          // Check the user is member of at least one validator group for the form answers
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
@@ -538,6 +546,21 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             $status = 'accepted';
          }
 
+         if ($form->getField('validation_required') == 1) {
+            $usersIdValidator = isset($data['formcreator_validator'])
+                                ? $data['formcreator_validator']
+                                : 0;
+         } else {
+            $usersIdValidator = 0;
+         }
+
+         if ($form->getField('validation_required') == 2) {
+            $groupIdValidator = isset($data['formcreator_validator'])
+                                ? $data['formcreator_validator']
+                                : 0;
+         } else {
+            $groupIdValidator = 0;
+         }
          $id = $this->add(array(
             'entities_id'                 => isset($_SESSION['glpiactive_entity'])
                                                 ? $_SESSION['glpiactive_entity']
@@ -547,9 +570,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                => isset($data['formcreator_validator'])
-                                                ? $data['formcreator_validator']
-                                                : 0,
+            'users_id_validator'          => $usersIdValidator,
+            'groups_id_validator'         => $groupIdValidator,
             'status'                      => $status,
             'request_date'                => date('Y-m-d H:i:s'),
          ));
@@ -627,7 +649,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'entities_id'     => $this->fields['entities_id'],
                         'is_recursive'    => $this->fields['is_recursive'],
                         'requester_id'    => $this->fields['requester_id'],
-                        'validator_id'    => $this->fields['validator_id'],
+                        'validator_id'    => $this->fields['users_id_validator'],
                         'comment'         => '',
                   ));
                } else {
@@ -645,7 +667,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'entities_id'     => $this->fields['entities_id'],
                         'is_recursive'    => $this->fields['is_recursive'],
                         'requester_id'    => $this->fields['requester_id'],
-                        'validator_id'    => $this->fields['validator_id'],
+                        'validator_id'    => $this->fields['users_id_validator'],
                         'comment'         => '',
                   ));
                }

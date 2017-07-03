@@ -1028,7 +1028,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             // The validator entity
          case 'validator' :
             $userObj = new User();
-            $userObj->getFromDB($formanswer->fields['validator_id']);
+            $userObj->getFromDB($formanswer->fields['users_id_validator']);
             $data['entities_id'] = $userObj->fields['entities_id'];
             break;
 
