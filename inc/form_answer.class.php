@@ -101,7 +101,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       ];
 
       $tab['7'] = [
-            'table'         => getTableForItemType('User'),
+            'table'         => getTableForItemType('Group'),
             'field'         => 'name',
             'name'          => __('Validator group', 'formcreator'),
             'datatype'      => 'itemlink',

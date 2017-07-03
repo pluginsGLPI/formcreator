@@ -14,6 +14,8 @@ function plugin_formcreator_update_dev(Migration $migration) {
 }
 
 function plugin_formcreator_updateForm_Answer_2_6(Migration $migration) {
+   global $DB;
+
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
 
    $table = 'glpi_plugin_formcreator_forms_answers';
