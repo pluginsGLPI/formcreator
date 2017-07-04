@@ -1061,7 +1061,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $valid = true;
 
       $tab_section    = array();
-      $datas          = array();
+      $data           = array();
       $sections       = new PluginFormcreatorSection();
       $found_sections = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
       foreach ($found_sections as $id => $fields) {
@@ -1078,25 +1078,25 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
          if (isset($_POST['formcreator_field_' . $id])) {
-            $datas['formcreator_field_' . $id] = is_array($_POST['formcreator_field_' . $id])
+            $data['formcreator_field_' . $id] = is_array($_POST['formcreator_field_' . $id])
                            ? json_encode($_POST['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
                            : $_POST['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
             if ($fields['fieldtype'] == 'float') {
-               $datas['formcreator_field_' . $id] = str_replace(',', '.', $datas['formcreator_field_' . $id]);
-               $datas['formcreator_field_' . $id] = str_replace(' ', '', $datas['formcreator_field_' . $id]);
+               $data['formcreator_field_' . $id] = str_replace(',', '.', $data['formcreator_field_' . $id]);
+               $data['formcreator_field_' . $id] = str_replace(' ', '', $data['formcreator_field_' . $id]);
             }
             unset($_POST['formcreator_field_' . $id]);
          } else {
-            $datas['formcreator_field_' . $id] = '';
+            $data['formcreator_field_' . $id] = '';
          }
 
          $className = 'PluginFormcreator' . ucfirst($fields['fieldtype']) . 'Field';
 
          if (class_exists($className)) {
-            $obj = new $className($fields, $datas);
-            if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas['formcreator_field_' . $id])) {
+            $obj = new $className($fields, $data);
+            if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
                $valid = false;
             }
          } else {
@@ -1104,38 +1104,38 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
       if (isset($_POST) && is_array($_POST)) {
-         $datas = $datas + $_POST;
+         $data = $data + $_POST;
       }
 
       // Check required_validator
-      if ($this->fields['validation_required'] && empty($datas['formcreator_validator'])) {
+      if ($this->fields['validation_required'] && empty($data['formcreator_validator'])) {
          Session::addMessageAfterRedirect(__('You must select validator !', 'formcreator'), false, ERROR);
          $valid = false;
       }
 
       // If not valid back to form
       if (!$valid) {
-         foreach ($datas as $key => $value) {
+         foreach ($data as $key => $value) {
             if (is_array($value)) {
                foreach ($value as $key2 => $value2) {
-                  $datas[$key][$key2] = plugin_formcreator_encode($value2);
+                  $data[$key][$key2] = plugin_formcreator_encode($value2);
                }
             } else if (is_array(json_decode($value))) {
                $value = json_decode($value);
                foreach ($value as $key2 => $value2) {
                   $value[$key2] = plugin_formcreator_encode($value2);
                }
-               $datas[$key] = json_encode($value);
+               $data[$key] = json_encode($value);
             } else {
-               $datas[$key] = plugin_formcreator_encode($value);
+               $data[$key] = plugin_formcreator_encode($value);
             }
          }
 
-         $_SESSION['formcreator']['datas'] = $datas;
+         $_SESSION['formcreator']['datas'] = $data;
          // Save form
       } else {
          $formanswer = new PluginFormcreatorForm_Answer();
-         $formanswer->saveAnswers($datas);
+         $formanswer->saveAnswers($data);
       }
 
       return $valid;
