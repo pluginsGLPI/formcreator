@@ -449,6 +449,9 @@ class PluginFormcreatorForm extends CommonDBTM
          case "PluginFormcreatorForm":
             return __('Preview');
             break;
+         case 'Central':
+            return _n('Form', 'Forms', 2, 'formcreator');
+            break;
       }
       return '';
    }
@@ -476,6 +479,10 @@ class PluginFormcreatorForm extends CommonDBTM
             echo '<div style="text-align: left">';
             $item->displayUserForm($item);
             echo '</div>';
+            break;
+         case 'central.php':
+            $form = new static();
+            $form->showForCentral();
             break;
       }
    }
