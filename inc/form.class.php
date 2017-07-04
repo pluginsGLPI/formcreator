@@ -1078,18 +1078,18 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
          if (isset($_POST['formcreator_field_' . $id])) {
-            $datas[$id] = is_array($_POST['formcreator_field_' . $id])
+            $datas['formcreator_field_' . $id] = is_array($_POST['formcreator_field_' . $id])
                            ? json_encode($_POST['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
                            : $_POST['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
             if ($fields['fieldtype'] == 'float') {
-               $datas[$id] = str_replace(',', '.', $datas[$id]);
-               $datas[$id] = str_replace(' ', '', $datas[$id]);
+               $datas['formcreator_field_' . $id] = str_replace(',', '.', $datas['formcreator_field_' . $id]);
+               $datas['formcreator_field_' . $id] = str_replace(' ', '', $datas['formcreator_field_' . $id]);
             }
             unset($_POST['formcreator_field_' . $id]);
          } else {
-            $datas[$id] = '';
+            $datas['formcreator_field_' . $id] = '';
          }
 
          $className = 'PluginFormcreator' . ucfirst($fields['fieldtype']) . 'Field';

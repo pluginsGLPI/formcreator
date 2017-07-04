@@ -471,7 +471,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
-    * ACtions done before deleting an item. In case of failure, prevents
+    * Actions done before deleting an item. In case of failure, prevents
     * actual deletion of the item
     *
     * @return boolean true if pre_delete actions succeeded, false if not
@@ -518,48 +518,15 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                $answer_value = null;
 
                if ($question->getField('fieldtype') != 'file') {
-                  $data_value = $datas['formcreator_field_' . $question->getID()];
-                  if (isset($data_value)) {
-                     if (is_array($data_value)) {
-                        foreach ($data_value as $key => $value) {
-                           $data_value[$key] = $value;
-                        }
-                        $answer_value = json_encode($data_value);
-                     } else {
-                        $answer_value = $data_value;
-                     }
+                  // If the answer is set, check if it is an array (then implode id).
+                  if (isset($datas['formcreator_field_' . $question->getID()])) {
+                     $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
                   } else {
                      $answer_value = '';
                   }
                } else if (isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name'])
                           && is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name'])) {
-                  // The field type is a file and a file was uploaded
-                  $doc    = new Document();
-
-                  $file_datas                 = array();
-                  $file_datas["name"]         = $form->fields['name'] . ' - ' . $question->getField('name');
-                  $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
-                                                      ? $_SESSION['glpiactive_entity']
-                                                      : $form->fields['entities_id'];
-                  $file_datas["is_recursive"] = $form->fields['is_recursive'];
-                  Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question->getID()]);
-
-                  if ($docID = $doc->add($file_datas)) {
-                     $docID    = intval($docID);
-                     $table    = getTableForItemType('Document');
-                     $filename = $_FILES['formcreator_field_' . $question->getID()]['name'];
-                     $query    = "UPDATE `$table` SET `filename` = '$filename'
-                                  WHERE `id` = $docID";
-                     $DB->query($query);
-
-                     $docItem = new Document_Item();
-                     $docItemId = $docItem->add(array(
-                        'documents_id' => $docID,
-                        'itemtype'     => __CLASS__,
-                        'items_id'     => $datas['id'],
-                     ));
-                     $answer_value = $docID;
-                  }
+                  $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
                }
 
                // $answer_value may be still null if the field type is file and no file was uploaded
@@ -608,62 +575,28 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             // unset the answer value
             $answer_value = null;
 
-            // If the answer is set, check if it is an array (then implode id).
-            if (isset($datas[$question->getID()])) {
-               $answer_value = $datas[$question->getID()];
-               if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
-                  $answer_value = json_decode($answer_value);
-                  foreach ($answer_value as $key => $value) {
-                     $answer_value[$key] = $value;
-                  }
-                  $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
+            if ($question->getField('fieldtype') != 'file') {
+               // If the answer is set, check if it is an array (then implode id).
+               if (isset($datas['formcreator_field_' . $question->getID()])) {
+                  $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
                } else {
-                  $answer_value = $answer_value;
+                  $answer_value = '';
                }
-            } else {
-               $answer_value = '';
+               $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
+            } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
+            	        && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
+               $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
             }
 
-            // If the question is a file field, save the file as a document
-            if (($question->getField('fieldtype') == 'file')
-                && (isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
-            	 && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
-               $doc         = new Document();
-               $file_datas                 = array();
-               $file_datas["name"]         = $form->fields['name'] . ' - ' . $question->getField('name');
-               $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
-                                                   ? $_SESSION['glpiactive_entity']
-                                                   : $form->fields['entities_id'];
-               $file_datas["is_recursive"] = $form->fields['is_recursive'];
-               Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question->getID()]);
-
-               if ($docID = $doc->add($file_datas)) {
-                  $docID    = intval($docID);
-                  $table    = getTableForItemType('Document');
-                  $filename = $_FILES['formcreator_field_' . $question->getID()]['name'];
-                  $query    = "UPDATE `$table` SET `filename` = '$filename'
-                               WHERE `id` = $docID";
-                  $DB->query($query);
-
-                  $docItem = new Document_Item();
-                  $docItemId = $docItem->add(array(
-                     'documents_id' => $docID,
-                     'itemtype'     => __CLASS__,
-                     'items_id'     => $id,
-                  ));
-                  $answer_value = $docID;
-               }
+            if ($answer_value !== null) {
+               // Save the answer to the question
+               $answerID = $answer->add(array(
+                  'plugin_formcreator_forms_answers_id'  => $id,
+                  'plugin_formcreator_question_id'       => $question->getID(),
+                  'answer'                               => $answer_value,
+               ), array(), 0);
             }
-
-            // Save the answer to the question
-            $answerID = $answer->add(array(
-               'plugin_formcreator_forms_answers_id'  => $id,
-               'plugin_formcreator_question_id'       => $question->getID(),
-               'answer'                               => $answer_value,
-            ), array(), 0);
-
          }
-
          $is_newFormAnswer = true;
       }
 
@@ -789,6 +722,76 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
+   }
+
+   /**
+    *
+    * @param array|string $value
+    * @return null|string
+    */
+   private function transformAnswerValue($value = null) {
+      // unset the answer value
+      $answer_value = null;
+
+      // If the answer is set, check if it is an array (then implode id).
+      if ($value !== null) {
+         $answer_value = $value;
+         if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
+            $answer_value = json_decode($answer_value);
+            foreach ($answer_value as $key => $value) {
+               $answer_value[$key] = $value;
+            }
+            $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
+         } else {
+            $answer_value = $answer_value;
+         }
+      } else {
+         $answer_value = '';
+      }
+
+      return $answer_value;
+   }
+
+   /**
+    * Save an uploaded file into a document object, link it to the answers
+    * and returns the document ID
+    * @param PluginFormcreatorForm $form
+    * @param PluginFormcreatorQuestion $question
+    * @param array $file                         an item from $_FILES array
+    *
+    * @return integer|NULL
+    */
+   private function saveDocument(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question, $file) {
+      global $DB;
+
+      $doc                        = new Document();
+
+      $file_data                 = array();
+      $file_data["name"]         = $form->getField('name'). ' - ' . $question->getField('name');
+      $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
+                                    ? $_SESSION['glpiactive_entity']
+                                    : $form->getField('entities_id');
+      $file_data["is_recursive"] = $form->getField('is_recursive');
+      Document::uploadDocument($file_data, $file);
+
+      if ($docID = $doc->add($file_data)) {
+         $docID    = intval($docID);
+         $table    = Document::getTable();
+         $filename = $file['name'];
+         $query    = "UPDATE `$table` SET `filename` = '$filename'
+                      WHERE `id` = '$docID'";
+         $DB->query($query);
+
+         $docItem = new Document_Item();
+         $docItemId = $docItem->add([
+            'documents_id' => $docID,
+            'itemtype'     => __CLASS__,
+            'items_id'     => $id,
+         ]);
+         return $docID;
+      }
+
+      return null;
    }
 
    public function refuseAnswers($datas) {
