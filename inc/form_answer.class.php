@@ -513,7 +513,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Update questions answers
          if ($status == 'waiting') {
-            foreach($questions as $question) {
+            foreach ($questions as $question) {
                // unset the answer value
                $answer_value = null;
 
@@ -571,7 +571,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          ));
 
          // Save questions answers
-         foreach($questions as $question) {
+         foreach ($questions as $question) {
             // unset the answer value
             $answer_value = null;
 
@@ -584,7 +584,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
                $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
             } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
-            	        && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
+                       && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
                $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
             }
 
