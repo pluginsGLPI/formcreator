@@ -499,15 +499,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         ?intval($datas['id'])
                         :-1;
 
-      $query = "SELECT q.`id`, q.`fieldtype`, q.`name`, a.`id` as answer_id
-                FROM glpi_plugin_formcreator_questions q
-                LEFT JOIN glpi_plugin_formcreator_sections s
-                  ON s.`id` = q.`plugin_formcreator_sections_id`
-                LEFT JOIN `glpi_plugin_formcreator_answers` AS a
-                  ON a.`plugin_formcreator_forms_answers_id` = $formanswers_id
-                  AND a.`plugin_formcreator_question_id` = q.`id`
-                WHERE s.`plugin_formcreator_forms_id` = {$datas['formcreator_form']}";
-      $result = $DB->query($query);
+      $question = new PluginFormcreatorQuestion();
+      $questions = $question->getQuestionsFromForm($datas['formcreator_form']);
 
       // Update form answers
       if (isset($datas['save_formanswer'])) {
@@ -520,9 +513,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Update questions answers
          if ($status == 'waiting') {
-            while ($question = $DB->fetch_array($result)) {
-               if ($question['fieldtype'] != 'file') {
-                  $data_value = $datas['formcreator_field_' . $question['id']];
+            foreach($questions as $question) {
+               // unset the answer value
+               $answer_value = null;
+
+               if ($question->getField('fieldtype') != 'file') {
+                  $data_value = $datas['formcreator_field_' . $question->getID()];
                   if (isset($data_value)) {
                      if (is_array($data_value)) {
                         foreach ($data_value as $key => $value) {
@@ -535,27 +531,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   } else {
                      $answer_value = '';
                   }
-
-                  $answer->update(array(
-                     'id'     => $question['answer_id'],
-                     'answer' => $answer_value,
-                  ), 0);
-               } else if (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name'])
-                     && is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name'])) {
+               } else if (isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name'])
+                          && is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name'])) {
+                  // The field type is a file and a file was uploaded
                   $doc    = new Document();
 
                   $file_datas                 = array();
-                  $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
+                  $file_datas["name"]         = $form->fields['name'] . ' - ' . $question->getField('name');
                   $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
                                                       ? $_SESSION['glpiactive_entity']
                                                       : $form->fields['entities_id'];
                   $file_datas["is_recursive"] = $form->fields['is_recursive'];
-                  Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
+                  Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question->getID()]);
 
                   if ($docID = $doc->add($file_datas)) {
-                     $docID = intval($docID);
+                     $docID    = intval($docID);
                      $table    = getTableForItemType('Document');
-                     $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
+                     $filename = $_FILES['formcreator_field_' . $question->getID()]['name'];
                      $query    = "UPDATE `$table` SET `filename` = '$filename'
                                   WHERE `id` = $docID";
                      $DB->query($query);
@@ -566,12 +558,20 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         'itemtype'     => __CLASS__,
                         'items_id'     => $datas['id'],
                      ));
-
-                     $answer->update(array(
-                        'id'     => $question['answer_id'],
-                        'answer' => $docID,
-                     ), 0);
+                     $answer_value = $docID;
                   }
+               }
+
+               // $answer_value may be still null if the field type is file and no file was uploaded
+               if ($answer_value !== null) {
+                  // Update the answer to the question
+                  $questionId = $question->getID();
+                  $answer = new PluginFormcreatorAnswer();
+                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_question_id` = '$questionId'");
+                  $answer->update(array(
+                     'id'     => $answer->getID(),
+                     'answer' => $answer_value,
+                  ), 0);
                }
             }
          }
@@ -604,46 +604,43 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          ));
 
          // Save questions answers
-         while ($question = $DB->fetch_assoc($result)) {
+         foreach($questions as $question) {
+            // unset the answer value
+            $answer_value = null;
+
             // If the answer is set, check if it is an array (then implode id).
-            if (isset($datas[$question['id']])) {
-               $question_answer = $datas[$question['id']];
-               if (is_array(json_decode($question_answer, JSON_UNESCAPED_UNICODE))) {
-                  $question_answer = json_decode($question_answer);
-                  foreach ($question_answer as $key => $value) {
-                     $question_answer[$key] = $value;
+            if (isset($datas[$question->getID()])) {
+               $answer_value = $datas[$question->getID()];
+               if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
+                  $answer_value = json_decode($answer_value);
+                  foreach ($answer_value as $key => $value) {
+                     $answer_value[$key] = $value;
                   }
-                  $question_answer = json_encode($question_answer, JSON_UNESCAPED_UNICODE);
+                  $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
                } else {
-                  $question_answer = $question_answer;
+                  $answer_value = $answer_value;
                }
             } else {
-               $question_answer = '';
+               $answer_value = '';
             }
 
-            $answerID = $answer->add(array(
-               'plugin_formcreator_forms_answers_id' => $id,
-               'plugin_formcreator_question_id'   => $question['id'],
-               'answer'                           => $question_answer,
-            ), array(), 0);
-
             // If the question is a file field, save the file as a document
-            if (($question['fieldtype'] == 'file')
-                  && (isset($_FILES['formcreator_field_' . $question['id']]['tmp_name']))
-                  && (is_file($_FILES['formcreator_field_' . $question['id']]['tmp_name']))) {
+            if (($question->getField('fieldtype') == 'file')
+                && (isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
+            	 && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
                $doc         = new Document();
                $file_datas                 = array();
-               $file_datas["name"]         = $form->fields['name'] . ' - ' . $question['name'];
+               $file_datas["name"]         = $form->fields['name'] . ' - ' . $question->getField('name');
                $file_datas["entities_id"]  = isset($_SESSION['glpiactive_entity'])
                                                    ? $_SESSION['glpiactive_entity']
                                                    : $form->fields['entities_id'];
                $file_datas["is_recursive"] = $form->fields['is_recursive'];
-               Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question['id']]);
+               Document::uploadDocument($file_datas, $_FILES['formcreator_field_' . $question->getID()]);
 
                if ($docID = $doc->add($file_datas)) {
-                  $docID = intval($docID);
+                  $docID    = intval($docID);
                   $table    = getTableForItemType('Document');
-                  $filename = $_FILES['formcreator_field_' . $question['id']]['name'];
+                  $filename = $_FILES['formcreator_field_' . $question->getID()]['name'];
                   $query    = "UPDATE `$table` SET `filename` = '$filename'
                                WHERE `id` = $docID";
                   $DB->query($query);
@@ -654,13 +651,17 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'itemtype'     => __CLASS__,
                      'items_id'     => $id,
                   ));
-
-                  $answer->update(array(
-                     'id'     => $answerID,
-                     'answer' => $docID,
-                  ), 0);
+                  $answer_value = $docID;
                }
             }
+
+            // Save the answer to the question
+            $answerID = $answer->add(array(
+               'plugin_formcreator_forms_answers_id'  => $id,
+               'plugin_formcreator_question_id'       => $question->getID(),
+               'answer'                               => $answer_value,
+            ), array(), 0);
+
          }
 
          $is_newFormAnswer = true;
