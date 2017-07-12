@@ -1401,8 +1401,8 @@ class PluginFormcreatorForm extends CommonDBTM
       $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
       $nb         = 0;
 
-      if (TableExists($form_table)
-          && TableExists($table_fp)
+      if ($DB->tableExists($form_table)
+          && $DB->tableExists($table_fp)
           && isset($_SESSION['glpiactiveprofile']['id'])) {
          $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
          $query      = "SELECT COUNT($form_table.id)

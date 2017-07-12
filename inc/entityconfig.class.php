@@ -80,11 +80,11 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       Dropdown::showFromArray('replace_helpdesk', $elements, array('value' => $this->fields['replace_helpdesk']));
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
-         echo "<font class='green'><br>";
+         echo '<div class="green">';
          echo $elements[$tid];
-         echo "</font>";
-         echo "</td></tr>";
+         echo '</div>';
       }
+      echo '</td></tr>';
 
       if ($canedit) {
          echo "<tr>";
