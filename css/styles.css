@@ -1363,7 +1363,7 @@ span.fc_list_icon {
    min-height: 1px;
 }
 
-.form_header ul {
+.form_header ul, .form_section ul {
    list-style-type: inherit;
    margin: inherit;
    padding: inherit;
