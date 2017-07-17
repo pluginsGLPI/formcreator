@@ -46,8 +46,9 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    protected $fields = [];
 
    /**
-    * @param unknown $fields
-    * @param array $data
+    *
+    * @param array $fields
+    * @param array $datas
     */
    public function __construct($fields, $data = []) {
       $this->fields           = $fields;
@@ -152,6 +153,10 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
    }
 
+   /**
+    * Get the value of the answer
+    * @return mixed
+    */
    public function getAnswer() {
       return $this->getValue();
    }
@@ -189,7 +194,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    /**
     * Is the field required ?
     *
-    * @return boolean
+    * @return boolean True if required, false if not
     */
    public function isRequired() {
       return $this->fields['required'];
