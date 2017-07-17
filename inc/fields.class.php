@@ -41,22 +41,6 @@ class PluginFormcreatorFields
 {
 
    /**
-    *
-    * @var array of PluginFormcreatorField objects
-    */
-   private $answerSet = [];
-
-   /**
-    *
-    * sets all the answers for the form
-    *
-    * @param array $answerSet answers for the form
-    */
-   public function setAnswerSet($answerSet) {
-
-   }
-
-   /**
     * Retrive all field types and file path
     * @return Array     field_type => File_path
     */
@@ -215,50 +199,14 @@ class PluginFormcreatorFields
          try {
             $conditionField = $fieldFactory->createField($conditionQuestion->getField('fieldtype'), $conditionQuestion->fields, $values[$condition['field']]);
          } catch (PluginFormcreatorUnknownFieldException $e) {
-            //return true;
+            return true;
          }
          switch ($condition['operator']) {
             case '!=' :
-               /*
-               if (empty($values[$condition['field']])) {
-                  $value = true;
-               } else {
-                  if (is_array($values[$condition['field']])) {
-                     $decodedConditionField = null;
-                  } else {
-                     $decodedConditionField = json_decode($values[$condition['field']]);
-                  }
-                  if (is_array($values[$condition['field']])) {
-                     $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                     $value = !in_array($condition['value'], $decodedConditionField);
-                  } else {
-                     $value = $condition['value'] != $values[$condition['field']];
-                  }
-               }
-               */
                $value = !$conditionField->equals($condition['value']);
                break;
 
             case '==' :
-               /*
-               if (empty($condition['value'])) {
-                  $value = false;
-               } else {
-                  if (is_array($values[$condition['field']])) {
-                     $decodedConditionField = null;
-                  } else {
-                     $decodedConditionField = json_decode($values[$condition['field']]);
-                  }
-                  if (is_array($values[$condition['field']])) {
-                     $value = in_array($condition['value'], $values[$condition['field']]);
-                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                     $value = in_array($condition['value'], $decodedConditionField);
-                  } else {
-                     $value = $condition['value'] == $values[$condition['field']];
-                  }
-               }
-               */
                $value = $conditionField->equals($condition['value']);
                break;
 
@@ -280,25 +228,6 @@ class PluginFormcreatorFields
                $value = !$conditionField->greaterThan($condition['value'])
                         || $conditionField->equals($condition['value']);
                break;
-
-            default:
-               /*
-               if (is_array($values[$condition['field']])) {
-                  $decodedConditionField = null;
-               } else {
-                  $decodedConditionField = json_decode($values[$condition['field']]);
-               }
-               if (is_array($values[$condition['field']])) {
-                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array('.implode(',', $values[$condition['field']]).');');
-               } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array(' .implode(',', $decodedConditionField).');');
-               } else {
-                  eval('$value = "'.$values[$condition['field']].'" '
-                    .$condition['operator'].' "'.$condition['value'].'";');
-               }
-               */
          }
 
          // Combine all condition with respect of operator precedence
