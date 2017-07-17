@@ -151,4 +151,38 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['dropdown'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $dropdown = new $itemtype();
+
+      if (!$dropdown->getFromDB($this->fields['answer'])) {
+         return false;
+      }
+      if (is_a($dropdown, 'CommonTreeDropdown')) {
+         $name = $dropdown->getField($dropdown->getCompleteNameField());
+      } else {
+         $name = $dropdown->getField($dropdown->getNameField());
+      }
+
+      return $name == $value;
+   }
+
+   public function greaterThan($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $dropdown = new $itemtype();
+
+      if (!$dropdown->getFromDB($this->fields['answer'])) {
+         return false;
+      }
+      if (is_a($dropdown, 'CommonTreeDropdown')) {
+         $name = $dropdown->getField($dropdown->getCompleteNameField());
+      } else {
+         $name = $dropdown->getField($dropdown->getNameField());
+      }
+
+      return $name > $value;
+   }
 }

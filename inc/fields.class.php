@@ -39,6 +39,23 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorFields
 {
+
+   /**
+    *
+    * @var array of PluginFormcreatorField objects
+    */
+   private $answerSet = [];
+
+   /**
+    *
+    * sets all the answers for the form
+    *
+    * @param array $answerSet answers for the form
+    */
+   public function setAnswerSet($answerSet) {
+
+   }
+
    /**
     * Retrive all field types and file path
     * @return Array     field_type => File_path
@@ -139,7 +156,7 @@ class PluginFormcreatorFields
        */
       static $evalQuestion = [];
       if (isset($evalQuestion[$id])) {
-         // TODO : how to deal a infinite loop while evaulating visibility of question ?
+         // TODO : how to deal a infinite loop while evaluating visibility of question ?
          return true;
       }
       $evalQuestion[$id]   = $id;
@@ -191,8 +208,18 @@ class PluginFormcreatorFields
             $values[$condition['field']] = '';
          }
 
+         // TODO: find the best behavior if the question does not exists
+         $conditionQuestion = new PluginFormcreatorQuestion();
+         $conditionQuestion->getFromDB($condition['field']);
+         $fieldFactory = new PluginFormcreatorFieldFactory();
+         try {
+            $conditionField = $fieldFactory->createField($conditionQuestion->getField('fieldtype'), $conditionQuestion->fields, $values[$condition['field']]);
+         } catch (PluginFormcreatorUnknownFieldException $e) {
+            //return true;
+         }
          switch ($condition['operator']) {
             case '!=' :
+               /*
                if (empty($values[$condition['field']])) {
                   $value = true;
                } else {
@@ -209,9 +236,12 @@ class PluginFormcreatorFields
                      $value = $condition['value'] != $values[$condition['field']];
                   }
                }
+               */
+               $value = !$conditionField->equals($condition['value']);
                break;
 
             case '==' :
+               /*
                if (empty($condition['value'])) {
                   $value = false;
                } else {
@@ -228,9 +258,31 @@ class PluginFormcreatorFields
                      $value = $condition['value'] == $values[$condition['field']];
                   }
                }
+               */
+               $value = $conditionField->equals($condition['value']);
+               break;
+
+            case '>':
+               $value = $conditionField->greaterThan($condition['value']);
+               break;
+
+            case '<':
+               $value = !$conditionField->greaterThan($condition['value'])
+                        && !$conditionField->equals($condition['value']);
+               break;
+
+            case '>=':
+               $value = $conditionField->greaterThan($condition['value'])
+                        || $conditionField->equals($condition['value']);
+               break;
+
+            case '<=':
+               $value = !$conditionField->greaterThan($condition['value'])
+                        || $conditionField->equals($condition['value']);
                break;
 
             default:
+               /*
                if (is_array($values[$condition['field']])) {
                   $decodedConditionField = null;
                } else {
@@ -246,6 +298,7 @@ class PluginFormcreatorFields
                   eval('$value = "'.$values[$condition['field']].'" '
                     .$condition['operator'].' "'.$condition['value'].'";');
                }
+               */
          }
 
          // Combine all condition with respect of operator precedence

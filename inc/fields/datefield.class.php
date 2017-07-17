@@ -109,4 +109,30 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['date'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      if (empty($this->fields['answer'])) {
+         $answer   = '0000-00-00 00:00';
+      } else {
+         $answer = $this->fields['answer'];
+      }
+
+      $answerDatetime = DateTime::createFromFormat("Y-m-d", $answer);
+      $compareDatetime = DateTime::createFromFormat("Y-m-d", $value);
+
+      return $answerDatetime == $compareDatetime;
+   }
+
+   public function greaterThan($value) {
+      if (empty($this->fields['answer'])) {
+         $answer   = '0000-00-00 00:00';
+      } else {
+         $answer = $this->fields['answer'];
+      }
+
+      $answerDatetime = DateTime::createFromFormat("Y-m-d", $answer);
+      $compareDatetime = DateTime::createFromFormat("Y-m-d", $value);
+
+      return $answerDatetime > $compareDatetime;
+   }
 }
