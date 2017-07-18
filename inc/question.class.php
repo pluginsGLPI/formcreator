@@ -473,13 +473,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input = $this->serializeDefaultValue($input);
       }
 
-      if (!empty($input)) {
-         if (!isset($input['show_logic']) || !isset($input['show_field'])
-               || !isset($input['show_condition']) || !isset($input['show_value'])) {
-                  $input['show_rule'] = 'always';
-         }
-      }
-
       return $input;
    }
 
