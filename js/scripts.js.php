@@ -10,6 +10,7 @@ var sortByName = false;
 var tiles = [];
 var helpdeskHome = 0;
 var serviceCatalogEnabled = false;
+var slinkyCategories;
 
 // === MENU ===
 var link = '';
@@ -19,7 +20,7 @@ link += "<?php echo _n('Form', 'Forms', 2, 'formcreator'); ?>";
 link += '</a>';
 link += '</li>';
 
-jQuery(document).ready(function($) {
+$(function() {
    var target = $('body');
    modalWindow = $("<div></div>").dialog({
       width: 980,
@@ -90,10 +91,10 @@ jQuery(document).ready(function($) {
       });
 
       $('#plugin_formcreator_wizard_categories #wizard_seeall').click(function () {
-         updateCategoriesView();
+         slinkyCategories.home();
          updateWizardFormsView(0);
-            $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
-            $(this).addClass('category_active');
+         $('#plugin_formcreator_wizard_categories .category_active').removeClass('category_active');
+         $(this).addClass('category_active');
       });
    }
 
@@ -183,7 +184,7 @@ function updateCategoriesView() {
       $('#plugin_formcreator_wizard_categories').append(html);
 
       // Setup slinky
-      $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
+      slinkyCategories = $('#plugin_formcreator_wizard_categories div:nth(2)').slinky({
          label: true
       });
       $('#plugin_formcreator_wizard_categories a.back').click(
