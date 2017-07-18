@@ -1238,7 +1238,7 @@ JS;
       while ($row = $DB->fetch_assoc($result)) {
          $question = new self();
          $question->getFromDB($row['id']);
-         $questions[] = $question;
+         $questions[$row['id']] = $question;
       }
 
       return $questions;
@@ -1250,7 +1250,7 @@ JS;
       foreach ($rows as $questionId => $row) {
             $question = new self();
             $question->getFromDB($questionId);
-            $questions[] = $question;
+            $questions[$questionId] = $question;
       }
 
       return $questions;

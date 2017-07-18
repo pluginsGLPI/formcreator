@@ -304,15 +304,13 @@ class PluginFormcreatorSection extends CommonDBChild
       foreach ($rows as $sectionId => $row) {
          $section = new self();
          $section->getFromDB($sectionId);
-         $sections[] = $section;
+         $sections[$sectionId] = $section;
       }
 
       return $sections;
    }
 
    public function showSubForm($ID) {
-      global $CFG_GLPI;
-
       if ($ID == 0) {
          $name          = '';
          $uuid          = '';

@@ -723,21 +723,18 @@ EOS;
       $answers_values = $formanswer->getAnswers($formanswer->getID());
 
       $content     = str_replace('##FULLFORM##', $fullform, $content);
-      $section     = new PluginFormcreatorSection();
-      $found       = $section->find('plugin_formcreator_forms_id = '.$formanswer->fields['plugin_formcreator_forms_id'],
-            '`order` ASC');
-      $tab_section = array();
-      foreach ($found as $section_item) {
-         $tab_section[] = $section_item['id'];
-      }
 
-      if (!empty($tab_section)) {
+      $section     = new PluginFormcreatorSection();
+      $sections    = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
+      $sectionsIdString = implode(', ', array_keys($sections));
+
+      if (count($sections) > 0) {
          $query_questions = "SELECT `questions`.*, `answers`.`answer`
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
                                ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
                                AND `plugin_formcreator_forms_answers_id` = ".$formanswer->getID()."
-                             WHERE `questions`.`plugin_formcreator_sections_id` IN (".implode(', ', $tab_section).")
+                             WHERE `questions`.`plugin_formcreator_sections_id` IN ($sectionsIdString)
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
          while ($question_line = $DB->fetch_assoc($res_questions)) {
