@@ -229,7 +229,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          return false;
       }
       if (is_array($this->fields['answer'])) {
-         $users = explode(',',  $this->fields['answer']);
+         $users = explode(',', $this->fields['answer']);
          foreach ($users as &$user) {
             $user = (int) $user;
          }
