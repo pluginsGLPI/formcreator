@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-06 23:46+0200\n"
-"PO-Revision-Date: 2017-06-06 22:10+0000\n"
+"PO-Revision-Date: 2017-07-24 10:32+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -290,7 +290,7 @@ msgstr "Annuler"
 
 #: inc/targetchange.class.php:373
 msgid "Change actors"
-msgstr "Acteurs du changement"
+msgstr "Acteurs du changment"
 
 #: inc/targetchange.class.php:472 inc/targetchange.class.php:580
 #: inc/targetchange.class.php:698 inc/target_actor.class.php:8
@@ -684,7 +684,7 @@ msgstr "Urgence à partir du gabarit ou Moyen"
 
 #: inc/targetbase.class.php:77
 msgid "Category from template or none"
-msgstr "Catégorie depuis un gabarit ou aucune"
+msgstr "Catégorie depuis le  gabarit ou aucune"
 
 #: inc/targetbase.class.php:326
 msgid "User type question"
@@ -696,7 +696,7 @@ msgstr "Question de type \"entité\""
 
 #: inc/targetbase.class.php:472
 msgid "Ticket category"
-msgstr "Catégorie de ticket"
+msgstr "Catégorie de  ticket"
 
 #: inc/targetbase.class.php:505 inc/form.class.php:531
 msgid "Category"
@@ -866,7 +866,7 @@ msgstr "Formcreator"
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Ticket cible"
-msgstr[1] "Tickets cible"
+msgstr[1] "Tickets cibles"
 
 #: inc/targetticket.class.php:72
 msgid "Ticket title"
