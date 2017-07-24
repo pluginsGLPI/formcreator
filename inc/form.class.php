@@ -821,11 +821,11 @@ class PluginFormcreatorForm extends CommonDBTM
    public function displayUserForm(CommonGLPI $item) {
       global $CFG_GLPI, $DB;
 
-      if (isset($_SESSION['formcreator']['datas'])) {
-         $datas = $_SESSION['formcreator']['datas'];
-         unset($_SESSION['formcreator']['datas']);
+      if (isset($_SESSION['formcreator']['data'])) {
+         $data = $_SESSION['formcreator']['data'];
+         unset($_SESSION['formcreator']['data']);
       } else {
-         $datas = null;
+         $data = null;
       }
 
       // Print css media
@@ -860,11 +860,11 @@ class PluginFormcreatorForm extends CommonDBTM
          // Display all fields of the section
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            if (isset($datas[$question_line['id']])) {
+            if (isset($data['formcreator_field_' . $question_line['id']])) {
                // multiple choice question are saved as JSON and needs to be decoded
                $answer = (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect')))
-                           ? json_decode($datas[$question_line['id']])
-                           : $datas[$question_line['id']];
+                       ? json_decode($data['formcreator_field_' . $question_line['id']])
+                       : $data['formcreator_field_' . $question_line['id']];
             } else {
                $answer = null;
             }
@@ -1131,7 +1131,7 @@ class PluginFormcreatorForm extends CommonDBTM
             }
          }
 
-         $_SESSION['formcreator']['datas'] = $data;
+         $_SESSION['formcreator']['data'] = $data;
          // Save form
       } else {
          $formanswer = new PluginFormcreatorForm_Answer();
