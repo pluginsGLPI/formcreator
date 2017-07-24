@@ -779,7 +779,7 @@ class PluginFormcreatorForm extends CommonDBTM
                 INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
                 INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                 WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`validator_id` = '$userId'
-                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdListString) AND fv.`itemtype` = 'Group' AND `fa`.`validator_id` IN ($groupIdList)
+                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdListString) AND fv.`itemtype` = 'Group' AND `fa`.`validator_id` IN ($groupIdListString)
                 )
                 AND f.is_deleted = 0
                 ORDER BY fa.`status` ASC, fa.`request_date` DESC
@@ -797,7 +797,17 @@ class PluginFormcreatorForm extends CommonDBTM
             }
             echo "</ul>";
             echo '<div align="center">';
-            echo '<a href="form_answer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]='.$_SESSION['glpiID'].'">';
+            $criteria = 'criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=' . $_SESSION['glpiID'];
+            $critIndex = 1;
+            foreach ($groupIdList as $groupId) {
+               $criteria.= "&criteria[$critIndex][link]=OR"
+                         . "&criteria[$critIndex][field]=7"
+                         . "&criteria[$critIndex][searchtype]=equals"
+                         . "&criteria[$critIndex][value]=$groupId";
+               $critIndex++;
+            }
+
+            echo '<a href="form_answer.php?' . $criteria . '">';
             echo __('All my forms (validator)', 'formcreator');
             echo '</a>';
             echo '</div>';
