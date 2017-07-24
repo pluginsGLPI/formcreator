@@ -14,4 +14,10 @@ class PluginFormcreatorCommon {
 
       return $enum;
    }
+
+   static function getGlpiVersion() {
+      return defined('GLPI_PREVER')
+             ? GLPI_PREVER
+             : GLPI_VERSION;
+   }
 }
