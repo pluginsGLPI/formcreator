@@ -40,7 +40,7 @@ abstract class PluginFormcreatorField implements Field
       } else {
          echo Html::scriptBlock('$(function() {
             formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-         . str_replace("\r\n", "\\r\\n", addslashes($value)) . '");
+               . str_replace("\r\n", "\\r\\n", addslashes(html_entity_decode($value))) . '");
          })');
       }
    }
