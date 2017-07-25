@@ -4,29 +4,48 @@ env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
     - PHPUNIT_ARGS="--verbose --debug"
-
-php:
-  - '5.6'
-  - '7.0'
-  - '7.1'
-  - '7.2'
-  - nightly
+    - DB="glpi-test"
 
 before_script:
-  - mysql -u root -e 'create database glpitest;'
+  - phpenv config-rm xdebug.ini || true
+  - mysql -u root -e 'create database $DB;'
   - git clone https://github.com/glpi-project/glpi --depth 1 -b 9.2/bugfixes ../glpi && cd ../glpi
   - mv ../formcreator plugins/formcreator
   - composer install --no-dev
-  - php tools/cliinstall.php --db=glpitest --user=root --tests
+  - php tools/cliinstall.php --db=$DB --user=root --tests --lang=en_US
   - cd plugins/formcreator
   - rm composer.lock
   - composer install
+  #install yarn globally
+  #- npm install -g yarn
+  #- yarn add phantomjs-prebuilt
+  #- yarn add casperjs
+  - npm install -g phantomjs-prebuilt
+  - npm install -g casperjs
+  - npm install -g slimerjs
+  - php -S localhost:8088 --docroot ../.. ../../tests/router.php &>/dev/null &
+  - mysql --version
+  - casperjs --version
 
 script:
-  - vendor/bin/phpunit $PHPUNIT_ARGS
-  - vendor/bin/robo --no-interaction code:cs
+  - vendor/bin/phpunit $PHPUNIT_ARGS --testsuite Install
+  #- vendor/bin/phpunit $PHPUNIT_ARGS --testsuite Unit
+  #- vendor/bin/phpunit $PHPUNIT_ARGS --testsuite Integration
+  #- mysql -u root $DB < save.sql
+  - casperjs test tests/0020_Functional/*Test.js --engine=phantomjs
+  #- mysql -u root $DB < save.sql
+  #- casperjs test tests/0020_Functional/*Test.js --engine=slimerjs
+  - vendor/bin/phpunit $PHPUNIT_ARGS --testsuite Uninstall
+  - if [[ "$CS" == "true" ]]; then vendor/bin/robo --no-interaction code:cs; fi
 
 matrix:
+  include:
+    - php: '5.6'
+    - php: '7.0'
+    - php: '7.1'
+    - php: '7.2'
+      env: CS=true
+    - php: nightly
   allow_failures:
     - php: nightly
 
