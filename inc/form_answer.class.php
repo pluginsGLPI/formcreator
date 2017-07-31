@@ -102,7 +102,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $tab['7'] = [
             'table'         => getTableForItemType('Group'),
-            'field'         => 'name',
+            'field'         => 'completename',
             'name'          => __('Validator group', 'formcreator'),
             'datatype'      => 'itemlink',
             'massiveaction' => false,

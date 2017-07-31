@@ -798,14 +798,10 @@ class PluginFormcreatorForm extends CommonDBTM
             echo "</ul>";
             echo '<div align="center">';
             $criteria = 'criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=' . $_SESSION['glpiID'];
-            $critIndex = 1;
-            foreach ($groupIdList as $groupId) {
-               $criteria.= "&criteria[$critIndex][link]=OR"
-                         . "&criteria[$critIndex][field]=7"
-                         . "&criteria[$critIndex][searchtype]=equals"
-                         . "&criteria[$critIndex][value]=$groupId";
-               $critIndex++;
-            }
+            $criteria.= "&criteria[1][link]=OR"
+                      . "&criteria[1][field]=7"
+                      . "&criteria[1][searchtype]=equals"
+                      . "&criteria[1][value]=mygroups";
 
             echo '<a href="form_answer.php?' . $criteria . '">';
             echo __('All my forms (validator)', 'formcreator');
