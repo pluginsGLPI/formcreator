@@ -115,7 +115,7 @@ if ($plugin->isActivated("formcreator")) {
          'option'
       );
 
-      if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), '9.2', 'ge')) {
          Html::requireJs('tinymce');
       }
 

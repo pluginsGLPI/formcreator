@@ -1367,6 +1367,18 @@ span.fc_list_icon {
    list-style-type: inherit;
    margin: inherit;
    padding: inherit;
+   padding-left: 40px;
+}
+
+.form_section ul {
+   list-style-type: inherit;
+   margin: inherit;
+   padding: inherit;
+   padding-left: 40px;
+}
+
+.form_header ul ul, .form_section ul ul, .form_header ol ul, .form_section ol ul {
+   list-style-type: circle;
 }
 
 /* ################--------------- Responsive  ---------------#################### */

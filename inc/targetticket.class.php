@@ -14,7 +14,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getItem_Supplier() {
-      return new Ticket_Supplier();
+      return new Supplier_Ticket();
    }
 
    protected function getItem_Item() {
@@ -26,7 +26,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    public function getItem_Actor() {
-      return new PluginFormcreatorTargetticket_Actor();
+      return new PluginFormcreatorTargetTicket_Actor();
    }
 
    /**
@@ -879,6 +879,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                       WHERE `glpi_profiles_users`.`users_id` = $requesters_id
                      ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
+            $data_entities = [];
             while ($entity = $DB->fetch_array($res_entities)) {
                $data_entities[] = $entity;
             }
@@ -1272,8 +1273,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @return integer the targetticket's id
     */
    public static function import($targetitems_id = 0, $target_data = array()) {
-      global $DB;
-
       $item = new self;
 
       $target_data['_skip_checks'] = true;
@@ -1328,8 +1327,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export() {
-      global $DB;
-
       if (!$this->getID()) {
          return false;
       }

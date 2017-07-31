@@ -45,7 +45,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
    public function getAnswer() {
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
-      return in_array(Html::entities_deep($value), $values) ? $value : $this->fields['default_values'];
+      return in_array($value, $values) ? $value : $this->fields['default_values'];
    }
 
    public static function getName() {

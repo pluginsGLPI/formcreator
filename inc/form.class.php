@@ -449,6 +449,9 @@ class PluginFormcreatorForm extends CommonDBTM
          case "PluginFormcreatorForm":
             return __('Preview');
             break;
+         case 'Central':
+            return _n('Form', 'Forms', 2, 'formcreator');
+            break;
       }
       return '';
    }
@@ -476,6 +479,10 @@ class PluginFormcreatorForm extends CommonDBTM
             echo '<div style="text-align: left">';
             $item->displayUserForm($item);
             echo '</div>';
+            break;
+         case 'central.php':
+            $form = new static();
+            $form->showForCentral();
             break;
       }
    }
@@ -776,8 +783,8 @@ class PluginFormcreatorForm extends CommonDBTM
                 FROM glpi_plugin_formcreator_forms f
                 INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
                 INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User'
-                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdList) AND fv.`itemtype` = 'Group'
+                WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`validator_id` = '$userId'
+                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdList) AND fv.`itemtype` = 'Group' AND `fa`.`validator_id` IN ($groupIdList)
                 )
                 AND f.is_deleted = 0
                 ORDER BY fa.`status` ASC, fa.`request_date` DESC
@@ -822,7 +829,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Print css media
-      echo Html::css(FORMCREATOR_ROOTDOC."/css/print.css", array('media' => 'print'));
+      echo Html::css(FORMCREATOR_ROOTDOC."/css/print_form.css", array('media' => 'print'));
 
       // Display form
       echo "<form name='formcreator_form'".$item->getID()."' method='post' role='form' enctype='multipart/form-data'
@@ -864,7 +871,9 @@ class PluginFormcreatorForm extends CommonDBTM
             PluginFormcreatorFields::showField($question_line, $answer);
          }
       }
-      echo '<script type="text/javascript">formcreatorShowFields();</script>';
+      echo Html::scriptBlock('$(function() {
+               formcreatorShowFields();
+            })');
 
       // Show validator selector
       if ($item->fields['validation_required'] > 0) {
@@ -1084,7 +1093,6 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
          $className = 'PluginFormcreator' . ucfirst($fields['fieldtype']) . 'Field';
-         $filePath  = dirname(__FILE__) . '/fields/' . $fields['fieldtype'] . '-field.class.php';
 
          if (class_exists($className)) {
             $obj = new $className($fields, $datas);

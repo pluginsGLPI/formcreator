@@ -10,12 +10,13 @@
 # Paulo Gobbato <paulo.paag@gmail.com>, 2017
 # Pedro de Oliveira Lira <pedrolira@live.com>, 2015
 # Rafael Viana <rafaelvian@gmail.com>, 2015
+# Thierry Bugier Pineau <tbugier@teclib.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-06 23:46+0200\n"
-"PO-Revision-Date: 2017-06-06 21:59+0000\n"
+"PO-Revision-Date: 2017-07-24 10:25+0000\n"
 "Last-Translator: Thierry Bugier Pineau <tbugier@teclib.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -173,7 +174,7 @@ msgstr "rejeitado"
 
 #: inc/form_answer.class.php:329 inc/form.class.php:834
 msgid "Print this form"
-msgstr ""
+msgstr "Imprimir este formulário"
 
 #: inc/form_answer.class.php:346
 msgid "Form accepted by validator."
@@ -252,16 +253,16 @@ msgstr "Por favor, ative o formulário para ver o link"
 #: inc/targetchange.class.php:5 inc/targetchange.class.php:193
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Mudança de alvo"
+msgstr[1] "Mundaças de alvo"
 
 #: inc/targetchange.class.php:10
 msgid "Medium"
-msgstr ""
+msgstr "Médio"
 
 #: inc/targetchange.class.php:11 inc/targetbase.class.php:70
 msgid "Specific urgency"
-msgstr ""
+msgstr "Urgência específica"
 
 #: inc/targetchange.class.php:12 inc/targetchange.class.php:20
 #: inc/targetbase.class.php:71 inc/targetbase.class.php:79
@@ -270,11 +271,11 @@ msgstr "Igual a resposta da pergunta"
 
 #: inc/targetchange.class.php:18
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #: inc/targetchange.class.php:19 inc/targetbase.class.php:78
 msgid "Specific category"
-msgstr ""
+msgstr "Categoria específica"
 
 #: inc/targetchange.class.php:181 inc/targetticket.class.php:57
 msgid "Edit a destination"
@@ -282,7 +283,7 @@ msgstr "Edite um destino"
 
 #: inc/targetchange.class.php:196
 msgid "Change title"
-msgstr ""
+msgstr "Mudar título"
 
 #: inc/targetchange.class.php:290 inc/targetticket.class.php:135
 msgid "Cancel"
@@ -290,7 +291,7 @@ msgstr "Cancelar"
 
 #: inc/targetchange.class.php:373
 msgid "Change actors"
-msgstr ""
+msgstr "Alterar atores"
 
 #: inc/targetchange.class.php:472 inc/targetchange.class.php:580
 #: inc/targetchange.class.php:698 inc/target_actor.class.php:8
@@ -684,7 +685,7 @@ msgstr "Urgência do modelo ou média"
 
 #: inc/targetbase.class.php:77
 msgid "Category from template or none"
-msgstr ""
+msgstr "Categoria do template ou nenhum"
 
 #: inc/targetbase.class.php:326
 msgid "User type question"
@@ -696,7 +697,7 @@ msgstr "Pergunta de tipo entidade"
 
 #: inc/targetbase.class.php:472
 msgid "Ticket category"
-msgstr ""
+msgstr "Categoria do chamado"
 
 #: inc/targetbase.class.php:505 inc/form.class.php:531
 msgid "Category"
@@ -706,7 +707,7 @@ msgstr[1] "Categorias"
 
 #: inc/targetbase.class.php:573
 msgid "Urgency "
-msgstr ""
+msgstr "Urgência"
 
 #: inc/targetbase.class.php:613
 msgid "Ticket tags"
@@ -971,7 +972,7 @@ msgstr "Este e-mail não é válido:"
 
 #: inc/fields/datetimefield.class.php:57
 msgid "Datetime"
-msgstr "Data"
+msgstr "Data e Hora"
 
 #: inc/fields/ldapselectfield.class.php:70
 msgid "LDAP Select"

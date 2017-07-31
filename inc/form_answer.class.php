@@ -106,7 +106,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $questions = $question->getQuestionsFromForm($_SESSION['formcreator']['form_search_answers']);
 
          foreach ($questions as $current_question) {
-            $questions_id = $question->getID();
+            $questions_id = $current_question->getID();
             $tab[$optindex] = [
                'table'         => PluginFormcreatorAnswer::getTable(),
                'field'         => 'answer',
@@ -245,15 +245,15 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       // prepare params for search
       $item          = new PluginFormcreatorForm_Answer();
-      $soptions      = $item->getSearchOptions();
+      $searchOptions      = $item->getSearchOptions();
       $filteredOptions = [];
-      foreach ($options as $key => $value) {
+      foreach ($searchOptions as $key => $value) {
          if (is_numeric($key)) {
             $filteredOptions[$key] = $value;
          }
       }
-      $soptions = $filteredOptions;
-      $sopt_keys     = array_keys($soptions);
+      $searchOptions = $filteredOptions;
+      $sopt_keys     = array_keys($searchOptions);
 
       $forcedisplay  = array_combine($sopt_keys, $sopt_keys);
 
@@ -310,7 +310,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $options = array('canedit' => false);
 
       // Print css media
-      echo Html::css(FORMCREATOR_ROOTDOC."/css/print.css", array('media' => 'print'));
+      echo Html::css(FORMCREATOR_ROOTDOC."/css/print_form_answer.css", array('media' => 'print'));
 
       // start form
       echo "<div class='form_answer'>";
@@ -392,10 +392,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
          }
       }
-
-      echo '<script type="text/javascript">
+      echo Html::scriptBlock('$(function() {
          formcreatorShowFields();
-      </script>';
+      })');
 
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
