@@ -5,7 +5,7 @@ env:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
     - PHPUNIT_ARGS="--verbose --debug"
     - DB="glpi-test"
-    - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
+    - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0
 
 addons:
   firefox: "latest-esr"
