@@ -5,8 +5,13 @@ env:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
     - PHPUNIT_ARGS="--verbose --debug"
     - DB="glpi-test"
+    - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
+
 addons:
   firefox: "latest-esr"
+
+before_install:
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
   
 before_script:
   - phpenv config-rm xdebug.ini || true
@@ -18,10 +23,6 @@ before_script:
   - cd plugins/formcreator
   - rm composer.lock
   - composer install
-  #install yarn globally
-  #- npm install -g yarn
-  #- yarn add phantomjs-prebuilt
-  #- yarn add casperjs
   - npm install -g phantomjs-prebuilt
   - npm install -g casperjs
   - npm install -g slimerjs
