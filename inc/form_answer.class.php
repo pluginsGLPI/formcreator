@@ -171,21 +171,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       switch ($field) {
          case 'status' :
-            $output  = '<select name="' . $name . '">';
-            $output .=  '<option value="waiting" '
-                           . (($values[$field] == 'waiting') ? ' selected ' : '') . '>'
-                        . __('waiting', 'formcreator')
-                        . '</option>';
-            $output .=  '<option value="accepted" '
-                           . (($values[$field] == 'accepted') ? ' selected ' : '') . '>'
-                        . __('accepted', 'formcreator')
-                        . '</option>';
-            $output .=  '<option value="refused" '
-                           . (($values[$field] == 'refused') ? ' selected ' : '') . '>'
-                        . __('refused', 'formcreator')
-                        . '</option>';
-            $output .=  '</select>';
-
+            $elements = [
+               'waiting'   => __('waiting', 'formcreator'),
+               'accepted'  => __('accepted', 'formcreator'),
+               'refused'   => __('refused', 'formcreator'),
+            ];
+            $output = Dropdown::showFromArray($name, $elements, ['display' => false, 'value' => $values[$field]]);
             return $output;
             break;
       }
