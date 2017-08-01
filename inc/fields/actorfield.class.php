@@ -226,7 +226,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public function equals($value) {
       $user = new User();
       if (!$user->getFromDBByName($value)) {
-         return false;
+         throw new PluginFormcreatorComparisonException(__('User not found for comparison'));
       }
       if (is_array($this->fields['answer'])) {
          $users = explode(',', $this->fields['answer']);

@@ -203,30 +203,54 @@ class PluginFormcreatorFields
          }
          switch ($condition['operator']) {
             case '!=' :
-               $value = !$conditionField->equals($condition['value']);
+               try {
+                  $value = !$conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
                break;
 
             case '==' :
-               $value = $conditionField->equals($condition['value']);
+               try {
+                  $value = $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
                break;
 
             case '>':
-               $value = $conditionField->greaterThan($condition['value']);
+               try {
+                  $value = $conditionField->greaterThan($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
                break;
 
             case '<':
-               $value = !$conditionField->greaterThan($condition['value'])
-                        && !$conditionField->equals($condition['value']);
+               try {
+                  $value = !$conditionField->greaterThan($condition['value'])
+                           && !$conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
                break;
 
             case '>=':
-               $value = $conditionField->greaterThan($condition['value'])
-                        || $conditionField->equals($condition['value']);
+               try {
+                  $value = $conditionField->greaterThan($condition['value'])
+                           || $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
                break;
 
             case '<=':
-               $value = !$conditionField->greaterThan($condition['value'])
-                        || $conditionField->equals($condition['value']);
+               try {
+                  $value = !$conditionField->greaterThan($condition['value'])
+                            || $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
                break;
          }
 
