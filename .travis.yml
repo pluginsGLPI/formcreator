@@ -8,7 +8,7 @@ php:
   - nightly
 
 before_script:
-  - git clone https://github.com/glpi-project/glpi --depth 1 -b 9.1.2 ../glpi && cd ../glpi
+  - git clone https://github.com/glpi-project/glpi --depth 1 -b master ../glpi && cd ../glpi
   - mv ../formcreator plugins/formcreator
   - composer install --no-dev
   - php tools/cliinstall.php --db=glpi-test --user=travis --tests
