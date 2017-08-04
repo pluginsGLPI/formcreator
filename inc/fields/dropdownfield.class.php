@@ -16,6 +16,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             if ($itemtype == "User") {
                $dparams['right'] = 'all';
+            } else if ($itemtype == "ITILCategory") {
+               if (isset ($_SESSION['glpiactiveprofile']['interface'])
+                   && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+                  $dparams['condition'] = "`is_helpdeskvisible` = '1'";
+               }
             }
 
             $itemtype::dropdown($dparams);
