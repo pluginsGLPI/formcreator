@@ -1,8 +1,7 @@
 <?php
 require_once(realpath(dirname(__FILE__ ) . '/../../../inc/includes.php'));
-require_once('field.interface.php');
 
-abstract class PluginFormcreatorField implements Field
+abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 {
    const IS_MULTIPLE = false;
 
