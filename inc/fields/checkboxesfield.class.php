@@ -99,6 +99,24 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return __('Checkboxes', 'formcreator');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['values'])) {
+         if (empty($input['values'])) {
+            Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+            return [];
+         } else {
+            $input['values'] = addslashes($input['values']);
+         }
+      }
+      if (isset($input['default_values'])) {
+         $input['default_values'] = addslashes($input['default_values']);
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
       return array(
          'required'       => 1,

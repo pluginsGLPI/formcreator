@@ -70,6 +70,54 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return __('LDAP Select', 'formcreator');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      // Fields are differents for dropdown lists, so we need to replace these values into the good ones
+      if (isset($input['ldap_auth'])
+          && !empty($input['ldap_auth'])) {
+
+         $config_ldap = new AuthLDAP();
+         $config_ldap->getFromDB($input['ldap_auth']);
+
+         if (!empty($input['ldap_attribute'])) {
+            $ldap_dropdown = new RuleRightParameter();
+            $ldap_dropdown->getFromDB($input['ldap_attribute']);
+            $attribute     = array($ldap_dropdown->fields['value']);
+         } else {
+            $attribute     = array();
+         }
+
+         // Set specific error handler to catch LDAP errors
+         if (!function_exists('warning_handler')) {
+            function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+               if (0 === error_reporting()) {
+                  return false;
+               }
+               throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+            }
+         }
+         set_error_handler("warning_handler", E_WARNING);
+
+         try {
+            $ds            = $config_ldap->connect();
+            ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_control_paged_result($ds, 1);
+            $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
+            $entries       = ldap_get_entries($ds, $sn);
+         } catch (Exception $e) {
+            Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
+         }
+
+         restore_error_handler();
+
+         $input['values'] = json_encode(array(
+            'ldap_auth'      => $input['ldap_auth'],
+            'ldap_filter'    => $input['ldap_filter'],
+            'ldap_attribute' => strtolower($input['ldap_attribute']),
+         ));
+      }
+      return $input;
+   }
+
    public function getAnswer() {
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
