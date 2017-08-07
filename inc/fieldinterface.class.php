@@ -1,6 +1,6 @@
 <?php
 
-interface Field
+interface PluginFormcreatorFieldInterface
 {
    public static function getName();
    public static function getPrefs();
