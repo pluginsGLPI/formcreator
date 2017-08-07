@@ -634,7 +634,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       Dropdown::showFromArray('dropdown_values', $optgroup, array(
             'value'     => $this->fields['values'],
             'rand'      => $rand,
-            'on_change' => 'change_dropdown();',
+            'on_change' => 'change_dropdown(); changeQuestionType();',
       ));
       echo '</div>';
       echo '<div id="glpi_objects_field">';
@@ -715,6 +715,29 @@ class PluginFormcreatorQuestion extends CommonDBChild
             'rand'  => $rand,
       ));
       echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1" id="cat_restrict_tr">';
+      echo '<td>';
+      echo '<label for="dropdown_values_restrict'.$rand.'" id="label_values_restrict">';
+      echo __('Show request categories');
+      echo '</label>';
+      echo '</td>';
+      echo '<td>';
+      dropdown::showYesNo('show_request_categories', $this->fields['show_empty'], -1, array(
+         'rand'  => $rand,
+      ));
+      echo '</td>';
+      echo '<td>';
+      echo '<label for="dropdown_values_restrict'.$rand.'" id="label_values_restrict">';
+      echo __('Show incident categories');
+      echo '</label>';
+      echo '</td>';
+      echo '<td>';
+      dropdown::showYesNo('show_incident_categories', $this->fields['show_empty'], -1, array(
+         'rand'  => $rand,
+      ));
       echo '</td>';
       echo '</tr>';
 
@@ -923,7 +946,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
       }
       changeQuestionType();
-
       function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
          if(required) {
             document.getElementById('dropdown_required$rand').style.display   = 'inline';
@@ -956,9 +978,17 @@ class PluginFormcreatorQuestion extends CommonDBChild
          if(dropdown_value) {
             document.getElementById('dropdown_values_field').style.display = 'inline';
             document.getElementById('label_dropdown_values').style.display                   = 'inline';
+            dd = document.getElementById('dropdown_dropdown_values$rand');
+            ddvalue = dd.options[dd.selectedIndex].value;
+            if(ddvalue == 'ITILCategory') {
+               document.getElementById('cat_restrict_tr').style.display                      = 'table-row';
+            } else {
+               document.getElementById('cat_restrict_tr').style.display                      = 'none';
+            }
          } else {
             document.getElementById('dropdown_values_field').style.display = 'none';
             document.getElementById('label_dropdown_values').style.display                   = 'none';
+            document.getElementById('cat_restrict_tr').style.display                         = 'none';
          }
          if(glpi_object) {
             document.getElementById('glpi_objects_field').style.display = 'inline';
