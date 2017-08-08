@@ -102,6 +102,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $this->showUrgencySettings($rand);
 
       // -------------------------------------------------------------------------------------------
+      // Location selection
+      // -------------------------------------------------------------------------------------------
+      $this->showLocationSettings($rand);
+      // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($rand);
@@ -707,6 +711,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                $input['category_question'] = '0';
          }
 
+         switch ($input['location_rule']) {
+            case 'answer':
+               $input['location_question'] = $input['_location_question'];
+               break;
+            case 'specific':
+               $input['location_question'] = $input['_location_specific'];
+               break;
+            default:
+               $input['location_question'] = '0';
+         }
+
          $plugin = new Plugin();
          if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
             $input['tag_questions'] = (!empty($input['_tag_questions']))
@@ -968,6 +983,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $datas = $this->setTargetCategory($datas, $formanswer);
 
+      $datas = $this->setTargetLocation($datas, $formanswer);
+
       $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
       $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
 
@@ -1108,6 +1125,30 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return $data;
    }
 
+   protected function setTargetLocation($data, $formanswer) {
+      switch ($this->fields['location_rule']) {
+         case 'answer':
+            $answer  = new PluginFormcreatorAnswer();
+            $formAnswerId = $formanswer->fields['id'];
+            $locationQuestion = $this->fields['location_question'];
+            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+                  AND `plugin_formcreator_question_id` = '$locationQuestion'");
+            $location = array_shift($found);
+            $location = $location['answer'];
+            break;
+         case 'specific':
+            $location = $this->fields['location_question'];
+            break;
+         default:
+            $location = null;
+      }
+      if (!is_null($location)) {
+         $data['locations_id'] = $location;
+      }
+
+      return $data;
+   }
+
    private static function getDeleteImage($id) {
       global $CFG_GLPI;
 
@@ -1228,5 +1269,4 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       return $target_data;
    }
-
 }

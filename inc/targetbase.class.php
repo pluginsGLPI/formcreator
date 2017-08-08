@@ -80,6 +80,15 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       );
    }
 
+   static function getEnumLocationRule() {
+      return array(
+         'none'      => __('Location from template or none', 'formcreator'),
+         'specific'  => __('Specific location', 'formcreator'),
+         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      );
+   }
+
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -551,7 +560,7 @@ EOS;
       ));
       $script = <<<EOS
          function change_urgency() {
-            $('#urgency_specific_question').hide();
+            $('#urgency_specific_title').hide();
             $('#urgency_specific_value').hide();
             $('#urgency_question_title').hide();
             $('#urgency_question_value').hide();
@@ -763,5 +772,77 @@ EOS;
       }
 
       return $content;
+   }
+
+
+   protected function showLocationSettings($rand) {
+      global $DB;
+
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Location') . '</td>';
+      echo '<td width="45%">';
+      Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), array(
+         'value'                 => $this->fields['location_rule'],
+         'on_change'             => 'change_location()',
+         'rand'                  => $rand
+      ));
+      $script = <<<EOS
+         function change_location() {
+            $('#location_specific_title').hide();
+            $('#location_specific_value').hide();
+            $('#location_question_title').hide();
+            $('#location_question_value').hide();
+
+            switch($('#dropdown_location_rule$rand').val()) {
+               case 'answer' :
+                  $('#location_question_title').show();
+                  $('#location_question_value').show();
+                  break;
+               case 'specific':
+                  $('#location_specific_title').show();
+                  $('#location_specific_value').show();
+                  break;
+            }
+         }
+         change_location();
+EOS;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="location_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="location_specific_title" style="display: none">' . __('Location ', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="location_specific_value" style="display: none">';
+      Location::dropdown(array(
+         'name' => '_location_specific',
+         'value' => $this->fields["location_question"],
+      ));
+      echo '</div>';
+      echo '<div id="location_question_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                AND q.fieldtype = 'dropdown'";
+      $result2 = $DB->query($query2);
+      $users_questions = array();
+      while ($question = $DB->fetch_array($result2)) {
+         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
+         if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'Location') {
+            $users_questions[$question['id']] = $question['name'];
+         }
+      }
+      Dropdown::showFromArray('_location_question', $users_questions, array(
+         'value' => $this->fields['location_question'],
+      ));
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
    }
 }
