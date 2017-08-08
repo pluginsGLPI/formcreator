@@ -261,84 +261,84 @@ function plugin_formcreator_updateForm_2_5(Migration $migration) {
 
    // Migration from previous version
    if (FieldExists('glpi_plugin_formcreator_forms', 'cat', false)
-         || !FieldExists('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id', false)) {
-            $migration->addField('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id',
-                  'integer', array('value' => '0'));
-         }
+       || !FieldExists('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id', false)) {
+      $migration->addField('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id',
+                           'integer', array('value' => '0'));
+   }
 
-         // Migration from previous version
-         if (!FieldExists('glpi_plugin_formcreator_forms', 'validation_required', false)) {
-            $migration->addField('glpi_plugin_formcreator_forms', 'validation_required', 'bool', array('value' => '0'));
-         }
+   // Migration from previous version
+   if (!FieldExists('glpi_plugin_formcreator_forms', 'validation_required', false)) {
+      $migration->addField('glpi_plugin_formcreator_forms', 'validation_required', 'bool', array('value' => '0'));
+   }
 
-         // Migration from previous version
-         if (!FieldExists('glpi_plugin_formcreator_forms', 'requesttype', false)) {
-            $migration->addField('glpi_plugin_formcreator_forms', 'access_rights', 'bool', array('value' => '1'));
-            $migration->addField('glpi_plugin_formcreator_forms', 'requesttype', 'integer', array('value' => '0'));
-            $migration->addField('glpi_plugin_formcreator_forms', 'description', 'string');
-            $migration->addField('glpi_plugin_formcreator_forms', 'helpdesk_home', 'bool', array('value' => '0'));
-            $migration->addField('glpi_plugin_formcreator_forms', 'is_deleted', 'bool', array('value' => '0'));
-         }
-         $migration->migrationOneTable('glpi_plugin_formcreator_forms');
+   // Migration from previous version
+   if (!FieldExists('glpi_plugin_formcreator_forms', 'requesttype', false)) {
+      $migration->addField('glpi_plugin_formcreator_forms', 'access_rights', 'bool', array('value' => '1'));
+      $migration->addField('glpi_plugin_formcreator_forms', 'requesttype', 'integer', array('value' => '0'));
+      $migration->addField('glpi_plugin_formcreator_forms', 'description', 'string');
+      $migration->addField('glpi_plugin_formcreator_forms', 'helpdesk_home', 'bool', array('value' => '0'));
+      $migration->addField('glpi_plugin_formcreator_forms', 'is_deleted', 'bool', array('value' => '0'));
+   }
+   $migration->migrationOneTable('glpi_plugin_formcreator_forms');
 
-         /**
-          * Migration of special chars from previous versions
-          *
-          * @since 0.85-1.2.3
-          */
-         $query  = "SELECT `id`, `name`, `description`, `content` FROM `glpi_plugin_formcreator_forms`";
-         $result = $DB->query($query);
-         while ($line = $DB->fetch_array($result)) {
-            $query_update = "UPDATE `glpi_plugin_formcreator_forms` SET
-                       `name`        = '" . plugin_formcreator_encode($line['name']) . "',
-                       `description` = '" . plugin_formcreator_encode($line['description']) . "',
-                       `content`     = '" . plugin_formcreator_encode($line['content']) . "'
-                       WHERE `id` = " . (int) $line['id'];
-            $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
-         }
+   /**
+    * Migration of special chars from previous versions
+    *
+    * @since 0.85-1.2.3
+    */
+   $query  = "SELECT `id`, `name`, `description`, `content` FROM `glpi_plugin_formcreator_forms`";
+   $result = $DB->query($query);
+   while ($line = $DB->fetch_array($result)) {
+      $query_update = "UPDATE `glpi_plugin_formcreator_forms` SET
+                 `name`        = '" . plugin_formcreator_encode($line['name']) . "',
+                 `description` = '" . plugin_formcreator_encode($line['description']) . "',
+                 `content`     = '" . plugin_formcreator_encode($line['content']) . "'
+                 WHERE `id` = " . (int) $line['id'];
+      $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
+   }
 
-         /**
-          * Add natural language search
-          * Add form usage counter
-          *
-          * @since 0.90-1.4
-          */
-         // An error may occur if the Search index does not exists
-         // This is not critical as we need to (re) create it
-         If (isIndex('glpi_plugin_formcreator_forms', 'Search')) {
-            $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`";
-            $DB->query($query);
-         }
+   /**
+    * Add natural language search
+    * Add form usage counter
+    *
+    * @since 0.90-1.4
+    */
+   // An error may occur if the Search index does not exists
+   // This is not critical as we need to (re) create it
+   If (isIndex('glpi_plugin_formcreator_forms', 'Search')) {
+      $query = "ALTER TABLE `glpi_plugin_formcreator_forms` DROP INDEX `Search`";
+      $DB->query($query);
+   }
 
-         // Re-add FULLTEXT index
-         $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   // Re-add FULLTEXT index
+   $query = "ALTER TABLE `glpi_plugin_formcreator_forms` ADD FULLTEXT INDEX `Search` (`name`, `description`)";
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
-         $migration->addField('glpi_plugin_formcreator_forms', 'usage_count', 'integer', array(
-            'after' => 'validation_required',
-            'value' => '0'
-         ));
-         $migration->addField('glpi_plugin_formcreator_forms', 'is_default', 'bool', array(
-            'after' => 'usage_count',
-            'value' => '0'
-         ));
+   $migration->addField('glpi_plugin_formcreator_forms', 'usage_count', 'integer', array(
+      'after' => 'validation_required',
+      'value' => '0'
+   ));
+   $migration->addField('glpi_plugin_formcreator_forms', 'is_default', 'bool', array(
+      'after' => 'usage_count',
+      'value' => '0'
+   ));
 
-         // add uuid to forms
-         if (!FieldExists('glpi_plugin_formcreator_forms', 'uuid', false)) {
-            $migration->addField('glpi_plugin_formcreator_forms', 'uuid', 'string', array('after' => 'is_default'));
-         }
+   // add uuid to forms
+   if (!FieldExists('glpi_plugin_formcreator_forms', 'uuid', false)) {
+      $migration->addField('glpi_plugin_formcreator_forms', 'uuid', 'string', array('after' => 'is_default'));
+   }
 
-         $migration->addKey('glpi_plugin_formcreator_forms', 'entities_id');
-         $migration->addKey('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id');
-         $migration->migrationOneTable('glpi_plugin_formcreator_forms');
+   $migration->addKey('glpi_plugin_formcreator_forms', 'entities_id');
+   $migration->addKey('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id');
+   $migration->migrationOneTable('glpi_plugin_formcreator_forms');
 
-         // fill missing uuid (force update of forms, see PluginFormcreatorForm::prepareInputForUpdate)
-         $obj = new PluginFormcreatorForm();
-         $all_forms = $obj->find("uuid IS NULL");
-         foreach ($all_forms as $forms_id => $form) {
-            $obj->update(array('id' => $forms_id));
-         }
-         unset($obj);
+   // fill missing uuid (force update of forms, see PluginFormcreatorForm::prepareInputForUpdate)
+   $obj = new PluginFormcreatorForm();
+   $all_forms = $obj->find("uuid IS NULL");
+   foreach ($all_forms as $forms_id => $form) {
+      $obj->update(array('id' => $forms_id));
+   }
+   unset($obj);
 }
 
 function plugin_formcreator_updateHeader_2_5(Migration $migration) {
@@ -383,7 +383,7 @@ function plugin_formcreator_updateIssue_2_5(Migration $migration) {
             'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
             'mode'      => CronTask::MODE_EXTERNAL
          )
-         );
+   );
    $task = new CronTask();
    PluginFormcreatorIssue::cronSyncIssues($task);
 }
