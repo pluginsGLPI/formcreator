@@ -326,7 +326,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
+         if ($input['fieldtype'] != 'dropdown'
+             || $input['fieldtype'] != 'dropdown' && $key != 'values') {
+            $input[$key] = plugin_formcreator_encode($value);
+         }
       }
 
       // generate a uniq id
