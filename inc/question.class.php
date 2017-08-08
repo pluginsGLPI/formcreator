@@ -269,10 +269,23 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return [];
       }
 
-      $fieldTypes = PluginFormcreatorFields::getTypes();
-      if (!in_array($input['fieldtype'], array_keys($fieldTypes))) {
-         Session::addMessageAfterRedirect(__('Unknown field type', 'formcreator'), false, ERROR);
-         return [];
+      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
+      $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
+      if (in_array($input['fieldtype'], $itemtypes)) {
+         if (isset($input['values'])) {
+            if (empty($input['values'])) {
+               Session::addMessageAfterRedirect(
+                     __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                     false,
+                     ERROR);
+               return array();
+            } else {
+               $input['values'] = addslashes($input['values']);
+            }
+         }
+         if (isset($input['default_values'])) {
+            $input['default_values'] = addslashes($input['default_values']);
+         }
       }
 
       $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
@@ -367,7 +380,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
+         if ($input['fieldtype'] != 'dropdown'
+             || $input['fieldtype'] != 'dropdown' && $key != 'values') {
+            $input[$key] = plugin_formcreator_encode($value);
+         }
       }
 
       if (!empty($input)
@@ -630,9 +646,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<td>';
       echo '<div id="dropdown_values_field">';
       $optgroup = Dropdown::getStandardDropdownItemTypes();
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
       array_unshift($optgroup, '---');
       Dropdown::showFromArray('dropdown_values', $optgroup, array(
-            'value'     => $this->fields['values'],
+            'value'     => $decodedValues['itemtype'],
             'rand'      => $rand,
             'on_change' => 'change_dropdown(); changeQuestionType();',
       ));
@@ -667,7 +684,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                   'Group'              => _n("Group", "Groups", 2),
                   'Entity'             => _n("Entity", "Entities", 2),
                   'Profile'            => _n("Profile", "Profiles", 2))
-      );;
+      );
       array_unshift($optgroup, '---');
       Dropdown::showFromArray('glpi_objects', $optgroup, array(
             'value'     => $this->fields['values'],
@@ -720,24 +737,34 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<tr class="line1" id="cat_restrict_tr">';
       echo '<td>';
-      echo '<label for="dropdown_values_restrict'.$rand.'" id="label_values_restrict">';
-      echo __('Show request categories');
+      echo '<label for="dropdown_show_ticket_categories'.$rand.'" id="label_show_ticket_categories">';
+      echo __('Show ticket categories', 'formcreator');
       echo '</label>';
       echo '</td>';
       echo '<td>';
-      dropdown::showYesNo('show_request_categories', $this->fields['show_empty'], -1, array(
+      $ticketCategoriesOptions = [
+         'request'   => __('Request categories', 'formcreator'),
+         'incident'  => __('Incident categories', 'formcreator'),
+         'both'      => __('Both', 'formcreator'),
+      ];
+      dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
          'rand'  => $rand,
-      ));
+         'value' => $decodedValues['show_ticket_categories']
+      ]);
       echo '</td>';
       echo '<td>';
-      echo '<label for="dropdown_values_restrict'.$rand.'" id="label_values_restrict">';
-      echo __('Show incident categories');
+      echo '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
+      echo __('Limit ticket categories depth', 'formcreator');
       echo '</label>';
       echo '</td>';
       echo '<td>';
-      dropdown::showYesNo('show_incident_categories', $this->fields['show_empty'], -1, array(
-         'rand'  => $rand,
-      ));
+      dropdown::showNumber('show_ticket_categories_depth', [
+                            'rand'  => $rand,
+                            'value' => $decodedValues['show_ticket_categories_depth'],
+                            'min' => 1,
+                            'max' => 16,
+                            'toadd' => [0 => __('No limit', 'formcreator')],
+      ]);
       echo '</td>';
       echo '</tr>';
 
