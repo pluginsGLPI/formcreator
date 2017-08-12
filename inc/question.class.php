@@ -785,15 +785,24 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
             .'style="width: 90%">'.$this->fields['default_values'].'</textarea>';
       echo '<div id="dropdown_default_value_field">';
-      if ((($this->fields['fieldtype'] == 'dropdown')
-            || ($this->fields['fieldtype'] == 'glpiselect'))
-            && !empty($this->fields['values'])
-            && class_exists($this->fields['values'])) {
-         Dropdown::show($this->fields['values'], array(
+      if (!empty($this->fields['values'])) {
+         if ($this->fields['fieldtype'] == 'glpiselect' && class_exists($this->fields['values'])) {
+            Dropdown::show($this->fields['values'], array(
                'name'  => 'dropdown_default_value',
                'value' => $this->fields['default_values'],
                'rand'  => $rand,
-         ));
+            ));
+         }
+         if ($this->fields['fieldtype'] == 'dropdown') {
+            $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+            if (class_exists($decodedValue['itemtype'])) {
+               Dropdown::show($decodedValue['itemtype'], array(
+                  'name'  => 'dropdown_default_value',
+                  'value' => $this->fields['default_values'],
+                  'rand'  => $rand,
+               ));
+            }
+         }
       }
       echo '</div>';
       echo '</td>';
