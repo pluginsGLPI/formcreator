@@ -13,42 +13,54 @@ class ExportImporTest extends SuperAdminTestCase {
       $form_validator = new PluginFormcreatorForm_Validator;
       $form_target    = new PluginFormcreatorTarget;
       $form_profile   = new PluginFormcreatorForm_Profile;
+      $targetTicket   = new PluginFormcreatorTargetTicket();
+      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
 
       // create objects
-      $forms_id = $form->add(array('name'                => "test export form",
-                                   'is_active'           => true,
-                                   'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER));
+      $forms_id = $form->add(['name'                => "test export form",
+                              'is_active'           => true,
+                              'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER]);
 
-      $sections_id = $form_section->add(array('name'                        => "test export section",
-                                              'plugin_formcreator_forms_id' => $forms_id));
+      $sections_id = $form_section->add(['name'                        => "test export section",
+                                          'plugin_formcreator_forms_id' => $forms_id]);
 
-      $questions_id_1 = $form_question->add(array('name'                           => "test export question 1",
-                                                  'fieldtype'                      => 'text',
-                                                  'plugin_formcreator_sections_id' => $sections_id));
-      $questions_id_2 = $form_question->add(array('name'                           => "test export question 2",
-                                                  'fieldtype'                      => 'textarea',
-                                                  'plugin_formcreator_sections_id' => $sections_id));
+      $questions_id_1 = $form_question->add(['name'                           => "test export question 1",
+                                             'fieldtype'                      => 'text',
+                                             'plugin_formcreator_sections_id' => $sections_id]);
+      $questions_id_2 = $form_question->add(['name'                           => "test export question 2",
+                                             'fieldtype'                      => 'textarea',
+                                             'plugin_formcreator_sections_id' => $sections_id]);
 
-      $form_condition->add(array('plugin_formcreator_questions_id' => $questions_id_1,
-                                 'show_field'                      => $questions_id_2,
-                                 'show_condition'                  => '==',
-                                 'show_value'                      => 'test'));
+      $form_condition->add(['plugin_formcreator_questions_id' => $questions_id_1,
+                            'show_field'                      => $questions_id_2,
+                             'show_condition'                  => '==',
+                             'show_value'                      => 'test']);
 
-      $form_validator->add(array('plugin_formcreator_forms_id' => $forms_id,
-                                 'itemtype'                    => 'User',
-                                 'items_id'                    => 2));
-      $form_validator->add(array('plugin_formcreator_forms_id' => $forms_id,
-                                 'itemtype'                    => 'User',
-                                 'items_id'                    => 3));
+      $form_validator->add(['plugin_formcreator_forms_id' => $forms_id,
+                            'itemtype'                    => 'User',
+                            'items_id'                    => 2]);
+      $form_validator->add(['plugin_formcreator_forms_id' => $forms_id,
+                            'itemtype'                    => 'User',
+                            'items_id'                    => 3]);
 
-      $targets_id = $form_target->add(array('plugin_formcreator_forms_id' => $forms_id,
-                                            'itemtype'                    => 'PluginFormcreatorTargetTicket',
-                                            'name'                        => "test export target"));
+      $targets_id = $form_target->add(['plugin_formcreator_forms_id' => $forms_id,
+                                       'itemtype'                    => PluginFormcreatorTargetTicket::class,
+                                       'name'                        => "test export target"]);
+
+      $targetTicket_id = $targetTicket->add(['name'         => $form_target->getField('name'),
+      ]);
+
       $form_target->getFromDB($targets_id);
       $targettickets_id = $form_target->fields['items_id'];
 
-      $form_profiles_id = $form_profile->add(array('plugin_formcreator_forms_id' => $forms_id,
-                                                   'profiles_id' => 1));
+      $form_profiles_id = $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
+                                                   'profiles_id' => 1]);
+
+      $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
+                               'link'     => Ticket_Ticket::LINK_TO,
+                               'itemtype' => $form_target->getField('itemtype'),
+                               'items_id' => $targets_id
+      ]);
    }
 
    /**

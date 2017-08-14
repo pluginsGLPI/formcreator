@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
    public static function getTypeName($nb = 1) {
@@ -109,6 +113,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       //  Tags
       // -------------------------------------------------------------------------------------------
       $this->showPluginTagsSettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      //  Composite tickets
+      // -------------------------------------------------------------------------------------------
+      $this->showCompositeTicketSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  Validation as ticket followup
@@ -522,9 +531,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</div>';
 
       echo '<div id="block_assigned_question_supplier" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, [
+      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, array(
          'value' => $this->fields['due_date_question'],
-      ]);
+      ));
       echo '</div>';
 
       echo '<div>';
@@ -740,18 +749,31 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    public function pre_deleteItem() {
-      global $DB;
+      // delete actors related to this instance
+      $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
+      $success = $targetTicketActor->deleteByCriteria([
+         'plugin_formcreator_targettickets_id' => $this->getID(),
+      ]);
 
-      $targetTicketId = $this->getID();
-      $query = "DELETE FROM `glpi_plugin_formcreator_targettickets_actors`
-         WHERE `plugin_formcreator_targettickets_id` = '$targetTicketId'";
-      return $DB->query($query);
+      // delete targets linked to this instance
+      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
+      $success |= $item_targetTicket->deleteByCriteria([
+         'plugin_formcreator_targettickets_id'  => $this->getID(),
+      ]);
+      $success |= $item_targetTicket->deleteByCriteria([
+         'itemtype'  => $this->getID(),
+         'items_id'  => $this->getID(),
+      ]);
+
+      return $success;
    }
 
    /**
     * Save form datas to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    *
+    * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
       global $DB, $CFG_GLPI;
@@ -1066,18 +1088,18 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          PluginFormcreatorCommon::setNotification(false);
 
          $ticketFollowup = new TicketFollowup();
-         $ticketFollowup->add(array(
-              'tickets_id'       => $ticketID,
-              'date'             => $_SESSION['glpi_currenttime'],
-              'users_id'         => $_SESSION['glpiID'],
-              'content'          => $message
-         ));
+         $ticketFollowup->add([
+           'tickets_id'       => $ticketID,
+           'date'             => $_SESSION['glpi_currenttime'],
+           'users_id'         => $_SESSION['glpiID'],
+           'content'          => $message
+         ]);
 
          // Restore mail notification setting
          PluginFormcreatorCommon::setNotification($use_mailing);
       }
 
-      return true;
+      return $ticket;
    }
 
    protected function setTargetCategory($data, $formanswer) {
@@ -1209,10 +1231,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // update target ticket
       $item->update($target_data);
 
-      if ($targetitems_id
-          && isset($target_data['_actors'])) {
-         foreach ($target_data['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+      if ($targetitems_id) {
+         if (isset($target_data['_actors'])) {
+            foreach ($target_data['_actors'] as $actor) {
+               PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+            }
+         }
+         if (isset($target_data['_ticket_relations'])) {
+            foreach ($target_data['_ticket_relations'] as $ticketLink) {
+               PluginFormcreatorItem_TargetTicket::import($targetitems_id, $ticketLink);
+            }
          }
       }
 
@@ -1264,6 +1292,16 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['comment'] = $content;
          }
+      }
+
+      // get data from ticket relations
+      $target_data['_ticket_relations'] = [];
+      $target_ticketLink = new PluginFormcreatorItem_TargetTicket();
+      $targetTicketId = $target_data['id'];
+      $all_ticketLinks = $target_ticketLink->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
+      foreach ($all_ticketLinks as $ticketLink) {
+         $target_ticketLink->getFromDB($ticketLink['id']);
+         $target_data['_ticket_relations'][] = $target_ticketLink->export();
       }
 
       // remove key and fk

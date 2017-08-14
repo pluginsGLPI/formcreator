@@ -86,7 +86,7 @@ class PluginFormcreatorInstall {
     * @return string
     */
    protected function getSchemaVersionFromGlpiConfig() {
-      $config = Config::getConfigurationValues('formcreator', ['schema_version']);
+      $config = Config::getConfigurationValues('formcreator', array('schema_version'));
       if (!isset($config['schema_version'])) {
          // No schema version in GLPI config, then this is older than 2.5
          return '0.0';
@@ -391,6 +391,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorTargetChange',
          'PluginFormcreatorTargetTicket_Actor',
          'PluginFormcreatorTargetTicket',
+         'PluginFormcreatorItem_TargetTicket',
          'PluginFormcreatorIssue',
       ];
 

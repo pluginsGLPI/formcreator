@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorForm_Answer extends CommonDBChild
 {
    public $dohistory  = true;
@@ -852,14 +856,20 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
+      $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
       foreach ($found_targets as $target) {
-         $obj = new $target['itemtype'];
-         $obj->getFromDB($target['items_id']);
-         if (!$obj->save($this)) {
+         $targetObject = new $target['itemtype'];
+         $targetObject->getFromDB($target['items_id']);
+         $generatedTarget = $targetObject->save($this);
+         if ($generatedTarget === null) {
             $success = false;
             break;
          }
+         // Map [itemtype of the target] [item ID of the target] = ID of the generated target
+         $generatedTargets->addTarget($targetObject, $generatedTarget);
       }
+      $generatedTargets->buildCompositeRelations();
+
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
       unset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket']);
       return $success;
