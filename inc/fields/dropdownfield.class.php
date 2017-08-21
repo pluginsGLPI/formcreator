@@ -8,7 +8,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $rand     = mt_rand();
             $required = $this->fields['required'] ? ' required' : '';
             $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-            $itemtype = $decodedValues['itemtype'];
+            if ($decodedValues === null) {
+               $itemtype = $this->fields['values'];
+            } else {
+               $itemtype = $decodedValues['itemtype'];
+            }
 
             $dparams = array('name'     => 'formcreator_field_' . $this->fields['id'],
                              'value'    => $this->getValue(),
