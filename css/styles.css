@@ -1364,14 +1364,14 @@ span.fc_list_icon {
 }
 
 .form_header ul {
-   list-style-type: inherit;
+   list-style-type: disc;
    margin: inherit;
    padding: inherit;
    padding-left: 40px;
 }
 
 .form_section ul {
-   list-style-type: inherit;
+   list-style-type: disc;
    margin: inherit;
    padding: inherit;
    padding-left: 40px;
