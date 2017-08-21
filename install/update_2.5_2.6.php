@@ -13,13 +13,16 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    // update questions
    $question = new PluginFormcreatorQuestion();
    $rows = $question->find("`fieldtype` = 'dropdown' AND `values` = 'ITILCategory'");
-   foreach ($rows as $row) {
-      $row['values'] = json_encode([
+   $table = PluginFormcreatorQuestion::getTable();
+   foreach ($rows as $id => $row) {
+      $updatedValue = json_encode([
          'itemtype'                       => $row['values'],
          'show_ticket_categories'         => 'both',
          'show_ticket_categories_depth'   => 0
       ]);
-      $question->update($row);
+      // Don't use update() method because the json will be HTML-entities-ified (see prepareInputForUpdate() )
+      $query = "UPDATE `$table` SET `values`='$updatedValue' WHERE `id`='$id'";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);;
    }
 
    $migration->executeMigration();
