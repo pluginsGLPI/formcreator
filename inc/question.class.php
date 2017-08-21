@@ -401,21 +401,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       // Add leading and trailing regex marker automaticaly
-      if (isset($input['regex'])
-          && !empty($input['regex'])) {
-         if (substr($input['regex'], 0, 1)  != '/') {
-            if (substr($input['regex'], 0, 1)  != '^') {
-               $input['regex'] = '/^' . $input['regex'];
-            } else {
-               $input['regex'] = '/' . $input['regex'];
-            }
-         }
-         if (substr($input['regex'], -1, 1) != '/') {
-            if (substr($input['regex'], -1, 1)  != '$') {
-               $input['regex'] = $input['regex'] . '$/';
-            } else {
-               $input['regex'] = $input['regex'] . '/';
-            }
+      if (isset($input['regex']) && !empty($input['regex'])) {
+         // Avoid php notice when validating the regular expression
+         set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
+         $isValid = !(preg_match($input['regex'], null) === false);
+         restore_error_handler();
+
+         if (!$isValid) {
+            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+            return [];
          }
       }
 
@@ -490,6 +484,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
          $input = $this->checkBeforeSave($input);
+      }
+
+      if (!is_array($input)|| count($input) == 0) {
+         return false;
       }
 
       // generate a uniq id
