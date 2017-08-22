@@ -13,6 +13,15 @@ abstract class PluginFormcreatorField implements Field
       $this->fields['answer'] = $datas;
    }
 
+   /**
+    * Transform input to properly save it in the database
+    * @param array $input data to transform before save
+    * return array input data to save as is
+    */
+   public function prepareQuestionInputForSave($input) {
+      return  $input;
+   }
+
    public function show($canEdit = true) {
       $required = ($canEdit && $this->fields['required']) ? ' required' : '';
 

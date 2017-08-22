@@ -32,6 +32,13 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return __('Text', 'formcreator');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['default_values'])) {
+         $input['default_values'] = addslashes($input['default_values']);
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
       return array(
          'required'       => 1,

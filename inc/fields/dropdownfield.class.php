@@ -46,6 +46,21 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return _n('Dropdown', 'Dropdowns', 1);
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['dropdown_values'])) {
+         if (empty($input['dropdown_values'])) {
+            Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+            return array();
+         }
+         $input['values']         = $input['dropdown_values'];
+         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
       return array(
          'required'       => 1,

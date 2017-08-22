@@ -35,6 +35,13 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return __('Urgency');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['values'])) {
+         $input['values'] = addslashes($input['values']);
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
       return array(
             'required'       => 1,
