@@ -821,11 +821,11 @@ class PluginFormcreatorForm extends CommonDBTM
    public function displayUserForm(CommonGLPI $item) {
       global $CFG_GLPI, $DB;
 
-      if (isset($_SESSION['formcreator']['datas'])) {
-         $datas = $_SESSION['formcreator']['datas'];
-         unset($_SESSION['formcreator']['datas']);
+      if (isset($_SESSION['formcreator']['data'])) {
+         $data = $_SESSION['formcreator']['data'];
+         unset($_SESSION['formcreator']['data']);
       } else {
-         $datas = null;
+         $data = null;
       }
 
       // Print css media
@@ -860,11 +860,11 @@ class PluginFormcreatorForm extends CommonDBTM
          // Display all fields of the section
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            if (isset($datas[$question_line['id']])) {
+            if (isset($data['formcreator_field_' . $question_line['id']])) {
                // multiple choice question are saved as JSON and needs to be decoded
                $answer = (in_array($question_line['fieldtype'], array('checkboxes', 'multiselect')))
-                           ? json_decode($datas[$question_line['id']])
-                           : $datas[$question_line['id']];
+                       ? json_decode($data['formcreator_field_' . $question_line['id']])
+                       : $data['formcreator_field_' . $question_line['id']];
             } else {
                $answer = null;
             }
@@ -1061,7 +1061,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $valid = true;
 
       $tab_section    = array();
-      $datas          = array();
+      $data           = array();
       $sections       = new PluginFormcreatorSection();
       $found_sections = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
       foreach ($found_sections as $id => $fields) {
@@ -1078,25 +1078,25 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
          if (isset($_POST['formcreator_field_' . $id])) {
-            $datas[$id] = is_array($_POST['formcreator_field_' . $id])
+            $data['formcreator_field_' . $id] = is_array($_POST['formcreator_field_' . $id])
                            ? json_encode($_POST['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
                            : $_POST['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
             if ($fields['fieldtype'] == 'float') {
-               $datas[$id] = str_replace(',', '.', $datas[$id]);
-               $datas[$id] = str_replace(' ', '', $datas[$id]);
+               $data['formcreator_field_' . $id] = str_replace(',', '.', $data['formcreator_field_' . $id]);
+               $data['formcreator_field_' . $id] = str_replace(' ', '', $data['formcreator_field_' . $id]);
             }
             unset($_POST['formcreator_field_' . $id]);
          } else {
-            $datas[$id] = '';
+            $data['formcreator_field_' . $id] = '';
          }
 
          $className = 'PluginFormcreator' . ucfirst($fields['fieldtype']) . 'Field';
 
          if (class_exists($className)) {
-            $obj = new $className($fields, $datas);
-            if (PluginFormcreatorFields::isVisible($id, $datas) && !$obj->isValid($datas[$id])) {
+            $obj = new $className($fields, $data);
+            if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
                $valid = false;
             }
          } else {
@@ -1104,38 +1104,38 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
       if (isset($_POST) && is_array($_POST)) {
-         $datas = $datas + $_POST;
+         $data = $data + $_POST;
       }
 
       // Check required_validator
-      if ($this->fields['validation_required'] && empty($datas['formcreator_validator'])) {
+      if ($this->fields['validation_required'] && empty($data['formcreator_validator'])) {
          Session::addMessageAfterRedirect(__('You must select validator !', 'formcreator'), false, ERROR);
          $valid = false;
       }
 
       // If not valid back to form
       if (!$valid) {
-         foreach ($datas as $key => $value) {
+         foreach ($data as $key => $value) {
             if (is_array($value)) {
                foreach ($value as $key2 => $value2) {
-                  $datas[$key][$key2] = plugin_formcreator_encode($value2);
+                  $data[$key][$key2] = plugin_formcreator_encode($value2);
                }
             } else if (is_array(json_decode($value))) {
                $value = json_decode($value);
                foreach ($value as $key2 => $value2) {
                   $value[$key2] = plugin_formcreator_encode($value2);
                }
-               $datas[$key] = json_encode($value);
+               $data[$key] = json_encode($value);
             } else {
-               $datas[$key] = plugin_formcreator_encode($value);
+               $data[$key] = plugin_formcreator_encode($value);
             }
          }
 
-         $_SESSION['formcreator']['datas'] = $datas;
+         $_SESSION['formcreator']['data'] = $data;
          // Save form
       } else {
          $formanswer = new PluginFormcreatorForm_Answer();
-         $formanswer->saveAnswers($datas);
+         $formanswer->saveAnswers($data);
       }
 
       return $valid;

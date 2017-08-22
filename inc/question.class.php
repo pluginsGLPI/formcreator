@@ -1218,6 +1218,11 @@ JS;
 
    }
 
+   /**
+    * return array of question objects belonging to a form
+    * @param integer $formId
+    * @return PluginFormcreatorQuestion[]
+    */
    public function getQuestionsFromForm($formId) {
       global $DB;
 
