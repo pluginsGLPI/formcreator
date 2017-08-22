@@ -502,8 +502,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getTicketSummary() {
-      global $DB;
-
       $status = [
          Ticket::INCOMING => 0,
          Ticket::WAITING => 0,

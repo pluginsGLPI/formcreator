@@ -1214,10 +1214,10 @@ JS;
    public function getQuestionsFromSection($sectionId) {
       $questions = array();
       $rows = $this->find("`plugin_formcreator_sections_id` = '$sectionId'", "`order` ASC");
-      foreach ($rows as $questionId => $row) {
+      foreach ($rows as $row) {
             $question = new self();
-            $question->getFromDB($questionId);
-            $questions[$questionId] = $question;
+            $question->getFromDB($row['id']);
+            $questions[$row['id']] = $question;
       }
 
       return $questions;
