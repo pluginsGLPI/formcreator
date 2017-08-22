@@ -779,7 +779,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $DB->query($query);
 
          $docItem = new Document_Item();
-         $docItemId = $docItem->add([
+         $docItem->add([
             'documents_id' => $docID,
             'itemtype'     => __CLASS__,
             'items_id'     => $this->getID(),
