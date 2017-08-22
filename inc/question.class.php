@@ -486,7 +486,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input = $this->checkBeforeSave($input);
       }
 
-      if (!is_array($input)|| count($input) == 0) {
+      if (!is_array($input) || count($input) == 0) {
          return false;
       }
 
