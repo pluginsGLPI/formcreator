@@ -15,15 +15,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
             return array();
          }
 
-         if (!function_exists('warning_handler')) {
-            function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
-               if (0 === error_reporting()) {
-                  return false;
-               }
-               throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-            }
-         }
-         set_error_handler("warning_handler", E_WARNING);
+         set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
 
          try {
             $tab_values = array();
@@ -86,16 +78,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
             $attribute     = array();
          }
 
-         // Set specific error handler to catch LDAP errors
-         if (!function_exists('warning_handler')) {
-            function warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
-               if (0 === error_reporting()) {
-                  return false;
-               }
-               throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-            }
-         }
-         set_error_handler("warning_handler", E_WARNING);
+         set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
 
          try {
             $ds            = $config_ldap->connect();
