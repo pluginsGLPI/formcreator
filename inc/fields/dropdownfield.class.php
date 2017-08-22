@@ -22,19 +22,20 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             if ($itemtype == "User") {
                $dparams['right'] = 'all';
             } else if ($itemtype == "ITILCategory") {
+               $dparams['condition'] = '1';
                if (isset ($_SESSION['glpiactiveprofile']['interface'])
                    && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-                  $dparams['condition'] = "`is_helpdeskvisible` = '1'";
+                  $dparams['condition'] .= " AND `is_helpdeskvisible` = '1'";
                }
                switch ($decodedValues['show_ticket_categories']) {
                   case 'request':
-                     $dparams['condition'] = "`is_request` = '1'";
+                     $dparams['condition'] .= " AND `is_request` = '1' AND `is_incident` = '0'";
                      break;
                   case 'incident':
-                     $dparams['condition'] = "`is_incident` = '1'";
+                     $dparams['condition'] .= " AND `is_incident` = '1' AND `is_request` = '0'";
                      break;
                   case 'both':
-                     $dparams['condition'] = "`is_request` = '1' AND `is_incident` = '1'";
+                     $dparams['condition'] .= " AND `is_request` = '1' AND `is_incident` = '1'";
                }
                if (isset($decodedValues['show_ticket_categories_depth'])
                    && $decodedValues['show_ticket_categories_depth'] > 0) {
