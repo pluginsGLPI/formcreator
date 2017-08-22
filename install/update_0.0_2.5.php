@@ -10,29 +10,29 @@ function plugin_formcreator_update_2_5(Migration $migration) {
 
    $migration->displayMessage("Upgrade to schema version 2.5");
 
-   plugin_formcreator_updateAnswer_2_5($migration);
-   plugin_formcreator_updateCategory_2_5($migration);
-   plugin_formcreator_updateForm_Answer_2_5($migration);
-   plugin_formcreator_updateForm_Profile_2_5($migration);
-   plugin_formcreator_updateFormValidator_2_5($migration);
-   plugin_formcreator_updateForm_2_5($migration);
-   plugin_formcreator_updateHeader_2_5($migration);
-   plugin_formcreator_updateIssue_2_5($migration);
-   plugin_formcreator_updateQuestionCondition_2_5($migration);
-   plugin_formcreator_updateQuestion_2_5($migration);
-   plugin_formcreator_updateSection_2_5($migration);
-   plugin_formcreator_updateTarget_2_5($migration);
-   plugin_formcreator_updateTargetChange_2_5($migration);
-   plugin_formcreator_updateTargetChange_Actor_2_5($migration);
-   plugin_formcreator_updateTargetTicket_Actor_2_5($migration);
-   plugin_formcreator_updateTargetTicket_2_5($migration);
-   plugin_formcreator_updateTitle_2_5($migration);
+   plugin_formcreator_updateAnswer($migration);
+   plugin_formcreator_updateCategory($migration);
+   plugin_formcreator_updateForm_Answer($migration);
+   plugin_formcreator_updateForm_Profile($migration);
+   plugin_formcreator_updateFormValidator($migration);
+   plugin_formcreator_updateForm($migration);
+   plugin_formcreator_updateHeader($migration);
+   plugin_formcreator_updateIssue($migration);
+   plugin_formcreator_updateQuestionCondition($migration);
+   plugin_formcreator_updateQuestion($migration);
+   plugin_formcreator_updateSection($migration);
+   plugin_formcreator_updateTarget($migration);
+   plugin_formcreator_updateTargetChange($migration);
+   plugin_formcreator_updateTargetChange_Actor($migration);
+   plugin_formcreator_updateTargetTicket_Actor($migration);
+   plugin_formcreator_updateTargetTicket($migration);
+   plugin_formcreator_updateTitle($migration);
 
    $migration->executeMigration();
 }
 
-function plugin_formcreator_updateAnswer_2_5(Migration $migration) {
-   global $DB;
+function plugin_formcreator_updateAnswer(Migration $migration) {
+      global $DB;
 
    // Legacy upgrade of Answers
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_answers");
@@ -66,8 +66,8 @@ function plugin_formcreator_updateAnswer_2_5(Migration $migration) {
    $migration->migrationOneTable('glpi_plugin_formcreator_answers');
 }
 
-function plugin_formcreator_updateCategory_2_5(Migration $migration) {
-   global $DB;
+function plugin_formcreator_updateCategory(Migration $migration) {
+      global $DB;
 
    // Legacy upgrade of Categories
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_categories");
@@ -101,23 +101,23 @@ function plugin_formcreator_updateCategory_2_5(Migration $migration) {
     */
    if (!FieldExists('glpi_plugin_formcreator_categories', "knowbaseitemcategories_id")) {
       $migration->addField('glpi_plugin_formcreator_categories', 'completename', 'string', array(
-         'after' => 'comment'
+            'after' => 'comment'
       ));
       $migration->addField('glpi_plugin_formcreator_categories', 'plugin_formcreator_categories_id', 'integer', array(
-         'after' => 'completename'
+            'after' => 'completename'
       ));
       $migration->addField('glpi_plugin_formcreator_categories', 'level', 'integer', array(
-         'value' => 1,
-         'after' => 'plugin_formcreator_categories_id'
+            'value' => 1,
+            'after' => 'plugin_formcreator_categories_id'
       ));
       $migration->addField('glpi_plugin_formcreator_categories', 'sons_cache', 'longtext', array(
-         'after' => 'level'
+            'after' => 'level'
       ));
       $migration->addField('glpi_plugin_formcreator_categories', 'ancestors_cache', 'longtext', array(
-         'after' => 'sons_cache'
+            'after' => 'sons_cache'
       ));
       $migration->addField('glpi_plugin_formcreator_categories', 'knowbaseitemcategories_id', 'integer', array(
-         'after' => 'ancestors_cache'
+            'after' => 'ancestors_cache'
       ));
 
       $migration->addKey('glpi_plugin_formcreator_categories', 'knowbaseitemcategories_id');
@@ -128,7 +128,7 @@ function plugin_formcreator_updateCategory_2_5(Migration $migration) {
    }
 }
 
-function plugin_formcreator_updateForm_Answer_2_5(Migration $migration) {
+function plugin_formcreator_updateForm_Answer(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Form_Answers
@@ -172,7 +172,7 @@ function plugin_formcreator_updateForm_Answer_2_5(Migration $migration) {
    $migration->addField('glpi_plugin_formcreator_forms_answers', 'is_deleted', 'bool');
 }
 
-function plugin_formcreator_updateForm_Profile_2_5(Migration $migration) {
+function plugin_formcreator_updateForm_Profile(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Form_Profiles
@@ -193,9 +193,9 @@ function plugin_formcreator_updateForm_Profile_2_5(Migration $migration) {
       $migration->addField('glpi_plugin_formcreator_forms_profiles', 'id', 'autoincrement');
       $migration->addKey('glpi_plugin_formcreator_forms_profiles', 'id', 'id', 'PRIMARY KEY');
       $migration->addKey('glpi_plugin_formcreator_forms_profiles', array('plugin_formcreator_forms_id',
-         'profiles_id'),
-            'unicity',
-            'UNIQUE KEY');
+                                                                         'profiles_id'),
+                                                                         'unicity',
+                                                                         'UNIQUE KEY');
    }
 
    // add uuid to validator
@@ -209,13 +209,13 @@ function plugin_formcreator_updateForm_Profile_2_5(Migration $migration) {
    $all_form_profiles = $obj->find("uuid IS NULL");
    foreach ($all_form_profiles as $form_profiles_id => $form_profile) {
       $obj->update(array(
-         'id'   => $form_profiles_id,
-         'uuid' => plugin_formcreator_getUuid()
+            'id'   => $form_profiles_id,
+            'uuid' => plugin_formcreator_getUuid()
       ));
    }
 }
 
-function plugin_formcreator_updateFormValidator_2_5(Migration $migration) {
+function plugin_formcreator_updateFormValidator(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Form_Validators
@@ -249,11 +249,11 @@ function plugin_formcreator_updateFormValidator_2_5(Migration $migration) {
    $all_validators = $obj->find("uuid IS NULL");
    foreach ($all_validators as $validators_id => $validator) {
       $obj->update(array('id'   => $validators_id,
-         'uuid' => plugin_formcreator_getUuid()));
+            'uuid' => plugin_formcreator_getUuid()));
    }
 }
 
-function plugin_formcreator_updateForm_2_5(Migration $migration) {
+function plugin_formcreator_updateForm(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Forms
@@ -261,9 +261,9 @@ function plugin_formcreator_updateForm_2_5(Migration $migration) {
 
    // Migration from previous version
    if (FieldExists('glpi_plugin_formcreator_forms', 'cat', false)
-       || !FieldExists('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id', false)) {
-      $migration->addField('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id',
-                           'integer', array('value' => '0'));
+         || !FieldExists('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id', false)) {
+            $migration->addField('glpi_plugin_formcreator_forms', 'plugin_formcreator_categories_id',
+                  'integer', array('value' => '0'));
    }
 
    // Migration from previous version
@@ -290,10 +290,10 @@ function plugin_formcreator_updateForm_2_5(Migration $migration) {
    $result = $DB->query($query);
    while ($line = $DB->fetch_array($result)) {
       $query_update = "UPDATE `glpi_plugin_formcreator_forms` SET
-                 `name`        = '" . plugin_formcreator_encode($line['name']) . "',
-                 `description` = '" . plugin_formcreator_encode($line['description']) . "',
-                 `content`     = '" . plugin_formcreator_encode($line['content']) . "'
-                 WHERE `id` = " . (int) $line['id'];
+                       `name`        = '" . plugin_formcreator_encode($line['name']) . "',
+                       `description` = '" . plugin_formcreator_encode($line['description']) . "',
+                       `content`     = '" . plugin_formcreator_encode($line['content']) . "'
+                       WHERE `id` = " . (int) $line['id'];
       $DB->query($query_update) or plugin_formcreator_upgrade_error($migration);
    }
 
@@ -315,12 +315,12 @@ function plugin_formcreator_updateForm_2_5(Migration $migration) {
    $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
    $migration->addField('glpi_plugin_formcreator_forms', 'usage_count', 'integer', array(
-      'after' => 'validation_required',
-      'value' => '0'
+         'after' => 'validation_required',
+         'value' => '0'
    ));
    $migration->addField('glpi_plugin_formcreator_forms', 'is_default', 'bool', array(
-      'after' => 'usage_count',
-      'value' => '0'
+         'after' => 'usage_count',
+         'value' => '0'
    ));
 
    // add uuid to forms
@@ -341,13 +341,13 @@ function plugin_formcreator_updateForm_2_5(Migration $migration) {
    unset($obj);
 }
 
-function plugin_formcreator_updateHeader_2_5(Migration $migration) {
+function plugin_formcreator_updateHeader(Migration $migration) {
    // Drop Headers table
    $migration->displayMessage("Drop glpi_plugin_formcreator_headers");
    $migration->dropTable('glpi_plugin_formcreator_headers');
 }
 
-function plugin_formcreator_updateIssue_2_5(Migration $migration) {
+function plugin_formcreator_updateIssue(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Issues
@@ -380,15 +380,15 @@ function plugin_formcreator_updateIssue_2_5(Migration $migration) {
    $DB->query($query) or die ($DB->error());
    CronTask::Register('PluginFormcreatorIssue', 'SyncIssues', HOUR_TIMESTAMP,
          array(
-            'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
-            'mode'      => CronTask::MODE_EXTERNAL
+               'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
+               'mode'      => CronTask::MODE_EXTERNAL
          )
    );
    $task = new CronTask();
    PluginFormcreatorIssue::cronSyncIssues($task);
 }
 
-function plugin_formcreator_updateQuestionCondition_2_5(Migration $migration) {
+function plugin_formcreator_updateQuestionCondition(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Question conditions
@@ -484,11 +484,11 @@ function plugin_formcreator_updateQuestionCondition_2_5(Migration $migration) {
    $all_conditions = $condition_obj->find("uuid IS NULL");
    foreach ($all_conditions as $conditions_id => $condition) {
       $condition_obj->update(array('id'   => $conditions_id,
-         'uuid' => plugin_formcreator_getUuid()));
+                                   'uuid' => plugin_formcreator_getUuid()));
    }
 }
 
-function plugin_formcreator_updateQuestion_2_5(Migration $migration) {
+function plugin_formcreator_updateQuestion(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Questions
@@ -697,7 +697,7 @@ function plugin_formcreator_updateQuestion_2_5(Migration $migration) {
    }
 }
 
-function plugin_formcreator_updateSection_2_5(Migration $migration) {
+function plugin_formcreator_updateSection(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Sections
@@ -779,7 +779,7 @@ function plugin_formcreator_updateSection_2_5(Migration $migration) {
    }
 }
 
-function plugin_formcreator_updateTarget_2_5(Migration $migration) {
+function plugin_formcreator_updateTarget(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of targets
@@ -820,9 +820,9 @@ function plugin_formcreator_updateTarget_2_5(Migration $migration) {
 
          $template    = new TicketTemplate();
          $template_id = $template->add(array(
-            'name'         => 'Template Formcreator '.$i,
-            'entities_id'  => $ligne['entities_id'],
-            'is_recursive' => 1,
+               'name'         => 'Template Formcreator '.$i,
+               'entities_id'  => $ligne['entities_id'],
+               'is_recursive' => 1,
          ));
 
          $predefinedField = new TicketTemplatePredefinedField();
@@ -830,36 +830,36 @@ function plugin_formcreator_updateTarget_2_5(Migration $migration) {
          // Urgency
          if (!empty($ligne['urgency'])) {
             $predefinedField->add(array(
-               'tickettemplates_id' => $template_id,
-               'num'                => 10,
-               'value'              => $ligne['urgency'],
+                  'tickettemplates_id' => $template_id,
+                  'num'                => 10,
+                  'value'              => $ligne['urgency'],
             ));
          }
 
          // Priority
          if (!empty($ligne['priority'])) {
             $predefinedField->add(array(
-               'tickettemplates_id' => $template_id,
-               'num'                => 3,
-               'value'              => $ligne['priority'],
+                  'tickettemplates_id' => $template_id,
+                  'num'                => 3,
+                  'value'              => $ligne['priority'],
             ));
          }
 
          // Category
          if (!empty($ligne['itilcategories_id'])) {
             $predefinedField->add(array(
-               'tickettemplates_id' => $template_id,
-               'num'                => 7,
-               'value'              => $ligne['itilcategories_id'],
+                  'tickettemplates_id' => $template_id,
+                  'num'                => 7,
+                  'value'              => $ligne['itilcategories_id'],
             ));
          }
 
          // Type
          if (!empty($ligne['type'])) {
             $predefinedField->add(array(
-               'tickettemplates_id' => $template_id,
-               'num'                => 14,
-               'value'              => $ligne['type'],
+                  'tickettemplates_id' => $template_id,
+                  'num'                => 14,
+                  'value'              => $ligne['type'],
             ));
          }
 
@@ -868,7 +868,7 @@ function plugin_formcreator_updateTarget_2_5(Migration $migration) {
 
       // Install or upgrade of TargetTicket is a prerequisite
       $version   = plugin_version_formcreator();
-      plugin_formcreator_updateTarget_2_5($migration);
+      plugin_formcreator_updateTarget($migration);
       $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
 
       // Convert targets to ticket templates only if at least one target extsis
@@ -939,7 +939,7 @@ function plugin_formcreator_updateTarget_2_5(Migration $migration) {
    }
 }
 
-function plugin_formcreator_updateTargetChange_Actor_2_5(Migration $migration) {
+function plugin_formcreator_updateTargetChange_Actor(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Change actors
@@ -986,12 +986,12 @@ function plugin_formcreator_updateTargetChange_Actor_2_5(Migration $migration) {
    $all_actor = $obj->find("uuid IS NULL");
    foreach ($all_actor as $actors_id => $actor) {
       $obj->update(array('id'   => $actors_id,
-         'uuid' => plugin_formcreator_getUuid()));
+            'uuid' => plugin_formcreator_getUuid()));
    }
 
 }
 
-function plugin_formcreator_updateTargetTicket_Actor_2_5(Migration $migration) {
+function plugin_formcreator_updateTargetTicket_Actor(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of target ticket actors
@@ -1002,20 +1002,20 @@ function plugin_formcreator_updateTargetTicket_Actor_2_5(Migration $migration) {
 
    $current_enum_actor_type = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets_actors', 'actor_type');
    if (count($current_enum_actor_type) != count(PluginFormcreatorTargetTicket_Actor::getEnumActorType())) {
-      $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets_actors`
+       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets_actors`
                  CHANGE COLUMN `actor_type` `actor_type`
                  ENUM($enum_actor_type)
                  NOT NULL";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    $current_enum_role = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets_actors', 'actor_role');
    if (count($current_enum_role) != count(PluginFormcreatorTargetTicket_Actor::getEnumRole())) {
-      $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets_actors`
+       $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets_actors`
                  CHANGE COLUMN `actor_role` `actor_role`
                  ENUM($enum_actor_role)
                  NOT NULL";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    // add uuid to actor
@@ -1029,11 +1029,11 @@ function plugin_formcreator_updateTargetTicket_Actor_2_5(Migration $migration) {
    $all_actor = $obj->find("uuid IS NULL");
    foreach ($all_actor as $actors_id => $actor) {
       $obj->update(array('id'   => $actors_id,
-         'uuid' => plugin_formcreator_getUuid()));
+            'uuid' => plugin_formcreator_getUuid()));
    }
 }
 
-function plugin_formcreator_updateTargetTicket_2_5(Migration $migration) {
+function plugin_formcreator_updateTargetTicket(Migration $migration) {
    global $DB;
 
    // Legacy upgrade of Target tickets
@@ -1117,13 +1117,13 @@ function plugin_formcreator_updateTargetTicket_2_5(Migration $migration) {
    $migration->addKey('glpi_plugin_formcreator_targettickets', 'tickettemplates_id');
 }
 
-function plugin_formcreator_updateTitle_2_5(Migration $migration) {
+function plugin_formcreator_updateTitle(Migration $migration) {
    // Drop Headers table
    $migration->displayMessage("Drop glpi_plugin_formcreator_titles");
    $migration->dropTable('glpi_plugin_formcreator_titles');
 }
 
-function plugin_formcreator_updateTargetChange_2_5($migration) {
+function plugin_formcreator_updateTargetChange($migration) {
    global $DB;
 
    // Legacy upgrade of Target changes
