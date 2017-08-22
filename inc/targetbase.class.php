@@ -704,4 +704,61 @@ EOS;
          echo '</tr>';
       }
    }
+
+   /**
+    * Parse target content to replace TAGS like ##FULLFORM## by the values
+    *
+    * @param  String $content                            String to be parsed
+    * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
+    * @param  String
+    * @return String                                     Parsed string with tags replaced by form values
+    */
+   protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
+      global $DB, $CFG_GLPI;
+
+      if ($fullform == "") {
+         $fullform = $formanswer->getFullForm();
+      }
+      // retrieve answers
+      $answers_values = $formanswer->getAnswers($formanswer->getID());
+
+      $content     = str_replace('##FULLFORM##', $fullform, $content);
+
+      $section     = new PluginFormcreatorSection();
+      $sections    = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
+      $sectionsIdString = implode(', ', array_keys($sections));
+
+      if (count($sections) > 0) {
+         $query_questions = "SELECT `questions`.*, `answers`.`answer`
+                             FROM `glpi_plugin_formcreator_questions` AS questions
+                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
+                               ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                               AND `plugin_formcreator_forms_answers_id` = ".$formanswer->getID()."
+                             WHERE `questions`.`plugin_formcreator_sections_id` IN ($sectionsIdString)
+                             ORDER BY `questions`.`order` ASC";
+         $res_questions = $DB->query($query_questions);
+         while ($question_line = $DB->fetch_assoc($res_questions)) {
+            $id    = $question_line['id'];
+            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
+               $name = '';
+               $value = '';
+            } else {
+               $name  = $question_line['name'];
+               $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+            }
+            if (is_array($value)) {
+               if ($CFG_GLPI['use_rich_text']) {
+                  $value = '<br />' . implode('<br />', $value);
+               } else {
+                  $value = "\r\n" . implode("\r\n", $value);
+               }
+            }
+
+            $content = str_replace('##question_' . $id . '##', $name, $content);
+            $content = str_replace('##answer_' . $id . '##', $value, $content);
+         }
+      }
+
+      return $content;
+   }
 }
