@@ -63,7 +63,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       if ($this->fields['values'] == 'User') {
          return getUserName($value);
       } else {
-         return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if (!isset($decodedValues['itemtype'])) {
+            return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+         } else {
+            return Dropdown::getDropdownName(getTableForItemType($decodedValues['itemtype']), $value);
+         }
       }
    }
 
