@@ -276,8 +276,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
-      $field = new $fieldType($this->fields);
-      $input = $field->prepareQuestionInputForSave($input);
+      $fieldObject = new $fieldType($this->fields);
+      $input = $fieldObject->prepareQuestionInputForSave($input);
 
       // Add leading and trailing regex marker automaticaly
       if (isset($input['regex'])
