@@ -486,8 +486,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
 
    public function saveAnswers($datas) {
-      global $DB;
-
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
 
@@ -588,7 +586,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
             if ($answer_value !== null) {
                // Save the answer to the question
-               $answerID = $answer->add(array(
+               $answer->add(array(
                   'plugin_formcreator_forms_answers_id'  => $id,
                   'plugin_formcreator_question_id'       => $question->getID(),
                   'answer'                               => $answer_value,
@@ -784,7 +782,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $docItemId = $docItem->add([
             'documents_id' => $docID,
             'itemtype'     => __CLASS__,
-            'items_id'     => $id,
+            'items_id'     => $this->getID(),
          ]);
          return $docID;
       }
