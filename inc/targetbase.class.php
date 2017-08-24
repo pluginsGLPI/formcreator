@@ -515,11 +515,14 @@ EOS;
                 INNER JOIN `glpi_plugin_formcreator_targets` `t`
                   ON `s`.`plugin_formcreator_forms_id` = `t`.`plugin_formcreator_forms_id`
                 WHERE `t`.`items_id` = ".$this->getID()."
-                AND `q`.`fieldtype` = 'dropdown' AND `q`.`values`='ITILCategory'";
+                AND `q`.`fieldtype` = 'dropdown'";
       $result2 = $DB->query($query2);
       $users_questions = array();
       while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
+         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
+         if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'ITILCategory') {
+            $users_questions[$question['id']] = $question['name'];
+         }
       }
       Dropdown::showFromArray('_category_question', $users_questions, array(
             'value' => $this->fields['category_question'],
