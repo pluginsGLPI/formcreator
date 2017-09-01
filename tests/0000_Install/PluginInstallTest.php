@@ -41,13 +41,8 @@ class PluginInstallTest extends CommonTestCase
    protected function setupGLPI() {
       global $CFG_GLPI;
 
-      if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
-         $paramName = 'use_notifications';
-      } else {
-         $paramName = 'use_mailing';
-      }
       $settings = [
-            $paramName => '1',
+            'use_notifications' => '1',
       ];
       Config::setConfigurationValues('core', $settings);
 

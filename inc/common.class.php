@@ -5,7 +5,7 @@ class PluginFormcreatorCommon {
       global $DB;
 
       $enum = array();
-      if ($res = $DB->query( "SHOW COLUMNS FROM {$table} WHERE Field = '{$field}'" )) {
+      if ($res = $DB->query( "SHOW COLUMNS FROM `$table` WHERE Field = '$field'" )) {
          $data = $DB->fetch_array($res);
          $type = $data['Type'];
          $matches = null;
@@ -18,12 +18,7 @@ class PluginFormcreatorCommon {
 
    static function isNotificationEnabled() {
       global $CFG_GLPI;
-
-      if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
-         $notification = $CFG_GLPI['use_notifications'];
-      } else {
-         $notification = $CFG_GLPI['use_mailing'];
-      }
+      $notification = $CFG_GLPI['use_notifications'];
 
       return ($notification == '1');
    }
@@ -31,11 +26,7 @@ class PluginFormcreatorCommon {
    static function setNotification($enable) {
       global $CFG_GLPI;
 
-      if (version_compare(GLPI_VERSION, '9.2', 'ge')) {
-         $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
-      } else {
-         $CFG_GLPI['use_mailing'] = $enable ? '1' : '0';
-      }
+      $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
    }
 
    static function getGlpiVersion() {
