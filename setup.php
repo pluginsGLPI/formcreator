@@ -6,11 +6,11 @@ define('PLUGIN_FORMCREATOR_VERSION', '2.6.0');
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.1.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.3');
 // Minimum version of PHP
-define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.4.0');
+define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.6.0');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
