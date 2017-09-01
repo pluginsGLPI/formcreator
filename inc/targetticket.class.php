@@ -968,99 +968,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $datas = $this->setTargetCategory($datas, $formanswer);
 
-      if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
-         $datas['_users_id_requester'] = $requesters_id;
-         // Remove first requester
-         array_shift($this->requesters['_users_id_requester']);
-         array_shift($this->requesters['_users_id_requester_notif']['use_notification']);
-         array_shift($this->requesters['_users_id_requester_notif']['alternative_email']);
-         $this->requesters = array(
-               '_users_id_requester'         => array(),
-               '_users_id_requester_notif'   => array(
-                     'use_notification'      => array(),
-                     'alternative_email'     => array(),
-               ),
-         );
-
-      } else {
-         $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
-         $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
-      }
+      $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
+      $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($datas)) {
          return false;
-      }
-
-      if (version_compare(GLPI_VERSION, '9.1.2', 'lt')) {
-         // update ticket with actors
-
-         // user actors
-         foreach ($this->requesters['_users_id_requester'] as $index => $userId) {
-            $ticket_user = $this->getItem_User();
-            $ticket_user->add(array(
-                  'tickets_id'         => $ticketID,
-                  'users_id'           => $userId,
-                  'type'               => CommonITILActor::REQUESTER,
-                  'use_notification'   => $this->requesters['_users_id_requester_notif']['use_notification'][$index],
-                  'alternative_email'  => $this->requesters['_users_id_requester_notif']['alternative_email'][$index],
-            ));
-         }
-         foreach ($this->observers['_users_id_observer'] as $index => $userId) {
-            $ticket_user = $this->getItem_User();
-            $ticket_user->add(array(
-                  'tickets_id'         => $ticketID,
-                  'users_id'           => $userId,
-                  'type'               => CommonITILActor::OBSERVER,
-                  'use_notification'   => $this->observers['_users_id_observer_notif']['use_notification'][$index],
-                  'alternative_email'  => $this->observers['_users_id_observer_notif']['alternative_email'][$index],
-            ));
-         }
-         foreach ($this->assigned['_users_id_assign'] as $index => $userId) {
-            $ticket_user = $this->getItem_User();
-            $ticket_user->add(array(
-                  'tickets_id'         => $ticketID,
-                  'users_id'           => $userId,
-                  'type'               => CommonITILActor::ASSIGN,
-                  'use_notification'   => $this->assigned['_users_id_assign_notif']['use_notification'][$index],
-                  'alternative_email'  => $this->assigned['_users_id_assign_notif']['alternative_email'][$index],
-            ));
-         }
-         foreach ($this->assignedSuppliers['_suppliers_id_assign'] as $index => $userId) {
-            $supplier_ticket = $this->getItem_Supplier();
-            $supplier_ticket->add(array(
-                  'tickets_id'         => $ticketID,
-                  'users_id'           => $userId,
-                  'type'               => CommonITILActor::ASSIGN,
-                  'use_notification'   => $this->assigned['_suppliers_id_assign']['use_notification'][$index],
-                  'alternative_email'  => $this->assigned['_suppliers_id_assign']['alternative_email'][$index],
-            ));
-         }
-
-         foreach ($this->requesterGroups['_groups_id_requester'] as $index => $groupId) {
-            $group_ticket = $this->getItem_Group();
-            $group_ticket->add(array(
-                  'tickets_id'       => $ticketID,
-                  'groups_id'        => $groupId,
-                  'type'             => CommonITILActor::REQUESTER,
-            ));
-         }
-         foreach ($this->observerGroups['_groups_id_observer'] as $index => $groupId) {
-            $group_ticket = $this->getItem_Group();
-            $group_ticket->add(array(
-                  'tickets_id'       => $ticketID,
-                  'groups_id'        => $groupId,
-                  'type'             => CommonITILActor::OBSERVER,
-            ));
-         }
-         foreach ($this->assignedGroups['_groups_id_assign'] as $index => $groupId) {
-            $group_ticket = $this->getItem_Group();
-            $group_ticket->add(array(
-                  'tickets_id'       => $ticketID,
-                  'groups_id'        => $groupId,
-                  'type'             => CommonITILActor::ASSIGN,
-            ));
-         }
       }
 
       // Add tag if presents
