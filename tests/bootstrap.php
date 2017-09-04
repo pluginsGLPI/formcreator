@@ -26,4 +26,8 @@ UnitTestAutoload::register();
 
 define('GLPI_ROOT', dirname(dirname(dirname(__DIR__))));
 define("GLPI_CONFIG_DIR", GLPI_ROOT . "/tests");
+if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
+   echo "config_db.php missing. Did GLPI successfully initialized ?\n";
+   exit(1);
+}
 include (GLPI_ROOT . "/inc/includes.php");
