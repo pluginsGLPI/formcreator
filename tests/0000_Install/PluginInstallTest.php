@@ -42,9 +42,9 @@ class PluginInstallTest extends CommonTestCase
       global $CFG_GLPI;
 
       $settings = [
-            'use_mailing' => '1',
+            'use_notifications' => '1',
       ];
-      config::setConfigurationValues('core', $settings);
+      Config::setConfigurationValues('core', $settings);
 
       $CFG_GLPI = $settings + $CFG_GLPI;
    }

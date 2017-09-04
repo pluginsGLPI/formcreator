@@ -6,11 +6,9 @@ define('PLUGIN_FORMCREATOR_VERSION', '2.6.0');
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.1.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.2');
-// Minimum version of PHP
-define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.4.0');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.3');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
@@ -19,14 +17,24 @@ define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
  *
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
-function plugin_version_formcreator () {
+function plugin_version_formcreator() {
+   $version = rtrim(GLPI_VERSION, '-dev');
+   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($version, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+      echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
+      return false;
+   }
    return array(
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
       'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
-      'minGlpiVersion' => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION
+      'requirements'   => [
+         'glpi'           => [
+            'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
+            'dev'            => true
+         ]
+      ]
    );
 }
 
@@ -35,27 +43,8 @@ function plugin_version_formcreator () {
  *
  * @return boolean
  */
-function plugin_formcreator_check_prerequisites () {
-   $success = true;
-   if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
-      echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
-      $success = false;
-   }
-   if (! function_exists('utf8_decode')) {
-      echo 'This plugin requires php-xml<br>';
-      $success = false;
-   }
-
-   if (version_compare(PHP_VERSION, PLUGIN_FORMCREATOR_PHP_MIN_VERSION, 'lt')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', PLUGIN_FORMCREATOR_GLPI_MIN_VERSION) . '<br/>';
-      } else {
-         echo 'This plugin requires PHP >=' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
-      }
-      $success= false;
-   }
-
-   return $success;
+function plugin_formcreator_check_prerequisites() {
+   return true;
 }
 
 /**
@@ -64,14 +53,14 @@ function plugin_formcreator_check_prerequisites () {
  * @param string $verbose Set true to show all messages (false by default)
  * @return boolean
  */
-function plugin_formcreator_check_config($verbose=false) {
+function plugin_formcreator_check_config($verbose = false) {
    return true;
 }
 
 /**
  * Initialize all classes and generic variables of the plugin
  */
-function plugin_init_formcreator () {
+function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Hack for vertical display
@@ -206,7 +195,7 @@ function plugin_init_formcreator () {
  * @param  String    $string  The string to encode
  * @return String             The encoded string
  */
-function plugin_formcreator_encode($string, $mode_legacy=true) {
+function plugin_formcreator_encode($string, $mode_legacy = true) {
    if (!is_string($string)) {
       return $string;
    }

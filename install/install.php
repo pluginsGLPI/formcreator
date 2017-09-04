@@ -336,13 +336,13 @@ class PluginFormcreatorInstall {
       global $DB, $CFG_GLPI;
 
       // Delete relations with tickets with email notifications disabled
-      $use_mailing = $CFG_GLPI['use_mailing'];
-      $CFG_GLPI['use_mailing'] = '0';
+      $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
+      PluginFormcreatorCommon::setNotification(false);
 
       $item_ticket = new Item_Ticket();
       $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm_Answer'));
 
-      $CFG_GLPI['use_mailing'] = $use_mailing;
+      PluginFormcreatorCommon::setNotification($use_mailing);
    }
 
    protected function deleteTables() {

@@ -1,17 +1,17 @@
 language: php
 
 php:
-  - '5.5'
   - '5.6'
   - '7.0'
   - '7.1'
   - nightly
 
 before_script:
-  - git clone https://github.com/glpi-project/glpi --depth 1 -b 9.1.2 ../glpi && cd ../glpi
+  - mysql -u root -e 'create database glpitest;'
+  - git clone https://github.com/glpi-project/glpi --depth 1 -b 9.2/bugfixes ../glpi && cd ../glpi
   - mv ../formcreator plugins/formcreator
   - composer install --no-dev
-  - php tools/cliinstall.php --db=glpi-test --user=travis --tests
+  - php tools/cliinstall.php --db=glpitest --user=root --tests
   - cd plugins/formcreator
   - rm composer.lock
   - composer install

@@ -62,7 +62,7 @@ $auth->auth_succeded = true;
 $auth->user = $user;
 Session::init($auth);
 
-if (!TableExists("glpi_configs")) {
+if (!$DB->tableExists("glpi_configs")) {
    die("GLPI not installed\n");
 }
 
