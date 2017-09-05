@@ -1275,6 +1275,7 @@ span.fc_list_icon {
 .plugin_formcreator_userMenu_icons > li {
    padding: 2px 4px;
    display: inline-block;
+   font-size: 1.8em;
 }
 
 .plugin_formcreator_userMenu_icons .button-icon {

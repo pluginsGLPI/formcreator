@@ -149,15 +149,15 @@ class PluginFormcreatorWizard {
       echo '<ul class="plugin_formcreator_userMenu_icons">';
       // preferences
       echo '<li id="plugin_formcreator_preferences_icon">';
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" title="'.
+      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" class="fa fa-cog" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
       echo '</a></li>';
       // Logout
-      echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout witout noAuto login for extauth
+      echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout without noAuto login for extauth
       if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
          echo '?noAUTO=1';
       }
-      echo '" title="'.__s('Logout').'">';
+      echo '" class="fa fa-sign-out" title="'.__s('Logout').'">';
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
