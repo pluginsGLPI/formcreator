@@ -22,11 +22,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    /**
     *
-    * @param unknown $task
+    * @param CronTask $task
     *
     * @return number
     */
-   public static function cronSyncIssues($task) {
+   public static function cronSyncIssues(CronTask $task) {
       global $DB;
 
       $task->log("Disable expired trial accounts");
@@ -210,7 +210,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    /**
     * Retrieve how many ticket associated to the current answer
     * @param  array $options must contains at least an _item key, instance for answer
-    * @return the provide _item key replaced if needed
+    * @return mixed the provide _item key replaced if needed
     */
    public function getTicketsForDisplay($options) {
       $item = $options['_item'];
@@ -392,6 +392,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $field=$searchopt[$option_id]["field"];
 
       if (isset($data['raw']['ITEM_0_display_id'])) {
+         $matches = null;
          preg_match('/[tf]+_([0-9]*)/', $data['raw']['ITEM_0_display_id'], $matches);
          $id = $matches[1];
       }
@@ -501,8 +502,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getTicketSummary() {
-      global $DB;
-
       $status = [
          Ticket::INCOMING => 0,
          Ticket::WAITING => 0,

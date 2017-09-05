@@ -11,6 +11,7 @@ class PluginFormcreatorFields
       $tab_field_types     = array();
 
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+         $matches = null;
          preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
          $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
@@ -37,7 +38,7 @@ class PluginFormcreatorFields
       $tab_field_types_name[''] = '---';
 
       // Get localized names of field types
-      foreach ($tab_field_types as $field_type => $class_file) {
+      foreach (array_keys($tab_field_types) as $field_type) {
          $classname                         = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
@@ -80,7 +81,7 @@ class PluginFormcreatorFields
       $tab_field_types = self::getTypes();
 
       // Get field types preference for JS
-      foreach ($tab_field_types as $field_type => $class_file) {
+      foreach (array_keys($tab_field_types) as $field_type) {
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if (method_exists($classname, 'getJSFields')) {
@@ -115,8 +116,6 @@ class PluginFormcreatorFields
     * @return  boolean                 Should be shown or not
     */
    public static function isVisible($id, $values) {
-      global $DB;
-
       /**
        * Keep track of questions being evaluated to detect infinite loops
        */

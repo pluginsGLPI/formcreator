@@ -39,8 +39,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    }
 
    public function showFormForEntity(Entity $entity) {
-      global $DB;
-
       $ID = $entity->getField('id');
       if (!$entity->can($ID, READ)
             || !Notification::canView()) {
@@ -110,7 +108,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     * @param $fieldref        string   name of the referent field to know if we look at parent entity
     * @param $entities_id
     * @param $fieldval        string   name of the field that we want value (default '')
-    * @param $default_value            value to return (default -2)
+    * @param $default_value   integer  value to return (default -2)
     **/
    static function getUsedConfig($fieldref, $entities_id, $fieldval='', $default_value=-2) {
 

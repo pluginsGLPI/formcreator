@@ -53,7 +53,6 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
 
       // retrieve FK
       if (isset($actor['_question'])) {
-         $section = new PluginFormcreatorSection;
          $question = new PluginFormcreatorQuestion;
 
          if ($questions_id = plugin_formcreator_getFromDBByField($question, 'uuid', $actor['_question'])) {
@@ -123,7 +122,6 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
          case 'question_supplier':
          case 'question_actors':
             $question = new PluginFormcreatorQuestion;
-            $section = new PluginFormcreatorSection;
             if ($question->getFromDB($target_actor['actor_value'])) {
                $target_actor['_question'] = $question->fields['uuid'];
                unset($target_actor['actor_value']);

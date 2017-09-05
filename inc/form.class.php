@@ -330,7 +330,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $formId = $this->getID();
       $form_validator = new PluginFormcreatorForm_Validator();
       $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$formId'");
-      foreach ($rows as $id => $row) {
+      foreach ($rows as $row) {
          $validators[] = $row['items_id'];
       }
 
@@ -503,8 +503,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * Show the list of forms to be displayed to the end-user
     */
    public function showList() {
-      global $CFG_GLPI, $DB;
-
       echo '<div class="center" id="plugin_formcreator_wizard">';
 
       echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
@@ -520,8 +518,6 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    public function showServiceCatalog() {
-      global $CFG_GLPI;
-
       echo "<div id='formcreator_servicecatalogue'>";
 
       // show wizard
@@ -582,7 +578,6 @@ class PluginFormcreatorForm extends CommonDBTM
       $table_target  = getTableForItemType('PluginFormcreatorTargets');
       $table_section = getTableForItemType('PluginFormcreatorSections');
       $table_question= getTableForItemType('PluginFormcreatorQuestions');
-      $where         = getEntitiesRestrictRequest( "", $table_form, "", "", true, false);
 
       $order         = "$table_form.name ASC";
 
@@ -735,7 +730,7 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    protected function showMyLastForms() {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
@@ -925,9 +920,9 @@ class PluginFormcreatorForm extends CommonDBTM
    /**
     * Prepare input datas for adding the form
     *
-    * @param $input datas used to add the item
+    * @param array $input datas used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -973,7 +968,7 @@ class PluginFormcreatorForm extends CommonDBTM
    /**
     * Actions done after the ADD of the item in the database
     *
-    * @return nothing
+    * @return void
    **/
    public function post_addItem() {
       $this->updateValidators();
@@ -983,9 +978,9 @@ class PluginFormcreatorForm extends CommonDBTM
    /**
     * Prepare input datas for updating the form
     *
-    * @param $input datas used to add the item
+    * @param array $input datas used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       if (isset($input['access_rights'])
@@ -1001,11 +996,9 @@ class PluginFormcreatorForm extends CommonDBTM
    /**
     * Actions done after the PURGE of the item in the database
     *
-    * @return nothing
+    * @return void
    **/
    public function post_purgeItem() {
-      global $DB;
-
       $target = new PluginFormcreatorTarget();
       $target->deleteByCriteria(array('plugin_formcreator_forms_id' => $this->getID()));
 
@@ -1022,8 +1015,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return void
     */
    private function updateValidators() {
-      global $DB;
-
       if (!isset($this->input['validation_required'])) {
          return true;
       }
@@ -1170,10 +1161,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return Boolean true if success, false toherwize.
     */
    public function duplicate() {
-      global $DB;
-
-      $section             = new PluginFormcreatorSection();
-      $question            = new PluginFormcreatorQuestion();
       $target              = new PluginFormcreatorTarget();
       $target_ticket       = new PluginFormcreatorTargetTicket();
       $target_ticket_actor = new PluginFormcreatorTargetTicket_Actor();
@@ -1247,19 +1234,19 @@ class PluginFormcreatorForm extends CommonDBTM
       // Form questions conditions
       $questionIds = implode("', '", array_keys($tab_questions));
       $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-      foreach ($rows as $conditions_id => $row) {
+      foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
          $row['show_field'] = $tab_questions[$row['show_field']];
          $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-         if (!$new_conditions_id = $question_condition->add($row)) {
+         if (!$question_condition->add($row)) {
             return false;
          }
       }
 
       // Form targets
       $rows = $target->find("`plugin_formcreator_forms_id` = '$old_form_id'");
-      foreach ($rows as $targets_id => $target_values) {
+      foreach ($rows as $target_values) {
          unset($target_values['id'],
                $target_values['uuid']);
          $target_values['plugin_formcreator_forms_id'] = $new_form_id;
@@ -1294,11 +1281,11 @@ class PluginFormcreatorForm extends CommonDBTM
 
          // Form target tickets actors
          $rows = $target_ticket_actor->find("`plugin_formcreator_targettickets_id` = '{$target_values['items_id']}'");
-         foreach ($rows as $actors_id => $row) {
+         foreach ($rows as $row) {
             unset($row['id'],
                   $row['uuid']);
             $row['plugin_formcreator_targettickets_id'] = $new_target_ticket_id;
-            if (!$new_actors_id = $target_ticket_actor->add($row)) {
+            if (!$target_ticket_actor->add($row)) {
                return false;
             }
          }
@@ -1347,8 +1334,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
    **/
    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,  array $ids) {
-      global $DB;
-
       switch ($ma->getAction()) {
          case 'Duplicate' :
             foreach ($ids as $id) {
@@ -1462,32 +1447,32 @@ class PluginFormcreatorForm extends CommonDBTM
       // get sections
       $form['_sections'] = [];
       $all_sections = $form_section->find("plugin_formcreator_forms_id = ".$this->getID());
-      foreach ($all_sections as $sections_id => $section) {
-         $form_section->getFromDB($sections_id);
+      foreach ($all_sections as $section) {
+         $form_section->getFromDB($section['id']);
          $form['_sections'][] = $form_section->export($remove_uuid);
       }
 
       // get validators
       $form['_validators'] = [];
       $all_validators = $form_validator->find("plugin_formcreator_forms_id = ".$this->getID());
-      foreach ($all_validators as $validators_id => $validator) {
-         $form_validator->getFromDB($validators_id);
+      foreach ($all_validators as $validator) {
+         $form_validator->getFromDB($validator['id']);
          $form['_validators'][] = $form_validator->export($remove_uuid);
       }
 
       // get targets
       $form['_targets'] = [];
       $all_target = $form_target->find("plugin_formcreator_forms_id = ".$this->getID());
-      foreach ($all_target as $targets_id => $target) {
-         $form_target->getFromDB($targets_id);
+      foreach ($all_target as $target) {
+         $form_target->getFromDB($target['id']);
          $form['_targets'][] = $form_target->export($remove_uuid);
       }
 
       // get profiles
       $form['_profiles'] = [];
       $all_profiles = $form_profile->find("plugin_formcreator_forms_id = ".$this->getID());
-      foreach ($all_profiles as $profiles_id => $profile) {
-         $form_profile->getFromDB($profiles_id);
+      foreach ($all_profiles as $profile) {
+         $form_profile->getFromDB($profile['id']);
          $form['_profiles'][] = $form_profile->export($remove_uuid);
       }
 
@@ -1502,8 +1487,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * Display an html form to upload a json with forms data
     */
    public function showImportForm() {
-      global $CFG_GLPI;
-
       echo "<form name='form' method='post' action='".
             PluginFormcreatorForm::getFormURL().
             "?import_send=1' enctype=\"multipart/form-data\">";
@@ -1571,8 +1554,6 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_obj = new self;
       $entity   = new Entity;
       $form_cat = new PluginFormcreatorCategory;
-
-      $item = new self;
 
       // retrieve foreign keys
       if (!isset($form['_entity'])

@@ -316,8 +316,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
       $canValidate = $this->canValidate($form, $this);
 
-      $userId = $_SESSION['glpiID'];
-
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
       // Form Header
@@ -362,7 +360,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                             AND `answers`.`plugin_formcreator_forms_answers_id` = '$ID'
                           INNER JOIN `glpi_plugin_formcreator_sections` AS `sections`
                             ON `questions`.`plugin_formcreator_sections_id` = `sections`.`id`
-                            AND `plugin_formcreator_forms_id` = ".$form->getID()."
+                            AND `plugin_formcreator_forms_id` = " . $form->getID() . "
                           GROUP BY `questions`.`id`
                           ORDER BY `sections`.`order` ASC,
                                    `sections`.`id` ASC,
@@ -446,9 +444,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
       $form = new PluginFormcreatorForm();
@@ -462,9 +460,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       return $input;
@@ -488,8 +486,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
 
    public function saveAnswers($datas) {
-      global $DB;
-
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
 
@@ -590,7 +586,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
             if ($answer_value !== null) {
                // Save the answer to the question
-               $answerID = $answer->add(array(
+               $answer->add(array(
                   'plugin_formcreator_forms_answers_id'  => $id,
                   'plugin_formcreator_question_id'       => $question->getID(),
                   'answer'                               => $answer_value,
@@ -783,10 +779,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $DB->query($query);
 
          $docItem = new Document_Item();
-         $docItemId = $docItem->add([
+         $docItem->add([
             'documents_id' => $docID,
             'itemtype'     => __CLASS__,
-            'items_id'     => $id,
+            'items_id'     => $this->getID(),
          ]);
          return $docID;
       }
@@ -800,8 +796,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $datas['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
-      $answer = new PluginFormcreatorAnswer();
-
       $form->getFromDB($datas['plugin_formcreator_forms_id']);
 
       if (!$this->canValidate($form, $this)) {
@@ -818,8 +812,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $datas['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
-      $answer = new PluginFormcreatorAnswer();
-
       $form->getFromDB($datas['plugin_formcreator_forms_id']);
 
       if (!$this->canValidate($form, $this)) {
@@ -857,8 +849,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
    /**
     *
-    * @param unknown $formAnswerId
-    * @return string[]
+    * @param integer $formAnswerId
+    * @return array
     */
    public function getAnswers($formAnswerId) {
       $answer = new PluginFormcreatorAnswer();
@@ -990,7 +982,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * Actions done after the PURGE of the item in the database
     * Delete answers
     *
-    * @return nothing
+    * @return void
    **/
    public function post_purgeItem() {
       global $DB;

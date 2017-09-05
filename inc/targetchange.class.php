@@ -50,8 +50,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export() {
-      global $DB;
-
       if (!$this->getID()) {
          return false;
       }
@@ -102,8 +100,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return integer the targetticket's id
     */
    public static function import($targetitems_id = 0, $target_data = array()) {
-      global $DB;
-
       $item = new self;
 
       $target_data['_skip_checks'] = true;
@@ -797,9 +793,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    /**
     * Prepare input datas for updating the target ticket
     *
-    * @param $input datas used to add the item
+    * @param array $input datas used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
     **/
    public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
@@ -882,7 +878,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = array(
@@ -1011,6 +1007,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                                WHERE `glpi_profiles_users`.`users_id` = $requesters_id
                                ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
             $res_entities = $DB->query($query_entities);
+            $data_entities = [];
             while ($entity = $DB->fetch_array($res_entities)) {
                $data_entities[] = $entity;
             }

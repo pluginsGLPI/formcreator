@@ -156,12 +156,10 @@ class PluginFormcreatorInstall {
       $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
       $result = $DB->query($query) or die ($DB->error());
 
-      if ($DB->numrows($result) > 0) {
-         list($requesttype) = $DB->fetch_array($result);
-      } else {
+      if (!$DB->numrows($result) > 0) {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
          $DB->query($query) or die ($DB->error());
-         $requesttype = $DB->insert_id();
+         $DB->insert_id();
       }
    }
 
@@ -333,7 +331,7 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteTicketRelation() {
-      global $DB, $CFG_GLPI;
+      global $CFG_GLPI;
 
       // Delete relations with tickets with email notifications disabled
       $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
@@ -388,8 +386,8 @@ class PluginFormcreatorInstall {
 
    /**
     * http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
-    * @param unknown $haystack
-    * @param unknown $needle
+    * @param string $haystack
+    * @param string $needle
     */
    protected function endsWith($haystack, $needle) {
       // search forward starting from end minus needle length characters

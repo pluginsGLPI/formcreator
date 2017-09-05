@@ -1,6 +1,6 @@
 <?php
 
-class PluginFormcreatorFormlist extends CommonGLPI
+class PluginFormcreatorFormList extends CommonGLPI
 {
 
    /**
