@@ -1,9 +1,14 @@
 language: php
 
+env:
+  global:
+    - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
+
 php:
   - '5.6'
   - '7.0'
   - '7.1'
+  - '7.2'
   - nightly
 
 before_script:
