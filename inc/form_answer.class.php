@@ -790,6 +790,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return null;
    }
 
+   /**
+    * Mark answers of a form as refused
+    *
+    * @param array $datas
+    *
+    * @return boolean
+    */
    public function refuseAnswers($datas) {
       $datas['plugin_formcreator_forms_id'] = intval($datas['formcreator_form']);
       $datas['status']                      = 'refused';
@@ -806,6 +813,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return $this->saveAnswers($datas);
    }
 
+   /**
+    * Mark answers of a form as accepted
+    *
+    * @param array $datas
+    *
+    * @return boolean
+    */
    public function acceptAnswers($datas) {
       $datas['plugin_formcreator_forms_id'] = intval($datas['formcreator_form']);
       $datas['status']                      = 'accepted';
@@ -822,7 +836,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return $this->saveAnswers($datas);
    }
 
-
+   /**
+    * Generates all targets for the answers
+    */
    public function generateTarget() {
       global $CFG_GLPI;
 
@@ -848,8 +864,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
+    * Gets answers of all fields of a form answer
     *
     * @param integer $formAnswerId
+    *
     * @return array
     */
    public function getAnswers($formAnswerId) {
@@ -865,7 +883,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    /**
     * Get entire form to be inserted into a target content
     *
-    * @return String                                    Full form questions and answers to be print
+    * @return String Full form questions and answers to be print
     */
    public function getFullForm() {
       global $CFG_GLPI, $DB;
@@ -983,7 +1001,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * Delete answers
     *
     * @return void
-   **/
+    */
    public function post_purgeItem() {
       global $DB;
 
