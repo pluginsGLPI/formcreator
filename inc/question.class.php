@@ -251,8 +251,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return [];
       }
 
-      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios, LDAP
-      $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios', 'ldap');
+      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios
+      $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios');
       if (in_array($input['fieldtype'], $itemtypes)) {
          if (isset($input['values'])) {
             if (empty($input['values'])) {
@@ -261,12 +261,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      false,
                      ERROR);
                return array();
-            } else {
-               $input['values'] = addslashes($input['values']);
             }
-         }
-         if (isset($input['default_values'])) {
-            $input['default_values'] = addslashes($input['default_values']);
          }
       }
 
