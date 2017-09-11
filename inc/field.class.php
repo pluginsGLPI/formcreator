@@ -5,16 +5,18 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 {
    const IS_MULTIPLE = false;
 
-   protected $fields = array();
+   protected $fields = [];
 
-   public function __construct($fields, $datas = array()) {
+   public function __construct($fields, $data = []) {
       $this->fields           = $fields;
-      $this->fields['answer'] = $datas;
+      $this->fields['answer'] = $data;
    }
 
    /**
     * Transform input to properly save it in the database
+    *
     * @param array $input data to transform before save
+    *
     * return array input data to save as is
     */
    public function prepareQuestionInputForSave($input) {
@@ -53,6 +55,11 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
    }
 
+   /**
+    * Outputs the HTML representing the field
+    *
+    * @param string $canEdit
+    */
    public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<input type="text" class="form-control"
@@ -95,10 +102,22 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return $this->getValue();
    }
 
+   /**
+    * Gets the available values for the field
+    *
+    * @return array
+    */
    public function getAvailableValues() {
       return explode("\r\n", $this->fields['values']);
    }
 
+   /**
+    * Is the field valid for thegiven value ?
+    *
+    * @param unknown $value
+    *
+    * @return boolean
+    */
    public function isValid($value) {
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
@@ -113,6 +132,11 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return true;
    }
 
+   /**
+    * Is the field required ?
+    *
+    * @return boolean
+    */
    public function isRequired() {
       return $this->fields['required'];
    }

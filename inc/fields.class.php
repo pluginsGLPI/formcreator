@@ -56,9 +56,10 @@ class PluginFormcreatorFields
    /**
     * Get field value to display
     *
-    * @param Field $field     Field object to display
+    * @param String $field Field object to display
+    * @param String $value the value to display
     *
-    * @return String          field_value
+    * @return String
     */
    public static function getValue($field, $value) {
       $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'field.class.php';
@@ -91,6 +92,12 @@ class PluginFormcreatorFields
       return $tabFieldsForJS;
    }
 
+   /**
+    *
+    * @param unknown $field
+    * @param unknown $datas
+    * @param string $edit
+    */
    public static function showField($field, $datas = null, $edit = true) {
       // Get field types and file path
       $tab_field_types = self::getTypes();
