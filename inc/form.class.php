@@ -1048,7 +1048,14 @@ class PluginFormcreatorForm extends CommonDBTM
       }
    }
 
-   public function saveForm() {
+   /**
+    * Validates answers of a form and saves them in database
+    *
+    * @param array $input
+    *
+    * @return boolean true if the form is valid, false otherwise
+    */
+   public function saveForm($input) {
       $valid = true;
 
       $tab_section    = array();
@@ -1068,17 +1075,17 @@ class PluginFormcreatorForm extends CommonDBTM
       // Validate form fields
       foreach ($found_questions as $id => $fields) {
          // If field was not post, it's value is empty
-         if (isset($_POST['formcreator_field_' . $id])) {
-            $data['formcreator_field_' . $id] = is_array($_POST['formcreator_field_' . $id])
-                           ? json_encode($_POST['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
-                           : $_POST['formcreator_field_' . $id];
+         if (isset($input['formcreator_field_' . $id])) {
+            $data['formcreator_field_' . $id] = is_array($input['formcreator_field_' . $id])
+                           ? json_encode($input['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
+                           : $input['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
             if ($fields['fieldtype'] == 'float') {
                $data['formcreator_field_' . $id] = str_replace(',', '.', $data['formcreator_field_' . $id]);
                $data['formcreator_field_' . $id] = str_replace(' ', '', $data['formcreator_field_' . $id]);
             }
-            unset($_POST['formcreator_field_' . $id]);
+            unset($input['formcreator_field_' . $id]);
          } else {
             $data['formcreator_field_' . $id] = '';
          }
@@ -1094,8 +1101,8 @@ class PluginFormcreatorForm extends CommonDBTM
             $valid = false;
          }
       }
-      if (isset($_POST) && is_array($_POST)) {
-         $data = $data + $_POST;
+      if (isset($input) && is_array($input)) {
+         $data = $data + $input;
       }
 
       // Check required_validator

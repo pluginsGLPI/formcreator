@@ -152,15 +152,14 @@ class UrgencyTest extends SuperAdminTestCase
     * @param array $urgencyQuestions
     */
    public function testSendForm(PluginFormcreatorForm $form, $urgencyQuestions) {
-      $formId = $form->getID();
-      $_POST = array('formcreator_form' => $form->getID());
+      $saveFormData = [];
       foreach ($urgencyQuestions as $question) {
          if ($question['question'] !== null) {
-            $_POST['formcreator_field_' . $question['question']->getID()] = $question['expected'];
+            $saveFormData['formcreator_field_' . $question['question']->getID()] = $question['expected'];
          }
       }
-      $form->saveForm();
-      unset($_POST);
+      $saveFormData['formcreator_form'] = $form->getID();
+      $form->saveForm($saveFormData);
 
       // Check urgency for each target ticket
       foreach ($urgencyQuestions as $question) {
