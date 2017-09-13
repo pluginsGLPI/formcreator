@@ -13,28 +13,27 @@ if (isset($_POST["profiles_id"]) && isset($_POST["form_id"])) {
 
    if (isset($_POST['access_rights'])) {
       $form = new PluginFormcreatorForm();
-      $form->update(array(
-         'id'            => $_POST['form_id'],
-         'access_rights' => $_POST['access_rights']
-      ));
+      $form->update([
+         'id'            => (int) $_POST['form_id'],
+         'access_rights' => (int) $_POST['access_rights']
+      ]);
    }
 
    $form_profile = new PluginFormcreatorForm_Profile();
-   $form_profile->deleteByCriteria(array(
+   $form_profile->deleteByCriteria([
          'plugin_formcreator_forms_id'    => (int) $_POST["form_id"],
-   ));
+   ]);
 
    foreach ($_POST["profiles_id"] as $profile_id) {
       if ($profile_id != 0) {
          $form_profile = new PluginFormcreatorForm_Profile();
-         $form_profile->add(array(
+         $form_profile->add([
                'plugin_formcreator_forms_id' => (int) $_POST["form_id"],
                'profiles_id'                 => (int) $profile_id,
-         ));
+         ]);
       }
    }
    Html::back();
-
 } else {
    Html::back();
 }
