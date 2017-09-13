@@ -309,29 +309,41 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteNotifications() {
-      global $DB;
-
-      // Define DB tables
-      $table_targets       = NotificationTarget::getTable();
-      $table_notification  = Notification::getTable();
-      $table_translations  = NotificationTemplateTranslation::getTable();
-      $table_templates     = NotificationTemplate::getTable();
-
       // Delete translations
-      $query = "DELETE FROM `$table_translations`
-                WHERE `notificationtemplates_id` IN (
-                SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
-      $DB->query($query);
+      $translation = new NotificationTemplateTranslation();
+      $translation->deleteByCriteria([
+         'INNER JOIN' => [
+            NotificationTemplate::getTable() => [
+               'FKEY' => [
+                  NotificationTemplateTranslation::getTable() => NotificationTemplate::getForeignKeyField(),
+                  NotificationTemplate::getTable() => NotificationTemplate::getIndexName()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+         ]
+      ]);
 
       // Delete notification templates
       $template = new NotificationTemplate();
       $template->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
 
       // Delete notification targets
-      $query = "DELETE FROM `$table_targets`
-                WHERE `notifications_id` IN (
-                SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
-      $DB->query($query);
+      $target = new NotificationTarget();
+      $target->deleteByCriteria([
+         'INNER JOIN' => [
+            Notification::getTable() => [
+               'FKEY' => [
+                  NotificationTarget::getTable() => Notification::getForeignKeyField(),
+                  Notification::getTable() => Notification::getIndexName()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            Notification::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+         ],
+      ]);
 
       // Delete notifications and their templates
       $notification = new Notification();
