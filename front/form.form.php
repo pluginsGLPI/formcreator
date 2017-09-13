@@ -4,6 +4,7 @@ include ("../../../inc/includes.php");
 // Check if plugin is activated...
 $plugin = new Plugin();
 if (!$plugin->isActivated("formcreator")) {
+   Html::displayNotFoundError();
 }
 
 $form = new PluginFormcreatorForm();
