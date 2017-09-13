@@ -11,8 +11,8 @@ if (!$plugin->isActivated('formcreator')) {
 
 $question = new PluginFormcreatorQuestion();
 
-// Add a new Question
 if (isset($_POST["add"])) {
+   // Add a new Question
    Session::checkRight("entity", UPDATE);
    if ($newid = $question->add($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
@@ -21,8 +21,8 @@ if (isset($_POST["add"])) {
    }
    Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Edit an existing Question
 } else if (isset($_POST["update"])) {
+   // Edit an existing Question
    Session::checkRight("entity", UPDATE);
    if ($question->update($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
@@ -30,27 +30,26 @@ if (isset($_POST["add"])) {
    }
    Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
-   // Delete a Question
 } else if (isset($_POST["delete_question"])) {
+   // Delete a Question
    Session::checkRight("entity", UPDATE);
    $question->delete($_POST);
 
-   // Duplicate a Question
 } else if (isset($_POST["duplicate_question"])) {
+   // Duplicate a Question
    Session::checkRight("entity", UPDATE);
    if ($question->getFromDB((int) $_POST['id'])) {
       $question->duplicate();
    }
 
-   // Set a Question required
 } else if (isset($_POST["set_required"])) {
-   global $DB;
-   Session::checkRight("entity", UPDATE);
-   $table = getTableForItemtype('PluginFormcreatorQuestion');
-   $DB->query("UPDATE $table SET `required` = " . $_POST['value'] . " WHERE id = " . $_POST['id']);
+   // Set a Question required
+   $question = new PluginFormcreatorQuestion();
+   $question->gtFromDB((int) $_POST['id']);
+   $question->update(['required' => $_POST['value']] + $question->fields);
 
-   // Move a Question
 } else if (isset($_POST["move"])) {
+   // Move a Question
    Session::checkRight("entity", UPDATE);
 
    if ($question->getFromDB((int) $_POST['id'])) {
@@ -61,7 +60,7 @@ if (isset($_POST["add"])) {
       }
    }
 
-   // Return to form list
 } else {
+   // Return to form list
    Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.php');
 }
