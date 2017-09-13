@@ -17,7 +17,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     *
     * @param array $input data to transform before save
     *
-    * return array input data to save as is
+    * @return array input data to save as is
     */
    public function prepareQuestionInputForSave($input) {
       return  $input;
@@ -139,6 +139,17 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     */
    public function isRequired() {
       return $this->fields['required'];
+   }
+
+   /**
+    * trim values separated by \r\n
+    * @param string $value a value or default value
+    * @return string
+    */
+   protected function trimValue($value) {
+      $value = explode('\\r\\n', $value);
+      $value = array_map('trim', $value);
+      return implode('\\r\\n', $value);
    }
 
 }

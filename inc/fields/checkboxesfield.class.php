@@ -108,10 +108,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                   ERROR);
             return [];
          } else {
+            $input['values'] = $this->trimValue($input['values']);
             $input['values'] = addslashes($input['values']);
          }
       }
       if (isset($input['default_values'])) {
+         $input['default_values'] = $this->trimValue($input['default_values']);
          $input['default_values'] = addslashes($input['default_values']);
       }
       return $input;
