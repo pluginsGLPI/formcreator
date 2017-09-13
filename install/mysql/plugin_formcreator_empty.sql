@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   INDEX `requester_id` (`requester_id`),
   INDEX `users_id_validator` (`users_id_validator`),
   INDEX `groups_id_validator` (`groups_id_validator`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

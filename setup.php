@@ -324,3 +324,10 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    $migration->log($error . "\n" . Toolbox::backtrace(false, '', array('Toolbox::backtrace()')), false);
    die($error . "<br><br> Please, check migration log");
 }
+
+function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+   if (0 === error_reporting()) {
+      return false;
+   }
+   throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}

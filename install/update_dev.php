@@ -56,29 +56,31 @@ function plugin_formcreator_updateForm_Answer_2_6(Migration $migration) {
       ]);
       // Don't use update() method because the json will be HTML-entities-ified (see prepareInputForUpdate() )
       $query = "UPDATE `$table` SET `values`='$updatedValue' WHERE `id`='$id'";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);;
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
    // add location rule
    $enum_location_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumLocationRule()))."'";
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'location_rule', false)) {
       $migration->addField(
-            'glpi_plugin_formcreator_targettickets',
-            'location_rule',
-            "ENUM($enum_location_rule) NOT NULL DEFAULT 'none'",
-            ['after' => 'category_question']
-            );
+         'glpi_plugin_formcreator_targettickets',
+         'location_rule',
+         "ENUM($enum_location_rule) NOT NULL DEFAULT 'none'",
+         ['after' => 'category_question']
+      );
    } else {
       $current_enum_location_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'location_rule');
       if (count($current_enum_location_rule) != count(PluginFormcreatorTargetTicket::getEnumLocationRule())) {
          $migration->changeField(
-               'glpi_plugin_formcreator_targettickets',
-               'location_rule',
-               'location_rule',
-               "ENUM($enum_location_rule) NOT NULL DEFAULT 'none'",
-               ['after' => 'category_question']
-               );
+            'glpi_plugin_formcreator_targettickets',
+            'location_rule',
+            'location_rule',
+            "ENUM($enum_location_rule) NOT NULL DEFAULT 'none'",
+            ['after' => 'category_question']
+         );
       }
    }
-   $migration->addField('glpi_plugin_formcreator_targettickets', 'location_question', 'integer', array('after' => 'location_rule'));
+   $migration->addField('glpi_plugin_formcreator_targettickets', 'location_question', 'integer', ['after' => 'location_rule']);
 
    $migration->executeMigration();
 }
