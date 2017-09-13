@@ -28,17 +28,22 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    // add location rule
    $enum_location_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumLocationRule()))."'";
    if (!FieldExists('glpi_plugin_formcreator_targettickets', 'location_rule', false)) {
-      $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-                ADD `location_rule` ENUM($enum_location_rule) NOT NULL DEFAULT 'none' AFTER `category_question`;";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      $migration->addField(
+         'glpi_plugin_formcreator_targettickets',
+         'location_rule',
+         "ENUM($enum_location_rule) NOT NULL DEFAULT 'none'",
+         ['after' => 'category_question']
+      );
    } else {
       $current_enum_location_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'location_rule');
       if (count($current_enum_location_rule) != count(PluginFormcreatorTargetTicket::getEnumLocationRule())) {
-         $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
-                   CHANGE COLUMN `location_rule` `location_rule`
-                   ENUM($enum_location_rule)
-                   NOT NULL DEFAULT 'none'";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+         $migration->changeField(
+            'glpi_plugin_formcreator_targettickets',
+            'location_rule',
+            'location_rule',
+            "ENUM($enum_location_rule) NOT NULL DEFAULT 'none'",
+            ['after' => 'category_question']
+         );
       }
    }
    $migration->addField('glpi_plugin_formcreator_targettickets', 'location_question', 'integer', array('after' => 'location_rule'));
