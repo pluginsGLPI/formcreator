@@ -55,6 +55,11 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
    }
 
+   /**
+    * Outputs the HTML representing the field
+    *
+    * @param string $canEdit
+    */
    public function displayField($canEdit = true) {
       if ($canEdit) {
          echo '<input type="text" class="form-control"
