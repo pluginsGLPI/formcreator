@@ -81,11 +81,11 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    }
 
    static function getEnumLocationRule() {
-      return array(
+      return [
          'none'      => __('Location from template or none', 'formcreator'),
          'specific'  => __('Specific location', 'formcreator'),
          'answer'    => __('Equals to the answer to the question', 'formcreator'),
-      );
+      ];
    }
 
 
@@ -786,7 +786,7 @@ EOS;
          'on_change'             => 'change_location()',
          'rand'                  => $rand
       ));
-      $script = <<<EOS
+      $script = <<<JAVASCRIPT
          function change_location() {
             $('#location_specific_title').hide();
             $('#location_specific_value').hide();
@@ -805,7 +805,7 @@ EOS;
             }
          }
          change_location();
-EOS;
+JAVASCRIPT;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
@@ -815,10 +815,10 @@ EOS;
       echo '<td width="25%">';
 
       echo '<div id="location_specific_value" style="display: none">';
-      Location::dropdown(array(
+      Location::dropdown([
          'name' => '_location_specific',
          'value' => $this->fields["location_question"],
-      ));
+      ]);
       echo '</div>';
       echo '<div id="location_question_value" style="display: none">';
       // select all user questions (GLPI Object)
@@ -838,9 +838,9 @@ EOS;
             $users_questions[$question['id']] = $question['name'];
          }
       }
-      Dropdown::showFromArray('_location_question', $users_questions, array(
+      Dropdown::showFromArray('_location_question', $users_questions, [
          'value' => $this->fields['location_question'],
-      ));
+      ]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';
