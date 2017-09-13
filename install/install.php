@@ -19,6 +19,7 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      $this->createNotifications();
 
       return true;
    }
@@ -211,6 +212,9 @@ class PluginFormcreatorInstall {
       }
    }
 
+   /**
+    * Declares the notifications that the plugin handles
+    */
    protected function createNotifications() {
       $this->migration->displayMessage("create notifications");
 
@@ -248,10 +252,12 @@ class PluginFormcreatorInstall {
       );
 
       // Create the notification template
-      $notification        = new Notification();
-      $notification_target = new NotificationTarget();
-      $template            = new NotificationTemplate();
-      $translation         = new NotificationTemplateTranslation();
+      $notification                       = new Notification();
+      $template                           = new NotificationTemplate();
+      $translation                        = new NotificationTemplateTranslation();
+      $notification_target                = new NotificationTarget();
+      $notification_notificationTemplate  = new Notification_NotificationTemplate();
+
       foreach ($notifications as $event => $datas) {
          // Check if notification already exists
          $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
@@ -286,6 +292,12 @@ class PluginFormcreatorInstall {
                   'mode'                     => 'mail',
             ));
 
+            $notification_notificationTemplate->add([
+               'notifications_id'         => $notification_id,
+               'notificationtemplates_id' => $template_id,
+               'mode'                     => Notification_NotificationTemplate::MODE_MAIL,
+            ]);
+
             // Add default notification targets
             $notification_target->add(array(
                   "items_id"         => $datas['notified'],
@@ -297,37 +309,53 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteNotifications() {
-      global $DB;
-
-      $this->migration->displayMessage("Delete notifications");
-
-      // Define DB tables
-      $table_targets      = getTableForItemType('NotificationTarget');
-      $table_notification = getTableForItemType('Notification');
-      $table_translations = getTableForItemType('NotificationTemplateTranslation');
-      $table_templates    = getTableForItemType('NotificationTemplate');
-
       // Delete translations
-      $query = "DELETE FROM `$table_translations`
-      WHERE `notificationtemplates_id` IN (
-      SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
-      $DB->query($query);
+      $translation = new NotificationTemplateTranslation();
+      $translation->deleteByCriteria([
+         'INNER JOIN' => [
+            NotificationTemplate::getTable() => [
+               'FKEY' => [
+                  NotificationTemplateTranslation::getTable() => NotificationTemplate::getForeignKeyField(),
+                  NotificationTemplate::getTable() => NotificationTemplate::getIndexName()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+         ]
+      ]);
 
       // Delete notification templates
-      $query = "DELETE FROM `$table_templates`
-      WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
-      $DB->query($query);
+      $template = new NotificationTemplate();
+      $template->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
 
       // Delete notification targets
-      $query = "DELETE FROM `$table_targets`
-      WHERE `notifications_id` IN (
-      SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
-      $DB->query($query);
+      $target = new NotificationTarget();
+      $target->deleteByCriteria([
+         'INNER JOIN' => [
+            Notification::getTable() => [
+               'FKEY' => [
+                  NotificationTarget::getTable() => Notification::getForeignKeyField(),
+                  Notification::getTable() => Notification::getIndexName()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            Notification::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+         ],
+      ]);
 
-      // Delete notifications
-      $query = "DELETE FROM `$table_notification`
-      WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
-      $DB->query($query);
+      // Delete notifications and their templates
+      $notification = new Notification();
+      $notification_notificationTemplate = new Notification_NotificationTemplate();
+      $rows = $notification->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      foreach ($rows as $row) {
+         $notification_notificationTemplate->deleteByCriteria(['notifications_id' => $row['id']]);
+         $notification->delete($row);
+      }
+
+      $notification = new Notification();
+      $notification->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
    }
 
    protected function deleteTicketRelation() {
@@ -400,6 +428,7 @@ class PluginFormcreatorInstall {
    public function uninstall() {
       $this->deleteTicketRelation();
       $this->deleteTables();
+      $this->deleteNotifications();
 
       $config = new Config();
       $config->deleteByCriteria(array('context' => 'formcreator'));

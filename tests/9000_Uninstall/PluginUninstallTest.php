@@ -37,24 +37,35 @@ class PluginUninstallTest extends SuperAdminTestCase
       $plugin = new Plugin();
       $plugin->getFromDBbyDir("formcreator");
 
+      // Uninstall the plugin
       ob_start(function($in) { return ''; });
       $plugin->uninstall($plugin->getID());
       ob_end_clean();
 
+      // Check all  tables are dropped
       $tables = [];
       $result = $DB->query("SHOW TABLES LIKE 'glpi_plugin_formcreator_%'");
       while ($row = $DB->fetch_assoc($result)) {
          $tables[] = array_pop($row);
       }
       $this->assertCount(0, $tables, "not deleted tables \n" . json_encode($tables, JSON_PRETTY_PRINT));
-   }
 
-   /**
-    * @depends testUninstall
-    */
-   public function testRequestTypePersists() {
+      // Check the request type still exists
       $requestType = new RequestType();
       $rows = $requestType->find("`name` = 'Formcreator'");
       $this->assertCount(1, $rows);
+
+      // Check the notifications of the plugin no longer exist
+      $notification = new Notification();
+      $rows = $notification->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      $this->assertCount(0, $rows);
+
+      $template = new NotificationTemplate();
+      $rows = $template->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      $this->assertCount(0, $rows);
+
+      // TODO: need to find a r eliable way to detect not clenaed
+      // - NotificationTemplateTranslation
+      // - Notification_NotificationTemplate
    }
 }
