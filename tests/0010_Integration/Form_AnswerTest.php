@@ -22,9 +22,7 @@ class Form_AnswerTest extends SuperAdminTestCase {
       $this->assertFalse($form->isNewItem());
 
       // Answer the form
-      $_POST['formcreator_form'] = $form->getID();
-      $form->saveForm();
-      unset($_POST);
+      $form->saveForm(['formcreator_form' => $form->getID()]);
 
       // Check a notification was created with the expected template
       $result = $DB->request([
