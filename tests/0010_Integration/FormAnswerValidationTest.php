@@ -85,7 +85,6 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
 
       $formAnswer = new PluginFormcreatorForm_Answer();
       $formAnswer_table = PluginFormcreatorForm_Answer::getTable();
-      $_POST = $this->formAnswersData;
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
       $maxId = $DB->fetch_assoc($result);
@@ -101,8 +100,6 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
       $this->assertGreaterThan($maxId, $newId);
       $formAnswer->getFromDB($newId);
       $this->assertFalse($formAnswer->isNewItem());
-
-      unset($_POST); // $_POST was populated but triggers CSRF check when runing next test
 
       return $formAnswer;
    }

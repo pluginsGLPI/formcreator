@@ -85,7 +85,7 @@ if ($plugin->isActivated("formcreator")) {
          }
 
          // Save form
-         if (!$form->saveForm()) {
+         if (!$form->saveForm($_POST)) {
             Html::back();
          }
          $form->increaseUsageCount();
