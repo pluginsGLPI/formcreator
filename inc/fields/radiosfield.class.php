@@ -56,19 +56,13 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             return [];
          } else {
             // trim values
-            $input['values'] = explode('\\r\\n', $input['values']);
-            $input['values'] = array_map('trim', $input['values']);
-            $input['values'] = implode('\\r\\n', $input['values']);
-
+            $input['values'] = $this->trimValue($input['values']);
             $input['values'] = addslashes($input['values']);
          }
       }
       if (isset($input['default_values'])) {
          // trim values
-         $input['default_values'] = explode('\\r\\n', $input['default_values']);
-         $input['default_values'] = array_map('trim', $input['default_values']);
-         $input['default_values'] = implode('\\r\\n', $input['default_values']);
-
+         $input['default_values'] = $this->trimValue($input['default_values']);
          $input['default_values'] = addslashes($input['default_values']);
       }
       return $input;
