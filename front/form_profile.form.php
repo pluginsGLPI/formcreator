@@ -5,39 +5,35 @@ Session::checkRight("entity", UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if ($plugin->isActivated("formcreator")) {
-   if (isset($_POST["profiles_id"]) && isset($_POST["form_id"])) {
+if (!$plugin->isActivated("formcreator")) {
+   Html::displayNotFoundError();
+}
 
-      if (isset($_POST['access_rights'])) {
-         $form = new PluginFormcreatorForm();
-         $form->update(array(
-            'id'            => $_POST['form_id'],
-            'access_rights' => $_POST['access_rights']
-         ));
-      }
+if (isset($_POST["profiles_id"]) && isset($_POST["form_id"])) {
 
-      $form_profile = new PluginFormcreatorForm_Profile();
-      $form_profile->deleteByCriteria(array(
-            'plugin_formcreator_forms_id'    => (int) $_POST["form_id"],
-      ));
-      $table = PluginFormcreatorForm_Profile::getTable();
-
-      foreach ($_POST["profiles_id"] as $profile_id) {
-         if ($profile_id != 0) {
-            $form_profile = new PluginFormcreatorForm_Profile();
-            $form_profile->add(array(
-                  'plugin_formcreator_forms_id' => (int) $_POST["form_id"],
-                  'profiles_id'                 => (int) $profile_id,
-            ));
-         }
-      }
-      Html::back();
-
-   } else {
-      Html::back();
+   if (isset($_POST['access_rights'])) {
+      $form = new PluginFormcreatorForm();
+      $form->update([
+         'id'            => (int) $_POST['form_id'],
+         'access_rights' => (int) $_POST['access_rights']
+      ]);
    }
 
-   // Or display a "Not found" error
+   $form_profile = new PluginFormcreatorForm_Profile();
+   $form_profile->deleteByCriteria([
+         'plugin_formcreator_forms_id'    => (int) $_POST["form_id"],
+   ]);
+
+   foreach ($_POST["profiles_id"] as $profile_id) {
+      if ($profile_id != 0) {
+         $form_profile = new PluginFormcreatorForm_Profile();
+         $form_profile->add([
+               'plugin_formcreator_forms_id' => (int) $_POST["form_id"],
+               'profiles_id'                 => (int) $profile_id,
+         ]);
+      }
+   }
+   Html::back();
 } else {
-   Html::displayNotFoundError();
+   Html::back();
 }

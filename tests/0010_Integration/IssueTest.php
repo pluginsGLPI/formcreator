@@ -52,9 +52,6 @@ class IssueTest extends SuperAdminTestCase {
       $this->assertCount(1, $rows);
    }
 
-   /**
-    *
-    */
    public function testAddFormAnswerWithOneTargetTicket() {
       // create a form with a target ticket
       $form = new PluginFormcreatorForm();

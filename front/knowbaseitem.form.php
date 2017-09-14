@@ -1,6 +1,11 @@
 <?php
-
 include ("../../../inc/includes.php");
+
+// Check if plugin is activated...
+$plugin = new Plugin();
+if (!$plugin->isActivated('formcreator')) {
+   Html::displayNotFoundError();
+}
 
 $kb = new KnowbaseItem();
 
@@ -20,5 +25,4 @@ if (isset($_GET["id"])) {
    $kb->display($options);
 
    PluginFormcreatorWizard::footer();
-
 }

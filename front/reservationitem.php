@@ -1,8 +1,13 @@
 <?php
-
 include ("../../../inc/includes.php");
 
 Session::checkRightsOr('reservation', array(READ, ReservationItem::RESERVEANITEM));
+
+// Check if plugin is activated...
+$plugin = new Plugin();
+if (!$plugin->isActivated('formcreator')) {
+   Html::displayNotFoundError();
+}
 
 PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
 
