@@ -1057,23 +1057,12 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function saveForm($input) {
       $valid = true;
+      $data  = [];
 
-      $tab_section    = array();
-      $data           = array();
-      $sections       = new PluginFormcreatorSection();
-      $found_sections = $sections->find('`plugin_formcreator_forms_id` = ' . $this->getID());
-      foreach ($found_sections as $id => $fields) {
-         $tab_section[] = $id;
-      }
-
-      if (count($tab_section) < 1) {
-         $found_questions = array();
-      } else {
-         $questions         = new PluginFormcreatorQuestion();
-         $found_questions = $questions->find('`plugin_formcreator_sections_id` IN (' . implode(',', $tab_section) .')');
-      }
       // Validate form fields
-      foreach ($found_questions as $id => $fields) {
+      $question = new PluginFormcreatorQuestion();
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
          // If field was not post, it's value is empty
          if (isset($input['formcreator_field_' . $id])) {
             $data['formcreator_field_' . $id] = is_array($input['formcreator_field_' . $id])
@@ -1081,7 +1070,7 @@ class PluginFormcreatorForm extends CommonDBTM
                            : $input['formcreator_field_' . $id];
 
             // Replace "," by "." if field is a float field and remove spaces
-            if ($fields['fieldtype'] == 'float') {
+            if ($question->getField('fieldtype') == 'float') {
                $data['formcreator_field_' . $id] = str_replace(',', '.', $data['formcreator_field_' . $id]);
                $data['formcreator_field_' . $id] = str_replace(' ', '', $data['formcreator_field_' . $id]);
             }
@@ -1090,10 +1079,10 @@ class PluginFormcreatorForm extends CommonDBTM
             $data['formcreator_field_' . $id] = '';
          }
 
-         $className = 'PluginFormcreator' . ucfirst($fields['fieldtype']) . 'Field';
+         $className = 'PluginFormcreator' . ucfirst($question->getField('fieldtype')) . 'Field';
 
          if (class_exists($className)) {
-            $obj = new $className($fields, $data);
+            $obj = new $className($question->fields, $data);
             if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
                $valid = false;
             }
