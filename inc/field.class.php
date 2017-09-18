@@ -114,9 +114,9 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    /**
     * Is the field valid for thegiven value ?
     *
-    * @param unknown $value
+    * @param string $value
     *
-    * @return boolean
+    * @return boolean True if the field has a valid value, false otherwise
     */
    public function isValid($value) {
       // If the field is required it can't be empty

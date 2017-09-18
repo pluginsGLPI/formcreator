@@ -20,6 +20,20 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       return $input;
    }
 
+   public function isValid($value) {
+      // If the field is required it can't be empty (0 is a valid value for entity)
+      if ($this->isRequired() && empty($value) && ($value == '0' && $this->fields['values'] != Entity::class)) {
+         Session::addMessageAfterRedirect(
+               __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+               false,
+               ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
+   }
+
    public static function getPrefs() {
       return array(
          'required'       => 1,
