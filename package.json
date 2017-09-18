@@ -1,0 +1,20 @@
+{
+  "name": "formcreator",
+  "version": "2.5.2",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "jquery-slinky": "^3.0.0",
+    "masonry-layout": "^4.2.0",
+    "paramquery-select": "^1.2.1"
+  },
+  "devDependencies": {
+    "casperjs": "^1.1.4",
+    "mocha": "^3.5.3",
+    "nightmare": "^2.10.0",
+    "phantomjs-prebuilt": "^2.1.14",
+    "slimerjs": "^0.10.3"
+  },
+  "scripts": {
+    "test": "mocha tests/0020_Functional/*.js"
+  }
+}
