@@ -511,7 +511,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          if ($status == 'waiting') {
             foreach ($questions as $question) {
                // unset the answer value
-               $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
+               $answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
 
                // $answer_value may be still null if the field type is file and no file was uploaded
                if ($answer_value !== null) {
