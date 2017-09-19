@@ -164,7 +164,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_question_id` = '$actorValue'
+               $answer->getFromDBByQuery("WHERE `plugin_formcreator_questions_id` = '$actorValue'
                      AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
 
                if ($answer->isNewItem()) {
@@ -178,7 +178,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_question_id` = '$actorValue'
+               $answer->getFromDBByQuery("WHERE `plugin_formcreator_questions_id` = '$actorValue'
                      AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
 
                if ($answer->isNewItem()) {
@@ -744,7 +744,7 @@ EOS;
          $query_questions = "SELECT `questions`.*, `answers`.`answer`
                              FROM `glpi_plugin_formcreator_questions` AS questions
                              LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
-                               ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                               ON `answers`.`plugin_formcreator_questions_id` = `questions`.`id`
                                AND `plugin_formcreator_forms_answers_id` = ".$formanswer->getID()."
                              WHERE `questions`.`plugin_formcreator_sections_id` IN ($sectionsIdString)
                              ORDER BY `questions`.`order` ASC";

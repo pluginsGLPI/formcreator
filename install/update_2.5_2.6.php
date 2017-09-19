@@ -22,7 +22,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
       ]);
       // Don't use update() method because the json will be HTML-entities-ified (see prepareInputForUpdate() )
       $query = "UPDATE `$table` SET `values`='$updatedValue' WHERE `id`='$id'";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);;
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
 
    // add location rule
@@ -47,6 +47,10 @@ function plugin_formcreator_update_2_6(Migration $migration) {
       }
    }
    $migration->addField('glpi_plugin_formcreator_targettickets', 'location_question', 'integer', array('after' => 'location_rule'));
+
+   // Fix bad foreign key
+   $table = 'glpi_plugin_formcreator_answers';
+   $migration->changeField($table, 'plugin_formcreator_question_id', 'plugin_formcreator_questions_id', 'integer');
 
    $migration->executeMigration();
 }
