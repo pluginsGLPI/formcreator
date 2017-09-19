@@ -116,7 +116,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                'nosearch'      => false,
                'joinparams'    => [
                   'jointype'  => 'child',
-                  'condition' => "AND NEWTABLE.`plugin_formcreator_question_id` = $questions_id",
+                  'condition' => "AND NEWTABLE.`plugin_formcreator_questions_id` = $questions_id",
                ]
             ];
 
@@ -356,7 +356,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                  `answers`.`answer`
                           FROM `glpi_plugin_formcreator_questions` AS `questions`
                           LEFT JOIN `glpi_plugin_formcreator_answers` AS `answers`
-                            ON `answers`.`plugin_formcreator_question_id` = `questions`.`id`
+                            ON `answers`.`plugin_formcreator_questions_id` = `questions`.`id`
                             AND `answers`.`plugin_formcreator_forms_answers_id` = '$ID'
                           INNER JOIN `glpi_plugin_formcreator_sections` AS `sections`
                             ON `questions`.`plugin_formcreator_sections_id` = `sections`.`id`
@@ -518,7 +518,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   // Update the answer to the question
                   $questionId = $question->getID();
                   $answer = new PluginFormcreatorAnswer();
-                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_question_id` = '$questionId'");
+                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
                   $answer->update(array(
                      'id'     => $answer->getID(),
                      'answer' => $answer_value,
@@ -563,7 +563,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                // Save the answer to the question
                $answer->add(array(
                   'plugin_formcreator_forms_answers_id'  => $id,
-                  'plugin_formcreator_question_id'       => $question->getID(),
+                  'plugin_formcreator_questions_id'      => $question->getID(),
                   'answer'                               => $answer_value,
                ), array(), 0);
             }
@@ -861,7 +861,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $answers = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'");
       $answers_values = array();
       foreach ($answers as $found_answer) {
-         $answers_values[$found_answer['plugin_formcreator_question_id']] = stripslashes($found_answer['answer']);
+         $answers_values[$found_answer['plugin_formcreator_questions_id']] = stripslashes($found_answer['answer']);
       }
       return $answers_values;
    }
@@ -894,7 +894,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                  answers.`answer`
                           FROM `glpi_plugin_formcreator_questions` AS questions
                           INNER JOIN `glpi_plugin_formcreator_answers` AS answers
-                            ON answers.`plugin_formcreator_question_id` = questions.`id`
+                            ON answers.`plugin_formcreator_questions_id` = questions.`id`
                             AND answers.`plugin_formcreator_forms_answers_id` = ".$this->getID()."
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`

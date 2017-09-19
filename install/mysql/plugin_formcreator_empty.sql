@@ -4,11 +4,11 @@
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_forms_answers_id` int(11) NOT NULL,
-  `plugin_formcreator_question_id` int(11) NOT NULL,
+  `plugin_formcreator_questions_id` int(11) NOT NULL,
   `answer` text,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
-  INDEX `plugin_formcreator_question_id` (`plugin_formcreator_question_id`)
+  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
