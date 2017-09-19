@@ -847,9 +847,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $data['name']                  = addslashes($this->parseTags($this->fields['name'],
                                                                     $formanswer,
                                                                     $fullform));
-      $data['content']               = htmlentities(addslashes($this->parseTags($this->fields['comment'],
+      $data['content']               = addslashes($this->parseTags($this->fields['comment'],
                                                                       $formanswer,
-                                                                      $fullform)));
+                                                                      $fullform));
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
       $data['_tickettemplates_id']   = $this->fields['tickettemplates_id'];

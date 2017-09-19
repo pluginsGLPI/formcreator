@@ -511,19 +511,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          if ($status == 'waiting') {
             foreach ($questions as $question) {
                // unset the answer value
-               $answer_value = null;
-
-               if ($question->getField('fieldtype') != 'file') {
-                  // If the answer is set, check if it is an array (then implode id).
-                  if (isset($data['formcreator_field_' . $question->getID()])) {
-                     $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
-                  } else {
-                     $answer_value = '';
-                  }
-               } else if (isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name'])
-                          && is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name'])) {
-                  $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
-               }
+               $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
 
                // $answer_value may be still null if the field type is file and no file was uploaded
                if ($answer_value !== null) {
@@ -569,20 +557,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          // Save questions answers
          foreach ($questions as $question) {
             // unset the answer value
-            $answer_value = null;
-
-            if ($question->getField('fieldtype') != 'file') {
-               // If the answer is set, check if it is an array (then implode id).
-               if (isset($data['formcreator_field_' . $question->getID()])) {
-                  $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
-               } else {
-                  $answer_value = '';
-               }
-               $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
-            } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
-                       && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
-               $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
-            }
+            $answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
 
             if ($answer_value !== null) {
                // Save the answer to the question
@@ -725,24 +700,35 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param array|string $value
     * @return null|string
     */
-   private function transformAnswerValue($value = null) {
+   private function transformAnswerValue(PluginFormcreatorQuestion $question, $value = null) {
       // unset the answer value
       $answer_value = null;
+      $form = $question->getForm();
 
-      // If the answer is set, check if it is an array (then implode id).
-      if ($value !== null) {
-         $answer_value = $value;
-         if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
-            $answer_value = json_decode($answer_value);
-            foreach ($answer_value as $key => $value) {
-               $answer_value[$key] = $value;
+      if ($question->getField('fieldtype') != 'file') {
+         // If the answer is set, check if it is an array (then implode id).
+         if (isset($value)) {
+            // If the answer is set, check if it is an array (then implode id).
+            if ($value !== null) {
+               $answer_value = $value;
+               if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
+                  $answer_value = json_decode($answer_value);
+                  foreach ($answer_value as $key => $value) {
+                     $answer_value[$key] = $value;
+                  }
+                  $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
+               } else {
+                  $answer_value = str_replace('\\r\\n', '\n', $answer_value);
+               }
+            } else {
+               $answer_value = '';
             }
-            $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
          } else {
-            $answer_value = $answer_value;
+            $answer_value = '';
          }
-      } else {
-         $answer_value = '';
+      } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
+                 && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
+         $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
       }
 
       return $answer_value;

@@ -944,27 +944,27 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $data['name']                = addslashes($this->parseTags($this->fields['name'],
             $formanswer,
             $fullform));
-      $data['content']             = htmlentities(addslashes($this->parseTags($this->fields['comment'],
+      $data['content']             = addslashes($this->parseTags($this->fields['comment'],
             $formanswer,
-            $fullform)));
-      $data['impactcontent']       = htmlentities(addslashes($this->parseTags($this->fields['impactcontent'],
+            $fullform));
+      $data['impactcontent']       = addslashes($this->parseTags($this->fields['impactcontent'],
             $formanswer,
-            $fullform)));
+            $fullform));
 
-      $data['controlistcontent']   = htmlentities(addslashes($this->parseTags($this->fields['controlistcontent'],
+      $data['controlistcontent']   = addslashes($this->parseTags($this->fields['controlistcontent'],
             $formanswer,
-            $fullform)));
+            $fullform));
 
-      $data['rolloutplancontent']  = htmlentities(addslashes($this->parseTags($this->fields['rolloutplancontent'],
+      $data['rolloutplancontent']  = addslashes($this->parseTags($this->fields['rolloutplancontent'],
             $formanswer,
-            $fullform)));
+            $fullform));
 
-      $data['backoutplancontent']  = htmlentities(addslashes($this->parseTags($this->fields['backoutplancontent'],
+      $data['backoutplancontent']  = addslashes($this->parseTags($this->fields['backoutplancontent'],
             $formanswer,
-            $fullform)));
-      $data['checklistcontent']    = htmlentities(addslashes($this->parseTags($this->fields['checklistcontent'],
+            $fullform));
+      $data['checklistcontent']    = addslashes($this->parseTags($this->fields['checklistcontent'],
             $formanswer,
-            $fullform)));
+            $fullform));
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
 

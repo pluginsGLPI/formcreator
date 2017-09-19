@@ -1245,8 +1245,39 @@ JS;
       return $question;
    }
 
+   /**
+    * get  the form belonging the question
+    *
+    * @return boolean|PluginFormcreatorForm the form or false if not found
+    */
    public function getForm() {
+      global $DB;
 
+      $form = new PluginFormcreatorForm();
+      $iterator = $DB->request([
+         'SELECT' => $form::getForeignKeyField(),
+         'FROM' => PluginFormcreatorSection::getTable(),
+         'INNER JOIN' => [
+            $this::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getIndexName(),
+                  $this::getTable() => PluginFormcreatorSection::getForeignKeyField()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            $this::getTable() . '.' . $this::getIndexName() => $this->getID()
+         ]
+      ]);
+      if ($iterator->count() !== 1) {
+         return false;
+      }
+      $form->getFromDB($iterator->next()[$form::getForeignKeyField()]);
+      if ($form->isNewItem()) {
+         return false;
+      }
+
+      return $form;
    }
 
    /**
