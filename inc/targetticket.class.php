@@ -796,7 +796,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             '_groups_id_assign'           => array(),
       );
 
-      $datas   = array();
+      $data   = array();
       $ticket  = new Ticket();
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -808,7 +808,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $result  = $DB->query($query) or die ($DB->error());
       list($requesttypes_id) = $DB->fetch_array($result);
 
-      $datas['requesttypes_id'] = $requesttypes_id;
+      $data['requesttypes_id'] = $requesttypes_id;
 
       // Get predefined Fields
       $ttp                  = new TicketTemplatePredefinedField();
@@ -840,19 +840,19 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          unset($predefined_fields['_groups_id_assign']);
       }
 
-      $datas                = array_merge($datas, $predefined_fields);
+      $data                = array_merge($data, $predefined_fields);
 
       // Parse datas
       $fullform = $formanswer->getFullForm();
-      $datas['name']                  = addslashes($this->parseTags($this->fields['name'],
+      $data['name']                  = addslashes($this->parseTags($this->fields['name'],
                                                                     $formanswer,
                                                                     $fullform));
-      $datas['content']               = htmlentities(addslashes($this->parseTags($this->fields['comment'],
+      $data['content']               = htmlentities(addslashes($this->parseTags($this->fields['comment'],
                                                                       $formanswer,
                                                                       $fullform)));
 
-      $datas['_users_id_recipient']   = $_SESSION['glpiID'];
-      $datas['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
+      $data['_users_id_recipient']   = $_SESSION['glpiID'];
+      $data['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
 
       $this->prepareActors($form, $formanswer);
 
@@ -872,12 +872,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       switch ($this->fields['destination_entity']) {
          // Requester's entity
          case 'current' :
-            $datas['entities_id'] = $_SESSION['glpiactive_entity'];
+            $data['entities_id'] = $_SESSION['glpiactive_entity'];
             break;
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
-            $datas['entities_id'] = $userObj->fields['entities_id'];
+            $data['entities_id'] = $userObj->fields['entities_id'];
             break;
 
          // Requester's first dynamic entity
@@ -899,24 +899,24 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                $data_entities[] = $entity;
             }
             $first_entity = array_shift($data_entities);
-            $datas['entities_id'] = $first_entity['entities_id'];
+            $data['entities_id'] = $first_entity['entities_id'];
             break;
 
          // Specific entity
          case 'specific' :
-            $datas['entities_id'] = $this->fields['destination_entity_value'];
+            $data['entities_id'] = $this->fields['destination_entity_value'];
             break;
 
          // The form entity
          case 'form' :
-            $datas['entities_id'] = $form->fields['entities_id'];
+            $data['entities_id'] = $form->fields['entities_id'];
             break;
 
          // The validator entity
          case 'validator' :
             $userObj = new User();
             $userObj->getFromDB($formanswer->fields['validator_id']);
-            $datas['entities_id'] = $userObj->fields['entities_id'];
+            $data['entities_id'] = $userObj->fields['entities_id'];
             break;
 
          // Default entity of a user from the answer of a user's type question
@@ -929,9 +929,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             if ($user_id > 0) {
                $userObj = new User();
                $userObj->getFromDB($user_id);
-               $datas['entities_id'] = $userObj->fields['entities_id'];
+               $data['entities_id'] = $userObj->fields['entities_id'];
             } else {
-               $datas['entities_id'] = 0;
+               $data['entities_id'] = 0;
             }
             break;
 
@@ -941,12 +941,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                                     ' AND plugin_formcreator_question_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
-            $datas['entities_id'] = $entity['answer'];
+            $data['entities_id'] = $entity['answer'];
             break;
 
          // Requester current entity
          default :
-            $datas['entities_id'] = 0;
+            $data['entities_id'] = 0;
             break;
       }
 
@@ -975,21 +975,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             break;
       }
       if (!is_null($due_date)) {
-         $datas['due_date'] = $due_date;
+         $data['due_date'] = $due_date;
       }
 
       // Define urgency
-      $datas = $this->setTargetUrgency($datas, $formanswer);
+      $data = $this->setTargetUrgency($data, $formanswer);
 
-      $datas = $this->setTargetCategory($datas, $formanswer);
+      $data = $this->setTargetCategory($data, $formanswer);
 
-      $datas = $this->setTargetLocation($datas, $formanswer);
+      $data = $this->setTargetLocation($data, $formanswer);
 
-      $datas = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $datas;
-      $datas = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $datas;
+      $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
+      $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
 
       // Create the target ticket
-      if (!$ticketID = $ticket->add($datas)) {
+      if (!$ticketID = $ticket->add($data)) {
          return false;
       }
 

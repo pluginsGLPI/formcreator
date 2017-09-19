@@ -258,14 +258,14 @@ class PluginFormcreatorInstall {
       $notification_target                = new NotificationTarget();
       $notification_notificationTemplate  = new Notification_NotificationTemplate();
 
-      foreach ($notifications as $event => $datas) {
+      foreach ($notifications as $event => $data) {
          // Check if notification already exists
          $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
 
          // If it doesn't exists, create it
          if (count($exists) == 0) {
             $template_id = $template->add(array(
-                  'name'     => Toolbox::addslashes_deep($datas['name']),
+                  'name'     => Toolbox::addslashes_deep($data['name']),
                   'comment'  => '',
                   'itemtype' => 'PluginFormcreatorForm_Answer',
             ));
@@ -274,14 +274,14 @@ class PluginFormcreatorInstall {
             $translation->add(array(
                   'notificationtemplates_id' => $template_id,
                   'language'                 => '',
-                  'subject'                  => Toolbox::addslashes_deep($datas['subject']),
-                  'content_text'             => Toolbox::addslashes_deep($datas['content']),
-                  'content_html'             => '<p>'.str_replace('\n', '<br />', Toolbox::addslashes_deep($datas['content'])).'</p>',
+                  'subject'                  => Toolbox::addslashes_deep($data['subject']),
+                  'content_text'             => Toolbox::addslashes_deep($data['content']),
+                  'content_html'             => '<p>'.str_replace('\n', '<br />', Toolbox::addslashes_deep($data['content'])).'</p>',
             ));
 
             // Create the notification
             $notification_id = $notification->add(array(
-                  'name'                     => Toolbox::addslashes_deep($datas['name']),
+                  'name'                     => Toolbox::addslashes_deep($data['name']),
                   'comment'                  => '',
                   'entities_id'              => 0,
                   'is_recursive'             => 1,
@@ -300,7 +300,7 @@ class PluginFormcreatorInstall {
 
             // Add default notification targets
             $notification_target->add(array(
-                  "items_id"         => $datas['notified'],
+                  "items_id"         => $data['notified'],
                   "type"             => Notification::USER_TYPE,
                   "notifications_id" => $notification_id,
             ));

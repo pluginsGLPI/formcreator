@@ -18,8 +18,8 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'), '', '', true);
 
          $result = $obj->find($where, "name");
-         foreach ($result AS $id => $datas) {
-            $values[$id] = $datas['name'];
+         foreach ($result AS $id => $data) {
+            $values[$id] = $data['name'];
          }
 
          Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(

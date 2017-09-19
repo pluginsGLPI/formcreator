@@ -522,7 +522,7 @@ function plugin_formcreator_updateQuestion_2_5(Migration $migration) {
                  FROM `glpi_plugin_formcreator_questions`";
       $result = $DB->query($query);
       while ($line = $DB->fetch_array($result)) {
-         $datas    = json_decode($line['data']);
+         $data     = json_decode($line['data']);
          $options  = json_decode($line['option']);
 
          $fieldtype = 'text';
@@ -531,15 +531,15 @@ function plugin_formcreator_updateQuestion_2_5(Migration $migration) {
          $regex     = '';
          $required  = 0;
 
-         if (isset($datas->value) && !empty($datas->value)) {
-            if (is_object($datas->value)) {
-               foreach ($datas->value as $value) {
+         if (isset($data->value) && !empty($data->value)) {
+            if (is_object($data->value)) {
+               foreach ($data->value as $value) {
                   if (!empty($value)) {
                      $values .= urldecode($value) . "\r\n";
                   }
                }
             } else {
-               $values .= urldecode($datas->value);
+               $values .= urldecode($data->value);
             }
          }
 
@@ -614,7 +614,6 @@ function plugin_formcreator_updateQuestion_2_5(Migration $migration) {
                break;
 
             default :
-               $data = null;
                break;
          }
 
