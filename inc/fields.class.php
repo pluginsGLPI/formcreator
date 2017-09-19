@@ -95,10 +95,10 @@ class PluginFormcreatorFields
    /**
     *
     * @param unknown $field
-    * @param unknown $datas
+    * @param unknown $data
     * @param string $edit
     */
-   public static function showField($field, $datas = null, $edit = true) {
+   public static function showField($field, $data = null, $edit = true) {
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
@@ -110,7 +110,7 @@ class PluginFormcreatorFields
             return;
          }
 
-         $obj = new $fieldClass($field, $datas);
+         $obj = new $fieldClass($field, $data);
          $obj->show($edit);
       }
    }

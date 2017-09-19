@@ -485,26 +485,26 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
 
-   public function saveAnswers($datas) {
+   public function saveAnswers($data) {
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
 
-      $form->getFromDB($datas['formcreator_form']);
+      $form->getFromDB($data['formcreator_form']);
 
-      $formanswers_id = isset($datas['id'])
-                        ?intval($datas['id'])
+      $formanswers_id = isset($data['id'])
+                        ?intval($data['id'])
                         :-1;
 
       $question = new PluginFormcreatorQuestion();
-      $questions = $question->getQuestionsFromForm($datas['formcreator_form']);
+      $questions = $question->getQuestionsFromForm($data['formcreator_form']);
 
       // Update form answers
-      if (isset($datas['save_formanswer'])) {
-         $status = $datas['status'];
+      if (isset($data['save_formanswer'])) {
+         $status = $data['status'];
          $this->update(array(
             'id'                          => $formanswers_id,
             'status'                      => $status,
-            'comment'                     => isset($datas['comment']) ? $datas['comment'] : 'NULL'
+            'comment'                     => isset($data['comment']) ? $data['comment'] : 'NULL'
          ));
 
          // Update questions answers
@@ -515,8 +515,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
                if ($question->getField('fieldtype') != 'file') {
                   // If the answer is set, check if it is an array (then implode id).
-                  if (isset($datas['formcreator_field_' . $question->getID()])) {
-                     $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
+                  if (isset($data['formcreator_field_' . $question->getID()])) {
+                     $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
                   } else {
                      $answer_value = '';
                   }
@@ -555,12 +555,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                                 ? $_SESSION['glpiactive_entity']
                                                 : $form->fields['entities_id'],
             'is_recursive'                => $form->fields['is_recursive'],
-            'plugin_formcreator_forms_id' => $datas['formcreator_form'],
+            'plugin_formcreator_forms_id' => $data['formcreator_form'],
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
-            'validator_id'                => isset($datas['formcreator_validator'])
-                                                ? $datas['formcreator_validator']
+            'validator_id'                => isset($data['formcreator_validator'])
+                                                ? $data['formcreator_validator']
                                                 : 0,
             'status'                      => $status,
             'request_date'                => date('Y-m-d H:i:s'),
@@ -573,12 +573,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
             if ($question->getField('fieldtype') != 'file') {
                // If the answer is set, check if it is an array (then implode id).
-               if (isset($datas['formcreator_field_' . $question->getID()])) {
-                  $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
+               if (isset($data['formcreator_field_' . $question->getID()])) {
+                  $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
                } else {
                   $answer_value = '';
                }
-               $answer_value = $this->transformAnswerValue($datas['formcreator_field_' . $question->getID()]);
+               $answer_value = $this->transformAnswerValue($data['formcreator_field_' . $question->getID()]);
             } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
                        && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
                $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
@@ -793,47 +793,47 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    /**
     * Mark answers of a form as refused
     *
-    * @param array $datas
+    * @param array $data
     *
     * @return boolean
     */
-   public function refuseAnswers($datas) {
-      $datas['plugin_formcreator_forms_id'] = intval($datas['formcreator_form']);
-      $datas['status']                      = 'refused';
-      $datas['save_formanswer']             = true;
+   public function refuseAnswers($data) {
+      $data['plugin_formcreator_forms_id'] = intval($data['formcreator_form']);
+      $data['status']                      = 'refused';
+      $data['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
-      $form->getFromDB($datas['plugin_formcreator_forms_id']);
+      $form->getFromDB($data['plugin_formcreator_forms_id']);
 
       if (!$this->canValidate($form, $this)) {
          Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
          return false;
       }
 
-      return $this->saveAnswers($datas);
+      return $this->saveAnswers($data);
    }
 
    /**
     * Mark answers of a form as accepted
     *
-    * @param array $datas
+    * @param array $data
     *
     * @return boolean
     */
-   public function acceptAnswers($datas) {
-      $datas['plugin_formcreator_forms_id'] = intval($datas['formcreator_form']);
-      $datas['status']                      = 'accepted';
-      $datas['save_formanswer']             = true;
+   public function acceptAnswers($data) {
+      $data['plugin_formcreator_forms_id'] = intval($data['formcreator_form']);
+      $data['status']                      = 'accepted';
+      $data['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
-      $form->getFromDB($datas['plugin_formcreator_forms_id']);
+      $form->getFromDB($data['plugin_formcreator_forms_id']);
 
       if (!$this->canValidate($form, $this)) {
          Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
          return false;
       }
 
-      return $this->saveAnswers($datas);
+      return $this->saveAnswers($data);
    }
 
    /**

@@ -701,8 +701,8 @@ EOS;
 
          $result = $obj->find($where);
          $values = array();
-         foreach ($result AS $id => $datas) {
-            $values[$id] = $datas['name'];
+         foreach ($result AS $id => $data) {
+            $values[$id] = $data['name'];
          }
 
          Dropdown::showFromArray('_tag_specifics', $values, array(
