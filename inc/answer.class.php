@@ -54,7 +54,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
             }
             $input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
          } else {
-            $input[$key] = plugin_formcreator_encode($value, false);
+            $input[$key] = $value;
          }
       }
 
