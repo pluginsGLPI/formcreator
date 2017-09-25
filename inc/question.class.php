@@ -232,7 +232,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (isset($input['name'])) {
          if (empty($input['name'])) {
             Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
          $input['name'] = addslashes($input['name']);
       }
@@ -260,11 +260,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
                      __('The field value is required:', 'formcreator') . ' ' . $input['name'],
                      false,
                      ERROR);
-               return array();
+               return [];
             }
          }
       }
 
+      if (!isset($input['fieldtype'])) {
+         $input['fieldtype'] = $this->fields['fieldtype'];
+      }
       $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
       $fieldObject = new $fieldType($this->fields);
       $input = $fieldObject->prepareQuestionInputForSave($input);
@@ -435,17 +438,17 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
       $otherItem = new static();
       $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-                                        AND `order` < '$order'
-                                        ORDER BY `order` DESC LIMIT 1");
+                                    AND `order` < '$order'
+                                    ORDER BY `order` DESC LIMIT 1");
       if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
+         $this->update([
+            'id'     => $this->getID(),
+            'order'  => $otherItem->getField('order'),
+         ]);
+         $otherItem->update([
+            'id'     => $otherItem->getID(),
+            'order'  => $order,
+         ]);
       }
    }
 
@@ -454,17 +457,17 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
       $otherItem = new static();
       $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-            AND `order` > '$order'
-            ORDER BY `order` ASC LIMIT 1");
+                                    AND `order` > '$order'
+                                    ORDER BY `order` ASC LIMIT 1");
       if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
+         $this->update([
+            'id'     => $this->getID(),
+            'order'  => $otherItem->getField('order'),
+         ]);
+         $otherItem->update([
+            'id'     => $otherItem->getID(),
+            'order'  => $order,
+         ]);
       }
    }
 
