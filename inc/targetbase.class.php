@@ -356,7 +356,7 @@ EOS;
                 AND q.fieldtype = 'glpiselect'
                 AND q.values = 'User'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $users_questions[$question['id']] = $question['name'];
       }
@@ -377,7 +377,7 @@ EOS;
                 AND q.fieldtype = 'glpiselect'
                 AND q.values = 'Entity'";
       $result2 = $DB->query($query2);
-      $entities_questions = array();
+      $entities_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $entities_questions[$question['id']] = $question['name'];
       }
@@ -431,7 +431,7 @@ EOS;
          WHERE s.id = {$section['id']}
          AND q.fieldtype IN ('date', 'datetime')";
          $result2 = $DB->query($query2);
-         $section_questions = array();
+         $section_questions = [];
          while ($question = $DB->fetch_array($result2)) {
             $section_questions[$question['id']] = $question['name'];
          }
@@ -526,7 +526,7 @@ EOS;
                 WHERE `t`.`items_id` = ".$this->getID()."
                 AND `q`.`fieldtype` = 'dropdown'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
          if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'ITILCategory') {
@@ -603,7 +603,7 @@ EOS;
                 WHERE t.items_id = ".$this->getID()."
                 AND q.fieldtype = 'urgency'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $users_questions[$question['id']] = $question['name'];
       }
@@ -679,7 +679,7 @@ EOS;
                    WHERE t.items_id = ".$this->getID()."
                    AND q.fieldtype = 'tag'";
          $result2 = $DB->query($query2);
-         $entities_questions = array();
+         $entities_questions = [];
          while ($question = $DB->fetch_array($result2)) {
             $entities_questions[$question['id']] = $question['name'];
          }
@@ -700,7 +700,7 @@ EOS;
          $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
 
          $result = $obj->find($where);
-         $values = array();
+         $values = [];
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
          }
@@ -831,7 +831,7 @@ JAVASCRIPT;
                 WHERE t.items_id = ".$this->getID()."
                 AND q.fieldtype = 'dropdown'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
          if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'Location') {

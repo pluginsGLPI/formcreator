@@ -7,7 +7,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
-         $values = array();
+         $values = [];
          $values = $this->getAvailableValues();
          if (!empty($values)) {
             echo '<div class="checkboxes">';
@@ -66,7 +66,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    public function isValid($value) {
       $value = json_decode($value);
       if (is_null($value)) {
-         $value = array();
+         $value = [];
       }
 
       // If the field is required it can't be empty

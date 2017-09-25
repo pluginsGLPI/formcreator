@@ -81,7 +81,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   __('The field value is required:', 'formcreator') . ' ' . $input['name'],
                   false,
                   ERROR);
-            return array();
+            return [];
          }
          $allowedDropdownValues = [];
          foreach (Dropdown::getStandardDropdownItemTypes() as $categoryOfTypes) {

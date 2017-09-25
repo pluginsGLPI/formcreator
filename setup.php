@@ -126,7 +126,7 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
             // Config page
-            $links  = array();
+            $links  = [];
             if (Session::haveRight('entity', UPDATE)) {
                $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
                $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';

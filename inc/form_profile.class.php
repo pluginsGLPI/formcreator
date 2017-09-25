@@ -91,7 +91,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
     * @param  array   $form_profile the validator data (match the validator table)
     * @return integer the validator's id
     */
-   public static function import($forms_id = 0, $form_profile = array()) {
+   public static function import($forms_id = 0, $form_profile = []) {
       $item    = new self;
       $profile = new Profile;
       $form_profile['plugin_formcreator_forms_id'] = $forms_id;

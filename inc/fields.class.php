@@ -8,7 +8,7 @@ class PluginFormcreatorFields
     * @return Array     field_type => File_path
     */
    public static function getTypes() {
-      $tab_field_types     = array();
+      $tab_field_types     = [];
 
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
          $matches = null;
@@ -34,7 +34,7 @@ class PluginFormcreatorFields
       $plugin = new Plugin();
 
       // Initialize array
-      $tab_field_types_name     = array();
+      $tab_field_types_name     = [];
       $tab_field_types_name[''] = '---';
 
       // Get localized names of field types
@@ -126,7 +126,7 @@ class PluginFormcreatorFields
       /**
        * Keep track of questions being evaluated to detect infinite loops
        */
-      static $evalQuestion = array();
+      static $evalQuestion = [];
       if (isset($evalQuestion[$id])) {
          // TODO : how to deal a infinite loop while evaulating visibility of question ?
          return true;
@@ -135,7 +135,7 @@ class PluginFormcreatorFields
 
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
-      $conditions = array();
+      $conditions = [];
 
       // If the field is always shown
       if ($question->getField('show_rule') == 'always') {
@@ -318,7 +318,7 @@ class PluginFormcreatorFields
          }
       }
       unset ($value);
-      $questionToShow = array();
+      $questionToShow = [];
       foreach ($currentValues as $id => $value) {
          $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
       }

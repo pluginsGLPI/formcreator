@@ -45,7 +45,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
     * @param  array   $actor the actor data (match the actor table)
     * @return integer the actor's id
     */
-   public static function import($targets_id = 0, $actor = array()) {
+   public static function import($targets_id = 0, $actor = []) {
       $item = new static;
 
       $foreignKeyField = $item->getTargetItem()->getForeignKeyField();

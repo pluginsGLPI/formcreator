@@ -36,7 +36,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=array()) {
+   public function showForm($options=[]) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -169,10 +169,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                      AND q.values IN ('User', 'Group', 'Supplier'))
                      OR (q.fieldtype = 'actor'))";
          $result2 = $DB->query($query2);
-         $section_questions_user       = array();
-         $section_questions_group      = array();
-         $section_questions_supplier   = array();
-         $section_questions_actors     = array();
+         $section_questions_user       = [];
+         $section_questions_group      = [];
+         $section_questions_supplier   = [];
+         $section_questions_actors     = [];
          while ($question = $DB->fetch_array($result2)) {
             if ($question['fieldtype'] == 'glpiselect') {
                switch ($question['values']) {
@@ -197,7 +197,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       // Get available questions for actors lists
-      $actors = array('requester' => array(), 'observer' => array(), 'assigned' => array());
+      $actors = array('requester' => [], 'observer' => [], 'assigned' => []);
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID();
@@ -659,13 +659,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          // - name is required
          if (empty($input['title'])) {
             Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
 
          // - comment is required
          if (empty($input['comment'])) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
 
          $input['name'] = plugin_formcreator_encode($input['title']);
@@ -755,48 +755,48 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = array(
-            '_users_id_requester'         => array(),
+            '_users_id_requester'         => [],
             '_users_id_requester_notif'   => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
+                  'use_notification'      => [],
+                  'alternative_email'     => [],
             ),
       );
       $this->observers = array(
-            '_users_id_observer'          => array(),
+            '_users_id_observer'          => [],
             '_users_id_observer_notif'    => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
+                  'use_notification'      => [],
+                  'alternative_email'     => [],
             ),
       );
       $this->assigned = array(
-            '_users_id_assign'            => array(),
+            '_users_id_assign'            => [],
             '_users_id_assign_notif'      => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
+                  'use_notification'      => [],
+                  'alternative_email'     => [],
             ),
       );
 
       $this->assignedSuppliers = array(
-            '_suppliers_id_assign'        => array(),
+            '_suppliers_id_assign'        => [],
             '_suppliers_id_assign_notif'  => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
+                  'use_notification'      => [],
+                  'alternative_email'     => [],
             )
       );
 
       $this->requesterGroups = array(
-            '_groups_id_requester'        => array(),
+            '_groups_id_requester'        => [],
       );
 
       $this->observerGroups = array(
-            '_groups_id_observer'         => array(),
+            '_groups_id_observer'         => [],
       );
 
       $this->assignedGroups = array(
-            '_groups_id_assign'           => array(),
+            '_groups_id_assign'           => [],
       );
 
-      $data   = array();
+      $data   = [];
       $ticket  = new Ticket();
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -998,7 +998,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
 
          $tagObj = new PluginTagTagItem();
-         $tags   = array();
+         $tags   = [];
 
          // Add question tags
          if (($this->fields['tag_type'] == 'questions'
@@ -1166,7 +1166,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @param  array   $target_data the targetticket data (match the targetticket table)
     * @return integer the targetticket's id
     */
-   public static function import($targetitems_id = 0, $target_data = array()) {
+   public static function import($targetitems_id = 0, $target_data = []) {
       $item = new self;
 
       $target_data['_skip_checks'] = true;
@@ -1179,7 +1179,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $section       = new PluginFormcreatorSection();
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
-      $tab_section = array();
+      $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
@@ -1239,7 +1239,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $section       = new PluginFormcreatorSection();
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
-      $tab_section = array();
+      $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }

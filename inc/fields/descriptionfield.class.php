@@ -24,7 +24,7 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
             __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
             false,
             ERROR);
-         return array();
+         return [];
       }
       $input['description'] = addslashes($input['description']);
       return $input;

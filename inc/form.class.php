@@ -160,7 +160,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return String                 Html string to be displayed for the form field
     **/
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=[]) {
 
       if (!is_array($values)) {
          $values = array($field => $values);
@@ -211,7 +211,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param  Array  $options Options (optional)
     * @return Mixed           Value to be displayed
     */
-   public static function getSpecificValueToDisplay($field, $values, array $options=array()) {
+   public static function getSpecificValueToDisplay($field, $values, array $options=[]) {
       global $CFG_GLPI;
       if (!is_array($values)) {
          $values = array($field => $values);
@@ -263,7 +263,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($ID, $options=array()) {
+   public function showForm($ID, $options=[]) {
       global $DB;
 
       $this->initForm($ID, $options);
@@ -326,7 +326,7 @@ class PluginFormcreatorForm extends CommonDBTM
       ));
 
       // Validators users
-      $validators = array();
+      $validators = [];
       $formId = $this->getID();
       $form_validator = new PluginFormcreatorForm_Validator();
       $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$formId'");
@@ -360,7 +360,7 @@ class PluginFormcreatorForm extends CommonDBTM
                 GROUP BY u.`id`
                 ORDER BY u.`name`";
       $result = $DB->query($query);
-      $groups_users = array();
+      $groups_users = [];
 
       echo '<div id="validators_users" style="width: 100%">';
       echo '<select name="_validator_users[]" size="4" style="width: 100%" multiple id="validator_users">';
@@ -488,8 +488,8 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
 
-   public function defineTabs($options=array()) {
-      $ong = array();
+   public function defineTabs($options=[]) {
+      $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
       $this->addStandardTab('PluginFormcreatorForm_Profile', $ong, $options);
@@ -642,7 +642,7 @@ class PluginFormcreatorForm extends CommonDBTM
       ORDER BY $order";
       $result_forms = $DB->query($query_forms);
 
-      $formList = array();
+      $formList = [];
       if ($DB->numrows($result_forms) > 0) {
          while ($form = $DB->fetch_array($result_forms)) {
             $formList[] = [
@@ -768,7 +768,7 @@ class PluginFormcreatorForm extends CommonDBTM
          echo '<div class="plugin_formcreator_card">';
          echo '<div class="plugin_formcreator_heading">'.__('My last forms (validator)', 'formcreator').'</div>';
          $groupList = Group_User::getUserGroups($userId);
-         $groupIdList = array();
+         $groupIdList = [];
          foreach ($groupList as $group) {
             $groupIdList[] = $group['id'];
          }
@@ -844,7 +844,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       // Get and display sections of the form
       $question      = new PluginFormcreatorQuestion();
-      $questions     = array();
+      $questions     = [];
 
       $section_class = new PluginFormcreatorSection();
       $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
@@ -943,7 +943,7 @@ class PluginFormcreatorForm extends CommonDBTM
       if (isset($input['name'])) {
          if (empty($input['name'])) {
             Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
          $input['name'] = addslashes($input['name']);
       }
@@ -1165,7 +1165,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $question_condition  = new PluginFormcreatorQuestion_Condition();
       $form_validator      = new PluginFormcreatorForm_Validator();
       $form_profile        = new PluginFormcreatorForm_Profile();
-      $tab_questions       = array();
+      $tab_questions       = [];
 
       // From datas
       $form_datas              = $this->fields;
@@ -1514,7 +1514,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * Process import of json file(s) sended by the submit of self::showImportForm
     * @param  array  $params GET/POST data who need to contains the filename(s) in _json_file key
     */
-   public function importJson($params = array()) {
+   public function importJson($params = []) {
       // parse json file(s)
       foreach ($params['_json_file'] as $filename) {
          if (!$json = file_get_contents(GLPI_TMP_DIR."/".$filename)) {
@@ -1546,7 +1546,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param  array   $form the form data (match the form table)
     * @return integer the form's id
     */
-   public static function import($form = array()) {
+   public static function import($form = []) {
       $form_obj = new self;
       $entity   = new Entity;
       $form_cat = new PluginFormcreatorCategory;
@@ -1589,7 +1589,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
       // Save all question conditions stored in memory
-      PluginFormcreatorQuestion_Condition::import(0, array(), false);
+      PluginFormcreatorQuestion_Condition::import(0, [], false);
 
       // import form's validators
       if ($forms_id

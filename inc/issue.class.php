@@ -110,7 +110,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * {@inheritDoc}
     * @see CommonGLPI::display()
     */
-   public function display($options = array()) {
+   public function display($options = []) {
       $itemtype = $options['sub_itemtype'];
       if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorForm_Answer'))) {
          html::displayRightError();
@@ -122,7 +122,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
    }
 
-   public function displayExtended($options = array()) {
+   public function displayExtended($options = []) {
       $item = new $options['sub_itemtype'];
 
       if (isset($options['id'])
@@ -144,7 +144,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * {@inheritDoc}
     * @see CommonGLPI::display()
     */
-   public function displaySimplified($options = array()) {
+   public function displaySimplified($options = []) {
       global $CFG_GLPI;
 
       $item = new $options['sub_itemtype'];
@@ -345,7 +345,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       );
    }
 
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=[]) {
 
       if (!is_array($values)) {
          $values = array($field => $values);

@@ -108,13 +108,13 @@ class PluginFormcreatorTarget extends CommonDBTM
       if (isset($input['name'])
          && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-         return array();
+         return [];
       }
       // - field type is required
       if (isset($input['itemtype'])) {
          if (empty($input['itemtype'])) {
             Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
 
          switch ($input['itemtype']) {
@@ -219,7 +219,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param  array   $target the target data (match the target table)
     * @return integer the target's id
     */
-   public static function import($forms_id = 0, $target = array()) {
+   public static function import($forms_id = 0, $target = []) {
       $item = new self;
 
       $target['plugin_formcreator_forms_id'] = $forms_id;
@@ -324,7 +324,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param PluginFormcreatorForm $form
     */
    public function getTargetsForForm(PluginFormcreatorForm $form) {
-      $targets = array();
+      $targets = [];
       $formId = $form->getID();
       $foundTargets = $this->find("plugin_formcreator_forms_id = '$formId'");
       foreach ($foundTargets as $row) {

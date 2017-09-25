@@ -52,7 +52,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $number      = 0;
             $section     = new PluginFormcreatorSection();
             $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
-            $tab_section = array();
+            $tab_section = [];
             foreach ($found as $section_item) {
                $tab_section[] = $section_item['id'];
             }
@@ -301,7 +301,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       $input = $this->checkBeforeSave($input);
       if (count($input) == 0) {
-         return array();
+         return [];
       }
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
@@ -542,7 +542,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query($query);
    }
 
-   public function showForm($ID, $options=array()) {
+   public function showForm($ID, $options=[]) {
       global $DB, $CFG_GLPI;
 
       $rootDoc = $CFG_GLPI['root_doc'];
@@ -597,7 +597,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<td>';
       $table = getTableForItemtype('PluginFormcreatorSection');
-      $sections = array();
+      $sections = [];
       $sql = "SELECT `id`, `name`
               FROM $table
               WHERE `plugin_formcreator_forms_id` = $form_id
@@ -676,7 +676,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<div id="glpi_ldap_field">';
       $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
       if ($ldap_values === null) {
-         $ldap_values = array();
+         $ldap_values = [];
       }
       Dropdown::show('AuthLDAP', array(
             'name'      => 'ldap_auth',
@@ -1187,7 +1187,7 @@ JS;
     * @param  array   $question the question data (match the question table)
     * @return integer the question's id
     */
-   public static function import($sections_id = 0, $question = array()) {
+   public static function import($sections_id = 0, $question = []) {
       $item = new self;
 
       $question['plugin_formcreator_sections_id'] = $sections_id;
@@ -1291,7 +1291,7 @@ JS;
    public function getQuestionsFromForm($formId) {
       global $DB;
 
-      $questions = array();
+      $questions = [];
       $table_question = getTableForItemtype('PluginFormcreatorQuestion');
       $table_section  = getTableForItemtype('PluginFormcreatorSection');
       $result = $DB->query("SELECT `q`.*
@@ -1310,7 +1310,7 @@ JS;
    }
 
    public function getQuestionsFromSection($sectionId) {
-      $questions = array();
+      $questions = [];
       $rows = $this->find("`plugin_formcreator_sections_id` = '$sectionId'", "`order` ASC");
       foreach ($rows as $row) {
             $question = new self();

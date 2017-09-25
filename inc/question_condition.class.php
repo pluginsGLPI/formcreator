@@ -29,8 +29,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
     * @param  array   $condition the condition data (match the condition table)
     * @return integer the condition's id
     */
-   public static function import($questions_id = 0, $condition = array(), $storeOnly = true) {
-      static $conditionsToImport = array();
+   public static function import($questions_id = 0, $condition = [], $storeOnly = true) {
+      static $conditionsToImport = [];
 
       if ($storeOnly) {
          $condition['plugin_formcreator_questions_id'] = $questions_id;
@@ -58,7 +58,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
                $item->add($condition);
             }
          }
-         $conditionsToImport = array();
+         $conditionsToImport = [];
       }
    }
 
@@ -89,7 +89,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    }
 
    public function getConditionsFromQuestion($questionId) {
-      $questionConditions = array();
+      $questionConditions = [];
       $rows = $this->find("`plugin_formcreator_questions_id` = '$questionId'", "`order` ASC");
       foreach ($rows as $row) {
          $questionCondition = new static();
@@ -129,7 +129,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
 
       $question = new PluginFormcreatorQuestion();
       $questionsInForm = $question->getQuestionsFromForm($form_id);
-      $questions_tab = array();
+      $questions_tab = [];
       foreach ($questionsInForm as $question) {
          if (strlen($question->getField('name')) > 30) {
             $questions_tab[$question->getID()] = substr($question->getField('name'),

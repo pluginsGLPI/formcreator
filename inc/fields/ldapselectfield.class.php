@@ -6,19 +6,19 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          $ldap_values   = json_decode(plugin_formcreator_decode($this->fields['values']));
          $ldap_dropdown = new RuleRightParameter();
          if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
-            return array();
+            return [];
          }
          $attribute     = array($ldap_dropdown->fields['value']);
 
          $config_ldap = new AuthLDAP();
          if (!$config_ldap->getFromDB($ldap_values->ldap_auth)) {
-            return array();
+            return [];
          }
 
          set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);
 
          try {
-            $tab_values = array();
+            $tab_values = [];
 
             $ds      = $config_ldap->connect();
             ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -49,12 +49,12 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
             asort($tab_values);
             return $tab_values;
          } catch (Exception $e) {
-            return array();
+            return [];
          }
 
          restore_error_handler();
       } else {
-         return array();
+         return [];
       }
    }
 
@@ -75,7 +75,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
             $ldap_dropdown->getFromDB($input['ldap_attribute']);
             $attribute     = array($ldap_dropdown->fields['value']);
          } else {
-            $attribute     = array();
+            $attribute     = [];
          }
 
          set_error_handler('plugin_formcreator_ldap_warning_handler', E_WARNING);

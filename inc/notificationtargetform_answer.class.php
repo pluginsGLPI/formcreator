@@ -16,7 +16,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       return $events;
    }
 
-   public function addDataForTemplate($event, $options = array()) {
+   public function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
 
       $form = new PluginFormcreatorForm();

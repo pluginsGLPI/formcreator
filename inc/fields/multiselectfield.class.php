@@ -6,7 +6,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    public function isValid($value) {
       $value = json_decode($value);
       if (is_null($value)) {
-         $value = array();
+         $value = [];
       }
 
       // If the field is required it can't be empty
@@ -43,7 +43,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    }
 
    public function getAnswer() {
-      $return = array();
+      $return = [];
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
 

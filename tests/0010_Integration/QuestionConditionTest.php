@@ -5,8 +5,8 @@ class QuestionConditionTest extends SuperAdminTestCase
    protected static $sectionData;
    protected static $form;
    protected static $targetData;
-   protected static $sections = array();
-   protected static $questions = array();
+   protected static $sections = [];
+   protected static $questions = [];
 
    public static function setUpBeforeClass() {
       parent::setUpBeforeClass();
@@ -36,7 +36,7 @@ class QuestionConditionTest extends SuperAdminTestCase
             ),
       );
 
-      self::$targetData = array();
+      self::$targetData = [];
 
       self::login('glpi', 'glpi', true);
       self::$form = new PluginFormcreatorForm();

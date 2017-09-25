@@ -134,7 +134,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
    switch ($table.".".$field) {
       case "glpi_plugin_formcreator_issues.status" :
-         $tocheck = array();
+         $tocheck = [];
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case 'all':
@@ -215,7 +215,7 @@ function plugin_formcreator_MassiveActions($itemtype) {
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
          );
    }
-   return array();
+   return [];
 }
 
 

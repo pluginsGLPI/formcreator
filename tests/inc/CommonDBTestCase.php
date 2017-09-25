@@ -12,7 +12,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       $cmd = 'echo "DROP DATABASE IF EXISTS \`'.$dbdefault .'\`; CREATE DATABASE \`'.$dbdefault.'\`" | ' . $cmd ." 2>&1";
 
       $returncode = 0;
-      $output = array();
+      $output = [];
       exec(
             $cmd,
             $output,
@@ -43,7 +43,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       $cmd = $result . " " . $dbdefault . " < ". $file ." 2>&1";
 
       $returncode = 0;
-      $output = array();
+      $output = [];
       exec(
             $cmd,
             $output,
@@ -57,7 +57,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
    }
 
    protected static function construct_mysql_options($dbuser='', $dbhost='', $dbpassword='', $cmd_base='mysql') {
-      $cmd = array();
+      $cmd = [];
 
       if (empty($dbuser) || empty($dbhost)) {
          return array(
@@ -113,7 +113,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
       $cmd = $result . ' --opt '. $dbdefault.' > ' . $file;
       $returncode = 0;
-      $output = array();
+      $output = [];
       exec(
             $cmd,
             $output,
@@ -130,7 +130,7 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       global $CFG_GLPI, $DB, $LOADED_PLUGINS;
 
       $LOADED_PLUGINS = null;
-      $_SESSION = array();
+      $_SESSION = [];
       $_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;       // Prevents notice in execution of GLPI_ROOT . /inc/includes.php
       require (GLPI_ROOT . "/inc/includes.php");
 

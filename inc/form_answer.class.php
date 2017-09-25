@@ -135,7 +135,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param  Array  $options Options (optional)
     * @return Mixed           Value to be displayed
     */
-   public static function getSpecificValueToDisplay($field, $values, array $options=array()) {
+   public static function getSpecificValueToDisplay($field, $values, array $options=[]) {
       global $CFG_GLPI;
 
       if (!is_array($values)) {
@@ -163,7 +163,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return String                 Html string to be displayed for the form field
     **/
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=[]) {
       if (!is_array($values)) {
          $values = array($field => $values);
       }
@@ -201,8 +201,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
    }
 
-   public function defineTabs($options = array()) {
-      $ong = array();
+   public function defineTabs($options = []) {
+      $ong = [];
       $this->addDefaultFormTab($ong);
       if ($this->fields['id'] > 0) {
          $this->addStandardTab('Ticket', $ong, $options);
@@ -292,7 +292,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return $canValidate;
    }
 
-   public function showForm($ID, $options = array()) {
+   public function showForm($ID, $options = []) {
       global $DB;
 
       if (!isset($ID) || !$this->getFromDB($ID)) {
@@ -565,7 +565,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   'plugin_formcreator_forms_answers_id'  => $id,
                   'plugin_formcreator_questions_id'      => $question->getID(),
                   'answer'                               => $answer_value,
-               ), array(), 0);
+               ), [], 0);
             }
          }
          $is_newFormAnswer = true;
@@ -748,7 +748,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $doc                        = new Document();
 
-      $file_data                 = array();
+      $file_data                 = [];
       $file_data["name"]         = $form->getField('name'). ' - ' . $question->getField('name');
       $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
                                     ? $_SESSION['glpiactive_entity']
@@ -859,7 +859,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    public function getAnswers($formAnswerId) {
       $answer = new PluginFormcreatorAnswer();
       $answers = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'");
-      $answers_values = array();
+      $answers_values = [];
       foreach ($answers as $found_answer) {
          $answers_values[$found_answer['plugin_formcreator_questions_id']] = stripslashes($found_answer['answer']);
       }

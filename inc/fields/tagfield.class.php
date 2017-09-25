@@ -9,7 +9,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $required = $this->fields['required'] ? ' required' : '';
 
          echo '<div class="form_field">';
-         $values = array();
+         $values = [];
 
          $obj = new PluginTagTag();
          $obj->getEmpty();
@@ -45,7 +45,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function getAnswer() {
-      $return = array();
+      $return = [];
       $values = $this->getValue();
 
       if (!empty($values)) {

@@ -114,7 +114,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'name'            => $name,
             'parent'          => $parent,
             'id'              => $rootId,
-            'subcategories'   => array()
+            'subcategories'   => []
       );
       foreach ($items as $categoryItem) {
          $children['subcategories'][] = self::getCategoryTree($categoryItem['id']);

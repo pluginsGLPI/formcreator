@@ -37,7 +37,7 @@ function any($iterable) {
  * The PHP version of this function doesn't work properly if the values aren't scalar.
  */
 function array_count_values($array) {
-    $counts = array();
+    $counts = [];
    foreach ($array as $v) {
       if ($v && is_scalar($v)) {
           $key = $v;
@@ -76,7 +76,7 @@ function array_filter($input, $callback, $reKey=false) {
  */
 function array_merge() {
     $values = func_get_args();
-    $resolved = array();
+    $resolved = [];
    foreach ($values as $v) {
       if ($v instanceof \ArrayIterator) {
           $resolved[] = $v->getArrayCopy();
@@ -100,7 +100,7 @@ function get_class_name($obj) {
 function dump($val) {
    if (is_array($val) || $val instanceof \Traversable) {
       echo '[';
-      $cur = array();
+      $cur = [];
       foreach ($val as $i) {
           $cur[] = $i->dump();
       }
@@ -193,7 +193,7 @@ class Pattern
      * Fix elements that should accumulate/increment values.
      */
    public function fixRepeatingArguments() {
-      $either = array();
+      $either = [];
       foreach ($this->either()->children as $c) {
          $either[] = $c->children;
       }
@@ -207,7 +207,7 @@ class Pattern
          foreach ($case as $e) {
             if ($e instanceof Argument || ($e instanceof Option && $e->argcount)) {
                if (!$e->value) {
-                  $e->value = array();
+                  $e->value = [];
                } else if (!is_array($e->value) && !$e->value instanceof \Traversable) {
                   $e->value = preg_split('/\s+/', $e->value);
                }
@@ -227,11 +227,11 @@ class Pattern
    public function either() {
       // Currently the pattern will not be equivalent, but more "narrow",
       // although good enough to reason about list arguments.
-      $ret = array();
+      $ret = [];
       $groups = array(array($this));
       while ($groups) {
          $children = array_pop($groups);
-         $types = array();
+         $types = [];
          foreach ($children as $c) {
             if (is_object($c)) {
                $cls = get_class($c);
@@ -297,7 +297,7 @@ class Pattern
          }
       }
 
-      $rs = array();
+      $rs = [];
       foreach ($ret as $e) {
          $rs[] = new Required($e);
       }
@@ -318,19 +318,19 @@ class Pattern
 
 class ChildPattern extends Pattern
 {
-   public function flat($types=array()) {
+   public function flat($types=[]) {
       $types = is_array($types) ? $types : array($types);
 
       if (!$types || in_array(get_class_name($this), $types)) {
           return array($this);
       } else {
-         return array();
+         return [];
       }
    }
 
    public function match($left, $collected=null) {
       if (!$collected) {
-         $collected = array();
+         $collected = [];
       }
 
       list ($pos, $match) = $this->singleMatch($left);
@@ -372,11 +372,11 @@ class ChildPattern extends Pattern
 
 class ParentPattern extends Pattern
 {
-   public $children = array();
+   public $children = [];
 
    public function __construct($children=null) {
       if (!$children) {
-          $children = array();
+          $children = [];
       } else if ($children instanceof Pattern) {
           $children = array($children);
       }
@@ -386,13 +386,13 @@ class ParentPattern extends Pattern
       }
    }
 
-   public function flat($types=array()) {
+   public function flat($types=[]) {
       $types = is_array($types) ? $types : array($types);
       if (in_array(get_class_name($this), $types)) {
           return array($this);
       }
 
-      $flat = array();
+      $flat = [];
       foreach ($this->children as $c) {
          $flat = array_merge($flat, $c->flat($types));
       }
@@ -401,7 +401,7 @@ class ParentPattern extends Pattern
 
    public function dump() {
       $out = get_class_name($this).'(';
-      $cd = array();
+      $cd = [];
       foreach ($this->children as $c) {
          $cd[] = $c->dump();
       }
@@ -547,7 +547,7 @@ class Required extends ParentPattern
 {
    public function match($left, $collected=null) {
       if (!$collected) {
-          $collected = array();
+          $collected = [];
       }
 
       $l = $left;
@@ -568,7 +568,7 @@ class Optional extends ParentPattern
 {
    public function match($left, $collected=null) {
       if (!$collected) {
-          $collected = array();
+          $collected = [];
       }
 
       foreach ($this->children as $p) {
@@ -594,13 +594,13 @@ class OneOrMore extends ParentPattern
       }
 
       if (!$collected) {
-          $collected = array();
+          $collected = [];
       }
 
       $l = $left;
       $c = $collected;
 
-      $lnew = array();
+      $lnew = [];
       $matched = true;
       $times = 0;
 
@@ -628,10 +628,10 @@ class Either extends ParentPattern
 {
    public function match($left, $collected=null) {
       if (!$collected) {
-          $collected = array();
+          $collected = [];
       }
 
-      $outcomes = array();
+      $outcomes = [];
       foreach ($this->children as $p) {
          list ($matched, $dump1, $dump2) = $outcome = $p->match($left, $collected);
          if ($matched) {
@@ -754,11 +754,11 @@ function parse_shorts($tokens, \ArrayIterator $options) {
    }
 
     $left = ltrim($token, '-');
-    $parsed = array();
+    $parsed = [];
    while ($left != '') {
       $short = '-'.$left[0];
       $left = substr($left, 1);
-      $similar = array();
+      $similar = [];
       foreach ($options as $o) {
          if ($o->short == $short) {
              $similar[] = $o;
@@ -845,7 +845,7 @@ function parse_expr($tokens, \ArrayIterator $options) {
  * seq ::= ( atom [ '...' ] )* ;
  */
 function parse_seq($tokens, \ArrayIterator $options) {
-    $result = array();
+    $result = [];
     $not = array(null, '', ']', ')', '|');
    while (!in_array($tokens->current(), $not, true)) {
       $atom = parse_atom($tokens, $options);
@@ -869,7 +869,7 @@ function parse_seq($tokens, \ArrayIterator $options) {
  */
 function parse_atom($tokens, \ArrayIterator $options) {
     $token = $tokens->current();
-    $result = array();
+    $result = [];
    if ($token == '(' || $token == '[') {
       $tokens->move();
 
@@ -908,7 +908,7 @@ function parse_atom($tokens, \ArrayIterator $options) {
  *     argv ::= [ long | shorts | argument ]* [ '--' [ argument ]* ] ;
  */
 function parse_argv($tokens, \ArrayIterator $options, $optionsFirst=false) {
-    $parsed = array();
+    $parsed = [];
 
    while ($tokens->current() !== null) {
       if ($tokens->current() == '--') {
@@ -931,7 +931,7 @@ function parse_argv($tokens, \ArrayIterator $options, $optionsFirst=false) {
 
 function parse_defaults($doc) {
     $splitTmp = array_slice(preg_split('@\n[ ]*(<\S+?>|-\S+?)@', $doc, null, PREG_SPLIT_DELIM_CAPTURE), 1);
-    $split = array();
+    $split = [];
    for ($cnt = count($splitTmp), $i=0; $i < $cnt; $i+=2) {
       $split[] = $splitTmp[$i] . (isset($splitTmp[$i+1]) ? $splitTmp[$i+1] : '');
    }
@@ -961,7 +961,7 @@ function printable_usage($doc) {
 function formal_usage($printableUsage) {
     $pu = array_slice(preg_split('/\s+/', $printableUsage), 1);
 
-    $ret = array();
+    $ret = [];
    foreach (array_slice($pu, 1) as $s) {
       if ($s == $pu[0]) {
           $ret[] = ') | (';
@@ -997,8 +997,8 @@ function extras($help, $version, $options, $doc) {
 /**
  * API compatibility with python docopt
  */
-function docopt($doc, $params=array()) {
-    $argv = array();
+function docopt($doc, $params=[]) {
+    $argv = [];
    if (isset($params['argv'])) {
       $argv = $params['argv'];
       unset($params['argv']);
@@ -1017,7 +1017,7 @@ class Handler
    public $optionsFirst = false;
    public $version;
 
-   public function __construct($options=array()) {
+   public function __construct($options=[]) {
       foreach ($options as $k=>$v) {
           $this->$k = $v;
       }
@@ -1044,7 +1044,7 @@ class Handler
 
          list($matched, $left, $collected) = $pattern->fix()->match($argv);
          if ($matched && !$left) {
-            $return = array();
+            $return = [];
             foreach (array_merge($pattern->flat(), $collected) as $a) {
                $name = $a->name;
                if ($name) {
@@ -1075,7 +1075,7 @@ class Response implements \ArrayAccess, \IteratorAggregate
    public $args;
 
    public function __construct($args, $status=0, $output='') {
-      $this->args = $args ?: array();
+      $this->args = $args ?: [];
       $this->status = $status;
       $this->output = $output;
    }

@@ -21,7 +21,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
-      $tabNames = array();
+      $tabNames = [];
       if (!$withtemplate) {
          if ($item->getType() == 'Entity') {
             $tabNames[1] = _n('Form', 'Forms', 2, 'formcreator');
@@ -66,7 +66,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
                self::CONFIG_PARENT => __('Inheritance of the parent entity')
          );
       } else {
-         $elements = array();
+         $elements = [];
       }
       $elements[0] = __('GLPi\'s helpdesk', 'formcreator');
       $elements[1] = __('Service catalog simplified', 'formcreator');
