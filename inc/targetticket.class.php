@@ -978,7 +978,7 @@ EOS;
     * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -1222,7 +1222,7 @@ EOS;
 
       // Add tag if presents
       $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+      if ($plugin->isActivated('tag')) {
 
          $tagObj = new PluginTagTagItem();
          $tags   = [];

@@ -1110,7 +1110,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Add tag if presents
       $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+      if ($plugin->isActivated('tag')) {
 
          $tagObj = new PluginTagTagItem();
          $tags   = [];
