@@ -519,15 +519,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</div>';
 
       echo '<div id="block_assigned_question_group" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
+      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
          'value' => $this->fields['due_date_question'],
-      ]);
+      ));
       echo '</div>';
 
       echo '<div id="block_assigned_question_actors" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
             'value' => $this->fields['due_date_question'],
-      ]);
+      ));
       echo '</div>';
 
       echo '<div id="block_assigned_question_supplier" style="display:none">';
@@ -656,6 +656,140 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    /**
+    * Show settings to handle composite tickets
+    * @param string $rand
+    */
+   protected function showCompositeTicketSettings($rand) {
+      echo '<tr class="line1">';
+      echo '<td>';
+      echo __('Link to an other ticket', 'formcreator');
+      echo "<span class='fa fa-plus pointer' onClick=\"".Html::jsShow("plugin_formcreator_linked_items$rand")."\"
+             title=\"".__s('Add')."\"><span class='sr-only'>" . __s('Add') . "</span></span>";
+
+      echo '</td>';
+      echo '<td colspan="3">';
+      echo '<div style="display: none" id="plugin_formcreator_linked_items' . $rand . '">';
+      Ticket_Ticket::dropdownLinks('_linktype');
+      $elements = [
+         'PluginFormcreatorTargetTicket'  => __('An other destination of this form', 'formcreator'),
+         'Ticket'                         => __('An existing ticket', 'formcreator'),
+      ];
+      Dropdown::showFromArray('_link_itemtype', $elements, [
+         'on_change' => 'updateCompositePeerType()',
+         'rand'      => $rand,
+      ]);
+      $script = <<<EOS
+      function updateCompositePeerType() {
+         if ($('#dropdown__link_itemtype$rand').val() == 'Ticket') {
+            $('#plugin_formcreator_link_ticket').show();
+            $('#plugin_formcreator_link_target').hide();
+         } else {
+            $('#plugin_formcreator_link_ticket').hide();
+            $('#plugin_formcreator_link_target').show();
+         }
+      }
+      updateCompositePeerType();
+EOS;
+      echo Html::scriptBlock($script);
+      // get already linked items
+      $targetTicketId = $this->getID();
+      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
+      $rows = $item_targetTicket->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
+      $excludedTargetTicketsIds = [];
+      $excludedTicketIds = [];
+      foreach ($rows as $row) {
+         switch ($row['itemtype']) {
+            case PluginFormcreatorTargetTicket::getType():
+               $excludedTargetTicketsIds[] = $row['items_id'];
+               break;
+
+            case Ticket::getType():
+               $excludedTicketIds[] = $row['items_id'];
+               break;
+         }
+      }
+
+      echo '<span id="plugin_formcreator_link_ticket">';
+      $linkparam = [
+         'name'        => '_link_tickets_id',
+         'used'        => $excludedTicketIds,
+         'displaywith' => ['id'],
+         'display'     => false
+      ];
+      echo Ticket::dropdown($linkparam);
+      echo '</span>';
+
+      // dropdown of target tickets
+      echo '<span id="plugin_formcreator_link_target">';
+      $excludedTargetTicketsIds[] = $this->getID();
+      echo PluginFormcreatorTargetTicket::dropdown([
+         'name' => '_link_targettickets_id',
+         'rand' => $rand,
+         'display' => false,
+         'used'   => $excludedTargetTicketsIds,
+         'condition' => "`id` IN (
+            SELECT `items_id` FROM `glpi_plugin_formcreator_targets` AS `t1`
+            WHERE `plugin_formcreator_forms_id` = (
+               SELECT `plugin_formcreator_forms_id` FROM `glpi_plugin_formcreator_targets` AS `t2`
+               WHERE `t2`.`itemtype` = 'PluginFormcreatorTargetTicket' AND `t2`.`items_id` = '$targetTicketId'
+            )
+            AND `t1`.`itemtype` = 'PluginFormcreatorTargetTicket')",
+      ]);
+      echo '</span>';
+      echo '</div>';
+
+      // show already linked items
+      foreach ($rows as $row) {
+         $icons = '&nbsp;'.Html::getSimpleForm(PluginFormcreatorItem_TargetTicket::getFormURL(), 'purge',
+               _x('button', 'Delete permanently'),
+               ['id'                => $row['id']],
+               'fa-times-circle');
+               $itemtype = $row['itemtype'];
+               $item = new $itemtype();
+               $item->getFromDB($row['items_id']);
+         switch ($itemtype) {
+            case Ticket::getType():
+               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               //echo Ticket_Ticket::getLinkName($row['link']);
+               echo PluginFormcreatorCommon::getLinkName($row['link']);
+               echo ' ';
+               echo $itemtype::getTypeName();
+               echo ' ';
+               echo '<span style="font-weight:bold">' . $item->getField('name') . '</span>';
+               echo ' ';
+               echo $icons;
+               break;
+
+            case PluginFormcreatorTargetTicket::getType():
+               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               //echo Ticket_Ticket::getLinkName($row['link']);
+               echo PluginFormcreatorCommon::getLinkName($row['link']);
+               echo ' ';
+               echo $itemtype::getTypeName();
+               echo ' ';
+               echo '<span style="font-weight:bold">' . $item->getField('name') . '</span>';
+               echo ' ';
+               echo $icons;
+               break;
+         }
+         echo '<br>';
+      }
+
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   public function prepareInputForAdd($input) {
+      // generate a unique id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
+   /**
     * Prepare input datas for updating the target ticket
     *
     * @param array $input datas used to add the item
@@ -743,6 +877,74 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                                        ? implode(',', $input['_tag_specifics'])
                                        : '';
          }
+      }
+
+      if (isset($input['_linktype']) && isset($input['_link_itemtype'])) {
+         $input = $this->saveLinkedItem($input);
+      }
+
+      // generate a unique id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
+   /**
+    * Save links to other items for composite tickets
+    * @param array $input form data
+    *
+    * @return array
+    */
+   private function saveLinkedItem($input) {
+      // Check link type is valid
+      $linktype = (int) $input['_linktype'];
+      if ($linktype < Ticket_Ticket::LINK_TO || $linktype > Ticket_Ticket::PARENT_OF) {
+         Session::addMessageAfterRedirect(__('Invalid link type', 'formcreator'), false, ERROR);
+         return [];
+      }
+
+      // Check itemtype
+      $itemtype = $input['_link_itemtype'];
+      switch ($itemtype) {
+         case Ticket::getType():
+            $itemId = (int) $input['_link_tickets_id'];
+            break;
+
+         case PluginFormcreatorTargetTicket::getType():
+            $itemId = (int) $input['_link_targettickets_id'];
+            break;
+
+         default:
+            Session::addMessageAfterRedirect(__('Invalid linked item type', 'formcreator'), false, ERROR);
+            return [];
+      }
+      $item = new $itemtype();
+
+      // Check an id was provided (if not, then the fields were not populated)
+      if ($item::isNewID($itemId)) {
+         // nothing to do
+         return $input;
+      }
+
+      // Check item exists
+      if (!$item->getFromDB($itemId)) {
+         Session::addMessageAfterRedirect(__('Linked item does not exists', 'formcreator'), false, ERROR);
+         return [];
+      }
+
+      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
+      $item_targetTicket->add([
+         'plugin_formcreator_targettickets_id'  => $this->getID(),
+         'link'                                 => $linktype,
+         'itemtype'                             => $itemtype,
+         'items_id'                             => $itemId,
+      ]);
+
+      if ($item_targetTicket->isNewItem()) {
+         Session::addMessageAfterRedirect(__('Failed to link the item', 'formcreator'), false, ERROR);
       }
 
       return $input;
