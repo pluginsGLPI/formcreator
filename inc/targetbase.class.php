@@ -274,12 +274,10 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
     */
    protected function attachDocument($formAnswerId, $itemtype, $targetID) {
       $docItem = new Document_Item();
-      $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
-                               AND items_id = '$formAnswerId'");
-      if (count($found) > 0) {
-         foreach ($found as $document) {
+      if (count($this->attachedDocuments) > 0) {
+         foreach ($this->attachedDocuments as $documentID => $dummy) {
             $docItem->add([
-               'documents_id' => $document['documents_id'],
+               'documents_id' => $documentID,
                'itemtype'     => $itemtype,
                'items_id'     => $targetID
             ]);
@@ -768,6 +766,9 @@ EOS;
                $content = str_replace('##answer_' . $id . '##', $value, $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
+                  $content = str_replace('##question_' . $id . '##', $name, $content);
+                  $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+
                   // keep the ID of the document
                   $this->attachedDocuments[$value] = true;
                }

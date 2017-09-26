@@ -907,12 +907,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
       // compute all questions
       $query_questions = "SELECT sections.`name` as section_name,
-                                 questions.*,
-                                 answers.`answer`
+                                 questions.*
                           FROM `glpi_plugin_formcreator_questions` AS questions
-                          INNER JOIN `glpi_plugin_formcreator_answers` AS answers
-                            ON answers.`plugin_formcreator_questions_id` = questions.`id`
-                            AND answers.`plugin_formcreator_forms_answers_id` = ".$this->getID()."
                           INNER JOIN `glpi_plugin_formcreator_sections` as sections
                             ON questions.`plugin_formcreator_sections_id` = sections.`id`
                             AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
@@ -945,61 +941,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             continue;
          }
 
-         /*
-         // TODO: split and move this code in the field class ans specialize in each sub class
-         //       implemnt in the interface of the fields a method renderForTarget()
-         if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
-            $question_no ++;
-            $value = $question_line['answer'];
-            $output_value = PluginFormcreatorFields::getValue($question_line,
-                                                              $value);
-
-            if (in_array($question_line['fieldtype'], ['checkboxes', 'multiselect'])) {
-               if (is_array($value)) {
-                  if ($CFG_GLPI['use_rich_text']) {
-                     $output_value = '<ul>';
-                     foreach ($value as $choice) {
-                        $output_value .= '<li>' . $choice . '</li>';
-                     }
-                     $output_value .= '</ul>';
-                  } else {
-                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", $value);
-                  }
-               } else if (is_array(json_decode($value))) {
-                  if ($CFG_GLPI['use_rich_text']) {
-                     $value = json_decode($value);
-                     $output_value = '<ul>';
-                     foreach ($value as $choice) {
-                        $output_value .= '<li>' . $choice . '</li>';
-                     }
-                     $output_value .= '</ul>';
-                  } else {
-                     $output_value = PHP_EOL . " - " . implode(PHP_EOL . " - ", json_decode($value));
-                  }
-               } else {
-                  $output_value = $value;
-               }
-            } else if ($question_line['fieldtype'] == 'textarea') {
-               if ($CFG_GLPI['use_rich_text']) {
-                  $output_value = '<br /><blockquote>' . $value . '</blockquote>';
-               } else {
-                  $output_value = PHP_EOL . $value;
-               }
-            }
-
-            if ($CFG_GLPI['use_rich_text']) {
-               $output .= '<div>';
-               $output .= '<b>' . $question_no . ') ' . $question_line['name'] . ' : </b>';
-               $output .= $output_value;
-               $output .= '</div>';
-            } else {
-               $output .= $question_no . ') ' . $question_line['name'] . ' : ';
-               $output .= $output_value . PHP_EOL . PHP_EOL;
-            }
-         }
-         */
-
-         if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
+         if ($question_line['fieldtype'] != 'description') {
             $question_no++;
             if ($CFG_GLPI['use_rich_text']) {
                $output .= '<div>';
