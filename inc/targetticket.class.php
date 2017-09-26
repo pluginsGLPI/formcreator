@@ -1262,7 +1262,7 @@ EOS;
             $tagObj->add([
                'plugin_tag_tags_id' => $tag,
                'items_id'           => $ticketID,
-               'itemtype'           => 'Ticket',
+               'itemtype'           => Ticket::class,
             ]);
          }
       }
@@ -1275,7 +1275,7 @@ EOS;
          'tickets_id' => $ticketID,
       ]);
 
-      $this->attachDocument($formanswer->getID(), 'Ticket', $ticketID);
+      $this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
 
       // Attach validation message as first ticket followup if validation is required and
       // if is set in ticket target configuration
