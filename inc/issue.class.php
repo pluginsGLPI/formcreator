@@ -379,7 +379,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
          ]
       ];
 
-
       return $tab;
    }
 

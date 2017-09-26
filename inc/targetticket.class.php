@@ -260,10 +260,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
       unset($dropdownItems['question_supplier']);
-      Dropdown::showFromArray('actor_type',
-         $dropdownItems, [
-         'on_change'         => 'formcreatorChangeActorRequester(this.value)'
-      ]);
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems,
+         ['on_change' => 'formcreatorChangeActorRequester(this.value)']
+      );
 
       echo '<div id="block_requester_user" style="display:none">';
       User::dropdown([
@@ -369,10 +370,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
       unset($dropdownItems['question_supplier']);
-      Dropdown::showFromArray('actor_type',
-         $dropdownItems, [
-         'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
-      ]);
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems,
+         ['on_change' => 'formcreatorChangeActorWatcher(this.value)']
+      );
 
       echo '<div id="block_watcher_user" style="display:none">';
       User::dropdown([
@@ -475,10 +477,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
       $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
-      Dropdown::showFromArray('actor_type',
-         $dropdownItems, [
-         'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
-      ]);
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems,
+         ['on_change' => 'formcreatorChangeActorAssigned(this.value)']
+      );
 
       echo '<div id="block_assigned_user" style="display:none">';
       User::dropdown([

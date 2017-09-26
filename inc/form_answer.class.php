@@ -140,7 +140,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          }
       }
 
-
       return $tab;
    }
 

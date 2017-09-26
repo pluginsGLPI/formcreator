@@ -519,9 +519,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       unset($dropdownItems['supplier']);
       unset($dropdownItems['question_supplier']);
       Dropdown::showFromArray('actor_type',
-         $dropdownItems, [
-            'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
-      ]);
+         $dropdownItems, ['on_change' => 'formcreatorChangeActorWatcher(this.value)']
+      );
 
       echo '<div id="block_watcher_user" style="display:none">';
       User::dropdown([
