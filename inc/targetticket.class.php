@@ -754,7 +754,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -845,17 +845,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $data                = array_merge($data, $predefined_fields);
 
-      // Parse datas
-      $fullform = $formanswer->getFullForm();
-      $data['name']                  = addslashes($this->parseTags($this->fields['name'],
-                                                                    $formanswer,
-                                                                    $fullform));
-      $data['content']               = addslashes($this->parseTags($this->fields['comment'],
-                                                                      $formanswer,
-                                                                      $fullform));
+      // Parse data
+      // TODO: generate instances of all answers of the form and use them for the fullform computation
+      //       and the computation from a admin-defined target ticket template
+      $data['name'] = $this->fields['name'];
+      $data['name'] = addslashes($this->parseTags($data['name'],
+                                                  $formanswer));
 
-      $data['_users_id_recipient']   = $_SESSION['glpiID'];
-      $data['_tickettemplates_id']   = $this->fields['tickettemplates_id'];
+      $data['content'] = $this->fields['comment'];
+      if (strpos($data['content'], '##FULLFORM##') !== false) {
+         $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
+      }
+      $data['content'] = addslashes($this->parseTags($data['content'], $formanswer));
+
+      $data['_users_id_recipient'] = $_SESSION['glpiID'];
+      $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
       $this->prepareActors($form, $formanswer);
 

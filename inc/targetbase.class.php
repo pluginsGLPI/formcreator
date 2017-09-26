@@ -16,6 +16,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    protected $assignedGroups;
 
+   protected $attachedDocuments;
+
    abstract public function export();
 
    abstract public function save(PluginFormcreatorForm_Answer $formanswer);
@@ -722,19 +724,14 @@ EOS;
     *
     * @param  String $content                            String to be parsed
     * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
-    * @param  String
+    * @param  String                                     full form
     * @return String                                     Parsed string with tags replaced by form values
     */
    protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
       global $DB, $CFG_GLPI;
 
-      if ($fullform == "") {
-         $fullform = $formanswer->getFullForm();
-      }
       // retrieve answers
       $answers_values = $formanswer->getAnswers($formanswer->getID());
-
-      $content     = str_replace('##FULLFORM##', $fullform, $content);
 
       $section     = new PluginFormcreatorSection();
       $sections    = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
@@ -766,8 +763,15 @@ EOS;
                }
             }
 
-            $content = str_replace('##question_' . $id . '##', $name, $content);
-            $content = str_replace('##answer_' . $id . '##', $value, $content);
+            if ($question_line['fieldtype'] !== 'file') {
+               $content = str_replace('##question_' . $id . '##', $name, $content);
+               $content = str_replace('##answer_' . $id . '##', $value, $content);
+            } else {
+               if (strpos($content, '##answer_' . $id . '##') !== false) {
+                  // keep the ID of the document
+                  $this->attachedDocuments[$value] = true;
+               }
+            }
          }
       }
 

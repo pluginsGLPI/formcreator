@@ -904,6 +904,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       // retrieve answers
       $answers_values = $this->getAnswers($this->getID());
 
+      // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
       // compute all questions
       $query_questions = "SELECT sections.`name` as section_name,
                                  questions.*,
@@ -944,6 +945,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             continue;
          }
 
+         /*
+         // TODO: split and move this code in the field class ans specialize in each sub class
+         //       implemnt in the interface of the fields a method renderForTarget()
          if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
             $question_no ++;
             $value = $question_line['answer'];
@@ -991,6 +995,20 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             } else {
                $output .= $question_no . ') ' . $question_line['name'] . ' : ';
                $output .= $output_value . PHP_EOL . PHP_EOL;
+            }
+         }
+         */
+
+         if ($question_line['fieldtype'] != 'file' && $question_line['fieldtype'] != 'description') {
+            $question_no++;
+            if ($CFG_GLPI['use_rich_text']) {
+               $output .= '<div>';
+               $output .= '<b>' . $question_no . ') ##question_' . $question_line['id'] . '## : </b>';
+               $output .= '##answer_' . $question_line['id'] . '##';
+               $output .= '</div>';
+            } else {
+               $output .= $question_no . ') ##question_' . $question_line['id'] . '## : ';
+               $output .= '##answer_' . $question_line['id'] . '##' . PHP_EOL . PHP_EOL;
             }
          }
       }

@@ -944,30 +944,22 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Parse datas
       $fullform = $formanswer->getFullForm();
 
-      $data['name']                = addslashes($this->parseTags($this->fields['name'],
-            $formanswer,
-            $fullform));
-      $data['content']             = addslashes($this->parseTags($this->fields['comment'],
-            $formanswer,
-            $fullform));
-      $data['impactcontent']       = addslashes($this->parseTags($this->fields['impactcontent'],
-            $formanswer,
-            $fullform));
-
-      $data['controlistcontent']   = addslashes($this->parseTags($this->fields['controlistcontent'],
-            $formanswer,
-            $fullform));
-
-      $data['rolloutplancontent']  = addslashes($this->parseTags($this->fields['rolloutplancontent'],
-            $formanswer,
-            $fullform));
-
-      $data['backoutplancontent']  = addslashes($this->parseTags($this->fields['backoutplancontent'],
-            $formanswer,
-            $fullform));
-      $data['checklistcontent']    = addslashes($this->parseTags($this->fields['checklistcontent'],
-            $formanswer,
-            $fullform));
+      $changeFields = [
+         'name',
+         'content',
+         'impactcontent',
+         'controlistcontent',
+         'rolloutplancontent',
+         'backoutplancontent',
+         'checklistcontent'
+      ];
+      foreach ($changeFields as $changeField) {
+         $data[$changeField] = $this->fields[$changeField];
+         if (strpos($data[$changeField], '##FULLFORM##') !== false) {
+            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
+         }
+         $data[$changeField]                = addslashes($this->parseTags($data[$changeField], $formanswer));
+      }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
 
