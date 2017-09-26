@@ -72,7 +72,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    }
 
    public static function getPrefs() {
-      return S
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
