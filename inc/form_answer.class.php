@@ -43,61 +43,76 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return Array Array of fields to show in search engine and options for each fields
     */
-   public function getSearchOptions() {
+   public function getSearchOptionsNew() {
       $tab = [];
-
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
                           && $_SESSION['formcreator']['form_search_answers'];
 
-      $tab['common']     = __('Characteristics');
-      $tab['1'] = [
-         'table'         => self::getTable(),
-         'field'         => 'status',
-         'name'          => _n('Status', 'Statuses', 1),
-         'searchtype'    => ['equals', 'notequals'],
-         'datatype'      => 'specific',
-         'massiveaction' => false,
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => __('Characteristics')
       ];
-      $tab['2'] = [
-         'table'         => self::getTable(),
-         'field'         => 'id',
-         'name'          => __('ID'),
-         'searchtype'    => 'contains',
-         'datatype'      => 'itemlink',
-         'massiveaction' => false,
+
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this::getTable(),
+         'field'              => 'status',
+         'name'               => __('Status'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
       ];
-      if (!$display_for_form) {
-         $tab['3'] = [
-            'table'         => getTableForItemType('PluginFormcreatorForm'),
-            'field'         => 'name',
-            'name'          => PluginFormcreatorForm::getTypeName(1),
-            'searchtype'    => 'contains',
-            'datatype'      => 'string',
-            'massiveaction' => false,
-         ];
-      }
-      $tab['4'] = [
-         'table'         => getTableForItemType('User'),
-         'field'         => 'name',
-         'name'          => __('Requester', 'formcreator'),
-         'datatype'      => 'itemlink',
-         'massiveaction' => false,
-         'linkfield'     => 'requester_id',
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'searchtype'         => 'contains',
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false
       ];
-      $tab['5'] = [
-         'table'         => getTableForItemType('User'),
-         'field'         => 'name',
-         'name'          => __('Validator', 'formcreator'),
-         'datatype'      => 'itemlink',
-         'massiveaction' => false,
-         'linkfield'     => 'validator_id',
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => 'glpi_plugin_formcreator_forms',
+         'field'              => 'name',
+         'name'               => __('Form'),
+         'searchtype'         => 'contains',
+         'datatype'           => 'string',
+         'massiveaction'      => false
       ];
-      $tab['6'] = [
-         'table'         => self::getTable(),
-         'field'         => 'request_date',
-         'name'          => __('Creation date'),
-         'datatype'      => 'datetime',
-         'massiveaction' => false,
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'name'               => __('Requester'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'linkfield'          => 'requester_id'
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'name'               => __('Validator'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'linkfield'          => 'validator_id'
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this::getTable(),
+         'field'              => 'request_date',
+         'name'               => __('Creation date'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
       ];
 
       if ($display_for_form) {
@@ -107,7 +122,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          foreach ($questions as $current_question) {
             $questions_id = $current_question->getID();
-            $tab[$optindex] = [
+            $tab[] = [
+               'id'            => $optindex,
                'table'         => PluginFormcreatorAnswer::getTable(),
                'field'         => 'answer',
                'name'          => $current_question->getField('name'),
@@ -123,6 +139,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             $optindex++;
          }
       }
+
 
       return $tab;
    }

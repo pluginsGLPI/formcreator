@@ -237,112 +237,150 @@ class PluginFormcreatorIssue extends CommonDBTM {
     *
     * @return Array Array of fields to show in search engine and options for each fields
     */
-   public function getSearchOptions() {
-      return array(
-         __('Issue', 'formcreator'),
-         '1' => array(
-            'table'         => self::getTable(),
-            'field'         => 'name',
-            'name'          => __('Name'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-            'forcegroupby'  => true,
-            'additionalfields' => array('display_id'),
-         ),
-         '2' => array(
-            'table'         => self::getTable(),
-            'field'         => 'display_id',
-            'name'          => __('ID'),
-            'datatype'      => 'string',
-            'massiveaction' => false,
-         ),
-         '3' => array(
-            'table'         => self::getTable(),
-            'field'         => 'sub_itemtype',
-            'name'          => __('Type'),
-            'searchtype'    => array('equals', 'notequals'),
-            'datatype'      => 'specific',
-            'massiveaction' => false,
-         ),
-         '4' => array(
-            'table'         => self::getTable(),
-            'field'         => 'status',
-            'name'          => __('Status'),
-            'searchtype'    => array('equals', 'notequals'),
-            'datatype'      => 'specific',
-            'massiveaction' => false,
-         ),
-         '5' => array(
-            'table'         => self::getTable(),
-            'field'         => 'date_creation',
-            'name'          => __('Opening date'),
-            'datatype'      => 'datetime',
-            'massiveaction' => false,
-         ),
-         '6' => array(
-            'table'         => self::getTable(),
-            'field'         => 'date_mod',
-            'name'          => __('Last update'),
-            'datatype'      => 'datetime',
-            'massiveaction' => false,
-         ),
-         '7' => array(
-            'table'         => "glpi_entities",
-            'field'         => 'completename',
-            'name'          => __('Entity'),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '8' => array(
-            'table'         => 'glpi_users',
-            'field'         => 'name',
-            'linkfield'     => 'requester_id',
-            'name'          => __('Requester'),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '9' => array(
-            'table'         => 'glpi_users',
-            'field'         => 'name',
-            'linkfield'     => 'validator_id',
-            'name'          => __('Form approver'),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '10' => array(
-            'table'         => self::getTable(),
-            'field'         => 'comment',
-            'name'          => __('Comment'),
-            'datatype'      => 'string',
-            'massiveaction' => false,
-         ),
-         '11' => array(
-            'table'         => 'glpi_users',
-            'field'         => 'name',
-            'linkfield'     => 'users_id_validate',
-            'name'          => __('Ticket approver'),
-            'datatype'      => 'dropdown',
-            'right'         => array('validate_request', 'validate_incident'),
-            'forcegroupby'  => false,
-            'massiveaction' => false,
-            'joinparams'    => array(
-               'beforejoin' => array(
-                  array(
-                     'table' => 'glpi_items_tickets',
-                     'joinparams' => array(
-                        'jointype'           => 'itemtypeonly',
-                        'specific_itemtype'  => 'PluginFormcreatorForm_Answer',
-                        'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
-                     )
-                  ),
-                  array(
-                     'table' => 'glpi_ticketvalidations',
-                        // no join type in search engine match our need. See plugin_formcreator_addLeftJoin
-                  )
-               )
-            )
-         ),
-      );
+   public function getSearchOptionsNew() {
+      $tab = [];
+
+      $tab[] = [
+         'id'                 => '0',
+         'name'               => __('Issue', 'formcreator')
+      ];
+
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this::getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'forcegroupby'       => true,
+         'additionalfields'   => [
+            '0'                  => 'display_id'
+         ]
+      ];
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'display_id',
+         'name'               => __('ID'),
+         'datatype'           => 'string',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this::getTable(),
+         'field'              => 'sub_itemtype',
+         'name'               => __('Type'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'status',
+         'name'               => __('Status'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this::getTable(),
+         'field'              => 'date_creation',
+         'name'               => __('Opening date'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this::getTable(),
+         'field'              => 'date_mod',
+         'name'               => __('Last update'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => 'glpi_entities',
+         'field'              => 'completename',
+         'name'               => __('Entity'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'linkfield'          => 'requester_id',
+         'name'               => __('Requester'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'linkfield'          => 'validator_id',
+         'name'               => __('Form approver'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this::getTable(),
+         'field'              => 'comment',
+         'name'               => __('Comment'),
+         'datatype'           => 'string',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'linkfield'          => 'users_id_validate',
+         'name'               => __('Ticket approver'),
+         'datatype'           => 'dropdown',
+         'right'              => [
+            '0'                  => 'validate_request',
+            '1'                  => 'validate_incident'
+         ],
+         'forcegroupby'       => false,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'beforejoin'         => [
+               '0'                  => [
+                  'table'              => 'glpi_items_tickets',
+                  'joinparams'         => [
+                     'jointype'           => 'itemtypeonly',
+                     'specific_itemtype'  => 'PluginFormcreatorForm_Answer',
+                     'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
+                  ]
+               ],
+               '1'                  => [
+                  'table'              => 'glpi_ticketvalidations'
+               ]
+            ]
+         ]
+      ];
+
+
+      return $tab;
    }
 
    public static function getSpecificValueToSelect($field, $name='', $values='', array $options = []) {

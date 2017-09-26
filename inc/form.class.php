@@ -67,84 +67,118 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return Array Array of fields to show in search engine and options for each fields
     */
-   public function getSearchOptions() {
-      $tab = array(
-         'common'           => __('Characteristics'),
-         '2' => array(
-            'table'         => self::getTable(),
-            'field'         => 'id',
-            'name'          => __('ID'),
-            'searchtype'    => 'contains',
-            'massiveaction' => false,
-         ),
-         '1' => array(
-            'table'         => self::getTable(),
-            'field'         => 'name',
-            'name'          => __('Name'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-         ),
-         '4' => array(
-            'table'         => self::getTable(),
-            'field'         => 'description',
-            'name'          => __('Description', 'formcreator'),
-            'massiveaction' => false,
-         ),
-         '5' => array(
-            'table'         => 'glpi_entities',
-            'field'         => 'completename',
-            'name'          => _n('Entity', 'Entities', 1),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '6' => array(
-            'table'         => self::getTable(),
-            'field'         => 'is_recursive',
-            'name'          => __('Recursive'),
-            'datatype'      => 'bool',
-            'massiveaction' => false,
-         ),
-         '7' => array(
-            'table'         => self::getTable(),
-            'field'         => 'language',
-            'name'          => __('Language'),
-            'datatype'      => 'specific',
-            'searchtype'    => array('equals'),
-            'massiveaction' => false,
-         ),
-         '8' => array(
-            'table'         => self::getTable(),
-            'field'         => 'helpdesk_home',
-            'name'          => __('Homepage', 'formcreator'),
-            'datatype'      => 'bool',
-            'searchtype'    => array('equals', 'notequals'),
-            'massiveaction' => true,
-         ),
-         '9' => array(
-            'table'         => self::getTable(),
-            'field'         => 'access_rights',
-            'name'          => __('Access', 'formcreator'),
-            'datatype'      => 'specific',
-            'searchtype'    => array('equals', 'notequals'),
-            'massiveaction' => true,
-         ),
-         '10' => array(
-            'table'         => getTableForItemType('PluginFormcreatorCategory'),
-            'field'         => 'name',
-            'name'          => PluginFormcreatorCategory::getTypeName(1),
-            'datatype'      => 'dropdown',
-            'massiveaction' => true,
+   public function getSearchOptionsNew() {
+      $tab = [];
 
-         ),
-         '30' => array(
-            'table'         => self::getTable(),
-            'field'         => 'is_active',
-            'name'          => __('Active'),
-            'datatype'      => 'specific',
-            'searchtype'    => array('equals', 'notequals'),
-            'massiveaction' => true,
-         ),
-      );
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => __('Characteristics')
+      ];
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->getTable(),
+         'field'              => 'id',
+         'name'               => __('ID'),
+         'searchtype'         => 'contains',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this->getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'description',
+         'name'               => __('Description'),
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => 'glpi_entities',
+         'field'              => 'completename',
+         'name'               => __('Entity'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'is_recursive',
+         'name'               => __('Recursive'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this->getTable(),
+         'field'              => 'language',
+         'name'               => __('Language'),
+         'datatype'           => 'specific',
+         'searchtype'         => [
+            '0'                  => 'equals'
+         ],
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this->getTable(),
+         'field'              => 'helpdesk_home',
+         'name'               => __('Homepage'),
+         'datatype'           => 'bool',
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'massiveaction'      => true
+      ];
+
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => $this->getTable(),
+         'field'              => 'access_rights',
+         'name'               => __('Access'),
+         'datatype'           => 'specific',
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'massiveaction'      => true
+      ];
+
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => 'glpi_plugin_formcreator_categories',
+         'field'              => 'name',
+         'name'               => __('Form category'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => true
+      ];
+
+      $tab[] = [
+         'id'                 => '30',
+         'table'              => $this->getTable(),
+         'field'              => 'is_active',
+         'name'               => __('Active'),
+         'datatype'           => 'specific',
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'massiveaction'      => true
+      ];
+
       return $tab;
    }
 
