@@ -101,21 +101,21 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       // No sub-categories, then return
       if (count($items) == 0) {
-         return array(
-               'name'            => $name,
-               'parent'          => $parent,
-               'id'              => $rootId,
-               'subcategories'   => new stdClass()
-         );
-      }
-
-      // Generate sub categories
-      $children = array(
+         return [
             'name'            => $name,
             'parent'          => $parent,
             'id'              => $rootId,
-            'subcategories'   => []
-      );
+            'subcategories'   => new stdClass()
+         ];
+      }
+
+      // Generate sub categories
+      $children = [
+         'name'            => $name,
+         'parent'          => $parent,
+         'id'              => $rootId,
+         'subcategories'   => []
+      ];
       foreach ($items as $categoryItem) {
          $children['subcategories'][] = self::getCategoryTree($categoryItem['id']);
       }

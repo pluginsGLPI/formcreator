@@ -15,10 +15,10 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    }
 
    public static function getEnumShowLogic() {
-      return array(
-            'AND'    => 'AND',
-            'OR'     => 'OR',
-      );
+      return [
+         'AND'    => 'AND',
+         'OR'     => 'OR',
+      ];
    }
 
    /**
@@ -149,35 +149,35 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<div class="div_show_condition_logic"' . $showLogic . '>';
       $html.= Dropdown::showFromArray('show_logic[]',
             PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
-            array(
-                  'display'               => false,
-                  'value'                 => $show_logic,
-                  'display_emptychoice'   => false,
-                  'rand'                  => $rand,
-            ));
+            [
+               'display'               => false,
+               'value'                 => $show_logic,
+               'display_emptychoice'   => false,
+               'rand'                  => $rand,
+            ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_field">';
-      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, array(
-            'display'      => false,
-            'used'         => array($questionId => ''),
-            'value'        => $show_field,
-            'rand'         => $rand,
-      ));
+      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, [
+         'display'      => false,
+         'used'         => array($questionId => ''),
+         'value'        => $show_field,
+         'rand'         => $rand,
+      ]);
       $html.= '</div>';
 
       $html.= '<div class="div_show_condition_operator">';
-      $html.= Dropdown::showFromArray('show_condition[]', array(
-            '=='           => '=',
-            '!='           => '&ne;',
-            '<'            => '&lt;',
-            '>'            => '&gt;',
-            '<='           => '&le;',
-            '>='           => '&ge;',
-      ), array(
-            'display'      => false,
-            'value'        => $show_condition,
-            'rand'         => $rand,
-      ));
+      $html.= Dropdown::showFromArray('show_condition[]', [
+         '=='           => '=',
+         '!='           => '&ne;',
+         '<'            => '&lt;',
+         '>'            => '&gt;',
+         '<='           => '&le;',
+         '>='           => '&ge;',
+      ], [
+         'display'      => false,
+         'value'        => $show_condition,
+         'rand'         => $rand,
+      ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_value">';
       $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'

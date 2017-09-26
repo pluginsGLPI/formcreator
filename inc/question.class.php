@@ -252,7 +252,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios
-      $itemtypes = array('select', 'multiselect', 'checkboxes', 'radios');
+      $itemtypes = ['select', 'multiselect', 'checkboxes', 'radios'];
       if (in_array($input['fieldtype'], $itemtypes)) {
          if (isset($input['values'])) {
             if (empty($input['values'])) {
@@ -474,7 +474,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    public function updateConditions($input) {
       // Delete all existing conditions for the question
       $question_condition = new PluginFormcreatorQuestion_Condition();
-      $question_condition->deleteByCriteria(array('plugin_formcreator_questions_id' => $input['id']));
+      $question_condition->deleteByCriteria(['plugin_formcreator_questions_id' => $input['id']]);
 
       if (isset($input['show_field']) && isset($input['show_condition'])
             && isset($input['show_value']) && isset($input['show_logic'])) {
@@ -579,11 +579,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<td width="30%">';
       $fieldtypes = PluginFormcreatorFields::getNames();
-      Dropdown::showFromArray('fieldtype', $fieldtypes, array(
-            'value'       => $this->fields['fieldtype'],
-            'on_change'   => 'changeQuestionType();',
-            'rand'        => $rand,
-      ));
+      Dropdown::showFromArray('fieldtype', $fieldtypes, [
+         'value'       => $this->fields['fieldtype'],
+         'on_change'   => 'changeQuestionType();',
+         'rand'        => $rand,
+      ]);
       echo '</td>';
       echo '</tr>';
 
@@ -606,10 +606,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       while ($section = $DB->fetch_array($result)) {
          $sections[$section['id']] = $section['name'];
       }
-      Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, array(
-            'value' => ($this->fields['plugin_formcreator_sections_id']) ?:intval($_REQUEST['section_id']),
-            'rand'  => $rand,
-      ));
+      Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, [
+         'value' => ($this->fields['plugin_formcreator_sections_id']) ?:intval($_REQUEST['section_id']),
+         'rand'  => $rand,
+      ]);
       echo '</td>';
 
       echo '<td>';
@@ -629,61 +629,61 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $optgroup = Dropdown::getStandardDropdownItemTypes();
       $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
       array_unshift($optgroup, '---');
-      Dropdown::showFromArray('dropdown_values', $optgroup, array(
-            'value'     => $decodedValues['itemtype'],
-            'rand'      => $rand,
-            'on_change' => 'change_dropdown(); changeQuestionType();',
-      ));
+      Dropdown::showFromArray('dropdown_values', $optgroup, [
+         'value'     => $decodedValues['itemtype'],
+         'rand'      => $rand,
+         'on_change' => 'change_dropdown(); changeQuestionType();',
+      ]);
       echo '</div>';
       echo '<div id="glpi_objects_field">';
-      $optgroup = array(
-            __("Assets") => array(
-                  'Computer'           => _n("Computer", "Computers", 2),
-                  'Monitor'            => _n("Monitor", "Monitors", 2),
-                  'Software'           => _n("Software", "Software", 2),
-                  'Networkequipment'   => _n("Network", "Networks", 2),
-                  'Peripheral'         => _n("Device", "Devices", 2),
-                  'Printer'            => _n("Printer", "Printers", 2),
-                  'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
-                  'Consumableitem'     => _n("Consumable", "Consumables", 2),
-                  'Phone'              => _n("Phone", "Phones", 2)),
-            __("Assistance") => array(
-                  'Ticket'             => _n("Ticket", "Tickets", 2),
-                  'Problem'            => _n("Problem", "Problems", 2),
-                  'TicketRecurrent'    => __("Recurrent tickets")),
-            __("Management") => array(
-                  'Budget'             => _n("Budget", "Budgets", 2),
-                  'Supplier'           => _n("Supplier", "Suppliers", 2),
-                  'Contact'            => _n("Contact", "Contacts", 2),
-                  'Contract'           => _n("Contract", "Contracts", 2),
-                  'Document'           => _n("Document", "Documents", 2)),
-            __("Tools") => array(
-                  'Reminder'           => __("Notes"),
-                  'RSSFeed'            => __("RSS feed")),
-            __("Administration") => array(
-                  'User'               => _n("User", "Users", 2),
-                  'Group'              => _n("Group", "Groups", 2),
-                  'Entity'             => _n("Entity", "Entities", 2),
-                  'Profile'            => _n("Profile", "Profiles", 2))
-      );
+      $optgroup = [
+         __("Assets") => [
+            'Computer'           => _n("Computer", "Computers", 2),
+            'Monitor'            => _n("Monitor", "Monitors", 2),
+            'Software'           => _n("Software", "Software", 2),
+            'Networkequipment'   => _n("Network", "Networks", 2),
+            'Peripheral'         => _n("Device", "Devices", 2),
+            'Printer'            => _n("Printer", "Printers", 2),
+            'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
+            'Consumableitem'     => _n("Consumable", "Consumables", 2),
+            'Phone'              => _n("Phone", "Phones", 2)],
+         __("Assistance") => [
+            'Ticket'             => _n("Ticket", "Tickets", 2),
+            'Problem'            => _n("Problem", "Problems", 2),
+            'TicketRecurrent'    => __("Recurrent tickets")],
+         __("Management") => [
+            'Budget'             => _n("Budget", "Budgets", 2),
+            'Supplier'           => _n("Supplier", "Suppliers", 2),
+            'Contact'            => _n("Contact", "Contacts", 2),
+            'Contract'           => _n("Contract", "Contracts", 2),
+            'Document'           => _n("Document", "Documents", 2)],
+         __("Tools") => [
+            'Reminder'           => __("Notes"),
+            'RSSFeed'            => __("RSS feed")],
+         __("Administration") => [
+            'User'               => _n("User", "Users", 2),
+            'Group'              => _n("Group", "Groups", 2),
+            'Entity'             => _n("Entity", "Entities", 2),
+            'Profile'            => _n("Profile", "Profiles", 2)]
+      ];
       array_unshift($optgroup, '---');
-      Dropdown::showFromArray('glpi_objects', $optgroup, array(
-            'value'     => $this->fields['values'],
-            'rand'      => $rand,
-            'on_change' => 'change_glpi_objects();',
-      ));
+      Dropdown::showFromArray('glpi_objects', $optgroup, [
+         'value'     => $this->fields['values'],
+         'rand'      => $rand,
+         'on_change' => 'change_glpi_objects();',
+      ]);
       echo '</div>';
       echo '<div id="glpi_ldap_field">';
       $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
       if ($ldap_values === null) {
          $ldap_values = [];
       }
-      Dropdown::show('AuthLDAP', array(
-            'name'      => 'ldap_auth',
-            'rand'      => $rand,
-            'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
-            'on_change' => 'change_LDAP(this)',
-      ));
+      Dropdown::show('AuthLDAP', [
+         'name'      => 'ldap_auth',
+         'rand'      => $rand,
+         'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
+         'on_change' => 'change_LDAP(this)',
+      ]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -696,9 +696,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
 
       echo '<td>';
-      dropdown::showYesNo('required', $this->fields['required'], -1, array(
-            'rand'  => $rand,
-      ));
+      dropdown::showYesNo('required', $this->fields['required'], -1, [
+         'rand'  => $rand,
+      ]);
       echo '</td>';
 
       echo '<td>';
@@ -709,9 +709,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<td>';
       echo '<div id="show_empty">';
-      dropdown::showYesNo('show_empty', $this->fields['show_empty'], -1, array(
-            'rand'  => $rand,
-      ));
+      dropdown::showYesNo('show_empty', $this->fields['show_empty'], -1, [
+         'rand'  => $rand,
+      ]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -740,11 +740,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
       echo '<td>';
       dropdown::showNumber('show_ticket_categories_depth', [
-                            'rand'  => $rand,
-                            'value' => $decodedValues['show_ticket_categories_depth'],
-                            'min' => 1,
-                            'max' => 16,
-                            'toadd' => [0 => __('No limit', 'formcreator')],
+                           'rand'  => $rand,
+                           'value' => $decodedValues['show_ticket_categories_depth'],
+                           'min' => 1,
+                           'max' => 16,
+                           'toadd' => [0 => __('No limit', 'formcreator')],
       ]);
       echo '</td>';
       echo '</tr>';
@@ -765,20 +765,20 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<div id="dropdown_default_value_field">';
       if (!empty($this->fields['values'])) {
          if ($this->fields['fieldtype'] == 'glpiselect' && class_exists($this->fields['values'])) {
-            Dropdown::show($this->fields['values'], array(
+            Dropdown::show($this->fields['values'], [
                'name'  => 'dropdown_default_value',
                'value' => $this->fields['default_values'],
                'rand'  => $rand,
-            ));
+            ]);
          }
          if ($this->fields['fieldtype'] == 'dropdown') {
             $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
             if (class_exists($decodedValue['itemtype'])) {
-               Dropdown::show($decodedValue['itemtype'], array(
+               Dropdown::show($decodedValue['itemtype'], [
                   'name'  => 'dropdown_default_value',
                   'value' => $this->fields['default_values'],
                   'rand'  => $rand,
-               ));
+               ]);
             }
          }
       }
@@ -817,11 +817,11 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<td>';
       $rand2 = mt_rand();
-      Dropdown::show('RuleRightParameter', array(
-            'name'  => 'ldap_attribute',
-            'rand'  => $rand2,
-            'value' => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
-      ));
+      Dropdown::show('RuleRightParameter', [
+         'name'  => 'ldap_attribute',
+         'rand'  => $rand2,
+         'value' => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
+      ]);
       echo '</td>';
       echo '</tr>';
 
@@ -899,15 +899,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       echo '<tr">';
       echo '<td colspan="4">';
-      Dropdown::showFromArray('show_rule', array(
-            'always'       => __('Always displayed', 'formcreator'),
-            'hidden'       => __('Hidden unless', 'formcreator'),
-            'shown'        => __('Displayed unless', 'formcreator'),
-      ), array(
-            'value'        => $this->fields['show_rule'],
-            'on_change'    => 'toggleCondition(this);',
-            'rand'         => $rand,
-      ));
+      Dropdown::showFromArray('show_rule', [
+         'always'       => __('Always displayed', 'formcreator'),
+         'hidden'       => __('Hidden unless', 'formcreator'),
+         'shown'        => __('Displayed unless', 'formcreator'),
+      ], [
+         'value'        => $this->fields['show_rule'],
+         'on_change'    => 'toggleCondition(this);',
+         'rand'         => $rand,
+      ]);
 
       echo '</td>';
       echo '</tr>';

@@ -62,9 +62,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
 
       if ($ID != 0) {
-         $elements = array(
-               self::CONFIG_PARENT => __('Inheritance of the parent entity')
-         );
+         $elements = [
+            self::CONFIG_PARENT => __('Inheritance of the parent entity')
+         ];
       } else {
          $elements = [];
       }
@@ -75,7 +75,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Helpdesk mode', 'formcreator')."</td>";
       echo "<td>";
-      Dropdown::showFromArray('replace_helpdesk', $elements, array('value' => $this->fields['replace_helpdesk']));
+      Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
          echo '<div class="green">';

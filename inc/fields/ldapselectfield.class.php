@@ -8,7 +8,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
             return [];
          }
-         $attribute     = array($ldap_dropdown->fields['value']);
+         $attribute     = [$ldap_dropdown->fields['value']];
 
          $config_ldap = new AuthLDAP();
          if (!$config_ldap->getFromDB($ldap_values->ldap_auth)) {
@@ -73,7 +73,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          if (!empty($input['ldap_attribute'])) {
             $ldap_dropdown = new RuleRightParameter();
             $ldap_dropdown->getFromDB($input['ldap_attribute']);
-            $attribute     = array($ldap_dropdown->fields['value']);
+            $attribute     = [$ldap_dropdown->fields['value']];
          } else {
             $attribute     = [];
          }
@@ -92,11 +92,11 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 
          restore_error_handler();
 
-         $input['values'] = json_encode(array(
+         $input['values'] = json_encode([
             'ldap_auth'      => $input['ldap_auth'],
             'ldap_filter'    => $input['ldap_filter'],
             'ldap_attribute' => strtolower($input['ldap_attribute']),
-         ));
+         ]);
       }
       return $input;
    }
@@ -108,7 +108,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -119,7 +119,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 1,
-      );
+      ];
    }
 
    public static function getJSFields() {

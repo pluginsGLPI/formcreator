@@ -28,14 +28,14 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
-         array(
+         [
             PluginFormcreatorForm::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
             PluginFormcreatorForm::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
             PluginFormcreatorForm::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-         ),
-         array(
+         ],
+         [
             'value' => (isset($item->fields["access_rights"])) ? $item->fields["access_rights"] : 1,
-         )
+         ]
       );
       echo '</td>';
       echo '<td>'.__('Link to the form', 'formcreator').': ';

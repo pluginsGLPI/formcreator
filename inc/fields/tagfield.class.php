@@ -22,12 +22,12 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             $values[$id] = $data['name'];
          }
 
-         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(
+         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, [
             'values'               => $this->getValue(),
             'comments'            => false,
             'rand'                => $rand,
             'multiple'            => true,
-         ));
+         ]);
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {

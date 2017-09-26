@@ -123,7 +123,7 @@ class PluginFormcreatorSection extends CommonDBChild
       $DB->query($query);
 
       $question = new PluginFormcreatorQuestion();
-      $question->deleteByCriteria(array('plugin_formcreator_sections_id' => $this->getID()), 1);
+      $question->deleteByCriteria(['plugin_formcreator_sections_id' => $this->getID()], 1);
    }
 
    /**
@@ -187,14 +187,14 @@ class PluginFormcreatorSection extends CommonDBChild
             AND `order` < '$order'
             ORDER BY `order` DESC LIMIT 1");
       if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
+         $this->update([
+            'id'     => $this->getID(),
+            'order'  => $otherItem->getField('order'),
+         ]);
+         $otherItem->update([
+            'id'     => $otherItem->getID(),
+            'order'  => $order,
+         ]);
       }
    }
 
@@ -206,14 +206,14 @@ class PluginFormcreatorSection extends CommonDBChild
             AND `order` > '$order'
             ORDER BY `order` ASC LIMIT 1");
       if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
+         $this->update([
+            'id'     => $this->getID(),
+            'order'  => $otherItem->getField('order'),
+         ]);
+         $otherItem->update([
+            'id'     => $otherItem->getID(),
+            'order'  => $order,
+         ]);
       }
    }
 

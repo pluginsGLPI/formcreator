@@ -46,7 +46,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
          );
       }
    }
-   $migration->addField('glpi_plugin_formcreator_targettickets', 'location_question', 'integer', array('after' => 'location_rule'));
+   $migration->addField('glpi_plugin_formcreator_targettickets', 'location_question', 'integer', ['after' => 'location_rule']);
 
    // Fix bad foreign key
    $table = 'glpi_plugin_formcreator_answers';

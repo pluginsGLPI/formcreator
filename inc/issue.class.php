@@ -16,7 +16,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    static function cronInfo($name) {
       switch ($name) {
          case 'SyncIssues':
-            return array('description' => __('Update issue data from tickets and form answers', 'formcreator'));
+            return ['description' => __('Update issue data from tickets and form answers', 'formcreator')];
       }
    }
 
@@ -112,7 +112,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
     */
    public function display($options = []) {
       $itemtype = $options['sub_itemtype'];
-      if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorForm_Answer'))) {
+      if (!in_array($itemtype, ['Ticket', 'PluginFormcreatorForm_Answer'])) {
          html::displayRightError();
       }
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
@@ -345,24 +345,24 @@ class PluginFormcreatorIssue extends CommonDBTM {
       );
    }
 
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=[]) {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options = []) {
 
       if (!is_array($values)) {
-         $values = array($field => $values);
+         $values = [$field => $values];
       }
       switch ($field) {
          case 'sub_itemtype':
             return Dropdown::showFromArray($name,
-                                           array('Ticket'                      => __('Ticket'),
-                                                 'PluginFormcreatorForm_Answer' => __('Form answer', 'formcreator')),
-                                           array('display' => false,
-                                                 'value'   => $values[$field]));
+                                           ['Ticket'                      => __('Ticket'),
+                                            'PluginFormcreatorForm_Answer' => __('Form answer', 'formcreator')],
+                                           ['display' => false,
+                                            'value'   => $values[$field]]);
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
             $ticket_opts['waiting'] = __('Not validated');
             $ticket_opts['refused'] = __('Refused');
-            return Dropdown::showFromArray($name, $ticket_opts, array('display' => false,
-                                                                      'value'   => $values[$field]));
+            return Dropdown::showFromArray($name, $ticket_opts, ['display' => false,
+                                                                 'value'   => $values[$field]]);
             break;
 
       }
@@ -374,11 +374,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getDefaultSearchRequest() {
 
-      $search = array('criteria' => array(0 => array('field'      => 4,
-                                                     'searchtype' => 'equals',
-                                                     'value'      => 'notclosed')),
-                      'sort'     => 6,
-                      'order'    => 'DESC');
+      $search = ['criteria' => [0 => ['field'      => 4,
+                                      'searchtype' => 'equals',
+                                      'value'      => 'notclosed']],
+                 'sort'     => 6,
+                 'order'    => 'DESC'];
 
       if (Session::haveRight(self::$rightname, Ticket::READALL)) {
          $search['criteria'][0]['value'] = 'notold';
@@ -387,7 +387,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function giveItem($itemtype, $option_id, $data, $num) {
-      $searchopt=&Search::getOptions($itemtype);
+      $searchopt = &Search::getOptions($itemtype);
       $table=$searchopt[$option_id]["table"];
       $field=$searchopt[$option_id]["field"];
 
@@ -435,7 +435,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return array(Ticket::INCOMING, 'waiting', 'accepted', 'refused');
+      return [Ticket::INCOMING, 'waiting', 'accepted', 'refused'];
    }
 
    static function getProcessStatusArray() {
@@ -446,9 +446,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return Ticket::getReopenableStatusArray();
    }
 
-   static function getAllStatusArray($withmetaforsearch=false) {
+   static function getAllStatusArray($withmetaforsearch = false) {
       $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
-      $form_status = array('waiting', 'accepted', 'refused');
+      $form_status = ['waiting', 'accepted', 'refused'];
       $form_status = array_combine($form_status, $form_status);
       $all_status = $ticket_status + $form_status;
       return $all_status;

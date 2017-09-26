@@ -35,7 +35,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -46,7 +46,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
          'dropdown_value' => 0,
          'glpi_objects'   => 1,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

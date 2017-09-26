@@ -77,21 +77,21 @@ function plugin_init_formcreator() {
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    // hook to update issues when an operation occurs on a ticket
-   $PLUGIN_HOOKS['item_add']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_add_ticket'
-   );
-   $PLUGIN_HOOKS['item_update']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_update_ticket'
-   );
-   $PLUGIN_HOOKS['item_delete']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_delete_ticket'
-   );
-   $PLUGIN_HOOKS['item_restore']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_restore_ticket'
-   );
-   $PLUGIN_HOOKS['item_purge']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_purge_ticket'
-   );
+   $PLUGIN_HOOKS['item_add']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_add_ticket'
+   ];
+   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_update_ticket'
+   ];
+   $PLUGIN_HOOKS['item_delete']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_delete_ticket'
+   ];
+   $PLUGIN_HOOKS['item_restore']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_restore_ticket'
+   ];
+   $PLUGIN_HOOKS['item_purge']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+   ];
 
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
@@ -140,13 +140,13 @@ function plugin_init_formcreator() {
 
             // Set options for pages (title, links, buttons...)
             $links['search'] = '/plugins/formcreator/front/formlist.php';
-            $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
-               'config'       => array('title'  => __('Setup'),
-                                       'page'   => '/plugins/formcreator/front/form.php',
-                                       'links'  => $links),
-               'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                                       'links'  => $links),
-            );
+            $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
+               'config'       => ['title'  => __('Setup'),
+                                  'page'   => '/plugins/formcreator/front/form.php',
+                                  'links'  => $links],
+               'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
+                                  'links'  => $links],
+            ];
          }
 
          // Load JS and CSS files if we are on a page witch need them
@@ -174,17 +174,17 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
-         Plugin::registerClass('PluginFormcreatorForm', array('addtabon' => 'Central'));
+         Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
 
          // Load field class and all its method to manage fields
          Plugin::registerClass('PluginFormcreatorFields');
 
          // Notification
-         Plugin::registerClass('PluginFormcreatorForm_Answer', array(
+         Plugin::registerClass('PluginFormcreatorForm_Answer', [
             'notificationtemplates_types' => true
-         ));
+         ]);
 
-         Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
+         Plugin::registerClass('PluginFormcreatorEntityconfig', ['addtabon' => 'Entity']);
       }
    }
 }
@@ -321,7 +321,7 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    global $DB;
 
    $error = $DB->error();
-   $migration->log($error . "\n" . Toolbox::backtrace(false, '', array('Toolbox::backtrace()')), false);
+   $migration->log($error . "\n" . Toolbox::backtrace(false, '', ['Toolbox::backtrace()']), false);
    die($error . "<br><br> Please, check migration log");
 }
 

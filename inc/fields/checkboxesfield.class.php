@@ -18,12 +18,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                   $current_value = null;
                   $current_value = $this->getValue();
                   echo "<div class='checkbox'>";
-                  echo Html::getCheckbox(array('title'         => $value,
-                                               'id'            => 'formcreator_field_'.$this->fields['id'].'_'.$i,
-                                               'name'          => 'formcreator_field_'.$this->fields['id'] . '[]',
-                                               'value'         => $value,
-                                               'zero_on_empty' => false,
-                                               'checked' => (!empty($current_value) && in_array($value, $current_value))));
+                  echo Html::getCheckbox(['title'         => $value,
+                                          'id'            => 'formcreator_field_'.$this->fields['id'].'_'.$i,
+                                          'name'          => 'formcreator_field_'.$this->fields['id'] . '[]',
+                                          'value'         => $value,
+                                          'zero_on_empty' => false,
+                                          'checked' => (!empty($current_value) && in_array($value, $current_value))]);
                   echo '<label for="formcreator_field_'.$this->fields['id'].'_'.$i.'">';
                   echo '&nbsp;'.$value;
                   echo '</label>';
@@ -120,7 +120,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -131,7 +131,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

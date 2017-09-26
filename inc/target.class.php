@@ -120,54 +120,54 @@ class PluginFormcreatorTarget extends CommonDBTM
          switch ($input['itemtype']) {
             case 'PluginFormcreatorTargetTicket':
                $targetticket      = new PluginFormcreatorTargetTicket();
-               $id_targetticket   = $targetticket->add(array(
+               $id_targetticket   = $targetticket->add([
                   'name'    => $input['name'],
                   'comment' => '##FULLFORM##'
-               ));
+               ]);
                $input['items_id'] = $id_targetticket;
 
                if (!isset($input['_skip_create_actors'])
                    || !$input['_skip_create_actors']) {
                   $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
-                  $targetTicket_actor->add(array(
-                        'plugin_formcreator_targettickets_id'  => $id_targetticket,
-                        'actor_role'                           => 'requester',
-                        'actor_type'                           => 'creator',
-                        'use_notification'                     => '1'
-                  ));
+                  $targetTicket_actor->add([
+                     'plugin_formcreator_targettickets_id'  => $id_targetticket,
+                     'actor_role'                           => 'requester',
+                     'actor_type'                           => 'creator',
+                     'use_notification'                     => '1'
+                  ]);
                   $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
-                  $targetTicket_actor->add(array(
-                        'plugin_formcreator_targettickets_id'  => $id_targetticket,
-                        'actor_role'                           => 'observer',
-                        'actor_type'                           => 'validator',
-                        'use_notification'                     => '1'
-                  ));
+                  $targetTicket_actor->add([
+                     'plugin_formcreator_targettickets_id'  => $id_targetticket,
+                     'actor_role'                           => 'observer',
+                     'actor_type'                           => 'validator',
+                     'use_notification'                     => '1'
+                  ]);
                }
                break;
             case 'PluginFormcreatorTargetChange':
                $targetchange      = new PluginFormcreatorTargetChange();
-               $id_targetchange   = $targetchange->add(array(
-                     'name'    => $input['name'],
-                     'comment' => '##FULLFORM##'
-               ));
+               $id_targetchange   = $targetchange->add([
+                  'name'    => $input['name'],
+                  'comment' => '##FULLFORM##'
+               ]);
                $input['items_id'] = $id_targetchange;
 
                if (!isset($input['_skip_create_actors'])
                    || !$input['_skip_create_actors']) {
                   $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
-                  $targetChange_actor->add(array(
-                        'plugin_formcreator_targetchanges_id'  => $id_targetchange,
-                        'actor_role'                           => 'requester',
-                        'actor_type'                           => 'creator',
-                        'use_notification'                     => '1',
-                  ));
+                  $targetChange_actor->add([
+                     'plugin_formcreator_targetchanges_id'  => $id_targetchange,
+                     'actor_role'                           => 'requester',
+                     'actor_type'                           => 'creator',
+                     'use_notification'                     => '1',
+                  ]);
                   $targetChange_actor = new PluginFormcreatorTargetChange_Actor();
-                  $targetChange_actor->add(array(
-                        'plugin_formcreator_targetchanges_id'  => $id_targetchange,
-                        'actor_role'                           => 'observer',
-                        'actor_type'                           => 'validator',
-                        'use_notification'                     => '1',
-                  ));
+                  $targetChange_actor->add([
+                     'plugin_formcreator_targetchanges_id'  => $id_targetchange,
+                     'actor_role'                           => 'observer',
+                     'actor_type'                           => 'validator',
+                     'use_notification'                     => '1',
+                  ]);
                }
                break;
          }
@@ -207,7 +207,7 @@ class PluginFormcreatorTarget extends CommonDBTM
    public function pre_deleteItem() {
       $itemtype = $this->getField('itemtype');
       $item = new $itemtype();
-      return $item->delete(array('id' => $this->getField('items_id')));
+      return $item->delete(['id' => $this->getField('items_id')]);
    }
 
 
@@ -300,11 +300,11 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
-      Dropdown::showFromArray('itemtype', array(
+      Dropdown::showFromArray('itemtype', [
             ''                              => '-----',
             'PluginFormcreatorTargetTicket' => __('Ticket'),
             'PluginFormcreatorTargetChange' => __('Change'),
-      ));
+      ]);
       echo '</td>';
       echo '</tr>';
 
