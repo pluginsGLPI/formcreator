@@ -1,6 +1,50 @@
 GLPI Formcreator ChangeLog
 ===============================
 
+Version 2.6.0 Release Candidate 1
+---------------------------------
+
+## Bugfixes
+* limit displayed columns on form answers tab of a form (#686)
+* fix bulleted lists for IE
+* fix bad display of a dropdown
+* fix loss of input when validating requester's answers and form is incomplete 
+* fix ticket categories displayed in helpdesk when they should not
+* fix rejected entity dropdown answer if choosing root entity
+* fix newlines lost in textareas
+* fix rich text rendering of a textarea
+* fix broken multiselect field
+* fix inconsistent foreign key in the schema and code
+* fix move up / down questions
+* association of a document to all generated tickets
+
+## Features
+* update slinky JS library
+* many code cleanup and refactor
+* simplify string escaping code
+* give more power to form designers when using regex (#701)
+* limit display of ticket categories by tree depth and type criteria
+* location of tickets can be set from a question
+
+
+Version 2.5.2
+-------------
+
+## Bugfixes
+* blank or nearly blank view of form when displaying it for print
+* output name instead of ID for some fields when generating target tickets
+* fix use of a non existent class Ticket_Supplier
+* fix search options of form answers
+* fix loss of forn answers in screen when reject then accept a form
+* fix regression of not displayed tab for forms on helpdesk
+* fix bulleted and numbered lists in generated ticket followup
+* fix a bad SQL query
+
+## Features:
+* many code cleanup 
+* simplify string escaping code in some places
+
+
 Version 2.5.1
 -------------
 
