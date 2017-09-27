@@ -20,6 +20,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    protected $assignedGroups;
 
+   protected $attachedDocuments = [];
+
    abstract public function export();
 
    abstract public function save(PluginFormcreatorForm_Answer $formanswer);
@@ -276,12 +278,10 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
     */
    protected function attachDocument($formAnswerId, $itemtype, $targetID) {
       $docItem = new Document_Item();
-      $found = $docItem->find("itemtype = 'PluginFormcreatorForm_Answer'
-                               AND items_id = '$formAnswerId'");
-      if (count($found) > 0) {
-         foreach ($found as $document) {
+      if (count($this->attachedDocuments) > 0) {
+         foreach ($this->attachedDocuments as $documentID => $dummy) {
             $docItem->add([
-               'documents_id' => $document['documents_id'],
+               'documents_id' => $documentID,
                'itemtype'     => $itemtype,
                'items_id'     => $targetID
             ]);
@@ -725,19 +725,14 @@ EOS;
     *
     * @param  String $content                            String to be parsed
     * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
-    * @param  String
+    * @param  String                                     full form
     * @return String                                     Parsed string with tags replaced by form values
     */
    protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
       global $DB, $CFG_GLPI;
 
-      if ($fullform == "") {
-         $fullform = $formanswer->getFullForm();
-      }
       // retrieve answers
       $answers_values = $formanswer->getAnswers($formanswer->getID());
-
-      $content     = str_replace('##FULLFORM##', $fullform, $content);
 
       $section     = new PluginFormcreatorSection();
       $sections    = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
@@ -769,8 +764,18 @@ EOS;
                }
             }
 
-            $content = str_replace('##question_' . $id . '##', $name, $content);
-            $content = str_replace('##answer_' . $id . '##', $value, $content);
+            if ($question_line['fieldtype'] !== 'file') {
+               $content = str_replace('##question_' . $id . '##', $name, $content);
+               $content = str_replace('##answer_' . $id . '##', $value, $content);
+            } else {
+               if (strpos($content, '##answer_' . $id . '##') !== false) {
+                  $content = str_replace('##question_' . $id . '##', $name, $content);
+                  $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+
+                  // keep the ID of the document
+                  $this->attachedDocuments[$value] = true;
+               }
+            }
          }
       }
 
