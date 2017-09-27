@@ -14,10 +14,10 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                $itemtype = $decodedValues['itemtype'];
             }
 
-            $dparams = array('name'     => 'formcreator_field_' . $this->fields['id'],
-                             'value'    => $this->getValue(),
-                             'comments' => false,
-                             'rand'     => $rand);
+            $dparams = ['name'     => 'formcreator_field_' . $this->fields['id'],
+                        'value'    => $this->getValue(),
+                        'comments' => false,
+                        'rand'     => $rand];
 
             if ($itemtype == "User") {
                $dparams['right'] = 'all';
@@ -81,7 +81,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   __('The field value is required:', 'formcreator') . ' ' . $input['name'],
                   false,
                   ERROR);
-            return array();
+            return [];
          }
          $allowedDropdownValues = [];
          foreach (Dropdown::getStandardDropdownItemTypes() as $categoryOfTypes) {
@@ -114,7 +114,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -125,7 +125,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'dropdown_value' => 1,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

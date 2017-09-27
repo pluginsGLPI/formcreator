@@ -12,7 +12,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
                   __('The field value is required:', 'formcreator') . ' ' . $input['name'],
                   false,
                   ERROR);
-            return array();
+            return [];
          }
          $input['values']         = $input['glpi_objects'];
          $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
@@ -35,7 +35,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -46,7 +46,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
          'dropdown_value' => 0,
          'glpi_objects'   => 1,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

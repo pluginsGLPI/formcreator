@@ -37,7 +37,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
     * @param  array   $validator the validator data (match the validator table)
     * @return integer the validator's id
     */
-   public static function import($forms_id = 0, $validator = array()) {
+   public static function import($forms_id = 0, $validator = []) {
       $item = new self;
 
       $validator['plugin_formcreator_forms_id'] = $forms_id;

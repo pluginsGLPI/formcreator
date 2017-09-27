@@ -4,7 +4,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $rand       = mt_rand();
-         $tab_values = array();
+         $tab_values = [];
          $required   = $this->fields['required'] ? ' required' : '';
          $values     = $this->getAvailableValues();
 
@@ -17,14 +17,14 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             }
 
             if ($this->fields['show_empty']) {
-               $tab_values = array('' => '-----') + $tab_values;
+               $tab_values = ['' => '-----'] + $tab_values;
             }
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, array(
+            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, [
                'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
-               'values'    => static::IS_MULTIPLE ? $this->getValue() : array(),
+               'values'    => static::IS_MULTIPLE ? $this->getValue() : [],
                'rand'      => $rand,
                'multiple'  => static::IS_MULTIPLE,
-            ));
+            ]);
          }
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">
@@ -75,7 +75,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -86,7 +86,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

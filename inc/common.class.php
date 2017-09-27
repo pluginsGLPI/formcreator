@@ -4,7 +4,7 @@ class PluginFormcreatorCommon {
    static function getEnumValues($table, $field) {
       global $DB;
 
-      $enum = array();
+      $enum = [];
       if ($res = $DB->query( "SHOW COLUMNS FROM `$table` WHERE Field = '$field'" )) {
          $data = $DB->fetch_array($res);
          $type = $data['Type'];

@@ -9,7 +9,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $required = $this->fields['required'] ? ' required' : '';
 
          echo '<div class="form_field">';
-         $values = array();
+         $values = [];
 
          $obj = new PluginTagTag();
          $obj->getEmpty();
@@ -22,12 +22,12 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             $values[$id] = $data['name'];
          }
 
-         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, array(
+         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, [
             'values'               => $this->getValue(),
             'comments'            => false,
             'rand'                => $rand,
             'multiple'            => true,
-         ));
+         ]);
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
@@ -45,7 +45,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function getAnswer() {
-      $return = array();
+      $return = [];
       $values = $this->getValue();
 
       if (!empty($values)) {

@@ -55,12 +55,12 @@ class PluginDB extends PHPUnit\Framework\Assert{
       $file_content = file_get_contents(GLPI_ROOT."/plugins/".$pluginname."/install/mysql/".$comparaisonSQLFile);
       $a_lines = explode("\n", $file_content);
 
-      $a_tables_ref = array();
+      $a_tables_ref = [];
       $current_table = '';
       foreach ($a_lines as $line) {
          if (strstr($line, "CREATE TABLE ")
                  OR strstr($line, "CREATE VIEW")) {
-            $matches = array();
+            $matches = [];
             preg_match("/`(.*)`/", $line, $matches);
             $current_table = $matches[1];
          } else {
@@ -77,8 +77,8 @@ class PluginDB extends PHPUnit\Framework\Assert{
       }
 
       // * Get tables from MySQL
-      $a_tables_db = array();
-      $a_tables = array();
+      $a_tables_db = [];
+      $a_tables = [];
       // SHOW TABLES;
       $query = "SHOW TABLES";
       $result = $DB->query($query);
@@ -92,7 +92,7 @@ class PluginDB extends PHPUnit\Framework\Assert{
          }
       }
 
-      $toIgnore = array();
+      $toIgnore = [];
       foreach ($a_tables as $table) {
          $query = "SHOW CREATE TABLE ".$table;
          $result = $DB->query($query);
@@ -107,7 +107,7 @@ class PluginDB extends PHPUnit\Framework\Assert{
             foreach ($a_lines as $line) {
                if (strstr($line, "CREATE TABLE ")
                        OR strstr($line, "CREATE VIEW")) {
-                  $matches = array();
+                  $matches = [];
                   preg_match("/`(.*)`/", $line, $matches);
                   $current_table = $matches[1];
                } else {
@@ -126,13 +126,13 @@ class PluginDB extends PHPUnit\Framework\Assert{
          }
       }
 
-      $a_tables_ref_tableonly = array();
+      $a_tables_ref_tableonly = [];
       foreach ($a_tables_ref as $table=>$data) {
          if (!isset($toIgnore[$table])) {
             $a_tables_ref_tableonly[] = $table;
          }
       }
-      $a_tables_db_tableonly = array();
+      $a_tables_db_tableonly = [];
       foreach ($a_tables_db as $table=>$data) {
          $a_tables_db_tableonly[] = $table;
       }

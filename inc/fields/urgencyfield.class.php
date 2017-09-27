@@ -7,10 +7,10 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
          echo '<div class="form_field">';
          $rand     = mt_rand();
          $required = $this->fields['required'] ? ' required' : '';
-         Ticket::dropdownUrgency(array('name'     => 'formcreator_field_' . $this->fields['id'],
-                  'value'    => $this->getValue(),
-                  'comments' => false,
-                  'rand'     => $rand)
+         Ticket::dropdownUrgency(['name'     => 'formcreator_field_' . $this->fields['id'],
+                                  'value'    => $this->getValue(),
+                                  'comments' => false,
+                                  'rand'     => $rand]
          );
          echo '</div>' . PHP_EOL;
          echo '<script type="text/javascript">
@@ -43,28 +43,28 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
-            'required'       => 1,
-            'default_values' => 1,
-            'values'         => 0,
-            'range'          => 0,
-            'show_empty'     => 0,
-            'regex'          => 0,
-            'show_type'      => 1,
-            'dropdown_value' => 0,
-            'glpi_objects'   => 0,
-            'ldap_values'    => 0,
-      );
+      return [
+         'required'       => 1,
+         'default_values' => 1,
+         'values'         => 0,
+         'range'          => 0,
+         'show_empty'     => 0,
+         'regex'          => 0,
+         'show_type'      => 1,
+         'dropdown_value' => 0,
+         'glpi_objects'   => 0,
+         'ldap_values'    => 0,
+      ];
    }
 
    public function getAvailableValues() {
-      return array(
-            _x('urgency', 'Very high'),
-            _x('urgency', 'High'),
-            _x('urgency', 'Medium'),
-            _x('urgency', 'Low'),
-            _x('urgency', 'Very low'),
-      );
+      return [
+         _x('urgency', 'Very high'),
+         _x('urgency', 'High'),
+         _x('urgency', 'Medium'),
+         _x('urgency', 'Low'),
+         _x('urgency', 'Very low'),
+      ];
    }
 
    public function getValue() {

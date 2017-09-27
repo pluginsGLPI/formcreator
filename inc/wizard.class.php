@@ -111,8 +111,8 @@ class PluginFormcreatorWizard {
             echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_bookmarksIcon">';
             Ajax::createIframeModalWindow('loadbookmark',
                   $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
-                  array('title'         => __('Load a bookmark'),
-                        'reloadonclose' => true));
+                  ['title'         => __('Load a bookmark'),
+                        'reloadonclose' => true]);
             echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
             echo '<span class="fc_list_icon" title="'.__('Load a bookmark').'"></span>';
             echo '<label>'.__('Load a bookmark').'</label>';

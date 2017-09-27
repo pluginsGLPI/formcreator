@@ -14,8 +14,8 @@ if (isset($_GET["id"])) {
 
    PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
 
-   $available_options = array('item_itemtype', 'item_items_id', 'id');
-   $options           = array();
+   $available_options = ['item_itemtype', 'item_items_id', 'id'];
+   $options           = [];
    foreach ($available_options as $key) {
       if (isset($_GET[$key])) {
          $options[$key] = $_GET[$key];

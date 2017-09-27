@@ -16,7 +16,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    static function cronInfo($name) {
       switch ($name) {
          case 'SyncIssues':
-            return array('description' => __('Update issue data from tickets and form answers', 'formcreator'));
+            return ['description' => __('Update issue data from tickets and form answers', 'formcreator')];
       }
    }
 
@@ -110,9 +110,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * {@inheritDoc}
     * @see CommonGLPI::display()
     */
-   public function display($options = array()) {
+   public function display($options = []) {
       $itemtype = $options['sub_itemtype'];
-      if (!in_array($itemtype, array('Ticket', 'PluginFormcreatorForm_Answer'))) {
+      if (!in_array($itemtype, ['Ticket', 'PluginFormcreatorForm_Answer'])) {
          html::displayRightError();
       }
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
@@ -122,7 +122,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
    }
 
-   public function displayExtended($options = array()) {
+   public function displayExtended($options = []) {
       $item = new $options['sub_itemtype'];
 
       if (isset($options['id'])
@@ -144,7 +144,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * {@inheritDoc}
     * @see CommonGLPI::display()
     */
-   public function displaySimplified($options = array()) {
+   public function displaySimplified($options = []) {
       global $CFG_GLPI;
 
       $item = new $options['sub_itemtype'];
@@ -237,132 +237,169 @@ class PluginFormcreatorIssue extends CommonDBTM {
     *
     * @return Array Array of fields to show in search engine and options for each fields
     */
-   public function getSearchOptions() {
-      return array(
-         __('Issue', 'formcreator'),
-         '1' => array(
-            'table'         => self::getTable(),
-            'field'         => 'name',
-            'name'          => __('Name'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-            'forcegroupby'  => true,
-            'additionalfields' => array('display_id'),
-         ),
-         '2' => array(
-            'table'         => self::getTable(),
-            'field'         => 'display_id',
-            'name'          => __('ID'),
-            'datatype'      => 'string',
-            'massiveaction' => false,
-         ),
-         '3' => array(
-            'table'         => self::getTable(),
-            'field'         => 'sub_itemtype',
-            'name'          => __('Type'),
-            'searchtype'    => array('equals', 'notequals'),
-            'datatype'      => 'specific',
-            'massiveaction' => false,
-         ),
-         '4' => array(
-            'table'         => self::getTable(),
-            'field'         => 'status',
-            'name'          => __('Status'),
-            'searchtype'    => array('equals', 'notequals'),
-            'datatype'      => 'specific',
-            'massiveaction' => false,
-         ),
-         '5' => array(
-            'table'         => self::getTable(),
-            'field'         => 'date_creation',
-            'name'          => __('Opening date'),
-            'datatype'      => 'datetime',
-            'massiveaction' => false,
-         ),
-         '6' => array(
-            'table'         => self::getTable(),
-            'field'         => 'date_mod',
-            'name'          => __('Last update'),
-            'datatype'      => 'datetime',
-            'massiveaction' => false,
-         ),
-         '7' => array(
-            'table'         => "glpi_entities",
-            'field'         => 'completename',
-            'name'          => __('Entity'),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '8' => array(
-            'table'         => 'glpi_users',
-            'field'         => 'name',
-            'linkfield'     => 'requester_id',
-            'name'          => __('Requester'),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '9' => array(
-            'table'         => 'glpi_users',
-            'field'         => 'name',
-            'linkfield'     => 'validator_id',
-            'name'          => __('Form approver'),
-            'datatype'      => 'dropdown',
-            'massiveaction' => false,
-         ),
-         '10' => array(
-            'table'         => self::getTable(),
-            'field'         => 'comment',
-            'name'          => __('Comment'),
-            'datatype'      => 'string',
-            'massiveaction' => false,
-         ),
-         '11' => array(
-            'table'         => 'glpi_users',
-            'field'         => 'name',
-            'linkfield'     => 'users_id_validate',
-            'name'          => __('Ticket approver'),
-            'datatype'      => 'dropdown',
-            'right'         => array('validate_request', 'validate_incident'),
-            'forcegroupby'  => false,
-            'massiveaction' => false,
-            'joinparams'    => array(
-               'beforejoin' => array(
-                  array(
-                     'table' => 'glpi_items_tickets',
-                     'joinparams' => array(
-                        'jointype'           => 'itemtypeonly',
-                        'specific_itemtype'  => 'PluginFormcreatorForm_Answer',
-                        'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
-                     )
-                  ),
-                  array(
-                     'table' => 'glpi_ticketvalidations',
-                        // no join type in search engine match our need. See plugin_formcreator_addLeftJoin
-                  )
-               )
-            )
-         ),
-      );
+   public function getSearchOptionsNew() {
+      $tab = [];
+
+      $tab[] = [
+         'id'                 => '0',
+         'name'               => __('Issue', 'formcreator')
+      ];
+
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this::getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
+         'massiveaction'      => false,
+         'forcegroupby'       => true,
+         'additionalfields'   => [
+            '0'                  => 'display_id'
+         ]
+      ];
+
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this::getTable(),
+         'field'              => 'display_id',
+         'name'               => __('ID'),
+         'datatype'           => 'string',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this::getTable(),
+         'field'              => 'sub_itemtype',
+         'name'               => __('Type'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this::getTable(),
+         'field'              => 'status',
+         'name'               => __('Status'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this::getTable(),
+         'field'              => 'date_creation',
+         'name'               => __('Opening date'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this::getTable(),
+         'field'              => 'date_mod',
+         'name'               => __('Last update'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => 'glpi_entities',
+         'field'              => 'completename',
+         'name'               => __('Entity'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'linkfield'          => 'requester_id',
+         'name'               => __('Requester'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'linkfield'          => 'validator_id',
+         'name'               => __('Form approver'),
+         'datatype'           => 'dropdown',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this::getTable(),
+         'field'              => 'comment',
+         'name'               => __('Comment'),
+         'datatype'           => 'string',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => 'glpi_users',
+         'field'              => 'name',
+         'linkfield'          => 'users_id_validate',
+         'name'               => __('Ticket approver'),
+         'datatype'           => 'dropdown',
+         'right'              => [
+            '0'                  => 'validate_request',
+            '1'                  => 'validate_incident'
+         ],
+         'forcegroupby'       => false,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'beforejoin'         => [
+               '0'                  => [
+                  'table'              => 'glpi_items_tickets',
+                  'joinparams'         => [
+                     'jointype'           => 'itemtypeonly',
+                     'specific_itemtype'  => 'PluginFormcreatorForm_Answer',
+                     'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
+                  ]
+               ],
+               '1'                  => [
+                  'table'              => 'glpi_ticketvalidations'
+               ]
+            ]
+         ]
+      ];
+
+      return $tab;
    }
 
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   public static function getSpecificValueToSelect($field, $name='', $values='', array $options = []) {
 
       if (!is_array($values)) {
-         $values = array($field => $values);
+         $values = [$field => $values];
       }
       switch ($field) {
          case 'sub_itemtype':
             return Dropdown::showFromArray($name,
-                                           array('Ticket'                      => __('Ticket'),
-                                                 'PluginFormcreatorForm_Answer' => __('Form answer', 'formcreator')),
-                                           array('display' => false,
-                                                 'value'   => $values[$field]));
+                                           ['Ticket'                      => __('Ticket'),
+                                            'PluginFormcreatorForm_Answer' => __('Form answer', 'formcreator')],
+                                           ['display' => false,
+                                            'value'   => $values[$field]]);
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
             $ticket_opts['waiting'] = __('Not validated');
             $ticket_opts['refused'] = __('Refused');
-            return Dropdown::showFromArray($name, $ticket_opts, array('display' => false,
-                                                                      'value'   => $values[$field]));
+            return Dropdown::showFromArray($name, $ticket_opts, ['display' => false,
+                                                                 'value'   => $values[$field]]);
             break;
 
       }
@@ -374,11 +411,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getDefaultSearchRequest() {
 
-      $search = array('criteria' => array(0 => array('field'      => 4,
-                                                     'searchtype' => 'equals',
-                                                     'value'      => 'notclosed')),
-                      'sort'     => 6,
-                      'order'    => 'DESC');
+      $search = ['criteria' => [0 => ['field'      => 4,
+                                      'searchtype' => 'equals',
+                                      'value'      => 'notclosed']],
+                 'sort'     => 6,
+                 'order'    => 'DESC'];
 
       if (Session::haveRight(self::$rightname, Ticket::READALL)) {
          $search['criteria'][0]['value'] = 'notold';
@@ -387,7 +424,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function giveItem($itemtype, $option_id, $data, $num) {
-      $searchopt=&Search::getOptions($itemtype);
+      $searchopt = &Search::getOptions($itemtype);
       $table=$searchopt[$option_id]["table"];
       $field=$searchopt[$option_id]["field"];
 
@@ -435,7 +472,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return array(Ticket::INCOMING, 'waiting', 'accepted', 'refused');
+      return [Ticket::INCOMING, 'waiting', 'accepted', 'refused'];
    }
 
    static function getProcessStatusArray() {
@@ -446,9 +483,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return Ticket::getReopenableStatusArray();
    }
 
-   static function getAllStatusArray($withmetaforsearch=false) {
+   static function getAllStatusArray($withmetaforsearch = false) {
       $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
-      $form_status = array('waiting', 'accepted', 'refused');
+      $form_status = ['waiting', 'accepted', 'refused'];
       $form_status = array_combine($form_status, $form_status);
       $all_status = $ticket_status + $form_status;
       return $all_status;

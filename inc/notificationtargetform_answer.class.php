@@ -16,7 +16,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       return $events;
    }
 
-   public function addDataForTemplate($event, $options = array()) {
+   public function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
 
       $form = new PluginFormcreatorForm();
@@ -41,7 +41,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
    }
 
    public function getTags() {
-      $tags = array(
+      $tags = [
          'formcreator.form_id'            => __('Form #', 'formcreator'),
          'formcreator.form_name'          => __('Form name', 'formcreator'),
          'formcreator.form_requester'     => __('Requester', 'formcreator'),
@@ -51,13 +51,13 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
          'formcreator.validation_comment' => __('Refused comment', 'formcreator'),
          'formcreator.validation_link'    => __('Validation link', 'formcreator'),
          'formcreator.request_id'         => __('Request #', 'formcreator'),
-      );
+      ];
 
       foreach ($tags as $tag => $label) {
-         $this->addTagToList(array('tag'    => $tag,
-               'label'  => $label,
-               'value'  => true,
-               'events' => NotificationTarget::TAG_FOR_ALL_EVENTS));
+         $this->addTagToList(['tag'    => $tag,
+            'label'  => $label,
+            'value'  => true,
+            'events' => NotificationTarget::TAG_FOR_ALL_EVENTS]);
       }
    }
 

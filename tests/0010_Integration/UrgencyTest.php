@@ -93,7 +93,7 @@ class UrgencyTest extends SuperAdminTestCase
     * @param PluginFormcreatorForm $urgencyQuestions
     */
    public function testInitCreateTargetTicket(PluginFormcreatorForm $form) {
-      $urgencyQuestions = array();
+      $urgencyQuestions = [];
       $formId = $form->getID();
       foreach ($this->targetTicketData as $targetData) {
          // Create target

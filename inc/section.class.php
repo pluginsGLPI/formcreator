@@ -53,7 +53,7 @@ class PluginFormcreatorSection extends CommonDBChild
       if (!isset($input['name']) ||
          (isset($input['name']) && empty($input['name'])) ) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-         return array();
+         return [];
       }
       $input['name'] = addslashes($input['name']);
 
@@ -93,7 +93,7 @@ class PluginFormcreatorSection extends CommonDBChild
       if (isset($input['name'])
             && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
-         return array();
+         return [];
       }
 
       // generate a uniq id
@@ -123,7 +123,7 @@ class PluginFormcreatorSection extends CommonDBChild
       $DB->query($query);
 
       $question = new PluginFormcreatorQuestion();
-      $question->deleteByCriteria(array('plugin_formcreator_sections_id' => $this->getID()), 1);
+      $question->deleteByCriteria(['plugin_formcreator_sections_id' => $this->getID()], 1);
    }
 
    /**
@@ -137,7 +137,7 @@ class PluginFormcreatorSection extends CommonDBChild
       $section_question    = new PluginFormcreatorQuestion();
       $question_condition  = new PluginFormcreatorQuestion_Condition();
 
-      $tab_questions       = array();
+      $tab_questions       = [];
 
       $row = $this->fields;
       unset($row['id'],
@@ -187,14 +187,14 @@ class PluginFormcreatorSection extends CommonDBChild
             AND `order` < '$order'
             ORDER BY `order` DESC LIMIT 1");
       if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
+         $this->update([
+            'id'     => $this->getID(),
+            'order'  => $otherItem->getField('order'),
+         ]);
+         $otherItem->update([
+            'id'     => $otherItem->getID(),
+            'order'  => $order,
+         ]);
       }
    }
 
@@ -206,14 +206,14 @@ class PluginFormcreatorSection extends CommonDBChild
             AND `order` > '$order'
             ORDER BY `order` ASC LIMIT 1");
       if (!$otherItem->isNewItem()) {
-         $this->update(array(
-               'id'     => $this->getID(),
-               'order'  => $otherItem->getField('order'),
-         ));
-         $otherItem->update(array(
-               'id'     => $otherItem->getID(),
-               'order'  => $order,
-         ));
+         $this->update([
+            'id'     => $this->getID(),
+            'order'  => $otherItem->getField('order'),
+         ]);
+         $otherItem->update([
+            'id'     => $otherItem->getID(),
+            'order'  => $order,
+         ]);
       }
    }
 
@@ -225,7 +225,7 @@ class PluginFormcreatorSection extends CommonDBChild
     * @param  array   $section the section data (match the section table)
     * @return integer the section's id
     */
-   public static function import($forms_id = 0, $section = array()) {
+   public static function import($forms_id = 0, $section = []) {
       $item = new self;
 
       $section['plugin_formcreator_forms_id'] = $forms_id;
@@ -299,7 +299,7 @@ class PluginFormcreatorSection extends CommonDBChild
     * get all sections in a form
     */
    public function getSectionsFromForm($formId) {
-      $sections = array();
+      $sections = [];
       $rows = $this->find("`plugin_formcreator_forms_id` = '$formId'", "`order` ASC");
       foreach ($rows as $row) {
          $section = new self();

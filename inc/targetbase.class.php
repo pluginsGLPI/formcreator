@@ -33,51 +33,51 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    abstract public function getItem_Actor();
 
    static function getEnumDestinationEntity() {
-      return array(
-            'current'   => __("Current active entity", 'formcreator'),
-            'requester' => __("Default requester user's entity", 'formcreator'),
-            'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
-            'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
-            'form'      => __('The form entity', 'formcreator'),
-            'validator' => __('Default entity of the validator', 'formcreator'),
-            'specific'  => __('Specific entity', 'formcreator'),
-            'user'      => __('Default entity of a user type question answer', 'formcreator'),
-            'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
-      );
+      return [
+         'current'   => __("Current active entity", 'formcreator'),
+         'requester' => __("Default requester user's entity", 'formcreator'),
+         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
+         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
+         'form'      => __('The form entity', 'formcreator'),
+         'validator' => __('Default entity of the validator', 'formcreator'),
+         'specific'  => __('Specific entity', 'formcreator'),
+         'user'      => __('Default entity of a user type question answer', 'formcreator'),
+         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
+      ];
    }
 
    static function getEnumTagType() {
-      return array(
-            'none'                   => __("None"),
-            'questions'              => __('Tags from questions', 'formcreator'),
-            'specifics'              => __('Specific tags', 'formcreator'),
-            'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-            'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
-      );
+      return [
+         'none'                   => __("None"),
+         'questions'              => __('Tags from questions', 'formcreator'),
+         'specifics'              => __('Specific tags', 'formcreator'),
+         'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
+         'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
+      ];
    }
 
    static function getEnumDueDateRule() {
-      return array(
-            'answer' => __('equals to the answer to the question', 'formcreator'),
-            'ticket' => __('calculated from the ticket creation date', 'formcreator'),
-            'calcul' => __('calculated from the answer to the question', 'formcreator'),
-      );
+      return [
+         'answer' => __('equals to the answer to the question', 'formcreator'),
+         'ticket' => __('calculated from the ticket creation date', 'formcreator'),
+         'calcul' => __('calculated from the answer to the question', 'formcreator'),
+      ];
    }
 
    static function getEnumUrgencyRule() {
-      return array(
-            'none'      => __('Urgency from template or Medium', 'formcreator'),
-            'specific'  => __('Specific urgency', 'formcreator'),
-            'answer'    => __('Equals to the answer to the question', 'formcreator'),
-      );
+      return [
+         'none'      => __('Urgency from template or Medium', 'formcreator'),
+         'specific'  => __('Specific urgency', 'formcreator'),
+         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      ];
    }
 
    static function getEnumCategoryRule() {
-      return array(
-            'none'      => __('Category from template or none', 'formcreator'),
-            'specific'  => __('Specific category', 'formcreator'),
-            'answer'    => __('Equals to the answer to the question', 'formcreator'),
-      );
+      return [
+         'none'      => __('Category from template or none', 'formcreator'),
+         'specific'  => __('Specific category', 'formcreator'),
+         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      ];
    }
 
    static function getEnumLocationRule() {
@@ -145,17 +145,17 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
          switch ($actor['actor_type']) {
             case 'creator' :
-               $userIds = array($formanswer->fields['requester_id']);
+               $userIds = [$formanswer->fields['requester_id']];
                $notify  = $actor['use_notification'];
                break;
             case 'validator' :
-               $userIds = array($_SESSION['glpiID']);
+               $userIds = [$_SESSION['glpiID']];
                $notify  = $actor['use_notification'];
                break;
             case 'person' :
             case 'group' :
             case 'supplier' :
-               $userIds = array($actor['actor_value']);
+               $userIds = [$actor['actor_value']];
                $notify  = $actor['use_notification'];
                break;
             case 'question_person' :
@@ -170,7 +170,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                if ($answer->isNewItem()) {
                   continue;
                } else {
-                  $userIds = array($answer->getField('answer'));
+                  $userIds = [$answer->getField('answer')];
                }
                $notify  = $actor['use_notification'];
                break;
@@ -276,11 +276,11 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                                AND items_id = '$formAnswerId'");
       if (count($found) > 0) {
          foreach ($found as $document) {
-            $docItem->add(array(
-                  'documents_id' => $document['documents_id'],
-                  'itemtype'     => $itemtype,
-                  'items_id'     => $targetID
-            ));
+            $docItem->add([
+               'documents_id' => $document['documents_id'],
+               'itemtype'     => $itemtype,
+               'items_id'     => $targetID
+            ]);
          }
       }
    }
@@ -292,14 +292,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
-            'destination_entity',
-            self::getEnumDestinationEntity(),
-            array(
-                  'value'     => $this->fields['destination_entity'],
-                  'on_change' => 'change_entity()',
-                  'rand'      => $rand,
-            )
-            );
+         'destination_entity',
+         self::getEnumDestinationEntity(),
+         [
+            'value'     => $this->fields['destination_entity'],
+            'on_change' => 'change_entity()',
+            'rand'      => $rand,
+         ]
+      );
 
       $script = <<<EOS
          function change_entity() {
@@ -338,10 +338,10 @@ EOS;
       echo '<td width="25%">';
 
       echo '<div id="entity_specific_value" style="display: none">';
-      Entity::dropdown(array(
-            'name' => '_destination_entity_value_specific',
-            'value' => $this->fields['destination_entity_value'],
-      ));
+      Entity::dropdown([
+         'name' => '_destination_entity_value_specific',
+         'value' => $this->fields['destination_entity_value'],
+      ]);
       echo '</div>';
 
       echo '<div id="entity_user_value" style="display: none">';
@@ -356,13 +356,13 @@ EOS;
                 AND q.fieldtype = 'glpiselect'
                 AND q.values = 'User'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $users_questions[$question['id']] = $question['name'];
       }
-      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, array(
-            'value' => $this->fields['destination_entity_value'],
-      ));
+      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, [
+         'value' => $this->fields['destination_entity_value'],
+      ]);
       echo '</div>';
 
       echo '<div id="entity_entity_value" style="display: none">';
@@ -377,13 +377,13 @@ EOS;
                 AND q.fieldtype = 'glpiselect'
                 AND q.values = 'Entity'";
       $result2 = $DB->query($query2);
-      $entities_questions = array();
+      $entities_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $entities_questions[$question['id']] = $question['name'];
       }
-      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, array(
-            'value' => $this->fields['destination_entity_value'],
-      ));
+      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, [
+         'value' => $this->fields['destination_entity_value'],
+      ]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -392,10 +392,10 @@ EOS;
    protected function showTemplateSettins($rand) {
       echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
       echo '<td width="25%">';
-      Dropdown::show('TicketTemplate', array(
-            'name'  => 'tickettemplates_id',
-            'value' => $this->fields['tickettemplates_id']
-      ));
+      Dropdown::show('TicketTemplate', [
+         'name'  => 'tickettemplates_id',
+         'value' => $this->fields['tickettemplates_id']
+      ]);
       echo '</td>';
    }
 
@@ -407,15 +407,15 @@ EOS;
 
       // Due date type selection
       Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
-            array(
-                  'value'     => $this->fields['due_date_rule'],
-                  'on_change' => 'formcreatorChangeDueDate(this.value)',
-                  'display_emptychoice' => true
-            )
+         [
+            'value'     => $this->fields['due_date_rule'],
+            'on_change' => 'formcreatorChangeDueDate(this.value)',
+            'display_emptychoice' => true
+         ]
       );
 
       // for each section ...
-      $questions_list = array(Dropdown::EMPTY_VALUE);
+      $questions_list = [Dropdown::EMPTY_VALUE];
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
                 INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
@@ -431,7 +431,7 @@ EOS;
          WHERE s.id = {$section['id']}
          AND q.fieldtype IN ('date', 'datetime')";
          $result2 = $DB->query($query2);
-         $section_questions = array();
+         $section_questions = [];
          while ($question = $DB->fetch_array($result2)) {
             $section_questions[$question['id']] = $question['name'];
          }
@@ -446,9 +446,9 @@ EOS;
       } else {
          echo '<div id="due_date_questions">';
       }
-      Dropdown::showFromArray('due_date_question', $questions_list, array(
-            'value' => $this->fields['due_date_question']
-      ));
+      Dropdown::showFromArray('due_date_question', $questions_list, [
+         'value' => $this->fields['due_date_question']
+      ]);
       echo '</div>';
 
       if ($this->fields['due_date_rule'] != 'ticket'
@@ -457,19 +457,19 @@ EOS;
       } else {
          echo '<div id="due_date_time">';
       }
-      Dropdown::showNumber("due_date_value", array(
-            'value' => $this->fields['due_date_value'],
-            'min'   => -30,
-            'max'   => 30
-      ));
-      Dropdown::showFromArray('due_date_period', array(
-            'minute' => _n('Minute', 'Minutes', 2),
-            'hour'   => _n('Hour', 'Hours', 2),
-            'day'    => _n('Day', 'Days', 2),
-            'month'  => __('Month'),
-      ), array(
-            'value' => $this->fields['due_date_period']
-      ));
+      Dropdown::showNumber("due_date_value", [
+         'value' => $this->fields['due_date_value'],
+         'min'   => -30,
+         'max'   => 30
+      ]);
+      Dropdown::showFromArray('due_date_period', [
+         'minute' => _n('Minute', 'Minutes', 2),
+         'hour'   => _n('Hour', 'Hours', 2),
+         'day'    => _n('Day', 'Days', 2),
+         'month'  => __('Month'),
+      ], [
+         'value' => $this->fields['due_date_period']
+      ]);
       echo '</div>';
       echo '</td>';
    }
@@ -483,11 +483,11 @@ EOS;
       Dropdown::showFromArray(
             'category_rule',
             static::getEnumCategoryRule(),
-            array(
-                  'value'     => $this->fields['category_rule'],
-                  'on_change' => 'change_category()',
-                  'rand'      => $rand,
-            ));
+            [
+               'value'     => $this->fields['category_rule'],
+               'on_change' => 'change_category()',
+               'rand'      => $rand,
+            ]);
       $script = <<<EOS
          function change_category() {
             $('#category_specific_title').hide();
@@ -526,22 +526,22 @@ EOS;
                 WHERE `t`.`items_id` = ".$this->getID()."
                 AND `q`.`fieldtype` = 'dropdown'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
          if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'ITILCategory') {
             $users_questions[$question['id']] = $question['name'];
          }
       }
-      Dropdown::showFromArray('_category_question', $users_questions, array(
-            'value' => $this->fields['category_question'],
-      ));
+      Dropdown::showFromArray('_category_question', $users_questions, [
+         'value' => $this->fields['category_question'],
+      ]);
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
-      ITILCategory::dropdown(array(
-            'name'   => '_category_specific',
-            'value'  => $this->fields["category_question"],
-      ));
+      ITILCategory::dropdown([
+         'name'   => '_category_specific',
+         'value'  => $this->fields["category_question"],
+      ]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -553,11 +553,11 @@ EOS;
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
-      Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), array(
-            'value'                 => $this->fields['urgency_rule'],
-            'on_change'             => 'change_urgency()',
-            'rand'                  => $rand
-      ));
+      Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), [
+         'value'                 => $this->fields['urgency_rule'],
+         'on_change'             => 'change_urgency()',
+         'rand'                  => $rand
+      ]);
       $script = <<<EOS
          function change_urgency() {
             $('#urgency_specific_title').hide();
@@ -587,10 +587,10 @@ EOS;
       echo '<td width="25%">';
 
       echo '<div id="urgency_specific_value" style="display: none">';
-      Ticket::dropdownUrgency(array(
-            'name' => '_urgency_specific',
-            'value' => $this->fields["urgency_question"],
-      ));
+      Ticket::dropdownUrgency([
+         'name' => '_urgency_specific',
+         'value' => $this->fields["urgency_question"],
+      ]);
       echo '</div>';
       echo '<div id="urgency_question_value" style="display: none">';
       // select all user questions (GLPI Object)
@@ -603,13 +603,13 @@ EOS;
                 WHERE t.items_id = ".$this->getID()."
                 AND q.fieldtype = 'urgency'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $users_questions[$question['id']] = $question['name'];
       }
-      Dropdown::showFromArray('_urgency_question', $users_questions, array(
-            'value' => $this->fields['urgency_question'],
-      ));
+      Dropdown::showFromArray('_urgency_question', $users_questions, [
+         'value' => $this->fields['urgency_question'],
+      ]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -625,11 +625,11 @@ EOS;
          echo '<td width="15%">' . __('Ticket tags', 'formcreator') . '</td>';
          echo '<td width="25%">';
          Dropdown::showFromArray('tag_type', self::getEnumTagType(),
-               array(
-                     'value'     => $this->fields['tag_type'],
-                     'on_change' => 'change_tag_type()',
-                     'rand'      => $rand,
-               )
+            [
+               'value'     => $this->fields['tag_type'],
+               'on_change' => 'change_tag_type()',
+               'rand'      => $rand,
+            ]
          );
 
          $script = <<<EOS
@@ -679,14 +679,14 @@ EOS;
                    WHERE t.items_id = ".$this->getID()."
                    AND q.fieldtype = 'tag'";
          $result2 = $DB->query($query2);
-         $entities_questions = array();
+         $entities_questions = [];
          while ($question = $DB->fetch_array($result2)) {
             $entities_questions[$question['id']] = $question['name'];
          }
-         Dropdown::showFromArray('_tag_questions', $entities_questions, array(
-               'values'   => explode(',', $this->fields['tag_questions']),
-               'multiple' => true,
-         ));
+         Dropdown::showFromArray('_tag_questions', $entities_questions, [
+            'values'   => explode(',', $this->fields['tag_questions']),
+            'multiple' => true,
+         ]);
          echo '</div>';
 
          // Spécific tags
@@ -700,17 +700,17 @@ EOS;
          $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
 
          $result = $obj->find($where);
-         $values = array();
+         $values = [];
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
          }
 
-         Dropdown::showFromArray('_tag_specifics', $values, array(
-               'values'   => explode(',', $this->fields['tag_specifics']),
-               'comments' => false,
-               'rand'     => $rand,
-               'multiple' => true,
-         ));
+         Dropdown::showFromArray('_tag_specifics', $values, [
+            'values'   => explode(',', $this->fields['tag_specifics']),
+            'comments' => false,
+            'rand'     => $rand,
+            'multiple' => true,
+         ]);
          echo '</div>';
          echo '</td>';
          echo '</tr>';
@@ -781,11 +781,11 @@ EOS;
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Location') . '</td>';
       echo '<td width="45%">';
-      Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), array(
+      Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), [
          'value'                 => $this->fields['location_rule'],
          'on_change'             => 'change_location()',
          'rand'                  => $rand
-      ));
+      ]);
       $script = <<<JAVASCRIPT
          function change_location() {
             $('#location_specific_title').hide();
@@ -831,7 +831,7 @@ JAVASCRIPT;
                 WHERE t.items_id = ".$this->getID()."
                 AND q.fieldtype = 'dropdown'";
       $result2 = $DB->query($query2);
-      $users_questions = array();
+      $users_questions = [];
       while ($question = $DB->fetch_array($result2)) {
          $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
          if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'Location') {

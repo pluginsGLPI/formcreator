@@ -16,12 +16,12 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       } else {
          $value = $this->sanitizeValue($this->fields['default_values']);
       }
-      $initialValue = array();
+      $initialValue = [];
       foreach ($value as $id => $item) {
-         $initialValue[] = array(
-               'id'     => $id,
-               'text'   => $item,
-         );
+         $initialValue[] = [
+            'id'     => $id,
+            'text'   => $item,
+         ];
       }
       $initialValue = json_encode($initialValue);
       // Value needs to be non empty to allow execition of select2's initSelection
@@ -70,7 +70,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function serializeValue($value) {
-      $serialized = array();
+      $serialized = [];
       $value = explode("\r\n", $value);
       foreach ($value as $item) {
          if (filter_var($item, FILTER_VALIDATE_EMAIL)) {
@@ -90,7 +90,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function deserializeValue($value) {
-      $deserialized  = array();
+      $deserialized  = [];
       $serialized = explode(',', $value);
       if ($serialized !== null) {
          foreach ($serialized as $item) {
@@ -115,9 +115,9 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $value = trim($value);
       $answerValue = array_filter(explode(',', $value));
 
-      $unknownUsers = array();
-      $knownUsers = array();
-      $idToCheck = array();
+      $unknownUsers = [];
+      $knownUsers = [];
+      $idToCheck = [];
       foreach ($answerValue as $item) {
          $item = trim($item);
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
@@ -166,18 +166,18 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
-            'required'       => 1,
-            'default_values' => 1,
-            'values'         => 0,
-            'range'          => 0,
-            'show_empty'     => 0,
-            'regex'          => 0,
-            'show_type'      => 0,
-            'dropdown_value' => 0,
-            'glpi_objects'   => 0,
-            'ldap_values'    => 0,
-      );
+      return [
+         'required'       => 1,
+         'default_values' => 1,
+         'values'         => 0,
+         'range'          => 0,
+         'show_empty'     => 0,
+         'regex'          => 0,
+         'show_type'      => 0,
+         'dropdown_value' => 0,
+         'glpi_objects'   => 0,
+         'ldap_values'    => 0,
+      ];
    }
 
    public static function getJSFields() {

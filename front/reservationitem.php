@@ -1,7 +1,7 @@
 <?php
 include ("../../../inc/includes.php");
 
-Session::checkRightsOr('reservation', array(READ, ReservationItem::RESERVEANITEM));
+Session::checkRightsOr('reservation', [READ, ReservationItem::RESERVEANITEM]);
 
 // Check if plugin is activated...
 $plugin = new Plugin();

@@ -36,7 +36,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=array()) {
+   public function showForm($options=[]) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -147,10 +147,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       Html::closeForm();
 
       // Get available questions for actors lists
-      $questions_user_list     = array(Dropdown::EMPTY_VALUE);
-      $questions_group_list    = array(Dropdown::EMPTY_VALUE);
-      $questions_supplier_list = array(Dropdown::EMPTY_VALUE);
-      $questions_actors_list   = array(Dropdown::EMPTY_VALUE);
+      $questions_user_list     = [Dropdown::EMPTY_VALUE];
+      $questions_group_list    = [Dropdown::EMPTY_VALUE];
+      $questions_supplier_list = [Dropdown::EMPTY_VALUE];
+      $questions_actors_list   = [Dropdown::EMPTY_VALUE];
       $query = "SELECT s.id, s.name
                 FROM glpi_plugin_formcreator_targets t
                 INNER JOIN glpi_plugin_formcreator_sections s
@@ -169,10 +169,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                      AND q.values IN ('User', 'Group', 'Supplier'))
                      OR (q.fieldtype = 'actor'))";
          $result2 = $DB->query($query2);
-         $section_questions_user       = array();
-         $section_questions_group      = array();
-         $section_questions_supplier   = array();
-         $section_questions_actors     = array();
+         $section_questions_user       = [];
+         $section_questions_group      = [];
+         $section_questions_supplier   = [];
+         $section_questions_actors     = [];
          while ($question = $DB->fetch_array($result2)) {
             if ($question['fieldtype'] == 'glpiselect') {
                switch ($question['values']) {
@@ -197,17 +197,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       }
 
       // Get available questions for actors lists
-      $actors = array('requester' => array(), 'observer' => array(), 'assigned' => array());
+      $actors = ['requester' => [], 'observer' => [], 'assigned' => []];
       $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
                 FROM glpi_plugin_formcreator_targettickets_actors
                 WHERE plugin_formcreator_targettickets_id = " . $this->getID();
       $result = $DB->query($query);
       while ($actor = $DB->fetch_array($result)) {
-         $actors[$actor['actor_role']][$actor['id']] = array(
+         $actors[$actor['actor_role']][$actor['id']] = [
             'actor_type'       => $actor['actor_type'],
             'actor_value'      => $actor['actor_value'],
             'use_notification' => $actor['use_notification'],
-         );
+         ];
       }
 
       $img_user     = '<img src="../../../pics/users.png" alt="' . __('User') . '" title="' . __('User') . '" width="20" />';
@@ -257,44 +257,45 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="'
            . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      $dropdownItems = array('' => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
       unset($dropdownItems['question_supplier']);
-      Dropdown::showFromArray('actor_type',
-         $dropdownItems, array(
-         'on_change'         => 'formcreatorChangeActorRequester(this.value)'
-      ));
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems,
+         ['on_change' => 'formcreatorChangeActorRequester(this.value)']
+      );
 
       echo '<div id="block_requester_user" style="display:none">';
-      User::dropdown(array(
+      User::dropdown([
          'name' => 'actor_value_person',
          'right' => 'all',
          'all'   => 0,
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_requester_group" style="display:none">';
-      Group::dropdown(array(
+      Group::dropdown([
          'name' => 'actor_value_group',
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_requester_question_user" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_person', $questions_user_list, array(
+      Dropdown::showFromArray('actor_value_question_person', $questions_user_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_requester_question_group" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
+      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_requester_question_actors" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
             'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div>';
@@ -366,44 +367,45 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'
            . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
       unset($dropdownItems['supplier']);
       unset($dropdownItems['question_supplier']);
-      Dropdown::showFromArray('actor_type',
-         $dropdownItems, array(
-         'on_change'         => 'formcreatorChangeActorWatcher(this.value)'
-      ));
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems,
+         ['on_change' => 'formcreatorChangeActorWatcher(this.value)']
+      );
 
       echo '<div id="block_watcher_user" style="display:none">';
-      User::dropdown(array(
+      User::dropdown([
          'name' => 'actor_value_person',
          'right' => 'all',
          'all'   => 0,
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_watcher_group" style="display:none">';
-      Group::dropdown(array(
+      Group::dropdown([
          'name' => 'actor_value_group',
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_watcher_question_user" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_person', $questions_user_list, array(
+      Dropdown::showFromArray('actor_value_question_person', $questions_user_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_watcher_question_group" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
+      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_watcher_question_actors" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
-            'value' => $this->fields['due_date_question'],
-      ));
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
+         'value' => $this->fields['due_date_question'],
+      ]);
       echo '</div>';
 
       echo '<div>';
@@ -474,54 +476,55 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="'
             . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      $dropdownItems = array(''  => Dropdown::EMPTY_VALUE) + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
-      Dropdown::showFromArray('actor_type',
-         $dropdownItems, array(
-         'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
-      ));
+      $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + PluginFormcreatorTargetTicket_Actor::getEnumActorType();
+      Dropdown::showFromArray(
+         'actor_type',
+         $dropdownItems,
+         ['on_change' => 'formcreatorChangeActorAssigned(this.value)']
+      );
 
       echo '<div id="block_assigned_user" style="display:none">';
-      User::dropdown(array(
+      User::dropdown([
          'name' => 'actor_value_person',
          'right' => 'all',
          'all'   => 0,
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_group" style="display:none">';
-      Group::dropdown(array(
+      Group::dropdown([
          'name' => 'actor_value_group',
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_supplier" style="display:none">';
-      Supplier::dropdown(array(
+      Supplier::dropdown([
          'name' => 'actor_value_supplier',
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_user" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_person', $questions_user_list, array(
+      Dropdown::showFromArray('actor_value_question_person', $questions_user_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_group" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
+      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_actors" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
             'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_supplier" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, array(
+      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div>';
@@ -659,13 +662,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          // - name is required
          if (empty($input['title'])) {
             Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
 
          // - comment is required
          if (empty($input['comment'])) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
-            return array();
+            return [];
          }
 
          $input['name'] = plugin_formcreator_encode($input['title']);
@@ -754,49 +757,49 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
-      $this->requesters = array(
-            '_users_id_requester'         => array(),
-            '_users_id_requester_notif'   => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
-            ),
-      );
-      $this->observers = array(
-            '_users_id_observer'          => array(),
-            '_users_id_observer_notif'    => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
-            ),
-      );
-      $this->assigned = array(
-            '_users_id_assign'            => array(),
-            '_users_id_assign_notif'      => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
-            ),
-      );
+      $this->requesters = [
+         '_users_id_requester'         => [],
+         '_users_id_requester_notif'   => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ],
+      ];
+      $this->observers = [
+         '_users_id_observer'          => [],
+         '_users_id_observer_notif'    => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ],
+      ];
+      $this->assigned = [
+         '_users_id_assign'            => [],
+         '_users_id_assign_notif'      => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ],
+      ];
 
-      $this->assignedSuppliers = array(
-            '_suppliers_id_assign'        => array(),
-            '_suppliers_id_assign_notif'  => array(
-                  'use_notification'      => array(),
-                  'alternative_email'     => array(),
-            )
-      );
+      $this->assignedSuppliers = [
+         '_suppliers_id_assign'        => [],
+         '_suppliers_id_assign_notif'  => [
+            'use_notification'      => [],
+            'alternative_email'     => [],
+         ]
+      ];
 
-      $this->requesterGroups = array(
-            '_groups_id_requester'        => array(),
-      );
+      $this->requesterGroups = [
+         '_groups_id_requester'        => [],
+      ];
 
-      $this->observerGroups = array(
-            '_groups_id_observer'         => array(),
-      );
+      $this->observerGroups = [
+         '_groups_id_observer'         => [],
+      ];
 
-      $this->assignedGroups = array(
-            '_groups_id_assign'           => array(),
-      );
+      $this->assignedGroups = [
+         '_groups_id_assign'           => [],
+      ];
 
-      $data   = array();
+      $data   = [];
       $ticket  = new Ticket();
       $form    = new PluginFormcreatorForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -998,7 +1001,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
 
          $tagObj = new PluginTagTagItem();
-         $tags   = array();
+         $tags   = [];
 
          // Add question tags
          if (($this->fields['tag_type'] == 'questions'
@@ -1032,21 +1035,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
          // Save tags in DB
          foreach ($tags as $tag) {
-            $tagObj->add(array(
+            $tagObj->add([
                'plugin_tag_tags_id' => $tag,
                'items_id'           => $ticketID,
                'itemtype'           => 'Ticket',
-            ));
+            ]);
          }
       }
 
       // Add link between Ticket and FormAnswer
       $itemlink = $this->getItem_Item();
-      $itemlink->add(array(
+      $itemlink->add([
          'itemtype'   => 'PluginFormcreatorForm_Answer',
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
-      ));
+      ]);
 
       $this->attachDocument($formanswer->getID(), 'Ticket', $ticketID);
 
@@ -1166,7 +1169,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @param  array   $target_data the targetticket data (match the targetticket table)
     * @return integer the targetticket's id
     */
-   public static function import($targetitems_id = 0, $target_data = array()) {
+   public static function import($targetitems_id = 0, $target_data = []) {
       $item = new self;
 
       $target_data['_skip_checks'] = true;
@@ -1179,7 +1182,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $section       = new PluginFormcreatorSection();
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
-      $tab_section = array();
+      $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
@@ -1239,7 +1242,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $section       = new PluginFormcreatorSection();
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
             "`order` ASC");
-      $tab_section = array();
+      $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
