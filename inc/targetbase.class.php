@@ -16,7 +16,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    protected $assignedGroups;
 
-   protected $attachedDocuments;
+   protected $attachedDocuments = [];
 
    abstract public function export();
 
