@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 abstract class PluginFormcreatorTargetBase extends CommonDBTM
 {
 
@@ -614,7 +618,6 @@ EOS;
       echo '</td>';
       echo '</tr>';
    }
-
 
    protected function showPluginTagsSettings($rand) {
       global $DB;

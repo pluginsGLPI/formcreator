@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorTarget extends CommonDBTM
 {
    /**
@@ -204,12 +208,17 @@ class PluginFormcreatorTarget extends CommonDBTM
       return $input;
    }
 
+   /**
+    * Actions before deletion of an item
+    *
+    * @return boolean true if success, false otherwise
+    *
+    */
    public function pre_deleteItem() {
       $itemtype = $this->getField('itemtype');
       $item = new $itemtype();
       return $item->delete(['id' => $this->getField('items_id')]);
    }
-
 
    /**
     * Import a form's target into the db

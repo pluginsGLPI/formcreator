@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorQuestion_Condition extends CommonDBChild
 {
    static public $itemtype = "PluginFormcreatorQuestion";
@@ -27,6 +31,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
     *
     * @param  integer $questions_id  id of the parent question
     * @param  array   $condition the condition data (match the condition table)
+    * @param boolean  storeOnly
+    *
     * @return integer the condition's id
     */
    public static function import($questions_id = 0, $condition = [], $storeOnly = true) {

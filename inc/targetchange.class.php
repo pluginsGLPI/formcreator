@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 {
    public static function getTypeName($nb = 1) {
@@ -317,10 +321,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                       AND q.values IN ('User', 'Group', 'Supplier'))
                       OR (q.fieldtype = 'actor'))";
          $result2 = $DB->query($query2);
-         $section_questions_user = [];
-         $section_questions_group = [];
+         $section_questions_user     = [];
+         $section_questions_group    = [];
          $section_questions_supplier = [];
-         $section_questions_actors     = [];
+         $section_questions_actors   = [];
          while ($question = $DB->fetch_array($result2)) {
             if ($question['fieldtype'] == 'glpiselect') {
                switch ($question['values']) {
@@ -879,6 +883,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * Save form datas to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    *
+    * @return Change|null generated change
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
       global $DB;
@@ -899,8 +905,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          ],
       ];
       $this->assigned = [
-         '_users_id_assign'            => [],
-         '_users_id_assign_notif'      => [
+         '_users_id_assign'       => [],
+         '_users_id_assign_notif' => [
             'use_notification'      => [],
             'alternative_email'     => [],
          ],
@@ -1104,7 +1110,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Add tag if presents
       $plugin = new Plugin();
-      if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+      if ($plugin->isActivated('tag')) {
 
          $tagObj = new PluginTagTagItem();
          $tags   = [];
@@ -1159,7 +1165,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $this->attachDocument($formanswer->getID(), Change::class, $changeID);
 
-      return true;
+      return $change;
    }
 
    private static function getDeleteImage($id) {

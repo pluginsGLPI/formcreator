@@ -244,3 +244,15 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   INDEX `requester_id` (`requester_id`),
   INDEX `validator_id` (`validator_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_targettickets_id` int(11) NOT NULL DEFAULT '0',
+  `link` int(11) NOT NULL DEFAULT '0',
+  `itemtype` varchar(255) NOT NULL DEFAULT '',
+  `items_id` int(11) NOT NULL DEFAULT '0',
+  `uuid` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
+  INDEX `item` (`itemtype`,`items_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

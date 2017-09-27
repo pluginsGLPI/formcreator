@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorForm extends CommonDBTM
 {
    static $rightname = 'entity';
@@ -1640,6 +1644,8 @@ class PluginFormcreatorForm extends CommonDBTM
             PluginFormcreatorTarget::import($forms_id, $target);
          }
       }
+      // import form's ticket relations
+      PluginFormcreatorItem_TargetTicket::import(0, [], false);
 
       return $forms_id;
    }

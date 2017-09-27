@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorQuestion extends CommonDBChild
 {
    static public $itemtype = "PluginFormcreatorSection";

@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
 {
    abstract protected function getTargetItem();
