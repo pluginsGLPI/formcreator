@@ -12,20 +12,12 @@ function plugin_formcreator_update_2_6(Migration $migration) {
 
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
 
-   $table = 'glpi_plugin_formcreator_forms_answers';
-   $migration->changeField($table, 'validator_id', 'users_id_validator', 'integer');
-
-   // Rename key
-   $migration->dropKey($table, 'validator_id');
-   $migration->addKey($table, 'users_id_validator');
-
-   $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'requester_id']);
-   $migration->addKey($table, 'groups_id_validator');
-
    // update questions
+   $table = 'glpi_plugin_formcreator_questions';
+   $migration->displayMessage("Upgrade $table");
+
    $question = new PluginFormcreatorQuestion();
    $rows = $question->find("`fieldtype` = 'dropdown' AND `values` = 'ITILCategory'");
-   $table = PluginFormcreatorQuestion::getTable();
    foreach ($rows as $id => $row) {
       $updatedValue = json_encode([
          'itemtype'                       => $row['values'],
@@ -38,7 +30,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    }
 
    // Update Form Answers
-   $table = PluginFormcreatorForm_Answer::getTable();
+   $table = 'glpi_plugin_formcreator_forms_answers';
    $migration->displayMessage("Upgrade $table");
 
    $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
@@ -47,7 +39,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    $migration->addKey($table, 'groups_id_validator');
    $migration->migrationOneTable($table);
 
-   $formTable = PluginFormcreatorForm::getTable();
+   $formTable = 'glpi_plugin_formcreator_forms';
    $query = "UPDATE `$table`
              INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
              SET `users_id_validator` = 'validator_id'
@@ -59,6 +51,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
              WHERE `$formTable`.`validation_required` = '2'";
    $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
+   $migration->dropKey($table, 'validator_id');
    $migration->dropField($table, 'validator_id');
 
    // add location rule
