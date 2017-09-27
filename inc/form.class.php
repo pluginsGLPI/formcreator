@@ -772,14 +772,14 @@ class PluginFormcreatorForm extends CommonDBTM
          foreach ($groupList as $group) {
             $groupIdList[] = $group['id'];
          }
-         $groupIdList = $groupIdList + array('NULL', '0', '');
-         $groupIdList = "'" . implode("', '", $groupIdList) . "'";
+         $groupIdListString = $groupIdList + array('NULL', '0', '');
+         $groupIdListString = "'" . implode("', '", $groupIdList) . "'";
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
                 INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
                 INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`validator_id` = '$userId'
-                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdList) AND fv.`itemtype` = 'Group' AND `fa`.`validator_id` IN ($groupIdList)
+                WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`users_id_validator` = '$userId'
+                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdListString) AND fv.`itemtype` = 'Group' AND `fa`.`groups_id_validator` IN ($groupIdListString)
                 )
                 AND f.is_deleted = 0
                 ORDER BY fa.`status` ASC, fa.`request_date` DESC
@@ -797,7 +797,13 @@ class PluginFormcreatorForm extends CommonDBTM
             }
             echo "</ul>";
             echo '<div align="center">';
-            echo '<a href="form_answer.php?criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]='.$_SESSION['glpiID'].'">';
+            $criteria = 'criteria[0][field]=5&criteria[0][searchtype]=equals&criteria[0][value]=' . $_SESSION['glpiID'];
+            $criteria.= "&criteria[1][link]=OR"
+                      . "&criteria[1][field]=7"
+                      . "&criteria[1][searchtype]=equals"
+                      . "&criteria[1][value]=mygroups";
+
+            echo '<a href="form_answer.php?' . $criteria . '">';
             echo __('All my forms (validator)', 'formcreator');
             echo '</a>';
             echo '</div>';

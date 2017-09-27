@@ -49,7 +49,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   `fanswer`.`entities_id`        AS `entities_id`,
                   `fanswer`.`is_recursive`       AS `is_recursive`,
                   `fanswer`.`requester_id`       AS `requester_id`,
-                  `fanswer`.`validator_id`       AS `validator_id`,
+                  `fanswer`.`users_id_validator` AS `validator_id`,
                   `fanswer`.`comment`            AS `comment`
                FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
                LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
@@ -304,7 +304,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          '9' => array(
             'table'         => 'glpi_users',
             'field'         => 'name',
-            'linkfield'     => 'validator_id',
+            'linkfield'     => 'users_id_validator',
             'name'          => __('Form approver'),
             'datatype'      => 'dropdown',
             'massiveaction' => false,
