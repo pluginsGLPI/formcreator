@@ -35,6 +35,13 @@ If you want Formcreator to be available in your native language and have a littl
 
 Join us on [Transifex](https://www.transifex.com/teclib/glpi-project-plugin-formcreator)
 
+## Upgrade to 2.6.0
+
+When a form contains several target tickets and a file upload field, the uploaded file was attached to all generated tickets.
+Starting from the version 2.6.0 a document is attached to a generated ticket in two cases:
+* if the tag ##FULLFORM## is used
+* if the tag representing the file upload field is used. For example ##answer_3## when ID if this tag matches the file upload field.  
+
 ## Upgrade from 1.x to 2.4.0 or later
 
 After upgrade of FormCreator to version 2.4.0 or later, users may encounteer display issues. This is due to major changes on CSS of the plugin. You may need to refresh the cache of your browser with Ctrl+R or Ctrl+F5. If you plan to communicate about the new presentation of the plugin or the service catalog, introduce this simple manipulation to ensure all your users have a clean cache.
