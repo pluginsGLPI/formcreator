@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `requester_id` int(11) DEFAULT NULL,
-  `validator_id` int(11) DEFAULT NULL,
+  `users_id_validator` int(11) DEFAULT NULL,
+  `groups_id_validator` int(11) DEFAULT NULL,
   `request_date` datetime NOT NULL,
   `status` enum('waiting','refused','accepted') NOT NULL DEFAULT 'waiting',
   `comment` text,
@@ -73,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
   INDEX `requester_id` (`requester_id`),
-  INDEX `validator_id` (`validator_id`)
+  INDEX `users_id_validator` (`users_id_validator`),
+  INDEX `groups_id_validator` (`groups_id_validator`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (

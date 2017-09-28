@@ -10,10 +10,14 @@ function plugin_formcreator_update_2_6(Migration $migration) {
 
    $migration->displayMessage("Upgrade to schema version 2.6");
 
+   $migration->displayMessage("Upgrade glpi_plugin_formcreator_forms_answers");
+
    // update questions
+   $table = 'glpi_plugin_formcreator_questions';
+   $migration->displayMessage("Upgrade $table");
+
    $question = new PluginFormcreatorQuestion();
    $rows = $question->find("`fieldtype` = 'dropdown' AND `values` = 'ITILCategory'");
-   $table = PluginFormcreatorQuestion::getTable();
    foreach ($rows as $id => $row) {
       $updatedValue = json_encode([
          'itemtype'                       => $row['values'],
@@ -24,6 +28,31 @@ function plugin_formcreator_update_2_6(Migration $migration) {
       $query = "UPDATE `$table` SET `values`='$updatedValue' WHERE `id`='$id'";
       $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    }
+
+   // Update Form Answers
+   $table = 'glpi_plugin_formcreator_forms_answers';
+   $migration->displayMessage("Upgrade $table");
+
+   $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
+   $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
+   $migration->addKey($table, 'users_id_validator');
+   $migration->addKey($table, 'groups_id_validator');
+   $migration->migrationOneTable($table);
+
+   $formTable = 'glpi_plugin_formcreator_forms';
+   $query = "UPDATE `$table`
+             INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
+             SET `users_id_validator` = 'validator_id'
+             WHERE `$formTable`.`validation_required` = '1'";
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   $query = "UPDATE `$table`
+             INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
+             SET `groups_id_validator` = 'validator_id'
+             WHERE `$formTable`.`validation_required` = '2'";
+   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+
+   $migration->dropKey($table, 'validator_id');
+   $migration->dropField($table, 'validator_id');
 
    // add location rule
    $enum_location_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumLocationRule()))."'";
@@ -51,6 +80,34 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    // Fix bad foreign key
    $table = 'glpi_plugin_formcreator_answers';
    $migration->changeField($table, 'plugin_formcreator_question_id', 'plugin_formcreator_questions_id', 'integer');
+
+   $table = 'glpi_plugin_formcreator_items_targettickets';
+   if (!$DB->tableExists($table)) {
+      $query = "CREATE TABLE `$table` (
+                 `id` int(11) NOT NULL AUTO_INCREMENT,
+                 `plugin_formcreator_targettickets_id` int(11) NOT NULL DEFAULT '0',
+                 `link` int(11) NOT NULL DEFAULT '0',
+                 `itemtype` varchar(255) NOT NULL DEFAULT '',
+                 `items_id` int(11) NOT NULL DEFAULT '0',
+                 `uuid` varchar(255) DEFAULT NULL,
+                 PRIMARY KEY (`id`),
+                 INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
+                 INDEX `item` (`itemtype`,`items_id`)
+               ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   }
+
+   // add uuid and generate for existing rows
+   $table = PluginFormcreatorTargetTicket::getTable();
+   $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
+   $migration->migrationOneTable($table);
+   $obj = new PluginFormcreatorTargetTicket();
+   $all_targetTickets = $obj->find("`uuid` IS NULL");
+   foreach ($all_targetTickets as $targetTicket) {
+      $targetTicket['_skip_checks'] = true;
+      $obj->update($targetTicket);
+   }
+   unset($obj);
 
    $migration->executeMigration();
 }

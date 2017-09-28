@@ -31,7 +31,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       $requester = new User();
       $requester->getFromDB($this->obj->fields['requester_id']);
       $validator = new User();
-      $validator->getFromDB($this->obj->fields['validator_id']);
+      $validator->getFromDB($this->obj->fields['users_id_validator']);
 
       $this->data['##formcreator.form_id##']            = $form->getID();
       $this->data['##formcreator.form_name##']          = $form->fields['name'];
@@ -79,9 +79,9 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
             $form = new PluginFormcreatorForm();
             $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
             if ($form->fields['validation_required'] == 1) {
-               $this->addUserByField('validator_id', true);
+               $this->addUserByField('users_id_validator', true);
             } else if ($form->fields['validation_required'] == 2) {
-               $this->addForGroup(0, $this->obj->fields['validator_id']);
+               $this->addForGroup(0, $this->obj->fields['users_id_validator']);
             }
             break;
       }
