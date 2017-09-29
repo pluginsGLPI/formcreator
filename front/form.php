@@ -6,7 +6,7 @@ Session::checkRight("entity", UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
-if (!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
+if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 

@@ -46,8 +46,30 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       return __('Radios', 'formcreator');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['values'])) {
+         if (empty($input['values'])) {
+            Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+            return [];
+         } else {
+            // trim values
+            $input['values'] = $this->trimValue($input['values']);
+            $input['values'] = addslashes($input['values']);
+         }
+      }
+      if (isset($input['default_values'])) {
+         // trim values
+         $input['default_values'] = $this->trimValue($input['default_values']);
+         $input['default_values'] = addslashes($input['default_values']);
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -58,7 +80,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public function getValue() {

@@ -3,7 +3,7 @@ class Question_ConditionTest extends SuperAdminTestCase {
 
    static $question;
 
-   static $questionPool = array();
+   static $questionPool = [];
 
    public static function setUpBeforeClass() {
       parent::setupBeforeClass();
@@ -62,7 +62,7 @@ class Question_ConditionTest extends SuperAdminTestCase {
                         'show_value' => array(
                         ),
                         ),
-                  array(),
+                  [],
                   true,
             ),
             'simple condition' => array(
@@ -257,7 +257,7 @@ class Question_ConditionTest extends SuperAdminTestCase {
       foreach ($conditions['show_field'] as $id => &$showField) {
          $showField = self::$questionPool[$showField];
       }
-      $realAnswers = array();
+      $realAnswers = [];
       foreach ($answers as $id => $answer) {
          $realAnswers[self::$questionPool[$id]] = $answers[$id];
       }

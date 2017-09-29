@@ -38,8 +38,25 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return __('Float', 'formcreator');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['range_min'])
+          && isset($input['range_max'])
+          && isset($input['default_values'])) {
+         $input['default_values'] = !empty($input['default_values'])
+                                  ? (float) str_replace(',', '.', $input['default_values'])
+                                  : null;
+         $input['range_min']      = !empty($input['range_min'])
+                                  ? (float) str_replace(',', '.', $input['range_min'])
+                                  : null;
+         $input['range_max']      = !empty($input['range_max'])
+                                  ? (float) str_replace(',', '.', $input['range_max'])
+                                  : null;
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 0,
@@ -50,7 +67,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

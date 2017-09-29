@@ -36,13 +36,9 @@ class IssueTest extends SuperAdminTestCase {
 
       // answer the form (no matter it is empty)
       $formId = $form->getID();
-      $_POST = array(
-            'formcreator_form'   => $formId,
-      );
 
       // saveForm returns true if form data is valid
-      $this->assertTrue($form->saveForm());
-      unset($_POST); // Don't disturb next tests
+      $this->assertTrue($form->saveForm(['formcreator_form'   => $formId]));
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
@@ -56,9 +52,6 @@ class IssueTest extends SuperAdminTestCase {
       $this->assertCount(1, $rows);
    }
 
-   /**
-    *
-    */
    public function testAddFormAnswerWithOneTargetTicket() {
       // create a form with a target ticket
       $form = new PluginFormcreatorForm();
@@ -82,13 +75,9 @@ class IssueTest extends SuperAdminTestCase {
 
       // answer the form (no matter it is empty)
       $formId = $form->getID();
-      $_POST = array(
-            'formcreator_form'   => $formId,
-      );
 
       // saveForm returns true if form data is valid
-      $this->assertTrue($form->saveForm());
-      unset($_POST); // Don't disturb next tests
+      $this->assertTrue($form->saveForm(['formcreator_form'   => $formId]));
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
@@ -116,9 +105,6 @@ class IssueTest extends SuperAdminTestCase {
       $this->assertCount(0, $rows);
    }
 
-   /**
-    *
-    */
    public function testAddFormAnswerWithSeveralTargetTickets() {
       // create form
       $form = new PluginFormcreatorForm();
@@ -151,13 +137,9 @@ class IssueTest extends SuperAdminTestCase {
 
       // answer the form (no matter it is empty)
       $formId = $form->getID();
-      $_POST = array(
-            'formcreator_form'   => $formId,
-      );
 
       // saveForm returns true if form data is valid
-      $this->assertTrue($form->saveForm());
-      unset($_POST); // Don't disturb next tests
+      $this->assertTrue($form->saveForm(['formcreator_form'   => $formId]));
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
@@ -224,13 +206,9 @@ class IssueTest extends SuperAdminTestCase {
 
       // answer the form (no matter it is empty)
       $formId = $form->getID();
-      $_POST = array(
-            'formcreator_form'   => $formId,
-      );
 
       // saveForm returns true if form data is valid
-      $this->assertTrue($form->saveForm());
-      unset($_POST); // Don't disturb next tests
+      $this->assertTrue($form->saveForm(['formcreator_form'   => $formId]));
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
@@ -273,14 +251,13 @@ class IssueTest extends SuperAdminTestCase {
 
       // answer the form (no matter it is empty)
       $formId = $form->getID();
-      $_POST = array(
-            'formcreator_form'   => $formId,
-            'formcreator_validator' => $_SESSION['glpiID']
+      $saveFormData = array(
+         'formcreator_form'   => $formId,
+         'formcreator_validator' => $_SESSION['glpiID']
       );
 
       // saveForm returns true if form data is valid
-      $this->assertTrue($form->saveForm(), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
-      unset($_POST); // Don't disturb next tests
+      $this->assertTrue($form->saveForm($saveFormData), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
@@ -359,14 +336,13 @@ class IssueTest extends SuperAdminTestCase {
 
       // answer the form (no matter it is empty)
       $formId = $form->getID();
-      $_POST = array(
-            'formcreator_form'   => $formId,
-            'formcreator_validator' => $_SESSION['glpiID']
-      );
+      $saveFormData = [
+         'formcreator_form'   => $formId,
+         'formcreator_validator' => $_SESSION['glpiID']
+      ];
 
       // saveForm returns true if form data is valid
-      $this->assertTrue($form->saveForm(), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
-      unset($_POST); // Don't disturb next tests
+      $this->assertTrue($form->saveForm($saveFormData), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();

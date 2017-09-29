@@ -1,28 +1,32 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
 {
    abstract protected function getTargetItem();
 
    static function getEnumActorType() {
-      return array(
-            'creator'            => __("Form requester", 'formcreator'),
-            'validator'          => __("Form validator", 'formcreator'),
-            'person'             => __("Specific person", 'formcreator'),
-            'question_person'    => __("Person from the question", 'formcreator'),
-            'group'              => __('Specific group', 'formcreator'),
-            'question_group'     => __('Group from the question', 'formcreator'),
-            'supplier'           => __('Specific supplier', 'formcreator'),
-            'question_supplier'  => __('Supplier from the question', 'formcreator'),
-            'question_actors'    => __('Actors from the question', 'formcreator'),
-      );
+      return [
+         'creator'            => __("Form requester", 'formcreator'),
+         'validator'          => __("Form validator", 'formcreator'),
+         'person'             => __("Specific person", 'formcreator'),
+         'question_person'    => __("Person from the question", 'formcreator'),
+         'group'              => __('Specific group', 'formcreator'),
+         'question_group'     => __('Group from the question', 'formcreator'),
+         'supplier'           => __('Specific supplier', 'formcreator'),
+         'question_supplier'  => __('Supplier from the question', 'formcreator'),
+         'question_actors'    => __('Actors from the question', 'formcreator'),
+      ];
    }
 
    static function getEnumRole() {
-      return array(
-            'requester'          => __("Requester"),
-            'observer'           => __("Observer"),
-            'assigned'           => __("Assigned to"),
-      );
+      return [
+         'requester'          => __("Requester"),
+         'observer'           => __("Observer"),
+         'assigned'           => __("Assigned to"),
+      ];
    }
 
 
@@ -45,7 +49,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
     * @param  array   $actor the actor data (match the actor table)
     * @return integer the actor's id
     */
-   public static function import($targets_id = 0, $actor = array()) {
+   public static function import($targets_id = 0, $actor = []) {
       $item = new static;
 
       $foreignKeyField = $item->getTargetItem()->getForeignKeyField();
@@ -53,7 +57,6 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
 
       // retrieve FK
       if (isset($actor['_question'])) {
-         $section = new PluginFormcreatorSection;
          $question = new PluginFormcreatorQuestion;
 
          if ($questions_id = plugin_formcreator_getFromDBByField($question, 'uuid', $actor['_question'])) {
@@ -123,7 +126,6 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
          case 'question_supplier':
          case 'question_actors':
             $question = new PluginFormcreatorQuestion;
-            $section = new PluginFormcreatorSection;
             if ($question->getFromDB($target_actor['actor_value'])) {
                $target_actor['_question'] = $question->fields['uuid'];
                unset($target_actor['actor_value']);

@@ -1,4 +1,8 @@
 <?php
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorQuestion_Condition extends CommonDBChild
 {
    static public $itemtype = "PluginFormcreatorQuestion";
@@ -15,10 +19,10 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    }
 
    public static function getEnumShowLogic() {
-      return array(
-            'AND'    => 'AND',
-            'OR'     => 'OR',
-      );
+      return [
+         'AND'    => 'AND',
+         'OR'     => 'OR',
+      ];
    }
 
    /**
@@ -27,10 +31,12 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
     *
     * @param  integer $questions_id  id of the parent question
     * @param  array   $condition the condition data (match the condition table)
+    * @param boolean  storeOnly
+    *
     * @return integer the condition's id
     */
-   public static function import($questions_id = 0, $condition = array(), $storeOnly = true) {
-      static $conditionsToImport = array();
+   public static function import($questions_id = 0, $condition = [], $storeOnly = true) {
+      static $conditionsToImport = [];
 
       if ($storeOnly) {
          $condition['plugin_formcreator_questions_id'] = $questions_id;
@@ -58,7 +64,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
                $item->add($condition);
             }
          }
-         $conditionsToImport = array();
+         $conditionsToImport = [];
       }
    }
 
@@ -89,11 +95,11 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    }
 
    public function getConditionsFromQuestion($questionId) {
-      $questionConditions = array();
+      $questionConditions = [];
       $rows = $this->find("`plugin_formcreator_questions_id` = '$questionId'", "`order` ASC");
-      foreach ($rows as $questionConditionId => $row) {
+      foreach ($rows as $row) {
          $questionCondition = new static();
-         $questionCondition->getFromDB($questionConditionId);
+         $questionCondition->getFromDB($row['id']);
          $questionConditions[] = $questionCondition;
       }
 
@@ -125,12 +131,11 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
          $show_logic       = $this->fields['show_logic'];
          $questionId       = $this->fields['plugin_formcreator_questions_id'];
       }
-      $rootDoc = $CFG_GLPI['root_doc'];
       $rand = mt_rand();
 
       $question = new PluginFormcreatorQuestion();
       $questionsInForm = $question->getQuestionsFromForm($form_id);
-      $questions_tab = array();
+      $questions_tab = [];
       foreach ($questionsInForm as $question) {
          if (strlen($question->getField('name')) > 30) {
             $questions_tab[$question->getID()] = substr($question->getField('name'),
@@ -150,35 +155,35 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<div class="div_show_condition_logic"' . $showLogic . '>';
       $html.= Dropdown::showFromArray('show_logic[]',
             PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
-            array(
-                  'display'               => false,
-                  'value'                 => $show_logic,
-                  'display_emptychoice'   => false,
-                  'rand'                  => $rand,
-            ));
+            [
+               'display'               => false,
+               'value'                 => $show_logic,
+               'display_emptychoice'   => false,
+               'rand'                  => $rand,
+            ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_field">';
-      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, array(
-            'display'      => false,
-            'used'         => array($questionId => ''),
-            'value'        => $show_field,
-            'rand'         => $rand,
-      ));
+      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, [
+         'display'      => false,
+         'used'         => array($questionId => ''),
+         'value'        => $show_field,
+         'rand'         => $rand,
+      ]);
       $html.= '</div>';
 
       $html.= '<div class="div_show_condition_operator">';
-      $html.= Dropdown::showFromArray('show_condition[]', array(
-            '=='           => '=',
-            '!='           => '&ne;',
-            '<'            => '&lt;',
-            '>'            => '&gt;',
-            '<='           => '&le;',
-            '>='           => '&ge;',
-      ), array(
-            'display'      => false,
-            'value'        => $show_condition,
-            'rand'         => $rand,
-      ));
+      $html.= Dropdown::showFromArray('show_condition[]', [
+         '=='           => '=',
+         '!='           => '&ne;',
+         '<'            => '&lt;',
+         '>'            => '&gt;',
+         '<='           => '&le;',
+         '>='           => '&ge;',
+      ], [
+         'display'      => false,
+         'value'        => $show_condition,
+         'rand'         => $rand,
+      ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_value">';
       $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'

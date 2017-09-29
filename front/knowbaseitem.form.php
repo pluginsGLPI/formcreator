@@ -1,6 +1,11 @@
 <?php
-
 include ("../../../inc/includes.php");
+
+// Check if plugin is activated...
+$plugin = new Plugin();
+if (!$plugin->isActivated('formcreator')) {
+   Html::displayNotFoundError();
+}
 
 $kb = new KnowbaseItem();
 
@@ -9,8 +14,8 @@ if (isset($_GET["id"])) {
 
    PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
 
-   $available_options = array('item_itemtype', 'item_items_id', 'id');
-   $options           = array();
+   $available_options = ['item_itemtype', 'item_items_id', 'id'];
+   $options           = [];
    foreach ($available_options as $key) {
       if (isset($_GET[$key])) {
          $options[$key] = $_GET[$key];
@@ -20,5 +25,4 @@ if (isset($_GET["id"])) {
    $kb->display($options);
 
    PluginFormcreatorWizard::footer();
-
 }

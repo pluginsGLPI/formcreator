@@ -4,12 +4,12 @@
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_forms_answers_id` int(11) NOT NULL,
-  `plugin_formcreator_question_id` int(11) NOT NULL,
+  `plugin_formcreator_questions_id` int(11) NOT NULL,
   `answer` text,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
-  INDEX `plugin_formcreator_question_id` (`plugin_formcreator_question_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   INDEX `name` (`name`),
   INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
   INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `id` int(11) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   INDEX `entities_id` (`entities_id`),
   INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -64,7 +64,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `requester_id` int(11) DEFAULT NULL,
-  `validator_id` int(11) DEFAULT NULL,
+  `users_id_validator` int(11) DEFAULT NULL,
+  `groups_id_validator` int(11) DEFAULT NULL,
   `request_date` datetime NOT NULL,
   `status` enum('waiting','refused','accepted') NOT NULL DEFAULT 'waiting',
   `comment` text,
@@ -73,8 +74,9 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
   INDEX `requester_id` (`requester_id`),
-  INDEX `validator_id` (`validator_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  INDEX `users_id_validator` (`users_id_validator`),
+  INDEX `groups_id_validator` (`groups_id_validator`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -114,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_sections_id` (`plugin_formcreator_sections_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -137,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -185,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `itemtype_items_id` (`itemtype`, `items_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -198,6 +200,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `due_date_period` enum('minute','hour','day','month') DEFAULT NULL,
   `urgency_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
   `urgency_question` int(11) NOT NULL DEFAULT '0',
+  `location_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `location_question` int(11) NOT NULL DEFAULT '0',
   `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
   `destination_entity` enum('current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity') NOT NULL DEFAULT 'current',
   `destination_entity_value` int(11) DEFAULT NULL,
@@ -208,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `category_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -220,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -241,4 +245,16 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   INDEX `entities_id` (`entities_id`),
   INDEX `requester_id` (`requester_id`),
   INDEX `validator_id` (`validator_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_targettickets_id` int(11) NOT NULL DEFAULT '0',
+  `link` int(11) NOT NULL DEFAULT '0',
+  `itemtype` varchar(255) NOT NULL DEFAULT '',
+  `items_id` int(11) NOT NULL DEFAULT '0',
+  `uuid` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
+  INDEX `item` (`itemtype`,`items_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

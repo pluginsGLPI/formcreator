@@ -1,16 +1,14 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.5.2');
+define('PLUGIN_FORMCREATOR_VERSION', '2.6.0-rc1');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.5');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.1.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.2');
-// Minimum version of PHP
-define('PLUGIN_FORMCREATOR_PHP_MIN_VERSION', '5.4.0');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.3');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
@@ -19,14 +17,24 @@ define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
  *
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
-function plugin_version_formcreator () {
+function plugin_version_formcreator() {
+   $version = rtrim(GLPI_VERSION, '-dev');
+   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($version, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+      echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
+      return false;
+   }
    return array(
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
       'license'        => '<a href="../plugins/formcreator/LICENSE" target="_blank">GPLv2</a>',
-      'minGlpiVersion' => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION
+      'requirements'   => [
+         'glpi'           => [
+            'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
+            'dev'            => true
+         ]
+      ]
    );
 }
 
@@ -35,27 +43,8 @@ function plugin_version_formcreator () {
  *
  * @return boolean
  */
-function plugin_formcreator_check_prerequisites () {
-   $success = true;
-   if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
-      echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
-      $success = false;
-   }
-   if (! function_exists('utf8_decode')) {
-      echo 'This plugin requires php-xml<br>';
-      $success = false;
-   }
-
-   if (version_compare(PHP_VERSION, PLUGIN_FORMCREATOR_PHP_MIN_VERSION, 'lt')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', PLUGIN_FORMCREATOR_GLPI_MIN_VERSION) . '<br/>';
-      } else {
-         echo 'This plugin requires PHP >=' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . '<br>';
-      }
-      $success= false;
-   }
-
-   return $success;
+function plugin_formcreator_check_prerequisites() {
+   return true;
 }
 
 /**
@@ -64,14 +53,14 @@ function plugin_formcreator_check_prerequisites () {
  * @param string $verbose Set true to show all messages (false by default)
  * @return boolean
  */
-function plugin_formcreator_check_config($verbose=false) {
+function plugin_formcreator_check_config($verbose = false) {
    return true;
 }
 
 /**
  * Initialize all classes and generic variables of the plugin
  */
-function plugin_init_formcreator () {
+function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
    // Hack for vertical display
@@ -88,21 +77,21 @@ function plugin_init_formcreator () {
    array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
 
    // hook to update issues when an operation occurs on a ticket
-   $PLUGIN_HOOKS['item_add']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_add_ticket'
-   );
-   $PLUGIN_HOOKS['item_update']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_update_ticket'
-   );
-   $PLUGIN_HOOKS['item_delete']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_delete_ticket'
-   );
-   $PLUGIN_HOOKS['item_restore']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_restore_ticket'
-   );
-   $PLUGIN_HOOKS['item_purge']['formcreator'] = array(
-         'Ticket' => 'plugin_formcreator_hook_purge_ticket'
-   );
+   $PLUGIN_HOOKS['item_add']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_add_ticket'
+   ];
+   $PLUGIN_HOOKS['item_update']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_update_ticket'
+   ];
+   $PLUGIN_HOOKS['item_delete']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_delete_ticket'
+   ];
+   $PLUGIN_HOOKS['item_restore']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_restore_ticket'
+   ];
+   $PLUGIN_HOOKS['item_purge']['formcreator'] = [
+      'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+   ];
 
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
@@ -137,7 +126,7 @@ function plugin_init_formcreator () {
             $PLUGIN_HOOKS['menu_entry']['formcreator'] = 'front/formlist.php';
 
             // Config page
-            $links  = array();
+            $links  = [];
             if (Session::haveRight('entity', UPDATE)) {
                $PLUGIN_HOOKS['config_page']['formcreator']         = 'front/form.php';
                $PLUGIN_HOOKS['menu_toadd']['formcreator']['admin'] = 'PluginFormcreatorForm';
@@ -151,13 +140,13 @@ function plugin_init_formcreator () {
 
             // Set options for pages (title, links, buttons...)
             $links['search'] = '/plugins/formcreator/front/formlist.php';
-            $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = array(
-               'config'       => array('title'  => __('Setup'),
-                                       'page'   => '/plugins/formcreator/front/form.php',
-                                       'links'  => $links),
-               'options'      => array('title'  => _n('Form', 'Forms', 2, 'formcreator'),
-                                       'links'  => $links),
-            );
+            $PLUGIN_HOOKS['submenu_entry']['formcreator']['options'] = [
+               'config'       => ['title'  => __('Setup'),
+                                  'page'   => '/plugins/formcreator/front/form.php',
+                                  'links'  => $links],
+               'options'      => ['title'  => _n('Form', 'Forms', 2, 'formcreator'),
+                                  'links'  => $links],
+            ];
          }
 
          // Load JS and CSS files if we are on a page witch need them
@@ -185,17 +174,17 @@ function plugin_init_formcreator () {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
-         Plugin::registerClass('PluginFormcreatorForm', array('addtabon' => 'Central'));
+         Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
 
          // Load field class and all its method to manage fields
          Plugin::registerClass('PluginFormcreatorFields');
 
          // Notification
-         Plugin::registerClass('PluginFormcreatorForm_Answer', array(
+         Plugin::registerClass('PluginFormcreatorForm_Answer', [
             'notificationtemplates_types' => true
-         ));
+         ]);
 
-         Plugin::registerClass('PluginFormcreatorEntityconfig', array('addtabon' => 'Entity'));
+         Plugin::registerClass('PluginFormcreatorEntityconfig', ['addtabon' => 'Entity']);
       }
    }
 }
@@ -206,7 +195,7 @@ function plugin_init_formcreator () {
  * @param  String    $string  The string to encode
  * @return String             The encoded string
  */
-function plugin_formcreator_encode($string, $mode_legacy=true) {
+function plugin_formcreator_encode($string, $mode_legacy = true) {
    if (!is_string($string)) {
       return $string;
    }
@@ -332,6 +321,13 @@ function plugin_formcreator_upgrade_error(Migration $migration) {
    global $DB;
 
    $error = $DB->error();
-   $migration->log($error . "\n" . Toolbox::backtrace(false, '', array('Toolbox::backtrace()')), false);
+   $migration->log($error . "\n" . Toolbox::backtrace(false, '', ['Toolbox::backtrace()']), false);
    die($error . "<br><br> Please, check migration log");
+}
+
+function plugin_formcreator_ldap_warning_handler($errno, $errstr, $errfile, $errline, array $errcontext) {
+   if (0 === error_reporting()) {
+      return false;
+   }
+   throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }

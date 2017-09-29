@@ -1,4 +1,9 @@
 <?php
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorCategory extends CommonTreeDropdown
 {
    // Activate translation on GLPI 0.85
@@ -16,8 +21,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
-
       if ($item->getType()==__CLASS__) {
          $item->showChildren();
       }
@@ -45,7 +48,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    /**
-    * @param $rootId id of the subtree root
+    * @param integer $rootId id of the subtree root
     * @return array Tree of form categories as nested array
     */
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
@@ -103,23 +106,23 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       // No sub-categories, then return
       if (count($items) == 0) {
-         return array(
-               'name'            => $name,
-               'parent'          => $parent,
-               'id'              => $rootId,
-               'subcategories'   => new stdClass()
-         );
-      }
-
-      // Generate sub categories
-      $children = array(
+         return [
             'name'            => $name,
             'parent'          => $parent,
             'id'              => $rootId,
-            'subcategories'   => array()
-      );
-      foreach ($items as $categoryId => $categoryItem) {
-         $children['subcategories'][] = self::getCategoryTree($categoryId);
+            'subcategories'   => new stdClass()
+         ];
+      }
+
+      // Generate sub categories
+      $children = [
+         'name'            => $name,
+         'parent'          => $parent,
+         'id'              => $rootId,
+         'subcategories'   => []
+      ];
+      foreach ($items as $categoryItem) {
+         $children['subcategories'][] = self::getCategoryTree($categoryItem['id']);
       }
 
       return $children;

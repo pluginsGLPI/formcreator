@@ -7,7 +7,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
-         $values = array();
+         $values = [];
          $values = $this->getAvailableValues();
          if (!empty($values)) {
             echo '<div class="checkboxes">';
@@ -18,12 +18,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                   $current_value = null;
                   $current_value = $this->getValue();
                   echo "<div class='checkbox'>";
-                  echo Html::getCheckbox(array('title'         => $value,
-                                               'id'            => 'formcreator_field_'.$this->fields['id'].'_'.$i,
-                                               'name'          => 'formcreator_field_'.$this->fields['id'] . '[]',
-                                               'value'         => $value,
-                                               'zero_on_empty' => false,
-                                               'checked' => (!empty($current_value) && in_array($value, $current_value))));
+                  echo Html::getCheckbox(['title'         => $value,
+                                          'id'            => 'formcreator_field_'.$this->fields['id'].'_'.$i,
+                                          'name'          => 'formcreator_field_'.$this->fields['id'] . '[]',
+                                          'value'         => $value,
+                                          'zero_on_empty' => false,
+                                          'checked' => (!empty($current_value) && in_array($value, $current_value))]);
                   echo '<label for="formcreator_field_'.$this->fields['id'].'_'.$i.'">';
                   echo '&nbsp;'.$value;
                   echo '</label>';
@@ -66,7 +66,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    public function isValid($value) {
       $value = json_decode($value);
       if (is_null($value)) {
-         $value = array();
+         $value = [];
       }
 
       // If the field is required it can't be empty
@@ -99,8 +99,28 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return __('Checkboxes', 'formcreator');
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['values'])) {
+         if (empty($input['values'])) {
+            Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+            return [];
+         } else {
+            $input['values'] = $this->trimValue($input['values']);
+            $input['values'] = addslashes($input['values']);
+         }
+      }
+      if (isset($input['default_values'])) {
+         $input['default_values'] = $this->trimValue($input['default_values']);
+         $input['default_values'] = addslashes($input['default_values']);
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -111,7 +131,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

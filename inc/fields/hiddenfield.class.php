@@ -17,7 +17,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 0,
          'default_values' => 1,
          'values'         => 0,
@@ -28,7 +28,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

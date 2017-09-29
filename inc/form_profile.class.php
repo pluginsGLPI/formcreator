@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorForm_Profile extends CommonDBRelation
 {
    static public $itemtype_1 = 'PluginFormcreatorForm';
@@ -28,14 +32,14 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       echo '<td>';
       Dropdown::showFromArray(
          'access_rights',
-         array(
+         [
             PluginFormcreatorForm::ACCESS_PUBLIC     => __('Public access', 'formcreator'),
             PluginFormcreatorForm::ACCESS_PRIVATE    => __('Private access', 'formcreator'),
             PluginFormcreatorForm::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
-         ),
-         array(
+         ],
+         [
             'value' => (isset($item->fields["access_rights"])) ? $item->fields["access_rights"] : 1,
-         )
+         ]
       );
       echo '</td>';
       echo '<td>'.__('Link to the form', 'formcreator').': ';
@@ -91,7 +95,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
     * @param  array   $form_profile the validator data (match the validator table)
     * @return integer the validator's id
     */
-   public static function import($forms_id = 0, $form_profile = array()) {
+   public static function import($forms_id = 0, $form_profile = []) {
       $item    = new self;
       $profile = new Profile;
       $form_profile['plugin_formcreator_forms_id'] = $forms_id;

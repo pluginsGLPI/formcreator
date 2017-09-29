@@ -1,12 +1,12 @@
 <?php
 include ('../../../inc/includes.php');
 
+Session::checkLoginUser();
+
 $plugin = new Plugin();
-if (!$plugin->isInstalled('formcreator') || !$plugin->isActivated('formcreator')) {
+if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-
-Session::checkLoginUser();
 
 if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
    if (plugin_formcreator_replaceHelpdesk()) {

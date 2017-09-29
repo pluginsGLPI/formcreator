@@ -7,15 +7,38 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          if (!empty($this->fields['values'])) {
             $rand     = mt_rand();
             $required = $this->fields['required'] ? ' required' : '';
-            $itemtype = $this->fields['values'];
+            $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+            if ($decodedValues === null) {
+               $itemtype = $this->fields['values'];
+            } else {
+               $itemtype = $decodedValues['itemtype'];
+            }
 
-            $dparams = array('name'     => 'formcreator_field_' . $this->fields['id'],
-                             'value'    => $this->getValue(),
-                             'comments' => false,
-                             'rand'     => $rand);
+            $dparams = ['name'     => 'formcreator_field_' . $this->fields['id'],
+                        'value'    => $this->getValue(),
+                        'comments' => false,
+                        'rand'     => $rand];
 
             if ($itemtype == "User") {
                $dparams['right'] = 'all';
+            } else if ($itemtype == "ITILCategory") {
+               $dparams['condition'] = '1';
+               if (isset ($_SESSION['glpiactiveprofile']['interface'])
+                   && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+                  $dparams['condition'] .= " AND `is_helpdeskvisible` = '1'";
+               }
+               switch ($decodedValues['show_ticket_categories']) {
+                  case 'request':
+                     $dparams['condition'] .= " AND `is_request` = '1'";
+                     break;
+                  case 'incident':
+                     $dparams['condition'] .= " AND `is_incident` = '1'";
+                     break;
+               }
+               if (isset($decodedValues['show_ticket_categories_depth'])
+                   && $decodedValues['show_ticket_categories_depth'] > 0) {
+                  $dparams['condition'] .= " AND `level` <= '" . $decodedValues['show_ticket_categories_depth'] . "'";
+               }
             }
 
             $itemtype::dropdown($dparams);
@@ -38,7 +61,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       if ($this->fields['values'] == 'User') {
          return getUserName($value);
       } else {
-         return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if (!isset($decodedValues['itemtype'])) {
+            return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+         } else {
+            return Dropdown::getDropdownName(getTableForItemType($decodedValues['itemtype']), $value);
+         }
       }
    }
 
@@ -46,8 +74,47 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return _n('Dropdown', 'Dropdowns', 1);
    }
 
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['dropdown_values'])) {
+         if (empty($input['dropdown_values'])) {
+            Session::addMessageAfterRedirect(
+                  __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+            return [];
+         }
+         $allowedDropdownValues = [];
+         foreach (Dropdown::getStandardDropdownItemTypes() as $categoryOfTypes) {
+            $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
+         }
+         if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
+            Session::addMessageAfterRedirect(
+                  __('Invalid dropdown type:', 'formcreator') . ' ' . $input['name'],
+                  false,
+                  ERROR);
+            return [];
+         }
+         $input['values'] = [
+            'itemtype' => $input['dropdown_values'],
+         ];
+         if ($input['dropdown_values'] == 'ITILCategory') {
+            $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
+            if ($input['show_ticket_categories_depth'] != (int) $input['show_ticket_categories_depth']) {
+               $input['values']['show_ticket_categories_depth'] = 0;
+            } else {
+               $input['values']['show_ticket_categories_depth'] = $input['show_ticket_categories_depth'];
+            }
+         }
+         $input['values'] = json_encode($input['values']);
+         unset($input['show_ticket_categories']);
+         unset($input['show_ticket_categories_depth']);
+         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+      }
+      return $input;
+   }
+
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -58,7 +125,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'dropdown_value' => 1,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

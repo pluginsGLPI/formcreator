@@ -6,10 +6,10 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
          $required = ($canEdit && $this->fields['required']) ? ' required' : '';
          $rand     = mt_rand();
 
-         Html::showDateField('formcreator_field_' . $this->fields['id'], array(
+         Html::showDateField('formcreator_field_' . $this->fields['id'], [
             'value' => $this->getValue(),
             'rand'  => $rand,
-         ));
+         ]);
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      $( "#showdate' . $rand . '" ).on("change", function() {
@@ -58,7 +58,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 0,
          'values'         => 0,
@@ -69,7 +69,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

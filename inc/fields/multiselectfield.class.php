@@ -6,7 +6,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    public function isValid($value) {
       $value = json_decode($value);
       if (is_null($value)) {
-         $value = array();
+         $value = [];
       }
 
       // If the field is required it can't be empty
@@ -43,7 +43,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    }
 
    public function getAnswer() {
-      $return = array();
+      $return = [];
       $values = $this->getAvailableValues();
       $value  = $this->getValue();
 
@@ -56,7 +56,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       } else if (is_array(json_decode($value))) {
          $tab_values = json_decode($value);
       } else {
-         $tab_values = array($value);
+         $tab_values = [$value];
       }
 
       foreach ($tab_values as $value) {
@@ -72,7 +72,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    }
 
    public static function getPrefs() {
-      return array(
+      return [
          'required'       => 1,
          'default_values' => 1,
          'values'         => 1,
@@ -83,7 +83,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
          'dropdown_value' => 0,
          'glpi_objects'   => 0,
          'ldap_values'    => 0,
-      );
+      ];
    }
 
    public static function getJSFields() {

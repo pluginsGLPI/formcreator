@@ -21,7 +21,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
-      $tabNames = array();
+      $tabNames = [];
       if (!$withtemplate) {
          if ($item->getType() == 'Entity') {
             $tabNames[1] = _n('Form', 'Forms', 2, 'formcreator');
@@ -39,8 +39,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    }
 
    public function showFormForEntity(Entity $entity) {
-      global $DB;
-
       $ID = $entity->getField('id');
       if (!$entity->can($ID, READ)
             || !Notification::canView()) {
@@ -64,11 +62,11 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<tr><th colspan='2'>".__('Helpdesk', 'formcreator')."</th></tr>";
 
       if ($ID != 0) {
-         $elements = array(
-               self::CONFIG_PARENT => __('Inheritance of the parent entity')
-         );
+         $elements = [
+            self::CONFIG_PARENT => __('Inheritance of the parent entity')
+         ];
       } else {
-         $elements = array();
+         $elements = [];
       }
       $elements[0] = __('GLPi\'s helpdesk', 'formcreator');
       $elements[1] = __('Service catalog simplified', 'formcreator');
@@ -77,14 +75,14 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Helpdesk mode', 'formcreator')."</td>";
       echo "<td>";
-      Dropdown::showFromArray('replace_helpdesk', $elements, array('value' => $this->fields['replace_helpdesk']));
+      Dropdown::showFromArray('replace_helpdesk', $elements, ['value' => $this->fields['replace_helpdesk']]);
       if ($this->fields['replace_helpdesk'] == self::CONFIG_PARENT) {
          $tid = self::getUsedConfig('replace_helpdesk', $ID);
-         echo "<font class='green'><br>";
+         echo '<div class="green">';
          echo $elements[$tid];
-         echo "</font>";
-         echo "</td></tr>";
+         echo '</div>';
       }
+      echo '</td></tr>';
 
       if ($canedit) {
          echo "<tr>";
@@ -110,7 +108,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     * @param $fieldref        string   name of the referent field to know if we look at parent entity
     * @param $entities_id
     * @param $fieldval        string   name of the field that we want value (default '')
-    * @param $default_value            value to return (default -2)
+    * @param $default_value   integer  value to return (default -2)
     **/
    static function getUsedConfig($fieldref, $entities_id, $fieldval='', $default_value=-2) {
 

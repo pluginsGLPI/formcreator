@@ -19,6 +19,7 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      $this->createNotifications();
 
       return true;
    }
@@ -40,6 +41,11 @@ class PluginFormcreatorInstall {
             require_once(__DIR__ . '/update_0.0_2.5.php');
             plugin_formcreator_update_2_5($this->migration);
 
+         case '2.6':
+            //Any schema version below or equal 2.6
+            require_once(__DIR__ . '/update_2.5_2.6.php');
+            plugin_formcreator_update_2_6($this->migration);
+
          default:
             // Must be the last case
             if ($this->endsWith(PLUGIN_FORMCREATOR_VERSION, "-dev")) {
@@ -56,7 +62,7 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
-      Config::setConfigurationValues('formcreator', array('schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION));
+      Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
    }
@@ -151,12 +157,10 @@ class PluginFormcreatorInstall {
       $query  = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
       $result = $DB->query($query) or die ($DB->error());
 
-      if ($DB->numrows($result) > 0) {
-         list($requesttype) = $DB->fetch_array($result);
-      } else {
+      if (!$DB->numrows($result) > 0) {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
          $DB->query($query) or die ($DB->error());
-         $requesttype = $DB->insert_id();
+         $DB->insert_id();
       }
    }
 
@@ -208,168 +212,196 @@ class PluginFormcreatorInstall {
       }
    }
 
+   /**
+    * Declares the notifications that the plugin handles
+    */
    protected function createNotifications() {
       $this->migration->displayMessage("create notifications");
 
-      $notifications = array(
-            'plugin_formcreator_form_created' => array(
-                  'name'     => __('A form has been created', 'formcreator'),
-                  'subject'  => __('Your request has been saved', 'formcreator'),
-                  'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
-                  'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
-            ),
-            'plugin_formcreator_need_validation' => array(
-                  'name'     => __('A form need to be validate', 'formcreator'),
-                  'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
-                  'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-                  'notified' => PluginFormcreatorNotificationTargetForm_answer::APPROVER,
-            ),
-            'plugin_formcreator_refused'         => array(
-                  'name'     => __('The form is refused', 'formcreator'),
-                  'subject'  => __('Your form has been refused by the validator', 'formcreator'),
-                  'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
-                  'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
-            ),
-            'plugin_formcreator_accepted'        => array(
-                  'name'     => __('The form is accepted', 'formcreator'),
-                  'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
-                  'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
-                  'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
-            ),
-            'plugin_formcreator_deleted'         => array(
-                  'name'     => __('The form is deleted', 'formcreator'),
-                  'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
-                  'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
-                  'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
-            ),
-      );
+      $notifications = [
+            'plugin_formcreator_form_created' => [
+               'name'     => __('A form has been created', 'formcreator'),
+               'subject'  => __('Your request has been saved', 'formcreator'),
+               'content'  => __('Hi,\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\nYou can see your answers onto the following link:\n##formcreator.validation_link##', 'formcreator'),
+               'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
+            ],
+            'plugin_formcreator_need_validation' => [
+               'name'     => __('A form need to be validate', 'formcreator'),
+               'subject'  => __('A form from GLPI need to be validate', 'formcreator'),
+               'content'  => __('Hi,\nA form from GLPI need to be validate and you have been choosen as the validator.\nYou can access it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+               'notified' => PluginFormcreatorNotificationTargetForm_answer::APPROVER,
+            ],
+            'plugin_formcreator_refused'         => [
+               'name'     => __('The form is refused', 'formcreator'),
+               'subject'  => __('Your form has been refused by the validator', 'formcreator'),
+               'content'  => __('Hi,\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\n##formcreator.validation_comment##\n\nYou can still modify and resubmit it by clicking onto this link:\n##formcreator.validation_link##', 'formcreator'),
+               'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
+            ],
+            'plugin_formcreator_accepted'        => [
+               'name'     => __('The form is accepted', 'formcreator'),
+               'subject'  => __('Your form has been accepted by the validator', 'formcreator'),
+               'content'  => __('Hi,\nWe are pleased to inform you that your form has been accepted by the validator.\nYour request will be considered soon.', 'formcreator'),
+               'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
+            ],
+            'plugin_formcreator_deleted'         => [
+               'name'     => __('The form is deleted', 'formcreator'),
+               'subject'  => __('Your form has been deleted by an administrator', 'formcreator'),
+               'content'  => __('Hi,\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator.', 'formcreator'),
+               'notified' => PluginFormcreatorNotificationTargetForm_answer::AUTHOR,
+            ],
+      ];
 
       // Create the notification template
-      $notification        = new Notification();
-      $notification_target = new NotificationTarget();
-      $template            = new NotificationTemplate();
-      $translation         = new NotificationTemplateTranslation();
-      foreach ($notifications as $event => $datas) {
+      $notification                       = new Notification();
+      $template                           = new NotificationTemplate();
+      $translation                        = new NotificationTemplateTranslation();
+      $notification_target                = new NotificationTarget();
+      $notification_notificationTemplate  = new Notification_NotificationTemplate();
+
+      foreach ($notifications as $event => $data) {
          // Check if notification already exists
          $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
 
          // If it doesn't exists, create it
          if (count($exists) == 0) {
-            $template_id = $template->add(array(
-                  'name'     => Toolbox::addslashes_deep($datas['name']),
-                  'comment'  => '',
-                  'itemtype' => 'PluginFormcreatorForm_Answer',
-            ));
+            $template_id = $template->add([
+               'name'     => Toolbox::addslashes_deep($data['name']),
+               'comment'  => '',
+               'itemtype' => 'PluginFormcreatorForm_Answer',
+            ]);
 
             // Add a default translation for the template
-            $translation->add(array(
-                  'notificationtemplates_id' => $template_id,
-                  'language'                 => '',
-                  'subject'                  => Toolbox::addslashes_deep($datas['subject']),
-                  'content_text'             => Toolbox::addslashes_deep($datas['content']),
-                  'content_html'             => '<p>'.str_replace('\n', '<br />', Toolbox::addslashes_deep($datas['content'])).'</p>',
-            ));
+            $translation->add([
+               'notificationtemplates_id' => $template_id,
+               'language'                 => '',
+               'subject'                  => Toolbox::addslashes_deep($data['subject']),
+               'content_text'             => Toolbox::addslashes_deep($data['content']),
+               'content_html'             => '<p>'.str_replace('\n', '<br />', Toolbox::addslashes_deep($data['content'])).'</p>',
+            ]);
 
             // Create the notification
-            $notification_id = $notification->add(array(
-                  'name'                     => Toolbox::addslashes_deep($datas['name']),
-                  'comment'                  => '',
-                  'entities_id'              => 0,
-                  'is_recursive'             => 1,
-                  'is_active'                => 1,
-                  'itemtype'                 => 'PluginFormcreatorForm_Answer',
-                  'notificationtemplates_id' => $template_id,
-                  'event'                    => $event,
-                  'mode'                     => 'mail',
-            ));
+            $notification_id = $notification->add([
+               'name'                     => Toolbox::addslashes_deep($data['name']),
+               'comment'                  => '',
+               'entities_id'              => 0,
+               'is_recursive'             => 1,
+               'is_active'                => 1,
+               'itemtype'                 => 'PluginFormcreatorForm_Answer',
+               'notificationtemplates_id' => $template_id,
+               'event'                    => $event,
+               'mode'                     => 'mail',
+            ]);
+
+            $notification_notificationTemplate->add([
+               'notifications_id'         => $notification_id,
+               'notificationtemplates_id' => $template_id,
+               'mode'                     => Notification_NotificationTemplate::MODE_MAIL,
+            ]);
 
             // Add default notification targets
-            $notification_target->add(array(
-                  "items_id"         => $datas['notified'],
-                  "type"             => Notification::USER_TYPE,
-                  "notifications_id" => $notification_id,
-            ));
+            $notification_target->add([
+               "items_id"         => $data['notified'],
+               "type"             => Notification::USER_TYPE,
+               "notifications_id" => $notification_id,
+            ]);
          }
       }
    }
 
    protected function deleteNotifications() {
-      global $DB;
-
-      $this->migration->displayMessage("Delete notifications");
-
-      // Define DB tables
-      $table_targets      = getTableForItemType('NotificationTarget');
-      $table_notification = getTableForItemType('Notification');
-      $table_translations = getTableForItemType('NotificationTemplateTranslation');
-      $table_templates    = getTableForItemType('NotificationTemplate');
-
       // Delete translations
-      $query = "DELETE FROM `$table_translations`
-      WHERE `notificationtemplates_id` IN (
-      SELECT `id` FROM $table_templates WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
-      $DB->query($query);
+      $translation = new NotificationTemplateTranslation();
+      $translation->deleteByCriteria([
+         'INNER JOIN' => [
+            NotificationTemplate::getTable() => [
+               'FKEY' => [
+                  NotificationTemplateTranslation::getTable() => NotificationTemplate::getForeignKeyField(),
+                  NotificationTemplate::getTable() => NotificationTemplate::getIndexName()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+         ]
+      ]);
 
       // Delete notification templates
-      $query = "DELETE FROM `$table_templates`
-      WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
-      $DB->query($query);
+      $template = new NotificationTemplate();
+      $template->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
 
       // Delete notification targets
-      $query = "DELETE FROM `$table_targets`
-      WHERE `notifications_id` IN (
-      SELECT `id` FROM $table_notification WHERE `itemtype` = 'PluginFormcreatorForm_Answer')";
-      $DB->query($query);
+      $target = new NotificationTarget();
+      $target->deleteByCriteria([
+         'INNER JOIN' => [
+            Notification::getTable() => [
+               'FKEY' => [
+                  NotificationTarget::getTable() => Notification::getForeignKeyField(),
+                  Notification::getTable() => Notification::getIndexName()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            Notification::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+         ],
+      ]);
 
-      // Delete notifications
-      $query = "DELETE FROM `$table_notification`
-      WHERE `itemtype` = 'PluginFormcreatorForm_Answer'";
-      $DB->query($query);
+      // Delete notifications and their templates
+      $notification = new Notification();
+      $notification_notificationTemplate = new Notification_NotificationTemplate();
+      $rows = $notification->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      foreach ($rows as $row) {
+         $notification_notificationTemplate->deleteByCriteria(['notifications_id' => $row['id']]);
+         $notification->delete($row);
+      }
+
+      $notification = new Notification();
+      $notification->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
    }
 
    protected function deleteTicketRelation() {
-      global $DB, $CFG_GLPI;
+      global $CFG_GLPI;
 
       // Delete relations with tickets with email notifications disabled
-      $use_mailing = $CFG_GLPI['use_mailing'];
-      $CFG_GLPI['use_mailing'] = '0';
+      $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
+      PluginFormcreatorCommon::setNotification(false);
 
       $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(array('itemtype' => 'PluginFormcreatorForm_Answer'));
+      $item_ticket->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
 
-      $CFG_GLPI['use_mailing'] = $use_mailing;
+      PluginFormcreatorCommon::setNotification($use_mailing);
    }
 
    protected function deleteTables() {
       global $DB;
 
       // Drop tables
-      $itemtypes = array(
-            'PluginFormcreatorAnswer',
-            'PluginFormcreatorCategory',
-            'PluginFormcreatorEntityconfig',
-            'PluginFormcreatorForm_Answer',
-            'PluginFormcreatorForm_Profile',
-            'PluginFormcreatorForm_Validator',
-            'PluginFormcreatorForm',
-            'PluginFormcreatorQuestion_Condition',
-            'PluginFormcreatorQuestion',
-            'PluginFormcreatorSection',
-            'PluginFormcreatorTarget',
-            'PluginFormcreatorTargetChange_Actor',
-            'PluginFormcreatorTargetChange',
-            'PluginFormcreatorTargetTicket_Actor',
-            'PluginFormcreatorTargetTicket',
-            'PluginFormcreatorIssue',
-      );
+      $itemtypes = [
+         'PluginFormcreatorAnswer',
+         'PluginFormcreatorCategory',
+         'PluginFormcreatorEntityconfig',
+         'PluginFormcreatorForm_Answer',
+         'PluginFormcreatorForm_Profile',
+         'PluginFormcreatorForm_Validator',
+         'PluginFormcreatorForm',
+         'PluginFormcreatorQuestion_Condition',
+         'PluginFormcreatorQuestion',
+         'PluginFormcreatorSection',
+         'PluginFormcreatorTarget',
+         'PluginFormcreatorTargetChange_Actor',
+         'PluginFormcreatorTargetChange',
+         'PluginFormcreatorTargetTicket_Actor',
+         'PluginFormcreatorTargetTicket',
+         'PluginFormcreatorItem_TargetTicket',
+         'PluginFormcreatorIssue',
+      ];
 
       foreach ($itemtypes as $itemtype) {
          $table = getTableForItemType($itemtype);
          $log = new Log();
-         $log->deleteByCriteria(array('itemtype' => $itemtype));
+         $log->deleteByCriteria(['itemtype' => $itemtype]);
 
          $displayPreference = new DisplayPreference();
-         $displayPreference->deleteByCriteria(array('itemtype' => $itemtype));
+         $displayPreference->deleteByCriteria(['itemtype' => $itemtype]);
 
          $DB->query("DROP TABLE IF EXISTS `$table`");
       }
@@ -378,13 +410,13 @@ class PluginFormcreatorInstall {
       $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
 
       $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(array('itemtype' => 'PluginFormCreatorIssue'));
+      $displayPreference->deleteByCriteria(['itemtype' => 'PluginFormCreatorIssue']);
    }
 
    /**
     * http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
-    * @param unknown $haystack
-    * @param unknown $needle
+    * @param string $haystack
+    * @param string $needle
     */
    protected function endsWith($haystack, $needle) {
       // search forward starting from end minus needle length characters
@@ -397,8 +429,9 @@ class PluginFormcreatorInstall {
    public function uninstall() {
       $this->deleteTicketRelation();
       $this->deleteTables();
+      $this->deleteNotifications();
 
       $config = new Config();
-      $config->deleteByCriteria(array('context' => 'formcreator'));
+      $config->deleteByCriteria(['context' => 'formcreator']);
    }
 }

@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorFields
 {
    /**
@@ -8,9 +12,10 @@ class PluginFormcreatorFields
     * @return Array     field_type => File_path
     */
    public static function getTypes() {
-      $tab_field_types     = array();
+      $tab_field_types     = [];
 
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+         $matches = null;
          preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
          $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
@@ -33,11 +38,11 @@ class PluginFormcreatorFields
       $plugin = new Plugin();
 
       // Initialize array
-      $tab_field_types_name     = array();
+      $tab_field_types_name     = [];
       $tab_field_types_name[''] = '---';
 
       // Get localized names of field types
-      foreach ($tab_field_types as $field_type => $class_file) {
+      foreach (array_keys($tab_field_types) as $field_type) {
          $classname                         = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
@@ -55,9 +60,10 @@ class PluginFormcreatorFields
    /**
     * Get field value to display
     *
-    * @param Field $field     Field object to display
+    * @param String $field Field object to display
+    * @param String $value the value to display
     *
-    * @return String          field_value
+    * @return String
     */
    public static function getValue($field, $value) {
       $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'field.class.php';
@@ -80,7 +86,7 @@ class PluginFormcreatorFields
       $tab_field_types = self::getTypes();
 
       // Get field types preference for JS
-      foreach ($tab_field_types as $field_type => $class_file) {
+      foreach (array_keys($tab_field_types) as $field_type) {
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if (method_exists($classname, 'getJSFields')) {
@@ -90,7 +96,13 @@ class PluginFormcreatorFields
       return $tabFieldsForJS;
    }
 
-   public static function showField($field, $datas = null, $edit = true) {
+   /**
+    *
+    * @param unknown $field
+    * @param unknown $data
+    * @param string $edit
+    */
+   public static function showField($field, $data = null, $edit = true) {
       // Get field types and file path
       $tab_field_types = self::getTypes();
 
@@ -102,7 +114,7 @@ class PluginFormcreatorFields
             return;
          }
 
-         $obj = new $fieldClass($field, $datas);
+         $obj = new $fieldClass($field, $data);
          $obj->show($edit);
       }
    }
@@ -115,12 +127,10 @@ class PluginFormcreatorFields
     * @return  boolean                 Should be shown or not
     */
    public static function isVisible($id, $values) {
-      global $DB;
-
       /**
        * Keep track of questions being evaluated to detect infinite loops
        */
-      static $evalQuestion = array();
+      static $evalQuestion = [];
       if (isset($evalQuestion[$id])) {
          // TODO : how to deal a infinite loop while evaulating visibility of question ?
          return true;
@@ -129,7 +139,7 @@ class PluginFormcreatorFields
 
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
-      $conditions = array();
+      $conditions = [];
 
       // If the field is always shown
       if ($question->getField('show_rule') == 'always') {
@@ -148,12 +158,12 @@ class PluginFormcreatorFields
       }
 
       foreach ($questionConditions as $question_condition) {
-         $conditions[] = array(
-               'logic'    => $question_condition->getField('show_logic'),
-               'field'    => $question_condition->getField('show_field'),
-               'operator' => $question_condition->getField('show_condition'),
-               'value'    => $question_condition->getField('show_value')
-            );
+         $conditions[] = [
+            'logic'    => $question_condition->getField('show_logic'),
+            'field'    => $question_condition->getField('show_field'),
+            'operator' => $question_condition->getField('show_condition'),
+            'value'    => $question_condition->getField('show_value')
+         ];
       }
 
       // Force the first logic operator to OR
@@ -312,7 +322,7 @@ class PluginFormcreatorFields
          }
       }
       unset ($value);
-      $questionToShow = array();
+      $questionToShow = [];
       foreach ($currentValues as $id => $value) {
          $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
       }

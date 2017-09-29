@@ -32,9 +32,9 @@ function plugin_formcreator_uninstall() {
  * Define Dropdown tables to be manage in GLPI :
  */
 function plugin_formcreator_getDropdown() {
-   return array(
-       'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
-   );
+   return [
+      'PluginFormcreatorCategory' => _n('Form category', 'Form categories', 2, 'formcreator'),
+   ];
 }
 
 
@@ -89,9 +89,6 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
    $table = getTableForItemType($itemtype);
    switch ($itemtype) {
       case "PluginFormcreatorIssue" :
-         $condition_fanwser = plugin_formcreator_getCondition("PluginFormcreatorForm_Answer");
-         $condition = "`$table`.`sub_itemtype` = 'PluginFormcreatorForm_Answer'
-                       AND ($condition_fanwser) OR ";
          $condition = Search::addDefaultWhere("Ticket");
          $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
@@ -137,7 +134,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
    switch ($table.".".$field) {
       case "glpi_plugin_formcreator_issues.status" :
-         $tocheck = array();
+         $tocheck = [];
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case 'all':
@@ -186,7 +183,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
          if (count($tocheck) == 0) {
             $statuses = $item->getAllStatusArray();
             if (isset($statuses[$val])) {
-               $tocheck = array($val);
+               $tocheck = [$val];
             }
          }
 
@@ -212,13 +209,13 @@ function plugin_formcreator_MassiveActions($itemtype) {
 
    switch ($itemtype) {
       case 'PluginFormcreatorForm' :
-         return array(
+         return [
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Export' => _sx('button', 'Export'),
-         );
+         ];
    }
-   return array();
+   return [];
 }
 
 
@@ -243,33 +240,8 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
       if (!isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
          // run this hook only if the plugin is not generating tickets
          $issue = new PluginFormcreatorIssue();
-         $issue->add(array(
-               'original_id'     => $item->getID(),
-               'sub_itemtype'    => 'Ticket',
-               'name'            => addslashes($item->fields['name']),
-               'status'          => $item->fields['status'],
-               'date_creation'   => $item->fields['date'],
-               'date_mod'        => $item->fields['date_mod'],
-               'entities_id'     => $item->fields['entities_id'],
-               'is_recursive'    => '0',
-               'requester_id'    => $item->fields['users_id_recipient'],
-               'validator_id'    => '0',
-               'comment'         => addslashes($item->fields['content']),
-         ));
-      }
-   }
-}
-
-function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
-   if ($item instanceof Ticket) {
-      $id = $item->getID();
-
-      $issue = new PluginFormcreatorIssue();
-      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$id'");
-      $issue->update(array(
-            'id'              => $issue->getID(),
-            'original_id'     => $id,
-            'display_id'      => "t_$id",
+         $issue->add([
+            'original_id'     => $item->getID(),
             'sub_itemtype'    => 'Ticket',
             'name'            => addslashes($item->fields['name']),
             'status'          => $item->fields['status'],
@@ -280,7 +252,32 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
             'requester_id'    => $item->fields['users_id_recipient'],
             'validator_id'    => '0',
             'comment'         => addslashes($item->fields['content']),
-      ));
+         ]);
+      }
+   }
+}
+
+function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
+   if ($item instanceof Ticket) {
+      $id = $item->getID();
+
+      $issue = new PluginFormcreatorIssue();
+      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$id'");
+      $issue->update([
+         'id'              => $issue->getID(),
+         'original_id'     => $id,
+         'display_id'      => "t_$id",
+         'sub_itemtype'    => 'Ticket',
+         'name'            => addslashes($item->fields['name']),
+         'status'          => $item->fields['status'],
+         'date_creation'   => $item->fields['date'],
+         'date_mod'        => $item->fields['date_mod'],
+         'entities_id'     => $item->fields['entities_id'],
+         'is_recursive'    => '0',
+         'requester_id'    => $item->fields['users_id_recipient'],
+         'validator_id'    => '0',
+         'comment'         => addslashes($item->fields['content']),
+      ]);
    }
 }
 
@@ -293,18 +290,18 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
       $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
          $form_answer = new PluginFormcreatorForm_Answer();
-         $form_answer->update(array(
-               'id'           => $row['id'],
-               'is_deleted'   => 1,
-         ));
+         $form_answer->update([
+            'id'           => $row['id'],
+            'is_deleted'   => 1,
+         ]);
       }
 
       // delete issue
       $issue = new PluginFormcreatorIssue();
-      $issue->deleteByCriteria(array(
-            'display_id'   => "t_$id",
-            'sub_itemtype' => 'Ticket'
-      ), 1);
+      $issue->deleteByCriteria([
+         'display_id'   => "t_$id",
+         'sub_itemtype' => 'Ticket'
+      ], 1);
    }
 }
 
@@ -317,26 +314,26 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
       $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
          $form_answer = new PluginFormcreatorForm_Answer();
-         $form_answer->update(array(
-               'id'           => $row['id'],
-               'is_deleted'   => 0,
-         ));
+         $form_answer->update([
+            'id'           => $row['id'],
+            'is_deleted'   => 0,
+         ]);
       }
 
       $issue = new PluginFormcreatorIssue();
-      $issue->add(array(
-            'original_id'     => $item->getID(),
-            'sub_itemtype'    => 'Ticket',
-            'name'            => addslashes($item->fields['name']),
-            'status'          => $item->fields['status'],
-            'date_creation'   => $item->fields['date'],
-            'date_mod'        => $item->fields['date_mod'],
-            'entities_id'     => $item->fields['entities_id'],
-            'is_recursive'    => '0',
-            'requester_id'    => $item->fields['users_id_recipient'],
-            'validator_id'    => '0',
-            'comment'         => '',
-      ));
+      $issue->add([
+         'original_id'     => $item->getID(),
+         'sub_itemtype'    => 'Ticket',
+         'name'            => addslashes($item->fields['name']),
+         'status'          => $item->fields['status'],
+         'date_creation'   => $item->fields['date'],
+         'date_mod'        => $item->fields['date_mod'],
+         'entities_id'     => $item->fields['entities_id'],
+         'is_recursive'    => '0',
+         'requester_id'    => $item->fields['users_id_recipient'],
+         'validator_id'    => '0',
+         'comment'         => '',
+      ]);
    }
 }
 
@@ -345,10 +342,10 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
       $id = $item->getID();
 
       $issue = new PluginFormcreatorIssue();
-      $issue->deleteByCriteria(array(
-            'display_id'   => "t_$id",
-            'sub_itemtype' => 'Ticket'
-      ), 1);
+      $issue->deleteByCriteria([
+         'display_id'   => "t_$id",
+         'sub_itemtype' => 'Ticket'
+      ], 1);
    }
 }
 

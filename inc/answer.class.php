@@ -1,4 +1,9 @@
 <?php
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 class PluginFormcreatorAnswer extends CommonDBChild
 {
    static public $itemtype = "PluginFormcreatorForm_Answer";
@@ -36,11 +41,13 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
+      global $DB;
+
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
          if (is_array($value)) {
@@ -48,19 +55,14 @@ class PluginFormcreatorAnswer extends CommonDBChild
                $input[$key][$key2] = plugin_formcreator_encode($value2, false);
             }
          } else if (is_array(json_decode($value))) {
-            $value = json_decode($value);
-            foreach ($value as $key2 => $value2) {
-               $value[$key2] = plugin_formcreator_encode($value2, false);
-            }
-            // Verify the constant exits (included in PHP 5.4+)
-            if (defined('JSON_UNESCAPED_UNICODE')) {
-               $input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
-               // If PHP 5.3, don't use the constant, but bug with UTF-8 languages like Russian...
-            } else {
-               $input[$key] = json_encode($value);
-            }
+            //$value = json_decode($value);
+            //foreach ($value as $key2 => $value2) {
+               //$value[$key2] = plugin_formcreator_encode($value2, false);
+            //}
+            //$input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
+            $input[$key] = $DB->escape($value);
          } else {
-            $input[$key] = plugin_formcreator_encode($value, false);
+            $input[$key] = $value;
          }
       }
 
@@ -71,9 +73,9 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * Prepare input datas for adding the question
     * Check fields values and get the order for the new question
     *
-    * @param $input datas used to add the item
+    * @param array $input data used to add the item
     *
-    * @return the modified $input array
+    * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
       return $this->prepareInputForAdd($input);

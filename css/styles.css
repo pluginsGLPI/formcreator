@@ -1275,6 +1275,7 @@ span.fc_list_icon {
 .plugin_formcreator_userMenu_icons > li {
    padding: 2px 4px;
    display: inline-block;
+   font-size: 1.8em;
 }
 
 .plugin_formcreator_userMenu_icons .button-icon {
@@ -1290,6 +1291,10 @@ span.fc_list_icon {
    display: inline-block;
    width: 18px;
    height: 18px;
+}
+
+#plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
+   color: white;
 }
 
 #plugin_formcreator_logoutIcon span {
@@ -1364,14 +1369,14 @@ span.fc_list_icon {
 }
 
 .form_header ul {
-   list-style-type: inherit;
+   list-style-type: disc;
    margin: inherit;
    padding: inherit;
    padding-left: 40px;
 }
 
 .form_section ul {
-   list-style-type: inherit;
+   list-style-type: disc;
    margin: inherit;
    padding: inherit;
    padding-left: 40px;
