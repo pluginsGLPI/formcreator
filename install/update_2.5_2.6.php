@@ -56,7 +56,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
 
    // add location rule
    $enum_location_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumLocationRule()))."'";
-   if (!FieldExists('glpi_plugin_formcreator_targettickets', 'location_rule', false)) {
+   if (!$DB->fieldExists('glpi_plugin_formcreator_targettickets', 'location_rule', false)) {
       $migration->addField(
          'glpi_plugin_formcreator_targettickets',
          'location_rule',
