@@ -33,7 +33,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    public static function cronSyncIssues(CronTask $task) {
       global $DB;
 
-      $task->log("Disable expired trial accounts");
+      $task->log("Sync issues from forms answers and tickets");
       $volume = 0;
 
       // Request which merges tickets and formanswers
