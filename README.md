@@ -30,10 +30,20 @@ For more information you can visit the [documentation](http://glpi-plugins.readt
 
 ## Translations
 
-
-If you want Formcreator to be available in your native language and have a little time , you can help us :
+If you want Formcreator to be available in your native language and have a little time, you can help us:
 
 Join us on [Transifex](https://www.transifex.com/teclib/glpi-project-plugin-formcreator)
+
+## Upgrade to 2.6.0
+
+When a form contains several target tickets and a file upload field, the uploaded file was attached to all generated tickets.
+Starting from the version 2.6.0 a document is attached to a generated ticket in two cases:
+* if the tag ##FULLFORM## is used
+* if the tag representing the file upload field is used. 
+
+When the tag of the answer itself is used, the description of the generated ticket contains a mention of an attached document.
+
+Please take these changes into consideration to review forms containing a file upload field before production.
 
 ## Upgrade from 1.x to 2.4.0 or later
 
@@ -64,6 +74,16 @@ Formcreator est un plugin permettant la création de formulaires personalisés s
 14. Un catalogue de services optionnel pour consulter la FAQ et utiliser les formulaires dans une interface unifiée.
 
 Pour plus d'informations, visitez la [documentation (en anglais)](http://glpi-plugins.readthedocs.io/fr/latest/formcreator/)
+
+## Upgrade to 2.6.0
+
+Quand un formulaire contient plusieurs tickets destination et un champ d'envoi de fichier, le document téléversé était rattaché à t ous les tickets générés. A partir de la version 2.6.0 un document est rattaché à un ticket généré dans deux cas :
+* si la balise ##FULLFORM## est utilisée
+* si la balise représentant la réponse du champ d'envoi de fichier est utilisée.
+
+Quand la balise du champ est utilisée, la descrition du ticket généré contient une mention faisant référence à un document joint.
+
+Veuillez prendre ces changements en considération pour réviser tout formulaire contenant un champ d'envoi de fichier avant mise en production.
 
 # Mise à jour depuis 1.x vers 2.4.0 ou supérieur
 
