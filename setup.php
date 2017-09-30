@@ -165,6 +165,10 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
          }
 
+         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/targetticket.form.php") !== false) {
+            Html::requireJs('tinymce');
+         }
+
          if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
                || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
                || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
