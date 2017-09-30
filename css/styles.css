@@ -1186,6 +1186,8 @@ span.fc_list_icon {
    height: 24px;
    display: inline-block;
    vertical-align: middle;
+   font-size: 1.7em;
+   color: #FFFFFF;
 }
 
 .plugin_formcreator_entityProfile {
@@ -1208,31 +1210,6 @@ span.fc_list_icon {
    color:  #FFF;
    margin: 0 10px 0 0;
    white-space: nowrap;
-}
-
-.plugin_formcreator_serviceCatalogIcon span.fc_list_icon {
-   background: url('../pics/issue.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_myRequestsIcon span.fc_list_icon {
-   background: url('../pics/list.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_reservationsIcon span.fc_list_icon {
-   background: url('../pics/reservation.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_feedsIcon span.fc_list_icon {
-   background: url('../pics/feed.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_bookmarksIcon span.fc_list_icon {
-   background: url('../pics/bookmarks.png') left no-repeat;
-   background-size: contain;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
