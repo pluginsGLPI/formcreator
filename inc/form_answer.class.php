@@ -254,7 +254,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       if ($item instanceof PluginFormcreatorForm) {
-         $number  = count($this->find("`".self::$items_id."` = ".$item->getID()));
+         $dbUtils = new DbUtils();
+         $number = $dbUtils->countElementsInTableForMyEntities(
+            static::getTable(),
+            [
+               self::$items_id => $item->getID()
+            ]
+         );
          return self::createTabEntry(self::getTypeName($number), $number);
       } else {
          return $this->getTypeName();
