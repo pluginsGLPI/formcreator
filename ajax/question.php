@@ -10,5 +10,4 @@ if (empty($_REQUEST['question_id'])) {
    $question_id = intval($_REQUEST['question_id']);
    $question->getFromDB($question_id);
 }
-$form_id = (int) $_REQUEST['form_id'];
 $question->showForm($question_id);
