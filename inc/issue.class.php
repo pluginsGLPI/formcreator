@@ -115,9 +115,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function display($options = []) {
+      global $CFG_GLPI;
+
       $itemtype = $options['sub_itemtype'];
       if (!in_array($itemtype, ['Ticket', 'PluginFormcreatorForm_Answer'])) {
          html::displayRightError();
+      }
+      if ($CFG_GLPI['use_rich_text']) {
+         Html::requireJs('tinymce');
       }
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
          $this->displaySimplified($options);

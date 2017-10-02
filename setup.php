@@ -174,10 +174,6 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
-         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/issue.form.php") !== false) {
-            Html::requireJs('tinymce');
-         }
-
          Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
 
          // Load field class and all its method to manage fields
