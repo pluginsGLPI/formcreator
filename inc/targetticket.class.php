@@ -43,6 +43,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    public function showForm($options=[]) {
       global $CFG_GLPI, $DB;
 
+      if ($CFG_GLPI['use_rich_text']) {
+         Html::requireJs('tinymce');
+      }
       $rand = mt_rand();
 
       $obj = new PluginFormcreatorTarget();
