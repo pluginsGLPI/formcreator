@@ -343,7 +343,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'id'                 => '9',
          'table'              => 'glpi_users',
          'field'              => 'name',
-         'linkfield'          => 'users_id_validator',
+         'linkfield'          => 'validator_id',
          'name'               => __('Form approver'),
          'datatype'           => 'dropdown',
          'massiveaction'      => false
