@@ -440,8 +440,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</select>';
       echo '</div>';
 
-      echo '<script type="text/javascript">
-               function changeValidators(value) {
+      $script = 'function changeValidators(value) {
                   if (value == 1) {
                      document.getElementById("validators_users").style.display  = "block";
                      document.getElementById("validators_groups").style.display = "none";
@@ -454,8 +453,9 @@ class PluginFormcreatorForm extends CommonDBTM
                   }
                   fcInitMultiSelect();
                }
-               changeValidators(' . $this->fields["validation_required"] . ');
-            </script>';
+               $(document).ready(function() {changeValidators(' . $this->fields["validation_required"] . ');});';
+      echo Html::scriptBlock($script);
+
       echo '</td>';
       echo '</tr>';
 
