@@ -1263,22 +1263,13 @@ span.fc_list_icon {
    opacity: 1;
 }
 
-#plugin_formcreator_preferences_icon span {
-   background: url("../../../pics/preferences.png") no-repeat;
+#plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
    display: inline-block;
-   width: 18px;
-   height: 18px;
+   width: 22px;
 }
 
 #plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
    color: white;
-}
-
-#plugin_formcreator_logoutIcon span {
-   background: url("../../../pics/logout.png") no-repeat;
-   display: inline-block;
-   width: 18px;
-   height: 18px;
 }
 
 #c_menu #myname {
