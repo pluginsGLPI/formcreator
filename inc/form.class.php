@@ -868,7 +868,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Print css media
-      echo Html::css(FORMCREATOR_ROOTDOC."/css/print_form.css", ['media' => 'print']);
+      echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
       // Display form
       echo "<form name='formcreator_form'".$item->getID()."' method='post' role='form' enctype='multipart/form-data'
