@@ -981,7 +981,7 @@ EOS;
     * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -1084,7 +1084,9 @@ EOS;
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
       }
       $data['content'] = addslashes($this->parseTags($data['content'], $formanswer));
-
+      if ($CFG_GLPI['use_rich_text']) {
+         $data['content'] = htmlentities($data['content']);
+      }
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
