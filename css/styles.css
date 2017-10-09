@@ -1196,8 +1196,6 @@ span.fc_list_icon {
    height: 40px;
 }
 .plugin_formcreator_entityProfile > li {
-   float: none !important;
-   display: inline-block;
    line-height: normal;
    top: 20%;
 }
@@ -1399,12 +1397,9 @@ span.fc_list_icon {
       text-align: left;
    }
 
-   .profile-selector {
-      float: none !important;
-   }
-
-   .plugin_formcreator_entityProfile {
-      width: initial;
+   #header_top .plugin_formcreator_entityProfile .profile-selector {
+      max-width: none;
+      padding: 0 !important;
    }
 
    .toggle_menu #c_menu li label {
