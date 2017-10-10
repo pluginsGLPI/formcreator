@@ -619,7 +619,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return true;
    }
 
-
    /**
     * Create or update answers of a gorm
     * @param array $data answers
@@ -872,6 +871,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
+
+      // TODO: This reveals a real refactor need in this method !
+      if ($is_newFormAnswer) {
+         return $id;
+      } else {
+         return $formAnswerId;
+      }
    }
 
    /**

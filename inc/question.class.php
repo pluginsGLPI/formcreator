@@ -84,7 +84,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
             $number      = 0;
@@ -116,7 +116,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $CFG_GLPI;
 
       // TODO: move the content of this method into a new showForForm() method
@@ -1309,7 +1309,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    /**
     * Duplicate a question
     *
-    * @return boolean
+    * @return integer|boolean ID of  the new question, false otherwise
     */
    public function duplicate() {
       $oldQuestionId       = $this->getID();
@@ -1319,8 +1319,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
-      $row['_skip_checks'] = true;
-      if (!$newQuestion->add($row)) {
+      $newQuestion_id = $newQuestion->add($row);
+      if ($newQuestion_id === false) {
          return false;
       }
 
@@ -1344,11 +1344,13 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
-         $row['plugin_formcreator_questions_id'] = $newQuestion->getID();
+         $row['plugin_formcreator_questions_id'] = $newQuestion_id;
          if (!$question_condition->add($row)) {
             return false;
          }
       }
+
+      return $newQuestion_id;
    }
 
    /**
