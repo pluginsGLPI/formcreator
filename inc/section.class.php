@@ -154,7 +154,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
    /**
     * Duplicate a section
     *
-    * @return boolean
+    * @return integer|boolean ID of the new section, false otherwise
     */
    public function duplicate() {
       $oldSectionId        = $this->getID();
@@ -167,7 +167,8 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
-      if (!$newSection->add($row)) {
+      $newSection_id = $newSection->add($row);
+      if ($newSection_id === false) {
          return false;
       }
 
@@ -176,7 +177,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       foreach ($rows as $questions_id => $row) {
          unset($row['id'],
                $row['uuid']);
-         $row['plugin_formcreator_sections_id'] = $newSection->getID();
+         $row['plugin_formcreator_sections_id'] = $newSection_id;
          $row['_skip_checks'] = true;
          if (!$new_questions_id = $section_question->add($row)) {
             return false;
@@ -223,7 +224,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
          }
       }
 
-      return true;
+      return $newSection_id;
    }
 
 

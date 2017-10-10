@@ -1,0 +1,169 @@
+<?php
+namespace tests\units;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+
+/**
+ * The the methods conflict when running in parallel
+ * @engine inline
+ */
+class PluginFormcreatorForm_Answer extends CommonTestCase {
+
+   public function beforeTestMethod($method) {
+      switch ($method) {
+         case 'testNotificationFormAnswerCreated':
+         case 'testOtherUserValidates':
+            $this->boolean(self::login('glpi', 'glpi', true))->isTrue();
+            break;
+      }
+   }
+
+   public function afterTestMethod($method) {
+      parent::afterTestMethod($method);
+      switch ($method) {
+         case 'testNotificationFormAnswerCreated':
+            $user = new \User();
+            $user->getFromDBbyName('glpi');
+            $userEmail = new \Useremail();
+            $userEmail->deleteByCriteria([
+               'users_id' => $user->getID(),
+            ]);
+            break;
+      }
+   }
+
+   public function testNotificationFormAnswerCreated() {
+      global $DB, $CFG_GLPI;
+
+      $user = new \User();
+      $user->getFromDBbyName('glpi');
+      $user->update([
+         'id' => $user->getID(),
+         '_useremails' => ['glpi@localhost.local'],
+      ]);
+
+      \config::setConfigurationValues('core', ['notifications_mailing' => '1']);
+      $CFG_GLPI['notifications_mailing'] = '1';
+
+      $form = new \PluginFormcreatorForm();
+      $form->add([
+         'name'                  => __METHOD__,
+         'validation_required'   => '0'
+      ]);
+      $this->boolean($form->isNewItem())->isFalse();
+
+      // Answer the form
+      $form->saveForm(['formcreator_form' => $form->getID()]);
+
+      // Check a notification was created with the expected template
+      $result = $DB->request([
+         'SELECT' => \Notification_NotificationTemplate::getTable() . '.' . \NotificationTemplate::getForeignKeyField(),
+         'FROM' => \Notification_NotificationTemplate::getTable(),
+         'INNER JOIN' => [
+            \Notification::getTable() => [
+               'FKEY' => [
+                  \Notification::getTable() => 'id',
+                  \Notification_NotificationTemplate::getTable() => \Notification::getForeignKeyField()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            'itemtype'  => \PluginFormcreatorForm_Answer::class,
+            'event'     => 'plugin_formcreator_form_created',
+         ]
+      ]);
+      $this->integer($result->count())->isEqualTo(1);
+      $row = $result->next();
+
+      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer->getFromDBByCrit([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $queued = new \QueuedNotification();
+      $queued->getFromDBByCrit([
+         \NotificationTemplate::getForeignKeyField() => $row[\NotificationTemplate::getForeignKeyField()],
+         'itemtype'  => \PluginFormcreatorForm_Answer::class,
+         'items_id'  => $formAnswer->getID(),
+      ]);
+
+      // Check the notification is linked to the expected itemtype
+      $this->boolean($queued->isNewItem())->isFalse();
+   }
+
+   public function testOtherUserValidates() {
+      global $DB;
+
+      $form = new \PluginFormcreatorForm();
+      $form->add([
+         'entities_id'           => $_SESSION['glpiactive_entity'],
+         'name'                  => __METHOD__,
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+      ]);
+      $this->boolean($form->isNewItem())->isFalse();
+
+      $section = new \PluginFormcreatorSection();
+      $section->add([
+         'name'                        => 'a section',
+         'plugin_formcreator_forms_id' => $form->getID()
+      ]);
+      $this->boolean($section->isNewItem())->isFalse();
+
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $formValidator->add([
+         'itemtype'              => 'User',
+         'users_id'              => '2', // user is glpi
+         'plugin_formcreator_forms_id' => $form->getID()
+      ]);
+      $this->boolean($formValidator->isNewItem())->isFalse();
+
+      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer_table = \PluginFormcreatorForm_Answer::getTable();
+
+      $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
+      $maxId = $DB->fetch_assoc($result);
+      $maxId = $maxId['max_id'];
+      $maxId === null ? 0 : $maxId;
+
+      $form->saveForm([
+         'formcreator_form'      => $form->getID(),
+         'status'                => 'waiting',
+         'formcreator_validator' => $_SESSION['glpiID'],
+      ]);
+
+      $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
+      $newId = $DB->fetch_assoc($result);
+      $newId = $newId['max_id'];
+
+      $this->integer((int) $newId)->isGreaterThan((int) $maxId);
+      $formAnswer->getFromDB($newId);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+
+      $login = $this->getUniqueString();
+      $user = new \User();
+      $user->add([
+         'name'                  => $login,
+         'password'              => 'superadmin',
+         'password2'             => 'superadmin',
+         '_profiles_id'          => '4',
+         '_entities_id'          => 0,
+         '_is_recursive'         => 1,
+      ]);
+      $this->boolean($user->isNewItem())
+         ->isFalse(json_encode(
+            $_SESSION['MESSAGE_AFTER_REDIRECT'],
+            JSON_PRETTY_PRINT));
+
+      // Login as other user
+      $this->boolean(self::login($login, 'superadmin', true))->isTrue();
+
+      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isFalse();
+
+      // Login as glpi
+      $this->boolean(self::login('glpi', 'glpi', true))->istrue();
+
+      $this->boolean($formAnswer->canValidate($form, $formAnswer))->isTrue();
+   }
+}
