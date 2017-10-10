@@ -1,6 +1,13 @@
 GLPI Formcreator ChangeLog
 ===============================
 
+Version 2.6.0
+-------------
+## Bugfixes
+* fix CSS preventing access to entity selection in service catalog (simplified interface)
+* fix error if plugin Tag not available but used in a form to display
+* various JS fixes
+
 Version 2.6.0 Release Candidate 1
 ---------------------------------
 
