@@ -1218,7 +1218,7 @@ JS;
    /**
     * Duplicate a question
     *
-    * @return boolean
+    * @return integer|boolean ID of  the new question, false otherwise
     */
    public function duplicate() {
       $oldQuestionId       = $this->getID();
@@ -1228,7 +1228,8 @@ JS;
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
-      if (!$newQuestion->add($row)) {
+      $newQuestion_id = $newQuestion->add($row);
+      if ($newQuestion_id === false) {
          return false;
       }
 
@@ -1237,12 +1238,13 @@ JS;
       foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
-         $row['plugin_formcreator_questions_id'] = $newQuestion->getID();
+         $row['plugin_formcreator_questions_id'] = $newQuestion_id;
          if (!$question_condition->add($row)) {
             return false;
          }
       }
 
+      return $newQuestion_id;
    }
 
 

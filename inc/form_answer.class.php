@@ -615,7 +615,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return true;
    }
 
-
+   /**
+    *
+    * @param unknown $data
+    * @return boolean
+    */
    public function saveAnswers($data) {
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
@@ -863,6 +867,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
+
+      // TODO: This reveals a real refactor need in this method !
+      if ($is_newFormAnswer) {
+         return $id;
+      } else {
+         return $formAnswerId;
+      }
    }
 
    /**
@@ -894,7 +905,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      $answer_value = str_replace('\\r\\n', '\n', $answer_value);
                   }
                } else {
-                  if ($CFG_GLPI['use_rich_text']) {
+                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                      $answer_value = html_entity_decode($value);
                   } else {
                      $answer_value = $value;
@@ -1081,7 +1092,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $output      = '';
       $eol = '\r\n';
 
-      if ($CFG_GLPI['use_rich_text']) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
          $output .= __('Form data', 'formcreator') . $eol;
@@ -1110,7 +1121,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
-            if ($CFG_GLPI['use_rich_text']) {
+            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
             } else {
                $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
@@ -1131,7 +1142,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          if ($question_line['fieldtype'] != 'description') {
             $question_no++;
-            if ($CFG_GLPI['use_rich_text']) {
+            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                $output .= '<div>';
                $output .= '<b>' . $question_no . ') ##question_' . $question_line['id'] . '## : </b>';
                $output .= '##answer_' . $question_line['id'] . '##';

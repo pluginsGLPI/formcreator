@@ -19,7 +19,7 @@ php:
 
 allow_failures:
   - php: nightly
-
+  - env: GLPI_BRANCH=master
 before_script:
   - mysql -u root -e 'create database glpitest;'
   - git clone --depth=1 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
@@ -32,7 +32,10 @@ before_script:
   - composer install
 
 script:
-  - vendor/bin/phpunit $PHPUNIT_ARGS
+  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-install -ncc
+  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit --ncc
+  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration --ncc
+  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall -ncc
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ]] ; then vendor/bin/robo --no-interaction code:cs; fi
 
 cache:

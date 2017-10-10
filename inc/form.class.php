@@ -1518,9 +1518,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Transfer a form to another entity. Execute transfer action for massive action.
+    * Transfer a form to another entity. Execute transfert action for massive action.
     *
-    * @return Boolean true if success, false otherwise.
+    * @return Boolean true if success, false otherwize.
     */
    public function transfer($entity) {
       global $DB;
@@ -1560,7 +1560,7 @@ class PluginFormcreatorForm extends CommonDBTM
       switch ($ma->getAction()) {
          case 'Duplicate' :
             foreach ($ids as $id) {
-               if ($item->getFromDB($id) && $item->duplicate()) {
+               if ($item->getFromDB($id) && $item->duplicate() !== false) {
                   Session::addMessageAfterRedirect(sprintf(__('Form duplicated: %s', 'formcreator'), $item->getName()));
                   $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
                } else {
