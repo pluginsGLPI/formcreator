@@ -1186,6 +1186,8 @@ span.fc_list_icon {
    height: 24px;
    display: inline-block;
    vertical-align: middle;
+   font-size: 1.7em;
+   color: #FFFFFF;
 }
 
 .plugin_formcreator_entityProfile {
@@ -1194,8 +1196,6 @@ span.fc_list_icon {
    height: 40px;
 }
 .plugin_formcreator_entityProfile > li {
-   float: none !important;
-   display: inline-block;
    line-height: normal;
    top: 20%;
 }
@@ -1208,31 +1208,6 @@ span.fc_list_icon {
    color:  #FFF;
    margin: 0 10px 0 0;
    white-space: nowrap;
-}
-
-.plugin_formcreator_serviceCatalogIcon span.fc_list_icon {
-   background: url('../pics/issue.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_myRequestsIcon span.fc_list_icon {
-   background: url('../pics/list.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_reservationsIcon span.fc_list_icon {
-   background: url('../pics/reservation.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_feedsIcon span.fc_list_icon {
-   background: url('../pics/feed.png') left no-repeat;
-   background-size: contain;
-}
-
-.plugin_formcreator_bookmarksIcon span.fc_list_icon {
-   background: url('../pics/bookmarks.png') left no-repeat;
-   background-size: contain;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_leftMenuItem_separator {
@@ -1286,22 +1261,13 @@ span.fc_list_icon {
    opacity: 1;
 }
 
-#plugin_formcreator_preferences_icon span {
-   background: url("../../../pics/preferences.png") no-repeat;
+#plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
    display: inline-block;
-   width: 18px;
-   height: 18px;
+   width: 22px;
 }
 
 #plugin_formcreator_preferences_icon a, #plugin_formcreator_logoutIcon a {
    color: white;
-}
-
-#plugin_formcreator_logoutIcon span {
-   background: url("../../../pics/logout.png") no-repeat;
-   display: inline-block;
-   width: 18px;
-   height: 18px;
 }
 
 #c_menu #myname {
@@ -1431,12 +1397,9 @@ span.fc_list_icon {
       text-align: left;
    }
 
-   .profile-selector {
-      float: none !important;
-   }
-
-   .plugin_formcreator_entityProfile {
-      width: initial;
+   #header_top .plugin_formcreator_entityProfile .profile-selector {
+      max-width: none;
+      padding: 0 !important;
    }
 
    .toggle_menu #c_menu li label {

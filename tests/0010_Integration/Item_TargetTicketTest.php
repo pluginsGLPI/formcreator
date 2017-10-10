@@ -65,8 +65,9 @@ class PluginFormcreatorItem_TargetTicketTest extends SuperAdminTestCase {
       $this->assertFalse($item_targetticket_2->isNewItem());
 
       // Answer the form
-      $_POST['formcreator_form'] = $form->getID();
-      $form->saveForm();
+      $form->saveForm([
+         'formcreator_form' => $form->getID()
+      ]);
 
       // Check the tickets are generated
       $generatedTicket_1 = new Ticket();

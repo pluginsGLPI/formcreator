@@ -78,11 +78,11 @@ class RoboFile extends RoboFilePlugin
       }
 
       if (!$this->tagExists($version)) {
-         //throw new Exception("The tag $version does not exists yet");
+         throw new Exception("The tag $version does not exists yet");
       }
 
       if (!$this->isTagMatchesCurrentCommit($version)) {
-         //throw new Exception("HEAD is not pointing to the tag of the version to build");
+         throw new Exception("HEAD is not pointing to the tag of the version to build");
       }
 
       $versionTag = $this->getVersionTagFromXML($version);
