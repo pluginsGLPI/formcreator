@@ -110,7 +110,7 @@ class PluginFormcreatorFields
          $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
 
          $plugin = new Plugin();
-         if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
+         if ($fieldClass == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
             return;
          }
 
