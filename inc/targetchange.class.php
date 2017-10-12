@@ -948,8 +948,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $data['requesttypes_id'] = $requesttypes_id;
 
       // Parse datas
-      $fullform = $formanswer->getFullForm();
-
       $changeFields = [
          'name',
          'content',
@@ -960,11 +958,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          'checklistcontent'
       ];
       foreach ($changeFields as $changeField) {
-         $data[$changeField] = $this->fields[$changeField];
+         //TODO: 2.7.0 rename PluginFormcreatorTargetChange's comment into content
+         if ($changeField == 'content') {
+            // This handles mismatch of the column content in Change itemtype and comment in TargetChange itemtype
+            $data[$changeField] = $this->fields[$changeField];
+         } else {
+            $data[$changeField] = $this->fields['comment'];
+         }
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
          }
-         $data[$changeField]                = addslashes($this->parseTags($data[$changeField], $formanswer));
+         $data[$changeField] = addslashes($this->parseTags($data[$changeField], $formanswer));
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
