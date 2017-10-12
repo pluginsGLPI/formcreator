@@ -406,7 +406,7 @@ EOS;
    protected  function showDueDateSettings($rand) {
       global $DB;
 
-      echo '<td width="15%">' . __('Due date') . '</td>';
+      echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
       // Due date type selection
