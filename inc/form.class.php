@@ -1211,7 +1211,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_profile        = new PluginFormcreatorForm_Profile();
       $tab_questions       = [];
 
-      // From datas
+      // From data
       $form_datas              = $this->fields;
       $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
       $form_datas['is_active'] = 0;
@@ -1230,7 +1230,7 @@ class PluginFormcreatorForm extends CommonDBTM
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$form_validator->add($row)) {
+         if (!$form_profile->add($row)) {
             return false;
          }
       }
@@ -1298,6 +1298,7 @@ class PluginFormcreatorForm extends CommonDBTM
             return false;
          }
 
+         // Update the target ticket created while cloning the target
          $update_target_ticket = $target_ticket->fields;
          unset($update_target_ticket['id'], $update_target_ticket['uuid']);
          foreach ($tab_questions as $id => $value) {
