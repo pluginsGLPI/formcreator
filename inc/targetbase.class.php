@@ -38,6 +38,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    abstract public function getItem_Actor();
 
+   abstract protected function getCategoryFilter();
+
    static function getEnumDestinationEntity() {
       return [
          'current'   => __("Current active entity", 'formcreator'),
@@ -93,7 +95,6 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
          'answer'    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
-
 
    /**
     * Check if current user have the right to create and modify requests
@@ -543,8 +544,9 @@ EOS;
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
       ITILCategory::dropdown([
-         'name'   => '_category_specific',
-         'value'  => $this->fields["category_question"],
+         'name'      => '_category_specific',
+         'value'     => $this->fields["category_question"],
+         'condition' => $this->getCategoryFilter(),
       ]);
       echo '</div>';
       echo '</td>';
