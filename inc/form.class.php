@@ -1315,6 +1315,33 @@ class PluginFormcreatorForm extends CommonDBTM
                   $update_target_ticket['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['comment']);
                }
 
+               // update time to resolve rule
+               if ($update_target_ticket['due_date_rule'] == 'answer'
+                   || $update_target_ticket['due_date_rule'] == 'calcul') {
+                  $update_target_ticket['due_date_question'] = $tab_questions[$update_target_ticket['due_date_question']];
+               }
+
+               // update urgency rule
+               if ($update_target_ticket['urgency_rule'] == 'answer') {
+                  $update_target_ticket['urgency_question'] = $tab_questions[$update_target_ticket['urgency_question']];
+               }
+
+               // update destination entity
+               if ($update_target_ticket['destination_entity'] == 'user'
+                   || $update_target_ticket['destination_entity'] == 'entity') {
+                  $update_target_ticket['destination_entity_value'] = $tab_questions[$update_target_ticket['destination_entity_value']];
+               }
+
+               //update category
+               if ($update_target_ticket['category_rule'] == 'answer') {
+                  $update_target_ticket['category_question'] = $tab_questions[$update_target_ticket['category_question']];
+               }
+
+               //update location
+               if ($update_target_ticket['location_rule'] == 'answer') {
+                  $update_target_ticket['location_question'] = $tab_questions[$update_target_ticket['location_question']];
+               }
+
                $new_target_ticket = new PluginFormcreatorTargetTicket();
                $update_target_ticket['title'] = $update_target_ticket['name'];
                if (!$new_target_ticket->update($update_target_ticket)) {
@@ -1354,6 +1381,28 @@ class PluginFormcreatorForm extends CommonDBTM
                         $update_target_change[$changeField]
                      );
                   }
+               }
+
+               // update time to resolve rule
+               if ($update_target_ticket['due_date_rule'] == 'answer'
+                   || $update_target_ticket['due_date_rule'] == 'calcul') {
+                  $update_target_ticket['due_date_question'] = $tab_questions[$update_target_ticket['due_date_question']];
+               }
+
+               // update urgency rule
+               if ($update_target_ticket['urgency_rule'] == 'answer') {
+                  $update_target_ticket['urgency_question'] = $tab_questions[$update_target_ticket['urgency_question']];
+               }
+
+               // update destination entity
+               if ($update_target_ticket['destination_entity'] == 'user'
+                   || $update_target_ticket['destination_entity'] == 'entity') {
+                  $update_target_ticket['destination_entity_value'] = $tab_questions[$update_target_ticket['destination_entity_value']];
+               }
+
+               //update category
+               if ($update_target_ticket['category_rule'] == 'answer') {
+                  $update_target_ticket['category_question'] = $tab_questions[$update_target_ticket['category_question']];
                }
 
                $new_target_change = new PluginFormcreatorTargetChange();
