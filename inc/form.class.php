@@ -1217,7 +1217,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
       $form_datas['is_active'] = 0;
 
-      unset($form_datas['id']);
+      unset($form_datas['id'], $form_datas['uuid']);
 
       $old_form_id             = $this->getID();
       $new_form_id             = $this->add($form_datas);
