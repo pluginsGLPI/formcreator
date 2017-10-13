@@ -135,21 +135,24 @@ $(function() {
       $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].checked = true;
    }
 
-   fcInitMultiSelect();
+   // === Add better multi-select on form configuration validators ===
+   // initialize the pqSelect widget.
+      fcInitMultiSelect();
+
+   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+      fcInitMultiSelect();
+   });
+
 });
 
 function fcInitMultiSelect() {
-   // === Add better multi-select on form configuration validators ===
-   // initialize the pqSelect widget.
-   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-      $("#validator_users").pqSelect({
-          multiplePlaceholder: '----',
-          checkbox: true //adds checkbox to options
-      });
-      $("#validator_groups").pqSelect({
-          multiplePlaceholder: '----',
-          checkbox: true //adds checkbox to options
-      });
+   $("#validator_users").pqSelect({
+       multiplePlaceholder: '----',
+       checkbox: true //adds checkbox to options
+   });
+   $("#validator_groups").pqSelect({
+       multiplePlaceholder: '----',
+       checkbox: true //adds checkbox to options
    });
 }
 
