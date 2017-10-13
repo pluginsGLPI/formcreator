@@ -26,11 +26,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getTargetItemtypeName() {
-      return 'Ticket';
+      return Ticket::class;
    }
 
    public function getItem_Actor() {
       return new PluginFormcreatorTargetTicket_Actor();
+   }
+
+   protected function getCategoryFilter() {
+      return "`is_request` = '1' OR `is_incident` = '1'";
    }
 
    /**

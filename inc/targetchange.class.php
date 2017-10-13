@@ -42,11 +42,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    protected function getTargetItemtypeName() {
-      return 'Change';
+      return Change::class;
    }
 
    public function getItem_Actor() {
       return new PluginFormcreatorTargetChange_Actor();
+   }
+
+   protected function getCategoryFilter() {
+      return "`is_change` = '1'";
    }
 
    /**

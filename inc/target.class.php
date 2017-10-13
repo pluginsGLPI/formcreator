@@ -122,7 +122,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          }
 
          switch ($input['itemtype']) {
-            case 'PluginFormcreatorTargetTicket':
+            case PluginFormcreatorTargetTicket::class:
                $targetticket      = new PluginFormcreatorTargetTicket();
                $id_targetticket   = $targetticket->add([
                   'name'    => $input['name'],
@@ -148,7 +148,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                   ]);
                }
                break;
-            case 'PluginFormcreatorTargetChange':
+            case PluginFormcreatorTargetChange::class:
                $targetchange      = new PluginFormcreatorTargetChange();
                $id_targetchange   = $targetchange->add([
                   'name'    => $input['name'],
