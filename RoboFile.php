@@ -220,4 +220,28 @@ class RoboFile extends RoboFilePlugin
       return $this;
    }
 
+   /**
+    * Build MO files
+    *
+    * @return void
+    */
+   public function localesMo() {
+      $localesPath = $this->getPluginPath() . '/locales';
+      if ($handle = opendir($localesPath)) {
+         while (($file = readdir($handle)) !== false) {
+            if ($file != "." && $file != "..") {
+               $poFile = "$localesPath/$file";
+               if (pathinfo($poFile, PATHINFO_EXTENSION) == 'po') {
+                  $moFile = str_replace('.po', '.mo', $poFile);
+                  $command = "msgfmt $poFile -o $moFile";
+                  $this->_exec($command);
+               }
+            }
+         }
+         closedir($handle);
+      }
+      return $this;
+   }
+
+
 }
