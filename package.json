@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "standard-version": "^4.2.0"
+  },
+  "standard-version": {
+    "skip": {
+      "bump": true,
+      "commit": true,
+      "tag": true
+    }
+  }
+}
