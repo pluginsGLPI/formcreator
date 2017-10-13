@@ -12,17 +12,14 @@ $targetticket = new PluginFormcreatorTargetChange();
 
 // Edit an existing target change
 if (isset($_POST["update"])) {
-   Session::checkRight("entity", UPDATE);
-
    $target = new PluginFormcreatorTarget();
    $found  = $target->find('items_id = ' . (int) $_POST['id']);
    $found  = array_shift($found);
-   $target->update(['id' => $found['id'], 'name' => $name]);
+   $target->update(['id' => $found['id'], 'name' => $_POST['name']]);
    $targetticket->update($_POST);
    Html::back();
 
 } else if (isset($_POST['actor_role'])) {
-   Session::checkRight("entity", UPDATE);
    $id          = (int) $_POST['id'];
    $actor_value = isset($_POST['actor_value_' . $_POST['actor_type']])
                   ? $_POST['actor_value_' . $_POST['actor_type']]
