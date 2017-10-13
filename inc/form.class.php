@@ -1296,15 +1296,18 @@ class PluginFormcreatorForm extends CommonDBTM
             return false;
          }
 
+         $new_target_item_id = $target->getField('items_id');
          switch ($target_values['itemtype']) {
             case PluginFormcreatorTargetTicket::class:
+               // Get the original target ticket
                if (!$target_ticket->getFromDB($target_values['items_id'])) {
                   return false;
                }
 
                // Update the target ticket created while cloning the target
                $update_target_ticket = $target_ticket->fields;
-               unset($update_target_ticket['id'], $update_target_ticket['uuid']);
+               $update_target_ticket['id'] = $new_target_item_id;
+               unset($update_target_ticket['uuid']);
                foreach ($tab_questions as $id => $value) {
                   $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
                   $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
@@ -1313,21 +1316,22 @@ class PluginFormcreatorForm extends CommonDBTM
                }
 
                $new_target_ticket = new PluginFormcreatorTargetTicket();
-               $new_target_ticket->add($update_target_ticket);
-               $new_target_item_id = $new_target_ticket->getID();
-               if (!$new_target_item_id) {
+               $update_target_ticket['title'] = $update_target_ticket['name'];
+               if (!$new_target_ticket->update($update_target_ticket)) {
                   return false;
                }
                break;
 
             case PluginFormcreatorTargetChange::class:
+               // Get the original target change
                if (!$target_change->getFromDB($target_values['items_id'])) {
                   return false;
                }
 
                // Update the target change created while cloning the target
                $update_target_change = $target_change->fields;
-               unset($update_target_change['id'], $update_target_change['uuid']);
+               $update_target_change['id'] = $new_target_item_id;
+               unset($update_target_change['uuid']);
                foreach ($tab_questions as $id => $value) {
                   $changeFields = [
                      'name',
@@ -1353,21 +1357,20 @@ class PluginFormcreatorForm extends CommonDBTM
                }
 
                $new_target_change = new PluginFormcreatorTargetChange();
-               $new_target_change->add($update_target_change);
-               $new_target_item_id = $new_target_change->getID();
-               if (!$new_target_item_id) {
+               $update_target_change['title'] = $update_target_change['name'];
+               if (!$new_target_change->update($update_target_change)) {
                   return false;
                }
                break;
          }
 
-         $target->update([
-            'id'        => $target->getID(),
-            'items_id'  => $new_target_item_id,
-         ]);
-
          switch ($target_values['itemtype']) {
             case PluginFormcreatorTargetTicket::class:
+               // Drop default actors
+               $target_ticket_actor->deleteByCriteria([
+                  'plugin_formcreator_targettickets_id' => $new_target_item_id
+               ]);
+
                // Form target tickets actors
                $rows = $target_ticket_actor->find("`plugin_formcreator_targettickets_id` = '{$target_values['items_id']}'");
                foreach ($rows as $row) {
@@ -1381,6 +1384,11 @@ class PluginFormcreatorForm extends CommonDBTM
                break;
 
             case PluginFormcreatorTargetChange::class:
+               // Drop default actors
+               $target_ticket_actor->deleteByCriteria([
+                  'plugin_formcreator_targetchanges_id' => $new_target_item_id
+               ]);
+
                // Form target change actors
                $rows = $target_change_actor->find("`plugin_formcreator_targetchanges_id` = '{$target_values['items_id']}'");
                foreach ($rows as $row) {
