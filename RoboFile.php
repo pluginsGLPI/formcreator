@@ -1,3 +1,4 @@
+
 <?php
 /**
  * This is project's console commands configuration for Robo task runner.
@@ -209,7 +210,7 @@ class RoboFile extends RoboFilePlugin
    }
 
    public function localesExtract() {
-      $potfile = strtolower($this->getPluginName()) . ".pot";
+      $potfile = strtolower("glpi.pot");
       $phpSources = "*.php ajax/*.php front/*.php inc/*.php install/*.php";
       // extract locales from source code
       $command = "xgettext $phpSources -o locales/$potfile -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po";
