@@ -1,4 +1,3 @@
-
 <?php
 /**
  * This is project's console commands configuration for Robo task runner.
@@ -27,16 +26,16 @@ class RoboFile extends RoboFilePlugin
          'save.sql',
    ];
 
-   protected function getPluginPath() {
+   protected function getProjectPath() {
       return __DIR__;
    }
 
    protected function getPluginName() {
-      return basename($this->getPluginPath());
+      return basename($this->getProjectPath());
    }
 
    protected function getVersion() {
-      $setupFile = $this->getPluginPath(). "/setup.php";
+      $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
       $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_VERSION";
@@ -49,7 +48,7 @@ class RoboFile extends RoboFilePlugin
    }
 
    protected function getGLPIMinVersion() {
-      $setupFile = $this->getPluginPath(). "/setup.php";
+      $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
       $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_GLPI_MIN_VERSION";
@@ -92,7 +91,7 @@ class RoboFile extends RoboFilePlugin
       }
 
       $pluginName = $this->getPluginName();
-      $pluginPath = $this->getPluginPath();
+      $pluginPath = $this->getProjectPath();
       $targetFile = $pluginPath. "/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
       $toArchive = implode(' ', $this->getFileToArchive($version));
       @mkdir($pluginPath. "/dist");
@@ -226,7 +225,7 @@ class RoboFile extends RoboFilePlugin
     * @return void
     */
    public function localesMo() {
-      $localesPath = $this->getPluginPath() . '/locales';
+      $localesPath = $this->getProjectPath() . '/locales';
       if ($handle = opendir($localesPath)) {
          while (($file = readdir($handle)) !== false) {
             if ($file != "." && $file != "..") {
@@ -242,6 +241,5 @@ class RoboFile extends RoboFilePlugin
       }
       return $this;
    }
-
 
 }
