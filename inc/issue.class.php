@@ -250,7 +250,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $tab = [];
 
       $tab[] = [
-         'id'                 => '0',
+         'id'                 => 'common',
          'name'               => __('Issue', 'formcreator')
       ];
 
