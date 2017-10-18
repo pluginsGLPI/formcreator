@@ -132,7 +132,7 @@ class PluginFormcreatorForm extends CommonDBTM
          'searchtype'         => [
             '0'                  => 'equals'
          ],
-         'massiveaction'      => false
+         'massiveaction'      => true
       ];
 
       $tab[] = [
@@ -207,29 +207,30 @@ class PluginFormcreatorForm extends CommonDBTM
 
       switch ($field) {
          case 'is_active' :
-            return Dropdown::showFromArray('criteria[0][value]', [
+            return Dropdown::showFromArray($name, [
                '0' => __('Inactive'),
                '1' => __('Active'),
             ], [
                'value'               => $values[$field],
-               'display_emptychoice' => true,
+               'display_emptychoice' => false,
                'display'             => false
             ]);
             break;
+
          case 'access_rights' :
-            return Dropdown::showFromArray('criteria[0][value]', [
-               Dropdown::EMPTY_VALUE => '--- ' . __('All langages', 'formcreator') . ' ---',
+            return Dropdown::showFromArray($name, [
                self::ACCESS_PUBLIC => __('Public access', 'formcreator'),
                self::ACCESS_PRIVATE => __('Private access', 'formcreator'),
                self::ACCESS_RESTRICTED => __('Restricted access', 'formcreator'),
             ], [
                'value'               => $values[$field],
-               'display_emptychoice' => true,
+               'display_emptychoice' => false,
                'display'             => false
             ]);
             break;
+
          case 'language' :
-            return Dropdown::showLanguages('criteria[0][value]', [
+            return Dropdown::showLanguages($name, [
                'value'               => $values[$field],
                'display_emptychoice' => true,
                'emptylabel'          => '--- ' . __('All langages', 'formcreator') . ' ---',
@@ -269,20 +270,24 @@ class PluginFormcreatorForm extends CommonDBTM
             }
             return $output;
             break;
+
          case 'access_rights':
             switch ($values[$field]) {
                case self::ACCESS_PUBLIC :
                   return __('Public access', 'formcreator');
                   break;
+
                case self::ACCESS_PRIVATE :
                   return __('Private access', 'formcreator');
                   break;
+
                case self::ACCESS_RESTRICTED :
                   return __('Restricted access', 'formcreator');
                   break;
             }
             return '';
             break;
+
          case 'language' :
             if (empty($values[$field])) {
                return __('All langages', 'formcreator');
