@@ -21,6 +21,8 @@ class PluginFormcreatorInstall {
       $this->createDefaultDisplayPreferences();
       $this->createNotifications();
 
+      Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
+
       return true;
    }
 
@@ -371,10 +373,13 @@ class PluginFormcreatorInstall {
       PluginFormcreatorCommon::setNotification($use_mailing);
    }
 
+   /**
+    * Cleanups the database from plugin's itemtypes (tables and relations)
+    */
    protected function deleteTables() {
       global $DB;
 
-      // Drop tables
+      // Keep  these itemtypes as string because classes might be not avaiable (if plugin is inactive)
       $itemtypes = [
          'PluginFormcreatorAnswer',
          'PluginFormcreatorCategory',
