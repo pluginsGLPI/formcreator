@@ -64,7 +64,10 @@ class PluginUninstallTest extends SuperAdminTestCase
       $rows = $template->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
       $this->assertCount(0, $rows);
 
-      // TODO: need to find a r eliable way to detect not clenaed
+      $config = Config::getConfigurationValues('formcreator');
+      $this->assertArrayNotHasKey('schema_version', $config);
+
+      // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
    }

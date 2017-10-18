@@ -84,6 +84,10 @@ class PluginInstallTest extends CommonTestCase
       $PluginDBTest = new PluginDB();
       $PluginDBTest->checkInstall("formcreator", "install");
 
+      $config = Config::getConfigurationValues('formcreator');
+      $this->assertArrayHasKey('schema_version', $config);
+      $this->assertEquals($config['schema_version'], PLUGIN_FORMCREATOR_SCHEMA_VERSION);
+
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
       $this->assertTrue($plugin->isActivated("formcreator"), "Cannot enable the plugin");
