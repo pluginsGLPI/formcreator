@@ -1106,6 +1106,12 @@ EOS;
          } else {
             $requesters_id = $this->requesters['_users_id_requester'][0];
          }
+
+         // If only one requester, revert array of requesters into a scalar
+         // This is needed to process business rule affecting location of a ticket with the location of the user
+         if (count($this->requesters['_users_id_requester']) == 1) {
+            $this->requesters['_users_id_requester'] = array_pop($this->requesters['_users_id_requester']);
+         }
       }
 
       // Computation of the entity
