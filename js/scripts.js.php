@@ -4,7 +4,7 @@ header('Content-Type: text/javascript');
 ?>
 
 var modalWindow;
-var rootDoc          = "<?php echo $CFG_GLPI['root_doc']; ?>";
+var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
 var sortByName = false;
 var tiles = [];
