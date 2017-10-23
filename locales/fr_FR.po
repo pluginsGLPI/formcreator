@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-23 15:42+0200\n"
-"PO-Revision-Date: 2017-10-23 13:44+0000\n"
+"POT-Creation-Date: 2017-10-23 16:21+0200\n"
+"PO-Revision-Date: 2017-10-23 14:22+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -836,31 +836,27 @@ msgstr "Echec de liaison de l'objet"
 msgid "Your form has been accepted by the validator"
 msgstr "Votre formulaire a été accepté par le valideur"
 
-#: inc/wizard.class.php:67 inc/wizard.class.php:68
+#: inc/wizard.class.php:70 inc/wizard.class.php:71
 msgid "Seek assistance"
 msgstr "Demander une assistance"
 
-#: inc/wizard.class.php:73 inc/wizard.class.php:74
+#: inc/wizard.class.php:76 inc/wizard.class.php:77
 msgid "My requests for assistance"
 msgstr "Mes demandes d'assistance"
 
-#: inc/wizard.class.php:85 inc/wizard.class.php:86
+#: inc/wizard.class.php:88 inc/wizard.class.php:89
 msgid "Book an asset"
 msgstr "Réserver un matériel"
 
-#: inc/wizard.class.php:94 inc/wizard.class.php:95
+#: inc/wizard.class.php:97 inc/wizard.class.php:98
 msgid "Consult feeds"
 msgstr "Consulter les flux RSS"
 
-#: inc/wizard.class.php:126 inc/wizard.class.php:129
-msgid "Load a saved search"
-msgstr "Charger une requête sauvegardée"
-
-#: inc/wizard.class.php:243
+#: inc/wizard.class.php:246
 msgid "To validate"
 msgstr "À valider"
 
-#: inc/wizard.class.php:255
+#: inc/wizard.class.php:258
 msgid "Closed"
 msgstr "Fermé"
 

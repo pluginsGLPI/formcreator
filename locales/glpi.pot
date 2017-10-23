@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-23 15:42+0200\n"
+"POT-Creation-Date: 2017-10-23 16:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -828,31 +828,27 @@ msgstr ""
 msgid "Your form has been accepted by the validator"
 msgstr ""
 
-#: inc/wizard.class.php:67 inc/wizard.class.php:68
+#: inc/wizard.class.php:70 inc/wizard.class.php:71
 msgid "Seek assistance"
 msgstr ""
 
-#: inc/wizard.class.php:73 inc/wizard.class.php:74
+#: inc/wizard.class.php:76 inc/wizard.class.php:77
 msgid "My requests for assistance"
 msgstr ""
 
-#: inc/wizard.class.php:85 inc/wizard.class.php:86
+#: inc/wizard.class.php:88 inc/wizard.class.php:89
 msgid "Book an asset"
 msgstr ""
 
-#: inc/wizard.class.php:94 inc/wizard.class.php:95
+#: inc/wizard.class.php:97 inc/wizard.class.php:98
 msgid "Consult feeds"
 msgstr ""
 
-#: inc/wizard.class.php:126 inc/wizard.class.php:129
-msgid "Load a saved search"
-msgstr ""
-
-#: inc/wizard.class.php:243
+#: inc/wizard.class.php:246
 msgid "To validate"
 msgstr ""
 
-#: inc/wizard.class.php:255
+#: inc/wizard.class.php:258
 msgid "Closed"
 msgstr ""
 

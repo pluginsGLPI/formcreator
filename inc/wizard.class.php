@@ -126,11 +126,11 @@ class PluginFormcreatorWizard {
             echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             Ajax::createIframeModalWindow('loadbookmark',
                   $CFG_GLPI["root_doc"]."/front/savedsearch.php?action=load",
-                  ['title'         => __('Load a saved search', 'formcreator'),
-                        'reloadonclose' => true]);
+                  ['title'         => __('Saved searches'),
+                   'reloadonclose' => true]);
             echo '<a href="#" id="showSavedSearchesLink">';
-            echo '<span class="fa fa-star fc_list_icon" title="'.__('Load a saved search', 'formcretaor').'"></span>';
-            echo '<label>'.__('Load a saved search').'</label>';
+            echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
+            echo '<label>'.__('Saved searches').'</label>';
             echo '</a>';
             echo '</li>';
          }
