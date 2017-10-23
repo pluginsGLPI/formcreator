@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-17 14:55+0200\n"
-"PO-Revision-Date: 2017-10-17 12:57+0000\n"
+"POT-Creation-Date: 2017-10-23 15:42+0200\n"
+"PO-Revision-Date: 2017-10-23 13:44+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -32,8 +32,8 @@ msgstr[0] "Categoria de Formulário"
 msgstr[1] "Categorias de Formulário"
 
 #: setup.php:27 setup.php:147 ajax/homepage_link.php:6
-#: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:490
-#: inc/form.class.php:1859 inc/formlist.class.php:17 js/scripts.js.php:19
+#: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:495
+#: inc/form.class.php:1864 inc/formlist.class.php:17 js/scripts.js.php:19
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Formulário"
@@ -48,7 +48,7 @@ msgstr "Formulários aguardando validação"
 #: front/form_answer.form.php:49 front/form_answer.php:16
 #: front/form_answer.php:21 front/issue.php:16 front/issue.php:21
 #: front/targetchange.form.php:48 front/targetticket.form.php:48
-#: inc/form.class.php:1966 inc/form.class.php:1973
+#: inc/form.class.php:1971 inc/form.class.php:1978
 msgid "Form Creator"
 msgstr "Form creator"
 
@@ -56,11 +56,11 @@ msgstr "Form creator"
 #: front/issue.form.php:23 front/issue.php:12 front/knowbaseitem.form.php:15
 #: front/reservation.form.php:14 front/reservation.php:16
 #: front/reservationitem.php:12 front/wizard.php:14 front/wizardfeeds.php:15
-#: inc/form.class.php:1961
+#: inc/form.class.php:1966
 msgid "Service catalog"
 msgstr "Catálogo de serviços"
 
-#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:1963
+#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:1968
 msgid "Form list"
 msgstr "Lista de formulários"
 
@@ -111,135 +111,134 @@ msgstr "Um campo obrigatório está vazio: "
 msgid "Import forms"
 msgstr "Importar formulários"
 
-#: inc/form.class.php:221 inc/form.class.php:235 inc/form.class.php:288
-#: inc/form.class.php:342
-msgid "All langages"
-msgstr "Todos os idiomas"
-
-#: inc/form.class.php:222 inc/form.class.php:275 inc/form_profile.class.php:36
+#: inc/form.class.php:222 inc/form.class.php:277 inc/form_profile.class.php:36
 msgid "Public access"
 msgstr "Acesso público"
 
-#: inc/form.class.php:223 inc/form.class.php:278 inc/form_profile.class.php:37
+#: inc/form.class.php:223 inc/form.class.php:281 inc/form_profile.class.php:37
 msgid "Private access"
 msgstr "Acesso privado"
 
-#: inc/form.class.php:224 inc/form.class.php:281 inc/form_profile.class.php:38
+#: inc/form.class.php:224 inc/form.class.php:285 inc/form_profile.class.php:38
 msgid "Restricted access"
 msgstr "Acesso restrito"
 
-#: inc/form.class.php:327
+#: inc/form.class.php:236 inc/form.class.php:293 inc/form.class.php:347
+msgid "All langages"
+msgstr "Todos os idiomas"
+
+#: inc/form.class.php:332
 msgid "Direct access on homepage"
 msgstr "Acesso direto na página inicial"
 
-#: inc/form.class.php:348
+#: inc/form.class.php:353
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Cabeçalho"
 msgstr[1] "Cabeçalhos"
 
-#: inc/form.class.php:354
+#: inc/form.class.php:359
 msgid "Need to be validate?"
 msgstr "Precisa ser validado?"
 
-#: inc/form.class.php:461
+#: inc/form.class.php:466
 msgid "Default form in service catalog"
 msgstr "Formulário padrão no catálogo de serviços"
 
-#: inc/form.class.php:571 inc/targetbase.class.php:519
+#: inc/form.class.php:576 inc/targetbase.class.php:519
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categoria"
 msgstr[1] "Categorias"
 
-#: inc/form.class.php:572
+#: inc/form.class.php:577
 msgid "see all"
 msgstr "Ver todos"
 
-#: inc/form.class.php:590
+#: inc/form.class.php:595
 msgid "Popularity sort"
 msgstr "Organizar por popularidade"
 
-#: inc/form.class.php:594
+#: inc/form.class.php:599
 msgid "Alphabetic sort"
 msgstr "Organizar por ordem alfabética"
 
-#: inc/form.class.php:765
+#: inc/form.class.php:770
 msgid "Please, describe your need here"
 msgstr "Por favor, descreva o que precisa aqui"
 
-#: inc/form.class.php:774
+#: inc/form.class.php:779
 msgid "My last forms (requester)"
 msgstr "Formulários recentes (requerente)"
 
-#: inc/form.class.php:784
+#: inc/form.class.php:789
 msgid "No form posted yet"
 msgstr "Nenhum formulário postado ainda"
 
-#: inc/form.class.php:796
+#: inc/form.class.php:801
 msgid "All my forms (requester)"
 msgstr "Todos os formulários (requerente)"
 
-#: inc/form.class.php:806
+#: inc/form.class.php:811
 msgid "My last forms (validator)"
 msgstr "Formulários recentes (validador)"
 
-#: inc/form.class.php:826
+#: inc/form.class.php:831
 msgid "No form waiting for validation"
 msgstr "Nenhum formulário aguarda validação"
 
-#: inc/form.class.php:844
+#: inc/form.class.php:849
 msgid "All my forms (validator)"
 msgstr "Todos os formulários (validador)"
 
-#: inc/form.class.php:879 inc/form_answer.class.php:363
+#: inc/form.class.php:884 inc/form_answer.class.php:363
 msgid "Print this form"
 msgstr "Imprimir este formulário"
 
-#: inc/form.class.php:945
+#: inc/form.class.php:950
 msgid "Choose a validator"
 msgstr "Escolha um validador"
 
-#: inc/form.class.php:988 inc/target.class.php:114
+#: inc/form.class.php:993 inc/target.class.php:114
 msgid "The name cannot be empty!"
 msgstr "O nome não pode ser vazio!"
 
-#: inc/form.class.php:1142
+#: inc/form.class.php:1147
 msgid "You must select validator !"
 msgstr " Você deve selecionar um validador!"
 
-#: inc/form.class.php:1217
+#: inc/form.class.php:1222
 msgid "Duplicate"
 msgstr "Duplicar"
 
-#: inc/form.class.php:1502
+#: inc/form.class.php:1507
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulário duplicado: %s"
 
-#: inc/form.class.php:1513
+#: inc/form.class.php:1518
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulário transferido: %s"
 
-#: inc/form.class.php:1702
+#: inc/form.class.php:1707
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formulários importados com sucesso de %s"
 
-#: inc/form.class.php:1789
+#: inc/form.class.php:1794
 msgid "Failed to create JSON document type"
 msgstr "Falha ao criar o tipo de documento JSON"
 
-#: inc/form.class.php:1796
+#: inc/form.class.php:1801
 msgid "JSON document type not found"
 msgstr "Tipo de documento JSON não encontrado"
 
-#: inc/form.class.php:1803
+#: inc/form.class.php:1808
 msgid "Failed to update JSON document type"
 msgstr "Falha ao atualizar o tipo de documento JSON"
 
-#: inc/form.class.php:1863
+#: inc/form.class.php:1868
 msgid "Forms without category"
 msgstr "Formulários sem categoria"
 
@@ -837,27 +836,31 @@ msgstr "Falha ao vincular o item"
 msgid "Your form has been accepted by the validator"
 msgstr "Seu formulário foi aceito pelo validador"
 
-#: inc/wizard.class.php:70 inc/wizard.class.php:71
+#: inc/wizard.class.php:67 inc/wizard.class.php:68
 msgid "Seek assistance"
 msgstr "Procure suporte"
 
-#: inc/wizard.class.php:76 inc/wizard.class.php:77
+#: inc/wizard.class.php:73 inc/wizard.class.php:74
 msgid "My requests for assistance"
 msgstr "Minhas requisições de suporte"
 
-#: inc/wizard.class.php:88 inc/wizard.class.php:89
+#: inc/wizard.class.php:85 inc/wizard.class.php:86
 msgid "Book an asset"
 msgstr "Reservar um ativo"
 
-#: inc/wizard.class.php:97 inc/wizard.class.php:98
+#: inc/wizard.class.php:94 inc/wizard.class.php:95
 msgid "Consult feeds"
 msgstr "Consultar feeds"
 
-#: inc/wizard.class.php:236
+#: inc/wizard.class.php:126 inc/wizard.class.php:129
+msgid "Load a saved search"
+msgstr ""
+
+#: inc/wizard.class.php:243
 msgid "To validate"
 msgstr "Validar"
 
-#: inc/wizard.class.php:248
+#: inc/wizard.class.php:255
 msgid "Closed"
 msgstr "Fechado"
 

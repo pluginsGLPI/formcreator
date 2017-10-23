@@ -5,12 +5,13 @@
 # Translators:
 # Dominique Depireux <ddepireux@environnement.brussels>, 2017
 # Glenn Franssen <github@glennfrn.nl>, 2017
+# Thierry Bugier <tbugier@teclib.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-17 14:55+0200\n"
-"PO-Revision-Date: 2017-10-17 12:57+0000\n"
+"POT-Creation-Date: 2017-10-23 15:42+0200\n"
+"PO-Revision-Date: 2017-10-23 13:44+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/nl_BE/)\n"
 "MIME-Version: 1.0\n"
@@ -26,8 +27,8 @@ msgstr[0] "vormcategorie"
 msgstr[1] "Formulier categorieen"
 
 #: setup.php:27 setup.php:147 ajax/homepage_link.php:6
-#: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:490
-#: inc/form.class.php:1859 inc/formlist.class.php:17 js/scripts.js.php:19
+#: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:495
+#: inc/form.class.php:1864 inc/formlist.class.php:17 js/scripts.js.php:19
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Formulier"
@@ -42,7 +43,7 @@ msgstr "Formulieren wachten op goedkeuring"
 #: front/form_answer.form.php:49 front/form_answer.php:16
 #: front/form_answer.php:21 front/issue.php:16 front/issue.php:21
 #: front/targetchange.form.php:48 front/targetticket.form.php:48
-#: inc/form.class.php:1966 inc/form.class.php:1973
+#: inc/form.class.php:1971 inc/form.class.php:1978
 msgid "Form Creator"
 msgstr "Formcreator"
 
@@ -50,11 +51,11 @@ msgstr "Formcreator"
 #: front/issue.form.php:23 front/issue.php:12 front/knowbaseitem.form.php:15
 #: front/reservation.form.php:14 front/reservation.php:16
 #: front/reservationitem.php:12 front/wizard.php:14 front/wizardfeeds.php:15
-#: inc/form.class.php:1961
+#: inc/form.class.php:1966
 msgid "Service catalog"
 msgstr "Service Catalogus"
 
-#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:1963
+#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:1968
 msgid "Form list"
 msgstr "Formulieren lijst"
 
@@ -105,135 +106,134 @@ msgstr "Een verplicht veld is leeg:"
 msgid "Import forms"
 msgstr "Importeer formulieren"
 
-#: inc/form.class.php:221 inc/form.class.php:235 inc/form.class.php:288
-#: inc/form.class.php:342
-msgid "All langages"
-msgstr "Alle talen"
-
-#: inc/form.class.php:222 inc/form.class.php:275 inc/form_profile.class.php:36
+#: inc/form.class.php:222 inc/form.class.php:277 inc/form_profile.class.php:36
 msgid "Public access"
 msgstr "Publieke toegang"
 
-#: inc/form.class.php:223 inc/form.class.php:278 inc/form_profile.class.php:37
+#: inc/form.class.php:223 inc/form.class.php:281 inc/form_profile.class.php:37
 msgid "Private access"
 msgstr "Private toegang"
 
-#: inc/form.class.php:224 inc/form.class.php:281 inc/form_profile.class.php:38
+#: inc/form.class.php:224 inc/form.class.php:285 inc/form_profile.class.php:38
 msgid "Restricted access"
 msgstr "Beperkte toegang"
 
-#: inc/form.class.php:327
+#: inc/form.class.php:236 inc/form.class.php:293 inc/form.class.php:347
+msgid "All langages"
+msgstr "Alle talen"
+
+#: inc/form.class.php:332
 msgid "Direct access on homepage"
 msgstr "Meteen toegang op homepage"
 
-#: inc/form.class.php:348
+#: inc/form.class.php:353
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Titels"
 msgstr[1] "Titels"
 
-#: inc/form.class.php:354
+#: inc/form.class.php:359
 msgid "Need to be validate?"
 msgstr "Valideren?"
 
-#: inc/form.class.php:461
+#: inc/form.class.php:466
 msgid "Default form in service catalog"
 msgstr "Standaard formulier in service catalogus"
 
-#: inc/form.class.php:571 inc/targetbase.class.php:519
+#: inc/form.class.php:576 inc/targetbase.class.php:519
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categorieën"
 msgstr[1] "Categorieën"
 
-#: inc/form.class.php:572
+#: inc/form.class.php:577
 msgid "see all"
 msgstr "Zie alles"
 
-#: inc/form.class.php:590
+#: inc/form.class.php:595
 msgid "Popularity sort"
 msgstr "Sorteer op populariteit"
 
-#: inc/form.class.php:594
+#: inc/form.class.php:599
 msgid "Alphabetic sort"
 msgstr "Sorteer op alfabet"
 
-#: inc/form.class.php:765
+#: inc/form.class.php:770
 msgid "Please, describe your need here"
 msgstr "Vul hier je zoektermen in"
 
-#: inc/form.class.php:774
+#: inc/form.class.php:779
 msgid "My last forms (requester)"
 msgstr "Mijn laatste formulieren (aanvrager)"
 
-#: inc/form.class.php:784
+#: inc/form.class.php:789
 msgid "No form posted yet"
 msgstr "Geen formulieren gepost"
 
-#: inc/form.class.php:796
+#: inc/form.class.php:801
 msgid "All my forms (requester)"
 msgstr "Al mijn formulieren (aanvrager)"
 
-#: inc/form.class.php:806
+#: inc/form.class.php:811
 msgid "My last forms (validator)"
 msgstr "Mijn laatste formulieren (validatie)"
 
-#: inc/form.class.php:826
+#: inc/form.class.php:831
 msgid "No form waiting for validation"
 msgstr "Geen formulieren wachten op validatie"
 
-#: inc/form.class.php:844
+#: inc/form.class.php:849
 msgid "All my forms (validator)"
 msgstr "Al mijn formulieren (validatie)"
 
-#: inc/form.class.php:879 inc/form_answer.class.php:363
+#: inc/form.class.php:884 inc/form_answer.class.php:363
 msgid "Print this form"
 msgstr "Dit formulier printen"
 
-#: inc/form.class.php:945
+#: inc/form.class.php:950
 msgid "Choose a validator"
 msgstr "Kies een validator"
 
-#: inc/form.class.php:988 inc/target.class.php:114
+#: inc/form.class.php:993 inc/target.class.php:114
 msgid "The name cannot be empty!"
 msgstr "De naam kan niet leeg zijn"
 
-#: inc/form.class.php:1142
+#: inc/form.class.php:1147
 msgid "You must select validator !"
 msgstr "Je moet een validator selecteren!"
 
-#: inc/form.class.php:1217
+#: inc/form.class.php:1222
 msgid "Duplicate"
 msgstr "Dupliceren"
 
-#: inc/form.class.php:1502
+#: inc/form.class.php:1507
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulier gedupliceerd: 1%s"
 
-#: inc/form.class.php:1513
+#: inc/form.class.php:1518
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulier verplaatst: 1%s"
 
-#: inc/form.class.php:1702
+#: inc/form.class.php:1707
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formulieren succesvol geïmporteerd van 1%s"
 
-#: inc/form.class.php:1789
+#: inc/form.class.php:1794
 msgid "Failed to create JSON document type"
 msgstr "Het is niet gelukt om een JSON document type te maken"
 
-#: inc/form.class.php:1796
+#: inc/form.class.php:1801
 msgid "JSON document type not found"
 msgstr "JSON document type is niet gevonden"
 
-#: inc/form.class.php:1803
+#: inc/form.class.php:1808
 msgid "Failed to update JSON document type"
 msgstr "Het is niet gelukt om het JSON document type te updaten"
 
-#: inc/form.class.php:1863
+#: inc/form.class.php:1868
 msgid "Forms without category"
 msgstr "Formulieren zonder categorie"
 
@@ -831,27 +831,31 @@ msgstr "Gefaald om item te linken"
 msgid "Your form has been accepted by the validator"
 msgstr "Je formulier is geaccepteerd door de validator"
 
-#: inc/wizard.class.php:70 inc/wizard.class.php:71
+#: inc/wizard.class.php:67 inc/wizard.class.php:68
 msgid "Seek assistance"
 msgstr "Assistentie"
 
-#: inc/wizard.class.php:76 inc/wizard.class.php:77
+#: inc/wizard.class.php:73 inc/wizard.class.php:74
 msgid "My requests for assistance"
 msgstr "Mijn verzoeken tot assistentie"
 
-#: inc/wizard.class.php:88 inc/wizard.class.php:89
+#: inc/wizard.class.php:85 inc/wizard.class.php:86
 msgid "Book an asset"
 msgstr "Reserveer een item"
 
-#: inc/wizard.class.php:97 inc/wizard.class.php:98
+#: inc/wizard.class.php:94 inc/wizard.class.php:95
 msgid "Consult feeds"
 msgstr "Consult feeds"
 
-#: inc/wizard.class.php:236
+#: inc/wizard.class.php:126 inc/wizard.class.php:129
+msgid "Load a saved search"
+msgstr ""
+
+#: inc/wizard.class.php:243
 msgid "To validate"
 msgstr "Om te valideren"
 
-#: inc/wizard.class.php:248
+#: inc/wizard.class.php:255
 msgid "Closed"
 msgstr "Gesloten"
 
@@ -915,24 +919,24 @@ msgstr "Formcreator: Sync service catalogus problemen"
 
 #: js/scripts.js.php:263
 msgid "No form found. Please choose a form below instead"
-msgstr ""
+msgstr "Geen formulier gevonden. Selecteer een formulier"
 
 #: js/scripts.js.php:281
 msgid "An error occured while querying forms"
-msgstr ""
+msgstr "Er is een fout opgetreden terwijl we de formulieren opvroegen"
 
 #: js/scripts.js.php:317
 msgid "No form yet in this category"
-msgstr ""
+msgstr "Geen formulier in deze categorie"
 
 #: js/scripts.js.php:415
 msgid "Are you sure you want to delete this question?"
-msgstr ""
+msgstr "Weet je zeker dat je deze vraag wilt verwijderen?"
 
 #: js/scripts.js.php:476
 msgid "Are you sure you want to delete this section?"
-msgstr ""
+msgstr "Weet je zeker dat je dit gedeelte wilt verwijderen?"
 
 #: js/scripts.js.php:513
 msgid "Are you sure you want to delete this destination:"
-msgstr ""
+msgstr "Weet je zeker dat je deze bestemming wilt verwijderen:"
