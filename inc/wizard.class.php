@@ -21,9 +21,6 @@ class PluginFormcreatorWizard {
       }
       $HEADER_LOADED = true;
 
-      // force layout of glpi
-      $_SESSION['glpilayout'] = "lefttab";
-
       Html::includeHeader($title);
 
       $body_class = "layout_".$_SESSION['glpilayout'];
