@@ -882,7 +882,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $success = true;
 
       // Get all targets
-      $target_class    = new PluginFormcreatorTarget();
+      $target_class  = new PluginFormcreatorTarget();
       $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
@@ -921,6 +921,20 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $answers_values[$found_answer['plugin_formcreator_questions_id']] = stripslashes($found_answer['answer']);
       }
       return $answers_values;
+   }
+
+   /**
+    * Gets the associated form
+    * @return PluginFormcreatorForm|null the form used to create this set of answers
+    */
+   public function getForm() {
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields[$form::getForeignKeyField()]);
+
+      if ($form->isNewItem()) {
+         return null;
+      }
+      return $form;
    }
 
    /**

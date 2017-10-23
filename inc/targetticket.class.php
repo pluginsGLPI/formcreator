@@ -1032,10 +1032,8 @@ EOS;
 
       $data   = [];
       $ticket  = new Ticket();
-      $form    = new PluginFormcreatorForm();
+      $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
-
-      $form->getFromDB($formanswer->fields['plugin_formcreator_forms_id']);
 
       // Get default request type
       $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
@@ -1112,8 +1110,9 @@ EOS;
       switch ($this->fields['destination_entity']) {
          // Requester's entity
          case 'current' :
-            $data['entities_id'] = $_SESSION['glpiactive_entity'];
+            $data['entities_id'] = $formanswer->getField('entities_id');
             break;
+
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
