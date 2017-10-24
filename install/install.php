@@ -19,8 +19,8 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      $this->createCronTasks();
       $this->createNotifications();
-
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
@@ -64,6 +64,7 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      $this->createCronTasks();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
@@ -438,5 +439,17 @@ class PluginFormcreatorInstall {
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
+   }
+
+   /**
+    * Create cron tasks
+    */
+   protected function createCronTasks() {
+      CronTask::Register(PluginFormcreatorIssue::class, 'SyncIssues', HOUR_TIMESTAMP,
+         [
+            'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
+            'mode'      => CronTask::MODE_EXTERNAL
+         ]
+      );
    }
 }
