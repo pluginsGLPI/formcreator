@@ -23,6 +23,9 @@ class PluginFormcreatorInstall {
       $this->createNotifications();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
+      $task = new CronTask();
+      PluginFormcreatorIssue::cronSyncIssues($task);
+
       return true;
    }
 
