@@ -114,10 +114,6 @@ input.submit_button:focus {
    box-shadow: 0 0 10px rgba(233,175,102,1);
 }
 
-.layout_vsplit.form #tabspanel + div.ui-tabs:not(.horizontal) {
-   width: calc(100% - 30px) !important
-}
-
 .line0 {
    background-color: #F0F0F0;
 }
