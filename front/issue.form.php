@@ -11,6 +11,10 @@ if (!isset($_REQUEST['sub_itemtype'])) {
    Html::displayNotFoundError();
 }
 
+// force layout of glpi
+$layout = $_SESSION['glpilayout'];
+$_SESSION['glpilayout'] = "lefttab";
+
 $issue = new PluginFormcreatorIssue();
 if (isset($_POST['save_formanswer'])) {
    $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
@@ -33,3 +37,6 @@ if (isset($_POST['save_formanswer'])) {
       Html::footer();
    }
 }
+
+// restore layout
+$_SESSION['glpilayout'] = $layout;
