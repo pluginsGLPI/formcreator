@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-06 23:46+0200\n"
-"PO-Revision-Date: 2017-09-21 11:55+0000\n"
-"Last-Translator: alexandre delaunay <delaunay.alexandre@gmail.com>\n"
+"POT-Creation-Date: 2017-10-31 10:12+0100\n"
+"PO-Revision-Date: 2017-10-31 09:13+0000\n"
+"Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,867 +20,847 @@ msgstr ""
 "Language: hu_HU\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: setup.php:22 setup.php:147 js/scripts.js.php:18 ajax/homepage_link.php:6
-#: inc/formlist.class.php:13 inc/entityconfig.class.php:27
-#: inc/form.class.php:46 inc/form.class.php:1707
-msgid "Form"
-msgid_plural "Forms"
-msgstr[0] "Űrlap"
-msgstr[1] "Űrlapok"
-
-#: setup.php:137 inc/formlist.class.php:21 inc/formlist.class.php:22
-#: inc/form.class.php:54
-msgid "Forms waiting for validation"
-msgstr "Jóváhagyásra váró űrlapok"
-
-#: hook.php:36 inc/category.class.php:8
+#: hook.php:36 inc/category.class.php:13
 msgid "Form category"
 msgid_plural "Form categories"
 msgstr[0] "Űrlap kategória"
 msgstr[1] "Űrlap kategóriák"
 
-#: js/scripts.js.php:259
-msgid "No form found. Please choose a form below instead"
+#: setup.php:27 setup.php:147 ajax/homepage_link.php:6
+#: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:495
+#: inc/form.class.php:1866 inc/formlist.class.php:17 js/scripts.js.php:19
+msgid "Form"
+msgid_plural "Forms"
+msgstr[0] "Űrlap"
+msgstr[1] "Űrlapok"
+
+#: setup.php:137 inc/form.class.php:58 inc/formlist.class.php:25
+#: inc/formlist.class.php:26
+msgid "Forms waiting for validation"
+msgstr "Jóváhagyásra váró űrlapok"
+
+#: front/form.php:15 front/form_answer.form.php:44
+#: front/form_answer.form.php:49 front/form_answer.php:16
+#: front/form_answer.php:21 front/issue.php:16 front/issue.php:21
+#: front/targetchange.form.php:48 front/targetticket.form.php:48
+#: inc/form.class.php:1973 inc/form.class.php:1980
+msgid "Form Creator"
+msgstr "Űrlap Készítő"
+
+#: front/form_answer.form.php:40 front/form_answer.php:12
+#: front/issue.form.php:27 front/issue.php:12 front/knowbaseitem.form.php:15
+#: front/reservation.form.php:14 front/reservation.php:16
+#: front/reservationitem.php:12 front/wizard.php:14 front/wizardfeeds.php:15
+#: inc/form.class.php:1968
+msgid "Service catalog"
 msgstr ""
 
-#: js/scripts.js.php:277
-msgid "An error occured while querying forms"
-msgstr ""
+#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:1970
+msgid "Form list"
+msgstr "Űrlap lista"
 
-#: js/scripts.js.php:313
-msgid "No form yet in this category"
-msgstr ""
+#: front/question.form.php:18
+msgid "The question has been successfully saved!"
+msgstr "A kérdés sikeresen mentve!"
 
-#: js/scripts.js.php:411
-msgid "Are you sure you want to delete this question?"
-msgstr "Biztosan törli ezt a kérdést?"
+#: front/question.form.php:28
+msgid "The question has been successfully updated!"
+msgstr "A kérdés sikeresen frissítve!"
 
-#: js/scripts.js.php:472
-msgid "Are you sure you want to delete this section?"
-msgstr "Biztosan törli ezt a szekciót?"
-
-#: js/scripts.js.php:509
-msgid "Are you sure you want to delete this destination:"
-msgstr "Biztosan törli ezt a célt:"
-
-#: install/update_0.0_2.5.php:383
-msgid "Formcreator - Sync service catalog issues"
-msgstr ""
-
-#: install/install.php:216
-msgid "A form has been created"
-msgstr "Az űrlap létrehozva"
-
-#: install/install.php:217
-msgid "Your request has been saved"
-msgstr "A kérelme mentve"
-
-#: install/install.php:218
-msgid ""
-"Hi,\\nYour request from GLPI has been successfully saved with number "
-"##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
-"see your answers onto the following link:\\n##formcreator.validation_link##"
-msgstr "Üdvözlöm,\\nA kérelme a GLPI-ben mentésre került, a száma:##formcreator.request_id##. Kérelmét továbbítottuk a helpdesk csapatnak.\\nA válaszokat az alábbi linken nézheti meg:\\n##formcreator.validation_link##"
-
-#: install/install.php:222 inc/notificationtargetform_answer.class.php:12
-msgid "A form need to be validate"
-msgstr "Egy űrlapot jóvá kell hagynia"
-
-#: install/install.php:223
-msgid "A form from GLPI need to be validate"
-msgstr "Egy űrlapot jóvá kell hagynia a GLPI-ben"
-
-#: install/install.php:224
-msgid ""
-"Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
-"validator.\\nYou can access it by clicking onto this "
-"link:\\n##formcreator.validation_link##"
-msgstr "Üdvözlöm,\\nEgy űrlapot jóvá kell hagynia a GLPI-ben, melyen önt választották jóváhagyónak.\\nElérheti az alábbi linkre kattintva:\\n##formcreator.validation_link##"
-
-#: install/install.php:228 inc/notificationtargetform_answer.class.php:13
-msgid "The form is refused"
-msgstr "Az űrlap elutasítva"
-
-#: install/install.php:229
-msgid "Your form has been refused by the validator"
-msgstr "Az űrlapját visszautasította a jóváhagyó"
-
-#: install/install.php:230
-msgid ""
-"Hi,\\nWe are sorry to inform you that your form has been refused by the "
-"validator for the reason "
-"below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
-"resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
-msgstr "Üdvözlöm,\\nSajnálattal közöljük, hogy az Ön űrlapját elutasította a jóváhagyó. Az elutasítás oka:\\n##formcreator.validation_comment##\\nMódosíthatja, és újra elküldheti az alábbi linkre kattintva:\\n##formcreator.validation_link##"
-
-#: install/install.php:234 inc/notificationtargetform_answer.class.php:14
-msgid "The form is accepted"
-msgstr "Az űrlap elfogadva"
-
-#: install/install.php:235 inc/targetticket.class.php:1125
-msgid "Your form has been accepted by the validator"
-msgstr "Az űrlapját elfogadta a jóváhagyó"
-
-#: install/install.php:236
-msgid ""
-"Hi,\\nWe are pleased to inform you that your form has been accepted by the "
-"validator.\\nYour request will be considered soon."
-msgstr "Üdvözlöm,\\nÖrömmel értesítjük, hogy az űrlapját elfogadta a jóváhagyó.\\nKérelme hamarosan mérlegelésre kerül."
-
-#: install/install.php:240 inc/notificationtargetform_answer.class.php:15
-msgid "The form is deleted"
-msgstr "Az űrlap törölve"
-
-#: install/install.php:241
-msgid "Your form has been deleted by an administrator"
-msgstr "Az űrlapját törölte egy Adminisztrátor"
-
-#: install/install.php:242
-msgid ""
-"Hi,\\nWe are sorry to inform you that your request cannot be considered and "
-"has been deleted by an administrator."
-msgstr "Üdvözlöm,\\nSajnálattal közöljük, hogy az Ön kérelme nem mérlegelhető és egy Adminisztrátor törölte."
-
-#: inc/form_answer.class.php:38 inc/issue.class.php:357
-msgid "Form answer"
-msgid_plural "Form answers"
-msgstr[0] "Űrlap válasz"
-msgstr[1] "Űrlap válaszok"
-
-#: inc/form_answer.class.php:82 inc/notificationtargetform_answer.class.php:48
-msgid "Requester"
-msgstr "Kérelmező"
-
-#: inc/form_answer.class.php:90 inc/notificationtargetform_answer.class.php:49
-msgid "Validator"
-msgstr "Jóváhagyó"
-
-#: inc/form_answer.class.php:177
-msgid "waiting"
-msgstr "várakozó"
-
-#: inc/form_answer.class.php:181
-msgid "accepted"
-msgstr "elfogadott"
-
-#: inc/form_answer.class.php:185
-msgid "refused"
-msgstr "elutasított"
-
-#: inc/form_answer.class.php:329 inc/form.class.php:834
-msgid "Print this form"
-msgstr ""
-
-#: inc/form_answer.class.php:346
-msgid "Form accepted by validator."
-msgstr "Az űrlapját elfogadta a jóváhagyó"
-
-#: inc/form_answer.class.php:348
-msgid "Form successfully saved."
-msgstr "Az űrlap sikeresen mentve!"
-
-#: inc/form_answer.class.php:405
-msgid "Comment"
-msgstr "Megjegyzés"
-
-#: inc/form_answer.class.php:410
-msgid "Required if refused"
-msgstr "Elutasítás estén kötelező"
-
-#: inc/form_answer.class.php:416
-msgid "Refuse"
-msgstr "Elutasít"
-
-#: inc/form_answer.class.php:419
-msgid "Accept"
-msgstr "Elfogad"
-
-#: inc/form_answer.class.php:434
-msgid "Refused comment is required!"
-msgstr "Az elutasítás megjegyzése kötelező!"
-
-#: inc/form_answer.class.php:692
-msgid "Cannot generate targets!"
-msgstr "Nem generálhatóak a célpontok!"
-
-#: inc/form_answer.class.php:792 inc/form_answer.class.php:851
-msgid "The form has been successfully saved!"
-msgstr "Az űrlap sikeresen mentve!"
-
-#: inc/form_answer.class.php:806 inc/form_answer.class.php:824
-msgid "You are not the validator of these answers"
-msgstr ""
-
-#: inc/form_answer.class.php:883 inc/form_answer.class.php:885
-msgid "Form data"
-msgstr "Űrlap adatok"
-
-#: inc/form_profile.class.php:11
-msgid "Target"
-msgid_plural "Targets"
-msgstr[0] "Célpont"
-msgstr[1] "Célpontok"
-
-#: inc/form_profile.class.php:26
-msgid "Access type"
-msgstr "Elérés típus"
-
-#: inc/form_profile.class.php:32 inc/form.class.php:184 inc/form.class.php:237
-msgid "Public access"
-msgstr "Publikus elérés"
-
-#: inc/form_profile.class.php:33 inc/form.class.php:185 inc/form.class.php:240
-msgid "Private access"
-msgstr "Privát elérés"
-
-#: inc/form_profile.class.php:34 inc/form.class.php:186 inc/form.class.php:243
-msgid "Restricted access"
-msgstr "Korlátozott elérés"
-
-#: inc/form_profile.class.php:41
-msgid "Link to the form"
-msgstr ""
-
-#: inc/form_profile.class.php:49
-msgid "Please active the form to view the link"
-msgstr ""
-
-#: inc/targetchange.class.php:5 inc/targetchange.class.php:193
-msgid "Target change"
-msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/targetchange.class.php:10
-msgid "Medium"
-msgstr ""
-
-#: inc/targetchange.class.php:11 inc/targetbase.class.php:70
-msgid "Specific urgency"
-msgstr ""
-
-#: inc/targetchange.class.php:12 inc/targetchange.class.php:20
-#: inc/targetbase.class.php:71 inc/targetbase.class.php:79
-msgid "Equals to the answer to the question"
-msgstr ""
-
-#: inc/targetchange.class.php:18
-msgid "None"
-msgstr ""
-
-#: inc/targetchange.class.php:19 inc/targetbase.class.php:78
-msgid "Specific category"
-msgstr ""
-
-#: inc/targetchange.class.php:181 inc/targetticket.class.php:57
-msgid "Edit a destination"
-msgstr "Cél szerkesztése"
-
-#: inc/targetchange.class.php:196
-msgid "Change title"
-msgstr ""
-
-#: inc/targetchange.class.php:290 inc/targetticket.class.php:135
-msgid "Cancel"
-msgstr "Mégse"
-
-#: inc/targetchange.class.php:373
-msgid "Change actors"
-msgstr ""
-
-#: inc/targetchange.class.php:472 inc/targetchange.class.php:580
-#: inc/targetchange.class.php:698 inc/target_actor.class.php:8
-#: inc/targetticket.class.php:317 inc/targetticket.class.php:425
-#: inc/targetticket.class.php:543
-msgid "Form requester"
-msgstr "Űrlap kérelmező"
-
-#: inc/targetchange.class.php:475 inc/targetchange.class.php:583
-#: inc/targetchange.class.php:701 inc/target_actor.class.php:9
-#: inc/targetticket.class.php:320 inc/targetticket.class.php:428
-#: inc/targetticket.class.php:546
-msgid "Form validator"
-msgstr "Űrlap jóváhagyó"
-
-#: inc/targetchange.class.php:485 inc/targetchange.class.php:593
-#: inc/targetchange.class.php:711 inc/target_actor.class.php:11
-#: inc/targetticket.class.php:330 inc/targetticket.class.php:438
-#: inc/targetticket.class.php:556
-msgid "Person from the question"
-msgstr "Személy a kérdésből"
-
-#: inc/targetchange.class.php:496 inc/targetchange.class.php:604
-#: inc/targetchange.class.php:722 inc/target_actor.class.php:13
-#: inc/targetticket.class.php:341 inc/targetticket.class.php:449
-#: inc/targetticket.class.php:567
-msgid "Group from the question"
-msgstr "Csoport a kérdésből"
-
-#: inc/targetchange.class.php:502 inc/targetchange.class.php:610
-#: inc/targetchange.class.php:728 inc/target_actor.class.php:16
-#: inc/targetticket.class.php:347 inc/targetticket.class.php:455
-#: inc/targetticket.class.php:573
-msgid "Actors from the question"
-msgstr ""
-
-#: inc/targetchange.class.php:739 inc/target_actor.class.php:15
-#: inc/targetticket.class.php:584
-msgid "Supplier from the question"
-msgstr "Cég a kérdésből"
-
-#: inc/targetchange.class.php:759 inc/question.class.php:32
-#: inc/targetbase.class.php:506 inc/targetbase.class.php:572
-#: inc/targetbase.class.php:654 inc/targetticket.class.php:604
-msgid "Question"
-msgid_plural "Questions"
-msgstr[0] "Kérdés"
-msgstr[1] "Kérdések"
-
-#: inc/targetchange.class.php:761 inc/answer.class.php:32
-#: inc/targetticket.class.php:606
+#: inc/answer.class.php:37 inc/targetchange.class.php:768
+#: inc/targetticket.class.php:626
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Válasz"
 msgstr[1] "Válaszok"
 
-#: inc/targetchange.class.php:762 inc/question.class.php:736
-#: inc/section.class.php:32 inc/targetticket.class.php:607
-msgid "Section"
-msgid_plural "Sections"
-msgstr[0] "Szekció"
-msgstr[1] "Szekciók"
-
-#: inc/targetchange.class.php:766 inc/targetticket.class.php:611
-msgid "Full form"
-msgstr "Teljes űrlap"
-
-#: inc/targetchange.class.php:812 inc/targetticket.class.php:657
-msgid "The title cannot be empty!"
-msgstr "A cím nem lehet üres!"
-
-#: inc/targetchange.class.php:818 inc/targetticket.class.php:663
-msgid "The description cannot be empty!"
-msgstr "A Leírás nem lehet üres!"
-
-#: inc/target.class.php:23
-msgid "Destination"
-msgid_plural "Destinations"
-msgstr[0] "Cél"
-msgstr[1] "Célok"
-
-#: inc/target.class.php:43
-msgid "Destinations"
-msgid_plural "Destinations"
-msgstr[0] "Célok"
-msgstr[1] "Célok"
-
-#: inc/target.class.php:68 inc/question.class.php:106
-#: inc/question.class.php:164
-msgid "Delete"
-msgstr "Törlés"
-
-#: inc/target.class.php:80 inc/target.class.php:299
-msgid "Add a destination"
-msgstr "Cél hozzáadása"
-
-#: inc/target.class.php:113 inc/form.class.php:941
-msgid "The name cannot be empty!"
-msgstr "A név nem lehet üres"
-
-#: inc/target.class.php:119
-msgid "The type cannot be empty!"
-msgstr "A típus nem lehet üres!"
-
-#: inc/issue.class.php:6 inc/issue.class.php:242
-msgid "Issue"
-msgid_plural "Issues"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/issue.class.php:19
-msgid "Update issue data from tickets and form answers"
+#: inc/category.class.php:38
+msgid "Knowbase category"
 msgstr ""
 
-#: inc/field.class.php:95 inc/fields/actorfield.class.php:151
-#: inc/fields/datefield.class.php:46 inc/fields/checkboxesfield.class.php:74
+#: inc/entityconfig.class.php:62
+msgid "Helpdesk"
+msgstr ""
+
+#: inc/entityconfig.class.php:71
+msgid "GLPi's helpdesk"
+msgstr ""
+
+#: inc/entityconfig.class.php:72
+msgid "Service catalog simplified"
+msgstr ""
+
+#: inc/entityconfig.class.php:73
+msgid "Service catalog extended"
+msgstr ""
+
+#: inc/entityconfig.class.php:76
+msgid "Helpdesk mode"
+msgstr ""
+
+#: inc/field.class.php:130 inc/fields/actorfield.class.php:146
+#: inc/fields/checkboxesfield.class.php:75 inc/fields/datefield.class.php:46
 #: inc/fields/datetimefield.class.php:46
+#: inc/fields/glpiselectfield.class.php:27
 #: inc/fields/multiselectfield.class.php:14
 msgid "A required field is empty:"
 msgstr "Egy kötelező mező üres:"
 
-#: inc/category.class.php:35
-msgid "Knowbase category"
-msgstr ""
-
-#: inc/question.class.php:178 inc/question.class.php:836
-msgid "Required"
-msgstr "Kötelező"
-
-#: inc/question.class.php:207 inc/question.class.php:700
-msgid "Add a question"
-msgstr "Kérdés hozzáadása"
-
-#: inc/question.class.php:217 inc/section.class.php:328
-msgid "Add a section"
-msgstr "Szekció hozzáadása"
-
-#: inc/question.class.php:252 inc/section.class.php:55
-#: inc/section.class.php:95
-msgid "The title is required"
-msgstr "A cím kötelező"
-
-#: inc/question.class.php:261
-msgid "The field type is required"
-msgstr "A mező típus kötelező"
-
-#: inc/question.class.php:268
-msgid "The section is required"
-msgstr "A szekció kötelező"
-
-#: inc/question.class.php:278 inc/question.class.php:297
-#: inc/question.class.php:311
-msgid "The field value is required:"
-msgstr "A mező értéke kötelező:"
-
-#: inc/question.class.php:325
-msgid "A description field should have a description:"
-msgstr "A leírás mezőnek tartalmaznia kell a leírást:"
-
-#: inc/question.class.php:383
-msgid "Cannot recover LDAP informations!"
-msgstr "Az LDAP adatok nem kérhetők le!"
-
-#: inc/question.class.php:700
-msgid "Edit a question"
-msgstr "Kérdés szerkesztése"
-
-#: inc/question.class.php:763 inc/fields/glpiselectfield.class.php:5
-msgid "GLPI object"
-msgid_plural "GLPI objects"
-msgstr[0] "GLPI Objektum"
-msgstr[1] "GLPI Objektumok"
-
-#: inc/question.class.php:848
-msgid "Show empty"
-msgstr "Üres megjelenítése"
-
-#: inc/question.class.php:865
-msgid "One per line for lists"
-msgstr "Soronként egy érték a listákból"
-
-#: inc/question.class.php:890
-msgid "Values"
-msgstr "Értékek"
-
-#: inc/question.class.php:891
-msgid "One per line"
-msgstr "Soronként egy"
-
-#: inc/question.class.php:903
-msgid "Filter"
-msgstr "Szűrő"
-
-#: inc/question.class.php:914
-msgid "Attribute"
-msgstr "Attribútum"
-
-#: inc/question.class.php:938
-msgid "Range"
-msgstr "tartomány"
-
-#: inc/question.class.php:943
-msgid "Min"
-msgstr "Min"
-
-#: inc/question.class.php:949
-msgid "Max"
-msgstr "Max"
-
-#: inc/question.class.php:975
-msgid "Additional validation"
-msgstr "További validálás"
-
-#: inc/question.class.php:978
-msgid "Regular expression"
-msgstr "Reguláris kifejezés"
-
-#: inc/question.class.php:987
-msgid ""
-"Specify the additional validation conditions in the description of the "
-"question to help users."
-msgstr "További jóváhagyási feltételek megadása a kérdés leírásában, melyek segíthetik a felhasználókt"
-
-#: inc/question.class.php:995
-msgid "Show field"
-msgstr "Mező megjelenítése"
-
-#: inc/question.class.php:1016
-msgid "Always displayed"
-msgstr "Mindig megjelenik"
-
-#: inc/question.class.php:1017
-msgid "Hidden unless"
-msgstr "Rejtett amíg"
-
-#: inc/question.class.php:1018
-msgid "Displayed unless"
-msgstr "Megjelenik amíg"
-
-#: inc/wizard.class.php:65 inc/wizard.class.php:66
-msgid "Seek assistance"
-msgstr ""
-
-#: inc/wizard.class.php:71 inc/wizard.class.php:72
-msgid "My requests for assistance"
-msgstr ""
-
-#: inc/wizard.class.php:83 inc/wizard.class.php:84
-msgid "Book an asset"
-msgstr ""
-
-#: inc/wizard.class.php:92 inc/wizard.class.php:93
-msgid "Consult feeds"
-msgstr ""
-
-#: inc/wizard.class.php:222
-msgid "To validate"
-msgstr ""
-
-#: inc/wizard.class.php:234
-msgid "Closed"
-msgstr ""
-
-#: inc/entityconfig.class.php:64
-msgid "Helpdesk"
-msgstr ""
-
-#: inc/entityconfig.class.php:73
-msgid "GLPi's helpdesk"
-msgstr ""
-
-#: inc/entityconfig.class.php:74
-msgid "Service catalog simplified"
-msgstr ""
-
-#: inc/entityconfig.class.php:75
-msgid "Service catalog extended"
-msgstr ""
-
-#: inc/entityconfig.class.php:78
-msgid "Helpdesk mode"
-msgstr ""
-
-#: inc/target_actor.class.php:10
-msgid "Specific person"
-msgstr "Különleges személy"
-
-#: inc/target_actor.class.php:12
-msgid "Specific group"
-msgstr "Különleges csoport"
-
-#: inc/target_actor.class.php:14
-msgid "Specific supplier"
-msgstr ""
-
-#: inc/notificationtargetform_answer.class.php:11
-msgid "The form as been saved"
-msgstr "Az űrlap mentve"
-
-#: inc/notificationtargetform_answer.class.php:46
-msgid "Form #"
-msgstr "Űrlap #"
-
-#: inc/notificationtargetform_answer.class.php:47
-msgid "Form name"
-msgstr "Űrlap neve"
-
-#: inc/notificationtargetform_answer.class.php:51
-msgid "Full form answers"
-msgstr "A teljes űrlap válaszai"
-
-#: inc/notificationtargetform_answer.class.php:52
-msgid "Refused comment"
-msgstr "Elutasító megjegyzés"
-
-#: inc/notificationtargetform_answer.class.php:53
-msgid "Validation link"
-msgstr "Jóváhagyó link"
-
-#: inc/notificationtargetform_answer.class.php:54
-msgid "Request #"
-msgstr "Kérelem #"
-
-#: inc/targetbase.class.php:37
-msgid "Current active entity"
-msgstr "Jelenlegi aktív szervezet"
-
-#: inc/targetbase.class.php:38
-msgid "Default requester user's entity"
-msgstr "Alapértelmezett kérelmező felhasználó szervezete"
-
-#: inc/targetbase.class.php:39
-msgid "First dynamic requester user's entity (alphabetical)"
-msgstr "Első dinamikus kérelmező felhasználó szervezete (ABC)"
-
-#: inc/targetbase.class.php:40
-msgid "Last dynamic requester user's entity (alphabetical)"
-msgstr "Utolsó dinamikus kérelmező felhasználó szervezete (ABC)"
-
-#: inc/targetbase.class.php:41
-msgid "The form entity"
-msgstr "Az űrlap szervezete"
-
-#: inc/targetbase.class.php:42
-msgid "Default entity of the validator"
-msgstr "Jóváhagyó alapértelmezett szervezete"
-
-#: inc/targetbase.class.php:43
-msgid "Specific entity"
-msgstr "Különleges szervezet"
-
-#: inc/targetbase.class.php:44
-msgid "Default entity of a user type question answer"
-msgstr "A felhasználó típus kérdés válaszából az alapértelmezett szervezet"
-
-#: inc/targetbase.class.php:45
-msgid "From a GLPI object > Entity type question answer"
-msgstr "A GLPI objektum > szervezet típus kérdés válaszából "
-
-#: inc/targetbase.class.php:52
-msgid "Tags from questions"
-msgstr "Címkék a kérdésből"
-
-#: inc/targetbase.class.php:53
-msgid "Specific tags"
-msgstr "Különleges címkék"
-
-#: inc/targetbase.class.php:54
-msgid "Tags from questions and specific tags"
-msgstr "Címkék a kérdésekből és különleges címkék"
-
-#: inc/targetbase.class.php:55
-msgid "Tags from questions or specific tags"
-msgstr "Címkék a kérdésekből vagy különleges címkék"
-
-#: inc/targetbase.class.php:61
-msgid "equals to the answer to the question"
-msgstr "Megegyezik a kérdésre adott válasszal"
-
-#: inc/targetbase.class.php:62
-msgid "calculated from the ticket creation date"
-msgstr "A bejelentés létrehozási dátumából számítva"
-
-#: inc/targetbase.class.php:63
-msgid "calculated from the answer to the question"
-msgstr "A kérdés válaszából számítva"
-
-#: inc/targetbase.class.php:69
-msgid "Urgency from template or Medium"
-msgstr ""
-
-#: inc/targetbase.class.php:77
-msgid "Category from template or none"
-msgstr ""
-
-#: inc/targetbase.class.php:326
-msgid "User type question"
-msgstr "Felhasználó típus kérdés"
-
-#: inc/targetbase.class.php:327
-msgid "Entity type question"
-msgstr "Szervezet típus kérdés"
-
-#: inc/targetbase.class.php:472
-msgid "Ticket category"
-msgstr ""
-
-#: inc/targetbase.class.php:505 inc/form.class.php:531
-msgid "Category"
-msgid_plural "Categories"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/targetbase.class.php:573
-msgid "Urgency "
-msgstr ""
-
-#: inc/targetbase.class.php:613
-msgid "Ticket tags"
-msgstr "Bejelentés címkék"
-
-#: inc/targetbase.class.php:655
-msgid "Tags"
-msgstr "Címkék"
-
-#: inc/section.class.php:330
-msgid "Edit a section"
-msgstr "Szekció szerkesztése"
-
-#: inc/form.class.php:56
+#: inc/form.class.php:60
 msgid "Import forms"
 msgstr ""
 
-#: inc/form.class.php:90
-msgid "Description"
-msgstr "Leírás"
+#: inc/form.class.php:222 inc/form.class.php:277 inc/form_profile.class.php:36
+msgid "Public access"
+msgstr "Publikus elérés"
 
-#: inc/form.class.php:118
-msgid "Homepage"
-msgstr "Kezdőképernyő"
+#: inc/form.class.php:223 inc/form.class.php:281 inc/form_profile.class.php:37
+msgid "Private access"
+msgstr "Privát elérés"
 
-#: inc/form.class.php:126
-msgid "Access"
-msgstr "Elérés"
+#: inc/form.class.php:224 inc/form.class.php:285 inc/form_profile.class.php:38
+msgid "Restricted access"
+msgstr "Korlátozott elérés"
 
-#: inc/form.class.php:183 inc/form.class.php:197 inc/form.class.php:250
-#: inc/form.class.php:304
+#: inc/form.class.php:236 inc/form.class.php:293 inc/form.class.php:347
 msgid "All langages"
 msgstr "Minden nyelv"
 
-#: inc/form.class.php:289
+#: inc/form.class.php:332
 msgid "Direct access on homepage"
 msgstr "Közvetlen elérés a kezdőképernyőről"
 
-#: inc/form.class.php:310
+#: inc/form.class.php:353
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Fejléc"
 msgstr[1] "Fejlécek"
 
-#: inc/form.class.php:316
+#: inc/form.class.php:359
 msgid "Need to be validate?"
 msgstr "Szükséges jóváhagyás?"
 
-#: inc/form.class.php:424
+#: inc/form.class.php:466
 msgid "Default form in service catalog"
 msgstr ""
 
-#: inc/form.class.php:532
+#: inc/form.class.php:576 inc/targetbase.class.php:519
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/form.class.php:577
 msgid "see all"
 msgstr ""
 
-#: inc/form.class.php:550
+#: inc/form.class.php:595
 msgid "Popularity sort"
 msgstr ""
 
-#: inc/form.class.php:554
+#: inc/form.class.php:599
 msgid "Alphabetic sort"
 msgstr ""
 
-#: inc/form.class.php:726
+#: inc/form.class.php:770
 msgid "Please, describe your need here"
 msgstr ""
 
-#: inc/form.class.php:735
+#: inc/form.class.php:779
 msgid "My last forms (requester)"
 msgstr "Utolsó űrlapjaim (kérelmező)"
 
-#: inc/form.class.php:745
+#: inc/form.class.php:789
 msgid "No form posted yet"
 msgstr "Még nincs beküldött űrlap"
 
-#: inc/form.class.php:757
+#: inc/form.class.php:801
 msgid "All my forms (requester)"
 msgstr "Minden űrlapom (kérelmező)"
 
-#: inc/form.class.php:767
+#: inc/form.class.php:811
 msgid "My last forms (validator)"
 msgstr "Utolsó űrlapjaim (jóváhagyó)"
 
-#: inc/form.class.php:787
+#: inc/form.class.php:831
 msgid "No form waiting for validation"
 msgstr "Nincs jóváhagyásra váró űrlap"
 
-#: inc/form.class.php:799
+#: inc/form.class.php:849
 msgid "All my forms (validator)"
 msgstr "Minden űrlapom (jóváhagyó)"
 
-#: inc/form.class.php:898
+#: inc/form.class.php:884 inc/form_answer.class.php:363
+msgid "Print this form"
+msgstr ""
+
+#: inc/form.class.php:950
 msgid "Choose a validator"
 msgstr "Válasszon jóváhagyót"
 
-#: inc/form.class.php:1104
+#: inc/form.class.php:993 inc/target.class.php:114
+msgid "The name cannot be empty!"
+msgstr "A név nem lehet üres"
+
+#: inc/form.class.php:1147
 msgid "You must select validator !"
 msgstr "Ki kell választania a jóváhagyót !"
 
-#: inc/form.class.php:1181
+#: inc/form.class.php:1222
 msgid "Duplicate"
 msgstr "Duplikált"
 
-#: inc/form.class.php:1348
+#: inc/form.class.php:1509
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Duplikált űrlap: %s"
 
-#: inc/form.class.php:1359
+#: inc/form.class.php:1520
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Áthelyezett űrlap: %s"
 
-#: inc/form.class.php:1550
+#: inc/form.class.php:1709
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr ""
 
-#: inc/form.class.php:1637
+#: inc/form.class.php:1796
 msgid "Failed to create JSON document type"
 msgstr ""
 
-#: inc/form.class.php:1644
+#: inc/form.class.php:1803
 msgid "JSON document type not found"
 msgstr ""
 
-#: inc/form.class.php:1651
+#: inc/form.class.php:1810
 msgid "Failed to update JSON document type"
 msgstr ""
 
-#: inc/form.class.php:1711
+#: inc/form.class.php:1870
 msgid "Forms without category"
 msgstr "Kategória nélküli űrlapok"
 
-#: inc/form.class.php:1809 front/reservation.form.php:10
-#: front/reservation.php:12 front/issue.php:12 front/wizardfeeds.php:11
-#: front/form_answer.php:12 front/wizard.php:13 front/form_answer.form.php:37
-#: front/issue.form.php:20 front/knowbaseitem.form.php:10
-#: front/reservationitem.php:7
-msgid "Service catalog"
+#: inc/form_answer.class.php:42 inc/issue.class.php:403
+msgid "Form answer"
+msgid_plural "Form answers"
+msgstr[0] "Űrlap válasz"
+msgstr[1] "Űrlap válaszok"
+
+#: inc/form_answer.class.php:127
+msgid "Validator group"
 msgstr ""
 
-#: inc/form.class.php:1811 front/formlist.php:16 front/formlist.php:22
-msgid "Form list"
-msgstr "Űrlap lista"
+#: inc/form_answer.class.php:206
+msgid "waiting"
+msgstr "várakozó"
 
-#: inc/form.class.php:1814 inc/form.class.php:1821
-#: front/targetticket.form.php:49 front/form.php:15 front/issue.php:16
-#: front/issue.php:21 front/form_answer.php:16 front/form_answer.php:21
-#: front/targetchange.form.php:49 front/form_answer.form.php:41
-#: front/form_answer.form.php:46
-msgid "Form Creator"
-msgstr "Űrlap Készítő"
+#: inc/form_answer.class.php:207
+msgid "accepted"
+msgstr "elfogadott"
 
-#: inc/targetticket.class.php:5 inc/targetticket.class.php:69
+#: inc/form_answer.class.php:208
+msgid "refused"
+msgstr "elutasított"
+
+#: inc/form_answer.class.php:380
+msgid "Form accepted by validator."
+msgstr "Az űrlapját elfogadta a jóváhagyó"
+
+#: inc/form_answer.class.php:382
+msgid "Form successfully saved."
+msgstr "Az űrlap sikeresen mentve!"
+
+#: inc/form_answer.class.php:438
+msgid "Comment"
+msgstr "Megjegyzés"
+
+#: inc/form_answer.class.php:443
+msgid "Required if refused"
+msgstr "Elutasítás estén kötelező"
+
+#: inc/form_answer.class.php:449
+msgid "Refuse"
+msgstr "Elutasít"
+
+#: inc/form_answer.class.php:452
+msgid "Accept"
+msgstr "Elfogad"
+
+#: inc/form_answer.class.php:467
+msgid "Refused comment is required!"
+msgstr "Az elutasítás megjegyzése kötelező!"
+
+#: inc/form_answer.class.php:646
+msgid "Cannot generate targets!"
+msgstr "Nem generálhatóak a célpontok!"
+
+#: inc/form_answer.class.php:746 inc/form_answer.class.php:904
+msgid "The form has been successfully saved!"
+msgstr "Az űrlap sikeresen mentve!"
+
+#: inc/form_answer.class.php:846 inc/form_answer.class.php:869
+msgid "You are not the validator of these answers"
+msgstr ""
+
+#: inc/form_answer.class.php:952 inc/form_answer.class.php:954
+msgid "Form data"
+msgstr "Űrlap adatok"
+
+#: inc/form_profile.class.php:15
+msgid "Target"
+msgid_plural "Targets"
+msgstr[0] "Célpont"
+msgstr[1] "Célpontok"
+
+#: inc/form_profile.class.php:30
+msgid "Access type"
+msgstr "Elérés típus"
+
+#: inc/form_profile.class.php:45
+msgid "Link to the form"
+msgstr ""
+
+#: inc/form_profile.class.php:53
+msgid "Please active the form to view the link"
+msgstr ""
+
+#: inc/issue.class.php:10 inc/issue.class.php:254
+msgid "Issue"
+msgid_plural "Issues"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/issue.class.php:23
+msgid "Update issue data from tickets and form answers"
+msgstr ""
+
+#: inc/notificationtargetform_answer.class.php:14
+msgid "The form as been saved"
+msgstr "Az űrlap mentve"
+
+#: inc/notificationtargetform_answer.class.php:15 install/install.php:235
+msgid "A form need to be validate"
+msgstr "Egy űrlapot jóvá kell hagynia"
+
+#: inc/notificationtargetform_answer.class.php:16 install/install.php:241
+msgid "The form is refused"
+msgstr "Az űrlap elutasítva"
+
+#: inc/notificationtargetform_answer.class.php:17 install/install.php:247
+msgid "The form is accepted"
+msgstr "Az űrlap elfogadva"
+
+#: inc/notificationtargetform_answer.class.php:18 install/install.php:253
+msgid "The form is deleted"
+msgstr "Az űrlap törölve"
+
+#: inc/notificationtargetform_answer.class.php:49
+msgid "Form #"
+msgstr "Űrlap #"
+
+#: inc/notificationtargetform_answer.class.php:50
+msgid "Form name"
+msgstr "Űrlap neve"
+
+#: inc/notificationtargetform_answer.class.php:51
+msgid "Requester"
+msgstr "Kérelmező"
+
+#: inc/notificationtargetform_answer.class.php:52
+msgid "Validator"
+msgstr "Jóváhagyó"
+
+#: inc/notificationtargetform_answer.class.php:54
+msgid "Full form answers"
+msgstr "A teljes űrlap válaszai"
+
+#: inc/notificationtargetform_answer.class.php:55
+msgid "Refused comment"
+msgstr "Elutasító megjegyzés"
+
+#: inc/notificationtargetform_answer.class.php:56
+msgid "Validation link"
+msgstr "Jóváhagyó link"
+
+#: inc/notificationtargetform_answer.class.php:57
+msgid "Request #"
+msgstr "Kérelem #"
+
+#: inc/question.class.php:36 inc/targetbase.class.php:520
+#: inc/targetbase.class.php:590 inc/targetbase.class.php:671
+#: inc/targetbase.class.php:822 inc/targetchange.class.php:766
+#: inc/targetticket.class.php:624
+msgid "Question"
+msgid_plural "Questions"
+msgstr[0] "Kérdés"
+msgstr[1] "Kérdések"
+
+#: inc/question.class.php:107 inc/question.class.php:161
+#: inc/target.class.php:71
+msgid "Delete"
+msgstr "Törlés"
+
+#: inc/question.class.php:175 inc/question.class.php:691
+msgid "Required"
+msgstr "Kötelező"
+
+#: inc/question.class.php:204 inc/question.class.php:554
+msgid "Add a question"
+msgstr "Kérdés hozzáadása"
+
+#: inc/question.class.php:214 inc/section.class.php:330
+msgid "Add a section"
+msgstr "Szekció hozzáadása"
+
+#: inc/question.class.php:238 inc/section.class.php:59
+#: inc/section.class.php:99
+msgid "The title is required"
+msgstr "A cím kötelező"
+
+#: inc/question.class.php:247
+msgid "The field type is required"
+msgstr "A mező típus kötelező"
+
+#: inc/question.class.php:254
+msgid "The section is required"
+msgstr "A szekció kötelező"
+
+#: inc/question.class.php:264 inc/fields/checkboxesfield.class.php:106
+#: inc/fields/dropdownfield.class.php:81
+#: inc/fields/glpiselectfield.class.php:12 inc/fields/radiosfield.class.php:53
+#: inc/fields/selectfield.class.php:59
+msgid "The field value is required:"
+msgstr "A mező értéke kötelező:"
+
+#: inc/question.class.php:287
+msgid "The regular expression is invalid"
+msgstr ""
+
+#: inc/question.class.php:554
+msgid "Edit a question"
+msgstr "Kérdés szerkesztése"
+
+#: inc/question.class.php:590 inc/section.class.php:36
+#: inc/targetchange.class.php:769 inc/targetticket.class.php:627
+msgid "Section"
+msgid_plural "Sections"
+msgstr[0] "Szekció"
+msgstr[1] "Szekciók"
+
+#: inc/question.class.php:617 inc/fields/glpiselectfield.class.php:5
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "GLPI Objektum"
+msgstr[1] "GLPI Objektumok"
+
+#: inc/question.class.php:703
+msgid "Show empty"
+msgstr "Üres megjelenítése"
+
+#: inc/question.class.php:719
+msgid "Show ticket categories"
+msgstr ""
+
+#: inc/question.class.php:724
+msgid "Request categories"
+msgstr ""
+
+#: inc/question.class.php:725
+msgid "Incident categories"
+msgstr ""
+
+#: inc/question.class.php:726
+msgid "Both"
+msgstr ""
+
+#: inc/question.class.php:735
+msgid "Limit ticket categories depth"
+msgstr ""
+
+#: inc/question.class.php:744
+msgid "No limit"
+msgstr ""
+
+#: inc/question.class.php:753
+msgid "One per line for lists"
+msgstr "Soronként egy érték a listákból"
+
+#: inc/question.class.php:787
+msgid "Values"
+msgstr "Értékek"
+
+#: inc/question.class.php:788
+msgid "One per line"
+msgstr "Soronként egy"
+
+#: inc/question.class.php:800
+msgid "Filter"
+msgstr "Szűrő"
+
+#: inc/question.class.php:811
+msgid "Attribute"
+msgstr "Attribútum"
+
+#: inc/question.class.php:835
+msgid "Range"
+msgstr "tartomány"
+
+#: inc/question.class.php:840
+msgid "Min"
+msgstr "Min"
+
+#: inc/question.class.php:846
+msgid "Max"
+msgstr "Max"
+
+#: inc/question.class.php:872
+msgid "Additional validation"
+msgstr "További validálás"
+
+#: inc/question.class.php:875
+msgid "Regular expression"
+msgstr "Reguláris kifejezés"
+
+#: inc/question.class.php:884
+msgid ""
+"Specify the additional validation conditions in the description of the "
+"question to help users."
+msgstr "További jóváhagyási feltételek megadása a kérdés leírásában, melyek segíthetik a felhasználókt"
+
+#: inc/question.class.php:892
+msgid "Show field"
+msgstr "Mező megjelenítése"
+
+#: inc/question.class.php:900
+msgid "Always displayed"
+msgstr "Mindig megjelenik"
+
+#: inc/question.class.php:901
+msgid "Hidden unless"
+msgstr "Rejtett amíg"
+
+#: inc/question.class.php:902
+msgid "Displayed unless"
+msgstr "Megjelenik amíg"
+
+#: inc/section.class.php:332
+msgid "Edit a section"
+msgstr "Szekció szerkesztése"
+
+#: inc/target.class.php:27
+msgid "Destination"
+msgid_plural "Destinations"
+msgstr[0] "Cél"
+msgstr[1] "Célok"
+
+#: inc/target.class.php:47
+msgid "Destinations"
+msgid_plural "Destinations"
+msgstr[0] "Célok"
+msgstr[1] "Célok"
+
+#: inc/target.class.php:83 inc/target.class.php:305
+msgid "Add a destination"
+msgstr "Cél hozzáadása"
+
+#: inc/target.class.php:120
+msgid "The type cannot be empty!"
+msgstr "A típus nem lehet üres!"
+
+#: inc/target_actor.class.php:12 inc/targetchange.class.php:478
+#: inc/targetchange.class.php:585 inc/targetchange.class.php:705
+#: inc/targetticket.class.php:335 inc/targetticket.class.php:444
+#: inc/targetticket.class.php:563
+msgid "Form requester"
+msgstr "Űrlap kérelmező"
+
+#: inc/target_actor.class.php:13 inc/targetchange.class.php:481
+#: inc/targetchange.class.php:588 inc/targetchange.class.php:708
+#: inc/targetticket.class.php:338 inc/targetticket.class.php:447
+#: inc/targetticket.class.php:566
+msgid "Form validator"
+msgstr "Űrlap jóváhagyó"
+
+#: inc/target_actor.class.php:14
+msgid "Specific person"
+msgstr "Különleges személy"
+
+#: inc/target_actor.class.php:15 inc/targetchange.class.php:491
+#: inc/targetchange.class.php:598 inc/targetchange.class.php:718
+#: inc/targetticket.class.php:348 inc/targetticket.class.php:457
+#: inc/targetticket.class.php:576
+msgid "Person from the question"
+msgstr "Személy a kérdésből"
+
+#: inc/target_actor.class.php:16
+msgid "Specific group"
+msgstr "Különleges csoport"
+
+#: inc/target_actor.class.php:17 inc/targetchange.class.php:502
+#: inc/targetchange.class.php:609 inc/targetchange.class.php:729
+#: inc/targetticket.class.php:359 inc/targetticket.class.php:468
+#: inc/targetticket.class.php:587
+msgid "Group from the question"
+msgstr "Csoport a kérdésből"
+
+#: inc/target_actor.class.php:18
+msgid "Specific supplier"
+msgstr ""
+
+#: inc/target_actor.class.php:19 inc/targetchange.class.php:746
+#: inc/targetticket.class.php:604
+msgid "Supplier from the question"
+msgstr "Cég a kérdésből"
+
+#: inc/target_actor.class.php:20 inc/targetchange.class.php:508
+#: inc/targetchange.class.php:615 inc/targetchange.class.php:735
+#: inc/targetticket.class.php:365 inc/targetticket.class.php:474
+#: inc/targetticket.class.php:593
+msgid "Actors from the question"
+msgstr ""
+
+#: inc/targetbase.class.php:45
+msgid "Current active entity"
+msgstr "Jelenlegi aktív szervezet"
+
+#: inc/targetbase.class.php:46
+msgid "Default requester user's entity"
+msgstr "Alapértelmezett kérelmező felhasználó szervezete"
+
+#: inc/targetbase.class.php:47
+msgid "First dynamic requester user's entity (alphabetical)"
+msgstr "Első dinamikus kérelmező felhasználó szervezete (ABC)"
+
+#: inc/targetbase.class.php:48
+msgid "Last dynamic requester user's entity (alphabetical)"
+msgstr "Utolsó dinamikus kérelmező felhasználó szervezete (ABC)"
+
+#: inc/targetbase.class.php:49
+msgid "The form entity"
+msgstr "Az űrlap szervezete"
+
+#: inc/targetbase.class.php:50
+msgid "Default entity of the validator"
+msgstr "Jóváhagyó alapértelmezett szervezete"
+
+#: inc/targetbase.class.php:51
+msgid "Specific entity"
+msgstr "Különleges szervezet"
+
+#: inc/targetbase.class.php:52
+msgid "Default entity of a user type question answer"
+msgstr "A felhasználó típus kérdés válaszából az alapértelmezett szervezet"
+
+#: inc/targetbase.class.php:53
+msgid "From a GLPI object > Entity type question answer"
+msgstr "A GLPI objektum > szervezet típus kérdés válaszából "
+
+#: inc/targetbase.class.php:60
+msgid "Tags from questions"
+msgstr "Címkék a kérdésből"
+
+#: inc/targetbase.class.php:61
+msgid "Specific tags"
+msgstr "Különleges címkék"
+
+#: inc/targetbase.class.php:62
+msgid "Tags from questions and specific tags"
+msgstr "Címkék a kérdésekből és különleges címkék"
+
+#: inc/targetbase.class.php:63
+msgid "Tags from questions or specific tags"
+msgstr "Címkék a kérdésekből vagy különleges címkék"
+
+#: inc/targetbase.class.php:69
+msgid "equals to the answer to the question"
+msgstr "Megegyezik a kérdésre adott válasszal"
+
+#: inc/targetbase.class.php:70
+msgid "calculated from the ticket creation date"
+msgstr "A bejelentés létrehozási dátumából számítva"
+
+#: inc/targetbase.class.php:71
+msgid "calculated from the answer to the question"
+msgstr "A kérdés válaszából számítva"
+
+#: inc/targetbase.class.php:77
+msgid "Urgency from template or Medium"
+msgstr ""
+
+#: inc/targetbase.class.php:78 inc/targetchange.class.php:15
+msgid "Specific urgency"
+msgstr ""
+
+#: inc/targetbase.class.php:79 inc/targetbase.class.php:87
+#: inc/targetbase.class.php:95 inc/targetchange.class.php:16
+#: inc/targetchange.class.php:24
+msgid "Equals to the answer to the question"
+msgstr ""
+
+#: inc/targetbase.class.php:85
+msgid "Category from template or none"
+msgstr ""
+
+#: inc/targetbase.class.php:86 inc/targetchange.class.php:23
+msgid "Specific category"
+msgstr ""
+
+#: inc/targetbase.class.php:93
+msgid "Location from template or none"
+msgstr ""
+
+#: inc/targetbase.class.php:94
+msgid "Specific location"
+msgstr ""
+
+#: inc/targetbase.class.php:340
+msgid "User type question"
+msgstr "Felhasználó típus kérdés"
+
+#: inc/targetbase.class.php:341
+msgid "Entity type question"
+msgstr "Szervezet típus kérdés"
+
+#: inc/targetbase.class.php:486
+msgid "Ticket category"
+msgstr ""
+
+#: inc/targetbase.class.php:591
+msgid "Urgency "
+msgstr ""
+
+#: inc/targetbase.class.php:630
+msgid "Ticket tags"
+msgstr "Bejelentés címkék"
+
+#: inc/targetbase.class.php:672
+msgid "Tags"
+msgstr "Címkék"
+
+#: inc/targetbase.class.php:775
+msgid "Attached document"
+msgstr ""
+
+#: inc/targetbase.class.php:823
+msgid "Location "
+msgstr ""
+
+#: inc/targetchange.class.php:9 inc/targetchange.class.php:197
+msgid "Target change"
+msgid_plural "Target changes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/targetchange.class.php:14
+msgid "Medium"
+msgstr ""
+
+#: inc/targetchange.class.php:22
+msgid "None"
+msgstr ""
+
+#: inc/targetchange.class.php:185 inc/targetticket.class.php:65
+msgid "Edit a destination"
+msgstr "Cél szerkesztése"
+
+#: inc/targetchange.class.php:200
+msgid "Change title"
+msgstr ""
+
+#: inc/targetchange.class.php:294 inc/targetticket.class.php:152
+msgid "Cancel"
+msgstr "Mégse"
+
+#: inc/targetchange.class.php:377
+msgid "Change actors"
+msgstr ""
+
+#: inc/targetchange.class.php:773 inc/targetticket.class.php:631
+msgid "Full form"
+msgstr "Teljes űrlap"
+
+#: inc/targetchange.class.php:819 inc/targetticket.class.php:811
+msgid "The title cannot be empty!"
+msgstr "A cím nem lehet üres!"
+
+#: inc/targetchange.class.php:825 inc/targetticket.class.php:817
+msgid "The description cannot be empty!"
+msgstr "A Leírás nem lehet üres!"
+
+#: inc/targetticket.class.php:9 inc/targetticket.class.php:77
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Cél bejelentés"
 msgstr[1] "Cél bejelentések"
 
-#: inc/targetticket.class.php:72
+#: inc/targetticket.class.php:80
 msgid "Ticket title"
 msgstr "Bejelentés tárgya"
 
-#: inc/targetticket.class.php:122
+#: inc/targetticket.class.php:139
 msgid "Add validation message as first ticket followup"
 msgstr "Az érvényesítő üzenet kerüljön a bejelentés első utótevekenységébe"
 
-#: inc/targetticket.class.php:217
+#: inc/targetticket.class.php:234
 msgid "Ticket actors"
 msgstr "Bejelentés szerzők"
 
-#: inc/fields/tagfield.class.php:61
-msgid "Tag"
-msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
+#: inc/targetticket.class.php:669
+msgid "Link to an other ticket"
+msgstr ""
+
+#: inc/targetticket.class.php:678
+msgid "An other destination of this form"
+msgstr ""
+
+#: inc/targetticket.class.php:679
+msgid "An existing ticket"
+msgstr ""
+
+#: inc/targetticket.class.php:909
+msgid "Invalid link type"
+msgstr ""
+
+#: inc/targetticket.class.php:925
+msgid "Invalid linked item type"
+msgstr ""
+
+#: inc/targetticket.class.php:938
+msgid "Linked item does not exists"
+msgstr ""
+
+#: inc/targetticket.class.php:951
+msgid "Failed to link the item"
+msgstr ""
+
+#: inc/targetticket.class.php:1298 install/install.php:248
+msgid "Your form has been accepted by the validator"
+msgstr "Az űrlapját elfogadta a jóváhagyó"
+
+#: inc/wizard.class.php:67 inc/wizard.class.php:68
+msgid "Seek assistance"
+msgstr ""
+
+#: inc/wizard.class.php:73 inc/wizard.class.php:74
+msgid "My requests for assistance"
+msgstr ""
+
+#: inc/wizard.class.php:85 inc/wizard.class.php:86
+msgid "Book an asset"
+msgstr ""
+
+#: inc/wizard.class.php:94 inc/wizard.class.php:95
+msgid "Consult feeds"
+msgstr ""
+
+#: inc/wizard.class.php:243
+msgid "To validate"
+msgstr ""
+
+#: inc/wizard.class.php:255
+msgid "Closed"
+msgstr ""
 
 #: inc/fields/actorfield.class.php:7
 msgid "Actor"
@@ -888,32 +868,45 @@ msgid_plural "Actors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/fields/actorfield.class.php:157
+#: inc/fields/actorfield.class.php:152
 msgid "Invalid value:"
 msgstr ""
 
-#: inc/fields/textareafield.class.php:35 inc/fields/textfield.class.php:13
+#: inc/fields/checkboxesfield.class.php:82
+#: inc/fields/multiselectfield.class.php:19
 #, php-format
-msgid "The text is too short (minimum %d characters):"
-msgstr "A szöveg túl rövid (minimum %d karakter):"
+msgid "The following question needs of at least %d answers"
+msgstr "A következő kérdésre legalább %d választ kell adni"
 
-#: inc/fields/textareafield.class.php:40 inc/fields/textfield.class.php:18
+#: inc/fields/checkboxesfield.class.php:88
+#: inc/fields/multiselectfield.class.php:25
 #, php-format
-msgid "The text is too long (maximum %d characters):"
-msgstr "A szöveg túl hosszú (maximum %d karakter):"
+msgid "The following question does not accept more than %d answers"
+msgstr "A következő kérdésre nem adható több válasz, mint %d"
 
-#: inc/fields/textareafield.class.php:45 inc/fields/textfield.class.php:23
-#: inc/fields/floatfield.class.php:28 inc/fields/integerfield.class.php:28
-msgid "Specific format does not match:"
-msgstr "A megadott formátum nem illeszkedik:"
+#: inc/fields/checkboxesfield.class.php:99
+msgid "Checkboxes"
+msgstr "Jelölőnégyzetek"
 
-#: inc/fields/textareafield.class.php:54
-msgid "Textarea"
-msgstr "Szöveg terület"
+#: inc/fields/datetimefield.class.php:57
+msgid "Datetime"
+msgstr "Időpont"
 
-#: inc/fields/textfield.class.php:32
-msgid "Text"
-msgstr "Szöveg"
+#: inc/fields/descriptionfield.class.php:24
+msgid "A description field should have a description:"
+msgstr "A leírás mezőnek tartalmaznia kell a leírást:"
+
+#: inc/fields/dropdownfield.class.php:92
+msgid "Invalid dropdown type:"
+msgstr ""
+
+#: inc/fields/emailfield.class.php:25
+msgid "This is not a valid e-mail:"
+msgstr "Nem érvényes e-mail cím:"
+
+#: inc/fields/filefield.class.php:27
+msgid "A required file is missing:"
+msgstr "Egy kötelező fájl hiányzik:"
 
 #: inc/fields/floatfield.class.php:11
 msgid "This is not a number:"
@@ -929,6 +922,11 @@ msgstr "A következő számnak nagyobbnak kell lennie mint %d: "
 msgid "The following number must be lower than %d:"
 msgstr "A következő számnak kisebbnek kell lennie mint %d: "
 
+#: inc/fields/floatfield.class.php:28 inc/fields/integerfield.class.php:28
+#: inc/fields/textfield.class.php:23
+msgid "Specific format does not match:"
+msgstr "A megadott formátum nem illeszkedik:"
+
 #: inc/fields/floatfield.class.php:38
 msgid "Float"
 msgstr "Float"
@@ -941,60 +939,128 @@ msgstr "Ez nem egész szám:"
 msgid "Integer"
 msgstr "Egész szám"
 
-#: inc/fields/checkboxesfield.class.php:81
-#: inc/fields/multiselectfield.class.php:19
-#, php-format
-msgid "The following question needs of at least %d answers"
-msgstr "A következő kérdésre legalább %d választ kell adni"
-
-#: inc/fields/checkboxesfield.class.php:87
-#: inc/fields/multiselectfield.class.php:25
-#, php-format
-msgid "The following question does not accept more than %d answers"
-msgstr "A következő kérdésre nem adható több válasz, mint %d"
-
-#: inc/fields/checkboxesfield.class.php:98
-msgid "Checkboxes"
-msgstr "Jelölőnégyzetek"
-
-#: inc/fields/selectfield.class.php:52
-msgid "Select"
-msgstr "Saját legördülő lista"
-
-#: inc/fields/emailfield.class.php:25
-msgid "This is not a valid e-mail:"
-msgstr "Nem érvényes e-mail cím:"
-
-#: inc/fields/datetimefield.class.php:57
-msgid "Datetime"
-msgstr "Időpont"
-
-#: inc/fields/ldapselectfield.class.php:70
+#: inc/fields/ldapselectfield.class.php:62
 msgid "LDAP Select"
 msgstr "LDAP Érték"
+
+#: inc/fields/ldapselectfield.class.php:90
+msgid "Cannot recover LDAP informations!"
+msgstr "Az LDAP adatok nem kérhetők le!"
 
 #: inc/fields/multiselectfield.class.php:71
 msgid "Multiselect"
 msgstr "Többszörös kiválasztás"
 
-#: inc/fields/filefield.class.php:27
-msgid "A required file is missing:"
-msgstr "Egy kötelező fájl hiányzik:"
-
 #: inc/fields/radiosfield.class.php:46
 msgid "Radios"
 msgstr "Rádiógombok"
 
-#: front/header.form.php:13
+#: inc/fields/selectfield.class.php:52
+msgid "Select"
+msgstr "Saját legördülő lista"
+
+#: inc/fields/tagfield.class.php:61
+msgid "Tag"
+msgid_plural "Tags"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/fields/textareafield.class.php:29
+msgid "Textarea"
+msgstr "Szöveg terület"
+
+#: inc/fields/textfield.class.php:13
+#, php-format
+msgid "The text is too short (minimum %d characters):"
+msgstr "A szöveg túl rövid (minimum %d karakter):"
+
+#: inc/fields/textfield.class.php:18
+#, php-format
+msgid "The text is too long (maximum %d characters):"
+msgstr "A szöveg túl hosszú (maximum %d karakter):"
+
+#: inc/fields/textfield.class.php:32
+msgid "Text"
+msgstr "Szöveg"
+
+#: install/install.php:229
+msgid "A form has been created"
+msgstr "Az űrlap létrehozva"
+
+#: install/install.php:230
+msgid "Your request has been saved"
+msgstr "A kérelme mentve"
+
+#: install/install.php:231
 msgid ""
-"An header already exists for this entity! You can have only one header per "
-"entity."
-msgstr "A fejléc már létezik ebben a szervezetben, szervezetenként egy fejléc adható meg."
+"Hi,\\nYour request from GLPI has been successfully saved with number "
+"##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
+"see your answers onto the following link:\\n##formcreator.validation_link##"
+msgstr "Üdvözlöm,\\nA kérelme a GLPI-ben mentésre került, a száma:##formcreator.request_id##. Kérelmét továbbítottuk a helpdesk csapatnak.\\nA válaszokat az alábbi linken nézheti meg:\\n##formcreator.validation_link##"
 
-#: front/question.form.php:15
-msgid "The question has been successfully saved!"
-msgstr "A kérdés sikeresen mentve!"
+#: install/install.php:236
+msgid "A form from GLPI need to be validate"
+msgstr "Egy űrlapot jóvá kell hagynia a GLPI-ben"
 
-#: front/question.form.php:25
-msgid "The question has been successfully updated!"
-msgstr "A kérdés sikeresen frissítve!"
+#: install/install.php:237
+msgid ""
+"Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
+"validator.\\nYou can access it by clicking onto this "
+"link:\\n##formcreator.validation_link##"
+msgstr "Üdvözlöm,\\nEgy űrlapot jóvá kell hagynia a GLPI-ben, melyen önt választották jóváhagyónak.\\nElérheti az alábbi linkre kattintva:\\n##formcreator.validation_link##"
+
+#: install/install.php:242
+msgid "Your form has been refused by the validator"
+msgstr "Az űrlapját visszautasította a jóváhagyó"
+
+#: install/install.php:243
+msgid ""
+"Hi,\\nWe are sorry to inform you that your form has been refused by the "
+"validator for the reason "
+"below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
+"resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
+msgstr "Üdvözlöm,\\nSajnálattal közöljük, hogy az Ön űrlapját elutasította a jóváhagyó. Az elutasítás oka:\\n##formcreator.validation_comment##\\nMódosíthatja, és újra elküldheti az alábbi linkre kattintva:\\n##formcreator.validation_link##"
+
+#: install/install.php:249
+msgid ""
+"Hi,\\nWe are pleased to inform you that your form has been accepted by the "
+"validator.\\nYour request will be considered soon."
+msgstr "Üdvözlöm,\\nÖrömmel értesítjük, hogy az űrlapját elfogadta a jóváhagyó.\\nKérelme hamarosan mérlegelésre kerül."
+
+#: install/install.php:254
+msgid "Your form has been deleted by an administrator"
+msgstr "Az űrlapját törölte egy Adminisztrátor"
+
+#: install/install.php:255
+msgid ""
+"Hi,\\nWe are sorry to inform you that your request cannot be considered and "
+"has been deleted by an administrator."
+msgstr "Üdvözlöm,\\nSajnálattal közöljük, hogy az Ön kérelme nem mérlegelhető és egy Adminisztrátor törölte."
+
+#: install/install.php:453 install/update_0.0_2.5.php:383
+msgid "Formcreator - Sync service catalog issues"
+msgstr ""
+
+#: js/scripts.js.php:263
+msgid "No form found. Please choose a form below instead"
+msgstr ""
+
+#: js/scripts.js.php:281
+msgid "An error occured while querying forms"
+msgstr ""
+
+#: js/scripts.js.php:317
+msgid "No form yet in this category"
+msgstr ""
+
+#: js/scripts.js.php:415
+msgid "Are you sure you want to delete this question?"
+msgstr "Biztosan törli ezt a kérdést?"
+
+#: js/scripts.js.php:476
+msgid "Are you sure you want to delete this section?"
+msgstr "Biztosan törli ezt a szekciót?"
+
+#: js/scripts.js.php:513
+msgid "Are you sure you want to delete this destination:"
+msgstr "Biztosan törli ezt a célt:"
