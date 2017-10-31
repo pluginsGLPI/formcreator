@@ -19,47 +19,91 @@ class FormDuplicationTest extends SuperAdminTestCase
       );
 
       $this->sectionData = array(
-            array(
-                  'name'                  => 'a section',
-                  'questions'             => array (
-                        array(
-                              'name'                  => 'text question',
-                              'fieldtype'             => 'text'
-                        ),
-                        array(
-                              'name'                  => 'other text question',
-                              'fieldtype'             => 'text'
-                        ),
-                  ),
+         array(
+            'name'                  => 'a section',
+            'questions'             => array (
+               array(
+                  'name'                  => 'text question',
+                  'fieldtype'             => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ],
+               ),
+               array(
+                  'name'                  => 'other text question',
+                  'fieldtype'             => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ],
+               ),
             ),
-            array(
-                  'name'                  => 'an other section',
-                  'questions'             => array (
-                        array(
-                              'name'                  => 'text question',
-                              'fieldtype'             => 'text'
-                        ),
-                        array(
-                              'name'                  => 'other text question',
-                              'fieldtype'             => 'text',
-                              'show_rule'             => 'hidden',
-                              'show_field'            => 'text question',
-                              'show_condition'        => '==',
-                              'show_value'            => 'azerty',
-                        ),
-                  ),
+         ),
+         array(
+            'name'                  => 'an other section',
+            'questions'             => array (
+               array(
+                  'name'                  => 'text question',
+                  'fieldtype'             => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ],
+               ),
+               array(
+                  'name'                  => 'other text question',
+                  'fieldtype'             => 'text',
+                  'show_rule'             => 'hidden',
+                  'show_field'            => 'text question',
+                  'show_condition'        => '==',
+                  'show_value'            => 'azerty',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ],
+               ),
             ),
+         ),
       );
 
       $this->targetData = array(
-            array(
-                  'name'                  => 'target ticket 1',
-                  'itemtype'              => 'PluginFormcreatorTargetTicket',
-            ),
-            array(
-                  'name'                  => 'target ticket 2',
-                  'itemtype'              => 'PluginFormcreatorTargetTicket',
-            )
+         array(
+            'name'                  => 'target ticket 1',
+            'itemtype'              => 'PluginFormcreatorTargetTicket',
+         ),
+         array(
+            'name'                  => 'target ticket 2',
+            'itemtype'              => 'PluginFormcreatorTargetTicket',
+         )
       );
    }
 
@@ -70,7 +114,7 @@ class FormDuplicationTest extends SuperAdminTestCase
 
       foreach ($this->sectionData as $sectionData) {
          // Keep questions data set apart from sections data
-         $questionsData = $sectionData['questions'];
+         $questionData = $sectionData['questions'];
          unset($sectionData['questions']);
 
          // Create section
@@ -79,16 +123,16 @@ class FormDuplicationTest extends SuperAdminTestCase
          $section->add($sectionData);
          $this->assertFalse($section->isNewItem());
          $sectionId = $section->getID();
-         foreach ($questionsData as $questionData) {
+         foreach ($questionData as $oneQuestionData) {
             // Create question
-            $questionData ['plugin_formcreator_sections_id'] = $section->getID();
+            $oneQuestionData ['plugin_formcreator_sections_id'] = $section->getID();
             $question = new PluginFormcreatorQuestion();
-            $question->add($questionData);
-            $this->assertFalse($question->isNewItem(), $_SESSION['MESSAGE_AFTER_REDIRECT']);
+            $question->add($oneQuestionData);
+            $this->assertFalse($question->isNewItem(), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
 
             $questionData['id'] = $question->getID();
             if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
-               $showFieldName = $questionData['show_field'];
+               $showFieldName = $oneQuestionData['show_field'];
                $showfield = new PluginFormcreatorQuestion();
                $showfield->getFromDBByCrit([
                   'AND' => [
@@ -96,8 +140,8 @@ class FormDuplicationTest extends SuperAdminTestCase
                      'name'                           => $showFieldName
                   ]
                ]);
-               $questionData['show_field'] = $showfield->getID();
-               $question->updateConditions($questionData);
+               $oneQuestionData['show_field'] = $showfield->getID();
+               $question->updateConditions($oneQuestionData);
             }
          }
          foreach ($this->targetData as $targetData) {

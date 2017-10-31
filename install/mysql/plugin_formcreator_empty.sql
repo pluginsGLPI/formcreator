@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `range_min` varchar(10) DEFAULT NULL,
   `range_max` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
-  `regex` varchar(255) DEFAULT NULL,
+  `regex` text,
   `order` int(11) NOT NULL DEFAULT '0',
   `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always',
   `uuid` varchar(255) DEFAULT NULL,
@@ -261,4 +261,36 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
   INDEX `item` (`itemtype`,`items_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_questions_id`   int(11)       NOT NULL,
+  `plugin_formcreator_questions_id_2` int(11)       NOT NULL,
+  `fieldname`                         varchar(255)  DEFAULT NULL,
+  `uuid`                              varchar(255)  DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`),
+  INDEX `plugin_formcreator_questions_id_2` (`plugin_formcreator_questions_id_2`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_questions_id`   int(11)       NOT NULL,
+  `regex`                             text          DEFAULT NULL,
+  `fieldname`                         varchar(255)  DEFAULT NULL,
+  `uuid`                              varchar(255)  DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_formcreator_questions_id`   int(11)       NOT NULL,
+  `range_min`                         varchar(255)  DEFAULT NULL,
+  `range_max`                         varchar(255)  DEFAULT NULL,
+  `fieldname`                         varchar(255)  DEFAULT NULL,
+  `uuid`                              varchar(255)  DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

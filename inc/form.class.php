@@ -36,7 +36,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorForm extends CommonDBTM
+class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExportableInterface
 {
    static $rightname = 'entity';
 
@@ -230,7 +230,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param Array  $options         Options (optional)
     *
     * @return String                 Html string to be displayed for the form field
-    **/
+    */
    public static function getSpecificValueToSelect($field, $name='', $values='', array $options=[]) {
 
       if (!is_array($values)) {
@@ -1002,7 +1002,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param array $input datas used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForAdd($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
@@ -1048,7 +1048,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * Actions done after the ADD of the item in the database
     *
     * @return void
-   **/
+   */
    public function post_addItem() {
       $this->updateValidators();
       return true;
@@ -1060,7 +1060,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param array $input datas used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForUpdate($input) {
       if (isset($input['access_rights'])
             || isset($_POST['massiveaction'])
@@ -1076,7 +1076,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * Actions done after the PURGE of the item in the database
     *
     * @return void
-   **/
+   */
    public function post_purgeItem() {
       $target = new PluginFormcreatorTarget();
       $target->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
@@ -1218,6 +1218,11 @@ class PluginFormcreatorForm extends CommonDBTM
       ]);
    }
 
+   /**
+    * gets a form from database from a question
+    *
+    * @param integer $questionId
+    */
    public  function getByQuestionId($questionId) {
       $table_sections = PluginFormcreatorSection::getTable();
       $table_questions = PluginFormcreatorQuestion::getTable();
@@ -1309,7 +1314,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
 
       // Form sections
-      $sectionRows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'");
+      $sectionRows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'", "`order` ASC");
       foreach ($sectionRows as $sections_id => $sectionRow) {
          unset($sectionRow['id'],
                $sectionRow['uuid']);
@@ -1319,17 +1324,37 @@ class PluginFormcreatorForm extends CommonDBTM
          }
 
          // Form questions
-         $questionRows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'");
+         $questionRows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'", "`order` ASC");
          foreach ($questionRows as $questions_id => $questionRow) {
             unset($questionRow['id'],
                   $questionRow['uuid']);
             $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
+            $questionRow['_skip_checks'] = true;
             if (!$new_questions_id = $section_question->add($questionRow)) {
                return false;
             }
 
             // Map old question ID to new question ID
             $tab_questions[$questions_id] = $new_questions_id;
+         }
+      }
+
+      // Form questions parameters
+      foreach ($tab_questions as $questions_id => $new_questions_id) {
+         $oldQuestion = new PluginFormcreatorQuestion();
+         $oldQuestion->getFromDB($questions_id);
+         $fieldType = 'PluginFormcreator' . ucfirst($oldQuestion->fields['fieldtype']) . 'Field';
+         $this->field = new $fieldType($oldQuestion->fields);
+         $parameters = $this->field->getUsedParameters();
+         foreach ($parameters as $fieldName => $parameter) {
+            $parameter->getFromDBByCrit([
+               'plugin_formcreator_questions_id' => $questions_id,
+               'fieldname' => $fieldName,
+            ]);
+            $newQuestion = new PluginFormcreatorQuestion();
+            $newQuestion->getFromDB($new_questions_id);
+            $parameter = $parameter->duplicate($newQuestion, $tab_questions);
+            $parameter->add($parameter->fields);
          }
       }
 
@@ -1537,7 +1562,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @since version 0.85
     *
     * @see CommonDBTM::showMassiveActionsSubForm()
-   **/
+   */
    public static function showMassiveActionsSubForm(MassiveAction $ma) {
       switch ($ma->getAction()) {
          case 'Transfert':
@@ -1556,7 +1581,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @since version 0.85
     *
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
-   **/
+   */
    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,  array $ids) {
       switch ($ma->getAction()) {
          case 'Duplicate' :
@@ -1812,12 +1837,18 @@ class PluginFormcreatorForm extends CommonDBTM
             continue;
          }
 
+         $importLinker = new PluginFormcreatorImportLinker();
          foreach ($forms_toimport['forms'] as $form) {
-            self::import($form);
+            //self::import($form);
+            self::import($importLinker, $form);
          }
-
-         Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
-                                                  $filename));
+         if (!$importLinker->importPostponed()) {
+            Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
+                                                         $filename));
+         } else {
+            Session::addMessageAfterRedirect(sprintf(__("Failed to import forms from %s", "formcreator"),
+                                                        $filename));
+         }
       }
    }
 
@@ -1828,6 +1859,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @param  array   $form the form data (match the form table)
     * @return integer the form's id
     */
+   /*
    public static function import($form = []) {
       $form_obj = new self;
       $entity   = new Entity;
@@ -1873,6 +1905,9 @@ class PluginFormcreatorForm extends CommonDBTM
       // Save all question conditions stored in memory
       PluginFormcreatorQuestion_Condition::import(0, [], false);
 
+      // Save all question parameters stored in memory
+      //PluginFormcreatorQuestion_Condition::import(0, [], false);
+
       // import form's validators
       if ($forms_id
           && isset($form['_validators'])) {
@@ -1890,6 +1925,62 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       // import form's ticket relations
       PluginFormcreatorItem_TargetTicket::import(0, [], false);
+
+      return $forms_id;
+   }
+   */
+
+   public static function import(PluginFormcreatorImportLinker $importLinker, $form = []) {
+      $form_obj = new self;
+      $entity   = new Entity;
+      $form_cat = new PluginFormcreatorCategory;
+
+      // retrieve foreign keys
+      if (!isset($form['_entity'])
+          || !$form['entities_id']
+             = plugin_formcreator_getFromDBByField($entity,
+                                                   'completename',
+                                                   $form['_entity'])) {
+         $form['entities_id'] = $_SESSION['glpiactive_entity'];
+      }
+      if (!isset($form['_plugin_formcreator_categories_id'])
+          || !$form['_plugin_formcreator_categories_id']
+             = plugin_formcreator_getFromDBByField($form_cat,
+                                                   'completename',
+                                                   $form['_plugin_formcreator_category'])) {
+         $form['plugin_formcreator_categories_id'] = 0;
+      }
+
+      // retrieve form by its uuid
+      if ($forms_id = plugin_formcreator_getFromDBByField($form_obj,
+                                                          'uuid',
+                                                          $form['uuid'])) {
+         // add id key
+         $form['id'] = $forms_id;
+
+         // update existing form
+         $form_obj->update($form);
+      } else {
+         // create new form
+         $forms_id = $form_obj->add($form);
+      }
+
+      // import form's sections
+      if ($forms_id
+          && isset($form['_sections'])) {
+         // sort questions by order
+         usort($form['_sections'], function ($a, $b) {
+            if ($a['order'] == $b['order']) {
+               return 0;
+            }
+            return ($a['order'] < $b['order']) ? -1 : 1;
+         });
+
+         $importLinker->addImportedObject($form['uuid'], $form_obj);
+         foreach ($form['_sections'] as $section) {
+            PluginFormcreatorSection::import($importLinker, $forms_id, $section);
+         }
+      }
 
       return $forms_id;
    }
@@ -2091,6 +2182,11 @@ class PluginFormcreatorForm extends CommonDBTM
       }
    }
 
+   /**
+    * Gets the footer HTML
+    *
+    * @return string HTML to show a footer
+    */
    static function footer() {
       switch (self::getInterface()) {
          case "servicecatalog";
