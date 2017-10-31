@@ -37,9 +37,12 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorFields
 {
+
+   private $types = null;
    /**
-    * Retrieve all field types and file path
-    * @return Array     field_type => File_path
+    * Retrive all field types and file path
+    *
+    * @return array field_type => File_path
     */
    public static function getTypes() {
       $tab_field_types     = [];
@@ -57,12 +60,30 @@ class PluginFormcreatorFields
    }
 
    /**
+    * Gets classe names of all known field types
+    *
+    * @return array field_type => classname
+    */
+   public static function getClasses() {
+      $classes = [];
+      foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
+         $matches = null;
+         preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
+         $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
+         if (class_exists($classname)) {
+            $classes[strtolower($matches[1])] = $classname;
+         }
+      }
+
+      return $classes;
+   }
+
+   /**
     * Get type and name of all field types
     * @return Array     field_type => Name
     */
    public static function getNames() {
       // Get field types and file path
-      $tab_field_types = self::getTypes();
       $plugin = new Plugin();
 
       // Initialize array
@@ -70,9 +91,8 @@ class PluginFormcreatorFields
       $tab_field_types_name[''] = '---';
 
       // Get localized names of field types
-      foreach (array_keys($tab_field_types) as $field_type) {
+      foreach (PluginFormcreatorFields::getClasses() as $field_type => $classname) {
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
-
          if ($classname == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
             continue;
          }
@@ -102,9 +122,10 @@ class PluginFormcreatorFields
    }
 
    /**
-    * @param unknown $field
-    * @param unknown $data
-    * @param string $edit
+    *
+    * @param array $field fields of a PluginFormcreatorQuestion instance
+    * @param mixed|null $data
+    * @param boolean $edit
     */
    public static function showField($field, $data = null, $edit = true) {
       // Get field types and file path

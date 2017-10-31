@@ -291,7 +291,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param Array  $options         Options (optional)
     *
     * @return String                 Html string to be displayed for the form field
-    **/
+    */
    public static function getSpecificValueToSelect($field, $name='', $values='', array $options = []) {
       if (!is_array($values)) {
          $values = [$field => $values];
@@ -582,7 +582,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForAdd($input) {
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
@@ -598,7 +598,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForUpdate($input) {
       return $input;
    }
@@ -620,6 +620,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
 
+   /**
+    * Create or update answers of a gorm
+    * @param array $data answers
+    * @return boolean
+    */
    public function saveAnswers($data) {
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
@@ -627,8 +632,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $form->getFromDB($data['formcreator_form']);
 
       $formanswers_id = isset($data['id'])
-                        ?intval($data['id'])
-                        :-1;
+                        ? intval($data['id'])
+                        : -1;
 
       $question = new PluginFormcreatorQuestion();
       $questions = $question->getQuestionsFromForm($data['formcreator_form']);

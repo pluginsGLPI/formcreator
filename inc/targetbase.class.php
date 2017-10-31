@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTargetBase extends CommonDBTM
+abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginFormcreatorExportableInterface
 {
 
    protected $requesters;
@@ -54,7 +54,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    protected $attachedDocuments = [];
 
-   abstract public function export();
+   abstract public function export($remove_uuid = false);
 
    abstract public function save(PluginFormcreatorForm_Answer $formanswer);
 
@@ -782,8 +782,8 @@ EOS;
       // retrieve answers
       $answers_values = $formanswer->getAnswers($formanswer->getID());
 
-      $section     = new PluginFormcreatorSection();
-      $sections    = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
+      $section = new PluginFormcreatorSection();
+      $sections = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
       $sectionsIdString = implode(', ', array_keys($sections));
 
       if (count($sections) > 0) {
@@ -801,7 +801,7 @@ EOS;
                $fieldObject = new $classname($question_line, $question_line['answer']);
             }
 
-            $id    = $question_line['id'];
+            $id = $question_line['id'];
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
                $name = '';
                $value = '';
@@ -809,6 +809,14 @@ EOS;
                $name  = $question_line['name'];
                $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
+            if (is_array($value)) {
+               if ($CFG_GLPI['use_rich_text']) {
+                  $value = '<br />' . implode('<br />', $value);
+               } else {
+                  $value = "\r\n" . implode("\r\n", $value);
+               }
+            }
+
             if ($question_line['fieldtype'] !== 'file') {
                $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
                $content = str_replace('##answer_' . $id . '##', $value, $content);

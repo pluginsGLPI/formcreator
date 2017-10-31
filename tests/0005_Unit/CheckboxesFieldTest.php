@@ -37,94 +37,136 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
 
       $dataset = array(
             array(
-                  'fields'          => array(
-                        'fieldtype'       => 'checkboxes',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'default_values'  => '',
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always'
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array(''),
-                  'expectedIsValid' => true
+               'fields'          => array(
+                  'fieldtype'       => 'checkboxes',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'default_values'  => '',
+                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'order'           => '1',
+                  'show_rule'       => 'always',
+                  '_parameters'     => [
+                     'checkboxes' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ]
+                     ]
+                  ],
+               ),
+               'data'            => null,
+               'expectedValue'   => array(''),
+               'expectedIsValid' => true
             ),
             array(
-                  'fields'          => array(
-                        'fieldtype'       => 'checkboxes',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'default_values'  => '2',
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always'
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('2'),
-                  'expectedIsValid' => true
+               'fields'          => array(
+                  'fieldtype'       => 'checkboxes',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'default_values'  => '2',
+                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'order'           => '1',
+                  'show_rule'       => 'always',
+                  '_parameters'     => [
+                     'checkboxes' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ]
+                     ]
+                  ],
+               ),
+               'data'            => null,
+               'expectedValue'   => array('2'),
+               'expectedIsValid' => true
             ),
             array(
-                  'fields'          => array(
-                        'fieldtype'       => 'checkboxes',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'default_values'  => "3\r\n5",
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always'
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3', '5'),
-                  'expectedIsValid' => true
+               'fields'          => array(
+                  'fieldtype'       => 'checkboxes',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'default_values'  => "3\r\n5",
+                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'order'           => '1',
+                  'show_rule'       => 'always',
+                  '_parameters'     => [
+                     'checkboxes' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ]
+                     ]
+                  ],
+               ),
+               'data'            => null,
+               'expectedValue'   => array('3', '5'),
+               'expectedIsValid' => true
             ),
             array(
-                  'fields'          => array(
-                        'fieldtype'       => 'checkboxes',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'default_values'  => "3\r\n5",
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always',
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3', '5'),
-                  'expectedIsValid' => false
+               'fields'          => array(
+                  'fieldtype'       => 'checkboxes',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'default_values'  => "3\r\n5",
+                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'order'           => '1',
+                  'show_rule'       => 'always',
+                  '_parameters'     => [
+                     'checkboxes' => [
+                        'range' => [
+                           'range_min' => '3',
+                           'range_max' => '4',
+                        ]
+                     ]
+                  ],
+               ),
+               'data'            => null,
+               'expectedValue'   => array('3', '5'),
+               'expectedIsValid' => false
             ),
             array(
-                  'fields'          => array(
-                        'fieldtype'       => 'checkboxes',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'default_values'  => "3\r\n5\r\n6",
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always',
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3', '5', '6'),
-                  'expectedIsValid' => true
+               'fields'          => array(
+                  'fieldtype'       => 'checkboxes',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'default_values'  => "3\r\n5\r\n6",
+                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'order'           => '1',
+                  'show_rule'       => 'always',
+                  '_parameters'     => [
+                     'checkboxes' => [
+                        'range' => [
+                           'range_min' => '3',
+                           'range_max' => '4',
+                        ]
+                     ]
+                  ],
+               ),
+               'data'            => null,
+               'expectedValue'   => array('3', '5', '6'),
+               'expectedIsValid' => true
             ),
             array(
-                  'fields'          => array(
-                        'fieldtype'       => 'checkboxes',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always',
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('1', '2', '3', '5', '6'),
-                  'expectedIsValid' => false
+               'fields'          => array(
+                  'fieldtype'       => 'checkboxes',
+                  'name'            => 'question',
+                  'required'        => '0',
+                  'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
+                  'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+                  'order'           => '1',
+                  'show_rule'       => 'always',
+                  '_parameters'     => [
+                     'checkboxes' => [
+                        'range' => [
+                           'range_min' => '3',
+                           'range_max' => '4',
+                        ]
+                     ]
+                  ],
+               ),
+               'data'            => null,
+               'expectedValue'   => array('1', '2', '3', '5', '6'),
+               'expectedIsValid' => false
             ),
       );
 
@@ -135,6 +177,8 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
     * @dataProvider provider
     */
    public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity) {
+      $section = $this->getSection();
+      $fields[$section::getForeignKeyField()] = $section->getID();
       $fieldInstance = new PluginFormcreatorCheckboxesField($fields, $data);
 
       $availableValues = $fieldInstance->getAvailableValues();
@@ -164,8 +208,14 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
     * @dataProvider provider
     */
    public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new PluginFormcreatorCheckboxesField($fields, $data);
+      $section = $this->getSection();
+      $fields[$section::getForeignKeyField()] = $section->getID();
 
+      $question = new PluginFormcreatorQuestion();
+      $question->add($fields);
+      $question->updateParameters($fields);
+
+      $fieldInstance = new PluginFormcreatorCheckboxesField($question->fields, $data);
       $values = json_encode(explode("\r\n", $fields['default_values']), JSON_OBJECT_AS_ARRAY);
       $isValid = $fieldInstance->isValid($values);
       $this->assertEquals($expectedValidity, $isValid);
@@ -210,5 +260,18 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->assertEquals('something\r\nsomething else', $out['values']);
       $this->assertEquals("something", $out['default_values']);
+   }
+
+   private function getSection() {
+      $form = new PluginFormcreatorForm();
+      $form->add([
+         'name' => 'form'
+      ]);
+      $section = new PluginFormcreatorSection();
+      $section->add([
+         $form::getForeignKeyField() => $form->getID(),
+         'name' => 'section',
+      ]);
+      return $section;
    }
 }

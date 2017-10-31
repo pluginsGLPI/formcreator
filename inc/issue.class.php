@@ -143,7 +143,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    /**
-    * {@inheritDoc}
     * @see CommonGLPI::display()
     */
    public function display($options = []) {
@@ -184,7 +183,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    /**
-    * {@inheritDoc}
     * @see CommonGLPI::display()
     */
    public function displaySimplified($options = []) {
