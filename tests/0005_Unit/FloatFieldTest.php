@@ -134,10 +134,29 @@ class FloatFieldTest extends SuperAdminTestCase {
     * @dataProvider provider
     */
    public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new PluginFormcreatorFloatField($fields, $data);
+      $section = $this->getSection();
+      $fields[$section::getForeignKeyField()] = $section->getID();
 
+      $question = new PluginFormcreatorQuestion();
+      $question->add($fields);
+      $this->assertFalse($question->isNewItem(), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+      $question->updateParameters($fields);
+
+      $fieldInstance = new PluginFormcreatorFloatField($question->fields, $data);
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->assertEquals($expectedValidity, $isValid);
    }
 
+   private function getSection() {
+      $form = new PluginFormcreatorForm();
+      $form->add([
+         'name' => 'form'
+      ]);
+      $section = new PluginFormcreatorSection();
+      $section->add([
+         $form::getForeignKeyField() => $form->getID(),
+         'name' => 'section',
+      ]);
+      return $section;
+   }
 }

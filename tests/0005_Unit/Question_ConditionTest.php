@@ -62,19 +62,41 @@ class Question_ConditionTest extends SuperAdminTestCase {
 
       // Create a question
       self::$question = new PluginFormcreatorQuestion();
-      self::$question->add(array(
-            'name'                           => 'text question',
-            'fieldtype'                      => 'text',
-            'plugin_formcreator_sections_id' => $section->getID(),
-      ));
+      self::$question->add([
+         'name'                           => 'text question',
+         'fieldtype'                      => 'text',
+         'plugin_formcreator_sections_id' => $section->getID(),
+         '_parameters'     => [
+            'text' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ]
+            ]
+         ],
+      ]);
 
       for ($i = 0; $i < 4; $i++) {
          $item = new PluginFormcreatorQuestion();
-         $item->add(array(
-               'fieldtype'                      => 'text',
-               'name'                           => "question $i",
-               'plugin_formcreator_sections_id' => $section->getID(),
-         ));
+         $item->add([
+            'fieldtype'                      => 'text',
+            'name'                           => "question $i",
+            'plugin_formcreator_sections_id' => $section->getID(),
+            '_parameters'     => [
+               'text' => [
+                  'range' => [
+                     'range_min' => '',
+                     'range_max' => '',
+                  ],
+                  'regex' => [
+                     'regex' => ''
+                  ]
+               ]
+            ],
+         ]);
          self::$questionPool[$i] = $item->getID();
       }
    }
@@ -296,6 +318,17 @@ class Question_ConditionTest extends SuperAdminTestCase {
             'id'        => self::$question->getID(),
             'fieldtype' => 'text',
             'show_rule' => $show_rule,
+         '_parameters'     => [
+            'text' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ]
+            ]
+         ],
       );
       self::$question->update($input);
       self::$question->updateConditions($input);

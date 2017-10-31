@@ -77,7 +77,7 @@ class PluginFormcreatorCommon {
     * @param boolean $inverted Whether to invert label
     *
     * @return string
-    **/
+    */
    public static function getLinkName($value, $inverted = false) {
       $tmp = [];
 

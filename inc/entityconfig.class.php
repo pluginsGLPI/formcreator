@@ -140,7 +140,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     * @param $entities_id
     * @param $fieldval        string   name of the field that we want value (default '')
     * @param $default_value   integer  value to return (default -2)
-    **/
+    */
    static function getUsedConfig($fieldref, $entities_id, $fieldval='', $default_value=-2) {
 
       // for calendar
