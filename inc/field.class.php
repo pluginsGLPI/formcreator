@@ -43,11 +43,13 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 {
    const IS_MULTIPLE = false;
 
+   /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
    protected $fields = [];
 
    /**
-    * @param unknown $fields
-    * @param array $data
+    *
+    * @param array $fields fields of a PluginFormcreatorQuestion instance
+    * @param array $data value of all fields
     */
    public function __construct($fields, $data = []) {
       $this->fields           = $fields;
@@ -126,12 +128,13 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
    }
 
+   /**
+    * Gets the label of the field
+    *
+    * @return string
+    */
    public function getLabel() {
       return $this->fields['name'];
-   }
-
-   public function getField() {
-
    }
 
    public function getValue() {
@@ -206,4 +209,58 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return implode('\\r\\n', $value);
    }
 
+   public function getFieldTypeName() {
+      $classname = get_called_class();
+      $matches = null;
+      preg_match("#^PluginFormcreator(.+)Field$#", $classname, $matches);
+      return strtolower($matches[1]);
+   }
+
+   public function getUsedParameters() {
+      return [];
+   }
+
+   public final function addParameters(PluginFormcreatorQuestion $question, array $input) {
+      $fieldTypeName = $this->getFieldTypeName();
+      if (!isset($input['_parameters'][$fieldTypeName])) {
+         return;
+      }
+
+      foreach ($this->getUsedParameters() as $fieldName => $parameter) {
+         $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $question->getID();
+         $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
+      }
+   }
+
+   public final function updateParameters(PluginFormcreatorQuestion $question, array $input) {
+      $fieldTypeName = $this->getFieldTypeName();
+      if (!isset($input['_parameters'][$fieldTypeName])) {
+         return;
+      }
+
+      foreach ($this->getUsedParameters() as $fieldName => $parameter) {
+         $parameter->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $question->getID(),
+            'fieldname' => $fieldName,
+         ]);
+         $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $question->getID();
+         if ($parameter->isNewItem()) {
+            // In case of the parameter vanished in DB, just recreate it
+            $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
+         } else {
+            $input['_parameters'][$fieldTypeName][$fieldName]['id'] = $parameter->getID();
+            $parameter->update($input['_parameters'][$fieldTypeName][$fieldName]);
+         }
+      }
+   }
+
+   public final function deleteParameters(PluginFormcreatorQuestion $question) {
+      foreach ($this->getUsedParameters() as $parameter) {
+         if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
+            // Don't make  this error fatal, but log it anyway
+            Toolbox::logInFile('php-errors', 'failed to delete parameter for question ' . $question->getID() . PHP_EOL);
+         }
+      }
+      return true;
+   }
 }

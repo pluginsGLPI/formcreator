@@ -36,10 +36,12 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion extends CommonDBChild
-{
-   static public $itemtype = "PluginFormcreatorSection";
-   static public $items_id = "plugin_formcreator_sections_id";
+class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreatorExportableInterface {
+   static public $itemtype = PluginFormcreatorSection::class;
+   static public $items_id = 'plugin_formcreator_sections_id';
+
+   /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
+   private $field = null;
 
    /**
     * Check if current user have the right to create and modify requests
@@ -83,9 +85,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
-         case "PluginFormcreatorForm":
+         case PluginFormcreatorForm::class:
             $number      = 0;
             $section     = new PluginFormcreatorSection();
             $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
@@ -115,9 +117,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
+      // TODO: move the content of this method into a new showForForm() method
       echo '<table class="tab_cadre_fixe">';
 
       // Get sections
@@ -271,6 +274,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
             return [];
          }
+         $input['name'] = addslashes($input['name']);
       }
 
       // - field type is required
@@ -305,21 +309,29 @@ class PluginFormcreatorQuestion extends CommonDBChild
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
       $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
-      $fieldObject = new $fieldType($this->fields);
-      $input = $fieldObject->prepareQuestionInputForSave($input);
+      $this->field = new $fieldType($this->fields);
 
-      // Add leading and trailing regex marker automaticaly
-      if (isset($input['regex']) && !empty($input['regex'])) {
-         // Avoid php notice when validating the regular expression
-         set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
-         $regex = Toolbox::stripslashes_deep($input['regex']);
-         $isValid = !(preg_match($regex, null) === false);
-         restore_error_handler();
-
-         if (!$isValid) {
-            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+      // Check the parameters are provided
+      $parameters = $this->field->getUsedParameters();
+      if (count($parameters) > 0) {
+         if (!isset($input['_parameters'][$input['fieldtype']])) {
+            // This should not happen
+            Session::addMessageAfterRedirect(__('This type of question requires parameters', 'formcreator'));
             return [];
          }
+         foreach ($parameters as $parameter) {
+            if (!isset($input['_parameters'][$input['fieldtype']][$parameter->getFieldName()])) {
+               // This should not happen
+               Session::addMessageAfterRedirect(__('A parameter is missing for this question type', 'formcreator'));
+               return [];
+            }
+         }
+      }
+
+      $input = $this->field->prepareQuestionInputForSave($input);
+      if ($input === false || !is_array($input)) {
+         // Invalid data
+         return [];
       }
 
       return $input;
@@ -332,11 +344,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+    */
    public function prepareInputForAdd($input) {
       global $DB;
 
-      $input = $this->checkBeforeSave($input);
+      if (!isset($input['_skip_checks'])
+          || !$input['_skip_checks']) {
+         $input = $this->checkBeforeSave($input);
+      }
       if (count($input) == 0) {
          return [];
       }
@@ -379,7 +394,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     * @param array $input data used to add the item
     *
     * @array return the modified $input array
-   **/
+    */
    public function prepareInputForUpdate($input) {
       global $DB;
 
@@ -474,6 +489,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
       return $input;
    }
 
+   /**
+    * Moves the question up in the ordered list of questions in the section
+    */
    public function moveUp() {
       $order         = $this->fields['order'];
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
@@ -506,6 +524,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
    }
 
+   /**
+    * Moves the question down in the ordered list of questions in the section
+    */
    public function moveDown() {
       $order         = $this->fields['order'];
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
@@ -538,6 +559,10 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
    }
 
+   /**
+    * Updates the conditions of the question
+    * @param array $input
+    */
    public function updateConditions($input) {
       // Delete all existing conditions for the question
       $question_condition = new PluginFormcreatorQuestion_Condition();
@@ -577,11 +602,62 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
+    * Adds or updates parameters of the question
+    * @param array $input parameters
+    */
+   public function updateParameters($input) {
+      if (!isset($this->fields['fieldtype'])) {
+         return;
+      }
+
+      $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
+      $this->field = new $fieldType($this->fields);
+      $parameters = $this->field->getUsedParameters();
+      if (isset($input['_parameters'][$this->fields['fieldtype']])) {
+         foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
+            $parameters[$fieldName]->getFromDBByCrit([
+               'plugin_formcreator_questions_id' => $this->getID(),
+               'fieldname' => $fieldName,
+            ]);
+            $parameterInput['plugin_formcreator_questions_id'] = $this->getID();
+            if ($parameters[$fieldName]->isNewItem()) {
+               $parameters[$fieldName]->add($parameterInput);
+            } else {
+               $parameterInput['id'] = $parameters[$fieldName]->getID();
+               $parameters[$fieldName]->update($parameterInput);
+            }
+         }
+      }
+   }
+
+   public function pre_deleteItem() {
+      $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
+      $this->field = new $fieldType($this->fields);
+      return $this->field->deleteParameters($this);
+   }
+
+   public function post_updateItem($history = 1) {
+      if (!in_array('fieldtype', $this->updates)) {
+         // update question parameters into the database
+         $this->field->updateParameters($this, $this->input);
+      } else {
+         // Field type changed
+         // Drop old parameters
+         $fieldType = 'PluginFormcreator' . ucfirst($this->oldvalues['fieldtype']) . 'Field';
+         $oldField = new $fieldType($this->oldvalues);
+         $oldField->deleteParameters($this);
+
+         // add new ones
+         $this->field->addParameters($this, $this->input);
+      }
+   }
+
+   /**
     * Actions done after the PURGE of the item in the database
     * Reorder other questions
     *
     * @return void
-   **/
+    */
    public function post_purgeItem() {
       global $DB;
 
@@ -609,11 +685,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query($query);
    }
 
-   public function showForm($ID, $options=[]) {
-      global $DB, $CFG_GLPI;
+   public function showForm($ID, $options = []) {
+      global $CFG_GLPI;
 
       $rootDoc = $CFG_GLPI['root_doc'];
+
       $form_id = (int) $_REQUEST['form_id'];
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($form_id);
+
       $rand = mt_rand();
       $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
       echo '<form name="form_question" method="post" action="'.$action.'">';
@@ -648,7 +728,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $fieldtypes = PluginFormcreatorFields::getNames();
       Dropdown::showFromArray('fieldtype', $fieldtypes, [
          'value'       => $this->fields['fieldtype'],
-         'on_change'   => 'changeQuestionType();',
+         'on_change'   => 'plugin_formcreator_changeQuestionType();',
          'rand'        => $rand,
       ]);
       echo '</td>';
@@ -665,13 +745,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<td>';
       $table = getTableForItemtype('PluginFormcreatorSection');
       $sections = [];
-      $sql = "SELECT `id`, `name`
-              FROM $table
-              WHERE `plugin_formcreator_forms_id` = $form_id
-              ORDER BY `order`";
-      $result = $DB->query($sql);
-      while ($section = $DB->fetch_array($result)) {
-         $sections[$section['id']] = $section['name'];
+      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($form_id) as $section) {
+         $sections[$section->getID()] = $section->getField('name');
       }
       Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, [
          'value' => ($this->fields['plugin_formcreator_sections_id']) ?:intval($_REQUEST['section_id']),
@@ -755,6 +830,80 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
       echo '</tr>';
 
+      // DOM selectors of all possible parameters
+      $allParameterSelectors = [];
+
+      // generate JS to show / hide parameters depending on field type
+      $showHideForFieldTypeJs = "
+      function plugin_formcreator_changeQuestionType() {
+         var value = document.getElementById('dropdown_fieldtype$rand').value
+         plugin_formcreator_hideAllParameters()" . "\n";
+
+      // build JS code to show parameters for the current question type
+      // also colelcts all selectors of the parameters to hide all parameters
+      $showHideForFieldTypeJs.= "switch(value) {" . "\n";
+      $evenRow = 0;
+      foreach (PluginFormcreatorFields::getClasses() as $fieldType => $classname) {
+         $evenRow++;
+         $showHideForFieldTypeJs.= "case '$fieldType':" . "\n";
+         $field = new $classname([]);
+         $evenColumnGroup = 0;
+         foreach ($field->getUsedParameters() as $parameter) {
+            $evenColumnGroup++;
+            if ($parameter->getParameterFormSize() > 0) {
+               // The parameter needs a 4 columns to show its form
+               // Force a hew table row prior showing the parameter form
+               if (($evenColumnGroup % 2) === 0) {
+                  $evenColumnGroup++;
+               }
+            }
+            if (($evenColumnGroup % 2) === 1) {
+               echo '<tr class="line' . $evenRow % 2 . '">';
+            }
+            $jsSelector = $parameter->getJsShowHideSelector();
+            // Output the table row for the parameter
+            echo $parameter->getParameterForm($form, $this);
+
+            // If the parameter form needs 4 columns, count it twice
+            if ($parameter->getParameterFormSize() > 0) {
+               $evenColumnGroup++;
+            }
+
+            // generate JS code to show the parameter depending on the selected field type
+            $showHideForFieldTypeJs.= "$('$jsSelector').show()" . "\n";
+            $showHideForFieldTypeJs.= "$('$jsSelector + td').show()" . "\n";
+
+            // save the selector to build JS code to hide all parameters
+            $allParameterSelectors[] = $jsSelector;
+            if (($evenColumnGroup % 2) === 0) {
+               echo '</tr>';
+            }
+         }
+         if ($evenColumnGroup > 0 && ($evenColumnGroup % 2) === 1) {
+            // If the question has an odd quantity of parameters
+            // the last row is incomplete
+            // Fill it with an empty dumy cell
+            // show or hide it with the last parameter
+            echo '<td colspan="2"></td>';
+            $showHideForFieldTypeJs.= "$('$jsSelector + td + td').show()" . "\n";
+            $allParameterSelectors[] = "$jsSelector + td + td";
+            echo '</tr>';
+         }
+         $showHideForFieldTypeJs.= "break" . "\n";
+      }
+      $showHideForFieldTypeJs.= "}
+         changeQuestionType()
+      }
+
+      function plugin_formcreator_hideAllParameters() {
+         showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)" . "\n";
+
+      foreach ($allParameterSelectors as $jsSelector) {
+         $showHideForFieldTypeJs.= "$('$jsSelector').hide()" . "\n";
+         $showHideForFieldTypeJs.= "$('$jsSelector + td').hide()" . "\n";
+      }
+      $showHideForFieldTypeJs.= "}" . "\n";
+
       echo '<tr class="line0" id="required_tr">';
       echo '<td>';
       echo '<label for="dropdown_required'.$rand.'" id="label_required">';
@@ -769,7 +918,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
 
       echo '<td>';
-      echo '<label for="dropdown_show_empty<?php'.$rand.'" id="label_show_empty">';
+      echo '<label for="dropdown_show_empty'.$rand.'" id="label_show_empty">';
       echo __('Show empty', 'formcreator');
       echo '</label>';
       echo '</td>';
@@ -900,28 +1049,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<td colspan="2">&nbsp;</td>';
       echo '</tr>';
 
-      echo '<tr class="line0" id="range_tr">';
-      echo '<td>';
-      echo '<span id="label_range">'.__('Range', 'formcreator').'</span>';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<label for="range_min" id="label_range_min">';
-      echo __('Min', 'formcreator');
-      echo '</label>';
-      echo '<input type="text" name="range_min" id="range_min" class="small_text"'
-           .'style="width: 90px" value="'.$this->fields['range_min'].'" />';
-      echo '&nbsp;';
-      echo '<label for="range_max" id="label_range_max">';
-      echo __('Max', 'formcreator');
-      echo '</label>';
-      echo '<input type="text" name="range_max" id="range_max" class="small_text"'
-           .'style="width: 90px" value="'.$this->fields['range_max'].'" />';
-      echo '</td>';
-
-      echo '<td colspan="2">&nbsp;</td>';
-      echo '</tr>';
-
       echo '<tr class="line1" id="description_tr">';
       echo '<td>';
       echo '<label for="description" id="label_description">';
@@ -933,26 +1060,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<textarea name="description" id="description" rows="6" cols="108"'
            .'style="width: 97%">'.$this->fields['description'].'</textarea>';
       Html::initEditorSystem('description');
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="line0" id="regex_tr">';
-      echo '<td>';
-      echo '<label for="regex" id="label_regex">';
-      echo __('Additional validation', 'formcreator');
-      echo '<small>';
-      echo '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
-      echo '('.__('Regular expression', 'formcreator').')';
-      echo '</small>';
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td width="80%" colspan="3">';
-      echo '<input type="text" name="regex" id="regex" style="width:98%;"'
-           .'value="'.$this->fields['regex'].'" />';
-      echo '<em>';
-      echo __('Specify the additional validation conditions in the description of the question to help users.', 'formcreator');
-      echo '</em>';
       echo '</td>';
       echo '</tr>';
 
@@ -1002,12 +1109,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</tr>';
       $rootDoc = $CFG_GLPI['root_doc'];
       $allTabFields = PluginFormcreatorFields::printAllTabFieldsForJS();
-      echo <<<JS
-      <script type="text/javascript">
+
+      echo Html::scriptBlock("$showHideForFieldTypeJs
+
       function changeQuestionType() {
          var value = document.getElementById('dropdown_fieldtype$rand').value;
 
-         if(value != "") {
+         if(value != '') {
             var tab_fields_fields = [];
             $allTabFields
 
@@ -1016,7 +1124,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
             showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
          }
       }
-      changeQuestionType();
+      plugin_formcreator_changeQuestionType();
       function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
          if(required) {
             document.getElementById('dropdown_required$rand').style.display   = 'inline';
@@ -1075,36 +1183,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
             document.getElementById('dropdown_default_value_field').style.display = 'none';
             document.getElementById('label_dropdown_default_value').style.display            = 'none';
          }
-         if(range) {
-            document.getElementById('range_min').style.display                               = 'inline';
-            document.getElementById('range_max').style.display                               = 'inline';
-            document.getElementById('label_range_min').style.display                         = 'inline';
-            document.getElementById('label_range_max').style.display                         = 'inline';
-            document.getElementById('label_range').style.display                             = 'inline';
-            document.getElementById('range_tr').style.display                                = 'table-row';
-         } else {
-            document.getElementById('range_min').style.display                               = 'none';
-            document.getElementById('range_max').style.display                               = 'none';
-            document.getElementById('label_range_min').style.display                         = 'none';
-            document.getElementById('label_range_max').style.display                         = 'none';
-            document.getElementById('label_range').style.display                             = 'none';
-            document.getElementById('range_tr').style.display                                = 'none';
-         }
          if(show_empty) {
             document.getElementById('show_empty').style.display = 'inline';
             document.getElementById('label_show_empty').style.display                        = 'inline';
          } else {
             document.getElementById('show_empty').style.display = 'none';
             document.getElementById('label_show_empty').style.display                        = 'none';
-         }
-         if(regex) {
-            document.getElementById('regex').style.display                                   = 'inline';
-            document.getElementById('label_regex').style.display                             = 'inline';
-            document.getElementById('regex_tr').style.display                                = 'table-row';
-         } else {
-            document.getElementById('regex').style.display                                   = 'none';
-            document.getElementById('label_regex').style.display                             = 'none';
-            document.getElementById('regex_tr').style.display                                = 'none';
          }
          if(values || default_values || dropdown_value || glpi_object) {
             document.getElementById('values_tr').style.display                               = 'table-row';
@@ -1128,13 +1212,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       function toggleCondition(field) {
-         if (field.value == "always") {
-            $(".plugin_formcreator_logicRow").hide();
+         if (field.value == 'always') {
+            $('.plugin_formcreator_logicRow').hide();
          } else {
-            if ($(".plugin_formcreator_logicRow").length < 1) {
+            if ($('.plugin_formcreator_logicRow').length < 1) {
                addEmptyCondition(field);
             }
-            $(".plugin_formcreator_logicRow").show();
+            $('.plugin_formcreator_logicRow').show();
          }
       }
 
@@ -1156,27 +1240,27 @@ class PluginFormcreatorQuestion extends CommonDBChild
             }
          }).done(function (data) {
             $(target).parents('tr').after(data);
-            $(".plugin_formcreator_logicRow .div_show_condition_logic").first().hide();
+            $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
          });
       }
 
       function removeNextCondition(target) {
          $(target).parents('tr').remove();
-         $(".plugin_formcreator_logicRow .div_show_condition_logic").first().hide();
+         $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
       }
 
       function change_dropdown() {
          dropdown_type = document.getElementById('dropdown_dropdown_values$rand').value;
 
          jQuery.ajax({
-            url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
-            type: "GET",
+            url: '$rootDoc/plugins/formcreator/ajax/dropdown_values.php',
+            type: 'GET',
             data: {
                dropdown_itemtype: dropdown_type,
-               rand: "$rand"
+               rand: '$rand'
             },
          }).done(function(response){
-            jQuery("#dropdown_default_value_field").html(response);
+            jQuery('#dropdown_default_value_field').html(response);
          });
       }
 
@@ -1184,14 +1268,14 @@ class PluginFormcreatorQuestion extends CommonDBChild
          glpi_object = document.getElementById('dropdown_glpi_objects$rand').value;
 
          jQuery.ajax({
-            url: "$rootDoc/plugins/formcreator/ajax/dropdown_values.php",
-            type: "GET",
+            url: '$rootDoc/plugins/formcreator/ajax/dropdown_values.php',
+            type: 'GET',
             data: {
                dropdown_itemtype: glpi_object,
-               rand: "$rand"
+               rand: '$rand'
             },
          }).done(function(response){
-            jQuery("#dropdown_default_value_field").html(response);
+            jQuery('#dropdown_default_value_field').html(response);
          });
       }
 
@@ -1199,25 +1283,23 @@ class PluginFormcreatorQuestion extends CommonDBChild
          var ldap_directory = ldap.value;
 
          jQuery.ajax({
-           url: "$rootDoc/plugins/formcreator/ajax/ldap_filter.php",
-           type: "POST",
+           url: '$rootDoc/plugins/formcreator/ajax/ldap_filter.php',
+           type: 'POST',
            data: {
                value: ldap_directory,
-               _glpi_csrf_token: "<?php Session::getNewCSRFToken(); ?>"
+               _glpi_csrf_token: '" . Session::getNewCSRFToken() . "'
             },
          }).done(function(response){
             document.getElementById('ldap_filter').value = response;
          });
       }
-   </script>
-JS;
+      ");
       echo '</table>';
       Html::closeForm();
    }
 
    /**
     * Duplicate a question
-    *
     * @return boolean
     */
    public function duplicate() {
@@ -1228,8 +1310,24 @@ JS;
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
+      $row['_skip_checks'] = true;
       if (!$newQuestion->add($row)) {
          return false;
+      }
+
+      // Form questions parameters
+      $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
+      $this->field = new $fieldType($this->fields);
+      $parameters = $this->field->getUsedParameters();
+      foreach ($parameters as $fieldName => $parameter) {
+         $parameter->getFromDBByCrit([
+            'plugin_formcreator_questions_id' => $oldQuestionId,
+            'fieldname' => $fieldName,
+         ]);
+         $row = $parameter->fields;
+         $row[PluginFormcreatorQuestion::getForeignKeyField()] = $newQuestion->getID();
+         unset($row['id']);
+         $parameter->add($row);
       }
 
       // Form questions conditions
@@ -1242,7 +1340,6 @@ JS;
             return false;
          }
       }
-
    }
 
 
@@ -1254,6 +1351,7 @@ JS;
     * @param  array   $question the question data (match the question table)
     * @return integer the question's id
     */
+   /*
    public static function import($sections_id = 0, $question = []) {
       $item = new self;
 
@@ -1275,6 +1373,50 @@ JS;
           && isset($question['_conditions'])) {
          foreach ($question['_conditions'] as $condition) {
             PluginFormcreatorQuestion_Condition::import($questions_id, $condition);
+         }
+      }
+
+      return $questions_id;
+   }
+   */
+
+   public static function import(PluginFormcreatorImportLinker $importLinker, $sections_id = 0, $question = []) {
+      $item = new self;
+
+      $question['plugin_formcreator_sections_id'] = $sections_id;
+      $question['_skip_checks']                   = true;
+
+      if ($questions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $question['uuid'])) {
+         // add id key
+         $question['id'] = $questions_id;
+         $fieldType = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
+         $item->field = new $fieldType($item->fields);
+
+         // update question
+         $item->update($question);
+      } else {
+         //create question
+
+         $questions_id = $item->add($question);
+      }
+
+      if ($questions_id
+          && isset($question['_conditions'])) {
+         $importLinker->addImportedObject($question['uuid'], $item);
+
+         foreach ($question['_conditions'] as $condition) {
+            PluginFormcreatorQuestion_Condition::import($importLinker, $questions_id, $condition);
+         }
+
+         $fieldType = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
+         $field = new $fieldType($item->fields);
+         $parameters = $field->getUsedParameters();
+         foreach ($parameters as $fieldName => $parameter) {
+            $parameter->getFromDBByCrit([
+               'plugin_formcreator_questions_id'   => $item->fields['id'],
+               'fieldname'                         => $fieldName,
+            ]);
+            $parameter::import($importLinker, $questions_id, $fieldName, $question['_parameters'][$question['fieldtype']][$fieldName]);
          }
       }
 
@@ -1306,6 +1448,19 @@ JS;
          if ($form_question_condition->getFromDB($condition['id'])) {
             $question['_conditions'][] = $form_question_condition->export($remove_uuid);
          }
+      }
+
+      // get question parameters
+      $question['_parameters'] = [];
+      $fieldType = 'PluginFormcreator' . ucfirst($this->fields['fieldtype']) . 'Field';
+      $this->field = new $fieldType($this->fields);
+      $parameters = $this->field->getUsedParameters();
+      foreach ($parameters as $fieldname => $parameter) {
+         $parameter->getFromDBByCrit([
+            'plugin_formcreator_questions_id'   => $this->fields['id'],
+            'fieldname'                         => $fieldname,
+         ]);
+         $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export();
       }
 
       if ($remove_uuid) {
@@ -1355,16 +1510,19 @@ JS;
     * @param integer $formId
     * @return PluginFormcreatorQuestion[]
     */
-   public function getQuestionsFromForm($formId) {
+   public function getQuestionsFromForm($formId, $crit = '') {
       global $DB;
 
       $questions = [];
+      if ($crit === '') {
+         $crit = '1';
+      }
       $table_question = getTableForItemtype('PluginFormcreatorQuestion');
       $table_section  = getTableForItemtype('PluginFormcreatorSection');
       $result = $DB->query("SELECT `q`.*
                             FROM $table_question `q`
                             LEFT JOIN $table_section `s` ON `q`.`plugin_formcreator_sections_id` = `s`.`id`
-                            WHERE `s`.`plugin_formcreator_forms_id` = '$formId'
+                            WHERE `s`.`plugin_formcreator_forms_id` = '$formId' AND $crit
                             ORDER BY `s`.`order`, `q`.`order`"
       );
       while ($row = $DB->fetch_assoc($result)) {
@@ -1376,6 +1534,13 @@ JS;
       return $questions;
    }
 
+   /**
+    * Gets questions belonging to a section
+    *
+    * @param integer $sectionId
+    *
+    * @return PluginFormcreatorQuestion[]
+    */
    public function getQuestionsFromSection($sectionId) {
       $questions = [];
       $rows = $this->find("`plugin_formcreator_sections_id` = '$sectionId'", "`order` ASC");

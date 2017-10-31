@@ -63,7 +63,7 @@ if (isset($_POST['update'])) {
 
 } else if (isset($_POST['save_formanswer'])) {
    $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-   $_POST['status']                      = 'waiting';
+   $_POST['status'] = 'waiting';
    $formanswer->saveAnswers($_POST);
    if (plugin_formcreator_replaceHelpdesk()) {
       $issue = new PluginFormcreatorIssue();

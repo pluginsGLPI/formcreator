@@ -15,19 +15,26 @@ class CloneTest extends SuperAdminTestCase {
       $form_profile   = new PluginFormcreatorForm_Profile;
 
       // create objects
-      $forms_id = $form->add(array('name'                => "test clone form",
-                                   'is_active'           => true,
-                                   'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER));
+      $forms_id = $form->add(['name'                => "test clone form",
+                              'is_active'           => true,
+                              'validation_required' => PluginFormcreatorForm_Validator::VALIDATION_USER]);
 
-      $sections_id = $form_section->add(array('name'                        => "test clone section",
-                                              'plugin_formcreator_forms_id' => $forms_id));
+      $sections_id = $form_section->add(['name'                        => "test clone section",
+                                         'plugin_formcreator_forms_id' => $forms_id]);
 
-      $questions_id_1 = $form_question->add(array('name'                           => "test clone question 1",
-                                                  'fieldtype'                      => 'text',
-                                                  'plugin_formcreator_sections_id' => $sections_id));
-      $questions_id_2 = $form_question->add(array('name'                           => "test clone question 2",
-                                                  'fieldtype'                      => 'textarea',
-                                                  'plugin_formcreator_sections_id' => $sections_id));
+      $questions_id_1 = $form_question->add(['name'                           => "test clone question 1",
+                                             'fieldtype'                      => 'text',
+                                             'plugin_formcreator_sections_id' => $sections_id,
+                                             '_parameters' => [
+                                              'text' => [
+                                               'regex' => '',
+                                               'range' => ['min' => '', 'max' => ''],
+                                              ]
+                                             ],
+                                            ]);
+      $questions_id_2 = $form_question->add(['name'                           => "test clone question 2",
+                                             'fieldtype'                      => 'textarea',
+                                             'plugin_formcreator_sections_id' => $sections_id]);
    }
 
    /**
