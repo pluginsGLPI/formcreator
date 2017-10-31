@@ -76,23 +76,42 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             false,
             ERROR);
          return false;
-
-         // Min range not set or number of selected item lower than min
-      } else if (!empty($this->fields['range_min']) && (count($value) < $this->fields['range_min'])) {
-         $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $this->fields['range_min']);
-         Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
-         return false;
-
-         // Max range not set or number of selected item greater than max
-      } else if (!empty($this->fields['range_max']) && (count($value) > $this->fields['range_max'])) {
-          $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $this->fields['range_max']);
-          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
-          return false;
-
-         // All is OK
-      } else {
-          return true;
       }
+
+      if (!$this->isValidValue($value)) {
+         return false;
+      }
+
+      return true;
+   }
+
+   private function isValidValue($value) {
+      $parameters = $this->getUsedParameters();
+      foreach ($parameters as $fieldname => $parameter) {
+         $parameter->getFromDBByCrit([
+            'plugin_formcreator_questions_id'   => $this->fields['id'],
+            'fieldname'                         => $fieldname,
+         ]);
+      }
+
+      // Check the field matches the format regex
+      if (!$parameters['range']->isNewItem()) {
+         $rangeMin = $parameters['range']->getField('range_min');
+         $rangeMax = $parameters['range']->getField('range_max');
+         if (strlen($rangeMin) > 0 && count($value) < $rangeMin) {
+            $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $rangeMin);
+            Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+            return false;
+         }
+
+         if (strlen($rangeMax) > 0 && count($value) > $rangeMax) {
+            $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $rangeMax);
+            Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
+            return false;
+         }
+      }
+
+      return true;
    }
 
    public static function getName() {
@@ -136,4 +155,18 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['checkboxes'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function getUsedParameters() {
+      return [
+         'range' => new PluginFormcreatorQuestionRange(
+            $this,
+            [
+               'fieldName' => 'range',
+               'label'     => __('Range', 'formcreator'),
+               'fieldType' => ['text'],
+            ]
+         ),
+      ];
+   }
+
 }

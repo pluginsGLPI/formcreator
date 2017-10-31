@@ -18,6 +18,7 @@ if (isset($_POST["add"])) {
       Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
       $_POST['id'] = $newid;
       $question->updateConditions($_POST);
+      $question->updateParameters($_POST);
    }
    Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
@@ -27,6 +28,7 @@ if (isset($_POST["add"])) {
    if ($question->update($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
       $question->updateConditions($_POST);
+      $question->updateParameters($_POST);
    }
    Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
