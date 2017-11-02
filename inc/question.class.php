@@ -255,6 +255,20 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return [];
       }
 
+      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios
+      $itemtypes = ['select', 'multiselect', 'checkboxes', 'radios'];
+      if (in_array($input['fieldtype'], $itemtypes)) {
+         if (isset($input['values'])) {
+            if (empty($input['values'])) {
+               Session::addMessageAfterRedirect(
+                     __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+                     false,
+                     ERROR);
+               return [];
+            }
+         }
+      }
+
       if (!isset($input['fieldtype'])) {
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
@@ -266,7 +280,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (isset($input['regex']) && !empty($input['regex'])) {
          // Avoid php notice when validating the regular expression
          set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
-         $isValid = !(preg_match($input['regex'], null) === false);
+         $regex = Toolbox::stripslashes_deep($input['regex']);
+         $isValid = !(preg_match($regex, null) === false);
          restore_error_handler();
 
          if (!$isValid) {
@@ -298,7 +313,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
       foreach ($input as $key => $value) {
          if ($input['fieldtype'] != 'dropdown'
              || $input['fieldtype'] != 'dropdown' && $key != 'values') {
-            $input[$key] = plugin_formcreator_encode($value);
+            if ($key != 'regex') {
+               $input[$key] = plugin_formcreator_encode($value);
+            }
          }
       }
 
@@ -361,7 +378,9 @@ class PluginFormcreatorQuestion extends CommonDBChild
                 && !($input['fieldtype'] == 'checkboxes' && ($key == 'values' || $key == 'default_values'))
                 && !($input['fieldtype'] == 'radios' && ($key == 'values' || $key == 'default_values'))
                 && !($input['fieldtype'] == 'multiselect' && ($key == 'values' || $key == 'default_values'))) {
-               $input[$key] = plugin_formcreator_encode($value);
+               if ($key != 'regex') {
+                  $input[$key] = plugin_formcreator_encode($value);
+               }
             } else {
                $input[$key] = str_replace('\r\n', "\r\n", $input[$key]);
             }
