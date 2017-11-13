@@ -37,7 +37,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       } else {
          $answer = $this->getAnswer();
          echo '<div class="form_field">';
-         echo empty($answer) ? '' : implode('<br />', json_decode($answer));
+         echo empty($answer) ? '' : implode('<br />', $answer);
          echo '</div>';
       }
    }
@@ -64,7 +64,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
             $return[] = $value;
          }
       }
-      return json_encode($return);
+      return $return;
    }
 
    public static function getName() {

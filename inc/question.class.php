@@ -352,10 +352,19 @@ class PluginFormcreatorQuestion extends CommonDBChild
       }
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
+      // The if() {} structures here will grow until the call to plugin_formcreator_encode
+      // becomes obsolete
       foreach ($input as $key => $value) {
          if ($input['fieldtype'] != 'dropdown'
-             || $input['fieldtype'] != 'dropdown' && $key != 'values') {
-            $input[$key] = plugin_formcreator_encode($value);
+             || $input['fieldtype'] != 'dropdown' && $key != 'values' && $key != 'default_values') {
+            if (!($input['fieldtype'] == 'select' && ($key == 'values' || $key == 'default_values'))
+                && !($input['fieldtype'] == 'checkboxes' && ($key == 'values' || $key == 'default_values'))
+                && !($input['fieldtype'] == 'radios' && ($key == 'values' || $key == 'default_values'))
+                && !($input['fieldtype'] == 'multiselect' && ($key == 'values' || $key == 'default_values'))) {
+               $input[$key] = plugin_formcreator_encode($value);
+            } else {
+               $input[$key] = str_replace('\r\n', "\r\n", $input[$key]);
+            }
          }
       }
 
