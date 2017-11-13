@@ -772,10 +772,14 @@ EOS;
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
                   $content = str_replace('##question_' . $id . '##', $name, $content);
-                  $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+                  if ($value !== '') {
+                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
 
-                  // keep the ID of the document
-                  $this->attachedDocuments[$value] = true;
+                     // keep the ID of the document
+                     $this->attachedDocuments[$value] = true;
+                  } else {
+                     $content = str_replace('##answer_' . $id . '##', __('No document', 'formcreator'), $content);
+                  }
                }
             }
          }
