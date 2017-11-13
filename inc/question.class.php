@@ -255,20 +255,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return [];
       }
 
-      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios
-      $itemtypes = ['select', 'multiselect', 'checkboxes', 'radios'];
-      if (in_array($input['fieldtype'], $itemtypes)) {
-         if (isset($input['values'])) {
-            if (empty($input['values'])) {
-               Session::addMessageAfterRedirect(
-                     __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-                     false,
-                     ERROR);
-               return [];
-            }
-         }
-      }
-
       if (!isset($input['fieldtype'])) {
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
