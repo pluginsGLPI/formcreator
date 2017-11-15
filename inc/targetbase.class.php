@@ -778,7 +778,7 @@ EOS;
                      // keep the ID of the document
                      $this->attachedDocuments[$value] = true;
                   } else {
-                     $content = str_replace('##answer_' . $id . '##', __('No document', 'formcreator'), $content);
+                     $content = str_replace('##answer_' . $id . '##', '', $content);
                   }
                }
             }
