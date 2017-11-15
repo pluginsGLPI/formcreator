@@ -263,7 +263,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    protected function addGroupActor($role, $group) {
       switch ($role) {
          case 'requester':
-            $this->requesterGroupss['_groups_id_requester'][]  = $group;
+            $this->requesterGroups['_groups_id_requester'][]  = $group;
             break;
          case 'observer' :
             $this->observerGroups['_groups_id_observer'][]     = $group;
