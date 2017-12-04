@@ -32,7 +32,12 @@ if (isset($_POST['update'])) {
    $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
    $_POST['status']                      = 'waiting';
    $formanswer->saveAnswers($_POST);
-   $formanswer->redirectToList();
+   if (plugin_formcreator_replaceHelpdesk()) {
+      $issue = new PluginFormcreatorIssue();
+      $issue->redirectToList();
+   } else {
+      $formanswer->redirectToList();
+   }
 
    // Show target ticket form
 } else {
