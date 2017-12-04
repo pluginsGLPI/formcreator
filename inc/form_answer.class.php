@@ -85,7 +85,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'id'                 => '3',
          'table'              => 'glpi_plugin_formcreator_forms',
          'field'              => 'name',
-         'name'               => __('Form'),
+         'name'               => __('Form', 'formcreator'),
          'searchtype'         => 'contains',
          'datatype'           => 'string',
          'massiveaction'      => false
@@ -105,7 +105,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'id'                 => '5',
          'table'              => 'glpi_users',
          'field'              => 'name',
-         'name'               => __('Validator user'),
+         'name'               => __('Form approver', 'formcreator'),
          'datatype'           => 'itemlink',
          'massiveaction'      => false,
          'linkfield'          => 'users_id_validator'
@@ -121,13 +121,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       ];
 
       $tab[] = [
-            'id'            => '7',
-            'table'         => getTableForItemType('Group'),
-            'field'         => 'completename',
-            'name'          => __('Validator group', 'formcreator'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-            'linkfield'     => 'groups_id_validator',
+         'id'            => '7',
+         'table'         => getTableForItemType('Group'),
+         'field'         => 'completename',
+         'name'          => __('Form approver group', 'formcreator'),
+         'datatype'      => 'itemlink',
+         'massiveaction' => false,
+         'linkfield'     => 'groups_id_validator',
       ];
 
       if ($display_for_form) {
