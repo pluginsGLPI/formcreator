@@ -655,19 +655,19 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          }
 
          // Update issues table
+         $issue = new PluginFormcreatorIssue();
+         $formAnswerId = $this->getID();
          if ($status != 'refused') {
 
             // If cannot get itemTicket from DB it happens either
             // when no item exist
             // when several rows matches
             // Both are processed the same way
-            $formAnswerId = $this->getID();
             $itemTicket = new Item_Ticket();
             $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formAnswerId'");
             if (count($rows) != 1) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
-                  $issue = new PluginFormcreatorIssue();
                   $issue->add([
                      'original_id'     => $id,
                      'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
@@ -682,7 +682,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => '',
                   ]);
                } else {
-                  $issue = new PluginFormcreatorIssue();
                   $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
                   $id = $this->getID();
                   $issue->update([
@@ -707,7 +706,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                $ticket->getFromDB($itemTicket->getField('tickets_id'));
                $ticketId = $ticket->getID();
                if ($is_newFormAnswer) {
-                  $issue = new PluginFormcreatorIssue();
                   $issue->add([
                      'original_id'     => $ticketId,
                      'sub_itemtype'    => 'Ticket',
@@ -722,7 +720,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => addslashes($ticket->getField('content')),
                   ]);
                } else {
-                  $issue = new PluginFormcreatorIssue();
                   $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
                   $issue->update([
                      'id'              => $issue->getID(),
@@ -740,6 +737,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   ]);
                }
             }
+         } else {
+            $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+            $issue->update([
+               'id'              => $issue->getID(),
+               'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+               'original_id'     => $formAnswerId,
+               'status'          => $status,
+            ]);
          }
       }
 
