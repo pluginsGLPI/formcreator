@@ -782,9 +782,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          } else {
             $answer_value = '';
          }
-      } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
-                 && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
-         $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
+      } else if ((isset($_POST['_formcreator_field_' . $question->getID()]['0']))
+                 && (is_file(GLPI_TMP_DIR . '/' . $_POST['_formcreator_field_' . $question->getID()]['0']))) {
+         $answer_value = $this->saveDocument($form, $question, $_POST['_formcreator_field_' . $question->getID()]['0']);
       }
 
       return $answer_value;
@@ -810,12 +810,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                     ? $_SESSION['glpiactive_entity']
                                     : $form->getField('entities_id');
       $file_data["is_recursive"] = $form->getField('is_recursive');
-      Document::uploadDocument($file_data, $file);
+      Document::moveDocument($file_data, $file);
 
       if ($docID = $doc->add($file_data)) {
          $docID    = intval($docID);
          $table    = Document::getTable();
-         $filename = $file['name'];
+         $filename = addslashes($file);
          $query    = "UPDATE `$table` SET `filename` = '$filename'
                       WHERE `id` = '$docID'";
          $DB->query($query);
