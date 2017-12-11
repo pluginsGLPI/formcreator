@@ -1032,12 +1032,7 @@ EOS;
       $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
 
-      // Get default request type
-      $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $DB->query($query) or die ($DB->error());
-      list($requesttypes_id) = $DB->fetch_array($result);
-
-      $data['requesttypes_id'] = $requesttypes_id;
+      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       // Get predefined Fields
       $ttp                  = new TicketTemplatePredefinedField();
@@ -1075,8 +1070,7 @@ EOS;
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
       $data['name'] = $this->fields['name'];
-      $data['name'] = addslashes($this->parseTags($data['name'],
-                                                  $formanswer));
+      $data['name'] = addslashes($this->parseTags($data['name'], $formanswer));
 
       $data['content'] = $this->fields['comment'];
       if (strpos($data['content'], '##FULLFORM##') !== false) {
