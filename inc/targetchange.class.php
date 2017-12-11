@@ -891,7 +891,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return Change|null generated change
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -963,6 +963,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
+         } else {
+            if ($CFG_GLPI['use_rich_text']) {
+               // replace HTML P tags with DIV tags
+               $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+            }
          }
          $data[$changeField] = addslashes($this->parseTags($data[$changeField], $formanswer));
       }

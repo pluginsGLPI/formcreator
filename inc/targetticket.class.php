@@ -1075,6 +1075,11 @@ EOS;
       $data['content'] = $this->fields['comment'];
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
+      } else {
+         if ($CFG_GLPI['use_rich_text']) {
+            // replace HTML P tags with DIV tags
+            $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+         }
       }
       $data['content'] = addslashes($this->parseTags($data['content'], $formanswer));
       if ($CFG_GLPI['use_rich_text']) {

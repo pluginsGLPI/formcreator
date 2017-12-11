@@ -757,6 +757,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @return null|string
     */
    private function transformAnswerValue(PluginFormcreatorQuestion $question, $value = null) {
+      global $CFG_GLPI;
+
       // unset the answer value
       $answer_value = null;
       $form = $question->getForm();
@@ -766,15 +768,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          if (isset($value)) {
             // If the answer is set, check if it is an array (then implode id).
             if ($value !== null) {
-               $answer_value = $value;
-               if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
-                  $answer_value = json_decode($answer_value);
-                  foreach ($answer_value as $key => $value) {
-                     $answer_value[$key] = $value;
+               if ($question->getField('fieldtype') != 'textarea') {
+                  $answer_value = $value;
+                  if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
+                     $answer_value = json_decode($answer_value);
+                     foreach ($answer_value as $key => $value) {
+                        $answer_value[$key] = $value;
+                     }
+                     $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
+                  } else {
+                     $answer_value = str_replace('\\r\\n', '\n', $answer_value);
                   }
-                  $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
                } else {
-                  $answer_value = str_replace('\\r\\n', '\n', $answer_value);
+                  if ($CFG_GLPI['use_rich_text']) {
+                     $answer_value = html_entity_decode($value);
+                  } else {
+                     $answer_value = $value;
+                  }
                }
             } else {
                $answer_value = '';
