@@ -5,8 +5,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginFormcreatorCommon {
-
-   static function getEnumValues($table, $field) {
+   public static function getEnumValues($table, $field) {
       global $DB;
 
       $enum = [];
@@ -21,20 +20,20 @@ class PluginFormcreatorCommon {
       return $enum;
    }
 
-   static function isNotificationEnabled() {
+   public static function isNotificationEnabled() {
       global $CFG_GLPI;
       $notification = $CFG_GLPI['use_notifications'];
 
       return ($notification == '1');
    }
 
-   static function setNotification($enable) {
+   public static function setNotification($enable) {
       global $CFG_GLPI;
 
       $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
    }
 
-   static function getGlpiVersion() {
+   public static function getGlpiVersion() {
       return defined('GLPI_PREVER')
              ? GLPI_PREVER
              : GLPI_VERSION;
@@ -48,7 +47,7 @@ class PluginFormcreatorCommon {
     *
     * @return string
     **/
-   static function getLinkName($value, $inverted = false) {
+   public static function getLinkName($value, $inverted = false) {
       $tmp = [];
 
       if (!$inverted) {
@@ -69,4 +68,22 @@ class PluginFormcreatorCommon {
       return NOT_AVAILABLE;
    }
 
+   /**
+    * Gets the ID of Formcreator request type
+    */
+   public static function getFormcreatorRequestTypeId() {
+      global $DB;
+
+      $requesttypes_id = 0;
+      $request = $DB->request(
+         RequestType::getTable(),
+         ['name' => ['LIKE', 'Formcreator']]
+      );
+      if (count($request) === 1) {
+         $row = $request->next();
+         $requesttypes_id = $row['id'];
+      }
+
+      return $requesttypes_id;
+   }
 }

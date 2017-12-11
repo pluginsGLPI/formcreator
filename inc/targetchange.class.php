@@ -938,18 +938,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $data   = [];
       $change  = new Change();
-
-      $form    = new PluginFormcreatorForm();
+      $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
 
-      $form->getFromDB($formanswer->fields['plugin_formcreator_forms_id']);
-
-      // Get default request type
-      $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $DB->query($query) or die ($DB->error());
-      list($requesttypes_id) = $DB->fetch_array($result);
-
-      $data['requesttypes_id'] = $requesttypes_id;
+      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       // Parse datas
       $changeFields = [
