@@ -1192,35 +1192,8 @@ EOS;
             break;
       }
 
-      // Define due date
-      if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('`plugin_formcreator_forms_answers_id` = '.$formanswer->fields['id'].
-                                 ' AND `plugin_formcreator_questions_id` = '.$this->fields['due_date_question']);
-         $date   = array_shift($found);
-      } else {
-         $date = null;
-      }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+      $data = $this->setTargetDueDate($data, $formanswer);
 
-      switch ($this->fields['due_date_rule']) {
-         case 'answer':
-            $due_date = $date['answer'];
-            break;
-         case 'ticket':
-            $due_date = date('Y-m-d H:i:s', strtotime($str));
-            break;
-         case 'calcul':
-            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
-            break;
-         default:
-            $due_date = null;
-            break;
-      }
-      if (!is_null($due_date)) {
-         $data['due_date'] = $due_date;
-      }
-
-      // Define urgency
       $data = $this->setTargetUrgency($data, $formanswer);
 
       $data = $this->setTargetCategory($data, $formanswer);
@@ -1338,6 +1311,38 @@ EOS;
       }
       if ($category !== null) {
          $data['itilcategories_id'] = $category;
+      }
+
+      return $data;
+   }
+
+   protected function setTargetDueDate($data, $formanswer) {
+      $answer  = new PluginFormcreatorAnswer();
+      if ($this->fields['due_date_question'] !== null) {
+         $found  = $answer->find('`plugin_formcreator_forms_answers_id` = '.$formanswer->fields['id'].
+               ' AND `plugin_formcreator_questions_id` = '.$this->fields['due_date_question']);
+         $date   = array_shift($found);
+      } else {
+         $date = null;
+      }
+      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+
+      switch ($this->fields['due_date_rule']) {
+         case 'answer':
+            $due_date = $date['answer'];
+            break;
+         case 'ticket':
+            $due_date = date('Y-m-d H:i:s', strtotime($str));
+            break;
+         case 'calcul':
+            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
+            break;
+         default:
+            $due_date = null;
+            break;
+      }
+      if (!is_null($due_date)) {
+         $data['time_to_resolve'] = $due_date;
       }
 
       return $data;
