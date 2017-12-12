@@ -963,7 +963,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       ];
       foreach ($changeFields as $changeField) {
          //TODO: 2.7.0 rename PluginFormcreatorTargetChange's comment into content
-         if ($changeField == 'content') {
+         if ($changeField != 'content') {
             // This handles mismatch of the column content in Change itemtype and comment in TargetChange itemtype
             $data[$changeField] = $this->fields[$changeField];
          } else {
