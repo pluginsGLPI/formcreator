@@ -226,7 +226,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public function equals($value) {
       $user = new User();
       if (!$user->getFromDBByName($value)) {
-         throw new PluginFormcreatorComparisonException(__('User not found for comparison'));
+         throw new PluginFormcreatorComparisonException('User not found for comparison');
       }
       if (is_array($this->fields['answer'])) {
          $users = explode(',', $this->fields['answer']);
@@ -243,25 +243,10 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      $user = new User();
-      if (!$user->getFromDBByName($value)) {
-         return false;
-      }
-      $users = explode($this->fields['answer']);
-      foreach ($users as &$user) {
-         $user = (int) $user;
-      }
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
 
-      // Remove duplicates IDs
-      $users = array_unique($users);
-
-      foreach ($users as $user) {
-         if ($user <= $user->getID()) {
-            // At least one user has an ID less than or equal to the value to compare
-            return false;
-         }
-      }
-
-      return true;
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 }

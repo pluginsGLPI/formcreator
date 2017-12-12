@@ -1,4 +1,2 @@
 <?php
-class PluginFormcreatorUnknownFieldException extends Exception {
-
-}
+class PluginFormcreatorUnknownFieldException extends Exception {}

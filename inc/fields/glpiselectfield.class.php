@@ -93,7 +93,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       $item = new $itemtype();
 
       if (!$item->getFromDB($this->fields['answer'])) {
-         return false;
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
       }
 
       return $item->getField($item->getNameField()) == $value;
@@ -105,7 +105,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       $item = new $itemtype();
 
       if (!$item->getFromDB($this->fields['answer'])) {
-         return false;
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
       }
 
       return $item->getField($item->getNameField()) > $value;

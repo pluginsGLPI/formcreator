@@ -86,4 +86,12 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['email'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
 }

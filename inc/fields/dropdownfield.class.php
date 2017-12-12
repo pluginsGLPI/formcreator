@@ -158,7 +158,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $dropdown = new $itemtype();
 
       if (!$dropdown->getFromDB($this->fields['answer'])) {
-         return false;
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
       }
       if (is_a($dropdown, 'CommonTreeDropdown')) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());
@@ -175,7 +175,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $dropdown = new $itemtype();
 
       if (!$dropdown->getFromDB($this->fields['answer'])) {
-         return false;
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
       }
       if (is_a($dropdown, 'CommonTreeDropdown')) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());

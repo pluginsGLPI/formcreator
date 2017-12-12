@@ -37,8 +37,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorFields
-{
+class PluginFormcreatorFields {
 
    /**
     * Retrive all field types and file path
@@ -228,8 +227,7 @@ class PluginFormcreatorFields
 
             case '<':
                try {
-                  $value = !$conditionField->greaterThan($condition['value'])
-                           && !$conditionField->equals($condition['value']);
+                  $value = $conditionField->lessThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
@@ -246,8 +244,8 @@ class PluginFormcreatorFields
 
             case '<=':
                try {
-                  $value = !$conditionField->greaterThan($condition['value'])
-                            || $conditionField->equals($condition['value']);
+                  $value = $conditionField->lessThan($condition['value'])
+                           || $conditionField->equals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }

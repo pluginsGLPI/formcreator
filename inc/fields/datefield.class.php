@@ -112,7 +112,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
 
    public function equals($value) {
       if (empty($this->fields['answer'])) {
-         $answer   = '0000-00-00 00:00';
+         $answer = '0000-00-00 00:00';
       } else {
          $answer = $this->fields['answer'];
       }
@@ -125,7 +125,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
 
    public function greaterThan($value) {
       if (empty($this->fields['answer'])) {
-         $answer   = '0000-00-00 00:00';
+         $answer = '0000-00-00 00:00';
       } else {
          $answer = $this->fields['answer'];
       }

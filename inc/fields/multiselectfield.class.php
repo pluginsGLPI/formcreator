@@ -152,4 +152,38 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       $prefs = self::getPrefs();
       return "tab_fields_fields['multiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      return in_array($value, $this->fields['answer']);
+   }
+
+   public function equals($value) {
+      return !in_array($value, $this->fields['answer']);
+   }
+
+   public function greaterThan($value) {
+      if (count($this->fields['answer']) < 1) {
+         return false;
+      }
+      foreach ($this->fields['answer'] as $answer) {
+         if ($answer <= $value) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   public function lessThan($value) {
+      if (count($this->fields['answer']) < 1) {
+         return false;
+      }
+      foreach ($this->fields['answer'] as $answer) {
+         if ($answer >= $value) {
+            return false;
+         }
+      }
+
+      return true;
+   }
 }

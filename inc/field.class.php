@@ -221,11 +221,28 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    /**
-    * Tests if the given value is greater than the field value
+    * Tests if the given value is not equal to field value
     *
     * @return boolean True if the value is not equal to the field value
     */
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+   /**
+    * Tests if the given value is greater than the field value
+    *
+    * @return boolean True if the value is greater than the field value
+    */
    public function greaterThan($value) {
       return $this->getValue() > $value;
+   }
+
+   /**
+    * Tests if the given value is less than the field value
+    *
+    * @return boolean True if the value is less than the field value
+    */
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && $this->notEquals($value);
    }
 }
