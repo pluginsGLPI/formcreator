@@ -16,6 +16,74 @@ class FormTest extends SuperAdminTestCase {
       );
    }
 
+   public function addUpdateFormProvider() {
+      return [
+         [
+
+            'input' => [
+               'name'         => '',
+               'description'  => '',
+               'content'      => '',
+            ],
+            'expected' => false, // An empty name should be rejected
+         ],
+         [
+            'input' => [
+               'name'         => 'être ou ne pas être',
+               'description'  => 'être ou ne pas être',
+               'content'      => '&lt;p&gt;être ou ne pas être&lt;/p&gt;',
+            ],
+            'expected' => true,
+         ],
+         [
+            'input' => [
+               'name'         => 'test d\\\'apostrophe',
+               'description'  => 'test d\\\'apostrophe',
+               'content'      => '&lt;p&gt;test d\\\'apostrophe&lt;/p&gt;',
+            ],
+            'expected' => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider addUpdateFormProvider
+    * @param array $input
+    * @param boolean $expected
+    */
+   public function testPrepareInputForAdd($input, $expected) {
+      $form = new PluginFormcreatorForm();
+      $output = $form->prepareInputForAdd($input);
+      if ($expected === false) {
+         $this->assertCount(0, $output);
+      } else {
+         $this->assertEquals($input['name'], $output['name']);
+         $this->assertEquals($input['description'], $output['description']);
+         $this->assertEquals($input['content'], $output['content']);
+         $this->assertArrayHasKey('uuid', $output);
+      }
+   }
+
+   /**
+    * @dataProvider addUpdateFormProvider
+    * @param array $input
+    * @param boolean $expected
+    */
+   public function testPrepareInputForUpdate($input, $expected) {
+      $form = new PluginFormcreatorForm();
+      $form->add([
+         'name' => 'anything',
+      ]);
+      $output = $form->prepareInputForUpdate($input);
+      if ($expected === false) {
+         $this->assertCount(0, $output);
+      } else {
+         $this->assertEquals($input['name'], $output['name']);
+         $this->assertEquals($input['description'], $output['description']);
+         $this->assertEquals($input['content'], $output['content']);
+      }
+   }
+
    public function testCreateForm() {
       $form = new PluginFormcreatorForm();
       $formId = $form->add($this->formData);

@@ -45,6 +45,18 @@ function plugin_formcreator_update_dev(Migration $migration) {
    $query = "UPDATE `$table` SET `num`='8' WHERE `itemtype`='PluginFormcreatorForm_Answer' AND `num`='1'";
    $DB->query($query);
 
+   // decode html entities in name of targets
+   $request = [
+      'FROM' => 'glpi_plugin_formcreator_forms_targets',
+   ];
+   foreach ($DB->request($request) as $row) {
+      $id = $row['id'];
+      $name = Toolbox::addslashes_deep(Html::entity_decode_deep($row['name']));
+      $DB->query("UPDATE `glpi_plugin_formcreator_forms_targets`
+                  SET `name`='$name',
+                  WHERE `id` = '$id'");
+   }
+
    // Remove abusive encoding in targets
    $table = 'glpi_plugin_formcreator_targets';
    $request = [
@@ -57,7 +69,7 @@ function plugin_formcreator_update_dev(Migration $migration) {
       $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
    }
 
-   // Remove abusive encding in target tickets
+   // Remove abusive encoding in target tickets
    $table = 'glpi_plugin_formcreator_targettickets';
    $request = [
       'FROM' => $table,
@@ -69,7 +81,7 @@ function plugin_formcreator_update_dev(Migration $migration) {
       $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
    }
 
-   // Remove abusive encding in target changes
+   // Remove abusive encoding in target changes
    $table = 'glpi_plugin_formcreator_targetchanges';
    $request = [
       'FROM' => $table,
@@ -80,4 +92,54 @@ function plugin_formcreator_update_dev(Migration $migration) {
       $id = $row['id'];
       $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
    }
+
+   // decode html entities in answers
+   $request = [
+      'SELECT' => ['glpi_plugin_formcreator_answers.*'],
+      'FROM' => 'glpi_plugin_formcreator_answers',
+      'INNER JOIN' => ['glpi_plugin_formcreator_questions' => [
+         'FKEY' => [
+            'glpi_plugin_formcreator_answers' => 'plugin_formcreator_questions_id',
+            'glpi_plugin_formcreator_questions' => 'id'
+         ]
+      ]],
+      'WHERE' => ['fieldtype' => 'textarea']
+   ];
+   foreach ($DB->request($request) as $row) {
+      $answer = Toolbox::addslashes_deep(html_entity_decode($row['answer']));
+      $id = $row['id'];
+      $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer`='$answer' WHERE `id` = '$id'");
+   }
+
+   // decode html entities in name, description and content of forms
+   $request = [
+      'FROM' => 'glpi_plugin_formcreator_forms',
+   ];
+   foreach ($DB->request($request) as $row) {
+      $id = $row['id'];
+      $name = addslashes(Html::entity_decode_deep($row['name']));
+      $description = addslashes(Html::entity_decode_deep($row['description']));
+      // have only HTML special chars encoded
+      $content = addslashes(htmlspecialchars(Html::entity_decode_deep($row['description'])));
+      $DB->query("UPDATE `glpi_plugin_formcreator_forms`
+                  SET `name`='$name',
+                  `description`='$description',
+                  `content`='$content'
+                  WHERE `id` = '$id'");
+   }
+
+   // decode html entities in name of form answers
+   $request = [
+      'FROM' => 'glpi_plugin_formcreator_forms_answers',
+   ];
+   foreach ($DB->request($request) as $row) {
+      $id = $row['id'];
+      $name = addslashes(Html::entity_decode_deep($row['name']));
+      $DB->query("UPDATE `glpi_plugin_formcreator_forms_answers`
+                  SET `name`='$name',
+                  WHERE `id` = '$id'");
+   }
+
+   // Force update of issues to remove abusive encoding
+   PluginFormcreatorIssue::cronSyncIssues(new CronTask());
 }

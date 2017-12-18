@@ -1,6 +1,42 @@
 <?php
 class Form_AnswerTest extends SuperAdminTestCase {
 
+   public function addUpdateFormProvider() {
+      return [
+         [
+            'input' => [
+               'name'         => 'être ou ne pas être',
+               'description'  => 'être ou ne pas être',
+               'content'      => '&lt;p&gt;être ou ne pas être&lt;/p&gt;',
+            ],
+            'expected' => true,
+         ],
+         [
+            'input' => [
+               'name'         => 'test d\\\'apostrophe',
+               'description'  => 'test d\\\'apostrophe',
+               'content'      => '&lt;p&gt;test d\\\'apostrophe&lt;/p&gt;',
+            ],
+            'expected' => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider addUpdateFormProvider
+    * @param array $input
+    */
+   public function testPrepareInputForAdd($input) {
+      $form = new PluginFormcreatorForm();
+      $form->add($input);
+
+      $formAnswer = new PluginFormcreatorForm_Answer();
+      $output = $formAnswer->prepareInputForAdd([
+         $form::getForeignKeyField() => $form->getID(),
+      ]);
+      $this->assertEquals($input['name'], $output['name']);
+   }
+
    public function testNotificationFormAnswerCreated() {
       global $DB, $CFG_GLPI;
 
