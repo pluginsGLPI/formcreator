@@ -132,8 +132,8 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       //Run the condition
       $currentValues = array(
-            $firstQuestionId  => $condition['show_value'][0] . " and now for something completely different",
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => $condition['show_value'][0] . " and now for something completely different",
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
@@ -143,17 +143,17 @@ class QuestionConditionTest extends SuperAdminTestCase
       } else {
          $expected = true;
       }
-      $this->assertEquals($expected, $visibility[$secondQuestionId]);
+      $this->assertEquals($expected, $visibility["formcreator_field_$secondQuestionId"]);
 
       // Run the reversed condition
       $currentValues = array(
-            $firstQuestionId  => $condition['show_value'][0],
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => $condition['show_value'][0],
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
-      $this->assertEquals(!$expected, $visibility[$secondQuestionId]);
+      $this->assertEquals(!$expected, $visibility["formcreator_field_$secondQuestionId"]);
 
    }
 
@@ -174,8 +174,8 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       //Run the condition
       $currentValues = array(
-            $firstQuestionId  => array($condition['show_value'][0] . " and now for something completely different"),
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => array($condition['show_value'][0] . " and now for something completely different"),
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
@@ -185,16 +185,16 @@ class QuestionConditionTest extends SuperAdminTestCase
       } else {
          $expected = true;
       }
-      $this->assertEquals($expected, $visibility[$secondQuestionId]);
+      $this->assertEquals($expected, $visibility["formcreator_field_$secondQuestionId"]);
 
       // Run the reversed condition
       $currentValues = array(
-            $firstQuestionId  => array($condition['show_value'][0]),
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => array($condition['show_value'][0]),
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
-      $this->assertEquals(!$expected, $visibility[$secondQuestionId]);
+      $this->assertEquals(!$expected, $visibility["formcreator_field_$secondQuestionId"]);
    }
 }

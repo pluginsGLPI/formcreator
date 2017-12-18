@@ -160,7 +160,7 @@ class PluginFormcreatorFields
       foreach ($questionConditions as $question_condition) {
          $conditions[] = [
             'logic'    => $question_condition->getField('show_logic'),
-            'field'    => $question_condition->getField('show_field'),
+            'field'    => 'formcreator_field_' . $question_condition->getField('show_field'),
             'operator' => $question_condition->getField('show_condition'),
             'value'    => $question_condition->getField('show_value')
          ];
