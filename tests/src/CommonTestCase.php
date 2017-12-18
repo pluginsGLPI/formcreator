@@ -384,6 +384,16 @@ abstract class CommonTestCase extends CommonDBTestCase
    }
 
    /**
+    * create a new form in database
+    */
+   protected function createForm($input = []) {
+      $form = new \PluginFormcreatorForm();
+      $form->add($input);
+      $this->boolean($form->isNewItem())->isFalse();
+      return $form;
+   }
+
+   /**
     * Create a whole form
     * Method incomplete, some new things needs to be implemented
     */

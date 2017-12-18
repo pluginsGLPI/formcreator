@@ -1033,15 +1033,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
-         $input['name'] = addslashes($input['name']);
-      }
-
-      if (isset($input['description'])) {
-         $input['description'] = addslashes($input['description']);
-      }
-
-      if (isset($input['content'])) {
-         $input['content'] = addslashes($input['content']);
       }
 
       if (!isset($input['requesttype'])) {

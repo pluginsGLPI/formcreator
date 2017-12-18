@@ -586,20 +586,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    public function prepareInputForAdd($input) {
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
-      $input['name'] = $form->getName();
+      $input['name'] = addslashes($form->getName());
 
-      return $input;
-   }
-
-   /**
-    * Prepare input datas for adding the question
-    * Check fields values and get the order for the new question
-    *
-    * @param array $input data used to add the item
-    *
-    * @return array the modified $input array
-   */
-   public function prepareInputForUpdate($input) {
       return $input;
    }
 

@@ -36,30 +36,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    protected $formData;
 
-   protected function formProvider() {
-      return [
-         [
-            [
-               'entities_id'           => '0',
-               'name'                  => 'a form',
-               'description'           => 'form description',
-               'content'               => 'a content',
-               'is_active'             => 1,
-               'validation_required'   => 0
-            ]
-         ]
-      ];
-   }
-
-   /**
-    * @dataProvider formProvider
-    */
-   public function testCreateForm($formData) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($formData);
-      $this->boolean($form->isNewItem())->isFalse();
-   }
-
    public function providerPrepareInputForAdd() {
       return [
          [
@@ -95,7 +71,6 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @param array $input
     * @param boolean $expected
     */
-   /*
    public function testPrepareInputForAdd($input, $expected) {
       $form = new \PluginFormcreatorForm();
       $output = $form->prepareInputForAdd($input);
@@ -108,7 +83,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          $this->array($output)->hasKey('uuid');
       }
    }
-   */
 
    public function providerPrepareInputForUpdate() {
       return $this->providerPrepareInputForAdd();
@@ -119,7 +93,6 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @param array $input
     * @param boolean $expected
     */
-   /*
    public function testPrepareInputForUpdate($input, $expected) {
       $form = new \PluginFormcreatorForm();
       $form->add([
@@ -133,23 +106,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          $this->string($output['description'])->isEqualTo($output['description']);
          $this->string($output['content'])->isEqualTo($output['content']);
       }
-   }
-   */
-
-   /**
-    * @dataProvider formProvider
-    */
-   public function testUpdateForm($formData) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($formData);
-      $this->boolean($form->isNewItem())->isFalse();
-
-      $success = $form->update([
-         'id'                    => $form->getID(),
-         'name'                  => 'an updated form',
-         'validation_required'   => 0
-      ]);
-      $this->boolean($success)->isTrue(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
    }
 
    /**
