@@ -914,8 +914,8 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
       echo Html::scriptBlock('$(function() {
-               formcreatorShowFields();
-            })');
+         formcreatorShowFields();
+      })');
 
       // Show validator selector
       if ($item->fields['validation_required'] > 0) {
@@ -1106,7 +1106,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $valid = true;
       $data  = [];
 
-      // Validate form fields
+      // Prepare form fields for validation
       $question = new PluginFormcreatorQuestion();
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
@@ -1125,7 +1125,10 @@ class PluginFormcreatorForm extends CommonDBTM
          } else {
             $data['formcreator_field_' . $id] = '';
          }
+      }
 
+      // Validate form fields
+      foreach ($found_questions as $id => $question) {
          $className = 'PluginFormcreator' . ucfirst($question->getField('fieldtype')) . 'Field';
 
          if (class_exists($className)) {

@@ -531,7 +531,7 @@ function deleteTarget(items_id, token, target_id) {
 var formcreatorQuestions = new Object();
 
 function formcreatorChangeValueOf(field_id, value) {
-   formcreatorQuestions[field_id] = value;
+   formcreatorQuestions['formcreator_field_' + field_id] = value;
    formcreatorShowFields();
 }
 function formcreatorAddValueOf(field_id, value) {
