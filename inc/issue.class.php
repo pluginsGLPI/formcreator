@@ -143,7 +143,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       // if ticket(s) exist(s), show it/them
       $options['_item'] = $item;
-      $item = $this->getTicketsForDisplay($options);
+      if ($item Instanceof PluginFormcreatorForm_Answer) {
+         $item = $this->getTicketsForDisplay($options);
+      }
 
       $item->showTabsContent();
 
@@ -191,7 +193,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       // retrieve associated tickets
       $options['_item'] = $item;
-      $item = $this->getTicketsForDisplay($options);
+      if ($item Instanceof PluginFormcreatorForm_Answer) {
+         $item = $this->getTicketsForDisplay($options);
+      }
 
       // force recall of ticket in layout
       $old_layout = $_SESSION['glpilayout'];
