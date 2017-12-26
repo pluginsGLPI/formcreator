@@ -109,6 +109,23 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    }
    unset($obj);
 
+   $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumCategoryRule()))."'";
+   $table = 'glpi_plugin_formcreator_targettickets';
+   if (!$DB->fieldExists($table, 'category_rule', false)) {
+      $query = "ALTER TABLE `$table`
+                ADD `category_rule` ENUM($enum_category_rule) NOT NULL DEFAULT 'none' AFTER `tag_specifics`;";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+   } else {
+      $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues($table, 'category_rule');
+      if (count($current_enum_category_rule) != count(PluginFormcreatorTargetTicket::getEnumCategoryRule())) {
+         $query = "ALTER TABLE `$table`
+                   CHANGE COLUMN `category_rule` `category_rule`
+                   ENUM($enum_category_rule)
+                   NOT NULL DEFAULT 'none'";
+         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      }
+   }
+
    $table = 'glpi_plugin_formcreator_items_targetchanges';
    $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumUrgencyRule()))."'";
    $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumCategoryRule()))."'";
