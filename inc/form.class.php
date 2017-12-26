@@ -1666,22 +1666,22 @@ class PluginFormcreatorForm extends CommonDBTM
             if ($canAddType) {
                $destination = PluginFormcreatorForm::getFormURL();
                $message .= __('You may allow JSON files right now.', 'formcreator');
-               $button = Html::submit(_x('button','Create', 'formcreator'), array('name' => 'filetype_create'));
+               $button = Html::submit(_x('button', 'Create', 'formcreator'), array('name' => 'filetype_create'));
             } else {
                $destination = PluginFormcreatorForm::getSearchURL();
                $message .= __('Please contact your GLPI administrator.', 'formcreator');
-               $button = Html::submit(_x('button','Back', 'formcreator'), array('name' => 'filetype_back'));
+               $button = Html::submit(_x('button', 'Back', 'formcreator'), array('name' => 'filetype_back'));
             }
          } else {
             $message = __('Upload of JSON files not enabled.', 'formcreator');
             if ($canUpdateType) {
                $destination = PluginFormcreatorForm::getFormURL();
                $message .= __('You may enable JSON files right now.', 'formcreator');
-               $button = Html::submit(_x('button','Enable', 'formcreator'), array('name' => 'filetype_enable'));
+               $button = Html::submit(_x('button', 'Enable', 'formcreator'), array('name' => 'filetype_enable'));
             } else {
                $message .= __('You may enable JSON files right now.', 'formcreator');
                $message .= __('Please contact your GLPI administrator.', 'formcreator');
-               $button = Html::submit(_x('button','Back', 'formcreator'), array('name' => 'filetype_back'));
+               $button = Html::submit(_x('button', 'Back', 'formcreator'), array('name' => 'filetype_back'));
             }
          }
          echo '<div class="spaced" id="tabsbody">';
