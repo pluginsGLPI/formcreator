@@ -888,7 +888,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
-    * @return Change|null generated change
+    * @return Change|false generated change
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
       global $DB, $CFG_GLPI;
@@ -961,6 +961,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          } else {
             $data[$changeField] = $this->fields['comment'];
          }
+         $data[$changeField] = addslashes($data[$changeField]);
+         $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
          } else {
@@ -969,7 +971,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
             }
          }
-         $data[$changeField] = addslashes($this->parseTags($data[$changeField], $formanswer));
+         $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
@@ -1071,9 +1073,20 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-                                 ' AND plugin_formcreator_questions_id = '.$this->fields['due_date_question']);
-         $date   = array_shift($found);
+         $request = [
+            'FROM' => $answer::getTable(),
+            'WHERE' => [
+               'AND' => [
+                  $formanswer::getForeignKeyField() => $formanswer->fields['id'],
+                  PluginFormcreatorQuestion::getForeignKeyField() => $this->fields['due_date_question'],
+               ],
+            ],
+         ];
+         $iterator = $DB->request($request);
+         if ($iterator->count() > 0) {
+            $iterator->rewind();
+            $date   = $iterator->current();
+         }
       } else {
          $date = null;
       }

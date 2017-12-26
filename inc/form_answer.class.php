@@ -907,7 +907,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $targetObject = new $target['itemtype'];
          $targetObject->getFromDB($target['items_id']);
          $generatedTarget = $targetObject->save($this);
-         if ($generatedTarget === null) {
+         if ($generatedTarget === false) {
             $success = false;
             break;
          }
@@ -962,13 +962,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $question_no = 0;
       $output      = '';
+      $eol = '\r\n';
 
       if ($CFG_GLPI['use_rich_text']) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
-         $output .= __('Form data', 'formcreator') . PHP_EOL;
+         $output .= __('Form data', 'formcreator') . $eol;
          $output .= '=================';
-         $output .= PHP_EOL . PHP_EOL;
+         $output .= $eol . $eol;
       }
 
       // retrieve answers
@@ -995,9 +996,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             if ($CFG_GLPI['use_rich_text']) {
                $output .= '<h2>'.$question_line['section_name'].'</h2>';
             } else {
-               $output .= PHP_EOL.$question_line['section_name'].PHP_EOL;
+               $output .= $eol . $question_line['section_name'] . $eol;
                $output .= '---------------------------------';
-               $output .= PHP_EOL;
+               $output .= $eol;
             }
             $last_section = $question_line['section_name'];
          }
@@ -1020,7 +1021,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                $output .= '</div>';
             } else {
                $output .= $question_no . ') ##question_' . $question_line['id'] . '## : ';
-               $output .= '##answer_' . $question_line['id'] . '##' . PHP_EOL . PHP_EOL;
+               $output .= '##answer_' . $question_line['id'] . '##' . $eol . $eol;
             }
          }
       }

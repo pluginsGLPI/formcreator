@@ -979,7 +979,7 @@ EOS;
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
-    * @return Ticket|null Generated ticket if success, null otherwise
+    * @return Ticket|false Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
       global $DB, $CFG_GLPI;
@@ -1072,7 +1072,8 @@ EOS;
       $data['name'] = $this->fields['name'];
       $data['name'] = addslashes($this->parseTags($data['name'], $formanswer));
 
-      $data['content'] = $this->fields['comment'];
+      $data['content'] = addslashes($this->fields['comment']);
+      $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
       } else {
@@ -1081,7 +1082,7 @@ EOS;
             $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
          }
       }
-      $data['content'] = addslashes($this->parseTags($data['content'], $formanswer));
+      $data['content'] = $this->parseTags($data['content'], $formanswer);
       if ($CFG_GLPI['use_rich_text']) {
          $data['content'] = htmlentities($data['content']);
       }
