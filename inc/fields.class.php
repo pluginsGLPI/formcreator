@@ -203,7 +203,7 @@ class PluginFormcreatorFields {
          switch ($condition['operator']) {
             case '!=' :
                try {
-                  $value = !$conditionField->equals($condition['value']);
+                  $value = $conditionField->notEquals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }

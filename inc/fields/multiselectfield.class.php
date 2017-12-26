@@ -157,7 +157,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       return in_array($value, $this->fields['answer']);
    }
 
-   public function equals($value) {
+   public function notEquals($value) {
       return !in_array($value, $this->fields['answer']);
    }
 
