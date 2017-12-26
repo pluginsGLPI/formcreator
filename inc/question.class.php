@@ -238,7 +238,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
             return [];
          }
-         $input['name'] = addslashes($input['name']);
       }
 
       // - field type is required
@@ -313,7 +312,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       foreach ($input as $key => $value) {
          if ($input['fieldtype'] != 'dropdown'
              || $input['fieldtype'] != 'dropdown' && $key != 'values') {
-            if ($key != 'regex') {
+            if ($key != 'regex' && $key != 'name') {
                $input[$key] = plugin_formcreator_encode($value);
             }
          }
@@ -378,7 +377,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                 && !($input['fieldtype'] == 'checkboxes' && ($key == 'values' || $key == 'default_values'))
                 && !($input['fieldtype'] == 'radios' && ($key == 'values' || $key == 'default_values'))
                 && !($input['fieldtype'] == 'multiselect' && ($key == 'values' || $key == 'default_values'))) {
-               if ($key != 'regex') {
+               if ($key != 'regex' && $key != 'name') {
                   $input[$key] = plugin_formcreator_encode($value);
                }
             } else {
