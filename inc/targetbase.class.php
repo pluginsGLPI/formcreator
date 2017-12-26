@@ -767,8 +767,8 @@ EOS;
             }
 
             if ($question_line['fieldtype'] !== 'file') {
-               $content = str_replace('##question_' . $id . '##', $name, $content);
-               $content = str_replace('##answer_' . $id . '##', $value, $content);
+               $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
+               $content = str_replace('##answer_' . $id . '##', addslashes($value), $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
                   $content = str_replace('##question_' . $id . '##', $name, $content);
