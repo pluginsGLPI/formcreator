@@ -32,6 +32,55 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return true;
    }
 
+   public function canViewItem() {
+      global $DB;
+
+      if (!isset($_SESSION['glpiID'])) {
+         return false;
+      }
+
+      if ($_SESSION['glpiID'] == $this->getField('requester_id')) {
+         return true;
+      }
+
+      $request = [
+         'SELECT' => PluginFormcreatorForm_Validator::getTable() . '.*',
+         'FROM' => $this::getTable(),
+         'INNER JOIN' => [
+            PluginFormcreatorForm::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorForm::getTable() => PluginFormcreatorForm::getIndexName(),
+                  $this::getTable() => PluginFormcreatorForm::getForeignKeyField(),
+               ],
+            ],
+            PluginFormcreatorForm_Validator::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorForm::getTable() => PluginFormcreatorForm::getIndexName(),
+                  PluginFormcreatorForm_Validator::getTable() => PluginFormcreatorForm::getForeignKeyField()
+               ]
+            ]
+         ],
+         'WHERE' => [$this::getTable() . '.id' => $this->getID()],
+      ];
+      foreach ($DB->request($request) as $row) {
+         if ($row['itemtype'] == User::class) {
+            if ($_SESSION['glpiID'] == $row['items_id']) {
+               return true;
+            }
+         } else {
+            $groupUser = new Group_User();
+            $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+            foreach ($groups as $group) {
+               if ($row['items_id'] == $group['id']) {
+                  return true;
+               }
+            }
+         }
+      }
+
+      return false;
+   }
+
    /**
     * Returns the type name with consideration of plural
     *
