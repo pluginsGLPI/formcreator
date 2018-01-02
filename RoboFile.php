@@ -224,20 +224,20 @@ class RoboFile extends RoboFilePlugin
     * @param string $commitMessage commit message
     */
    protected function gitCommit(array $files, $commitMessage) {
-       if (count($files) < 1) {
-           $arg = '-u';
-       } else {
-           $arg = '"' . implode('" "', $files) . '"';
-       }
+      if (count($files) < 1) {
+         $arg = '-u';
+      } else {
+         $arg = '"' . implode('" "', $files) . '"';
+      }
        exec("git add $arg", $output, $retCode);
-       if ($retCode > 0) {
-           throw new Exception("Failed to add files for $commitMessage");
-       }
+      if ($retCode > 0) {
+         throw new Exception("Failed to add files for $commitMessage");
+      }
 
        exec("git commit -m \"$commitMessage\"", $output, $retCode);
-       if ($retCode > 0) {
-           throw new Exception("Failed to commit $commitMessage");
-       }
+      if ($retCode > 0) {
+         throw new Exception("Failed to commit $commitMessage");
+      }
 
        return true;
    }
@@ -246,9 +246,9 @@ class RoboFile extends RoboFilePlugin
     */
    protected function updateChangelog() {
        exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
-       if ($retCode > 0) {
-           throw new Exception("Failed to update the changelog");
-       }
+      if ($retCode > 0) {
+         throw new Exception("Failed to update the changelog");
+      }
 
        return true;
    }
@@ -299,10 +299,10 @@ class RoboFile extends RoboFilePlugin
        $jsonContent = json_decode($jsonContent, true);
 
        // update version
-       if (empty($version)) {
-           echo "Version not found in setup.php\n";
-           return;
-       }
+      if (empty($version)) {
+         echo "Version not found in setup.php\n";
+         return;
+      }
        $jsonContent['version'] = $version;
        file_put_contents($filename, json_encode($jsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
    }
