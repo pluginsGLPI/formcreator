@@ -83,9 +83,9 @@ class RoboFile extends RoboFilePlugin
          throw new Exception("The tag $version already exists");
       }
 
-      if (!$this->isTagMatchesCurrentCommit($version)) {
+      //if (!$this->isTagMatchesCurrentCommit($version)) {
          //throw new Exception("HEAD is not pointing to the tag of the version to build");
-      }
+      //}
 
       $versionTag = $this->getVersionTagFromXML($version);
       if (!is_array($versionTag)) {
@@ -106,7 +106,7 @@ class RoboFile extends RoboFilePlugin
       $targetFile = $pluginPath. "/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
       $toArchive = implode(' ', $this->getFileToArchive("HEAD"));
       @mkdir($pluginPath. "/dist");
-      $this->_exec("git archive --prefix=$pluginName/ $version $toArchive | bzip2 > $targetFile");
+      $this->_exec("git archive --prefix=$pluginName/ HEAD $toArchive | bzip2 > $targetFile");
    }
 
    protected function getTrackedFiles($version) {
