@@ -1,6 +1,6 @@
 <?php
 
-function plugin_formcreator_update_dev() {
+function plugin_formcreator_update_2_6_1() {
    global $DB;
 
    // decode html entities in name of questions

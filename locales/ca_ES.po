@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-31 10:12+0100\n"
-"PO-Revision-Date: 2017-10-31 09:13+0000\n"
+"POT-Creation-Date: 2018-01-02 16:17+0100\n"
+"PO-Revision-Date: 2018-01-02 14:06+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Catalan (Spain) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ca_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: ca_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hook.php:36 inc/category.class.php:13
+#: hook.php:36 inc/category.class.php:13 inc/form.class.php:168
 msgid "Form category"
 msgid_plural "Form categories"
 msgstr[0] "Categoria del formulari"
@@ -26,7 +26,8 @@ msgstr[1] "Categories dels formularis"
 
 #: setup.php:27 setup.php:147 ajax/homepage_link.php:6
 #: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:495
-#: inc/form.class.php:1866 inc/formlist.class.php:17 js/scripts.js.php:19
+#: inc/form.class.php:1922 inc/form_answer.class.php:137
+#: inc/formlist.class.php:17 js/scripts.js.php:19
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Sol·licitud"
@@ -37,23 +38,23 @@ msgstr[1] "Sol·licituds"
 msgid "Forms waiting for validation"
 msgstr "Sol·licituds pendents de validació"
 
-#: front/form.php:15 front/form_answer.form.php:44
-#: front/form_answer.form.php:49 front/form_answer.php:16
+#: front/form.php:15 front/form_answer.form.php:49
+#: front/form_answer.form.php:54 front/form_answer.php:16
 #: front/form_answer.php:21 front/issue.php:16 front/issue.php:21
 #: front/targetchange.form.php:48 front/targetticket.form.php:48
-#: inc/form.class.php:1973 inc/form.class.php:1980
+#: inc/form.class.php:2029 inc/form.class.php:2036
 msgid "Form Creator"
 msgstr "Creador de formularis"
 
-#: front/form_answer.form.php:40 front/form_answer.php:12
+#: front/form_answer.form.php:45 front/form_answer.php:12
 #: front/issue.form.php:27 front/issue.php:12 front/knowbaseitem.form.php:15
 #: front/reservation.form.php:14 front/reservation.php:16
 #: front/reservationitem.php:12 front/wizard.php:14 front/wizardfeeds.php:15
-#: inc/form.class.php:1968
+#: inc/form.class.php:2024
 msgid "Service catalog"
 msgstr "Catàleg de serveis"
 
-#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:1970
+#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:2026
 msgid "Form list"
 msgstr "Llista de formularis"
 
@@ -108,6 +109,10 @@ msgstr "Un camp obligatori està buit:"
 msgid "Import forms"
 msgstr "Importar formularis"
 
+#: inc/form.class.php:142
+msgid "Homepage"
+msgstr "Pàgina d'inici"
+
 #: inc/form.class.php:222 inc/form.class.php:277 inc/form_profile.class.php:36
 msgid "Public access"
 msgstr "Accés públic"
@@ -142,166 +147,205 @@ msgstr "Necessita validació?"
 msgid "Default form in service catalog"
 msgstr "Formulari per defecte del catàleg de serveis"
 
-#: inc/form.class.php:576 inc/targetbase.class.php:519
+#: inc/form.class.php:575 inc/targetbase.class.php:519
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categoria"
 msgstr[1] "Categories"
 
-#: inc/form.class.php:577
+#: inc/form.class.php:576
 msgid "see all"
 msgstr "Veure-ho tot"
 
-#: inc/form.class.php:595
+#: inc/form.class.php:594
 msgid "Popularity sort"
 msgstr "Ordenar per popularitat"
 
-#: inc/form.class.php:599
+#: inc/form.class.php:598
 msgid "Alphabetic sort"
 msgstr "Ordenar alfabèticament"
 
-#: inc/form.class.php:770
+#: inc/form.class.php:769
 msgid "Please, describe your need here"
 msgstr "Si us plau, descriu què necessites aquí"
 
-#: inc/form.class.php:779
+#: inc/form.class.php:778
 msgid "My last forms (requester)"
 msgstr "Les meves darreres sol·licituds (sol·licitant)"
 
-#: inc/form.class.php:789
+#: inc/form.class.php:788
 msgid "No form posted yet"
 msgstr "Formulari no publicat"
 
-#: inc/form.class.php:801
+#: inc/form.class.php:800
 msgid "All my forms (requester)"
 msgstr "Totes les meves sol·licituds (sol·licitant)"
 
-#: inc/form.class.php:811
+#: inc/form.class.php:810
 msgid "My last forms (validator)"
 msgstr "Les meves darreres sol·licituds (validador)"
 
-#: inc/form.class.php:831
+#: inc/form.class.php:830
 msgid "No form waiting for validation"
 msgstr "No hi ha sol·licituds pendents de validació"
 
-#: inc/form.class.php:849
+#: inc/form.class.php:848
 msgid "All my forms (validator)"
 msgstr "Totes les meves sol·licituds (validador)"
 
-#: inc/form.class.php:884 inc/form_answer.class.php:363
+#: inc/form.class.php:883 inc/form_answer.class.php:412
 msgid "Print this form"
 msgstr ""
 
-#: inc/form.class.php:950
+#: inc/form.class.php:949
 msgid "Choose a validator"
 msgstr "Escull un validador"
 
-#: inc/form.class.php:993 inc/target.class.php:114
+#: inc/form.class.php:992 inc/target.class.php:114
 msgid "The name cannot be empty!"
 msgstr "No es pot deixar el nom en blanc!"
 
-#: inc/form.class.php:1147
+#: inc/form.class.php:1149
 msgid "You must select validator !"
 msgstr "Has de seleccionar un validador!"
 
-#: inc/form.class.php:1222
+#: inc/form.class.php:1224
 msgid "Duplicate"
 msgstr "Duplicada"
 
-#: inc/form.class.php:1509
+#: inc/form.class.php:1511
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Sol·licitud duplicada: %s"
 
-#: inc/form.class.php:1520
+#: inc/form.class.php:1522
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Sol·licitud transferida: %s"
 
-#: inc/form.class.php:1709
+#: inc/form.class.php:1668
+msgid "Upload of JSON files not allowed."
+msgstr "Càrrega de fitxers JSON no permesa."
+
+#: inc/form.class.php:1671
+msgid "You may allow JSON files right now."
+msgstr "Hauries de permetre fitxers JSON ara."
+
+#: inc/form.class.php:1672
+msgctxt "button"
+msgid "Create"
+msgstr "Crear"
+
+#: inc/form.class.php:1675 inc/form.class.php:1686
+msgid "Please contact your GLPI administrator."
+msgstr "Siusplau, contacta amb l'administrador del GLPI."
+
+#: inc/form.class.php:1676 inc/form.class.php:1687
+msgctxt "button"
+msgid "Back"
+msgstr "Enrere"
+
+#: inc/form.class.php:1679
+msgid "Upload of JSON files not enabled."
+msgstr "La càrrega de fitxers JSON no està habilitada."
+
+#: inc/form.class.php:1682 inc/form.class.php:1685
+msgid "You may enable JSON files right now."
+msgstr "Hauries d'habilitar els fitxers JSON ara."
+
+#: inc/form.class.php:1683
+msgctxt "button"
+msgid "Enable"
+msgstr "Habilitar"
+
+#: inc/form.class.php:1765
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formularis importats correctament de %s"
 
-#: inc/form.class.php:1796
+#: inc/form.class.php:1852
 msgid "Failed to create JSON document type"
 msgstr "Error en la creació de documents tipus JSON."
 
-#: inc/form.class.php:1803
+#: inc/form.class.php:1859
 msgid "JSON document type not found"
 msgstr "Document tipus JSON no trobat."
 
-#: inc/form.class.php:1810
+#: inc/form.class.php:1866
 msgid "Failed to update JSON document type"
 msgstr "Error en actualitzar el document tipus JSON."
 
-#: inc/form.class.php:1870
+#: inc/form.class.php:1926
 msgid "Forms without category"
 msgstr "Formularis sense categoria"
 
-#: inc/form_answer.class.php:42 inc/issue.class.php:403
+#: inc/form_answer.class.php:91 inc/issue.class.php:407
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Resposta del formulari"
 msgstr[1] "Sol·licituds"
 
-#: inc/form_answer.class.php:127
-msgid "Validator group"
+#: inc/form_answer.class.php:157
+msgid "Form approver"
 msgstr ""
 
-#: inc/form_answer.class.php:206
+#: inc/form_answer.class.php:176
+msgid "Form approver group"
+msgstr ""
+
+#: inc/form_answer.class.php:255
 msgid "waiting"
 msgstr "esperant"
 
-#: inc/form_answer.class.php:207
+#: inc/form_answer.class.php:256
 msgid "accepted"
 msgstr "acceptat"
 
-#: inc/form_answer.class.php:208
+#: inc/form_answer.class.php:257
 msgid "refused"
 msgstr "denegat"
 
-#: inc/form_answer.class.php:380
+#: inc/form_answer.class.php:429
 msgid "Form accepted by validator."
 msgstr "Sol·licitud acceptada pel validador."
 
-#: inc/form_answer.class.php:382
+#: inc/form_answer.class.php:431
 msgid "Form successfully saved."
 msgstr "Sol·licitud guardada correctament."
 
-#: inc/form_answer.class.php:438
+#: inc/form_answer.class.php:487
 msgid "Comment"
 msgstr "Comentari"
 
-#: inc/form_answer.class.php:443
+#: inc/form_answer.class.php:492
 msgid "Required if refused"
 msgstr "Es requereix si es va denegar"
 
-#: inc/form_answer.class.php:449
+#: inc/form_answer.class.php:498
 msgid "Refuse"
 msgstr "Denegar"
 
-#: inc/form_answer.class.php:452
+#: inc/form_answer.class.php:501
 msgid "Accept"
 msgstr "Acceptat"
 
-#: inc/form_answer.class.php:467
+#: inc/form_answer.class.php:516
 msgid "Refused comment is required!"
 msgstr "Cal un comentari de denegació!"
 
-#: inc/form_answer.class.php:646
+#: inc/form_answer.class.php:695
 msgid "Cannot generate targets!"
 msgstr "No es poden generar objectius!"
 
-#: inc/form_answer.class.php:746 inc/form_answer.class.php:904
+#: inc/form_answer.class.php:800 inc/form_answer.class.php:968
 msgid "The form has been successfully saved!"
 msgstr "S'ha guardat el formulari correctament!"
 
-#: inc/form_answer.class.php:846 inc/form_answer.class.php:869
+#: inc/form_answer.class.php:910 inc/form_answer.class.php:933
 msgid "You are not the validator of these answers"
 msgstr "No ets el validador d'aquestes respostes"
 
-#: inc/form_answer.class.php:952 inc/form_answer.class.php:954
+#: inc/form_answer.class.php:1017 inc/form_answer.class.php:1019
 msgid "Form data"
 msgstr "Dades de la sol·licitud"
 
@@ -323,7 +367,7 @@ msgstr "Enllaç al formulari"
 msgid "Please active the form to view the link"
 msgstr "Activa el formulari per veure l'enllaç"
 
-#: inc/issue.class.php:10 inc/issue.class.php:254
+#: inc/issue.class.php:10 inc/issue.class.php:258
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "qüestió"
@@ -337,19 +381,19 @@ msgstr "Problema d'actualització de dades de tiquets i respostes del formulari"
 msgid "The form as been saved"
 msgstr "S'ha guardat la sol·licitud"
 
-#: inc/notificationtargetform_answer.class.php:15 install/install.php:235
+#: inc/notificationtargetform_answer.class.php:15 install/install.php:244
 msgid "A form need to be validate"
 msgstr "La sol·licitud ha de ser validada"
 
-#: inc/notificationtargetform_answer.class.php:16 install/install.php:241
+#: inc/notificationtargetform_answer.class.php:16 install/install.php:250
 msgid "The form is refused"
 msgstr "Sol·licitud denegada"
 
-#: inc/notificationtargetform_answer.class.php:17 install/install.php:247
+#: inc/notificationtargetform_answer.class.php:17 install/install.php:256
 msgid "The form is accepted"
 msgstr "Sol·licitud acceptada"
 
-#: inc/notificationtargetform_answer.class.php:18 install/install.php:253
+#: inc/notificationtargetform_answer.class.php:18 install/install.php:262
 msgid "The form is deleted"
 msgstr "Sol·licitud eliminada"
 
@@ -387,7 +431,7 @@ msgstr "Sol·licitud #"
 
 #: inc/question.class.php:36 inc/targetbase.class.php:520
 #: inc/targetbase.class.php:590 inc/targetbase.class.php:671
-#: inc/targetbase.class.php:822 inc/targetchange.class.php:766
+#: inc/targetbase.class.php:826 inc/targetchange.class.php:766
 #: inc/targetticket.class.php:624
 msgid "Question"
 msgid_plural "Questions"
@@ -399,11 +443,11 @@ msgstr[1] "Preguntes"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: inc/question.class.php:175 inc/question.class.php:691
+#: inc/question.class.php:175 inc/question.class.php:704
 msgid "Required"
 msgstr "Obligatori"
 
-#: inc/question.class.php:204 inc/question.class.php:554
+#: inc/question.class.php:204 inc/question.class.php:567
 msgid "Add a question"
 msgstr "Afegir una pregunta"
 
@@ -416,18 +460,18 @@ msgstr "Afegir una secció"
 msgid "The title is required"
 msgstr "El títol és obligatori"
 
-#: inc/question.class.php:247
+#: inc/question.class.php:246
 msgid "The field type is required"
 msgstr "El camp Tipus és obligatori"
 
-#: inc/question.class.php:254
+#: inc/question.class.php:253
 msgid "The section is required"
 msgstr "Cal una secció"
 
-#: inc/question.class.php:264 inc/fields/checkboxesfield.class.php:106
+#: inc/question.class.php:263 inc/fields/checkboxesfield.class.php:106
 #: inc/fields/dropdownfield.class.php:81
 #: inc/fields/glpiselectfield.class.php:12 inc/fields/radiosfield.class.php:53
-#: inc/fields/selectfield.class.php:59
+#: inc/fields/selectfield.class.php:63
 msgid "The field value is required:"
 msgstr "El camp Valor és obligatori"
 
@@ -435,110 +479,110 @@ msgstr "El camp Valor és obligatori"
 msgid "The regular expression is invalid"
 msgstr ""
 
-#: inc/question.class.php:554
+#: inc/question.class.php:567
 msgid "Edit a question"
 msgstr "Editar una pregunta"
 
-#: inc/question.class.php:590 inc/section.class.php:36
+#: inc/question.class.php:603 inc/section.class.php:36
 #: inc/targetchange.class.php:769 inc/targetticket.class.php:627
 msgid "Section"
 msgid_plural "Sections"
 msgstr[0] "Secció"
 msgstr[1] "Seccions"
 
-#: inc/question.class.php:617 inc/fields/glpiselectfield.class.php:5
+#: inc/question.class.php:630 inc/fields/glpiselectfield.class.php:5
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "Objecte GLPI"
 msgstr[1] "Objectes GLPI"
 
-#: inc/question.class.php:703
+#: inc/question.class.php:716
 msgid "Show empty"
 msgstr "Mostrar buit"
 
-#: inc/question.class.php:719
+#: inc/question.class.php:732
 msgid "Show ticket categories"
 msgstr ""
 
-#: inc/question.class.php:724
+#: inc/question.class.php:737
 msgid "Request categories"
 msgstr ""
 
-#: inc/question.class.php:725
+#: inc/question.class.php:738
 msgid "Incident categories"
 msgstr ""
 
-#: inc/question.class.php:726
+#: inc/question.class.php:739
 msgid "Both"
 msgstr ""
 
-#: inc/question.class.php:735
+#: inc/question.class.php:748
 msgid "Limit ticket categories depth"
 msgstr ""
 
-#: inc/question.class.php:744
+#: inc/question.class.php:757
 msgid "No limit"
 msgstr ""
 
-#: inc/question.class.php:753
+#: inc/question.class.php:766
 msgid "One per line for lists"
 msgstr "Una per línia de llistes"
 
-#: inc/question.class.php:787
+#: inc/question.class.php:800
 msgid "Values"
 msgstr "Valors"
 
-#: inc/question.class.php:788
+#: inc/question.class.php:801
 msgid "One per line"
 msgstr "Un per línia"
 
-#: inc/question.class.php:800
+#: inc/question.class.php:813
 msgid "Filter"
 msgstr "Filtre"
 
-#: inc/question.class.php:811
+#: inc/question.class.php:824
 msgid "Attribute"
 msgstr "Atribut"
 
-#: inc/question.class.php:835
+#: inc/question.class.php:848
 msgid "Range"
 msgstr "Interval"
 
-#: inc/question.class.php:840
+#: inc/question.class.php:853
 msgid "Min"
 msgstr "Mín"
 
-#: inc/question.class.php:846
+#: inc/question.class.php:859
 msgid "Max"
 msgstr "Max"
 
-#: inc/question.class.php:872
+#: inc/question.class.php:885
 msgid "Additional validation"
 msgstr "Validació addicional"
 
-#: inc/question.class.php:875
+#: inc/question.class.php:888
 msgid "Regular expression"
 msgstr "Expressió regular"
 
-#: inc/question.class.php:884
+#: inc/question.class.php:897
 msgid ""
 "Specify the additional validation conditions in the description of the "
 "question to help users."
 msgstr "Especifica les condicions de validació addicionals a la descripció de la pregunta per ajudar als usuaris."
 
-#: inc/question.class.php:892
+#: inc/question.class.php:905
 msgid "Show field"
 msgstr "Mostrar camp"
 
-#: inc/question.class.php:900
+#: inc/question.class.php:913
 msgid "Always displayed"
 msgstr "Mostrar sempre"
 
-#: inc/question.class.php:901
+#: inc/question.class.php:914
 msgid "Hidden unless"
 msgstr "Ocult llevat que"
 
-#: inc/question.class.php:902
+#: inc/question.class.php:915
 msgid "Displayed unless"
 msgstr "Mostra llevat que"
 
@@ -736,11 +780,11 @@ msgstr "Etiquetes del tiquet"
 msgid "Tags"
 msgstr "Etiquetes"
 
-#: inc/targetbase.class.php:775
+#: inc/targetbase.class.php:776
 msgid "Attached document"
 msgstr ""
 
-#: inc/targetbase.class.php:823
+#: inc/targetbase.class.php:827
 msgid "Location "
 msgstr ""
 
@@ -832,7 +876,7 @@ msgstr ""
 msgid "Failed to link the item"
 msgstr ""
 
-#: inc/targetticket.class.php:1298 install/install.php:248
+#: inc/targetticket.class.php:1271 install/install.php:257
 msgid "Your form has been accepted by the validator"
 msgstr "La teva sol·licitud ha estat acceptada pel validador"
 
@@ -902,7 +946,7 @@ msgstr ""
 msgid "This is not a valid e-mail:"
 msgstr "No és un correu vàlid:"
 
-#: inc/fields/filefield.class.php:27
+#: inc/fields/filefield.class.php:29
 msgid "A required file is missing:"
 msgstr "Falta un arxiu necessari:"
 
@@ -953,7 +997,7 @@ msgstr "Multiselect"
 msgid "Radios"
 msgstr "Radios"
 
-#: inc/fields/selectfield.class.php:52
+#: inc/fields/selectfield.class.php:56
 msgid "Select"
 msgstr "Select"
 
@@ -981,37 +1025,37 @@ msgstr "El text és massa llarg (màxim %d caràcters):"
 msgid "Text"
 msgstr "Text"
 
-#: install/install.php:229
+#: install/install.php:238
 msgid "A form has been created"
 msgstr "S'ha creat el formulari"
 
-#: install/install.php:230
+#: install/install.php:239
 msgid "Your request has been saved"
 msgstr "La teva sol·licitud s'ha guardat"
 
-#: install/install.php:231
+#: install/install.php:240
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr "Benvolgut/da,\\n La teva sol·licitud s'ha guardat correctament amb el número ##formcreator.request_id## i s'ha tramès a l'equip de suport. \\nPots veure les seves respostes a l'enllaç : \\n ##formcreator.validation_link##"
 
-#: install/install.php:236
+#: install/install.php:245
 msgid "A form from GLPI need to be validate"
 msgstr "Hi ha una sol·licitud pendent de validació"
 
-#: install/install.php:237
+#: install/install.php:246
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr "Benvolgut/da, \\n Hi ha una sol·licitud per validar i has estat seleccionat  com a validador. \\ nPots accedir-hi fent clic en aquest enllaç :.\\n ##formcreator.validation_link##"
 
-#: install/install.php:242
+#: install/install.php:251
 msgid "Your form has been refused by the validator"
 msgstr "La teva sol·licitud ha estat denegada pel validador"
 
-#: install/install.php:243
+#: install/install.php:252
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1019,23 +1063,23 @@ msgid ""
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr "Hola, \\nLa teva sol·licitud ha estat denegada pel validador a causa de: \\n ##formcreator.validation_comment##.\\n\\nEncara la pot modificar i tornar a enviar fent clic en aquest enllaç: \\n ##formcreator.validation_link##"
 
-#: install/install.php:249
+#: install/install.php:258
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr "Hola, \\nEns complau informar-te que la seva sol·licitud ha estat acceptada pel validador. \\nLa sol·licitud serà tramitada en breu."
 
-#: install/install.php:254
+#: install/install.php:263
 msgid "Your form has been deleted by an administrator"
 msgstr "La teva sol·licitud ha estat eliminada per un administrador"
 
-#: install/install.php:255
+#: install/install.php:264
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr "Hola, \\n Malauradament la teva sol·licitud no pot ser considerada i s'ha suprimit per un administrador."
 
-#: install/install.php:453 install/update_0.0_2.5.php:383
+#: install/install.php:462 install/update_0.0_2.5.php:383
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Sincronització de problemes del catàleg de serveis"
 
