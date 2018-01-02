@@ -59,12 +59,9 @@
 ### Features
 
 * **file:** use enhanced file field ([988136a](https://github.com-btry/pluginsGLPI/formcreator/commit/988136a))
-* **install:** prepare upgrade code ([7a93405](https://github.com-btry/pluginsGLPI/formcreator/commit/7a93405))
+* **install:** prepare upgrade code ([0c8c64f](https://github.com-btry/pluginsGLPI/formcreator/commit/0c8c64f))
 
 
-
-GLPI Formcreator ChangeLog
-===============================
 
 Version 2.6.0
 -------------
