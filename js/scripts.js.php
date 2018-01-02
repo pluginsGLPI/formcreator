@@ -4,7 +4,7 @@ header('Content-Type: text/javascript');
 ?>
 
 var modalWindow;
-var rootDoc          = "<?php echo $CFG_GLPI['root_doc']; ?>";
+var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
 var sortByName = false;
 var tiles = [];
@@ -135,21 +135,24 @@ $(function() {
       $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].checked = true;
    }
 
-   fcInitMultiSelect();
+   // === Add better multi-select on form configuration validators ===
+   // initialize the pqSelect widget.
+      fcInitMultiSelect();
+
+   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+      fcInitMultiSelect();
+   });
+
 });
 
 function fcInitMultiSelect() {
-   // === Add better multi-select on form configuration validators ===
-   // initialize the pqSelect widget.
-   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-      $("#validator_users").pqSelect({
-          multiplePlaceholder: '----',
-          checkbox: true //adds checkbox to options
-      });
-      $("#validator_groups").pqSelect({
-          multiplePlaceholder: '----',
-          checkbox: true //adds checkbox to options
-      });
+   $("#validator_users").pqSelect({
+       multiplePlaceholder: '----',
+       checkbox: true //adds checkbox to options
+   });
+   $("#validator_groups").pqSelect({
+       multiplePlaceholder: '----',
+       checkbox: true //adds checkbox to options
    });
 }
 
@@ -528,7 +531,7 @@ function deleteTarget(items_id, token, target_id) {
 var formcreatorQuestions = new Object();
 
 function formcreatorChangeValueOf(field_id, value) {
-   formcreatorQuestions[field_id] = value;
+   formcreatorQuestions['formcreator_field_' + field_id] = value;
    formcreatorShowFields();
 }
 function formcreatorAddValueOf(field_id, value) {

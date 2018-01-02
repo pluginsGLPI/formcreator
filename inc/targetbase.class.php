@@ -38,6 +38,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    abstract public function getItem_Actor();
 
+   abstract protected function getCategoryFilter();
+
    static function getEnumDestinationEntity() {
       return [
          'current'   => __("Current active entity", 'formcreator'),
@@ -93,7 +95,6 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
          'answer'    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
-
 
    /**
     * Check if current user have the right to create and modify requests
@@ -262,7 +263,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    protected function addGroupActor($role, $group) {
       switch ($role) {
          case 'requester':
-            $this->requesterGroupss['_groups_id_requester'][]  = $group;
+            $this->requesterGroups['_groups_id_requester'][]  = $group;
             break;
          case 'observer' :
             $this->observerGroups['_groups_id_observer'][]     = $group;
@@ -406,7 +407,7 @@ EOS;
    protected  function showDueDateSettings($rand) {
       global $DB;
 
-      echo '<td width="15%">' . __('Due date') . '</td>';
+      echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
       // Due date type selection
@@ -543,8 +544,9 @@ EOS;
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
       ITILCategory::dropdown([
-         'name'   => '_category_specific',
-         'value'  => $this->fields["category_question"],
+         'name'      => '_category_specific',
+         'value'     => $this->fields["category_question"],
+         'condition' => $this->getCategoryFilter(),
       ]);
       echo '</div>';
       echo '</td>';
@@ -765,15 +767,19 @@ EOS;
             }
 
             if ($question_line['fieldtype'] !== 'file') {
-               $content = str_replace('##question_' . $id . '##', $name, $content);
-               $content = str_replace('##answer_' . $id . '##', $value, $content);
+               $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
+               $content = str_replace('##answer_' . $id . '##', addslashes($value), $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
                   $content = str_replace('##question_' . $id . '##', $name, $content);
-                  $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+                  if ($value !== '') {
+                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
 
-                  // keep the ID of the document
-                  $this->attachedDocuments[$value] = true;
+                     // keep the ID of the document
+                     $this->attachedDocuments[$value] = true;
+                  } else {
+                     $content = str_replace('##answer_' . $id . '##', '', $content);
+                  }
                }
             }
          }

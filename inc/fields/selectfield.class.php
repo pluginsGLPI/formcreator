@@ -12,7 +12,11 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
-                  $tab_values[$value] = $value;
+                  if (version_compare(GLPI_VERSION, '9.2.1') <= 0) {
+                     $tab_values[Html::entities_deep($value)] = $value;
+                  } else {
+                     $tab_values[$value] = $value;
+                  }
                }
             }
 
@@ -63,13 +67,11 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          } else {
             // trim values
             $input['values'] = $this->trimValue($input['values']);
-            $input['values'] = addslashes($input['values']);
          }
       }
       if (isset($input['default_values'])) {
          // trim values
          $input['default_values'] = $this->trimValue($input['default_values']);
-         $input['default_values'] = addslashes($input['default_values']);
       }
       return $input;
    }

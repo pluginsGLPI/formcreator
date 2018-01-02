@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6bd2bddd060ab70475f15776c4c87303",
+    "content-hash": "130b51a4df0023be055391815fc0332d",
     "packages": [],
     "packages-dev": [
         {
@@ -230,7 +230,7 @@
                 }
             ],
             "description": "Modern task runner",
-            "time": "2017-03-11 19:48:06"
+            "time": "2017-03-11T19:48:06+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -2383,6 +2383,9 @@
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">= 5.4.0",
+        "ext-xml": "*"
+    },
     "platform-dev": []
 }

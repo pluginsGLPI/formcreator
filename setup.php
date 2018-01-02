@@ -1,12 +1,12 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.6.0');
+define('PLUGIN_FORMCREATOR_VERSION', '2.6.1');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2.1');
 // Maximum GLPI version, exclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.3');
 
@@ -163,6 +163,12 @@ function plugin_init_formcreator() {
 
             // Add specific JavaScript
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
+         }
+
+         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/targetticket.form.php") !== false) {
+            if ($CFG_GLPI['use_rich_text']) {
+               Html::requireJs('tinymce');
+            }
          }
 
          if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false

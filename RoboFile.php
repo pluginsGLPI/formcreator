@@ -1,4 +1,6 @@
 <?php
+use Robo\Task\Docker\Commit;
+
 /**
  * This is project's console commands configuration for Robo task runner.
  *
@@ -26,16 +28,16 @@ class RoboFile extends RoboFilePlugin
          'save.sql',
    ];
 
-   protected function getPluginPath() {
+   protected function getProjectPath() {
       return __DIR__;
    }
 
    protected function getPluginName() {
-      return basename($this->getPluginPath());
+      return basename($this->getProjectPath());
    }
 
    protected function getVersion() {
-      $setupFile = $this->getPluginPath(). "/setup.php";
+      $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
       $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_VERSION";
@@ -48,7 +50,7 @@ class RoboFile extends RoboFilePlugin
    }
 
    protected function getGLPIMinVersion() {
-      $setupFile = $this->getPluginPath(). "/setup.php";
+      $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
       $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_GLPI_MIN_VERSION";
@@ -77,25 +79,34 @@ class RoboFile extends RoboFilePlugin
          throw new Exception("$version is not semver compliant. See http://semver.org/");
       }
 
-      if (!$this->tagExists($version)) {
-         throw new Exception("The tag $version does not exists yet");
+      if ($this->tagExists($version)) {
+         throw new Exception("The tag $version already exists");
       }
 
-      if (!$this->isTagMatchesCurrentCommit($version)) {
-         throw new Exception("HEAD is not pointing to the tag of the version to build");
-      }
+      //if (!$this->isTagMatchesCurrentCommit($version)) {
+         //throw new Exception("HEAD is not pointing to the tag of the version to build");
+      //}
 
       $versionTag = $this->getVersionTagFromXML($version);
       if (!is_array($versionTag)) {
          throw new Exception("The version does not exists in the XML file");
       }
 
+      // update version in package.json
+      $this->sourceUpdatePackageJson($version);
+      $this->sourceUpdateComposerJson($version);
+
+      $this->updateChangelog();
+
+      $this->gitCommit(['package.json', 'composer.json'], "docs: bump version in JSON files");
+      $this->gitCommit(['CHANGELOG.md'], "docs(changelog): update changelog");
+
       $pluginName = $this->getPluginName();
-      $pluginPath = $this->getPluginPath();
+      $pluginPath = $this->getProjectPath();
       $targetFile = $pluginPath. "/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
-      $toArchive = implode(' ', $this->getFileToArchive($version));
+      $toArchive = implode(' ', $this->getFileToArchive("HEAD"));
       @mkdir($pluginPath. "/dist");
-      $this->_exec("git archive --prefix=$pluginName/ $version $toArchive | bzip2 > $targetFile");
+      $this->_exec("git archive --prefix=$pluginName/ HEAD $toArchive | bzip2 > $targetFile");
    }
 
    protected function getTrackedFiles($version) {
@@ -208,9 +219,43 @@ class RoboFile extends RoboFilePlugin
       return false;
    }
 
+   /**
+    * @param array $files files to commit
+    * @param string $commitMessage commit message
+    */
+   protected function gitCommit(array $files, $commitMessage) {
+      if (count($files) < 1) {
+         $arg = '-u';
+      } else {
+         $arg = '"' . implode('" "', $files) . '"';
+      }
+       exec("git add $arg", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to add files for $commitMessage");
+      }
+
+       exec("git commit -m \"$commitMessage\"", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to commit $commitMessage");
+      }
+
+       return true;
+   }
+
+   /**
+    */
+   protected function updateChangelog() {
+       exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to update the changelog");
+      }
+
+       return true;
+   }
+
    public function localesExtract() {
-      $potfile = strtolower($this->getPluginName()) . ".pot";
-      $phpSources = "*.php ajax/*.php front/*.php inc/*.php install/*.php";
+      $potfile = strtolower("glpi.pot");
+      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/fields/*.php install/*.php js/*.php";
       // extract locales from source code
       $command = "xgettext $phpSources -o locales/$potfile -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po";
       $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
@@ -219,4 +264,60 @@ class RoboFile extends RoboFilePlugin
       return $this;
    }
 
+   /**
+    * Build MO files
+    *
+    * @return void
+    */
+   public function localesMo() {
+      $localesPath = $this->getProjectPath() . '/locales';
+      if ($handle = opendir($localesPath)) {
+         while (($file = readdir($handle)) !== false) {
+            if ($file != "." && $file != "..") {
+               $poFile = "$localesPath/$file";
+               if (pathinfo($poFile, PATHINFO_EXTENSION) == 'po') {
+                  $moFile = str_replace('.po', '.mo', $poFile);
+                  $command = "msgfmt $poFile -o $moFile";
+                  $this->_exec($command);
+               }
+            }
+         }
+         closedir($handle);
+      }
+      return $this;
+   }
+
+   /**
+    *
+    * @param string $filename
+    * @param string $version
+    */
+   protected function updateJsonFile($filename, $version) {
+       // get Package JSON
+       $filename = __DIR__ . "/$filename";
+       $jsonContent = file_get_contents($filename);
+       $jsonContent = json_decode($jsonContent, true);
+
+       // update version
+      if (empty($version)) {
+         echo "Version not found in setup.php\n";
+         return;
+      }
+       $jsonContent['version'] = $version;
+       file_put_contents($filename, json_encode($jsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
+   }
+
+   /**
+    * @param $version
+    */
+   protected function sourceUpdatePackageJson($version) {
+       $this->updateJsonFile('package.json', $version);
+   }
+
+   /**
+    * @param string $version
+    */
+   protected function sourceUpdateComposerJson($version) {
+       $this->updateJsonFile('composer.json', $version);
+   }
 }

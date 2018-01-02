@@ -49,12 +49,15 @@ class PluginInstallTest extends CommonTestCase
       $CFG_GLPI = $settings + $CFG_GLPI;
    }
 
+   /**
+    * @engine inline
+    */
    public function testInstallPlugin() {
       global $DB;
 
       $this->setupGLPI();
 
-      $this->assertTrue($DB->connected, "Problem connecting to the Database");
+      $this->assertTrue($DB->connected, 'Problem connecting to the Database');
 
       $this->login('glpi', 'glpi');
 
@@ -63,12 +66,12 @@ class PluginInstallTest extends CommonTestCase
       $config->deleteByCriteria(array('context' => 'formcreator'));
 
       // Drop tables of the plugin if they exist
-      $query = "SHOW TABLES";
+      $query = 'SHOW TABLES';
       $result = $DB->query($query);
       while ($data = $DB->fetch_array($result)) {
 
-         if (strstr($data[0], "glpi_plugin_formcreator") !== false) {
-            $DB->query("DROP TABLE ".$data[0]);
+         if (strstr($data[0], 'glpi_plugin_formcreator') !== false) {
+            $DB->query('DROP TABLE '.$data[0]);
          }
       }
 
@@ -82,11 +85,21 @@ class PluginInstallTest extends CommonTestCase
       ob_end_clean();
 
       $PluginDBTest = new PluginDB();
-      $PluginDBTest->checkInstall("formcreator", "install");
+      $PluginDBTest->checkInstall('formcreator', 'install');
+
+      // Check the version of the schema is saved
+      $config = Config::getConfigurationValues('formcreator');
+      $this->assertArrayHasKey('schema_version', $config);
+      $this->assertEquals(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $config['schema_version']);
+
+      // Check the cron task is created
+      $cronTask = new CronTask();
+      $cronTask->getFromDBbyName(PluginFormcreatorIssue::class, 'SyncIssues');
+      $this->assertFalse($cronTask->isNewItem());
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
-      $this->assertTrue($plugin->isActivated("formcreator"), "Cannot enable the plugin");
+      $this->assertTrue($plugin->isActivated('formcreator'), 'Cannot enable the plugin');
 
    }
 }

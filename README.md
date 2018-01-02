@@ -75,7 +75,7 @@ Formcreator est un plugin permettant la création de formulaires personalisés s
 
 Pour plus d'informations, visitez la [documentation (en anglais)](http://glpi-plugins.readthedocs.io/fr/latest/formcreator/)
 
-## Upgrade to 2.6.0
+## Mise à jour vers 2.6.0
 
 Quand un formulaire contient plusieurs tickets destination et un champ d'envoi de fichier, le document téléversé était rattaché à t ous les tickets générés. A partir de la version 2.6.0 un document est rattaché à un ticket généré dans deux cas :
 * si la balise ##FULLFORM## est utilisée

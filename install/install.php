@@ -19,7 +19,12 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      $this->createCronTasks();
       $this->createNotifications();
+      Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
+
+      $task = new CronTask();
+      PluginFormcreatorIssue::cronSyncIssues($task);
 
       return true;
    }
@@ -46,6 +51,9 @@ class PluginFormcreatorInstall {
             require_once(__DIR__ . '/update_2.5_2.6.php');
             plugin_formcreator_update_2_6($this->migration);
 
+            require_once(__DIR__ . '/update_2.6_2.6.1.php');
+            plugin_formcreator_update_2_6_1($this->migration);
+
          default:
             // Must be the last case
             if ($this->endsWith(PLUGIN_FORMCREATOR_VERSION, "-dev")) {
@@ -62,6 +70,7 @@ class PluginFormcreatorInstall {
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
+      $this->createCronTasks();
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
@@ -86,9 +95,15 @@ class PluginFormcreatorInstall {
     * @return string
     */
    protected function getSchemaVersionFromGlpiConfig() {
+      global $DB;
+
       $config = Config::getConfigurationValues('formcreator', array('schema_version'));
       if (!isset($config['schema_version'])) {
          // No schema version in GLPI config, then this is older than 2.5
+         if ($DB->tableExists('glpi_plugin_formcreator_items_targettickets')) {
+            // Workaround bug #794 where schema version was not saved
+            return '2.6';
+         }
          return '0.0';
       }
 
@@ -371,10 +386,13 @@ class PluginFormcreatorInstall {
       PluginFormcreatorCommon::setNotification($use_mailing);
    }
 
+   /**
+    * Cleanups the database from plugin's itemtypes (tables and relations)
+    */
    protected function deleteTables() {
       global $DB;
 
-      // Drop tables
+      // Keep  these itemtypes as string because classes might be not avaiable (if plugin is inactive)
       $itemtypes = [
          'PluginFormcreatorAnswer',
          'PluginFormcreatorCategory',
@@ -433,5 +451,17 @@ class PluginFormcreatorInstall {
 
       $config = new Config();
       $config->deleteByCriteria(['context' => 'formcreator']);
+   }
+
+   /**
+    * Create cron tasks
+    */
+   protected function createCronTasks() {
+      CronTask::Register(PluginFormcreatorIssue::class, 'SyncIssues', HOUR_TIMESTAMP,
+         [
+            'comment'   => __('Formcreator - Sync service catalog issues', 'formcreator'),
+            'mode'      => CronTask::MODE_EXTERNAL
+         ]
+      );
    }
 }

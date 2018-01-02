@@ -2,12 +2,7 @@
 class PluginFormcreatorIpField extends PluginFormcreatorField
 {
    public function show($canEdit = true) {
-      if (method_exists('Toolbox', 'getRemoteIpAddress')) {
-         $ip = Toolbox::getRemoteIpAddress();
-      } else {
-         $ip = (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"]
-                                                        : $_SERVER["REMOTE_ADDR"]);
-      }
+      $ip = Toolbox::getRemoteIpAddress();
       echo '<input type="hidden" class="form-control"
                name="formcreator_field_' . $this->fields['id'] . '"
                id="formcreator_field_' . $this->fields['id'] . '"

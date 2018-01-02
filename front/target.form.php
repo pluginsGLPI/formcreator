@@ -10,13 +10,11 @@ if ($plugin->isActivated("formcreator")) {
 
    // Add a new target
    if (isset($_POST["add"]) && !empty($_POST['plugin_formcreator_forms_id'])) {
-      Session::checkRight("entity", UPDATE);
       $target->add($_POST);
       Html::back();
 
       // Delete a target
    } else if (isset($_POST["delete_target"])) {
-      Session::checkRight("entity", UPDATE);
       $target->delete($_POST);
       Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 

@@ -21,9 +21,6 @@ class PluginFormcreatorWizard {
       }
       $HEADER_LOADED = true;
 
-      // force layout of glpi
-      $_SESSION['glpilayout'] = "lefttab";
-
       Html::includeHeader($title);
 
       $body_class = "layout_".$_SESSION['glpilayout'];
@@ -99,28 +96,38 @@ class PluginFormcreatorWizard {
          echo '</a></li>';
       }
 
-      $query = "SELECT `glpi_bookmarks`.*,
-                       `glpi_bookmarks_users`.`id` AS IS_DEFAULT
-                FROM `glpi_bookmarks`
-                LEFT JOIN `glpi_bookmarks_users`
-                  ON (`glpi_bookmarks`.`itemtype` = `glpi_bookmarks_users`.`itemtype`
-                      AND `glpi_bookmarks`.`id` = `glpi_bookmarks_users`.`bookmarks_id`
-                      AND `glpi_bookmarks_users`.`users_id` = '".Session::getLoginUserID()."')
-                WHERE `glpi_bookmarks`.`is_private`='1'
-                  AND `glpi_bookmarks`.`users_id`='".Session::getLoginUserID()."'
-                  OR `glpi_bookmarks`.`is_private`='0' ".
-                     getEntitiesRestrictRequest("AND", "glpi_bookmarks", "", "", true);
+      $query = "SELECT `glpi_savedsearches`.*,
+                       `glpi_savedsearches_users`.`id` AS IS_DEFAULT
+                FROM `glpi_savedsearches`
+                LEFT JOIN `glpi_savedsearches_users`
+                  ON (`glpi_savedsearches`.`itemtype` = `glpi_savedsearches_users`.`itemtype`
+                      AND `glpi_savedsearches`.`id` = `glpi_savedsearches_users`.`savedsearches_id`
+                      AND `glpi_savedsearches_users`.`users_id` = '".Session::getLoginUserID()."')
+                WHERE `glpi_savedsearches`.`is_private`='1'
+                  AND `glpi_savedsearches`.`users_id`='".Session::getLoginUserID()."'
+                  OR `glpi_savedsearches`.`is_private`='0' ".
+                     getEntitiesRestrictRequest("AND", "glpi_savedsearches", "", "", true);
 
       if ($result = $DB->query($query)) {
          if ($DB->numrows($result)) {
+            Ajax::createSlidePanel(
+                  'showSavedSearches',
+                  [
+                     'title'     => __('Saved searches'),
+                     'url'       => $CFG_GLPI['root_doc'] . '/ajax/savedsearch.php?action=show',
+                     'icon'      => '/pics/menu_config.png',
+                     'icon_url'  => SavedSearch::getSearchURL(),
+                     'icon_txt'  => __('Manage saved searches')
+                  ]
+                  );
             echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             Ajax::createIframeModalWindow('loadbookmark',
-                  $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
-                  ['title'         => __('Load a bookmark'),
-                        'reloadonclose' => true]);
-            echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
-            echo '<span class="fa fa-star fc_list_icon" title="'.__('Load a bookmark').'"></span>';
-            echo '<label>'.__('Load a bookmark').'</label>';
+                  $CFG_GLPI["root_doc"]."/front/savedsearch.php?action=load",
+                  ['title'         => __('Saved searches'),
+                   'reloadonclose' => true]);
+            echo '<a href="#" id="showSavedSearchesLink">';
+            echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
+            echo '<label>'.__('Saved searches').'</label>';
             echo '</a>';
             echo '</li>';
          }

@@ -45,7 +45,7 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["set_required"])) {
    // Set a Question required
    $question = new PluginFormcreatorQuestion();
-   $question->gtFromDB((int) $_POST['id']);
+   $question->getFromDB((int) $_POST['id']);
    $question->update(['required' => $_POST['value']] + $question->fields);
 
 } else if (isset($_POST["move"])) {
