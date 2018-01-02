@@ -139,7 +139,7 @@ class PluginFormcreatorForm extends CommonDBTM
          'id'                 => '8',
          'table'              => $this->getTable(),
          'field'              => 'helpdesk_home',
-         'name'               => __('Homepage'),
+         'name'               => __('Homepage', 'formcreator'),
          'datatype'           => 'bool',
          'searchtype'         => [
             '0'                  => 'equals',
@@ -165,7 +165,7 @@ class PluginFormcreatorForm extends CommonDBTM
          'id'                 => '10',
          'table'              => 'glpi_plugin_formcreator_categories',
          'field'              => 'name',
-         'name'               => __('Form category'),
+         'name'               => __('Form category', 'formcreator'),
          'datatype'           => 'dropdown',
          'massiveaction'      => true
       ];
