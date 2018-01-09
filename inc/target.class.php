@@ -102,11 +102,6 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // Control fields values :
       // - name is required
       if (isset($input['name'])
@@ -194,11 +189,6 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // generate a uniq id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {

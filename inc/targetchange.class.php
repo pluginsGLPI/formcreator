@@ -826,8 +826,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             return [];
          }
 
-         $input['name'] = plugin_formcreator_encode($input['title']);
-
          if ($CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
          }
