@@ -562,6 +562,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $table = self::getTable();
       $question_condition_table = PluginFormcreatorQuestion_Condition::getTable();
 
+      // Update order of questions
       $order = $this->fields['order'];
       $query = "UPDATE `$table` SET
                 `order` = `order` - 1
@@ -569,6 +570,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
       $DB->query($query);
 
+      // Always show questions with conditional display on the question being deleted
       $questionId = $this->fields['id'];
       $query = "UPDATE `$table` SET `show_rule`='always'
             WHERE `id` IN (
