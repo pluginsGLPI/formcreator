@@ -109,14 +109,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $tab[] = [
          'id'                 => '1',
-         'table'              => $this::getTable(),
-         'field'              => 'status',
-         'name'               => __('Status'),
-         'searchtype'         => [
-            '0'                  => 'equals',
-            '1'                  => 'notequals'
-         ],
-         'datatype'           => 'specific',
+         'table'              => $this->getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
          'massiveaction'      => false
       ];
 
@@ -177,6 +173,19 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'datatype'      => 'itemlink',
          'massiveaction' => false,
          'linkfield'     => 'groups_id_validator',
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this::getTable(),
+         'field'              => 'status',
+         'name'               => __('Status'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
       ];
 
       if ($display_for_form) {
