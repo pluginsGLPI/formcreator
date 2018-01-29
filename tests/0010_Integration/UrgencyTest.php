@@ -18,38 +18,49 @@ class UrgencyTest extends SuperAdminTestCase
             'validation_required'   => 0
       );
 
-      $this->sectionData = array(
-            array(
-                  'name'                  => 'a section',
-                  'questions'             => array (
-                        array(
-                              'name'                  => 'text question',
-                              'fieldtype'             => 'text'
-                        ),
-                        array(
-                              'name'                  => 'custom urgency',
-                              'fieldtype'             => 'urgency'
-                        ),
-                  ),
-            ),
-      );
+      $this->sectionData = [
+         [
+            'name'                  => 'a section',
+            'questions'             => [
+               [
+                  'name'                  => 'text question',
+                  'fieldtype'             => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ],
+               ],
+               [
+                  'name'                  => 'custom urgency',
+                  'fieldtype'             => 'urgency',
+               ],
+            ],
+         ],
+      ];
 
-      $this->targetTicketData = array(
-         array(
-               'name'                  => 'target 1',
-               'itemtype'              => 'PluginFormcreatorTargetTicket',
-               'urgency_rule'          => 'answer',
-               'urgency_question'      => 'custom urgency',
-               'expected'              => 5
-         ),
-         array(
-               'name'                  => 'target 2',
-               'itemtype'              => 'PluginFormcreatorTargetTicket',
-               'urgency_rule'          => 'none',
-               'urgency_question'      => '',
-               'expected'              => 3
-         )
-      );
+      $this->targetTicketData = [
+         [
+            'name'                  => 'target 1',
+            'itemtype'              => 'PluginFormcreatorTargetTicket',
+            'urgency_rule'          => 'answer',
+            'urgency_question'      => 'custom urgency',
+            'expected'              => 5
+         ],
+         [
+            'name'                  => 'target 2',
+            'itemtype'              => 'PluginFormcreatorTargetTicket',
+            'urgency_rule'          => 'none',
+            'urgency_question'      => '',
+            'expected'              => 3
+         ]
+      ];
    }
 
    public function testInitCreateForm() {
@@ -87,6 +98,7 @@ class UrgencyTest extends SuperAdminTestCase
                ]);
                $question->updateConditions($questionData);
             }
+            $question->updateParameters($questionData);
          }
       }
 
