@@ -51,7 +51,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'range_min' => '',
                         'range_max' => '',
                      ],
-                     'regex' => '',
+                     'regex' => ['regex' => ''],
                   ]
                ],
             ),
@@ -75,7 +75,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'range_min' => '',
                         'range_max' => '',
                      ],
-                     'regex' => '',
+                     'regex' => ['regex' => ''],
                   ]
                ],
             ),
@@ -98,7 +98,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'range_min' => 3,
                         'range_max' => 4,
                      ],
-                     'regex' => '',
+                     'regex' => ['regex' => ''],
                   ]
                ],
             ),
@@ -122,7 +122,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'range_min' => 3,
                         'range_max' => 4,
                      ],
-                     'regex' => '',
+                     'regex' => ['regex' => ''],
                   ]
                ],
             ),
@@ -146,7 +146,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'range_min' => 3,
                         'range_max' => 4,
                      ],
-                     'regex' => '',
+                     'regex' => ['regex' => ''],
                   ]
                ],
             ),
@@ -170,7 +170,7 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'range_min' => 3,
                         'range_max' => 4,
                      ],
-                     'regex' => '',
+                     'regex' => ['regex' => ''],
                   ]
                ],
             ),

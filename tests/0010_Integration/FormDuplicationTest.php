@@ -175,6 +175,7 @@ class FormDuplicationTest extends SuperAdminTestCase
                $oneQuestionData['show_field'] = $showfield->getID();
                $question->updateConditions($oneQuestionData);
             }
+            $question->updateParameters($oneQuestionData);
          }
          foreach ($this->targetData as $targetData) {
             $target = new PluginFormcreatorTarget();
