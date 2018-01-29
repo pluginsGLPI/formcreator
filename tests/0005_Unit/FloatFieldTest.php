@@ -44,7 +44,16 @@ class FloatFieldTest extends SuperAdminTestCase {
                'order'           => '1',
                'show_rule'       => 'always',
                'show_empty'      => '0',
-               'values'          => ''
+               'values'          => '',
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => '',
+                        'range_max'       => '',
+                     ],
+                     'regex' => ['regex' => ''],
+                  ]
+               ]
             ],
             'data'            => null,
             'expectedValue'   => '',
@@ -59,7 +68,16 @@ class FloatFieldTest extends SuperAdminTestCase {
                'order'           => '1',
                'show_rule'       => 'always',
                'show_empty'      => '0',
-               'values'          => ''
+               'values'          => '',
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => '',
+                        'range_max'       => '',
+                     ],
+                     'regex' => ['regex' => ''],
+                  ]
+               ]
             ],
             'data'            => null,
             'expectedValue'   => '2',
@@ -74,8 +92,15 @@ class FloatFieldTest extends SuperAdminTestCase {
                'order'           => '1',
                'show_rule'       => 'always',
                'show_empty'      => '0',
-               'range_min'       => 3,
-               'range_max'       => 4,
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => 3,
+                        'range_max'       => 4,
+                     ],
+                     'regex' => ['regex' => ''],
+                  ]
+               ]
             ],
             'data'            => null,
             'expectedValue'   => '2',
@@ -91,8 +116,15 @@ class FloatFieldTest extends SuperAdminTestCase {
                'show_rule'       => 'always',
                'show_empty'      => '0',
                'values'          => '',
-               'range_min'       => 3,
-               'range_max'       => 4,
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => 3,
+                        'range_max'       => 4,
+                     ],
+                     'regex' => ['regex' => ''],
+                  ]
+               ]
             ],
             'data'            => null,
             'expectedValue'   => '5',
@@ -108,8 +140,15 @@ class FloatFieldTest extends SuperAdminTestCase {
                'show_rule'       => 'always',
                'show_empty'      => '0',
                'values'          => '',
-               'range_min'       => 3,
-               'range_max'       => 4,
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => 3,
+                        'range_max'       => 4,
+                     ],
+                     'regex' => ['regex' => ''],
+                  ]
+               ]
             ],
             'data'            => null,
             'expectedValue'   => '3.141592',
