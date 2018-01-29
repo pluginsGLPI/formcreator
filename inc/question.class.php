@@ -556,6 +556,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $parameters = $this->field->getUsedParameters();
       if (isset($input['_parameters'][$this->fields['fieldtype']])) {
          foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
+            // echo var_dump($parameterInput);
             $parameters[$fieldName]->getFromDBByCrit([
                'plugin_formcreator_questions_id' => $this->getID(),
                'fieldname' => $fieldName,
