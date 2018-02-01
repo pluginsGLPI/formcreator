@@ -326,15 +326,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       if (!empty($input)) {
          // Get next order
-         $table = self::getTable();
          $sectionId = $input['plugin_formcreator_sections_id'];
-         $query  = "SELECT MAX(`order`) AS `order`
-                    FROM `$table`
-                    WHERE `plugin_formcreator_sections_id` = '$sectionId'";
-         $result = $DB->query($query);
-         $line   = $DB->fetch_array($result);
-         $input['order'] = $line['order'] + 1;
-
+         $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$sectionId'", 'order');
+         if ($maxOrder === null) {
+            $input['order'] = 1;
+         } else {
+            $input['order'] = $maxOrder + 1;
+         }
          $input = $this->serializeDefaultValue($input);
       }
 
@@ -402,12 +400,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $DB->query($query);
 
             // Get the order for the new section
-            $query  = "SELECT MAX(`order`) AS `order`
-                       FROM `$table`
-                       WHERE `plugin_formcreator_sections_id` = '$newId'";
-            $result = $DB->query($query);
-            $line   = $DB->fetch_array($result);
-            $input['order'] = $line['order'] + 1;
+            $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$newId'", 'order');
+            if ($maxOrder === null) {
+               $input['order'] = 1;
+            } else {
+               $input['order'] = $maxOrder + 1;
+            }
          }
 
          $input = $this->serializeDefaultValue($input);
