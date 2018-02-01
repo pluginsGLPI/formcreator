@@ -68,13 +68,13 @@ class PluginFormcreatorSection extends CommonDBChild
       }
 
       // Get next order
-      $table  = self::getTable();
-      $query  = "SELECT MAX(`order`) AS `order`
-                 FROM `$table`
-                 WHERE `plugin_formcreator_forms_id` = {$input['plugin_formcreator_forms_id']}";
-      $result = $DB->query($query);
-      $line   = $DB->fetch_array($result);
-      $input['order'] = $line['order'] + 1;
+      $formId = $input['plugin_formcreator_forms_id'];
+      $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_forms_id` = '$formId'", 'order');
+      if ($maxOrder === null) {
+         $input['order'] = 1;
+      } else {
+         $input['order'] = $maxOrder + 1;
+      }
 
       return $input;
    }
