@@ -181,8 +181,9 @@ class PluginFormcreatorFields
             $nextLogic = 'OR';
          }
          if (!isset($values[$condition['field']])) {
-            unset($evalQuestion[$id]);
-            return false;
+            //unset($evalQuestion[$id]);
+            //return false;
+            $values[$condition['field']] = '';
          }
          if (!self::isVisible($condition['field'], $values)) {
             unset($evalQuestion[$id]);
