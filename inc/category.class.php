@@ -49,6 +49,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
    /**
     * @param integer $rootId id of the subtree root
+    * @param boolean $helpdeskHome
     * @return array Tree of form categories as nested array
     */
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
@@ -56,7 +57,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $form_table = getTableForItemType('PluginFormcreatorForm');
       $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
       if ($helpdeskHome) {
-         $helpdesk   ="AND $form_table.`helpdesk_home` = 1";
+         $helpdesk   = "AND $form_table.`helpdesk_home` = 1";
       } else {
          $helpdesk   = '';
       }
