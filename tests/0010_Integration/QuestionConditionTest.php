@@ -32,6 +32,10 @@ class QuestionConditionTest extends SuperAdminTestCase
                   'name'                  => 'other text question',
                   'fieldtype'             => 'text',
                ],
+               [
+                  'name'                  => 'third text question',
+                  'fieldtype'             => 'text',
+               ],
             ],
          ],
       ];
@@ -173,10 +177,10 @@ class QuestionConditionTest extends SuperAdminTestCase
       $question->updateConditions($condition);
 
       //Run the condition
-      $currentValues = array(
-          "formcreator_field_$firstQuestionId"  => array($condition['show_value'][0] . " and now for something completely different"),
+      $currentValues = [
+          "formcreator_field_$firstQuestionId"  => [$condition['show_value'][0] . " and now for something completely different"],
           "formcreator_field_$secondQuestionId" => '',
-      );
+      ];
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
@@ -196,5 +200,111 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       // Check the result
       $this->assertEquals(!$expected, $visibility["formcreator_field_$secondQuestionId"]);
+   }
+
+   public  function testConditionForManyQuestions() {
+      $form = new PluginFormcreatorForm();
+      $form->add([
+         'entities_id'           => 0,
+         'name'                  => 'a form',
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => 0
+      ]);
+
+      $section = new PluginFormcreatorSection();
+      $sectionId = $section->add([
+         'name' => 'section',
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $questions = [];
+      $questions[0] = new PluginFormcreatorQuestion();
+      $questions[1] = new PluginFormcreatorQuestion();
+      $questions[2] = new PluginFormcreatorQuestion();
+
+      // create questions
+      $firstQuestionId = $questions[0]->add([
+         'name'                  => 'text question 0',
+         'fieldtype'             => 'text',
+         'plugin_formcreator_sections_id' => $sectionId,
+      ]);
+      $secondQuestionId = $questions[1]->add([
+         'name'                  => 'text question 1',
+         'fieldtype'             => 'text',
+         'plugin_formcreator_sections_id' => $sectionId,
+         'show_rule'             => 'hidden',
+      ]);
+      $thirdQuestionId = $questions[2]->add([
+         'name'                  => 'text question 2',
+         'fieldtype'             => 'text',
+         'plugin_formcreator_sections_id' => $sectionId,
+         'show_rule'             => 'hidden',
+      ]);
+
+      // create conditions
+      $condition = new PluginFormcreatorQuestion_Condition();
+      $condition->add([
+         'plugin_formcreator_questions_id' => $secondQuestionId,
+         'show_field'      => $firstQuestionId,
+         'show_condition'  => '==',
+         'show_value'      => 'a',
+         'show_logic'      => 'OR',
+      ]);
+      $condition->add([
+         'plugin_formcreator_questions_id' => $thirdQuestionId,
+         'show_field'      => $firstQuestionId,
+         'show_condition'  => '==',
+         'show_value'      => 'c',
+         'show_logic'      => 'OR',
+      ]);
+      $condition->add([
+         'plugin_formcreator_questions_id' => $thirdQuestionId,
+         'show_field'      => $secondQuestionId,
+         'show_condition'  => '==',
+         'show_value'      => 'c',
+         'show_logic'      => 'OR',
+      ]);
+
+      // test the conditions engine
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => '',
+         "formcreator_field_$secondQuestionId" => '',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$thirdQuestionId"]);
+
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => 'a',
+         "formcreator_field_$secondQuestionId" => '',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$thirdQuestionId"]);
+
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => 'a',
+         "formcreator_field_$secondQuestionId" => 'c',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$thirdQuestionId"]);
+
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => '',
+         "formcreator_field_$secondQuestionId" => 'c',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$thirdQuestionId"]);
    }
 }
