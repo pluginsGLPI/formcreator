@@ -607,7 +607,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * Show form and FAQ items
     * @param number $rootCategory Items of this subtree only. 0 = no filtering
     * @param string $keywords Filter items with keywords
-    * @param boolean $popularity If true : popularity sort; if false alphabetic sort
     * @param string $helpdeskHome show items for helpdesk only
     */
    public function showFormList($rootCategory = 0, $keywords = '', $helpdeskHome = false) {
