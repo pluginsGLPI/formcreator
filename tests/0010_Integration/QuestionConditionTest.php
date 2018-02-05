@@ -11,30 +11,30 @@ class QuestionConditionTest extends SuperAdminTestCase
    public static function setUpBeforeClass() {
       parent::setUpBeforeClass();
 
-      self::$formData = array(
-            'entities_id'           => 0,
-            'name'                  => 'a form',
-            'description'           => 'form description',
-            'content'               => 'a content',
-            'is_active'             => 1,
-            'validation_required'   => 0
-      );
+      self::$formData = [
+         'entities_id'           => 0,
+         'name'                  => 'a form',
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => 0
+      ];
 
-      self::$sectionData = array(
-            array(
-                  'name'                  => 'a section',
-                  'questions'             => array (
-                        array(
-                              'name'                  => 'text question',
-                              'fieldtype'             => 'text',
-                        ),
-                        array(
-                              'name'                  => 'other text question',
-                              'fieldtype'             => 'text',
-                        ),
-                  ),
-            ),
-      );
+      self::$sectionData = [
+         [
+            'name'                  => 'a section',
+            'questions'             => [
+               [
+                  'name'                  => 'text question',
+                  'fieldtype'             => 'text',
+               ],
+               [
+                  'name'                  => 'other text question',
+                  'fieldtype'             => 'text',
+               ],
+            ],
+         ],
+      ];
 
       self::$targetData = [];
 
@@ -82,36 +82,36 @@ class QuestionConditionTest extends SuperAdminTestCase
    }
 
    public function conditionDataProvider() {
-      return array(
-            array(
-                  array(
-                        'show_rule'       => 'hidden',
-                        'show_question'   => ['dummy'],
-                        'show_condition'  => ['=='],
-                        'show_value'      => ['an accented è character'],
-                        'show_logic'      => ['AND'],
-                  )
-            ),
-            /* This test currently fails due to Html::clean() in plugin_formcreator_encode()
-             * No solution found yet, then test disabled
-            array(
-                  array(
-                        'show_rule'       => 'hidden',
-                        'show_question'   => ['dummy'],
-                        'show_condition'  => ['=='],
-                        'show_value'      => ['a doubled  space'],
-                  )
-            ),*/
-            array(
-                  array(
-                        'show_rule'       => 'hidden',
-                        'show_question'   => ['dummy'],
-                        'show_condition'  => ['=='],
-                        'show_value'      => ['a euro € character'],
-                        'show_logic'      => ['AND'],
-                  )
-            ),
-      );
+      return [
+         [
+            [
+               'show_rule'       => 'hidden',
+               'show_question'   => ['dummy'],
+               'show_condition'  => ['=='],
+               'show_value'      => ['an accented è character'],
+               'show_logic'      => ['AND'],
+            ]
+         ],
+         /* This test currently fails due to Html::clean() in plugin_formcreator_encode()
+          * No solution found yet, then test disabled
+         [
+            [
+               'show_rule'       => 'hidden',
+               'show_question'   => ['dummy'],
+               'show_condition'  => ['=='],
+               'show_value'      => ['a doubled  space'],
+            ]
+         ],*/
+         [
+            [
+               'show_rule'       => 'hidden',
+               'show_question'   => ['dummy'],
+               'show_condition'  => ['=='],
+               'show_value'      => ['a euro € character'],
+               'show_logic'      => ['AND'],
+            ]
+         ],
+      ];
    }
 
    /**
