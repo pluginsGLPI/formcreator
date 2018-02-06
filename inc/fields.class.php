@@ -8,7 +8,6 @@ class PluginFormcreatorFields
 {
    /**
     * Retrive all field types and file path
-    *
     * @return Array     field_type => File_path
     */
    public static function getTypes() {
@@ -29,7 +28,6 @@ class PluginFormcreatorFields
 
    /**
     * Get type and name of all field types
-    *
     * @return Array     field_type => Name
     */
    public static function getNames() {
@@ -43,7 +41,7 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach (array_keys($tab_field_types) as $field_type) {
-         $classname                         = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
+         $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
          if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
             continue;
@@ -59,11 +57,11 @@ class PluginFormcreatorFields
 
    /**
     * Get field value to display
-    *
     * @param String $field Field object to display
     * @param String $value the value to display
-    *
     * @return String
+    * @deprecated 2.6.2 Only one caller, and being removed
+    * @see PluginFormcreatorField::prepareQuestionInputForTarget
     */
    public static function getValue($field, $value) {
       $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'field.class.php';
@@ -78,7 +76,6 @@ class PluginFormcreatorFields
       }
       return $value;
    }
-
 
    public static function printAllTabFieldsForJS() {
       $tabFieldsForJS = '';
@@ -97,7 +94,6 @@ class PluginFormcreatorFields
    }
 
    /**
-    *
     * @param unknown $field
     * @param unknown $data
     * @param string $edit
