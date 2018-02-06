@@ -55,28 +55,6 @@ class PluginFormcreatorFields
       return $tab_field_types_name;
    }
 
-   /**
-    * Get field value to display
-    * @param String $field Field object to display
-    * @param String $value the value to display
-    * @return String
-    * @deprecated 2.6.2 Only one caller, and being removed
-    * @see PluginFormcreatorField::prepareQuestionInputForTarget
-    */
-   public static function getValue($field, $value) {
-      $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'field.class.php';
-      if (is_file($class_file)) {
-         include_once ($class_file);
-
-         $classname = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
-         if (class_exists($classname)) {
-            $obj = new $classname($field, $value);
-            return $obj->getAnswer();
-         }
-      }
-      return $value;
-   }
-
    public static function printAllTabFieldsForJS() {
       $tabFieldsForJS = '';
       // Get field types and file path

@@ -38,7 +38,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return string
     */
    public function prepareQuestionInputForTarget($input) {
-      return addslashes($input);
+      return Toolbox::addslashes_deep($input);
    }
 
    /**
