@@ -12,6 +12,10 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 
    protected $fields = [];
 
+   /**
+    * @param unknown $fields
+    * @param array $data
+    */
    public function __construct($fields, $data = []) {
       $this->fields           = $fields;
       $this->fields['answer'] = $data;
@@ -25,9 +29,22 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return array input data to save as is
     */
    public function prepareQuestionInputForSave($input) {
-      return  $input;
+      return $input;
    }
 
+   /**
+    * Prepares a answer value for output in a target object
+    * @param string|array $input the answer to format for a target (ticket or change)
+    * @return string
+    */
+   public function prepareQuestionInputForTarget($input) {
+      return addslashes($input);
+   }
+
+   /**
+    * Output HTML to display the field
+    * @param boolean $canEdit is the field editable ?
+    */
    public function show($canEdit = true) {
       $required = ($canEdit && $this->fields['required']) ? ' required' : '';
 
@@ -62,7 +79,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 
    /**
     * Outputs the HTML representing the field
-    *
     * @param string $canEdit
     */
    public function displayField($canEdit = true) {

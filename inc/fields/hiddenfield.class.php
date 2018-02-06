@@ -16,6 +16,11 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return _n('Hidden field', 'Hidden fields', 1);
    }
 
+   public function prepareQuestionInputForTarget($input) {
+      $input = str_replace("\n", '\r\n', addslashes($input));
+      return $input;
+   }
+
    public static function getPrefs() {
       return [
          'required'       => 0,

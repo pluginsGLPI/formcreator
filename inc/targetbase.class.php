@@ -750,28 +750,25 @@ EOS;
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
          while ($question_line = $DB->fetch_assoc($res_questions)) {
+            $classname = 'PluginFormcreator'.ucfirst($question_line['fieldtype']).'Field';
+            if (class_exists($classname)) {
+               $fieldObject = new $classname($question_line, $question_line['answer']);
+            }
+
             $id    = $question_line['id'];
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
                $name = '';
                $value = '';
             } else {
                $name  = $question_line['name'];
-               $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+               $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
-            if (is_array($value)) {
-               if ($CFG_GLPI['use_rich_text']) {
-                  $value = '<br />' . implode('<br />', $value);
-               } else {
-                  $value = "\r\n" . implode("\r\n", $value);
-               }
-            }
-
             if ($question_line['fieldtype'] !== 'file') {
                $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
-               $content = str_replace('##answer_' . $id . '##', addslashes($value), $content);
+               $content = str_replace('##answer_' . $id . '##', $value, $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
-                  $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
+                  $content = str_replace('##question_' . $id . '##', $name, $content);
                   if ($value !== '') {
                      $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
 
