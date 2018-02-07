@@ -799,7 +799,7 @@ EOS;
     * @param array $input datas used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
@@ -1203,7 +1203,7 @@ EOS;
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
-         return false;
+         return null;
       }
 
       // Add tag if presents
@@ -1471,7 +1471,7 @@ EOS;
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }

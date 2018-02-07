@@ -4,87 +4,121 @@ class MultielectFieldTest extends SuperAdminTestCase {
    public function provider() {
 
       $dataset = array(
-            array(
-                  'fields'          => array(
-                        'fieldtype'       => 'select',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'show_empty'      => '0',
-                        'default_values'  => '',
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always'
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array(''),
-                  'expectedIsValid' => true
+         array(
+            'fields'          => array(
+               'fieldtype'       => 'multiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => '',
+               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'order'           => '1',
+               'show_rule'       => 'always',
+               '_parameters'     => [
+                  'multiselect' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ]
+                  ]
+               ],
             ),
-            array(
-                  'fields'          => array(
-                        'fieldtype'       => 'select',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'show_empty'      => '0',
-                        'default_values'  => '3',
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always'
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3'),
-                  'expectedIsValid' => true
+            'data'            => null,
+            'expectedValue'   => array(''),
+            'expectedIsValid' => true
+         ),
+         array(
+            'fields'          => array(
+               'fieldtype'       => 'multiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => '3',
+               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'order'           => '1',
+               'show_rule'       => 'always',
+               '_parameters'     => [
+                  'multiselect' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ]
+                  ]
+               ],
             ),
-            array(
-                  'fields'          => array(
-                        'fieldtype'       => 'select',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'show_empty'      => '0',
-                        'default_values'  => '3',
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always',
-                        'range_min'       => 2,
-                        'range_max'       => 4,
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3'),
-                  'expectedIsValid' => false
+            'data'            => null,
+            'expectedValue'   => array('3'),
+            'expectedIsValid' => true
+         ),
+         array(
+            'fields'          => array(
+               'fieldtype'       => 'multiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => '3',
+               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'order'           => '1',
+               'show_rule'       => 'always',
+               '_parameters'     => [
+                  'multiselect' => [
+                     'range' => [
+                        'range_min' => '2',
+                        'range_max' => '4',
+                     ]
+                  ]
+               ],
             ),
-            array(
-                  'fields'          => array(
-                        'fieldtype'       => 'select',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'show_empty'      => '0',
-                        'default_values'  => "3\r\n4",
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always',
-                        'range_min'       => 2,
-                        'range_max'       => 4,
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3', '4'),
-                  'expectedIsValid' => true
+            'data'            => null,
+            'expectedValue'   => array('3'),
+            'expectedIsValid' => false
+         ),
+         array(
+            'fields'          => array(
+               'fieldtype'       => 'multiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => "3\r\n4",
+               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'order'           => '1',
+               'show_rule'       => 'always',
+               '_parameters'     => [
+                  'multiselect' => [
+                     'range' => [
+                        'range_min' => '2',
+                        'range_max' => '4',
+                     ]
+                  ]
+               ],
             ),
-            array(
-                  'fields'          => array(
-                        'fieldtype'       => 'select',
-                        'name'            => 'question',
-                        'required'        => '0',
-                        'show_empty'      => '0',
-                        'default_values'  => "3\r\n4\r\n2\r\n1\r\n6",
-                        'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
-                        'order'           => '1',
-                        'show_rule'       => 'always',
-                        'range_min'       => 2,
-                        'range_max'       => 4,
-                  ),
-                  'data'            => null,
-                  'expectedValue'   => array('3', '4', '2', '1', '6'),
-                  'expectedIsValid' => false
+            'data'            => null,
+            'expectedValue'   => array('3', '4'),
+            'expectedIsValid' => true
+         ),
+         array(
+            'fields'          => array(
+               'fieldtype'       => 'multiselect',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => "3\r\n4\r\n2\r\n1\r\n6",
+               'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
+               'order'           => '1',
+               'show_rule'       => 'always',
+               '_parameters'     => [
+                  'multiselect' => [
+                     'range' => [
+                        'range_min' => '2',
+                        'range_max' => '4',
+                     ]
+                  ]
+               ],
             ),
+            'data'            => null,
+            'expectedValue'   => array('3', '4', '2', '1', '6'),
+            'expectedIsValid' => false
+         ),
       );
 
       return $dataset;
@@ -94,6 +128,8 @@ class MultielectFieldTest extends SuperAdminTestCase {
     * @dataProvider provider
     */
    public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity) {
+      $section = $this->getSection();
+      $fields[$section::getForeignKeyField()] = $section->getID();
       $fieldInstance = new PluginFormcreatorMultiSelectField($fields, $data);
 
       $availableValues = $fieldInstance->getAvailableValues();
@@ -123,8 +159,14 @@ class MultielectFieldTest extends SuperAdminTestCase {
     * @dataProvider provider
     */
    public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new PluginFormcreatorMultiSelectField($fields, $data);
+      $section = $this->getSection();
+      $fields[$section::getForeignKeyField()] = $section->getID();
 
+      $question = new PluginFormcreatorQuestion();
+      $question->add($fields);
+      $question->updateParameters($fields);
+
+      $fieldInstance = new PluginFormcreatorMultiSelectField($question->fields, $data);
       $values = json_encode(explode("\r\n", $fields['default_values']), JSON_OBJECT_AS_ARRAY);
       $isValid = $fieldInstance->isValid($values);
       $this->assertEquals($expectedValidity, $isValid);
@@ -169,5 +211,18 @@ class MultielectFieldTest extends SuperAdminTestCase {
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->assertEquals('something\r\nsomething else', $out['values']);
       $this->assertEquals("something", $out['default_values']);
+   }
+
+   private function getSection() {
+      $form = new PluginFormcreatorForm();
+      $form->add([
+         'name' => 'form'
+      ]);
+      $section = new PluginFormcreatorSection();
+      $section->add([
+         $form::getForeignKeyField() => $form->getID(),
+         'name' => 'section',
+      ]);
+      return $section;
    }
 }

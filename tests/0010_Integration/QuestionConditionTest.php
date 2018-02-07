@@ -22,19 +22,52 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       self::$sectionData = [
          [
-            'name'                  => 'a section',
-            'questions'             => [
+            'name'               => 'a section',
+            'questions'          => [
                [
-                  'name'                  => 'text question',
-                  'fieldtype'             => 'text',
+                  'name'         => 'text question',
+                  'fieldtype'    => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ]
                ],
                [
-                  'name'                  => 'other text question',
-                  'fieldtype'             => 'text',
+                  'name'         => 'other text question',
+                  'fieldtype'    => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ]
                ],
                [
                   'name'                  => 'third text question',
                   'fieldtype'             => 'text',
+                  '_parameters'     => [
+                     'text' => [
+                        'range' => [
+                           'range_min' => '',
+                           'range_max' => '',
+                        ],
+                        'regex' => [
+                           'regex' => ''
+                        ]
+                     ]
+                  ]
                ],
             ],
          ],
@@ -72,6 +105,7 @@ class QuestionConditionTest extends SuperAdminTestCase
                $questionData['show_field'] = $showfield->getID();
                $question->updateConditions($questionData);
             }
+            $question->updateParameters($questionData);
          }
          foreach (self::$targetData as $targetData) {
             $target = new PluginFormcreatorTarget();
@@ -131,7 +165,7 @@ class QuestionConditionTest extends SuperAdminTestCase
       $secondQuestionId = $question->getID();
       $condition['show_field'] = [self::$questions[0]->getID()];
       $condition['id'] = $secondQuestionId;
-      $question->update($condition + $question->fields);
+      $question->update($condition + self::$sectionData[0]['questions'][1]);
       $question->updateConditions($condition);
 
       //Run the condition

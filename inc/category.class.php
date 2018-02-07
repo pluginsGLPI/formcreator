@@ -27,7 +27,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    }
 
    /**
-    * {@inheritDoc}
     * @see CommonTreeDropdown::getAdditionalFields()
     */
    public function getAdditionalFields() {

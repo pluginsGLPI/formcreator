@@ -57,7 +57,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -807,7 +807,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @param array $input datas used to add the item
     *
     * @return array the modified $input array
-    **/
+    */
    public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 

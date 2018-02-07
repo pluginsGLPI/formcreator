@@ -1,140 +1,140 @@
 <?php
-class FloatFieldTest extends SuperAdminTestCase {
+class TextFieldTest extends SuperAdminTestCase {
 
    public function provider() {
       $dataset = [
          [
             'fields'          => [
-               'fieldtype'       => 'float',
+               'fieldtype'       => 'text',
                'name'            => 'question',
                'required'        => '0',
+               'show_empty'      => '0',
                'default_values'  => '',
+               'values'          => "",
                'order'           => '1',
                'show_rule'       => 'always',
-               'show_empty'      => '0',
-               'values'          => '',
                '_parameters'     => [
-                  'float' => [
+                  'text' => [
                      'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
+                        'range_min' => '',
+                        'range_max' => '',
                      ],
-                     'regex' => ['regex' => ''],
+                     'regex' => [
+                        'regex' => ''
+                     ]
                   ]
-               ]
+               ],
             ],
             'data'            => null,
-            'expectedValue'   => '',
+            'expectedValue'   => '1',
             'expectedIsValid' => true
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'float',
+               'fieldtype'       => 'text',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '2',
+               'show_empty'      => '0',
+               'default_values'  => 'a',
+               'values'          => "",
                'order'           => '1',
                'show_rule'       => 'always',
-               'show_empty'      => '0',
-               'values'          => '',
                '_parameters'     => [
-                  'float' => [
+                  'text' => [
                      'range' => [
-                        'range_min'       => '',
-                        'range_max'       => '',
+                        'range_min' => '5',
+                        'range_max' => '8',
                      ],
-                     'regex' => ['regex' => ''],
+                     'regex' => [
+                        'regex' => ''
+                     ]
                   ]
-               ]
+               ],
             ],
             'data'            => null,
-            'expectedValue'   => '2',
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'float',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => "2",
-               'order'           => '1',
-               'show_rule'       => 'always',
-               'show_empty'      => '0',
-               '_parameters'     => [
-                  'float' => [
-                     'range' => [
-                        'range_min'       => 3,
-                        'range_max'       => 4,
-                     ],
-                     'regex' => ['regex' => ''],
-                  ]
-               ]
-            ],
-            'data'            => null,
-            'expectedValue'   => '2',
+            'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'float',
+               'fieldtype'       => 'text',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => "5",
+               'show_empty'      => '0',
+               'default_values'  => 'short',
+               'values'          => "",
                'order'           => '1',
                'show_rule'       => 'always',
-               'show_empty'      => '0',
-               'values'          => '',
                '_parameters'     => [
-                  'float' => [
+                  'text' => [
                      'range' => [
-                        'range_min'       => 3,
-                        'range_max'       => 4,
+                        'range_min' => '6',
+                        'range_max' => '8',
                      ],
-                     'regex' => ['regex' => ''],
+                     'regex' => [
+                        'regex' => ''
+                     ]
                   ]
-               ]
+               ],
             ],
             'data'            => null,
-            'expectedValue'   => '5',
+            'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'float',
+               'fieldtype'       => 'text',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => "3.141592",
+               'show_empty'      => '0',
+               'default_values'  => 'very long',
+               'values'          => "",
                'order'           => '1',
                'show_rule'       => 'always',
-               'show_empty'      => '0',
-               'values'          => '',
                '_parameters'     => [
-                  'float' => [
+                  'text' => [
                      'range' => [
-                        'range_min'       => 3,
-                        'range_max'       => 4,
+                        'range_min' => '6',
+                        'range_max' => '8',
                      ],
-                     'regex' => ['regex' => ''],
+                     'regex' => [
+                        'regex' => ''
+                     ]
                   ]
-               ]
+               ],
             ],
             'data'            => null,
-            'expectedValue'   => '3.141592',
-            'expectedIsValid' => true
+            'expectedValue'   => '1',
+            'expectedIsValid' => false
+         ],
+         [
+            'fields'          => [
+               'fieldtype'       => 'text',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => 'very long',
+               'values'          => "",
+               'order'           => '1',
+               'show_rule'       => 'good',
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '3',
+                        'range_max' => '8',
+                     ],
+                     'regex' => [
+                        'regex' => ''
+                     ]
+                  ]
+               ],
+            ],
+            'data'            => null,
+            'expectedValue'   => '1',
+            'expectedIsValid' => false
          ],
       ];
-
       return $dataset;
-   }
-
-   /**
-    * @dataProvider provider
-    */
-   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new PluginFormcreatorFloatField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->assertEquals($expectedValue, $value);
    }
 
    /**
@@ -146,12 +146,12 @@ class FloatFieldTest extends SuperAdminTestCase {
 
       $question = new PluginFormcreatorQuestion();
       $question->add($fields);
-      $this->assertFalse($question->isNewItem(), json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->updateParameters($fields);
 
-      $fieldInstance = new PluginFormcreatorFloatField($question->fields, $data);
+      $fieldInstance = new PluginFormcreatorTextField($question->fields, $data);
+
       $isValid = $fieldInstance->isValid($fields['default_values']);
-      $this->assertEquals($expectedValidity, $isValid);
+      $this->assertEquals($expectedValidity, $isValid, $_SESSION['MESSAGE_AFTER_REDIRECT']);
    }
 
    private function getSection() {
