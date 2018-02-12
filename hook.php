@@ -32,6 +32,11 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ------------------------------------------------------------------------------
  */
+
+/**
+ * Install all necessary elements for the plugin
+ * @return boolean True if success
+ */
 function plugin_formcreator_install() {
    spl_autoload_register('plugin_formcreator_autoload');
 
