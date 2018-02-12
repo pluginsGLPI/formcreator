@@ -1,3 +1,21 @@
+<a name="2.6.2"></a>
+## [2.6.2](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.1...2.6.2) (2018-02-12)
+
+
+### Bug Fixes
+
+* **condition:** fix multiple condition process when a question is unanswered ([6bce6e7](https://github.com-btry/pluginsGLPI/formcreator/commit/6bce6e7))
+* **condition:** questions conditions may lead to wring  result in complex cases ([42cb852](https://github.com-btry/pluginsGLPI/formcreator/commit/42cb852)), closes [#880](https://github.com-btry/pluginsGLPI/formcreator/issues/880)
+* **field:** fix quote escaping for file field ([0280acf](https://github.com-btry/pluginsGLPI/formcreator/commit/0280acf)), closes [#832](https://github.com-btry/pluginsGLPI/formcreator/issues/832)
+* **field:** inability to save properties of a tag question ([faf304b](https://github.com-btry/pluginsGLPI/formcreator/commit/faf304b))
+* **form_answer:** fix search option ([1c8f38f](https://github.com-btry/pluginsGLPI/formcreator/commit/1c8f38f)), closes [#602](https://github.com-btry/pluginsGLPI/formcreator/issues/602)
+* **notification:** pending validation email for groups ([54c2a2e](https://github.com-btry/pluginsGLPI/formcreator/commit/54c2a2e)), closes [#871](https://github.com-btry/pluginsGLPI/formcreator/issues/871)
+* **question:** fields hidden under condition not rendered in  tickets ([9d87dd7](https://github.com-btry/pluginsGLPI/formcreator/commit/9d87dd7)), closes [#880](https://github.com-btry/pluginsGLPI/formcreator/issues/880)
+* **target:** answer rendering issues ([6d73872](https://github.com-btry/pluginsGLPI/formcreator/commit/6d73872)), closes [#877](https://github.com-btry/pluginsGLPI/formcreator/issues/877) [#817](https://github.com-btry/pluginsGLPI/formcreator/issues/817)
+* **target:** remove abusive encoding in target names ([a0dca23](https://github.com-btry/pluginsGLPI/formcreator/commit/a0dca23))
+
+
+
 <a name="2.6.1"></a>
 ## [2.6.1](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.0...2.6.1) (2018-01-02)
 

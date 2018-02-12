@@ -179,6 +179,10 @@ Features
          <num>2.6.1</num>
          <compatibility>9.2.1</compatibility>
       </version>
+      <version>
+         <num>2.6.2</num>
+         <compatibility>9.2.1</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>ca_ES</lang>
