@@ -361,6 +361,7 @@ class RoboFile extends RoboFilePlugin
    protected function getFormatedHeaderTemplate($extension, $template) {
       switch ($extension) {
          case 'php':
+         case 'css':
             $lines = explode("\n", $template);
             foreach ($lines as &$line) {
                $line = rtrim(" * $line");
@@ -390,6 +391,12 @@ class RoboFile extends RoboFilePlugin
             $replacementSuffix   = "\n */";
             break;
 
+         case 'css':
+            $prefix              = "/\*(\*)?\\n";
+            $replacementPrefix   = "/**\n";
+            $suffix              = "\\n( )?\*/";
+            $replacementSuffix   = "\n */";
+            break;
          default:
             // Unhandled file format
             return;
@@ -411,9 +418,27 @@ class RoboFile extends RoboFilePlugin
       if (isset($headerMatch[0])) {
          $originalHeader = $headerMatch[0];
          preg_match_all($authorsRegex, $originalHeader, $originalAuthors);
+         if (!is_array($originalAuthors)) {
+            $originalAuthors = [$originalAuthors];
+         }
          if (isset($originalAuthors[1])) {
+            $originalAuthors[1] = array_unique($originalAuthors[1]);
             $originalAuthors = $this->getFormatedHeaderTemplate($ext, implode("\n", $originalAuthors[1]));
-            $formatedHeader = preg_replace($authorsRegex, $originalAuthors, $formatedHeader, 1);
+            $countOfAuthors = preg_match_all($authorsRegex, $formatedHeader);
+            if ($countOfAuthors !== false) {
+               // Empty all author lines except the last one
+               $formatedHeader = preg_replace($authorsRegex, '', $formatedHeader, $countOfAuthors - 1);
+               // remove the lines previously reduced to zero
+               $lines = explode("\n", $formatedHeader);
+               $formatedHeader = [];
+               foreach ($lines as $line) {
+                  if ($line !== '') {
+                     $formatedHeader[] = $line;
+                  };
+               }
+               $formatedHeader = implode("\n", $formatedHeader);
+               $formatedHeader = preg_replace($authorsRegex, $originalAuthors, $formatedHeader, 1);
+            }
          }
       }
 
