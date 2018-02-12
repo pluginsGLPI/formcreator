@@ -152,7 +152,7 @@ class PluginFormcreatorForm extends CommonDBTM
          'id'                 => '9',
          'table'              => $this->getTable(),
          'field'              => 'access_rights',
-         'name'               => __('Access'),
+         'name'               => __('Access', 'formcreator'),
          'datatype'           => 'specific',
          'searchtype'         => [
             '0'                  => 'equals',
