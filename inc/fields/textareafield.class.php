@@ -29,6 +29,11 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return __('Textarea', 'formcreator');
    }
 
+   public function prepareQuestionInputForTarget($input) {
+      $input = str_replace("\r\n", '\r\n', addslashes($input));
+      return $input;
+   }
+
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['textarea'] = 'showFields(".implode(', ', $prefs).");';";

@@ -57,6 +57,10 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       return json_encode($return);
    }
 
+   public function prepareQuestionInputForSave($input) {
+      return $input;
+   }
+
    public static function getName() {
       return _n('Tag', 'Tags', 2, 'tag');
    }

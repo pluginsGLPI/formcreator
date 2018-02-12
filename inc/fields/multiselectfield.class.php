@@ -67,6 +67,37 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       return $return;
    }
 
+   public function prepareQuestionInputForTarget($input) {
+      global $CFG_GLPI;
+
+      $value = [];
+      $values = $this->getAvailableValues();
+
+      if (empty($input)) {
+         return '';
+      }
+
+      if (is_array($input)) {
+         $tab_values = $input;
+      } else if (is_array(json_decode($input))) {
+         $tab_values = json_decode($input);
+      } else {
+         $tab_values = [$input];
+      }
+
+      foreach ($tab_values as $input) {
+         if (in_array($input, $values)) {
+            $value[] = addslashes($input);
+         }
+      }
+      if ($CFG_GLPI['use_rich_text']) {
+         $value = '<br />' . implode('<br />', $value);
+      } else {
+         $value = '\r\n' . implode('\r\n', $value);
+      }
+      return $value;
+   }
+
    public static function getName() {
       return __('Multiselect', 'formcreator');
    }

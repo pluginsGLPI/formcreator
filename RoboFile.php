@@ -98,8 +98,8 @@ class RoboFile extends RoboFilePlugin
 
       $this->updateChangelog();
 
-      $this->gitCommit(['package.json', 'composer.json'], "docs: bump version in JSON files");
-      $this->gitCommit(['CHANGELOG.md'], "docs(changelog): update changelog");
+      $this->gitCommit(['package.json', 'composer.json'], "build: bump version in JSON files");
+      $this->gitCommit(['CHANGELOG.md'], "build(changelog): update changelog");
 
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();

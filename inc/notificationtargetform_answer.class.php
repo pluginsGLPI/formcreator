@@ -78,10 +78,10 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
          case self::APPROVER :
             $form = new PluginFormcreatorForm();
             $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
-            if ($form->fields['validation_required'] == 1) {
+            if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_USER) {
                $this->addUserByField('users_id_validator', true);
-            } else if ($form->fields['validation_required'] == 2) {
-               $this->addForGroup(0, $this->obj->fields['users_id_validator']);
+            } else if ($form->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
+               $this->addForGroup(0, $this->obj->fields['groups_id_validator']);
             }
             break;
       }

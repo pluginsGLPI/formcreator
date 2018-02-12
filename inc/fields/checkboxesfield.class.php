@@ -99,6 +99,17 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return __('Checkboxes', 'formcreator');
    }
 
+   public function getValue() {
+      if (isset($this->fields['answer'])) {
+         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
+            return json_decode($this->fields['answer']);
+         }
+         return $this->fields['answer'];
+      } else {
+         return explode("\r\n", $this->fields['default_values']);
+      }
+   }
+
    public function prepareQuestionInputForSave($input) {
       if (isset($input['values'])) {
          if (empty($input['values'])) {
@@ -115,6 +126,38 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          $input['default_values'] = $this->trimValue($input['default_values']);
       }
       return $input;
+   }
+
+   public function prepareQuestionInputForTarget($input) {
+      global $CFG_GLPI;
+
+      $value = [];
+      $values = $this->getAvailableValues();
+
+      if (empty($input)) {
+         return '';
+      }
+
+      if (is_array($input)) {
+         $tab_values = $input;
+      } else if (is_array(json_decode($input))) {
+         $tab_values = json_decode($input);
+      } else {
+         $tab_values = [$input];
+      }
+
+      foreach ($tab_values as $input) {
+         if (in_array($input, $values)) {
+            $value[] = addslashes($input);
+         }
+      }
+
+      if ($CFG_GLPI['use_rich_text']) {
+         $value = '<br />' . implode('<br />', $value);
+      } else {
+         $value = '\r\n' . implode('\r\n', $value);
+      }
+      return $value;
    }
 
    public static function getPrefs() {

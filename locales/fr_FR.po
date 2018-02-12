@@ -10,13 +10,13 @@
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 # Johan Cwiklinski <trasher@x-tnd.be>, 2016
 # Thierry Bugier <tbugier@teclib.com>, 2017
-# Thierry Bugier <tbugier@teclib.com>, 2017
+# Thierry Bugier <tbugier@teclib.com>, 2017-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-02 16:17+0100\n"
-"PO-Revision-Date: 2018-01-02 14:06+0000\n"
+"PO-Revision-Date: 2018-02-12 09:48+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -294,11 +294,11 @@ msgstr[1] "Formulaires saisis"
 
 #: inc/form_answer.class.php:157
 msgid "Form approver"
-msgstr ""
+msgstr "Validateur de formulaire"
 
 #: inc/form_answer.class.php:176
 msgid "Form approver group"
-msgstr ""
+msgstr "Groupe validateur de formulaire"
 
 #: inc/form_answer.class.php:255
 msgid "waiting"
@@ -914,8 +914,8 @@ msgstr "Fermé"
 #: inc/fields/actorfield.class.php:7
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Acteur"
+msgstr[1] "Acteurs"
 
 #: inc/fields/actorfield.class.php:152
 msgid "Invalid value:"
@@ -1011,8 +1011,8 @@ msgstr "Sélection"
 #: inc/fields/tagfield.class.php:61
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Étiquette"
+msgstr[1] "Étiquettes"
 
 #: inc/fields/textareafield.class.php:29
 msgid "Textarea"

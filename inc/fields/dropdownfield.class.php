@@ -58,16 +58,33 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getAnswer() {
       $value = $this->getValue();
+      $DbUtil = new DbUtils();
       if ($this->fields['values'] == 'User') {
-         return getUserName($value);
+         return $DbUtil->getUserName($value);
       } else {
          $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
          if (!isset($decodedValues['itemtype'])) {
-            return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+            return Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $value);
          } else {
-            return Dropdown::getDropdownName(getTableForItemType($decodedValues['itemtype']), $value);
+            return Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $value);
          }
       }
+   }
+
+   public function prepareQuestionInputForTarget($input) {
+      $DbUtil = new DbUtils();
+      if ($this->fields['values'] == User::class) {
+         $value = $DbUtil->getUserName($input);
+      } else {
+         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if (!isset($decodedValues['itemtype'])) {
+            $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $input);
+         } else {
+            $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $input);
+         }
+      }
+
+      return addslashes($value);
    }
 
    public static function getName() {
