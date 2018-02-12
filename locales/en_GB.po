@@ -6,13 +6,13 @@
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014-2016
 # Jérémy MOREAU <jmoreau@teclib.com>, 2014
 # Thierry Bugier <tbugier@teclib.com>, 2017
-# Thierry Bugier <tbugier@teclib.com>, 2017
+# Thierry Bugier <tbugier@teclib.com>, 2017-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-02 16:17+0100\n"
-"PO-Revision-Date: 2018-01-02 14:06+0000\n"
+"PO-Revision-Date: 2018-02-12 09:49+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -290,11 +290,11 @@ msgstr[1] "Form answers"
 
 #: inc/form_answer.class.php:157
 msgid "Form approver"
-msgstr ""
+msgstr "Form approver"
 
 #: inc/form_answer.class.php:176
 msgid "Form approver group"
-msgstr ""
+msgstr "Form approver group"
 
 #: inc/form_answer.class.php:255
 msgid "waiting"
@@ -910,8 +910,8 @@ msgstr "Closed"
 #: inc/fields/actorfield.class.php:7
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Actor"
+msgstr[1] "Actors"
 
 #: inc/fields/actorfield.class.php:152
 msgid "Invalid value:"
@@ -943,7 +943,7 @@ msgstr "A description field should have a description:"
 
 #: inc/fields/dropdownfield.class.php:92
 msgid "Invalid dropdown type:"
-msgstr ""
+msgstr "Invalid dropdown type:"
 
 #: inc/fields/emailfield.class.php:25
 msgid "This is not a valid e-mail:"
@@ -1007,8 +1007,8 @@ msgstr "Select"
 #: inc/fields/tagfield.class.php:61
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Tag"
+msgstr[1] "Tags"
 
 #: inc/fields/textareafield.class.php:29
 msgid "Textarea"
