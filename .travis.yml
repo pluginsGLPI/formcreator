@@ -4,32 +4,36 @@ env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
     - PHPUNIT_ARGS="--verbose --debug"
+    - CS=7.2
+  matrix:
+    - GLPI_BRANCH=9.2.1
+    - GLPI_BRANCH=9.2/bugfixes
+    - GLPI_BRANCH=master
+    
+php: 
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+  - nightly
+
+allow_failures:
+  - php: nightly
 
 before_script:
   - mysql -u root -e 'create database glpitest;'
-  - git clone https://github.com/glpi-project/glpi --depth 1 -b 9.2/bugfixes ../glpi && cd ../glpi
+  - git clone --depth=1 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
   - mv ../formcreator plugins/formcreator
   - composer install --no-dev
-  - php tools/cliinstall.php --db=glpitest --user=root --tests
+  - if [ -e scripts/cliinstall.php ] ; then php scripts/cliinstall.php --db=glpitest --user=root --tests ; fi
+  - if [ -e tools/cliinstall.php ] ; then php tools/cliinstall.php --db=glpitest --user=root --tests ; fi
   - cd plugins/formcreator
   - rm composer.lock
   - composer install
 
 script:
   - vendor/bin/phpunit $PHPUNIT_ARGS
-  - if [[ "$CS" == "true" ]]; then vendor/bin/robo --no-interaction code:cs; fi
-
-matrix:
-  include:
-    - php: 5.6
-    - php: 7.0
-    - php: 7.1
-    - php: 7.2
-      env: CS=true
-    - php: nightly
-
-  allow_failures:
-    - php: nightly
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ]] ; then vendor/bin/robo --no-interaction code:cs; fi
 
 cache:
   directories:
