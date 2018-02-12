@@ -1,5 +1,4 @@
 <?php
-use Robo\Task\Docker\Commit;
 
 /**
  * This is project's console commands configuration for Robo task runner.

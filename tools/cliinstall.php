@@ -1,5 +1,5 @@
 <?php
-include (__DIR__ . "/docopt.php");
+include (__DIR__ . "/../vendor/docopt/docopt/src/docopt.php");
 
 $doc = <<<DOC
 cliinstall.php
