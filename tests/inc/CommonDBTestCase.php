@@ -127,14 +127,25 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
    }
 
    protected static function setupGLPIFramework() {
-      global $CFG_GLPI, $DB, $LOADED_PLUGINS;
+      global $CFG_GLPI, $DB, $LOADED_PLUGINS, $PLUGIN_HOOKS, $AJAX_INCLUDE, $PLUGINS_INCLUDED;
 
+      if (session_status() == PHP_SESSION_ACTIVE) {
+         session_write_close();
+      }
       $LOADED_PLUGINS = null;
+      $PLUGINS_INCLUDED = null;
+      $AJAX_INCLUDE = null;
       $_SESSION = [];
       $_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;       // Prevents notice in execution of GLPI_ROOT . /inc/includes.php
+      if (is_readable(GLPI_ROOT . "/config/config.php")) {
+         $configFile = "/config/config.php";
+      } else {
+         $configFile = "/inc/config.php";
+      }
+      include (GLPI_ROOT . $configFile);
       require (GLPI_ROOT . "/inc/includes.php");
-
-      $DB = new DB();
+      $_SESSION['glpi_use_mode'] = Session::DEBUG_MODE;
+      \Toolbox::setDebugMode();
 
       include_once (GLPI_ROOT . "/inc/timer.class.php");
 
@@ -144,13 +155,14 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       ini_set("memory_limit", "-1");
       ini_set("max_execution_time", "0");
 
-      //ini_set('session.use_cookies', 0); //disable session cookies
+      if (session_status() == PHP_SESSION_ACTIVE) {
+         session_write_close();
+      }
+      session_start();
       $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
    }
 
    protected static function login($name, $password, $noauto = false) {
-      global $DB;
-
       Session::start();
       $_SESSION['glpi_use_mode'] = Session::NORMAL_MODE;
       $auth = new Auth();
@@ -159,5 +171,4 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
       return $result;
    }
-
 }
