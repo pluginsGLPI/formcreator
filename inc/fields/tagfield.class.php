@@ -41,7 +41,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $rand     = mt_rand();
          $required = $this->fields['required'] ? ' required' : '';
 
-         echo '<div class="form_field">';
          $values = [];
 
          $obj = new PluginTagTag();
@@ -61,7 +60,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             'rand'                => $rand,
             'multiple'            => true,
          ]);
-         echo '</div>' . PHP_EOL;
+         echo PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {

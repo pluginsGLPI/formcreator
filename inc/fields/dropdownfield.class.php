@@ -6,7 +6,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         echo '<div class="form_field">';
          if (!empty($this->fields['values'])) {
             $rand     = mt_rand();
             $required = $this->fields['required'] ? ' required' : '';
@@ -46,7 +45,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $itemtype::dropdown($dparams);
          }
-         echo '</div>' . PHP_EOL;
+         echo PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {

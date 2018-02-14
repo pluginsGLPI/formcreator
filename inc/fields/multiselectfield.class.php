@@ -69,9 +69,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
          parent::displayField($canEdit);
       } else {
          $answer = $this->getAnswer();
-         echo '<div class="form_field">';
          echo empty($answer) ? '' : implode('<br />', $answer);
-         echo '</div>';
       }
    }
 
