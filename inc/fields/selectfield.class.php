@@ -41,7 +41,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          $required   = $this->fields['required'] ? ' required' : '';
          $values     = $this->getAvailableValues();
 
-         echo '<div class="form_field">';
          if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
@@ -63,7 +62,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
                'multiple'  => static::IS_MULTIPLE,
             ]);
          }
-         echo '</div>' . PHP_EOL;
+         echo PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
@@ -73,9 +72,8 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
                   });
                </script>';
       } else {
-         echo '<div class="form_field">';
          echo nl2br($this->getAnswer());
-         echo '</div>' . PHP_EOL;
+         echo PHP_EOL;
       }
    }
 
