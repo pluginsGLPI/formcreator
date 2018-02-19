@@ -9,8 +9,9 @@ class IssueTest extends SuperAdminTestCase {
       $this->assertTrue(true);
       $ticket = new Ticket();
       $ticket->add(array(
-            'name'      => 'ticket without form_answer',
-            'content'   => 'My computer is down !'
+            'name'             => 'ticket without form_answer',
+            'content'          => 'My computer is down !',
+            '_users_id_assign' => 0,
       ));
       $this->assertFalse($ticket->isNewItem());
 
@@ -172,8 +173,9 @@ class IssueTest extends SuperAdminTestCase {
       $this->assertTrue(true);
       $ticket = new Ticket();
       $ticket->add(array(
-            'name'      => 'ticket to delete',
-            'content'   => 'My computer is down (again) !'
+            'name'             => 'ticket to delete',
+            'content'          => 'My computer is down (again) !',
+            '_users_id_assign' => 0,
       ));
       $this->assertFalse($ticket->isNewItem());
 

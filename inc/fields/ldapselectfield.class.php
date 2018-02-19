@@ -159,4 +159,20 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       $prefs = self::getPrefs();
       return "tab_fields_fields['ldapselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function notEquals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
 }

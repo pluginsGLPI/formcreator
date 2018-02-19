@@ -107,4 +107,12 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['integer'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      return (int) $this->getValue() == (int) $value;
+   }
+
+   public function greaterThan($value) {
+      return (int) $this->getValue() > (int) $value;
+   }
 }

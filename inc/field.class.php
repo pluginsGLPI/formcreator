@@ -46,7 +46,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    protected $fields = [];
 
    /**
-    * @param unknown $fields
+    *
+    * @param array $fields
     * @param array $data
     */
    public function __construct($fields, $data = []) {
@@ -152,6 +153,10 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
    }
 
+   /**
+    * Get the value of the answer
+    * @return mixed
+    */
    public function getAnswer() {
       return $this->getValue();
    }
@@ -159,14 +164,14 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    /**
     * Gets the available values for the field
     *
-    * @return array
+    * @return array available values
     */
    public function getAvailableValues() {
       return explode("\r\n", $this->fields['values']);
    }
 
    /**
-    * Is the field valid for thegiven value ?
+    * Is the field valid for the given value ?
     *
     * @param string $value
     *
@@ -189,7 +194,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    /**
     * Is the field required ?
     *
-    * @return boolean
+    * @return boolean True if required, false if not
     */
    public function isRequired() {
       return $this->fields['required'];
@@ -206,4 +211,38 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return implode('\\r\\n', $value);
    }
 
+   /**
+    * Tests if the given value equals the field value
+    *
+    * @return boolean True if the value equals the field value
+    */
+   public function equals($value) {
+      return $this->getValue() == $value;
+   }
+
+   /**
+    * Tests if the given value is not equal to field value
+    *
+    * @return boolean True if the value is not equal to the field value
+    */
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+   /**
+    * Tests if the given value is greater than the field value
+    *
+    * @return boolean True if the value is greater than the field value
+    */
+   public function greaterThan($value) {
+      return $this->getValue() > $value;
+   }
+
+   /**
+    * Tests if the given value is less than the field value
+    *
+    * @return boolean True if the value is less than the field value
+    */
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && $this->notEquals($value);
+   }
 }

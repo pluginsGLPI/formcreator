@@ -86,4 +86,28 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       $prefs = self::getPrefs();
       return "tab_fields_fields['glpiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $item = new $itemtype();
+
+      if (!$item->getFromDB($this->fields['answer'])) {
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+      }
+
+      return $item->getField($item->getNameField()) == $value;
+   }
+
+   public function greaterThan($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $item = new $itemtype();
+
+      if (!$item->getFromDB($this->fields['answer'])) {
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+      }
+
+      return $item->getField($item->getNameField()) > $value;
+   }
 }

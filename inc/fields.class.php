@@ -37,8 +37,8 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorFields
-{
+class PluginFormcreatorFields {
+
    /**
     * Retrive all field types and file path
     * @return Array     field_type => File_path
@@ -139,7 +139,7 @@ class PluginFormcreatorFields
        */
       static $evalQuestion = [];
       if (isset($evalQuestion[$id])) {
-         // TODO : how to deal a infinite loop while evaulating visibility of question ?
+         // TODO : how to deal a infinite loop while evaluating visibility of question ?
          return true;
       }
       $evalQuestion[$id]   = $id;
@@ -191,61 +191,65 @@ class PluginFormcreatorFields
             $values[$condition['field']] = '';
          }
 
+         // TODO: find the best behavior if the question does not exists
+         $conditionQuestion = new PluginFormcreatorQuestion();
+         $conditionQuestion->getFromDB($condition['field']);
+         $fieldFactory = new PluginFormcreatorFieldFactory();
+         try {
+            $conditionField = $fieldFactory->createField($conditionQuestion->getField('fieldtype'), $conditionQuestion->fields, $values[$condition['field']]);
+         } catch (PluginFormcreatorUnknownFieldException $e) {
+            return true;
+         }
          switch ($condition['operator']) {
             case '!=' :
-               if (empty($values[$condition['field']])) {
-                  $value = true;
-               } else {
-                  if (is_array($values[$condition['field']])) {
-                     $decodedConditionField = null;
-                  } else {
-                     $decodedConditionField = json_decode($values[$condition['field']]);
-                  }
-                  if (is_array($values[$condition['field']])) {
-                     $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                     $value = !in_array($condition['value'], $decodedConditionField);
-                  } else {
-                     $value = $condition['value'] != $values[$condition['field']];
-                  }
+               try {
+                  $value = $conditionField->notEquals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
                }
                break;
 
             case '==' :
-               if (empty($condition['value'])) {
+               try {
+                  $value = $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
-               } else {
-                  if (is_array($values[$condition['field']])) {
-                     $decodedConditionField = null;
-                  } else {
-                     $decodedConditionField = json_decode($values[$condition['field']]);
-                  }
-                  if (is_array($values[$condition['field']])) {
-                     $value = in_array($condition['value'], $values[$condition['field']]);
-                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                     $value = in_array($condition['value'], $decodedConditionField);
-                  } else {
-                     $value = $condition['value'] == $values[$condition['field']];
-                  }
                }
                break;
 
-            default:
-               if (is_array($values[$condition['field']])) {
-                  $decodedConditionField = null;
-               } else {
-                  $decodedConditionField = json_decode($values[$condition['field']]);
+            case '>':
+               try {
+                  $value = $conditionField->greaterThan($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
                }
-               if (is_array($values[$condition['field']])) {
-                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array('.implode(',', $values[$condition['field']]).');');
-               } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array(' .implode(',', $decodedConditionField).');');
-               } else {
-                  eval('$value = "'.$values[$condition['field']].'" '
-                    .$condition['operator'].' "'.$condition['value'].'";');
+               break;
+
+            case '<':
+               try {
+                  $value = $conditionField->lessThan($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
                }
+               break;
+
+            case '>=':
+               try {
+                  $value = $conditionField->greaterThan($condition['value'])
+                           || $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
+               break;
+
+            case '<=':
+               try {
+                  $value = $conditionField->lessThan($condition['value'])
+                           || $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
+               break;
          }
 
          // Combine all condition with respect of operator precedence

@@ -43,6 +43,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
+      $rand       = mt_rand();
       $readonly = $canEdit ? 'false' : 'true';
       if (isset($this->fields['answer'])) {
          $value = $this->sanitizeValue($this->fields['answer']);
@@ -60,12 +61,12 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       // Value needs to be non empty to allow execition of select2's initSelection
       echo '<input
                type="hidden"
-               name="formcreator_field_' . $this->fields['id'] . '"
-               id="actor_formcreator_field_' . $this->fields['id'] . '"
-               value=" " />';
+               name="formcreator_field_' . $this->fields['id'] . $rand . '"
+               id="actor_formcreator_field_' . $this->fields['id'] . $rand . '"
+               value="" />';
       echo '<script type="text/javascript">
-               jQuery(document).ready(function() {
-                  $("#actor_formcreator_field_' . $this->fields['id'] . '").select2({
+               $(function() {
+                  $("#actor_formcreator_field_' . $this->fields['id'] . $rand . '").select2({
                      multiple: true,
                      tokenSeparators: [",", ";"],
                      minimumInputLength: 0,
@@ -98,6 +99,10 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
                      }
                   })
                   $("#actor_formcreator_field_' . $this->fields['id'] . '").select2("readonly", ' . $readonly . ');
+                  $("#actor_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
+                     var selectedValues = $("#actor_formcreator_field_' . $this->fields['id'] . $rand . '").val();
+                     formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
+                  });
                });
             </script>';
    }
@@ -216,5 +221,32 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      $user = new User();
+      if (!$user->getFromDBByName($value)) {
+         throw new PluginFormcreatorComparisonException('User not found for comparison');
+      }
+      if (is_array($this->fields['answer'])) {
+         $users = explode(',', $this->fields['answer']);
+         foreach ($users as &$user) {
+            $user = (int) $user;
+         }
+
+         // Remove duplicates IDs
+         $users = array_unique($users);
+      } else {
+         $users = [(int) $this->fields['answer']];
+      }
+      return in_array($user->getID(), $users);
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 }

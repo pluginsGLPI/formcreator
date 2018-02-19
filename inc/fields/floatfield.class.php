@@ -107,4 +107,12 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['float'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function equals($value) {
+      return (float) $this->getValue() == (float) $value;
+   }
+
+   public function greaterThan($value) {
+      return (float) $this->getValue() > (float) $value;
+   }
 }

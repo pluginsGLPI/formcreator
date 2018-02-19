@@ -42,4 +42,8 @@ interface PluginFormcreatorFieldInterface {
    public static function getJSFields();
    public function prepareQuestionInputForSave($input);
    public function prepareQuestionInputForTarget($input);
+   public function equals($value);
+   public function notEquals($value);
+   public function greaterThan($value);
+   public function LessThan($value);
 }
