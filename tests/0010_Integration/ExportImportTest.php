@@ -282,7 +282,7 @@ class ExportImporTest extends SuperAdminTestCase {
    public function _checkTargetTicket($targetticket = []) {
       $this->assertArrayNotHasKey('id', $targetticket);
       $this->assertArrayNotHasKey('tickettemplates_id', $targetticket);
-      $this->assertArrayHasKey('name', $targetticket);
+      $this->assertArrayHasKey('title', $targetticket);
       $this->assertArrayHasKey('comment', $targetticket);
       $this->assertArrayHasKey('due_date_rule', $targetticket);
       $this->assertArrayHasKey('due_date_question', $targetticket);

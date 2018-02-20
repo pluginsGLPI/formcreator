@@ -924,6 +924,13 @@ EOS;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
+      $target = new PluginFormcreatorTarget();
+      $found  = $target->find('items_id = ' . $this->getID());
+      $found  = array_shift($found);
+      $target->update(['id' => $found['id'], 'name' => $input['name']]);
+      $input['name'] = $input['title'];
+      unset($input['title']);
+
       return $input;
    }
 
@@ -1469,7 +1476,7 @@ EOS;
          foreach ($rows as $id => $question_line) {
             $uuid  = $question_line['uuid'];
 
-            $content = $target_data['name'];
+            $content = $target_data['title'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['name'] = $content;
@@ -1561,6 +1568,8 @@ EOS;
       unset($target_data['id'],
             $target_data['tickettemplates_id']);
 
+      $target_data['title'] = $target_data['name'];
+      unset($target_data['name']);
       return $target_data;
    }
 }

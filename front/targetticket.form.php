@@ -45,10 +45,6 @@ $targetticket = new PluginFormcreatorTargetTicket();
 
 // Edit an existing target ticket
 if (isset($_POST["update"])) {
-   $target = new PluginFormcreatorTarget();
-   $found  = $target->find('items_id = ' . (int) $_POST['id']);
-   $found  = array_shift($found);
-   $target->update(['id' => $found['id'], 'name' => $_POST['name']]);
    $targetticket->update($_POST);
    Html::back();
 
