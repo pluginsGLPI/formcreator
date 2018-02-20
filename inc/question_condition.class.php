@@ -91,6 +91,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
             $item = new static();
             $question = new PluginFormcreatorQuestion();
             $condition['show_field'] = plugin_formcreator_getFromDBByField($question, 'uuid', $condition['show_field']);
+            $condition['show_value'] = Toolbox::addslashes_deep($condition['show_value']);
             if (isset($condition['id'])) {
                $item->update($condition);
             } else {
