@@ -1065,7 +1065,7 @@ EOS;
          '_groups_id_assign'           => [],
       ];
 
-      $data   = [];
+      $data = Ticket::getDefaultValues();
       $ticket  = new Ticket();
       $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -1231,15 +1231,32 @@ EOS;
       }
 
       $data = $this->setTargetDueDate($data, $formanswer);
-
       $data = $this->setTargetUrgency($data, $formanswer);
-
       $data = $this->setTargetCategory($data, $formanswer);
-
       $data = $this->setTargetLocation($data, $formanswer);
 
-      $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
-      $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
+      // There is always at least one requester
+      $data = $data + $this->requesters;
+
+      // Overwrite default actors only if populated
+      if (count($this->observers['_users_id_observer']) > 0) {
+         $data = $data + $this->observers;
+      }
+      if (count($this->assigned['_users_id_assign']) > 0) {
+         $data = $data + $this->assigned;
+      }
+      if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
+         $data = $data + $this->assignedSuppliers;
+      }
+      if (count($this->requesterGroups['_groups_id_requester']) > 0) {
+         $data = $data + $this->requesterGroups;
+      }
+      if (count($this->observerGroups['_groups_id_observer']) > 0) {
+         $data = $data + $this->observerGroups;
+      }
+      if (count($this->assignedGroups['_groups_id_assign']) > 0) {
+         $data = $data + $this->assignedGroups;
+      }
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
