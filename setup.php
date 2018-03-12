@@ -63,6 +63,9 @@ function plugin_formcreator_check_config($verbose = false) {
 function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
+   // Add specific CSS
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
+
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
       array_push($CFG_GLPI['layout_excluded_pages'], "targetticket.form.php");
@@ -154,9 +157,6 @@ function plugin_init_formcreator() {
              || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
              || isset($_SESSION['glpiactiveprofile']) &&
                 $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-             // Add specific CSS
-            $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
             $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
