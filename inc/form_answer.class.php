@@ -1,4 +1,37 @@
 <?php
+/**
+ * LICENSE
+ *
+ * Copyright © 2011-2018 Teclib'
+ *
+ * This file is part of Formcreator Plugin for GLPI.
+ *
+ * Formcreator is a plugin that allow creation of custom, easy to access forms
+ * for users when they want to create one or more GLPI tickets.
+ *
+ * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * If not, see http://www.gnu.org/licenses/.
+ * ------------------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2018 Teclib
+ * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ------------------------------------------------------------------------------
+ */
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -610,14 +643,29 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
                // $answer_value may be still null if the field type is file and no file was uploaded
                if ($answer_value !== null) {
-                  // Update the answer to the question
-                  $questionId = $question->getID();
-                  $answer = new PluginFormcreatorAnswer();
-                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
-                  $answer->update([
-                     'id'     => $answer->getID(),
-                     'answer' => $answer_value,
-                  ], 0);
+                   /** issue #662 */
+                   if(is_array($answer_value)){
+                       foreach ($answer_value as $value){
+                           // Update the answer to the question
+                           $questionId = $question->getID();
+                           $answer = new PluginFormcreatorAnswer();
+                           $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
+                           $answer->update([
+                               'id'     => $answer->getID(),
+                               'answer' => $value,
+                           ], 0);
+                       }
+                   }else{
+                       // Update the answer to the question
+                       $questionId = $question->getID();
+                       $answer = new PluginFormcreatorAnswer();
+                       $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
+                       $answer->update([
+                           'id'     => $answer->getID(),
+                           'answer' => $answer_value,
+                       ], 0);
+                   }
+                   /** issue #662 */
                }
             }
          }
@@ -670,11 +718,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
             if ($answer_value !== null) {
                // Save the answer to the question
-               $answer->add([
-                  'plugin_formcreator_forms_answers_id'  => $id,
-                  'plugin_formcreator_questions_id'      => $question->getID(),
-                  'answer'                               => $answer_value,
-               ], [], 0);
+                /** issue #662 */
+                if(is_array($answer_value)){
+                    foreach ($answer_value as $val){
+                        $answer->add([
+                            'plugin_formcreator_forms_answers_id'  => $id,
+                            'plugin_formcreator_questions_id'      => $question->getID(),
+                            'answer'                               => $val,
+                        ], [], 0);
+                    }
+                }else{
+                    $answer->add([
+                        'plugin_formcreator_forms_answers_id'  => $id,
+                        'plugin_formcreator_questions_id'      => $question->getID(),
+                        'answer'                               => $answer_value,
+                    ], [], 0);
+                }
+                /** issue #662 */
             }
          }
          $is_newFormAnswer = true;
@@ -812,7 +872,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    /**
     *
     * @param array|string $value
-    * @return null|string
+    * @return null|string | array
     */
    private function transformAnswerValue(PluginFormcreatorQuestion $question, $value = null) {
       global $CFG_GLPI;
@@ -850,10 +910,16 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          } else {
             $answer_value = '';
          }
-      } else if ((isset($_POST['_formcreator_field_' . $question->getID()]['0']))
-                 && (is_file(GLPI_TMP_DIR . '/' . $_POST['_formcreator_field_' . $question->getID()]['0']))) {
-         $answer_value = $this->saveDocument($form, $question, $_POST['_formcreator_field_' . $question->getID()]['0']);
+      /** issue #662 */
+      } else if (isset($_POST['_formcreator_field_' . $question->getID()])) {
+          $documents = $_POST['_formcreator_field_' . $question->getID()];
+          foreach ($documents as $document){
+              if(is_file(GLPI_TMP_DIR . '/' . $document)){
+                  $answer_value[] = $this->saveDocument($form, $question, $document);
+              }
+          }
       }
+      /** issue #662 */
 
       return $answer_value;
    }
@@ -883,7 +949,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       if ($docID = $doc->add($file_data)) {
          $docID    = intval($docID);
          $table    = Document::getTable();
-         $filename = addslashes($file);
+         /** issue #662 */
+         $filename = substr(addslashes($file),23);
+         /** issue #662 */
          $query    = "UPDATE `$table` SET `filename` = '$filename'
                       WHERE `id` = '$docID'";
          $DB->query($query);

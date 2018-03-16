@@ -771,13 +771,14 @@ EOS;
                   $content = str_replace('##question_' . $id . '##', $name, $content);
                   if ($value !== '') {
                      $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
-
-                     // keep the ID of the document
-                     $this->attachedDocuments[$value] = true;
                   } else {
                      $content = str_replace('##answer_' . $id . '##', '', $content);
                   }
                }
+               /**  issue #662 */
+               // keep the ID of the document
+               $this->attachedDocuments[$value] = true;
+               /**  issue #662 */
             }
          }
       }
