@@ -535,7 +535,7 @@ function formcreatorChangeValueOf(field_id, value) {
    formcreatorShowFields();
 }
 function formcreatorAddValueOf(field_id, value) {
-   formcreatorQuestions[field_id] = value;
+   formcreatorQuestions['formcreator_field_' + field_id] = value;
 }
 
 function formcreatorShowFields() {
@@ -550,14 +550,14 @@ function formcreatorShowFields() {
       var i = 0;
       for (question in formcreatorQuestions) {
          if (questionToShow[question]) {
-            $('#form-group-field' + question).show();
+            $('#form-group-' + question).show();
             i++;
-            $('#form-group-field' + question).removeClass('line' + (i+1) % 2);
-            $('#form-group-field' + question).addClass('line' + i%2);
+            $('#form-group-' + question).removeClass('line' + (i+1) % 2);
+            $('#form-group-' + question).addClass('line' + i%2);
          } else {
-            $('#form-group-field' + question).hide();
-            $('#form-group-field' + question).removeClass('line0');
-            $('#form-group-field' + question).removeClass('line1');
+            $('#form-group-' + question).hide();
+            $('#form-group-' + question).removeClass('line0');
+            $('#form-group-' + question).removeClass('line1');
          }
       }
    });

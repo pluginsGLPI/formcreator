@@ -991,7 +991,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
 
       echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
-      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+      echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
       echo '<input type="hidden" name="uuid" value="' .$item->fields['uuid'] . '">';
       echo '</form>';
    }

@@ -291,7 +291,7 @@ class PluginFormcreatorFields
 
       // If the field is hidden by default, show it if condition is true
       if ($question->fields['show_rule'] == 'hidden') {
-         return $return;
+         return ($return == true);
 
          // else show it if condition is false
       } else {
