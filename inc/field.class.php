@@ -81,7 +81,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    public function show($canEdit = true) {
       $required = ($canEdit && $this->fields['required']) ? ' required' : '';
 
-      echo '<div class="form-group ' . $required . '" id="form-group-field' . $this->fields['id'] . '">';
+      echo '<div class="form-group ' . $required . '" id="form-group-formcreator_field_' . $this->fields['id'] . '">';
       echo '<label for="formcreator_field_' . $this->fields['id'] . '">';
       echo $this->getLabel();
       if ($canEdit && $this->fields['required']) {
