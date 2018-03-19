@@ -770,7 +770,7 @@ EOS;
                if (strpos($content, '##answer_' . $id . '##') !== false) {
                   $content = str_replace('##question_' . $id . '##', $name, $content);
                   if ($value !== '') {
-                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);                    
+                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
                   } else {
                      $content = str_replace('##answer_' . $id . '##', '', $content);
                   }
