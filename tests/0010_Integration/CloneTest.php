@@ -46,11 +46,14 @@ class CloneTest extends SuperAdminTestCase {
 
       //get cloned section
       $originalId = $section->getID();
-      $new_section->getFromDBByQuery("WHERE `name` = 'test clone section' AND `id` <> '$originalId'");
-
-      // check uuid
-      $this->assertNotEquals($section->getField('uuid'),
-                             $new_section->getField('uuid'));
+      $new_section->getFromDBByCrit([
+         'AND' => [
+            'name'                        => 'test clone section',
+            'NOT'                         => ['uuid' => $section->getField('uuid')], // operator <> available in GLPI 9.3+ only
+            'plugin_formcreator_forms_id' => $section->getField('plugin_formcreator_forms_id')
+         ]
+      ]);
+      $this->assertFalse($new_section->isNewItem());
 
       // check questions
       $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$section->getID());
@@ -83,10 +86,13 @@ class CloneTest extends SuperAdminTestCase {
 
       //get cloned section
       $originalId = $question->getID();
-      $new_question->getFromDBByQuery("WHERE `name` = 'test clone question 1' AND `id` <> '$originalId'");
-
-      // check uuid
-      $this->assertNotEquals($question->getField('uuid'),
-                             $new_question->getField('uuid'));
+      $new_question->getFromDBByCrit([
+          'AND' => [
+              'name'                           => 'test clone question 1',
+              'NOT'                            => ['uuid' => $question->getField('uuid')],  // operator <> available in GLPI 9.3+ only
+              'plugin_formcreator_sections_id' => $question->getField('plugin_formcreator_sections_id')
+          ]
+      ]);
+      $this->assertFalse($new_question->isNewItem());
    }
 }

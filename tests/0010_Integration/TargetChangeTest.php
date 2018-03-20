@@ -69,10 +69,20 @@ class TargetChangeTest extends SuperAdminTestCase {
       $observerActor = new PluginFormcreatorTargetChange_Actor();
       $targetChangeId = $targetChange->getID();
 
-      $requesterActor->getFromDBByQuery("WHERE `plugin_formcreator_targetchanges_id` = '$targetChangeId'
-            AND `actor_role` = 'requester' AND `actor_type` = 'creator'");
-      $observerActor->getFromDBByQuery("WHERE `plugin_formcreator_targetchanges_id` = '$targetChangeId'
-            AND `actor_role` = 'observer' AND `actor_type` = 'validator'");
+      $requesterActor->getFromDBByCrit([
+         'AND' => [
+            'plugin_formcreator_targetchanges_id' => $targetChangeId,
+            'actor_role'                          => 'requester',
+            'actor_type'                          => 'creator'
+         ]
+      ]);
+      $observerActor->getFromDBByCrit([
+         'AND' => [
+            'plugin_formcreator_targetchanges_id' => $targetChangeId,
+            'actor_role'                          => 'observer',
+            'actor_type'                          => 'validator'
+         ]
+      ]);
 
       $this->assertFalse($requesterActor->isNewItem());
       $this->assertFalse($observerActor->isNewItem());

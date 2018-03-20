@@ -646,7 +646,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   // Update the answer to the question
                   $questionId = $question->getID();
                   $answer = new PluginFormcreatorAnswer();
-                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
+                  $answer->getFromDBByCrit([
+                    'AND' => [
+                      'plugin_formcreator_forms_answers_id' => $formanswers_id,
+                      'plugin_formcreator_questions_id'     => $questionId
+                    ]
+                  ]);
                   $answer->update([
                      'id'     => $answer->getID(),
                      'answer' => $answer_value,
@@ -773,7 +778,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => '',
                   ]);
                } else {
-                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->getFromDBByCrit([
+                     'AND' => [
+                       'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                       'original_id'  => $formAnswerId
+                     ]
+                  ]);
                   $id = $this->getID();
                   $issue->update([
                      'id'              => $issue->getID(),
@@ -811,7 +821,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => addslashes($ticket->getField('content')),
                   ]);
                } else {
-                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->getFromDBByCrit([
+                    'AND' => [
+                      'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                      'original_id'  => $formAnswerId
+                    ]
+                  ]);
                   $issue->update([
                      'id'              => $issue->getID(),
                      'original_id'     => $ticketId,
@@ -829,7 +844,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          } else {
-            $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+            $issue->getFromDBByCrit([
+              'AND' => [
+                'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                'original_id'  => $formAnswerId
+              ]
+            ]);
             $issue->update([
                'id'              => $issue->getID(),
                'sub_itemtype'    => 'PluginFormcreatorForm_Answer',

@@ -1037,7 +1037,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       if (!isset($input['requesttype'])) {
          $requestType = new RequestType();
-         $requestType->getFromDBByQuery("WHERE `name` LIKE 'Formcreator'");
+         $requestType->getFromDBByCrit(['name' => ['LIKE' => 'Formcreator']]);
          $input['requesttype'] = $requestType->getID();
       }
 
@@ -1221,14 +1221,36 @@ class PluginFormcreatorForm extends CommonDBTM
    public  function getByQuestionId($questionId) {
       $table_sections = PluginFormcreatorSection::getTable();
       $table_questions = PluginFormcreatorQuestion::getTable();
-      $this->getFromDBByQuery(
+      if (!method_exists($this, 'getFromDBByRequest')) {
+         $this->getFromDBByQuery(
             "WHERE `id` = (
                 SELECT `plugin_formcreator_forms_id` FROM `$table_sections`
                 INNER JOIN `$table_questions`
                    ON `$table_questions`.`plugin_formcreator_sections_id` = `$table_sections`.`id`
                 WHERE `$table_questions`.`id` = '$questionId'
             )"
-      );
+         );
+      } else {
+         $this->getFromDBByRequest([
+            'INNER JOIN' => [
+               PluginFormcreatorSection::getTable() => [
+                  'FKEY' => [
+                     PluginFormcreatorForm::getTable()    => 'id',
+                     PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getForeignKeyField(),
+                  ]
+               ],
+               PluginFormcreatorQuestion::getTable() => [
+                  'FKEY' => [
+                     PluginFormcreatorQuestion::getTable() => PluginFormcreatorSection::getForeignKeyField(),
+                     PluginFormcreatorSection::getTable()  => 'id'
+                  ]
+               ]
+            ],
+            'WHERE' => [
+               PluginFormcreatorQuestion::getTable() . '.id' => $questionId,
+            ]
+         ]);
+      }
    }
 
    /**
@@ -1690,7 +1712,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function showImportForm() {
       $documentType = new DocumentType();
-      $jsonTypeExists = $documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'");
+      $jsonTypeExists = $documentType->getFromDBByCrit(['ext' => 'json']);
       $jsonTypeEnabled = $jsonTypeExists && $documentType->getField('is_uploadable');
       $canAddType = $documentType->canCreate();
       $canUpdateType = $documentType->canUpdate();
@@ -1887,7 +1909,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
    public function enableDocumentType() {
       $documentType = new DocumentType();
-      if (!$documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'")) {
+      if (!$documentType->getFromDBByCrit(['ext' => 'json'])) {
          Session::addMessageAfterRedirect(__('JSON document type not found', 'formcreator'));
       } else {
          $success = $documentType->update([
