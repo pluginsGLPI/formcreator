@@ -68,7 +68,12 @@ class QuestionConditionTest extends SuperAdminTestCase
             if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
                $showFieldName = $questionData['show_field'];
                $showfield = new PluginFormcreatorQuestion();
-               $showfield->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId' AND `name` = '$showFieldName'");
+               $showfield->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_sections_id' => $sectionId,
+                     'name'                           => $showFieldName
+                  ]
+               ]);
                $questionData['show_field'] = $showfield->getID();
                $question->updateConditions($questionData);
             }

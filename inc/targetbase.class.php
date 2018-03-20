@@ -155,7 +155,13 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       $targetItemtype = static::getType();
 
       $target = new PluginFormcreatorTarget();
-      if (!$target->getFromDBByQuery("WHERE `itemtype` = '$targetItemtype' AND `items_id` = '$targetItemId'")) {
+      $request = [
+         'AND' => [
+            'itemtype' => $targetItemtype,
+            'items_id' => $targetItemId
+         ]
+      ];
+      if (!$target->getFromDBByCrit($request)) {
          return null;
       } else {
          $form = new PluginFormcreatorForm();
@@ -204,8 +210,12 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_questions_id` = '$actorValue'
-                     AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
+               $answer->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_questions_id'     => $actorValue,
+                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                  ]
+               ]);
 
                if ($answer->isNewItem()) {
                   continue;
@@ -218,8 +228,12 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_questions_id` = '$actorValue'
-                     AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
+               $answer->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_questions_id'     => $actorValue,
+                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                  ]
+               ]);
 
                if ($answer->isNewItem()) {
                   continue;
