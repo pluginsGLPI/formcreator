@@ -908,8 +908,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       if ($docID = $doc->add($file_data)) {
          $docID    = intval($docID);
-         $table    = substr(addslashes($file), 23);
-         $filename = addslashes($file);
+         $table    = Document::getTable();
+         $filename = substr(addslashes($file),23);
          $query    = "UPDATE `$table` SET `filename` = '$filename'
                       WHERE `id` = '$docID'";
          $DB->query($query);
