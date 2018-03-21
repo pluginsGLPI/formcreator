@@ -11,6 +11,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          echo Html::file([
             'name'    => 'formcreator_field_' . $this->fields['id'],
             'display' => false,
+            'multiple' => 'multiple'
          ]);
 
       } else {
