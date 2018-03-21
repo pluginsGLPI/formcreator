@@ -43,13 +43,19 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          echo Html::file([
             'name'    => 'formcreator_field_' . $this->fields['id'],
             'display' => false,
+            'multiple' => 'multiple',
          ]);
 
       } else {
          $doc = new Document();
          $answer = $this->getAnswer();
-         if ($doc->getFromDB($answer)) {
-            echo $doc->getDownloadLink();
+         if (is_numeric($answer)) {
+            $answer = [$answer];
+         }
+         foreach ($answer as $item) {
+            if ($doc->getFromDB($item)) {
+               echo $doc->getDownloadLink();
+            }
          }
       }
    }
@@ -62,7 +68,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       }
 
       if (is_array($_POST['_formcreator_field_' . $this->fields['id']])
-         && count($_POST['_formcreator_field_' . $this->fields['id']]) === 1) {
+         && count($_POST['_formcreator_field_' . $this->fields['id']]) > 0) {
          $file = current($_POST['_formcreator_field_' . $this->fields['id']]);
          if (is_file(GLPI_TMP_DIR . '/' . $file)) {
             return true;
