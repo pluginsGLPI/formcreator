@@ -809,25 +809,27 @@ EOS;
                $name  = $question_line['name'];
                $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
-            if (is_array($value)) {
+
+            if ($question_line['fieldtype'] !== 'file') {
                if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);
                } else {
                   $value = "\r\n" . implode("\r\n", $value);
                }
-            }
-
-            if ($question_line['fieldtype'] !== 'file') {
                $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
                $content = str_replace('##answer_' . $id . '##', $value, $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
                   $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
-                  if ($value !== '') {
+                  if (!is_array($value)) {
+                     $value = [$value];
+                  }
+                  if (count($value)) {
                      $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
-
                      // keep the ID of the document
-                     $this->attachedDocuments[$value] = true;
+                     foreach ($value as $documentId) {
+                        $this->attachedDocuments[$documentId] = true;
+                     }
                   } else {
                      $content = str_replace('##answer_' . $id . '##', '', $content);
                   }

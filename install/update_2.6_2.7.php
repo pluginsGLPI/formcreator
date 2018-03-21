@@ -108,4 +108,28 @@ function plugin_formcreator_update_2_7(Migration $migration) {
       $values = json_encode($values);
       $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values`='$values' WHERE `id` = '$id'");
    }
+
+   // multiple files upload per field
+   $request = [
+      'SELECT' => 'glpi_plugin_formcreator_answers.*',
+      'FROM' => 'glpi_plugin_formcreator_answers',
+      'LEFT JOIN' => [
+         'glpi_plugin_formcreator_questions' => [
+            'FKEY' => [
+               'glpi_plugin_formcreator_questions' => 'id',
+               'glpi_plugin_formcreator_answers'   => 'plugin_formcreator_questions_id'
+            ]
+         ]
+      ],
+      'WHERE' => [
+         'fieldtype' => 'file',
+      ]
+   ];
+   foreach ($DB->request($request) as $row) {
+      if (!is_array(json_decode($row['answer']))) {
+         $id = $row['id'];
+         $answer = json_encode([$row['answer']]);
+         $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer` = '$answer' WHERE `id` = '$id'");
+      }
+   }
 }
