@@ -1109,7 +1109,7 @@ a.plugin_formcreator_formTile_title {
 #c_menu li label {
    display: inline-block;
 }
-.toggle_menu #c_menu li label {
+.toggle_menu #c_menu li span.label {
    display: none;
 }
 .toggle_menu .plugin_formcreator_leftHeader#header .plugin_formcreator_leftMenu {

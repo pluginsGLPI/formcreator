@@ -98,13 +98,13 @@ class PluginFormcreatorWizard {
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">';
       echo '<span class="fa fa-paper-plane-o fc_list_icon" title="'.__('Seek assistance', 'formcreator').'"></span>';
-      echo __('Seek assistance', 'formcreator');
+      echo '<span class="label">'.__('Seek assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php?reset=reset' . '">';
       echo '<span class="fa fa-list fc_list_icon" title="'.__('My requests for assistance', 'formcreator').'"></span>';
-      echo __('My requests for assistance', 'formcreator');
+      echo '<span class="label">'.__('My requests for assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
@@ -116,7 +116,7 @@ class PluginFormcreatorWizard {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
             echo '<span class="fa fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
-            echo __('Book an asset', 'formcreator');
+            echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
             echo '</a></li>';
          }
       }
@@ -125,7 +125,7 @@ class PluginFormcreatorWizard {
          echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
          echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">';
          echo '<span class="fa fa-rss fc_list_icon" title="'.__('Consult feeds', 'formcreator').'"></span>';
-         echo __('Consult feeds', 'formcreator');
+         echo '<span class="label">'.__('Consult feeds', 'formcreator').'</span>';
          echo '</a></li>';
       }
 
@@ -160,7 +160,7 @@ class PluginFormcreatorWizard {
                    'reloadonclose' => true]);
             echo '<a href="#" id="showSavedSearchesLink">';
             echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
-            echo '<label>'.__('Saved searches').'</label>';
+            echo '<span class="label">'.__('Saved searches').'</span>';
             echo '</a>';
             echo '</li>';
          }
@@ -170,7 +170,7 @@ class PluginFormcreatorWizard {
          echo '<li class="' . ($activeMenuItem == self::MENU_HELP ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_helpIcon">';
          echo '<a href="' . $CFG_GLPI["helpdesk_doc_url"] . '" target="_blank">';
          echo '<span class="fa fa-question fc_list_icon" title="' . __s('Help') . '"></span>';
-         echo __('Help');
+         echo '<span class="label">'.__('Help').'</span>';
          echo '</a>';
          echo '</li>';
       }
