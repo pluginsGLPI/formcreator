@@ -81,11 +81,6 @@ class PluginFormcreatorSection extends CommonDBChild
    public function prepareInputForAdd($input) {
       global $DB;
 
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // Control fields values :
       // - name is required
       if (!isset($input['name']) ||
@@ -121,11 +116,6 @@ class PluginFormcreatorSection extends CommonDBChild
     * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // Control fields values :
       // - name is required
       if (isset($input['name'])

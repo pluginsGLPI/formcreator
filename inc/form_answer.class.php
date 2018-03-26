@@ -1105,9 +1105,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             if ($CFG_GLPI['use_rich_text']) {
-               $output .= '<h2>'.$question_line['section_name'].'</h2>';
+               $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
             } else {
-               $output .= $eol . $question_line['section_name'] . $eol;
+               $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
                $output .= '---------------------------------';
                $output .= $eol;
             }
