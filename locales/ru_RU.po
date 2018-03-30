@@ -6,15 +6,15 @@
 # Alexey Petukhov <lexx015@gmail.com>, 2014-2015
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2014
 # Nikolay <techobsl@yandex.ru>, 2016
-# Nikolay <techobsl@yandex.ru>, 2016-2017
+# Nikolay <techobsl@yandex.ru>, 2016-2018
 # Nikolay <techobsl@yandex.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-02 16:17+0100\n"
-"PO-Revision-Date: 2018-01-02 14:06+0000\n"
-"Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
+"POT-Creation-Date: 2018-02-12 10:42+0100\n"
+"PO-Revision-Date: 2018-03-30 08:38+0000\n"
+"Last-Translator: Nikolay <techobsl@yandex.ru>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,19 +25,19 @@ msgstr ""
 #: hook.php:36 inc/category.class.php:13 inc/form.class.php:168
 msgid "Form category"
 msgid_plural "Form categories"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] "Категории формы"
-msgstr[3] ""
+msgstr[0] "Категория формы"
+msgstr[1] "Категории форм"
+msgstr[2] "Категории форм"
+msgstr[3] "Категории форм"
 
 #: setup.php:27 setup.php:147 ajax/homepage_link.php:6
 #: inc/entityconfig.class.php:27 inc/form.class.php:50 inc/form.class.php:495
-#: inc/form.class.php:1922 inc/form_answer.class.php:137
+#: inc/form.class.php:1921 inc/form_answer.class.php:133
 #: inc/formlist.class.php:17 js/scripts.js.php:19
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Форма"
-msgstr[1] "Форм"
+msgstr[1] "Формы"
 msgstr[2] "Формы"
 msgstr[3] "Формы"
 
@@ -50,7 +50,7 @@ msgstr "Формы ожидающие согласования"
 #: front/form_answer.form.php:54 front/form_answer.php:16
 #: front/form_answer.php:21 front/issue.php:16 front/issue.php:21
 #: front/targetchange.form.php:48 front/targetticket.form.php:48
-#: inc/form.class.php:2029 inc/form.class.php:2036
+#: inc/form.class.php:2028 inc/form.class.php:2035
 msgid "Form Creator"
 msgstr "Форма создания заявки"
 
@@ -58,11 +58,11 @@ msgstr "Форма создания заявки"
 #: front/issue.form.php:27 front/issue.php:12 front/knowbaseitem.form.php:15
 #: front/reservation.form.php:14 front/reservation.php:16
 #: front/reservationitem.php:12 front/wizard.php:14 front/wizardfeeds.php:15
-#: inc/form.class.php:2024
+#: inc/form.class.php:2023
 msgid "Service catalog"
 msgstr "Каталог услуг"
 
-#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:2026
+#: front/formlist.php:16 front/formlist.php:22 inc/form.class.php:2025
 msgid "Form list"
 msgstr "Список форм"
 
@@ -107,7 +107,7 @@ msgstr "Расширенный каталог услуг"
 msgid "Helpdesk mode"
 msgstr "Режим службы поддержки"
 
-#: inc/field.class.php:130 inc/fields/actorfield.class.php:146
+#: inc/field.class.php:146 inc/fields/actorfield.class.php:146
 #: inc/fields/checkboxesfield.class.php:75 inc/fields/datefield.class.php:46
 #: inc/fields/datetimefield.class.php:46
 #: inc/fields/glpiselectfield.class.php:27
@@ -133,7 +133,7 @@ msgstr "Личный доступ"
 
 #: inc/form.class.php:224 inc/form.class.php:285 inc/form_profile.class.php:38
 msgid "Restricted access"
-msgstr ""
+msgstr "Ограниченный доступ"
 
 #: inc/form.class.php:236 inc/form.class.php:293 inc/form.class.php:347
 msgid "All langages"
@@ -163,7 +163,7 @@ msgstr "Форма по умолчанию в каталоге услуг"
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Категория"
-msgstr[1] "Категория"
+msgstr[1] "Категории"
 msgstr[2] "Категории"
 msgstr[3] "Категории"
 
@@ -179,189 +179,189 @@ msgstr "По популярности"
 msgid "Alphabetic sort"
 msgstr "По алфавиту"
 
-#: inc/form.class.php:769
+#: inc/form.class.php:768
 msgid "Please, describe your need here"
 msgstr "Пожалуйста, опишите здесь, что Вам нужно"
 
-#: inc/form.class.php:778
+#: inc/form.class.php:777
 msgid "My last forms (requester)"
 msgstr "Мои последние формы (заказчик)"
 
-#: inc/form.class.php:788
+#: inc/form.class.php:787
 msgid "No form posted yet"
 msgstr "Еще не создано форм"
 
-#: inc/form.class.php:800
+#: inc/form.class.php:799
 msgid "All my forms (requester)"
 msgstr "Все мои формы (заказчик)"
 
-#: inc/form.class.php:810
+#: inc/form.class.php:809
 msgid "My last forms (validator)"
 msgstr "Мои последние формы (согласующий)"
 
-#: inc/form.class.php:830
+#: inc/form.class.php:829
 msgid "No form waiting for validation"
 msgstr "Нет форм для согласования"
 
-#: inc/form.class.php:848
+#: inc/form.class.php:847
 msgid "All my forms (validator)"
 msgstr "Все мои формы (согласующий)"
 
-#: inc/form.class.php:883 inc/form_answer.class.php:412
+#: inc/form.class.php:882 inc/form_answer.class.php:421
 msgid "Print this form"
-msgstr ""
+msgstr "Печать данной формы"
 
-#: inc/form.class.php:949
+#: inc/form.class.php:948
 msgid "Choose a validator"
 msgstr "Выбрать согласующего"
 
-#: inc/form.class.php:992 inc/target.class.php:114
+#: inc/form.class.php:991 inc/target.class.php:109
 msgid "The name cannot be empty!"
 msgstr "Требуется указать название!"
 
-#: inc/form.class.php:1149
+#: inc/form.class.php:1148
 msgid "You must select validator !"
 msgstr "Вы должны выбрать согласующего!"
 
-#: inc/form.class.php:1224
+#: inc/form.class.php:1223
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: inc/form.class.php:1511
+#: inc/form.class.php:1510
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Форма дубликата: %s"
 
-#: inc/form.class.php:1522
+#: inc/form.class.php:1521
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Форма передана: %s"
 
-#: inc/form.class.php:1668
+#: inc/form.class.php:1667
 msgid "Upload of JSON files not allowed."
-msgstr ""
+msgstr "Загрузка файлов JSON не разрешена."
+
+#: inc/form.class.php:1670
+msgid "You may allow JSON files right now."
+msgstr "Вы можете разрешить файлы JSON прямо сейчас."
 
 #: inc/form.class.php:1671
-msgid "You may allow JSON files right now."
-msgstr ""
-
-#: inc/form.class.php:1672
 msgctxt "button"
 msgid "Create"
-msgstr ""
+msgstr "Создать"
+
+#: inc/form.class.php:1674 inc/form.class.php:1685
+msgid "Please contact your GLPI administrator."
+msgstr "Пожалуйста, свяжитесь с администратором GLPI."
 
 #: inc/form.class.php:1675 inc/form.class.php:1686
-msgid "Please contact your GLPI administrator."
-msgstr ""
-
-#: inc/form.class.php:1676 inc/form.class.php:1687
 msgctxt "button"
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
-#: inc/form.class.php:1679
+#: inc/form.class.php:1678
 msgid "Upload of JSON files not enabled."
-msgstr ""
+msgstr "Загрузка файлов JSON не включена."
 
-#: inc/form.class.php:1682 inc/form.class.php:1685
+#: inc/form.class.php:1681 inc/form.class.php:1684
 msgid "You may enable JSON files right now."
-msgstr ""
+msgstr "Вы можете включить файлы JSON прямо сейчас."
 
-#: inc/form.class.php:1683
+#: inc/form.class.php:1682
 msgctxt "button"
 msgid "Enable"
-msgstr ""
+msgstr "Включить"
 
-#: inc/form.class.php:1765
+#: inc/form.class.php:1764
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Формы успешно импортированы из %s"
 
-#: inc/form.class.php:1852
+#: inc/form.class.php:1851
 msgid "Failed to create JSON document type"
-msgstr ""
+msgstr "Не удалось создать тип документа JSON"
 
-#: inc/form.class.php:1859
+#: inc/form.class.php:1858
 msgid "JSON document type not found"
-msgstr ""
+msgstr "Тип документа JSON не найден"
 
-#: inc/form.class.php:1866
+#: inc/form.class.php:1865
 msgid "Failed to update JSON document type"
-msgstr ""
+msgstr "Не удалось обновить тип документа JSON"
 
-#: inc/form.class.php:1926
+#: inc/form.class.php:1925
 msgid "Forms without category"
 msgstr "Формы без категорий"
 
 #: inc/form_answer.class.php:91 inc/issue.class.php:407
 msgid "Form answer"
 msgid_plural "Form answers"
-msgstr[0] "Ответ в форме"
-msgstr[1] "Ответы в форме"
-msgstr[2] "Ответ в форме"
-msgstr[3] "Форма ответов"
+msgstr[0] "Ответ формы"
+msgstr[1] "Ответы формы"
+msgstr[2] "Ответы формы"
+msgstr[3] "Ответы формы"
 
-#: inc/form_answer.class.php:157
+#: inc/form_answer.class.php:153
 msgid "Form approver"
-msgstr ""
+msgstr "Утверждающий формы"
 
-#: inc/form_answer.class.php:176
+#: inc/form_answer.class.php:172
 msgid "Form approver group"
-msgstr ""
+msgstr "Группа одобрения формы"
 
-#: inc/form_answer.class.php:255
+#: inc/form_answer.class.php:264
 msgid "waiting"
 msgstr "ожидание"
 
-#: inc/form_answer.class.php:256
+#: inc/form_answer.class.php:265
 msgid "accepted"
 msgstr "принято"
 
-#: inc/form_answer.class.php:257
+#: inc/form_answer.class.php:266
 msgid "refused"
 msgstr "отклонено"
 
-#: inc/form_answer.class.php:429
+#: inc/form_answer.class.php:438
 msgid "Form accepted by validator."
 msgstr "Форма принята согласующим."
 
-#: inc/form_answer.class.php:431
+#: inc/form_answer.class.php:440
 msgid "Form successfully saved."
 msgstr "Форма успешно сохранена."
 
-#: inc/form_answer.class.php:487
+#: inc/form_answer.class.php:496
 msgid "Comment"
 msgstr "Комментарий"
 
-#: inc/form_answer.class.php:492
+#: inc/form_answer.class.php:501
 msgid "Required if refused"
 msgstr "Требуется если отклонено"
 
-#: inc/form_answer.class.php:498
+#: inc/form_answer.class.php:507
 msgid "Refuse"
 msgstr "Отклонить"
 
-#: inc/form_answer.class.php:501
+#: inc/form_answer.class.php:510
 msgid "Accept"
 msgstr "Принять"
 
-#: inc/form_answer.class.php:516
+#: inc/form_answer.class.php:525
 msgid "Refused comment is required!"
 msgstr "Требуется комментарий для отклонения!"
 
-#: inc/form_answer.class.php:695
+#: inc/form_answer.class.php:704
 msgid "Cannot generate targets!"
 msgstr "Не удается выполнить задание!"
 
-#: inc/form_answer.class.php:800 inc/form_answer.class.php:968
+#: inc/form_answer.class.php:809 inc/form_answer.class.php:977
 msgid "The form has been successfully saved!"
 msgstr "Форма успешно сохранена!"
 
-#: inc/form_answer.class.php:910 inc/form_answer.class.php:933
+#: inc/form_answer.class.php:919 inc/form_answer.class.php:942
 msgid "You are not the validator of these answers"
 msgstr "Вы не согласующий этих ответов"
 
-#: inc/form_answer.class.php:1017 inc/form_answer.class.php:1019
+#: inc/form_answer.class.php:1026 inc/form_answer.class.php:1028
 msgid "Form data"
 msgstr "Форма данных"
 
@@ -389,13 +389,13 @@ msgstr "Пожалуйста, активную форму можно увиде�
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Проблема"
-msgstr[1] "Проблема"
+msgstr[1] "Проблемы"
 msgstr[2] "Проблемы"
 msgstr[3] "Проблемы"
 
 #: inc/issue.class.php:23
 msgid "Update issue data from tickets and form answers"
-msgstr ""
+msgstr "Обновление данных о проблемах из заявок и ответов на формы"
 
 #: inc/notificationtargetform_answer.class.php:14
 msgid "The form as been saved"
@@ -439,7 +439,7 @@ msgstr "Полная форма ответа"
 
 #: inc/notificationtargetform_answer.class.php:55
 msgid "Refused comment"
-msgstr ""
+msgstr "Комментарий отказа"
 
 #: inc/notificationtargetform_answer.class.php:56
 msgid "Validation link"
@@ -451,7 +451,7 @@ msgstr "Запрос #"
 
 #: inc/question.class.php:36 inc/targetbase.class.php:520
 #: inc/targetbase.class.php:590 inc/targetbase.class.php:671
-#: inc/targetbase.class.php:826 inc/targetchange.class.php:766
+#: inc/targetbase.class.php:823 inc/targetchange.class.php:766
 #: inc/targetticket.class.php:624
 msgid "Question"
 msgid_plural "Questions"
@@ -465,11 +465,11 @@ msgstr[3] "Вопросы"
 msgid "Delete"
 msgstr "Удалить"
 
-#: inc/question.class.php:175 inc/question.class.php:704
+#: inc/question.class.php:175 inc/question.class.php:702
 msgid "Required"
 msgstr "Обязательный"
 
-#: inc/question.class.php:204 inc/question.class.php:567
+#: inc/question.class.php:204 inc/question.class.php:565
 msgid "Add a question"
 msgstr "Добавить вопрос"
 
@@ -490,8 +490,8 @@ msgstr "Требуется указать тип поля"
 msgid "The section is required"
 msgstr "Требуется указать секцию"
 
-#: inc/question.class.php:263 inc/fields/checkboxesfield.class.php:106
-#: inc/fields/dropdownfield.class.php:81
+#: inc/question.class.php:263 inc/fields/checkboxesfield.class.php:117
+#: inc/fields/dropdownfield.class.php:98
 #: inc/fields/glpiselectfield.class.php:12 inc/fields/radiosfield.class.php:53
 #: inc/fields/selectfield.class.php:63
 msgid "The field value is required:"
@@ -499,13 +499,13 @@ msgstr "Требуется указать значение поля:"
 
 #: inc/question.class.php:287
 msgid "The regular expression is invalid"
-msgstr ""
+msgstr "Неправильное регулярное выражение"
 
-#: inc/question.class.php:567
+#: inc/question.class.php:565
 msgid "Edit a question"
 msgstr "Изменить вопрос"
 
-#: inc/question.class.php:603 inc/section.class.php:36
+#: inc/question.class.php:601 inc/section.class.php:36
 #: inc/targetchange.class.php:769 inc/targetticket.class.php:627
 msgid "Section"
 msgid_plural "Sections"
@@ -514,7 +514,7 @@ msgstr[1] "Секции"
 msgstr[2] "Секции"
 msgstr[3] "Секции"
 
-#: inc/question.class.php:630 inc/fields/glpiselectfield.class.php:5
+#: inc/question.class.php:628 inc/fields/glpiselectfield.class.php:5
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "Объект GLPI"
@@ -522,93 +522,93 @@ msgstr[1] "Объекты GLPI"
 msgstr[2] "Объекты GLPI"
 msgstr[3] "Объекты GLPI"
 
-#: inc/question.class.php:716
+#: inc/question.class.php:714
 msgid "Show empty"
 msgstr "Показывать пустой"
 
-#: inc/question.class.php:732
+#: inc/question.class.php:730
 msgid "Show ticket categories"
-msgstr ""
+msgstr "Показать категории заявок"
+
+#: inc/question.class.php:735
+msgid "Request categories"
+msgstr "Запрос категорий"
+
+#: inc/question.class.php:736
+msgid "Incident categories"
+msgstr "Категории инцидентов"
 
 #: inc/question.class.php:737
-msgid "Request categories"
-msgstr ""
-
-#: inc/question.class.php:738
-msgid "Incident categories"
-msgstr ""
-
-#: inc/question.class.php:739
 msgid "Both"
-msgstr ""
+msgstr "Оба"
 
-#: inc/question.class.php:748
+#: inc/question.class.php:746
 msgid "Limit ticket categories depth"
-msgstr ""
+msgstr "Ограничение высоты категорий заявок"
 
-#: inc/question.class.php:757
+#: inc/question.class.php:755
 msgid "No limit"
-msgstr ""
+msgstr "Без ограничений"
 
-#: inc/question.class.php:766
+#: inc/question.class.php:764
 msgid "One per line for lists"
 msgstr "По одному в каждой строке для списка"
 
-#: inc/question.class.php:800
+#: inc/question.class.php:798
 msgid "Values"
 msgstr "Значения"
 
-#: inc/question.class.php:801
+#: inc/question.class.php:799
 msgid "One per line"
 msgstr "По одному в каждой линии"
 
-#: inc/question.class.php:813
+#: inc/question.class.php:811
 msgid "Filter"
 msgstr "Фильтр"
 
-#: inc/question.class.php:824
+#: inc/question.class.php:822
 msgid "Attribute"
 msgstr "Атрибут"
 
-#: inc/question.class.php:848
+#: inc/question.class.php:846
 msgid "Range"
 msgstr "Диапазон"
 
-#: inc/question.class.php:853
+#: inc/question.class.php:851
 msgid "Min"
 msgstr "Минимум"
 
-#: inc/question.class.php:859
+#: inc/question.class.php:857
 msgid "Max"
 msgstr "Максимум"
 
-#: inc/question.class.php:885
+#: inc/question.class.php:883
 msgid "Additional validation"
 msgstr "Дополнительное согласование"
 
-#: inc/question.class.php:888
+#: inc/question.class.php:886
 msgid "Regular expression"
 msgstr "Регулярное выражение"
 
-#: inc/question.class.php:897
+#: inc/question.class.php:895
 msgid ""
 "Specify the additional validation conditions in the description of the "
 "question to help users."
 msgstr "Укажите дополнительные критерии согласования в описании вопроса для помощи пользователям."
 
-#: inc/question.class.php:905
+#: inc/question.class.php:903
 msgid "Show field"
 msgstr "Показать поле"
 
-#: inc/question.class.php:913
+#: inc/question.class.php:911
 msgid "Always displayed"
 msgstr "Всегда видим"
 
-#: inc/question.class.php:914
+#: inc/question.class.php:912
 msgid "Hidden unless"
 msgstr "Скрытые исключения"
 
-#: inc/question.class.php:915
+#: inc/question.class.php:913
 msgid "Displayed unless"
 msgstr "Показанные исключения"
 
@@ -629,14 +629,14 @@ msgid "Destinations"
 msgid_plural "Destinations"
 msgstr[0] "Назначение"
 msgstr[1] "Назначения"
-msgstr[2] "Назначений"
+msgstr[2] "Назначения"
 msgstr[3] "Назначения"
 
-#: inc/target.class.php:83 inc/target.class.php:305
+#: inc/target.class.php:83 inc/target.class.php:295
 msgid "Add a destination"
 msgstr "Добавить назначение"
 
-#: inc/target.class.php:120
+#: inc/target.class.php:115
 msgid "The type cannot be empty!"
 msgstr "Требуется указать тип!"
 
@@ -678,7 +678,7 @@ msgstr "Группа из вопроса"
 
 #: inc/target_actor.class.php:18
 msgid "Specific supplier"
-msgstr ""
+msgstr "Конкретный поставщик"
 
 #: inc/target_actor.class.php:19 inc/targetchange.class.php:746
 #: inc/targetticket.class.php:604
@@ -690,7 +690,7 @@ msgstr "Поставщик из вопроса"
 #: inc/targetticket.class.php:365 inc/targetticket.class.php:474
 #: inc/targetticket.class.php:593
 msgid "Actors from the question"
-msgstr ""
+msgstr "Участники из вопроса"
 
 #: inc/targetbase.class.php:45
 msgid "Current active entity"
@@ -758,11 +758,11 @@ msgstr "Получено из ответов на вопрос"
 
 #: inc/targetbase.class.php:77
 msgid "Urgency from template or Medium"
-msgstr ""
+msgstr "Срочность из шаблона или Средняя"
 
 #: inc/targetbase.class.php:78 inc/targetchange.class.php:15
 msgid "Specific urgency"
-msgstr ""
+msgstr "Конкретная срочность"
 
 #: inc/targetbase.class.php:79 inc/targetbase.class.php:87
 #: inc/targetbase.class.php:95 inc/targetchange.class.php:16
@@ -772,19 +772,19 @@ msgstr "Точный ответ на вопрос"
 
 #: inc/targetbase.class.php:85
 msgid "Category from template or none"
-msgstr ""
+msgstr "Категория из шаблона или ничего"
 
 #: inc/targetbase.class.php:86 inc/targetchange.class.php:23
 msgid "Specific category"
-msgstr ""
+msgstr "Конкретная категория"
 
 #: inc/targetbase.class.php:93
 msgid "Location from template or none"
-msgstr ""
+msgstr "Местоположение из шаблона или ничего"
 
 #: inc/targetbase.class.php:94
 msgid "Specific location"
-msgstr ""
+msgstr "Конкретное местоположение"
 
 #: inc/targetbase.class.php:340
 msgid "User type question"
@@ -796,11 +796,11 @@ msgstr "Организация запрашивающего"
 
 #: inc/targetbase.class.php:486
 msgid "Ticket category"
-msgstr ""
+msgstr "Категория заявки"
 
 #: inc/targetbase.class.php:591
 msgid "Urgency "
-msgstr ""
+msgstr "Срочно"
 
 #: inc/targetbase.class.php:630
 msgid "Ticket tags"
@@ -810,29 +810,29 @@ msgstr "Тэги заявки"
 msgid "Tags"
 msgstr "Тэги"
 
-#: inc/targetbase.class.php:776
+#: inc/targetbase.class.php:773
 msgid "Attached document"
-msgstr ""
+msgstr "Прикрепленный документ"
 
-#: inc/targetbase.class.php:827
+#: inc/targetbase.class.php:824
 msgid "Location "
-msgstr ""
+msgstr "Местоположение"
 
 #: inc/targetchange.class.php:9 inc/targetchange.class.php:197
 msgid "Target change"
 msgid_plural "Target changes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Целевое изменение"
+msgstr[1] "Целевые изменения"
+msgstr[2] "Целевые изменения"
+msgstr[3] "Целевые изменения"
 
 #: inc/targetchange.class.php:14
 msgid "Medium"
-msgstr ""
+msgstr "Средний"
 
 #: inc/targetchange.class.php:22
 msgid "None"
-msgstr ""
+msgstr "Ничего"
 
 #: inc/targetchange.class.php:185 inc/targetticket.class.php:65
 msgid "Edit a destination"
@@ -840,7 +840,7 @@ msgstr "Изменить назначение"
 
 #: inc/targetchange.class.php:200
 msgid "Change title"
-msgstr ""
+msgstr "Изменить заголовок"
 
 #: inc/targetchange.class.php:294 inc/targetticket.class.php:152
 msgid "Cancel"
@@ -848,7 +848,7 @@ msgstr "Отменить"
 
 #: inc/targetchange.class.php:377
 msgid "Change actors"
-msgstr ""
+msgstr "Изменить участников"
 
 #: inc/targetchange.class.php:773 inc/targetticket.class.php:631
 msgid "Full form"
@@ -865,10 +865,10 @@ msgstr "Требуется указать описание!"
 #: inc/targetticket.class.php:9 inc/targetticket.class.php:77
 msgid "Target ticket"
 msgid_plural "Target tickets"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Целевая заявка"
+msgstr[1] "Целевые заявки"
 msgstr[2] "Целевые заявки"
-msgstr[3] ""
+msgstr[3] "Целевые заявки"
 
 #: inc/targetticket.class.php:80
 msgid "Ticket title"
@@ -884,33 +884,33 @@ msgstr "Участники заявки"
 
 #: inc/targetticket.class.php:669
 msgid "Link to an other ticket"
-msgstr ""
+msgstr "Связать с другой заявкой"
 
 #: inc/targetticket.class.php:678
 msgid "An other destination of this form"
-msgstr ""
+msgstr "Другое место назначения этой формы"
 
 #: inc/targetticket.class.php:679
 msgid "An existing ticket"
-msgstr ""
+msgstr "Существующая заявка"
 
-#: inc/targetticket.class.php:909
+#: inc/targetticket.class.php:907
 msgid "Invalid link type"
-msgstr ""
+msgstr "Недопустимый тип связи"
 
-#: inc/targetticket.class.php:925
+#: inc/targetticket.class.php:923
 msgid "Invalid linked item type"
-msgstr ""
+msgstr "Недопустимый тип связанного элемента"
 
-#: inc/targetticket.class.php:938
+#: inc/targetticket.class.php:936
 msgid "Linked item does not exists"
-msgstr ""
+msgstr "Связанный элемент не существует"
 
-#: inc/targetticket.class.php:951
+#: inc/targetticket.class.php:949
 msgid "Failed to link the item"
-msgstr ""
+msgstr "Не удалось связать элемент"
 
-#: inc/targetticket.class.php:1271 install/install.php:257
+#: inc/targetticket.class.php:1269 install/install.php:257
 msgid "Your form has been accepted by the validator"
 msgstr "Ваша форма была принята согласующим"
 
@@ -941,14 +941,14 @@ msgstr "Закрыто"
 #: inc/fields/actorfield.class.php:7
 msgid "Actor"
 msgid_plural "Actors"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Участник"
+msgstr[1] "Участники"
+msgstr[2] "Участники"
+msgstr[3] "Участники"
 
 #: inc/fields/actorfield.class.php:152
 msgid "Invalid value:"
-msgstr ""
+msgstr "Неверное значение:"
 
 #: inc/fields/checkboxesfield.class.php:82
 #: inc/fields/multiselectfield.class.php:19
@@ -974,9 +974,9 @@ msgstr "Дата и время"
 msgid "A description field should have a description:"
 msgstr "Поле с описанием должно содержать описание:"
 
-#: inc/fields/dropdownfield.class.php:92
+#: inc/fields/dropdownfield.class.php:109
 msgid "Invalid dropdown type:"
-msgstr ""
+msgstr "Недопустимый тип выпадающего списка:"
 
 #: inc/fields/emailfield.class.php:25
 msgid "This is not a valid e-mail:"
@@ -1025,7 +1025,7 @@ msgstr "Выбор LDAP"
 msgid "Cannot recover LDAP informations!"
 msgstr "Невозможно получить информацию из LDAP!"
 
-#: inc/fields/multiselectfield.class.php:71
+#: inc/fields/multiselectfield.class.php:102
 msgid "Multiselect"
 msgstr "Множественный выбор"
 
@@ -1037,13 +1037,13 @@ msgstr "Переключатель"
 msgid "Select"
 msgstr "Выбор"
 
-#: inc/fields/tagfield.class.php:61
+#: inc/fields/tagfield.class.php:65
 msgid "Tag"
 msgid_plural "Tags"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Метка"
+msgstr[1] "Метки"
+msgstr[2] "Метки"
+msgstr[3] "Метки"
 
 #: inc/fields/textareafield.class.php:29
 msgid "Textarea"
@@ -1080,7 +1080,7 @@ msgstr "Здравствуйте,\\nВаш запрос формы GLPI был �
 
 #: install/install.php:245
 msgid "A form from GLPI need to be validate"
-msgstr ""
+msgstr "Форма из GLPI должна быть подтверждена"
 
 #: install/install.php:246
 msgid ""
@@ -1119,7 +1119,7 @@ msgstr "Здравствуйте,\\nМы сожалеем сообщить Ва�
 
 #: install/install.php:462 install/update_0.0_2.5.php:383
 msgid "Formcreator - Sync service catalog issues"
-msgstr ""
+msgstr "Formcreator - Проблемы каталога службы синхронизации"
 
 #: js/scripts.js.php:263
 msgid "No form found. Please choose a form below instead"
