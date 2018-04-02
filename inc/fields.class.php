@@ -76,7 +76,7 @@ class PluginFormcreatorFields
       foreach (array_keys($tab_field_types) as $field_type) {
          $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
-         if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
+         if ($classname == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
             continue;
          }
 
