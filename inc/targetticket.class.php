@@ -1094,7 +1094,7 @@ EOS;
          unset($predefined_fields['_groups_id_requester']);
       }
       if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_observer']);
+         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
          unset($predefined_fields['_groups_id_observer']);
       }
       if (isset($predefined_fields['_groups_id_assign'])) {
