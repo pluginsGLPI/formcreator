@@ -1236,26 +1236,26 @@ EOS;
       $data = $this->setTargetLocation($data, $formanswer);
 
       // There is always at least one requester
-      $data = $data + $this->requesters;
+      $data = $this->requesters + $data;
 
       // Overwrite default actors only if populated
       if (count($this->observers['_users_id_observer']) > 0) {
-         $data = $data + $this->observers;
+         $data = $this->observers + $data;
       }
       if (count($this->assigned['_users_id_assign']) > 0) {
-         $data = $data + $this->assigned;
+         $data = $this->assigned + $data;
       }
       if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
-         $data = $data + $this->assignedSuppliers;
+         $data = $this->assignedSuppliers + $data;
       }
       if (count($this->requesterGroups['_groups_id_requester']) > 0) {
-         $data = $data + $this->requesterGroups;
+         $data = $this->requesterGroups + $data;
       }
       if (count($this->observerGroups['_groups_id_observer']) > 0) {
-         $data = $data + $this->observerGroups;
+         $data = $this->observerGroups + $data;
       }
       if (count($this->assignedGroups['_groups_id_assign']) > 0) {
-         $data = $data + $this->assignedGroups;
+         $data = $this->assignedGroups + $data;
       }
 
       // Create the target ticket
