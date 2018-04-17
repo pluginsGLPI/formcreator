@@ -430,7 +430,7 @@ class PluginFormcreatorInstall {
       $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
 
       $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(['itemtype' => 'PluginFormCreatorIssue']);
+      $displayPreference->deleteByCriteria(['itemtype' => PluginFormcreatorIssue::class]);
    }
 
    /**
