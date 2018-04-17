@@ -77,7 +77,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=[]) {
+   public function showForm($options = []) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -556,21 +556,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</div>';
 
       echo '<div id="block_assigned_question_group" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
+      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_actors" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
             'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_supplier" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, array(
+      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div>';

@@ -43,13 +43,13 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
    const APPROVER = 102;
 
    public function getEvents() {
-      $events = array (
+      $events = [
          'plugin_formcreator_form_created'    => __('The form as been saved', 'formcreator'),
          'plugin_formcreator_need_validation' => __('A form need to be validate', 'formcreator'),
          'plugin_formcreator_refused'         => __('The form is refused', 'formcreator'),
          'plugin_formcreator_accepted'        => __('The form is accepted', 'formcreator'),
          'plugin_formcreator_deleted'         => __('The form is deleted', 'formcreator'),
-      );
+      ];
       return $events;
    }
 
@@ -98,7 +98,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       }
    }
 
-   public function addAdditionalTargets($event='') {
+   public function addAdditionalTargets($event = '') {
       $this->addTarget(self::AUTHOR, __('Author'));
       $this->addTarget(self::APPROVER, __('Approver'));
    }

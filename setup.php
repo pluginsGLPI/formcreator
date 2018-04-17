@@ -23,7 +23,7 @@ function plugin_version_formcreator() {
       echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
-   return array(
+   return [
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
@@ -35,7 +35,7 @@ function plugin_version_formcreator() {
             'dev'            => true
          ]
       ]
-   );
+   ];
 }
 
 /**

@@ -4,36 +4,36 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
    public function setUp() {
       parent::setUp();
 
-      $this->formData = array(
+      $this->formData = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_USER,
-      );
+      ];
 
-      $this->sectionData = array(
+      $this->sectionData = [
             'name'                  => 'a section',
-      );
+      ];
 
-      $this->userValidatorData = array(
+      $this->userValidatorData = [
             'itemtype'              => 'User',
             'users_id'              => '2', // user is glpi
-      );
+      ];
 
-      $this->formAnswersData = array(
+      $this->formAnswersData = [
             'status'                => 'waiting',
             'formcreator_validator' => '2',
-      );
+      ];
 
-      $this->otherValidatorUser = array(
+      $this->otherValidatorUser = [
             'name'                  => 'superadmin',
             'password'              => 'superadmin',
             '_profiles_id'          => '4',
             '_entities_id'          => 0,
             '_is_recursive'         => 1,
-      );
+      ];
    }
 
    public function testInitCreateForm() {
@@ -50,9 +50,9 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
     */
    public function testInitCreateSection(PluginFormcreatorForm $form) {
       $section = new PluginFormcreatorSection();
-      $this->sectionData = $this->sectionData + array(
+      $this->sectionData = $this->sectionData + [
             'plugin_formcreator_forms_id' => $form->getID()
-      );
+      ];
       $section->add($this->sectionData);
       $this->assertFalse($section->isNewItem());
 
@@ -67,7 +67,7 @@ class FormAnswerValidationTest extends SuperAdminTestCase {
       $formValidator = new PluginFormcreatorForm_Validator();
       $formValidator->add(
           $this->userValidatorData
-          + array('plugin_formcreator_forms_id' => $form->getID())
+          + ['plugin_formcreator_forms_id' => $form->getID()]
       );
       $this->assertFalse($formValidator->isNewItem());
 

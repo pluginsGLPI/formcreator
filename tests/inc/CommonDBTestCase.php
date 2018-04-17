@@ -1,7 +1,7 @@
 <?php
 class CommonDBTestCase extends PHPUnit\Framework\TestCase {
 
-   protected static function drop_database($dbuser='', $dbhost='', $dbdefault='', $dbpassword='') {
+   protected static function drop_database($dbuser = '', $dbhost = '', $dbdefault = '', $dbpassword = '') {
 
       $cmd = self::construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysql');
 
@@ -19,19 +19,19 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
             $returncode
             );
       array_unshift($output, "Output of '{$cmd}'");
-      return array(
+      return [
             'returncode'=>$returncode,
             'output' => $output
-      );
+      ];
    }
 
-   protected static function load_mysql_file($dbuser='', $dbhost='', $dbdefault='', $dbpassword='', $file = NULL) {
+   protected static function load_mysql_file($dbuser = '', $dbhost = '', $dbdefault = '', $dbpassword = '', $file = null) {
 
       if (!file_exists($file)) {
-         return array(
+         return [
                'returncode' => 1,
-               'output' => array("ERROR: File '{$file}' does not exist !")
-         );
+               'output' => ["ERROR: File '{$file}' does not exist !"]
+         ];
       }
 
       $result = self::construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysql');
@@ -50,24 +50,24 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
             $returncode
             );
       array_unshift($output, "Output of '{$cmd}'");
-      return array(
+      return [
             'returncode'=>$returncode,
             'output' => $output
-      );
+      ];
    }
 
-   protected static function construct_mysql_options($dbuser='', $dbhost='', $dbpassword='', $cmd_base='mysql') {
+   protected static function construct_mysql_options($dbuser = '', $dbhost = '', $dbpassword = '', $cmd_base = 'mysql') {
       $cmd = [];
 
       if (empty($dbuser) || empty($dbhost)) {
-         return array(
+         return [
                'returncode' => 2,
-               'output' => array("ERROR: missing mysql parameters (user='{$dbuser}', host='{$dbhost}')")
-         );
+               'output' => ["ERROR: missing mysql parameters (user='{$dbuser}', host='{$dbhost}')"]
+         ];
       }
-      $cmd = array($cmd_base);
+      $cmd = [$cmd_base];
 
-      if (strpos($dbhost, ':') !== FALSE) {
+      if (strpos($dbhost, ':') !== false) {
          $dbhost = explode( ':', $dbhost);
          if (!empty($dbhost[0])) {
             $cmd[] = "--host ".$dbhost[0];
@@ -91,19 +91,19 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
       return implode(' ', $cmd);
    }
 
-   protected static function mysql_dump($dbuser = '', $dbhost = '', $dbpassword = '', $dbdefault = '', $file = NULL) {
+   protected static function mysql_dump($dbuser = '', $dbhost = '', $dbpassword = '', $dbdefault = '', $file = null) {
       if (is_null($file) or empty($file)) {
-         return array(
+         return [
                'returncode' => 1,
-               'output' => array("ERROR: mysql_dump()'s file argument must neither be null nor empty")
-         );
+               'output' => ["ERROR: mysql_dump()'s file argument must neither be null nor empty"]
+         ];
       }
 
       if (empty($dbdefault)) {
-         return array(
+         return [
                'returncode' => 2,
-               'output' => array("ERROR: mysql_dump() is missing dbdefault argument.")
-         );
+               'output' => ["ERROR: mysql_dump() is missing dbdefault argument."]
+         ];
       }
 
       $result = self::construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysqldump');
@@ -120,10 +120,10 @@ class CommonDBTestCase extends PHPUnit\Framework\TestCase {
             $returncode
             );
       array_unshift($output, "Output of '{$cmd}'");
-      return array(
+      return [
             'returncode'=>$returncode,
             'output' => $output
-      );
+      ];
    }
 
    protected static function setupGLPIFramework() {

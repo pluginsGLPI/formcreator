@@ -9,47 +9,47 @@ class UrgencyTest extends SuperAdminTestCase
    public function setUp() {
       parent::setUp();
 
-      $this->formData = array(
+      $this->formData = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => 0
-      );
+      ];
 
-      $this->sectionData = array(
-            array(
+      $this->sectionData = [
+            [
                   'name'                  => 'a section',
-                  'questions'             => array (
-                        array(
+                  'questions'             =>  [
+                        [
                               'name'                  => 'text question',
                               'fieldtype'             => 'text'
-                        ),
-                        array(
+                        ],
+                        [
                               'name'                  => 'custom urgency',
                               'fieldtype'             => 'urgency'
-                        ),
-                  ),
-            ),
-      );
+                        ],
+                  ],
+            ],
+      ];
 
-      $this->targetTicketData = array(
-         array(
+      $this->targetTicketData = [
+         [
                'name'                  => 'target 1',
                'itemtype'              => 'PluginFormcreatorTargetTicket',
                'urgency_rule'          => 'answer',
                'urgency_question'      => 'custom urgency',
                'expected'              => 5
-         ),
-         array(
+         ],
+         [
                'name'                  => 'target 2',
                'itemtype'              => 'PluginFormcreatorTargetTicket',
                'urgency_rule'          => 'none',
                'urgency_question'      => '',
                'expected'              => 3
-         )
-      );
+         ]
+      ];
    }
 
    public function testInitCreateForm() {
@@ -150,17 +150,17 @@ class UrgencyTest extends SuperAdminTestCase
             }
             $this->assertFalse($question->isNewItem());
             $questionId = $question->getID();
-            $urgencyQuestions[] = array(
+            $urgencyQuestions[] = [
                   'question'     => $question,
                   'targetTicket' => $targetTicket,
                   'expected'     => $targetData['expected']
-            );
+            ];
          } else {
-            $urgencyQuestions[] = array(
+            $urgencyQuestions[] = [
                   'question'     => null,
                   'targetTicket' => $targetTicket,
                   'expected'     => $targetData['expected']
-            );
+            ];
          }
 
          // Update target ticket

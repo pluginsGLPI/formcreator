@@ -68,7 +68,7 @@ class PluginInstallTest extends CommonTestCase
 
       //Drop plugin configuration if exists
       $config = new Config();
-      $config->deleteByCriteria(array('context' => 'formcreator'));
+      $config->deleteByCriteria(['context' => 'formcreator']);
 
       // Drop tables of the plugin if they exist
       $query = 'SHOW TABLES';

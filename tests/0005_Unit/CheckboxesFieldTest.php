@@ -3,9 +3,9 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
 
    public function provider() {
 
-      $dataset = array(
-            array(
-                  'fields'          => array(
+      $dataset = [
+            [
+                  'fields'          => [
                         'fieldtype'       => 'checkboxes',
                         'name'            => 'question',
                         'required'        => '0',
@@ -13,13 +13,13 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
                         'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => [''],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'checkboxes',
                         'name'            => 'question',
                         'required'        => '0',
@@ -27,13 +27,13 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
                         'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('2'),
+                  'expectedValue'   => ['2'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'checkboxes',
                         'name'            => 'question',
                         'required'        => '0',
@@ -41,13 +41,13 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
                         'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3', '5'),
+                  'expectedValue'   => ['3', '5'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'checkboxes',
                         'name'            => 'question',
                         'required'        => '0',
@@ -57,13 +57,13 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3', '5'),
+                  'expectedValue'   => ['3', '5'],
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'checkboxes',
                         'name'            => 'question',
                         'required'        => '0',
@@ -73,13 +73,13 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3', '5', '6'),
+                  'expectedValue'   => ['3', '5', '6'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'checkboxes',
                         'name'            => 'question',
                         'required'        => '0',
@@ -89,12 +89,12 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('1', '2', '3', '5', '6'),
+                  'expectedValue'   => ['1', '2', '3', '5', '6'],
                   'expectedIsValid' => false
-            ),
-      );
+            ],
+      ];
 
       return $dataset;
    }
@@ -140,7 +140,7 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
    }
 
    public function testPrepareInputForSave() {
-      $fields = array(
+      $fields = [
          'fieldtype'       => 'checkboxes',
          'name'            => 'question',
          'required'        => '0',
@@ -150,7 +150,7 @@ class CheckboxesFieldTest extends SuperAdminTestCase {
          'show_rule'       => 'always',
          'range_min'       => 3,
          'range_max'       => 4,
-      );
+      ];
       $fieldInstance = new PluginFormcreatorCheckboxesField($fields);
 
       // Test a value is mandatory

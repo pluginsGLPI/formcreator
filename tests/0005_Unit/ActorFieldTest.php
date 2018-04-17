@@ -6,9 +6,9 @@ class ActorFieldTest extends SuperAdminTestCase {
       $user = new User();
       $user->getFromDBbyName('glpi');
       $userId = $user->getID();
-      $dataset = array(
-            array(
-                  'fields'          => array(
+      $dataset = [
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -16,13 +16,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => [''],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -30,13 +30,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => 'glpi',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => [''],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -44,13 +44,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => [''],
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -58,13 +58,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => [''],
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -72,13 +72,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('email@something.com'),
+                  'expectedValue'   => ['email@something.com'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -86,13 +86,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('glpi', 'email@something.com'),
+                  'expectedValue'   => ['glpi', 'email@something.com'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -100,13 +100,13 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('glpi', 'email@something.com'),
+                  'expectedValue'   => ['glpi', 'email@something.com'],
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'actor',
                         'name'            => 'question',
                         'required'        => '0',
@@ -114,12 +114,12 @@ class ActorFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('glpi', 'email@something.com'),
+                  'expectedValue'   => ['glpi', 'email@something.com'],
                   'expectedIsValid' => false
-            ),
-      );
+            ],
+      ];
 
       return $dataset;
    }

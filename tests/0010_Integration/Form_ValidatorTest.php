@@ -4,27 +4,27 @@ class Form_ValidatorTest extends SuperAdminTestCase {
    public function setUp() {
       parent::setUp();
 
-      $this->formDataForGroup = array(
+      $this->formDataForGroup = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form for group validator',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_GROUP
-      );
+      ];
 
-      $this->formDataForUser = array(
+      $this->formDataForUser = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form for user validator',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => PluginFormcreatorForm_Validator::VALIDATION_USER
-      );
-      $this->groupData = array(
+      ];
+      $this->groupData = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'completename'          => 'a group',
-      );
+      ];
    }
 
    public function testInitCreateGroup() {
@@ -41,9 +41,9 @@ class Form_ValidatorTest extends SuperAdminTestCase {
     * @return PluginFormcreatorForm
     */
    public function testCreateFormForGroup(Group $group) {
-      $this->formDataForGroup = $this->formDataForGroup + array(
-            '_validator_groups'     => array($group->getID())
-      );
+      $this->formDataForGroup = $this->formDataForGroup + [
+            '_validator_groups'     => [$group->getID()]
+      ];
       $form = new PluginFormcreatorForm();
       $formId = $form->add($this->formDataForGroup);
       $this->assertFalse($form->isNewItem());
@@ -63,9 +63,9 @@ class Form_ValidatorTest extends SuperAdminTestCase {
       $user->getFromDBbyName('tech');
       $this->assertFalse($user->isNewItem());
 
-      $this->formDataForUser = $this->formDataForUser + array(
-            '_validator_users'     => array($user->getID())
-      );
+      $this->formDataForUser = $this->formDataForUser + [
+            '_validator_users'     => [$user->getID()]
+      ];
       $form = new PluginFormcreatorForm();
       $formId = $form->add($this->formDataForUser);
       $this->assertFalse($form->isNewItem());

@@ -231,7 +231,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return String                 Html string to be displayed for the form field
     **/
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options=[]) {
+   public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
 
       if (!is_array($values)) {
          $values = [$field => $values];
@@ -339,7 +339,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($ID, $options=[]) {
+   public function showForm($ID, $options = []) {
       global $DB;
 
       $this->initForm($ID, $options);
@@ -513,7 +513,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "PluginFormcreatorConfig":
             $object  = new self;
@@ -542,7 +542,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       $uri = strrchr($_SERVER['HTTP_REFERER'], '/');
       if (strpos($uri, '?')) {
          $uri = substr($uri, 0, strpos($uri, '?'));
@@ -563,7 +563,7 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
 
-   public function defineTabs($options=[]) {
+   public function defineTabs($options = []) {
       $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
@@ -1557,7 +1557,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
    **/
-   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,  array $ids) {
+   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
       switch ($ma->getAction()) {
          case 'Duplicate' :
             foreach ($ids as $id) {
@@ -1723,22 +1723,22 @@ class PluginFormcreatorForm extends CommonDBTM
             if ($canAddType) {
                $destination = PluginFormcreatorForm::getFormURL();
                $message .= __('You may allow JSON files right now.', 'formcreator');
-               $button = Html::submit(_x('button', 'Create', 'formcreator'), array('name' => 'filetype_create'));
+               $button = Html::submit(_x('button', 'Create', 'formcreator'), ['name' => 'filetype_create']);
             } else {
                $destination = PluginFormcreatorForm::getSearchURL();
                $message .= __('Please contact your GLPI administrator.', 'formcreator');
-               $button = Html::submit(_x('button', 'Back', 'formcreator'), array('name' => 'filetype_back'));
+               $button = Html::submit(_x('button', 'Back', 'formcreator'), ['name' => 'filetype_back']);
             }
          } else {
             $message = __('Upload of JSON files not enabled.', 'formcreator');
             if ($canUpdateType) {
                $destination = PluginFormcreatorForm::getFormURL();
                $message .= __('You may enable JSON files right now.', 'formcreator');
-               $button = Html::submit(_x('button', 'Enable', 'formcreator'), array('name' => 'filetype_enable'));
+               $button = Html::submit(_x('button', 'Enable', 'formcreator'), ['name' => 'filetype_enable']);
             } else {
                $message .= __('You may enable JSON files right now.', 'formcreator');
                $message .= __('Please contact your GLPI administrator.', 'formcreator');
-               $button = Html::submit(_x('button', 'Back', 'formcreator'), array('name' => 'filetype_back'));
+               $button = Html::submit(_x('button', 'Back', 'formcreator'), ['name' => 'filetype_back']);
             }
          }
          echo '<div class="spaced" id="tabsbody">';
