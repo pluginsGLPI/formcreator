@@ -97,8 +97,14 @@ class RoboFile extends RoboFilePlugin
 
       $this->updateChangelog();
 
-      $this->gitCommit(['package.json', 'composer.json'], "build: bump version in JSON files");
-      $this->gitCommit(['CHANGELOG.md'], "build(changelog): update changelog");
+      $this->taskGitStack()
+         ->stopOnFail()
+         ->add('package.json')
+         ->add('composer.json')
+         ->commit('build: bump version in JSON files')
+         ->add('CHANGELOG.md')
+         ->commit('build(changelog): update changelog')
+         ->run();
 
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
@@ -216,29 +222,6 @@ class RoboFile extends RoboFilePlugin
       }
 
       return false;
-   }
-
-   /**
-    * @param array $files files to commit
-    * @param string $commitMessage commit message
-    */
-   protected function gitCommit(array $files, $commitMessage) {
-      if (count($files) < 1) {
-         $arg = '-u';
-      } else {
-         $arg = '"' . implode('" "', $files) . '"';
-      }
-       exec("git add $arg", $output, $retCode);
-      if ($retCode > 0) {
-         throw new Exception("Failed to add files for $commitMessage");
-      }
-
-       exec("git commit -m \"$commitMessage\"", $output, $retCode);
-      if ($retCode > 0) {
-         throw new Exception("Failed to commit $commitMessage");
-      }
-
-       return true;
    }
 
    /**
