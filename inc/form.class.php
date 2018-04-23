@@ -1004,13 +1004,6 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         if (!is_array($value)) {
-            $input[$key] = plugin_formcreator_encode($value);
-         }
-      }
-
       // generate a uniq id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -1024,15 +1017,6 @@ class PluginFormcreatorForm extends CommonDBTM
             Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
-         $input['name'] = addslashes($input['name']);
-      }
-
-      if (isset($input['description'])) {
-         $input['description'] = addslashes($input['description']);
-      }
-
-      if (isset($input['content'])) {
-         $input['content'] = addslashes($input['content']);
       }
 
       if (!isset($input['requesttype'])) {
