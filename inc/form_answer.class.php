@@ -903,9 +903,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          } else {
             $answer_value = '';
          }
-      } else if ((isset($_POST['_formcreator_field_' . $question->getID()]['0']))
-                 && (is_file(GLPI_TMP_DIR . '/' . $_POST['_formcreator_field_' . $question->getID()]['0']))) {
-         $answer_value = $this->saveDocument($form, $question, $_POST['_formcreator_field_' . $question->getID()]['0']);
+      } else if (is_array($_POST['_formcreator_field_' . $question->getID()])
+                 && count($_POST['_formcreator_field_' . $question->getID()]) === 1) {
+         $file = current($_POST['_formcreator_field_' . $question->getID()]);
+         if (is_file(GLPI_TMP_DIR . '/' . $file)) {
+            $answer_value = $this->saveDocument($form, $question, $file);
+         }
       }
 
       return $answer_value;
