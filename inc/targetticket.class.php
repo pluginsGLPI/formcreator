@@ -1107,7 +1107,7 @@ EOS;
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $data['name'] = $this->fields['name'];
+      $data['name'] = addslashes($this->fields['name']);
       $data['name'] = $this->parseTags($data['name'], $formanswer);
 
       $data['content'] = addslashes($this->fields['comment']);
