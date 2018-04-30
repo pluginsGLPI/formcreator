@@ -54,6 +54,8 @@ class PluginFormcreatorInstall {
             require_once(__DIR__ . '/update_2.6_2.6.1.php');
             plugin_formcreator_update_2_6_1($this->migration);
 
+            require_once(__DIR__ . '/update_2.6.2_2.6.3.php');
+            plugin_formcreator_update_2_6_3($this->migration);
          default:
             // Must be the last case
             if ($this->endsWith(PLUGIN_FORMCREATOR_VERSION, "-dev")) {

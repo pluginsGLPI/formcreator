@@ -1,4 +1,37 @@
 <?php
+/**
+ * LICENSE
+ *
+ * Copyright © 2011-2018 Teclib'
+ *
+ * This file is part of Formcreator Plugin for GLPI.
+ *
+ * Formcreator is a plugin that allow creation of custom, easy to access forms
+ * for users when they want to create one or more GLPI tickets.
+ *
+ * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * If not, see http://www.gnu.org/licenses/.
+ * ------------------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2018 Teclib
+ * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ------------------------------------------------------------------------------
+ */
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -65,13 +98,13 @@ class PluginFormcreatorWizard {
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">';
       echo '<span class="fa fa-paper-plane-o fc_list_icon" title="'.__('Seek assistance', 'formcreator').'"></span>';
-      echo '<label>'.__('Seek assistance', 'formcreator').'</label>';
+      echo '<span class="label">'.__('Seek assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php?reset=reset' . '">';
       echo '<span class="fa fa-list fc_list_icon" title="'.__('My requests for assistance', 'formcreator').'"></span>';
-      echo '<label>'.__('My requests for assistance', 'formcreator').'</label>';
+      echo '<span class="label">'.__('My requests for assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
@@ -83,7 +116,7 @@ class PluginFormcreatorWizard {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
             echo '<span class="fa fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
-            echo '<label>'.__('Book an asset', 'formcreator').'</label>';
+            echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
             echo '</a></li>';
          }
       }
@@ -92,7 +125,7 @@ class PluginFormcreatorWizard {
          echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
          echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">';
          echo '<span class="fa fa-rss fc_list_icon" title="'.__('Consult feeds', 'formcreator').'"></span>';
-         echo '<label>'.__('Consult feeds', 'formcreator').'</label>';
+         echo '<span class="label">'.__('Consult feeds', 'formcreator').'</span>';
          echo '</a></li>';
       }
 
@@ -127,7 +160,7 @@ class PluginFormcreatorWizard {
                    'reloadonclose' => true]);
             echo '<a href="#" id="showSavedSearchesLink">';
             echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
-            echo '<label>'.__('Saved searches').'</label>';
+            echo '<span class="label">'.__('Saved searches').'</span>';
             echo '</a>';
             echo '</li>';
          }
@@ -137,7 +170,7 @@ class PluginFormcreatorWizard {
          echo '<li class="' . ($activeMenuItem == self::MENU_HELP ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_helpIcon">';
          echo '<a href="' . $CFG_GLPI["helpdesk_doc_url"] . '" target="_blank">';
          echo '<span class="fa fa-question fc_list_icon" title="' . __s('Help') . '"></span>';
-         echo '<label>' . __s('Help') . '</label>';
+         echo '<span class="label">'.__('Help').'</span>';
          echo '</a>';
          echo '</li>';
       }

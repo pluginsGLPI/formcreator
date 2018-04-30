@@ -1,4 +1,37 @@
 <?php
+/**
+ * LICENSE
+ *
+ * Copyright © 2011-2018 Teclib'
+ *
+ * This file is part of Formcreator Plugin for GLPI.
+ *
+ * Formcreator is a plugin that allow creation of custom, easy to access forms
+ * for users when they want to create one or more GLPI tickets.
+ *
+ * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * If not, see http://www.gnu.org/licenses/.
+ * ------------------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2018 Teclib
+ * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ------------------------------------------------------------------------------
+ */
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -152,7 +185,7 @@ class PluginFormcreatorForm extends CommonDBTM
          'id'                 => '9',
          'table'              => $this->getTable(),
          'field'              => 'access_rights',
-         'name'               => __('Access'),
+         'name'               => __('Access', 'formcreator'),
          'datatype'           => 'specific',
          'searchtype'         => [
             '0'                  => 'equals',
@@ -958,7 +991,7 @@ class PluginFormcreatorForm extends CommonDBTM
       echo '</div>';
 
       echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
-      echo '<input type="hidden" name="_glpi_csrf_token" value="' . Session::getNewCSRFToken() . '">';
+      echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
       echo '<input type="hidden" name="uuid" value="' .$item->fields['uuid'] . '">';
       echo '</form>';
    }
@@ -1004,7 +1037,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       if (!isset($input['requesttype'])) {
          $requestType = new RequestType();
-         $requestType->getFromDBByQuery("WHERE `name` LIKE 'Formcreator'");
+         $requestType->getFromDBByCrit(['name' => ['LIKE' => 'Formcreator']]);
          $input['requesttype'] = $requestType->getID();
       }
 
@@ -1188,14 +1221,36 @@ class PluginFormcreatorForm extends CommonDBTM
    public  function getByQuestionId($questionId) {
       $table_sections = PluginFormcreatorSection::getTable();
       $table_questions = PluginFormcreatorQuestion::getTable();
-      $this->getFromDBByQuery(
+      if (!method_exists($this, 'getFromDBByRequest')) {
+         $this->getFromDBByQuery(
             "WHERE `id` = (
                 SELECT `plugin_formcreator_forms_id` FROM `$table_sections`
                 INNER JOIN `$table_questions`
                    ON `$table_questions`.`plugin_formcreator_sections_id` = `$table_sections`.`id`
                 WHERE `$table_questions`.`id` = '$questionId'
             )"
-      );
+         );
+      } else {
+         $this->getFromDBByRequest([
+            'INNER JOIN' => [
+               PluginFormcreatorSection::getTable() => [
+                  'FKEY' => [
+                     PluginFormcreatorForm::getTable()    => 'id',
+                     PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getForeignKeyField(),
+                  ]
+               ],
+               PluginFormcreatorQuestion::getTable() => [
+                  'FKEY' => [
+                     PluginFormcreatorQuestion::getTable() => PluginFormcreatorSection::getForeignKeyField(),
+                     PluginFormcreatorSection::getTable()  => 'id'
+                  ]
+               ]
+            ],
+            'WHERE' => [
+               PluginFormcreatorQuestion::getTable() . '.id' => $questionId,
+            ]
+         ]);
+      }
    }
 
    /**
@@ -1657,7 +1712,7 @@ class PluginFormcreatorForm extends CommonDBTM
     */
    public function showImportForm() {
       $documentType = new DocumentType();
-      $jsonTypeExists = $documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'");
+      $jsonTypeExists = $documentType->getFromDBByCrit(['ext' => 'json']);
       $jsonTypeEnabled = $jsonTypeExists && $documentType->getField('is_uploadable');
       $canAddType = $documentType->canCreate();
       $canUpdateType = $documentType->canUpdate();
@@ -1854,7 +1909,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
    public function enableDocumentType() {
       $documentType = new DocumentType();
-      if (!$documentType->getFromDBByQuery("WHERE LOWER(`ext`)='json'")) {
+      if (!$documentType->getFromDBByCrit(['ext' => 'json'])) {
          Session::addMessageAfterRedirect(__('JSON document type not found', 'formcreator'));
       } else {
          $success = $documentType->update([

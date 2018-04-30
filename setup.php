@@ -1,14 +1,14 @@
 <?php
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.6.2');
+define('PLUGIN_FORMCREATOR_VERSION', '2.6.3');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
 
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2.1');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.3');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.4');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
@@ -62,6 +62,9 @@ function plugin_formcreator_check_config($verbose = false) {
  */
 function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
+
+   // Add specific CSS
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
@@ -154,9 +157,6 @@ function plugin_init_formcreator() {
              || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
              || isset($_SESSION['glpiactiveprofile']) &&
                 $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-             // Add specific CSS
-            $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
             $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
@@ -286,9 +286,15 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $val
 
    $field = $DB->escape($field);
    $value = $DB->escape($value);
-
-   $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
+   if (!method_exists(PluginFormcreatorForm::class, 'getFromDBByRequest')) {
+      $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
                                     .$value."' LIMIT 1");
+   } else {
+      $found = $item->getFromDBByRequest([
+         'WHERE' => [$item::getTable() . '.' . $field => $value],
+         'LIMIT' => 1
+      ]);
+   }
 
    if ($found) {
       return $item->getID();

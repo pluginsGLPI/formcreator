@@ -1,4 +1,37 @@
 <?php
+/**
+ * LICENSE
+ *
+ * Copyright © 2011-2018 Teclib'
+ *
+ * This file is part of Formcreator Plugin for GLPI.
+ *
+ * Formcreator is a plugin that allow creation of custom, easy to access forms
+ * for users when they want to create one or more GLPI tickets.
+ *
+ * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * If not, see http://www.gnu.org/licenses/.
+ * ------------------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2018 Teclib
+ * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ------------------------------------------------------------------------------
+ */
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -891,6 +924,13 @@ EOS;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
+      $target = new PluginFormcreatorTarget();
+      $found  = $target->find('items_id = ' . $this->getID());
+      $found  = array_shift($found);
+      $target->update(['id' => $found['id'], 'name' => $input['name']]);
+      $input['name'] = $input['title'];
+      unset($input['title']);
+
       return $input;
    }
 
@@ -1025,7 +1065,7 @@ EOS;
          '_groups_id_assign'           => [],
       ];
 
-      $data   = [];
+      $data = Ticket::getDefaultValues();
       $ticket  = new Ticket();
       $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
@@ -1054,7 +1094,7 @@ EOS;
          unset($predefined_fields['_groups_id_requester']);
       }
       if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_observer']);
+         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
          unset($predefined_fields['_groups_id_observer']);
       }
       if (isset($predefined_fields['_groups_id_assign'])) {
@@ -1067,19 +1107,19 @@ EOS;
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $data['name'] = $this->fields['name'];
-      $data['name'] = addslashes($this->parseTags($data['name'], $formanswer));
+      $data['name'] = addslashes($this->fields['name']);
+      $data['name'] = $this->parseTags($data['name'], $formanswer);
 
       $data['content'] = addslashes($this->fields['comment']);
       $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
-      } else {
-         if ($CFG_GLPI['use_rich_text']) {
-            // replace HTML P tags with DIV tags
-            $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
-         }
       }
+      if ($CFG_GLPI['use_rich_text']) {
+         // replace HTML P tags with DIV tags
+         $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+      }
+
       $data['content'] = $this->parseTags($data['content'], $formanswer);
       if ($CFG_GLPI['use_rich_text']) {
          $data['content'] = htmlentities($data['content']);
@@ -1191,15 +1231,32 @@ EOS;
       }
 
       $data = $this->setTargetDueDate($data, $formanswer);
-
       $data = $this->setTargetUrgency($data, $formanswer);
-
       $data = $this->setTargetCategory($data, $formanswer);
-
       $data = $this->setTargetLocation($data, $formanswer);
 
-      $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
-      $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
+      // There is always at least one requester
+      $data = $this->requesters + $data;
+
+      // Overwrite default actors only if populated
+      if (count($this->observers['_users_id_observer']) > 0) {
+         $data = $this->observers + $data;
+      }
+      if (count($this->assigned['_users_id_assign']) > 0) {
+         $data = $this->assigned + $data;
+      }
+      if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
+         $data = $this->assignedSuppliers + $data;
+      }
+      if (count($this->requesterGroups['_groups_id_requester']) > 0) {
+         $data = $this->requesterGroups + $data;
+      }
+      if (count($this->observerGroups['_groups_id_observer']) > 0) {
+         $data = $this->observerGroups + $data;
+      }
+      if (count($this->assignedGroups['_groups_id_assign']) > 0) {
+         $data = $this->assignedGroups + $data;
+      }
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
@@ -1436,7 +1493,7 @@ EOS;
          foreach ($rows as $id => $question_line) {
             $uuid  = $question_line['uuid'];
 
-            $content = $target_data['name'];
+            $content = $target_data['title'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['name'] = $content;
@@ -1528,6 +1585,8 @@ EOS;
       unset($target_data['id'],
             $target_data['tickettemplates_id']);
 
+      $target_data['title'] = $target_data['name'];
+      unset($target_data['name']);
       return $target_data;
    }
 }

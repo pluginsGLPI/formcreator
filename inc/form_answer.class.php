@@ -1,4 +1,37 @@
 <?php
+/**
+ * LICENSE
+ *
+ * Copyright © 2011-2018 Teclib'
+ *
+ * This file is part of Formcreator Plugin for GLPI.
+ *
+ * Formcreator is a plugin that allow creation of custom, easy to access forms
+ * for users when they want to create one or more GLPI tickets.
+ *
+ * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * If not, see http://www.gnu.org/licenses/.
+ * ------------------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2018 Teclib
+ * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ------------------------------------------------------------------------------
+ */
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -613,7 +646,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   // Update the answer to the question
                   $questionId = $question->getID();
                   $answer = new PluginFormcreatorAnswer();
-                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
+                  $answer->getFromDBByCrit([
+                    'AND' => [
+                      'plugin_formcreator_forms_answers_id' => $formanswers_id,
+                      'plugin_formcreator_questions_id'     => $questionId
+                    ]
+                  ]);
                   $answer->update([
                      'id'     => $answer->getID(),
                      'answer' => $answer_value,
@@ -740,7 +778,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => '',
                   ]);
                } else {
-                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->getFromDBByCrit([
+                     'AND' => [
+                       'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                       'original_id'  => $formAnswerId
+                     ]
+                  ]);
                   $id = $this->getID();
                   $issue->update([
                      'id'              => $issue->getID(),
@@ -778,7 +821,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => addslashes($ticket->getField('content')),
                   ]);
                } else {
-                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->getFromDBByCrit([
+                    'AND' => [
+                      'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                      'original_id'  => $formAnswerId
+                    ]
+                  ]);
                   $issue->update([
                      'id'              => $issue->getID(),
                      'original_id'     => $ticketId,
@@ -796,7 +844,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                }
             }
          } else {
-            $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+            $issue->getFromDBByCrit([
+              'AND' => [
+                'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                'original_id'  => $formAnswerId
+              ]
+            ]);
             $issue->update([
                'id'              => $issue->getID(),
                'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
@@ -850,9 +903,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          } else {
             $answer_value = '';
          }
-      } else if ((isset($_POST['_formcreator_field_' . $question->getID()]['0']))
-                 && (is_file(GLPI_TMP_DIR . '/' . $_POST['_formcreator_field_' . $question->getID()]['0']))) {
-         $answer_value = $this->saveDocument($form, $question, $_POST['_formcreator_field_' . $question->getID()]['0']);
+      } else if (is_array($_POST['_formcreator_field_' . $question->getID()])
+                 && count($_POST['_formcreator_field_' . $question->getID()]) === 1) {
+         $file = current($_POST['_formcreator_field_' . $question->getID()]);
+         if (is_file(GLPI_TMP_DIR . '/' . $file)) {
+            $answer_value = $this->saveDocument($form, $question, $file);
+         }
       }
 
       return $answer_value;
@@ -1052,9 +1108,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             if ($CFG_GLPI['use_rich_text']) {
-               $output .= '<h2>'.$question_line['section_name'].'</h2>';
+               $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
             } else {
-               $output .= $eol . $question_line['section_name'] . $eol;
+               $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
                $output .= '---------------------------------';
                $output .= $eol;
             }

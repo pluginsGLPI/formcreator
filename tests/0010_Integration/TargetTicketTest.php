@@ -69,15 +69,24 @@ class TargetTicketTest extends SuperAdminTestCase {
       $observerActor = new PluginFormcreatorTargetTicket_Actor();
       $targetTicketId = $targetTicket->getID();
 
-      $requesterActor->getFromDBByQuery("WHERE `plugin_formcreator_targettickets_id` = '$targetTicketId'
-            AND `actor_role` = 'requester' AND `actor_type` = 'creator'");
-      $observerActor->getFromDBByQuery("WHERE `plugin_formcreator_targettickets_id` = '$targetTicketId'
-            AND `actor_role` = 'observer' AND `actor_type` = 'validator'");
+      $requesterActor->getFromDBByCrit([
+         'AND' => [
+            'plugin_formcreator_targettickets_id' => $targetTicketId,
+            'actor_role'                          => 'requester',
+            'actor_type'                          => 'creator'
+         ]
+      ]);
+      $observerActor->getFromDBByCrit([
+         'AND' => [
+            'plugin_formcreator_targettickets_id' => $targetTicketId,
+            'actor_role'                          => 'observer',
+            'actor_type'                          => 'validator'
+         ]
+      ]);
 
       $this->assertFalse($requesterActor->isNewItem());
       $this->assertFalse($observerActor->isNewItem());
       $this->assertEquals(1, $requesterActor->getField('use_notification'));
       $this->assertEquals(1, $observerActor->getField('use_notification'));
    }
-
 }
