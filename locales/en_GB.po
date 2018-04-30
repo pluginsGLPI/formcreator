@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-02 12:50+0200\n"
-"PO-Revision-Date: 2018-04-02 10:54+0000\n"
+"POT-Creation-Date: 2018-04-30 10:14+0200\n"
+"PO-Revision-Date: 2018-04-30 08:14+0000\n"
 "Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgid_plural "Form categories"
 msgstr[0] "Form category"
 msgstr[1] "Form categories"
 
-#: setup.php:27 setup.php:147 ajax/homepage_link.php:39
+#: setup.php:27 setup.php:150 ajax/homepage_link.php:39
 #: inc/entityconfig.class.php:60 inc/form.class.php:83 inc/form.class.php:528
 #: inc/form.class.php:1976 inc/form_answer.class.php:166
 #: inc/formlist.class.php:49 js/scripts.js.php:19
@@ -36,7 +36,7 @@ msgid_plural "Forms"
 msgstr[0] "Form"
 msgstr[1] "Forms"
 
-#: setup.php:137 inc/form.class.php:91 inc/formlist.class.php:57
+#: setup.php:140 inc/form.class.php:91 inc/formlist.class.php:57
 #: inc/formlist.class.php:58
 msgid "Forms waiting for validation"
 msgstr "Forms waiting for validation"
@@ -344,15 +344,15 @@ msgstr "Refused comment is required!"
 msgid "Cannot generate targets!"
 msgstr "Cannot generate targets!"
 
-#: inc/form_answer.class.php:862 inc/form_answer.class.php:1030
+#: inc/form_answer.class.php:862 inc/form_answer.class.php:1033
 msgid "The form has been successfully saved!"
 msgstr "The form has been successfully saved!"
 
-#: inc/form_answer.class.php:972 inc/form_answer.class.php:995
+#: inc/form_answer.class.php:975 inc/form_answer.class.php:998
 msgid "You are not the validator of these answers"
 msgstr "You are not the validator of these answers"
 
-#: inc/form_answer.class.php:1079 inc/form_answer.class.php:1081
+#: inc/form_answer.class.php:1082 inc/form_answer.class.php:1084
 msgid "Form data"
 msgstr "Form data"
 
@@ -392,19 +392,19 @@ msgstr ""
 msgid "The form as been saved"
 msgstr "The form as been saved"
 
-#: inc/notificationtargetform_answer.class.php:48 install/install.php:244
+#: inc/notificationtargetform_answer.class.php:48 install/install.php:246
 msgid "A form need to be validate"
 msgstr "A form need to be validate"
 
-#: inc/notificationtargetform_answer.class.php:49 install/install.php:250
+#: inc/notificationtargetform_answer.class.php:49 install/install.php:252
 msgid "The form is refused"
 msgstr "The form is refused"
 
-#: inc/notificationtargetform_answer.class.php:50 install/install.php:256
+#: inc/notificationtargetform_answer.class.php:50 install/install.php:258
 msgid "The form is accepted"
 msgstr "The form is accepted"
 
-#: inc/notificationtargetform_answer.class.php:51 install/install.php:262
+#: inc/notificationtargetform_answer.class.php:51 install/install.php:264
 msgid "The form is deleted"
 msgstr "The form is deleted"
 
@@ -462,12 +462,12 @@ msgstr "Required"
 msgid "Add a question"
 msgstr "Add a question"
 
-#: inc/question.class.php:247 inc/section.class.php:390
+#: inc/question.class.php:247 inc/section.class.php:379
 msgid "Add a section"
 msgstr "Add a section"
 
-#: inc/question.class.php:271 inc/section.class.php:93
-#: inc/section.class.php:133
+#: inc/question.class.php:271 inc/section.class.php:88
+#: inc/section.class.php:122
 msgid "The title is required"
 msgstr "The title is required"
 
@@ -597,7 +597,7 @@ msgstr "Hidden unless"
 msgid "Displayed unless"
 msgstr "Displayed unless"
 
-#: inc/section.class.php:392
+#: inc/section.class.php:381
 msgid "Edit a section"
 msgstr "Edit a sectio"
 
@@ -887,7 +887,7 @@ msgstr "Linked item does not exists"
 msgid "Failed to link the item"
 msgstr "Failed to link the item"
 
-#: inc/targetticket.class.php:1309 install/install.php:257
+#: inc/targetticket.class.php:1326 install/install.php:259
 msgid "Your form has been accepted by the validator"
 msgstr "Your form has been accepted by the validator"
 
@@ -957,7 +957,7 @@ msgstr "Invalid dropdown type:"
 msgid "This is not a valid e-mail:"
 msgstr "This is not a valid e-mail:"
 
-#: inc/fields/filefield.class.php:62
+#: inc/fields/filefield.class.php:73
 msgid "A required file is missing:"
 msgstr "A required file is missing:"
 
@@ -1036,37 +1036,37 @@ msgstr "The text is too long (maximum %d characters):"
 msgid "Text"
 msgstr "Text"
 
-#: install/install.php:238
+#: install/install.php:240
 msgid "A form has been created"
 msgstr "A form has been created"
 
-#: install/install.php:239
+#: install/install.php:241
 msgid "Your request has been saved"
 msgstr "Your request has been saved"
 
-#: install/install.php:240
+#: install/install.php:242
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr "Hi,\\nYour request from GLPI has been successfully saved with number ##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can see your answers onto the following link:\\n##formcreator.validation_link##"
 
-#: install/install.php:245
+#: install/install.php:247
 msgid "A form from GLPI need to be validate"
 msgstr "A form from GLPI need to be validate"
 
-#: install/install.php:246
+#: install/install.php:248
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr " Hi,\\nA form from GLPI need to be validate and you have been choosen as the validator.\\nYou can access it by clicking onto this link:\\n##formcreator.validation_link##"
 
-#: install/install.php:251
+#: install/install.php:253
 msgid "Your form has been refused by the validator"
 msgstr "Your form has been refused by the validator"
 
-#: install/install.php:252
+#: install/install.php:254
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1074,23 +1074,23 @@ msgid ""
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr "Hi,\\nWe are sorry to inform you that your form has been refused by the validator for the reason below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 
-#: install/install.php:258
+#: install/install.php:260
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr "Hi,\\nWe are pleased to inform you that your form has been accepted by the validator.\\nYour request will be considered soon."
 
-#: install/install.php:263
+#: install/install.php:265
 msgid "Your form has been deleted by an administrator"
 msgstr "Your form has been deleted by an administrator"
 
-#: install/install.php:264
+#: install/install.php:266
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr "Hi,\\nWe are sorry to inform you that your request cannot be considered and has been deleted by an administrator."
 
-#: install/install.php:462 install/update_0.0_2.5.php:415
+#: install/install.php:464 install/update_0.0_2.5.php:415
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Sync service catalog issues"
 

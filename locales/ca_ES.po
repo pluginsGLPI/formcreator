@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-02 12:50+0200\n"
-"PO-Revision-Date: 2018-04-02 10:54+0000\n"
+"POT-Creation-Date: 2018-04-30 10:14+0200\n"
+"PO-Revision-Date: 2018-04-30 08:14+0000\n"
 "Last-Translator: Nuria Costa <nuria.costa@uvic.cat>\n"
 "Language-Team: Catalan (Spain) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/ca_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgid_plural "Form categories"
 msgstr[0] "Categoria del formulari"
 msgstr[1] "Categories dels formularis"
 
-#: setup.php:27 setup.php:147 ajax/homepage_link.php:39
+#: setup.php:27 setup.php:150 ajax/homepage_link.php:39
 #: inc/entityconfig.class.php:60 inc/form.class.php:83 inc/form.class.php:528
 #: inc/form.class.php:1976 inc/form_answer.class.php:166
 #: inc/formlist.class.php:49 js/scripts.js.php:19
@@ -33,7 +33,7 @@ msgid_plural "Forms"
 msgstr[0] "Sol·licitud"
 msgstr[1] "Sol·licituds"
 
-#: setup.php:137 inc/form.class.php:91 inc/formlist.class.php:57
+#: setup.php:140 inc/form.class.php:91 inc/formlist.class.php:57
 #: inc/formlist.class.php:58
 msgid "Forms waiting for validation"
 msgstr "Sol·licituds pendents de validació"
@@ -341,15 +341,15 @@ msgstr "Cal un comentari de denegació!"
 msgid "Cannot generate targets!"
 msgstr "No es poden generar objectius!"
 
-#: inc/form_answer.class.php:862 inc/form_answer.class.php:1030
+#: inc/form_answer.class.php:862 inc/form_answer.class.php:1033
 msgid "The form has been successfully saved!"
 msgstr "S'ha guardat el formulari correctament!"
 
-#: inc/form_answer.class.php:972 inc/form_answer.class.php:995
+#: inc/form_answer.class.php:975 inc/form_answer.class.php:998
 msgid "You are not the validator of these answers"
 msgstr "No ets el validador d'aquestes respostes"
 
-#: inc/form_answer.class.php:1079 inc/form_answer.class.php:1081
+#: inc/form_answer.class.php:1082 inc/form_answer.class.php:1084
 msgid "Form data"
 msgstr "Dades de la sol·licitud"
 
@@ -389,19 +389,19 @@ msgstr ""
 msgid "The form as been saved"
 msgstr "S'ha guardat la sol·licitud"
 
-#: inc/notificationtargetform_answer.class.php:48 install/install.php:244
+#: inc/notificationtargetform_answer.class.php:48 install/install.php:246
 msgid "A form need to be validate"
 msgstr "La sol·licitud ha de ser validada"
 
-#: inc/notificationtargetform_answer.class.php:49 install/install.php:250
+#: inc/notificationtargetform_answer.class.php:49 install/install.php:252
 msgid "The form is refused"
 msgstr "Sol·licitud denegada"
 
-#: inc/notificationtargetform_answer.class.php:50 install/install.php:256
+#: inc/notificationtargetform_answer.class.php:50 install/install.php:258
 msgid "The form is accepted"
 msgstr "Sol·licitud acceptada"
 
-#: inc/notificationtargetform_answer.class.php:51 install/install.php:262
+#: inc/notificationtargetform_answer.class.php:51 install/install.php:264
 msgid "The form is deleted"
 msgstr "Sol·licitud eliminada"
 
@@ -459,12 +459,12 @@ msgstr "Obligatori"
 msgid "Add a question"
 msgstr "Afegir una pregunta"
 
-#: inc/question.class.php:247 inc/section.class.php:390
+#: inc/question.class.php:247 inc/section.class.php:379
 msgid "Add a section"
 msgstr "Afegir una secció"
 
-#: inc/question.class.php:271 inc/section.class.php:93
-#: inc/section.class.php:133
+#: inc/question.class.php:271 inc/section.class.php:88
+#: inc/section.class.php:122
 msgid "The title is required"
 msgstr "El títol és obligatori"
 
@@ -594,7 +594,7 @@ msgstr "Ocult llevat que"
 msgid "Displayed unless"
 msgstr "Mostra llevat que"
 
-#: inc/section.class.php:392
+#: inc/section.class.php:381
 msgid "Edit a section"
 msgstr "Editar una secció"
 
@@ -884,7 +884,7 @@ msgstr "L'element enllaçat no existeix"
 msgid "Failed to link the item"
 msgstr "No s'ha pogut enllaçar l'element"
 
-#: inc/targetticket.class.php:1309 install/install.php:257
+#: inc/targetticket.class.php:1326 install/install.php:259
 msgid "Your form has been accepted by the validator"
 msgstr "La teva sol·licitud ha estat acceptada pel validador"
 
@@ -954,7 +954,7 @@ msgstr "Tipus de desplegable no vàlid:"
 msgid "This is not a valid e-mail:"
 msgstr "Aquest no és un correu vàlid:"
 
-#: inc/fields/filefield.class.php:62
+#: inc/fields/filefield.class.php:73
 msgid "A required file is missing:"
 msgstr "Falta un arxiu necessari:"
 
@@ -1033,37 +1033,37 @@ msgstr "El text és massa llarg (màxim %d caràcters):"
 msgid "Text"
 msgstr "Text"
 
-#: install/install.php:238
+#: install/install.php:240
 msgid "A form has been created"
 msgstr "S'ha creat el formulari"
 
-#: install/install.php:239
+#: install/install.php:241
 msgid "Your request has been saved"
 msgstr "La teva sol·licitud s'ha guardat"
 
-#: install/install.php:240
+#: install/install.php:242
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr "Benvolgut/da,\\n La teva sol·licitud s'ha guardat correctament amb el número ##formcreator.request_id## i s'ha tramès a l'equip de suport. \\nPots veure les seves respostes a l'enllaç : \\n ##formcreator.validation_link##"
 
-#: install/install.php:245
+#: install/install.php:247
 msgid "A form from GLPI need to be validate"
 msgstr "Hi ha una sol·licitud pendent de validació"
 
-#: install/install.php:246
+#: install/install.php:248
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr "Benvolgut/da, \\n Hi ha una sol·licitud per validar i has estat seleccionat  com a validador. \\ nPots accedir-hi fent clic en aquest enllaç :.\\n ##formcreator.validation_link##"
 
-#: install/install.php:251
+#: install/install.php:253
 msgid "Your form has been refused by the validator"
 msgstr "La teva sol·licitud ha estat denegada pel validador"
 
-#: install/install.php:252
+#: install/install.php:254
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1071,23 +1071,23 @@ msgid ""
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr "Hola, \\nLa teva sol·licitud ha estat denegada pel validador a causa de: \\n ##formcreator.validation_comment##.\\n\\nEncara la pot modificar i tornar a enviar fent clic en aquest enllaç: \\n ##formcreator.validation_link##"
 
-#: install/install.php:258
+#: install/install.php:260
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr "Hola, \\nEns complau informar-te que la seva sol·licitud ha estat acceptada pel validador. \\nLa sol·licitud serà tramitada en breu."
 
-#: install/install.php:263
+#: install/install.php:265
 msgid "Your form has been deleted by an administrator"
 msgstr "La teva sol·licitud ha estat eliminada per un administrador"
 
-#: install/install.php:264
+#: install/install.php:266
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr "Hola, \\n Malauradament la teva sol·licitud no pot ser considerada i s'ha suprimit per un administrador."
 
-#: install/install.php:462 install/update_0.0_2.5.php:415
+#: install/install.php:464 install/update_0.0_2.5.php:415
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Problemes amb la sincronització del catàleg de serveis"
 

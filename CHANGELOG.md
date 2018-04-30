@@ -1,3 +1,28 @@
+<a name="2.6.3"></a>
+## [2.6.3](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.2...2.6.3) (2018-04-30)
+
+
+### Bug Fixes
+
+* **condition:** escape quote in import ([b10134e](https://github.com-btry/pluginsGLPI/formcreator/commit/b10134e))
+* **condition:** fix show hide issues ([411b998](https://github.com-btry/pluginsGLPI/formcreator/commit/411b998))
+* **docs:** fix bad domain for locales ([47788ff](https://github.com-btry/pluginsGLPI/formcreator/commit/47788ff))
+* **field:** some fields output a duplicate HTML div ([c4d1a4c](https://github.com-btry/pluginsGLPI/formcreator/commit/c4d1a4c))
+* **file:** fix multiple file fields ([a9798d2](https://github.com-btry/pluginsGLPI/formcreator/commit/a9798d2)), closes [#937](https://github.com-btry/pluginsGLPI/formcreator/issues/937)
+* **locales:** invalid domain ([7be6ef1](https://github.com-btry/pluginsGLPI/formcreator/commit/7be6ef1)), closes [#872](https://github.com-btry/pluginsGLPI/formcreator/issues/872)
+* **question:** filtering out tag question type broken ([86b5a10](https://github.com-btry/pluginsGLPI/formcreator/commit/86b5a10))
+* **section:** fix creation of section with abusive escape ([6057cad](https://github.com-btry/pluginsGLPI/formcreator/commit/6057cad)), closes [#940](https://github.com-btry/pluginsGLPI/formcreator/issues/940) [#940](https://github.com-btry/pluginsGLPI/formcreator/issues/940)
+* **section:** single quote escaping issue ([b298505](https://github.com-btry/pluginsGLPI/formcreator/commit/b298505)), closes [#940](https://github.com-btry/pluginsGLPI/formcreator/issues/940)
+* **target:** distinguish fields content ([326315c](https://github.com-btry/pluginsGLPI/formcreator/commit/326315c))
+* **target ticket:** backquote in ticket ticle ([1296925](https://github.com-btry/pluginsGLPI/formcreator/commit/1296925)), closes [#951](https://github.com-btry/pluginsGLPI/formcreator/issues/951)
+* **target ticket:** observer groups from template added in assigned ones ([f09e685](https://github.com-btry/pluginsGLPI/formcreator/commit/f09e685))
+* **target ticket:** quote escaping for ticket title ([cd070ea](https://github.com-btry/pluginsGLPI/formcreator/commit/cd070ea))
+* **ticket:** use default values to set actors of tickets ([fa3f816](https://github.com-btry/pluginsGLPI/formcreator/commit/fa3f816)), closes [#629](https://github.com-btry/pluginsGLPI/formcreator/issues/629)
+* **ui:** compatibility issue with internet explorer 11 ([fb2c711](https://github.com-btry/pluginsGLPI/formcreator/commit/fb2c711)), closes [#936](https://github.com-btry/pluginsGLPI/formcreator/issues/936)
+* **ui:** responsive design of service catalog ([0f6e466](https://github.com-btry/pluginsGLPI/formcreator/commit/0f6e466))
+
+
+
 <a name="2.6.2"></a>
 ## [2.6.2](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.1...2.6.2) (2018-02-12)
 
