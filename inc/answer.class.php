@@ -77,7 +77,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+    */
    public function prepareInputForAdd($input) {
       global $DB;
 
@@ -109,7 +109,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+    */
    public function prepareInputForUpdate($input) {
       return $this->prepareInputForAdd($input);
    }

@@ -24,12 +24,38 @@ class ExportImporTest extends SuperAdminTestCase {
       $sections_id = $form_section->add(['name'                        => "test export section",
                                           'plugin_formcreator_forms_id' => $forms_id]);
 
-      $questions_id_1 = $form_question->add(['name'                           => "test export question 1",
-                                             'fieldtype'                      => 'text',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
-      $questions_id_2 = $form_question->add(['name'                           => "test export question 2",
-                                             'fieldtype'                      => 'textarea',
-                                             'plugin_formcreator_sections_id' => $sections_id]);
+      $questions_id_1 = $form_question->add([
+         'name'                           => "test export question 1",
+         'fieldtype'                      => 'text',
+         'plugin_formcreator_sections_id' => $sections_id,
+         '_parameters'                    => [
+            'text' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ]
+            ]
+         ],
+      ]);
+      $questions_id_2 = $form_question->add([
+         'name'                           => "test export question 2",
+         'fieldtype'                      => 'textarea',
+         'plugin_formcreator_sections_id' => $sections_id,
+         '_parameters'                    => [
+            'text' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ]
+            ]
+         ],
+      ]);
 
       $form_condition->add(['plugin_formcreator_questions_id' => $questions_id_1,
                             'show_field'                      => $questions_id_2,
@@ -157,7 +183,8 @@ class ExportImporTest extends SuperAdminTestCase {
     * @depends testExportForm
     */
    public function testImportForm($export = []) {
-      $forms_id = PluginFormcreatorForm::import($export);
+      $importLinker = new PluginFormcreatorImportLinker();
+      $forms_id = PluginFormcreatorForm::import($importLinker, $export);
 
       $this->assertNotFalse($forms_id);
 
@@ -170,7 +197,8 @@ class ExportImporTest extends SuperAdminTestCase {
     * @depends testExportSection
     */
    public function testImportSection($forms_id, $export = []) {
-      $sections_id = PluginFormcreatorSection::import($forms_id, $export);
+      $importLinker = new PluginFormcreatorImportLinker();
+      $sections_id = PluginFormcreatorSection::import($importLinker, $forms_id, $export);
 
       $this->assertNotFalse($sections_id);
 
@@ -183,7 +211,8 @@ class ExportImporTest extends SuperAdminTestCase {
     * @depends testExportQuestion
     */
    public function testImportQuestion($sections_id, $export = []) {
-      $questions_id = PluginFormcreatorQuestion::import($sections_id, $export);
+      $importLinker = new PluginFormcreatorImportLinker();
+      $questions_id = PluginFormcreatorQuestion::import($importLinker, $sections_id, $export);
 
       $this->assertNotFalse($questions_id);
 

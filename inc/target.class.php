@@ -133,7 +133,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForAdd($input) {
       // Control fields values :
       // - name is required
@@ -220,7 +220,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForUpdate($input) {
       // generate a uniq id
       if (!isset($input['uuid'])

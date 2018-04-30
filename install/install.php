@@ -56,6 +56,13 @@ class PluginFormcreatorInstall {
 
             require_once(__DIR__ . '/update_2.6.2_2.6.3.php');
             plugin_formcreator_update_2_6_3($this->migration);
+
+         case 2.7:
+         case PLUGIN_FORMCREATOR_SCHEMA_VERSION:
+            //Any schema version below or equal to 2.7
+            require_once(__DIR__ . '/update_2.6_2.7.php');
+            plugin_formcreator_update_2_7($this->migration);
+
          default:
             // Must be the last case
             if ($this->endsWith(PLUGIN_FORMCREATOR_VERSION, "-dev")) {
@@ -413,6 +420,9 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorTargetTicket',
          'PluginFormcreatorItem_TargetTicket',
          'PluginFormcreatorIssue',
+         'PluginFormcreatorQuestionDependency',
+         'PluginFormcreatorQuestionRange',
+         'PluginFormcreatorQuestionRegex',
       ];
 
       foreach ($itemtypes as $itemtype) {
