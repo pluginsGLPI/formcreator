@@ -1832,6 +1832,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_obj = new self;
       $entity   = new Entity;
       $form_cat = new PluginFormcreatorCategory;
+      global $DB;
 
       // retrieve foreign keys
       if (!isset($form['_entity'])
@@ -1867,7 +1868,12 @@ class PluginFormcreatorForm extends CommonDBTM
       if ($forms_id
           && isset($form['_sections'])) {
          foreach ($form['_sections'] as $section) {
-            PluginFormcreatorSection::import($forms_id, $section);
+         	
+         	$section['name'] = html_entity_decode($section['name'], ENT_QUOTES | ENT_HTML401);
+         	$section['name'] = stripslashes($section['name']);
+         	$section['name'] = mysqli_real_escape_string($DB->dbh, $section['name']);
+            
+         	PluginFormcreatorSection::import($forms_id, $section);
          }
       }
       // Save all question conditions stored in memory

@@ -280,6 +280,7 @@ class PluginFormcreatorSection extends CommonDBChild
     */
    public static function import($forms_id = 0, $section = []) {
       $item = new self;
+      global $DB;
 
       $section['plugin_formcreator_forms_id'] = $forms_id;
       $section['_skip_checks']                = true;
@@ -307,6 +308,11 @@ class PluginFormcreatorSection extends CommonDBChild
          );
 
          foreach ($section['_questions'] as $question) {
+
+         	$question['name'] = html_entity_decode($question['name'], ENT_QUOTES | ENT_HTML401);
+			$question['name'] = stripslashes($question['name']);
+			$question['name'] = mysqli_real_escape_string($DB->dbh, $question['name']);
+			 
             PluginFormcreatorQuestion::import($sections_id, $question);
          }
       }
