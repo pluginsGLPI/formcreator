@@ -1269,10 +1269,7 @@ EOS;
 	   $data['content'] = html_entity_decode($data['content'], ENT_QUOTES | ENT_HTML401);
 	   $data['content'] = stripslashes($data['content']);
 	   $data['content'] = mysqli_real_escape_string($DB->dbh, $data['content']);
-      
-//      print_r($data);
-//      die();
-      
+	   
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
          return false;

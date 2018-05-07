@@ -705,7 +705,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          foreach ($questions as $question) {
             // unset the answer value
             $answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
-
+            
             if ($answer_value !== null) {
                // Save the answer to the question
                $answer->add([
@@ -715,6 +715,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                ], [], 0);
             }
          }
+
          $is_newFormAnswer = true;
       }
 
