@@ -183,7 +183,12 @@ class PluginFormcreatorTarget extends CommonDBTM
                }
                break;
             case PluginFormcreatorTargetChange::class:
-               $targetchange      = new PluginFormcreatorTargetChange();
+            	$targetchange      = new PluginFormcreatorTargetChange();
+            	
+				$input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
+				$input['name'] = stripslashes($input['name']);
+				$input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']);
+               
                $id_targetchange   = $targetchange->add([
                   'name'    => $input['name'],
                   'comment' => '##FULLFORM##'
@@ -268,17 +273,17 @@ class PluginFormcreatorTarget extends CommonDBTM
       if ($targets_id = plugin_formcreator_getFromDBByField($item, 'uuid', $target['uuid'])) {
          // add id key
          $target['id'] = $targets_id;
-
          // update target
          $item->update($target);
       } else {
          //create target
          $targets_id = $item->add($target);
-         $item->getFromDB('$targets_id');
+         $item->getFromDB($targets_id);
       }
 
 	   $target['_data']['title'] = html_entity_decode($target['_data']['title'], ENT_QUOTES | ENT_HTML401);
 	   $target['_data']['title'] = mysqli_real_escape_string($DB->dbh, $target['_data']['title']);
+	   
       
       // import sub table
       $target['itemtype']::import($item->fields['items_id'], $target['_data']);

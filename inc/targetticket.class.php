@@ -928,8 +928,13 @@ EOS;
       $target = new PluginFormcreatorTarget();
       $found  = $target->find('items_id = ' . $this->getID());
       $found  = array_shift($found);
-	   $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']); 
-      $target->update(['id' => $found['id'], 'name' => $input['name']]);
+
+
+	  $input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
+	  $input['name'] = stripslashes($input['name']);
+      $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']); 
+	   
+	  $target->update(['id' => $found['id'], 'name' => $input['name']]);
       $input['name'] = $input['title'];
       unset($input['title']);
 
@@ -1260,6 +1265,14 @@ EOS;
          $data = $this->assignedGroups + $data;
       }
 
+	   $data['content'] = str_replace('\r\n', "\r\n", $data['content']);
+	   $data['content'] = html_entity_decode($data['content'], ENT_QUOTES | ENT_HTML401);
+	   $data['content'] = stripslashes($data['content']);
+	   $data['content'] = mysqli_real_escape_string($DB->dbh, $data['content']);
+      
+//      print_r($data);
+//      die();
+      
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
          return false;
