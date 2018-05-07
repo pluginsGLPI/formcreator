@@ -1,10 +1,10 @@
 {
-  "name": "mantis",
+  "name": "formcreator",
   "version": "1.0.0",
   "description": "Branch created with the intention of functioning as an introduction web site of the project, a small point of entry where anyone can find out what it is about and to be able to get relevant information.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pluginsGLPI/mantis.git"
+    "url": "git+https://github.com/pluginsGLPI/formcreator.git"
   },
   "sasslintConfig": ".sass-lint.yml",
   "scripts": {
@@ -18,9 +18,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pluginsGLPI/mantis/issues"
+    "url": "https://github.com/pluginsGLPI/formcreator/issues"
   },
-  "homepage": "https://github.com/pluginsGLPI/mantis#readme",
+  "homepage": "https://github.com/pluginsGLPI/formcreator#readme",
   "devDependencies": {
     "eslint": "^4.7.2",
     "eslint-config-google": "^0.9.1",
