@@ -1,0 +1,30 @@
+---
+---
+
+$grey: #bebebe;
+$blue: #00a2fa;
+$white: #fff;
+
+.coverage {
+  .list-items,
+  .row {
+    margin: 0;
+  }
+
+  .functions {
+    border-top: solid 1px $grey;
+  }
+
+  .targets {
+    background-color: $blue;
+    color: $white;
+
+    h4 {
+      padding: 13px 0;
+    }
+  }
+
+  h2 {
+    padding: 37px 0 20px;
+  }
+}

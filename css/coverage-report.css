@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+}
+
+th {
+    text-align: center!important;
+    cursor: pointer;
+}
+
+td, th {
+    vertical-align: middle!important;
+}
+
+tr.line td, tr.line th {
+    padding: 10px!important;
+    line-height: 0!important;
+}
+
+pre {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+}
+
+pre .label, .panel-heading .label {
+    margin: 0 10px;
+}
+
+pre .label {
+    font-weight: 300;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+    font-size: 13px;
+}
+
+.covered {
+    background-color: #8eff9b;
+}
+
+.uncovered {
+    background-color: #ff8c76;
+}
+
+.unreach {
+    background-color: #ffd781;
+}
+
+.graph {
+    display: block;
+    overflow: auto;
+}
+
+.node rect {
+    stroke: #999;
+    fill: #fff;
+    stroke-width: 1.5px;
+}
+
+.edgePath path {
+    stroke-width: 1.5px;
+}
+
+.covered path, .covered rect {
+    stroke: #8eff9b;
+}
+
+.uncovered path, .uncovered rect {
+    stroke: #ff8c76;
+}
+
+.covered path {
+    fill: #8eff9b;
+}
+
+.uncovered path {
+    fill: #ff8c76;
+}
+
+.navbar-right {
+    width: 50%;
+}
+
+.navbar-form .form-group, .navbar-form .form-control {
+    width: 100%;
+}
+
+.headerSortUp .fa::before {
+    content: "\f0dd";
+}
+
+.headerSortDown .fa::before {
+    content: "\f0de";
+}
+
+.number {
+    color: #333;
+}
+
+.table-bordered, .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+    border: 0.1px solid #DDD !important;
+}
+
+.col-lg-12 {
+    width: 100% !important;
+}
+
+.line {
+    border-width: 0.1px !important;
+}
+
+.navbar-brand [alt=atoum] {
+    height: 24px;
+    float: left;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+[alt=atoum] {
+    height: 24px;
+    float: right;
+}
+
+footer.row {
+    position: initial;
+}
