@@ -2,7 +2,7 @@
    <name>FormCreator</name>
    <key>formcreator</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/TECLIB/formcreator/master/icon.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
          <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.</fr>
@@ -50,13 +50,13 @@ Features
          </en>
       </long>
    </description>
-   <homepage>https://github.com/TECLIB/formcreator</homepage>
-   <download>https://github.com/TECLIB/formcreator/releases</download>
-   <issues>https://github.com/TECLIB/formcreator/issues</issues>
-   <readme>https://github.com/TECLIB/formcreator/blob/master/README.md</readme>
+   <homepage>https://pluginsglpi.github.io/formcreator/</homepage>
+   <download>https://github.com/pluginsGLPI/formcreator/releases</download>
+   <issues>https://github.com/pluginsGLPI/formcreator/issues</issues>
+   <readme>https://github.com/pluginsGLPI/formcreator/blob/master/README.md</readme>
    <authors>
       <author>Jérémy Moreau</author>
-      <author>TECLIB'</author>
+      <author>pluginsGLPI'</author>
    </authors>
    <versions>
       <version>
@@ -248,7 +248,7 @@ Features
       </en>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/TECLIB/formcreator/master/screenshot.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/TECLIB/formcreator/master/screenshot_2.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/screenshot.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/screenshot_2.png</screenshot>
    </screenshots>
 </root>
