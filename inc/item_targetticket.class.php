@@ -59,7 +59,7 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
 
       $item_targetTicket = $this->fields;
 
-      // remove uneeded keys
+      // remove non needed keys
       unset($item_targetTicket['id'],
             $item_targetTicket['plugin_formcreator_targettickets_id']);
 
@@ -88,10 +88,10 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
             // add id key
             $item_targetTicket['id'] = $item_targetTicket_id;
 
-            // prepare update item_targetticket
+            // prepare update item_target ticket
             $relationsToImport[] = $item_targetTicket;
          } else {
-            // prepare create item_targetticket
+            // prepare create item_target ticket
             $relationsToImport[] = $item_targetTicket;
          }
       } else {

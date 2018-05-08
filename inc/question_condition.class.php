@@ -41,7 +41,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
    static public $items_id = "plugin_formcreator_questions_id";
 
    public function prepareInputForAdd($input) {
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
             || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -145,7 +145,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
     *
     * @param integer $formId ID of the form of the condition
     * @param integer $questionId ID of the question (or 0 for a new question)
-    * @param string $isFirst true if this is the first condition à all conditions aplied to a question
+    * @param string $isFirst true if this is the first condition in all conditions applied to a question
     *
     * @return string
     */

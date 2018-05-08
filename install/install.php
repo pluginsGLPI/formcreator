@@ -146,7 +146,7 @@ class PluginFormcreatorInstall {
    }
 
    /**
-    * is the plugin already isntalled ?
+    * is the plugin already installed ?
     *
     * @return boolean
     */
@@ -426,7 +426,7 @@ class PluginFormcreatorInstall {
    protected function deleteTables() {
       global $DB;
 
-      // Keep  these itemtypes as string because classes might be not avaiable (if plugin is inactive)
+      // Keep  these itemtypes as string because classes might not be available (if plugin is inactive)
       $itemtypes = [
          'PluginFormcreatorAnswer',
          'PluginFormcreatorCategory',
@@ -471,7 +471,7 @@ class PluginFormcreatorInstall {
     * @param string $needle
     */
    protected function endsWith($haystack, $needle) {
-      // search forward starting from end minus needle length characters
+      // search foreward starting from end minus needle length characters
       return $needle === '' || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
    }
 

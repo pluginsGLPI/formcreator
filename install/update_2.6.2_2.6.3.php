@@ -63,7 +63,7 @@ function plugin_formcreator_update_2_6_3() {
       $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
    }
 
-   // Remove abusive encding in target tickets
+   // Remove abusive encoding in target tickets
    $table = 'glpi_plugin_formcreator_targettickets';
    $request = [
       'FROM' => $table,
@@ -75,7 +75,7 @@ function plugin_formcreator_update_2_6_3() {
       $DB->query("UPDATE `$table` SET `name`='$name' WHERE `id` = '$id'");
    }
 
-   // Remove abusive encding in target changes
+   // Remove abusive encoding in target changes
    $table = 'glpi_plugin_formcreator_targetchanges';
    $request = [
       'FROM' => $table,

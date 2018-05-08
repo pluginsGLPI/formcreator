@@ -69,7 +69,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -101,7 +101,7 @@ class PluginFormcreatorAnswer extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item

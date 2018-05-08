@@ -199,7 +199,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
-      // in case of lefttab layout, we couldn't see "right error" message
+      // in case of left tab layout, we couldn't see "right error" message
       if ($item->get_item_to_display_tab) {
          if (isset($options["id"])
              && $options["id"]
@@ -241,7 +241,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item->showTimeline($rand);
          echo "</div>";
       } else {
-         // No ticket asociated to this issue or multiple tickets
+         // No ticket associated to this issue or multiple tickets
          // Show the form answers
          echo '<div class"center">';
          $item->showTabsContent();

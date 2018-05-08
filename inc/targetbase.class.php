@@ -740,7 +740,7 @@ EOS;
          ]);
          echo '</div>';
 
-         // Spécific tags
+         // Specific tags
          echo '<div id="tag_specific_value" style="display: none">';
 
          $obj = new PluginTagTag();

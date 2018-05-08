@@ -69,7 +69,7 @@ class PluginFormcreatorSection extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the section
+    * Prepare input data for adding the section
     * Check fields values and get the order for the new section
     *
     * @param array $input data used to add the item
@@ -87,7 +87,7 @@ class PluginFormcreatorSection extends CommonDBChild
          return [];
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();

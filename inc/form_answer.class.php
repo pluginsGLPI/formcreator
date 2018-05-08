@@ -568,7 +568,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -663,7 +663,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       } else {
          // Create new form answer object
 
-         // Does the form need to be validate ?
+         // Does the form need to be validated?
          if ($form->fields['validation_required']) {
             $status = 'waiting';
          } else {

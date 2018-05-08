@@ -64,7 +64,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    /**
-    * Prepares a answer value for output in a target object
+    * Prepares an answer value for output in a target object
     * @param string|array $input the answer to format for a target (ticket or change)
     * @return string
     */
@@ -164,7 +164,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    /**
-    * Is the field valid for thegiven value ?
+    * Is the field valid for the given value?
     *
     * @param string $value
     *
@@ -185,7 +185,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    /**
-    * Is the field required ?
+    * Is the field required?
     *
     * @return boolean
     */

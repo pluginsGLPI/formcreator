@@ -64,7 +64,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
 
    public function prepareInputForAdd($input) {
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid']) || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
@@ -73,7 +73,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM
    }
 
    /**
-    * Import a form's targetticket's actor into the db
+    * Import a form's target ticket's actor into the db
     * @see PluginFormcreatorTargetTicket::import
     * @see PluginFormcreatorTargetChange::import
     *
