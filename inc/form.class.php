@@ -332,11 +332,11 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
-    * @return NULL         Nothing, just display the form
+    * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options=[]) {
       global $DB;
@@ -409,8 +409,8 @@ class PluginFormcreatorForm extends CommonDBTM
          $validators[] = $row['items_id'];
       }
 
-      // Si le formulaire est récursif, on authorise les validateurs des sous-entités
-      // Sinon uniquement les validateurs de l'entité du formulaire
+      // If the form is recursive, authorize the validators in sub-entities
+      // If it isn't, only the validators of the entity of the form
       if ($this->isRecursive()) {
          $entites = getSonsOf('glpi_entities', $this->getEntityID());
       } else {
@@ -418,7 +418,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
 
-      // Select all users with ticket validation right and there groups
+      // Select all users with ticket validation right and the groups
       $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
                 FROM `glpi_users` u
                 INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
@@ -996,9 +996,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for adding the form
+    * Prepare input data for adding the form
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
    **/
@@ -1010,7 +1010,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -1054,9 +1054,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for updating the form
+    * Prepare input data for updating the form
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
    **/
@@ -1257,7 +1257,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * NB: Queries are made directly in SQL without GLPI's API to avoid controls made by Add(), prepareInputForAdd(), etc.
     *
-    * @return Boolean true if success, false toherwize.
+    * @return Boolean true if success, false otherwise.
     */
    public function duplicate() {
       $target              = new PluginFormcreatorTarget();
@@ -1272,7 +1272,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_profile        = new PluginFormcreatorForm_Profile();
       $tab_questions       = [];
 
-      // From data
+      // Form data
       $form_datas              = $this->fields;
       $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
       $form_datas['is_active'] = 0;
@@ -1518,9 +1518,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Transfer a form to another entity. Execute transfert action for massive action.
+    * Transfer a form to another entity. Execute transfer action for massive action.
     *
-    * @return Boolean true if success, false otherwize.
+    * @return Boolean true if success, false otherwise.
     */
    public function transfer($entity) {
       global $DB;
@@ -1661,7 +1661,7 @@ class PluginFormcreatorForm extends CommonDBTM
                                         $form['entities_id']);
       }
 
-      // remove uneeded keys
+      // remove non needed keys
       unset($form['id'],
             $form['plugin_formcreator_categories_id'],
             $form['entities_id'],
@@ -1793,7 +1793,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
    /**
     * Process import of json file(s) sended by the submit of self::showImportForm
-    * @param  array  $params GET/POST data who need to contains the filename(s) in _json_file key
+    * @param  array  $params GET/POST data that need to contain the filename(s) in _json_file key
     */
    public function importJson($params = []) {
       // parse json file(s)
@@ -1950,7 +1950,7 @@ class PluginFormcreatorForm extends CommonDBTM
                       ORDER BY $form_table.name ASC";
       $result_forms = $DB->query($query_forms);
 
-      // Show categories wicth have at least one form user can access
+      // Show categories which have at least one form user can access
       $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                  FROM $cat_table
                  WHERE 0 < (

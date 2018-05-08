@@ -126,7 +126,7 @@ class PluginFormcreatorTarget extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -214,7 +214,7 @@ class PluginFormcreatorTarget extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for updating the form
+    * Prepare input data for updating the form
     *
     * @param array $input data used to add the item
     *

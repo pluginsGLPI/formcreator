@@ -86,7 +86,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Export in an array all the data of the current instanciated targetticket
+    * Export in an array all the data of the current instanciated target ticket
     * @return array the array with all data (with sub tables)
     */
    public function export() {
@@ -132,7 +132,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Import a form's targetchange into the db
+    * Import a form's target change into the db
     * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
@@ -190,7 +190,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
@@ -211,7 +211,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
-      // General information : name
+      // General information: name
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
@@ -223,7 +223,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '</table>';
 
-      // change information : title, template...
+      // change information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
@@ -834,9 +834,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Prepare input datas for updating the target ticket
+    * Prepare input data for updating the target ticket
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
     **/
@@ -914,7 +914,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Save form datas to the target
+    * Save form data to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
@@ -973,7 +973,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
-      // Parse datas
+      // Parse data
       $changeFields = [
          'name',
          'content',

@@ -131,7 +131,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       $profile = new Profile;
       $form_profile['plugin_formcreator_forms_id'] = $forms_id;
 
-      // retreive foreign key
+      // retrieve foreign key
       if (!isset($form['_profile'])
           || !$form['profiles_id']
                   = plugin_formcreator_getFromDBByField($profile, 'name', $form['_profile'])) {

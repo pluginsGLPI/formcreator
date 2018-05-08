@@ -38,7 +38,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorFields
 {
    /**
-    * Retrive all field types and file path
+    * Retrieve all field types and file path
     * @return Array     field_type => File_path
     */
    public static function getTypes() {

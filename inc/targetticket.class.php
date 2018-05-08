@@ -70,7 +70,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
@@ -91,7 +91,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      // General information : name
+      // General information: name
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
@@ -103,7 +103,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '</table>';
 
-      // Ticket information : title, template...
+      // Ticket information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
@@ -785,7 +785,7 @@ EOS;
                $item->getFromDB($row['items_id']);
          switch ($itemtype) {
             case Ticket::getType():
-               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
                //echo Ticket_Ticket::getLinkName($row['link']);
                echo PluginFormcreatorCommon::getLinkName($row['link']);
                echo ' ';
@@ -797,7 +797,7 @@ EOS;
                break;
 
             case PluginFormcreatorTargetTicket::getType():
-               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
                //echo Ticket_Ticket::getLinkName($row['link']);
                echo PluginFormcreatorCommon::getLinkName($row['link']);
                echo ' ';
@@ -1012,7 +1012,7 @@ EOS;
    }
 
    /**
-    * Save form datas to the target
+    * Save form data to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *

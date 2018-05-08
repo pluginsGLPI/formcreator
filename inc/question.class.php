@@ -325,7 +325,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -350,7 +350,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -372,7 +372,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -391,7 +391,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return false;
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -551,7 +551,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                if ((count($input['show_field']) == count($input['show_condition'])
                      && count($input['show_value']) == count($input['show_logic'])
                      && count($input['show_field']) == count($input['show_value']))) {
-                  // Arrays all have the same count and ahve at least one item
+                  // Arrays all have the same count and have at least one item
                   $order = 0;
                   while (count($input['show_field']) > 0) {
                      $order++;
@@ -1315,7 +1315,7 @@ JS;
    }
 
    /**
-    * get  the form belonging the question
+    * get the form belonging to the question
     *
     * @return boolean|PluginFormcreatorForm the form or false if not found
     */

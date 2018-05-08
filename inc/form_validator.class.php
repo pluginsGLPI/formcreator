@@ -52,7 +52,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
    const VALIDATION_GROUP = 2;
 
    public function prepareInputForAdd($input) {
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
