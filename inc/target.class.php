@@ -267,7 +267,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       } else {
          //create target
          $targets_id = $item->add($target);
-         $item->getFromDB('$targets_id');
+         $item->getFromDB($targets_id);
       }
 
       // import sub table
