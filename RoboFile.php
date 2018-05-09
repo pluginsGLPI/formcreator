@@ -374,7 +374,7 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $copyrightRegex = "#Copyright (\(c\)|©) (\d{4}-)?(\d{4}) #iUm";
+      $copyrightRegex = "#Copyright (\(c\)|©) (\d{4}\s*-\s*)(\d{4}) #iUm";
       $year = date("Y");
       $replacement = 'Copyright © ${2}' . $year . ' ';
       $this->headerTemplate = preg_replace($copyrightRegex, $replacement, $this->headerTemplate);
