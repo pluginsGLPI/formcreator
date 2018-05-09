@@ -1261,7 +1261,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return Boolean true if success, false toherwize.
     */
    public function duplicate() {
-      global $DB; 
+      global $DB;
       $target              = new PluginFormcreatorTarget();
       $target_ticket       = new PluginFormcreatorTargetTicket();
       $target_change       = new PluginFormcreatorTargetChange();
@@ -1294,8 +1294,8 @@ class PluginFormcreatorForm extends CommonDBTM
                $row['uuid']);
 
          $row['plugin_formcreator_forms_id'] = $new_form_id;
-	   $row['name'] = html_entity_decode($row['name'], ENT_QUOTES | ENT_HTML401);
-	   $row['name'] = stripslashes($row['name']);
+         $row['name'] = html_entity_decode($row['name'], ENT_QUOTES | ENT_HTML401);
+         $row['name'] = stripslashes($row['name']);
          $row['name'] = mysqli_real_escape_string($DB->dbh, $row['name']);
 
          if (!$form_profile->add($row)) {
@@ -1319,7 +1319,7 @@ class PluginFormcreatorForm extends CommonDBTM
       foreach ($sectionRows as $sections_id => $sectionRow) {
          unset($sectionRow['id'],
                $sectionRow['uuid']);
-         
+
          $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
          $sectionRow['name'] = html_entity_decode($sectionRow['name'], ENT_QUOTES | ENT_HTML401);
          $sectionRow['name'] = stripslashes($sectionRow['name']);

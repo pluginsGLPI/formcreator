@@ -931,7 +931,7 @@ EOS;
 
       $input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
       $input['name'] = stripslashes($input['name']);
-      $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']); 
+      $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']);
 
       $target->update(['id' => $found['id'], 'name' => $input['name']]);
       $input['name'] = $input['title'];
@@ -1516,9 +1516,7 @@ EOS;
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['comment'] = $content;
          }
-      } 
-      else 
-      {
+      } else {
             $target_data['name'] = $target_data['title'];
       }
 
