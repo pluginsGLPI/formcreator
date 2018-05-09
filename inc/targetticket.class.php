@@ -929,12 +929,11 @@ EOS;
       $found  = $target->find('items_id = ' . $this->getID());
       $found  = array_shift($found);
 
-
-	  $input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
-	  $input['name'] = stripslashes($input['name']);
+      $input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
+      $input['name'] = stripslashes($input['name']);
       $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']); 
-	   
-	  $target->update(['id' => $found['id'], 'name' => $input['name']]);
+
+      $target->update(['id' => $found['id'], 'name' => $input['name']]);
       $input['name'] = $input['title'];
       unset($input['title']);
 
@@ -1265,11 +1264,11 @@ EOS;
          $data = $this->assignedGroups + $data;
       }
 
-	   $data['content'] = str_replace('\r\n', "\r\n", $data['content']);
-	   $data['content'] = html_entity_decode($data['content'], ENT_QUOTES | ENT_HTML401);
-	   $data['content'] = stripslashes($data['content']);
-	   $data['content'] = mysqli_real_escape_string($DB->dbh, $data['content']);
-	   
+      $data['content'] = str_replace('\r\n', "\r\n", $data['content']);
+      $data['content'] = html_entity_decode($data['content'], ENT_QUOTES | ENT_HTML401);
+      $data['content'] = stripslashes($data['content']);
+      $data['content'] = mysqli_real_escape_string($DB->dbh, $data['content']);
+
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
          return false;
@@ -1490,7 +1489,7 @@ EOS;
       // convert question uuid into id
       $targetTicket = new PluginFormcreatorTargetTicket();
       $targetTicket->getFromDB($targetitems_id);
-      
+
       $formId        = $targetTicket->getForm()->getID();
       $section       = new PluginFormcreatorSection();
       $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
@@ -1517,15 +1516,15 @@ EOS;
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['comment'] = $content;
          }
+      } 
+      else 
+      {
+            $target_data['name'] = $target_data['title'];
       }
-      else
-	  {
-		  $target_data['name'] = $target_data['title'];
-	  }
-      
+
       $target_data['name'] = html_entity_decode($target_data['name'], ENT_QUOTES | ENT_HTML401);
       $target_data['name'] = stripslashes($target_data['name']);
-      
+
       // update target ticket
       $item->update($target_data); // This method already escapes strings so we don't need to do it here
 

@@ -135,7 +135,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
-   	  global $DB;
+      global $DB;
       // Control fields values :
       // - name is required
       if (isset($input['name'])
@@ -149,15 +149,15 @@ class PluginFormcreatorTarget extends CommonDBTM
             Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
-         
+
          switch ($input['itemtype']) {
             case PluginFormcreatorTargetTicket::class:
                $targetticket      = new PluginFormcreatorTargetTicket();
-               
+
                $input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
                $input['name'] = stripslashes($input['name']);
                $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']);
-               
+
                $id_targetticket   = $targetticket->add([
                   'name'    => $input['name'],
                   'comment' => '##FULLFORM##'
@@ -183,12 +183,12 @@ class PluginFormcreatorTarget extends CommonDBTM
                }
                break;
             case PluginFormcreatorTargetChange::class:
-            	$targetchange      = new PluginFormcreatorTargetChange();
-            	
-				$input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
-				$input['name'] = stripslashes($input['name']);
-				$input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']);
-               
+               $targetchange      = new PluginFormcreatorTargetChange();
+
+               $input['name'] = html_entity_decode($input['name'], ENT_QUOTES | ENT_HTML401);
+               $input['name'] = stripslashes($input['name']);
+               $input['name'] = mysqli_real_escape_string($DB->dbh, $input['name']);
+
                $id_targetchange   = $targetchange->add([
                   'name'    => $input['name'],
                   'comment' => '##FULLFORM##'
@@ -281,10 +281,9 @@ class PluginFormcreatorTarget extends CommonDBTM
          $item->getFromDB($targets_id);
       }
 
-	   $target['_data']['title'] = html_entity_decode($target['_data']['title'], ENT_QUOTES | ENT_HTML401);
-	   $target['_data']['title'] = mysqli_real_escape_string($DB->dbh, $target['_data']['title']);
-	   
-      
+      $target['_data']['title'] = html_entity_decode($target['_data']['title'], ENT_QUOTES | ENT_HTML401);
+      $target['_data']['title'] = mysqli_real_escape_string($DB->dbh, $target['_data']['title']);
+
       // import sub table
       $target['itemtype']::import($item->fields['items_id'], $target['_data']);
 
