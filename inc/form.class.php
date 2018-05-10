@@ -60,7 +60,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return boolean True if he can read requests
     */
    public static function canView() {
-      return Session::haveRight("entity", UPDATE);
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
@@ -69,7 +69,19 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return boolean True if he can read requests
     */
    public static function canDelete() {
-      return Session::haveRight("entity", UPDATE);
+      return Session::haveRight('entity', UPDATE);
+   }
+
+   public function canPurgeItem() {
+      $DbUtil = new DbUtils();
+
+      $criteria = [
+         PluginFormcreatorForm::getForeignKeyField() => $this->getID(),
+      ];
+      if ($DbUtil->countElementsInTable(PluginFormcreatorForm_Answer::getTable(), $criteria) > 0) {
+         return false;
+      }
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
