@@ -428,7 +428,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $tab;
    }
 
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options = []) {
+   public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
 
       if (!is_array($values)) {
          $values = [$field => $values];

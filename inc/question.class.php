@@ -83,7 +83,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "PluginFormcreatorForm":
             $number      = 0;
@@ -115,7 +115,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       echo '<table class="tab_cadre_fixe">';
@@ -609,7 +609,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query($query);
    }
 
-   public function showForm($ID, $options=[]) {
+   public function showForm($ID, $options = []) {
       global $DB, $CFG_GLPI;
 
       $rootDoc = $CFG_GLPI['root_doc'];

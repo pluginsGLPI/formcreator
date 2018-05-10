@@ -4,19 +4,19 @@ class TargetTicketTest extends SuperAdminTestCase {
    public function setUp() {
       parent::setUp();
 
-      $this->formData = array(
+      $this->formData = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => 0
-      );
+      ];
 
-      $this->target = array(
+      $this->target = [
             'name'                  => 'a target',
             'itemtype'              => 'PluginFormcreatorTargetTicket'
-      );
+      ];
    }
 
    public function testInitCreateForm() {
@@ -33,9 +33,9 @@ class TargetTicketTest extends SuperAdminTestCase {
     */
    public function testCreateTarget(PluginFormcreatorForm $form) {
       $target = new PluginFormcreatorTarget();
-      $this->target = $this->target + array(
+      $this->target = $this->target + [
             'plugin_formcreator_forms_id' => $form->getID()
-      );
+      ];
       $target->add($this->target);
       $this->assertFalse($target->isNewItem());
       $this->assertEquals($form->getID(), $target->getField('plugin_formcreator_forms_id'));

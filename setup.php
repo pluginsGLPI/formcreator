@@ -23,7 +23,7 @@ function plugin_version_formcreator() {
       echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
-   return array(
+   return [
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
@@ -35,7 +35,7 @@ function plugin_version_formcreator() {
             'dev'            => true
          ]
       ]
-   );
+   ];
 }
 
 /**
@@ -76,8 +76,8 @@ function plugin_init_formcreator() {
 
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
-   array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorForm_Answer');
-   array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
+   array_push($CFG_GLPI["ticket_types"], PluginFormcreatorForm_Answer::class);
+   array_push($CFG_GLPI["document_types"], PluginFormcreatorForm_Answer::class);
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
@@ -97,7 +97,7 @@ function plugin_init_formcreator() {
    ];
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
+   if ($plugin->isActivated('formcreator')) {
       spl_autoload_register('plugin_formcreator_autoload');
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
@@ -180,17 +180,17 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
-         Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
+         Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => 'Central']);
 
          // Load field class and all its method to manage fields
-         Plugin::registerClass('PluginFormcreatorFields');
+         Plugin::registerClass(PluginFormcreatorFields::class);
 
          // Notification
-         Plugin::registerClass('PluginFormcreatorForm_Answer', [
+         Plugin::registerClass(PluginFormcreatorForm_Answer::class, [
             'notificationtemplates_types' => true
          ]);
 
-         Plugin::registerClass('PluginFormcreatorEntityconfig', ['addtabon' => 'Entity']);
+         Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => 'Entity']);
       }
    }
 }
@@ -198,8 +198,9 @@ function plugin_init_formcreator() {
 /**
  * Encode special chars
  *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
+ * @param  string  $string       The string to encode
+ * @param  boolean $mode_legacy
+ * @return string                The encoded string
  */
 function plugin_formcreator_encode($string, $mode_legacy = true) {
    if (!is_string($string)) {
@@ -225,8 +226,8 @@ function plugin_formcreator_encode($string, $mode_legacy = true) {
 /**
  * Encode special chars
  *
- * @param  String    $string  The string to encode
- * @return String             The encoded string
+ * @param  string    $string  The string to encode
+ * @return string             The encoded string
  */
 function plugin_formcreator_decode($string) {
    $string = stripcslashes($string);
@@ -273,7 +274,7 @@ function plugin_formcreator_getUuid() {
  * @param $value value to search in provided field
  *
  * @return true if succeed else false
-**/
+ */
 function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $value = "") {
    global $DB;
 

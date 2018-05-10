@@ -3,9 +3,9 @@ class MultielectFieldTest extends SuperAdminTestCase {
 
    public function provider() {
 
-      $dataset = array(
-            array(
-                  'fields'          => array(
+      $dataset = [
+            [
+                  'fields'          => [
                         'fieldtype'       => 'select',
                         'name'            => 'question',
                         'required'        => '0',
@@ -14,13 +14,13 @@ class MultielectFieldTest extends SuperAdminTestCase {
                         'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array(''),
+                  'expectedValue'   => [''],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'select',
                         'name'            => 'question',
                         'required'        => '0',
@@ -29,13 +29,13 @@ class MultielectFieldTest extends SuperAdminTestCase {
                         'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                         'order'           => '1',
                         'show_rule'       => 'always'
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3'),
+                  'expectedValue'   => ['3'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'select',
                         'name'            => 'question',
                         'required'        => '0',
@@ -46,13 +46,13 @@ class MultielectFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'range_min'       => 2,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3'),
+                  'expectedValue'   => ['3'],
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'select',
                         'name'            => 'question',
                         'required'        => '0',
@@ -63,13 +63,13 @@ class MultielectFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'range_min'       => 2,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3', '4'),
+                  'expectedValue'   => ['3', '4'],
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'select',
                         'name'            => 'question',
                         'required'        => '0',
@@ -80,12 +80,12 @@ class MultielectFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'range_min'       => 2,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
-                  'expectedValue'   => array('3', '4', '2', '1', '6'),
+                  'expectedValue'   => ['3', '4', '2', '1', '6'],
                   'expectedIsValid' => false
-            ),
-      );
+            ],
+      ];
 
       return $dataset;
    }
@@ -131,7 +131,7 @@ class MultielectFieldTest extends SuperAdminTestCase {
    }
 
    public function testPrepareInputForSave() {
-      $fields = array(
+      $fields = [
          'fieldtype'       => 'multiselect',
          'name'            => 'question',
          'required'        => '0',
@@ -141,7 +141,7 @@ class MultielectFieldTest extends SuperAdminTestCase {
          'show_rule'       => 'always',
          'range_min'       => 3,
          'range_max'       => 4,
-      );
+      ];
       $fieldInstance = new PluginFormcreatorMultiselectField($fields);
 
       // Test a value is mandatory

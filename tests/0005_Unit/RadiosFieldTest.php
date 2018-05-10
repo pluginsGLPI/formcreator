@@ -1,7 +1,7 @@
 <?php
 class RadiossFieldTest extends SuperAdminTestCase {
    public function testPrepareInputForSave() {
-      $fields = array(
+      $fields = [
          'fieldtype'       => 'radios',
          'name'            => 'question',
          'required'        => '0',
@@ -11,7 +11,7 @@ class RadiossFieldTest extends SuperAdminTestCase {
          'show_rule'       => 'always',
          'range_min'       => 3,
          'range_max'       => 4,
-      );
+      ];
       $fieldInstance = new PluginFormcreatorRadiosField($fields);
 
       // Test a value is mandatory

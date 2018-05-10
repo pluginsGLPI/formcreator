@@ -199,7 +199,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<div class="div_show_condition_field">';
       $html.= Dropdown::showFromArray('show_field[]', $questions_tab, [
          'display'      => false,
-         'used'         => array($questionId => ''),
+         'used'         => [$questionId => ''],
          'value'        => $show_field,
          'rand'         => $rand,
       ]);

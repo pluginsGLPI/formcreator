@@ -2,9 +2,9 @@
 class IntegerFieldTest extends SuperAdminTestCase {
 
    public function provider() {
-      $dataset = array(
-            array(
-                  'fields'          => array(
+      $dataset = [
+            [
+                  'fields'          => [
                         'fieldtype'       => 'integer',
                         'name'            => 'question',
                         'required'        => '0',
@@ -13,13 +13,13 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'show_empty'      => '0',
                         'values'          => ''
-                  ),
+                  ],
                   'data'            => null,
                   'expectedValue'   => '',
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'integer',
                         'name'            => 'question',
                         'required'        => '0',
@@ -28,13 +28,13 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'show_rule'       => 'always',
                         'show_empty'      => '0',
                         'values'          => ''
-                  ),
+                  ],
                   'data'            => null,
                   'expectedValue'   => '2',
                   'expectedIsValid' => true
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'integer',
                         'name'            => 'question',
                         'required'        => '0',
@@ -44,13 +44,13 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'show_empty'      => '0',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
                   'expectedValue'   => '2',
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'integer',
                         'name'            => 'question',
                         'required'        => '0',
@@ -61,13 +61,13 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
                   'expectedValue'   => '5',
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'integer',
                         'name'            => 'question',
                         'required'        => '0',
@@ -78,13 +78,13 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
                   'expectedValue'   => '3.4',
                   'expectedIsValid' => false
-            ),
-            array(
-                  'fields'          => array(
+            ],
+            [
+                  'fields'          => [
                         'fieldtype'       => 'integer',
                         'name'            => 'question',
                         'required'        => '0',
@@ -95,12 +95,12 @@ class IntegerFieldTest extends SuperAdminTestCase {
                         'values'          => '',
                         'range_min'       => 3,
                         'range_max'       => 4,
-                  ),
+                  ],
                   'data'            => null,
                   'expectedValue'   => '4',
                   'expectedIsValid' => true
-            ),
-      );
+            ],
+      ];
 
       return $dataset;
    }
