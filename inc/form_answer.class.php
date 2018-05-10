@@ -72,6 +72,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          return false;
       }
 
+      if (Session::haveRight('entity', UPDATE)) {
+         return true;
+      }
+
       if ($_SESSION['glpiID'] == $this->getField('requester_id')) {
          return true;
       }
