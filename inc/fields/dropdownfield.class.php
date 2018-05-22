@@ -34,6 +34,8 @@
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
+      global $DB, $CFG_GLPI;
+
       if ($canEdit) {
          if (!empty($this->fields['values'])) {
             $rand     = mt_rand();
@@ -50,26 +52,53 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                         'comments' => false,
                         'rand'     => $rand];
 
-            if ($itemtype == "User") {
-               $dparams['right'] = 'all';
-            } else if ($itemtype == "ITILCategory") {
-               $dparams['condition'] = '1';
-               if (isset ($_SESSION['glpiactiveprofile']['interface'])
-                   && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-                  $dparams['condition'] .= " AND `is_helpdeskvisible` = '1'";
-               }
-               switch ($decodedValues['show_ticket_categories']) {
-                  case 'request':
-                     $dparams['condition'] .= " AND `is_request` = '1'";
-                     break;
-                  case 'incident':
-                     $dparams['condition'] .= " AND `is_incident` = '1'";
-                     break;
-               }
-               if (isset($decodedValues['show_ticket_categories_depth'])
-                   && $decodedValues['show_ticket_categories_depth'] > 0) {
-                  $dparams['condition'] .= " AND `level` <= '" . $decodedValues['show_ticket_categories_depth'] . "'";
-               }
+            switch ($itemtype) {
+               case User::class:
+                  $dparams['right'] = 'all';
+                  break;
+
+               case ITILCategory::class:
+                  $dparams['condition'] = '1';
+                  if (isset ($_SESSION['glpiactiveprofile']['interface'])
+                     && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+                     $dparams['condition'] .= " AND `is_helpdeskvisible` = '1'";
+                  }
+                  switch ($decodedValues['show_ticket_categories']) {
+                     case 'request':
+                        $dparams['condition'] .= " AND `is_request` = '1'";
+                        break;
+                     case 'incident':
+                        $dparams['condition'] .= " AND `is_incident` = '1'";
+                        break;
+                  }
+                  if (isset($decodedValues['show_ticket_categories_depth'])
+                     && $decodedValues['show_ticket_categories_depth'] > 0) {
+                     $dparams['condition'] .= " AND `level` <= '" . $decodedValues['show_ticket_categories_depth'] . "'";
+                  }
+                  break;
+
+               default:
+                  if (in_array($itemtype, $CFG_GLPI['ticket_types'])) {
+                     $userFk = User::getForeignKeyField();
+                     $groupFk = Group::getForeignKeyField();
+                     $canViewAllHardware = Session::haveRight('helpdesk_hardware', pow(2, Ticket::HELPDESK_ALL_HARDWARE));
+                     $canViewMyHardware = Session::haveRight('helpdesk_hardware', pow(2, Ticket::HELPDESK_MY_HARDWARE));
+                     $canViewGroupHardware = Session::haveRight('show_group_hardware', '1');
+                     $groups = [];
+                     if ($canViewGroupHardware) {
+                        $groups = $this->getMyGroups(Session::getLoginUserID());
+                     }
+                     if ($DB->fieldExists($itemtype::getTable(), $userFk)
+                        && !$canViewAllHardware && $canViewMyHardware) {
+                        $userId = $_SESSION['glpiID'];
+                        $dparams['condition'] = "`$userFk`='$userId'";
+                     }
+                     if ($DB->fieldExists($itemtype::getTable(), $groupFk)
+                        && !$canViewAllHardware && count($groups) > 0) {
+                        $groups = implode("', '", $groups);
+                        $dparams['condition'] .= " OR `$groupFk` IN ('$groups')";
+                     }
+                  }
             }
 
             $itemtype::dropdown($dparams);
@@ -179,5 +208,41 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['dropdown'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   private function getMyGroups($userID) {
+      global $DB;
+
+      // from Item_Ticket::dropdownMyDevices()
+      $DbUtil = new DbUtils();
+      $group_where = "";
+      $query       = "SELECT `glpi_groups_users`.`groups_id`, `glpi_groups`.`name`
+                        FROM `glpi_groups_users`
+                        LEFT JOIN `glpi_groups`
+                        ON (`glpi_groups`.`id` = `glpi_groups_users`.`groups_id`)
+                        WHERE `glpi_groups_users`.`users_id` = '$userID' " .
+                              $DbUtil->getEntitiesRestrictRequest(
+                                 "AND",
+                                 "glpi_groups",
+                                 "",
+                                 $_SESSION['glpiactive_entity'],
+                                 $_SESSION['glpiactive_entity_recursive']);
+      $result  = $DB->query($query);
+
+      $first   = true;
+      $devices = [];
+      if ($DB->numrows($result) === 0) {
+         return [];
+      }
+      while ($data = $DB->fetch_assoc($result)) {
+         if ($first) {
+            $first = false;
+         } else {
+            $group_where .= " OR ";
+         }
+         $a_groups                     = getAncestorsOf("glpi_groups", $data["groups_id"]);
+         $a_groups[$data["groups_id"]] = $data["groups_id"];
+      }
+      return $a_groups;
    }
 }
