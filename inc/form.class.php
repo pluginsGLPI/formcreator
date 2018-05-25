@@ -1019,13 +1019,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         if (!is_array($value)) {
-            $input[$key] = plugin_formcreator_encode($value);
-         }
-      }
-
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
