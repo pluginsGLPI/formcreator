@@ -51,14 +51,17 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['description']) && empty($input['description'])) {
-         Session::addMessageAfterRedirect(
-            __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR);
-         return [];
+      if (isset($input['description'])) {
+         if (strlen($input['description']) < 1) {
+            Session::addMessageAfterRedirect(
+               __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
+               false,
+               ERROR);
+            return [];
+         }
+         $input['description'] = addslashes($input['description']);
       }
-      $input['description'] = addslashes($input['description']);
+
       return $input;
    }
 
