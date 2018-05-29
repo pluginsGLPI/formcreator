@@ -90,6 +90,14 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       }
    }
 
+   public function setInitialValue($value) {
+      $value = json_encode($value);
+      echo Html::scriptBlock('$(function() {
+         formcreatorAddValueOf(' . $this->fields['id'] . ', '
+            . $value . ');
+      })');
+   }
+
    public function getAnswer() {
       $return = [];
       $values = $this->getAvailableValues();

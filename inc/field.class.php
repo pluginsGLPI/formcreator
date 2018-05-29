@@ -67,7 +67,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 
    /**
     * Prepares an answer value for output in a target object
-    * @param  string|array $input the answer to format for a target (ticket or change)
+    * @param string|array $input the answer to format for a target (ticket or change)
     * @return string
     */
    public function prepareQuestionInputForTarget($input) {
@@ -92,26 +92,14 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          echo ' <span class="red">*</span>';
       }
       echo '</label>';
-      echo '<div class="help-block">' . html_entity_decode($this->fields['description']) . '</div>';
+      echo '<div class="help-block">' . $this->fields['description'] . '</div>';
 
       echo '<div class="form_field">';
       $this->displayField($canEdit);
       echo '</div>';
 
       echo '</div>';
-      $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
-      // $value = json_encode($this->getAnswer());
-      if ($this->fields['fieldtype'] == 'dropdown') {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-            . str_replace("\r\n", "\\r\\n", addslashes($this->fields['answer'])) . '");
-         })');
-      } else {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-               . str_replace("\r\n", "\\r\\n", addslashes(html_entity_decode($value))) . '");
-         })');
-      }
+      $this->setInitialValue($this->fields['answer']);
    }
 
    /**
@@ -128,6 +116,13 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       } else {
          echo $this->getAnswer();
       }
+   }
+
+   public function setInitialValue($value) {
+      echo Html::scriptBlock('$(function() {
+         formcreatorAddValueOf(' . $this->fields['id'] . ', "'
+            . str_replace("\r\n", "\\r\\n", $value) . '");
+      })');
    }
 
    /**

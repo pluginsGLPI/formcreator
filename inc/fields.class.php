@@ -325,22 +325,23 @@ class PluginFormcreatorFields
     * @rturn array
     */
    public static function updateVisibility($currentValues) {
-      foreach ($currentValues as &$value) {
-         if (is_array($value)) {
-            foreach ($value as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value, false);
-            }
-         } else if (is_array(json_decode($value))) {
-            $tab = json_decode($value);
-            foreach ($tab as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value, false);
-            }
-            $value = json_encode($tab);
-         } else {
-            $value = stripslashes($value);
-         }
-      }
-      unset ($value);
+      //foreach ($currentValues as &$value) {
+         //if (is_array($value)) {
+            //foreach ($value as &$sub_value) {
+               //$sub_value = plugin_formcreator_encode($sub_value, false);
+            //}
+         //} else if (is_array(json_decode($value))) {
+            //$tab = json_decode($value);
+            //foreach ($tab as &$sub_value) {
+               //$sub_value = plugin_formcreator_encode($sub_value, false);
+            //}
+            //$value = json_encode($tab);
+         //} else {
+         //if (!is_array($value) && !is_array(json_decode($value))) {
+         //   $value = Toolbox::stripslashes_deep($value);
+         //}
+      //}
+      //unset ($value);
       $questionToShow = [];
       foreach ($currentValues as $id => $value) {
          $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);

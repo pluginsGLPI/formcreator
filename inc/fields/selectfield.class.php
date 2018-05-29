@@ -50,22 +50,21 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             if ($this->fields['show_empty']) {
                $tab_values = ['' => '-----'] + $tab_values;
             }
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, [
+            echo Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, [
                'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
                'values'    => static::IS_MULTIPLE ? $this->getValue() : [],
                'rand'      => $rand,
                'multiple'  => static::IS_MULTIPLE,
+               'display'   => false,
             ]);
          }
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
-                        var selectedValues = jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").val();
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock('$(function() {
+            $("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
+               var selectedValues = $("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").val();
+               formcreatorChangeValueOf(' . $this->fields['id']. ', selectedValues);
+            });
+         })');
       } else {
          echo nl2br($this->getAnswer());
          echo PHP_EOL;

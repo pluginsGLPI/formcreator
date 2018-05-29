@@ -957,9 +957,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             } else {
                $answer = null;
             }
-            PluginFormcreatorFields::showField($question_line, $answer);
+            PluginFormcreatorFields::showField($question_line, Toolbox::stripslashes_deep($answer));
          }
       }
+
       echo Html::scriptBlock('$(function() {
          formcreatorShowFields();
       })');
@@ -1190,6 +1191,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // If not valid back to form
       if (!$valid) {
+         /*
          foreach ($data as $key => $value) {
             if (is_array($value)) {
                foreach ($value as $key2 => $value2) {
@@ -1205,6 +1207,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                $data[$key] = plugin_formcreator_encode($value);
             }
          }
+         */
 
          $_SESSION['formcreator']['data'] = $data;
          // Save form
