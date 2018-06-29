@@ -102,7 +102,7 @@ function plugin_formcreator_updateCategory_2_5(Migration $migration) {
    // Legacy upgrade of Categories
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_categories");
 
-   if (TableExists('glpi_plugin_formcreator_cats')) {
+   if ($DB->tableExists('glpi_plugin_formcreator_cats')) {
       $query = "INSERT IGNORE INTO `glpi_plugin_formcreator_categories` (`id`, `name`)
                 SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
       $DB->query($query);
@@ -129,7 +129,7 @@ function plugin_formcreator_updateCategory_2_5(Migration $migration) {
     *
     * @since 0.90-1.4
     */
-   if (!FieldExists('glpi_plugin_formcreator_categories', "knowbaseitemcategories_id")) {
+   if (!$DB->fieldExists('glpi_plugin_formcreator_categories', "knowbaseitemcategories_id")) {
       $migration->addField('glpi_plugin_formcreator_categories', 'completename', 'string', [
          'after' => 'comment'
       ]);
@@ -759,7 +759,7 @@ function plugin_formcreator_updateSection_2_5(Migration $migration) {
    }
 
    // Migration from previous version => Update Question table, then create a "description" question from content
-   if (FieldExists('glpi_plugin_formcreator_sections', 'content', false)) {
+   if ($DB->fieldExists('glpi_plugin_formcreator_sections', 'content', false)) {
       // Increment the order of questions which are in a section with a description
       $query = "UPDATE `PluginFormcreatorQuestion`
                 SET `order` = `order` + 1
@@ -815,7 +815,7 @@ function plugin_formcreator_updateTarget_2_5(Migration $migration) {
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targets");
 
    // Migration to 0.85-1.2.5
-   if (FieldExists('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id', false)) {
+   if ($DB->fieldExists('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targets`
                 CHANGE `plugin_formcreator_forms_id` `plugin_formcreator_forms_id` INT NOT NULL;";
       $DB->query($query);
