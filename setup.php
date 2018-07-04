@@ -305,8 +305,8 @@ function plugin_formcreator_getUuid() {
  * @param $value value to search in provided field
  *
  * @return true if succeed else false
-**/
-function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $value = "") {
+ */
+function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $value = '') {
    global $DB;
 
    // != 0 because 0 is consider as empty
