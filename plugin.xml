@@ -56,6 +56,8 @@ Features
    <readme>https://github.com/pluginsGLPI/formcreator/blob/master/README.md</readme>
    <authors>
       <author>Jérémy Moreau</author>
+      <author>Thierry Bugier</author>
+      <author>Alexandre Delaunay</author>
       <author>pluginsGLPI'</author>
    </authors>
    <versions>
@@ -216,14 +218,22 @@ Features
    <langs>
       <lang>ca_ES</lang>
       <lang>cs_CZ</lang>
+      <lang>de_AT</lang>
       <lang>de_DE</lang>
       <lang>en_GB</lang>
+      <lang>en_US</lang>
+      <lang>es_419</lang>
       <lang>es_AR</lang>
+      <lang>es_CL</lang>
       <lang>es_ES</lang>
+      <lang>es_MX</lang>
       <lang>fr_FR</lang>
       <lang>hu_HU</lang>
       <lang>it_IT</lang>
       <lang>lv_LV</lang>
+      <lang>nb_NO</lang>
+      <lang>nl_BE</lang>
+      <lang>nl_NL</lang>
       <lang>pl_PL</lang>
       <lang>pt_BR</lang>
       <lang>ro_RO</lang>

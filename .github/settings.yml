@@ -1,7 +1,7 @@
 repository:
   name: formcreator
   description: GLPI Plugin Formcreator
-  homepage: https://plugisglpi.github.io/formcreator/
+  homepage: https://pluginsglpi.github.io/formcreator/
   topics: service-catalog, ticket, helpdesk, incident-management, servicedesk, itil, php, open-source, gplv3
   private: false
   has_issues: true
@@ -12,12 +12,20 @@ repository:
   allow_merge_commit: false
   allow_rebase_merge: true
 labels:
+  - name: api
+    color: 0052cc
   - name: bug
     color: f44336
   - name: build
     color: 795548
+  - name: cherry-pick
+    color: af1c46
   - name: ci
     color: fbca04
+  - name: cleanup
+    color: c2e0c6
+  - name: cli
+    color: 444444
   - name: documentation
     color: 607d8b
   - name: duplicate
@@ -26,8 +34,14 @@ labels:
     color: 3f51b5
   - name: hacktoberfest
     color: ff625f
+  - name: install
+    color: ffa31a
   - name: invalid
     color: cddc39
+  - name: locales
+    color: d4c5f9
+  - name: notification
+    color: cc6699
   - name: performance
     color: 009688
   - name: question
@@ -38,6 +52,8 @@ labels:
     color: 2196f3
   - name: test
     color: 8bc34a
+  - name: ui
+    color: bfdadc
   - name: wontfix
     color: ffffff
   - name: help wanted
