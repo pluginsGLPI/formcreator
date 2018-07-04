@@ -1874,6 +1874,22 @@ class PluginFormcreatorForm extends CommonDBTM
          $forms_id = $form_obj->add($form);
       }
 
+      // import restrictions
+      if ($forms_id) {
+         // Delete all previous restrictions
+         $FormProfile = new PluginFormcreatorForm_Profile();
+         $FormProfile->deleteByCriteria([
+            'plugin_formcreator_forms_id' => $forms_id,
+         ]);
+
+         // Import updates
+         if (isset($form['_profiles'])) {
+            foreach ($form['_profiles'] as $formProfile) {
+               PluginFormcreatorForm_Profile::import($forms_id, $formProfile);
+            }
+         }
+      }
+
       // import form's sections
       if ($forms_id
           && isset($form['_sections'])) {
