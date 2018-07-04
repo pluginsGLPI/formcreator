@@ -50,6 +50,23 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
          return self::getTypeName(2);
    }
 
+   /**
+    * Prepare input data for adding the form
+    *
+    * @param array $input data used to add the item
+    *
+    * @return array the modified $input array
+    */
+   public function prepareInputForAdd($input) {
+      // generate a unique id
+      if (!isset($input['uuid'])
+         || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      return $input;
+   }
+
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $DB, $CFG_GLPI;
 
