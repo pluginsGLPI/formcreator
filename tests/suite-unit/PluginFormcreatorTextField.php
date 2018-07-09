@@ -1,5 +1,8 @@
 <?php
-class TextFieldTest extends SuperAdminTestCase {
+namespace tests\units;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+
+class PluginFormcreatorTextField extends CommonTestCase {
 
    public function provider() {
       $dataset = [
@@ -144,26 +147,13 @@ class TextFieldTest extends SuperAdminTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new PluginFormcreatorQuestion();
+      $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
       $question->updateParameters($fields);
 
-      $fieldInstance = new PluginFormcreatorTextField($question->fields, $data);
+      $fieldInstance = new \PluginFormcreatorTextField($question->fields, $data);
 
       $isValid = $fieldInstance->isValid($fields['default_values']);
-      $this->assertEquals($expectedValidity, $isValid, $_SESSION['MESSAGE_AFTER_REDIRECT']);
-   }
-
-   private function getSection() {
-      $form = new PluginFormcreatorForm();
-      $form->add([
-         'name' => 'form'
-      ]);
-      $section = new PluginFormcreatorSection();
-      $section->add([
-         $form::getForeignKeyField() => $form->getID(),
-         'name' => 'section',
-      ]);
-      return $section;
+      $this->boolean($isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
    }
 }

@@ -212,17 +212,4 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
-
-   private function getSection() {
-      $form = new PluginFormcreatorForm();
-      $form->add([
-         'name' => 'form'
-      ]);
-      $section = new PluginFormcreatorSection();
-      $section->add([
-         $form::getForeignKeyField() => $form->getID(),
-         'name' => 'section',
-      ]);
-      return $section;
-   }
 }

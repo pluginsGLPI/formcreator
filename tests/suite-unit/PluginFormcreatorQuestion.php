@@ -96,6 +96,17 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
                'show_rule'                      => 'always',
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => [
+                        'regex' => ''
+                     ]
+                  ]
+               ],
             ],
             'expected' => [
                'plugin_formcreator_sections_id' => $this->section->getID(),
@@ -108,6 +119,17 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
                'show_rule'                      => 'always',
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => [
+                        'regex' => ''
+                     ]
+                  ]
+               ],
             ]
          ],
       ];
@@ -121,6 +143,9 @@ class PluginFormcreatorQuestion extends CommonTestCase {
     * @dataProvider providerPrepareInputForAdd
     */
    public function testPrepareInputForAdd($input, $expected) {
+      $section = $this->getSection();
+      $input[$section::getForeignKeyField()] = $section->getID();
+
       $instance = new \PluginFormcreatorQuestion();
       $output = $instance->prepareInputForAdd($input);
       $this->array($output)->hasKeys(array_keys($expected));
@@ -137,6 +162,9 @@ class PluginFormcreatorQuestion extends CommonTestCase {
     * @dataProvider providerPrepareInputForUpdate
     */
    public function prepareInputForUpdate($input, $expected) {
+      $section = $this->getSection();
+      $input[$section::getForeignKeyField()] = $section->getID();
+
       $instance = new \PluginFormcreatorQuestion();
       $output = $instance->prepareInputForUpdate($input);
       $this->array($output)->hasKeys(array_keys($expected));

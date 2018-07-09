@@ -179,26 +179,13 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new PluginFormcreatorQuestion();
+      $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->updateParameters($fields);
 
-      $fieldInstance = new PluginFormcreatorFloatField($question->fields, $data);
+      $fieldInstance = new \PluginFormcreatorFloatField($question->fields, $data);
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
-   }
-
-   private function getSection() {
-      $form = new PluginFormcreatorForm();
-      $form->add([
-         'name' => 'form'
-      ]);
-      $section = new PluginFormcreatorSection();
-      $section->add([
-         $form::getForeignKeyField() => $form->getID(),
-         'name' => 'section',
-      ]);
-      return $section;
    }
 }

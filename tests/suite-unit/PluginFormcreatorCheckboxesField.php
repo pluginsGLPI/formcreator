@@ -178,7 +178,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new PluginFormcreatorQuestion();
+      $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
       $question->updateParameters($fields);
 
@@ -228,18 +228,5 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->string($out['values'])->isEqualTo('something\r\nsomething else');
       $this->string($out['default_values'])->isEqualTo("something");
-   }
-
-   private function getSection() {
-      $form = new PluginFormcreatorForm();
-      $form->add([
-         'name' => 'form'
-      ]);
-      $section = new PluginFormcreatorSection();
-      $section->add([
-         $form::getForeignKeyField() => $form->getID(),
-         'name' => 'section',
-      ]);
-      return $section;
    }
 }

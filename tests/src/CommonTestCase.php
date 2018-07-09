@@ -154,4 +154,18 @@ abstract class CommonTestCase extends CommonDBTestCase
          //$_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
       }
    }
+
+   protected function getSection() {
+      $form = new \PluginFormcreatorForm();
+      $form->add([
+         'name' => 'form'
+      ]);
+      $section = new \PluginFormcreatorSection();
+      $section->add([
+         $form::getForeignKeyField() => $form->getID(),
+         'name' => 'section',
+      ]);
+      return $section;
+   }
+
 }

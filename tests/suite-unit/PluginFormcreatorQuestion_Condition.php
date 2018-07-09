@@ -31,14 +31,16 @@
  * ---------------------------------------------------------------------
  */
 
-class Question_ConditionTest extends SuperAdminTestCase {
+namespace tests\units;
+use GlpiPlugin\Formcreator\Tests\CommonTestCase;
+class Question_ConditionTest extends CommonTestCase {
 
    static $question;
 
    static $questionPool = [];
 
-   public static function beforeTestMethod($method) {
-      parent::beforeTestMethod();
+   public function beforeTestMethod($method) {
+      parent::beforeTestMethod($method);
 
       self::login('glpi', 'glpi');
    }
