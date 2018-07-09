@@ -13,6 +13,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->login('glpi', 'glpi');
    }
 
+   /**
+    * @engine inline
+    */
    public function testTargetTicketActors() {
       $form = new \PluginFormcreatorForm();
       $form->add([
@@ -90,11 +93,17 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'questions'             =>  [
                [
                   'name'                  => 'text question',
-                  'fieldtype'             => 'text'
+                  'fieldtype'             => 'text',
+                  '_parameters' => [
+                     'text' => [
+                     'regex' => ['regex' => ''],
+                     'range' => ['min' => '', 'max' => ''],
+                     ]
+                  ],
                ],
                [
                   'name'                  => 'custom urgency',
-                  'fieldtype'             => 'urgency'
+                  'fieldtype'             => 'urgency',
                ],
             ],
          ],
@@ -115,8 +124,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             $questionData ['plugin_formcreator_sections_id'] = $section->getID();
             $question = new \PluginFormcreatorQuestion();
             $question->add($questionData);
-            $this->boolean($question->isNewItem())->isFalse($_SESSION['MESSAGE_AFTER_REDIRECT']);
-
+            $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+            $question->updateParameters($questionData);
             $questionData['id'] = $question->getID();
             if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
                $showFieldName = $questionData['show_field'];
