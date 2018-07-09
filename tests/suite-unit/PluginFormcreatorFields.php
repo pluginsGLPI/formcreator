@@ -204,6 +204,7 @@ class PluginFormcreatorFields extends CommonTestCase {
 
    /**
     * @dataProvider answersProvider
+    * @engine inline
     */
    public function testIsVisible($show_rule, $conditions, $answers, $expectedVisibility) {
       // create form
@@ -230,7 +231,19 @@ class PluginFormcreatorFields extends CommonTestCase {
          'name'                           => 'text question',
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $section->getID(),
+         '_parameters'     => [
+            'text' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ]
+            ]
+         ],
       ]);
+      $this->boolean($question->isNewItem())->isFalse();
 
       $questionPool = [];
       for ($i = 0; $i < 4; $i++) {
@@ -239,6 +252,17 @@ class PluginFormcreatorFields extends CommonTestCase {
             'fieldtype'                      => 'text',
             'name'                           => "question $i",
             'plugin_formcreator_sections_id' => $section->getID(),
+            '_parameters'     => [
+               'text' => [
+                  'range' => [
+                     'range_min' => '',
+                     'range_max' => '',
+                  ],
+                  'regex' => [
+                     'regex' => ''
+                  ]
+               ]
+            ]
          ]);
          $questionPool[$i] = $item->getID();
       }
@@ -251,9 +275,20 @@ class PluginFormcreatorFields extends CommonTestCase {
          $realAnswers['formcreator_field_' . $questionPool[$id]] = $answers[$id];
       }
       $input = $conditions + [
-            'id'        => $question->getID(),
-            'fieldtype' => 'text',
-            'show_rule' => $show_rule,
+         'id'        => $question->getID(),
+         'fieldtype' => 'text',
+         'show_rule' => $show_rule,
+         '_parameters'     => [
+            'text' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ]
+            ]
+         ]
       ];
       $question->update($input);
       $question->updateConditions($input);
