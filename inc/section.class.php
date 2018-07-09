@@ -209,18 +209,20 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       }
 
       // Form questions conditions
-      $questionIds = implode("', '", array_keys($tab_questions));
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         if (isset($tab_questions[$row['show_field']])) {
-            // update show_field if id in show_field belongs to the section being duplicated
-            $row['show_field'] = $tab_questions[$row['show_field']];
-         }
-         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-         if (!$question_condition->add($row)) {
-            return false;
+      if (count($tab_questions) > 0) {
+         $questionIds = implode("', '", array_keys($tab_questions));
+         $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+         foreach ($rows as $row) {
+            unset($row['id'],
+                  $row['uuid']);
+            if (isset($tab_questions[$row['show_field']])) {
+               // update show_field if id in show_field belongs to the section being duplicated
+               $row['show_field'] = $tab_questions[$row['show_field']];
+            }
+            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+            if (!$question_condition->add($row)) {
+               return false;
+            }
          }
       }
 

@@ -1352,13 +1352,14 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
 
+      // TODO: duplicates code in Question::duplicate()
       // Form questions parameters
       foreach ($tab_questions as $questions_id => $new_questions_id) {
          $oldQuestion = new PluginFormcreatorQuestion();
          $oldQuestion->getFromDB($questions_id);
          $fieldType = 'PluginFormcreator' . ucfirst($oldQuestion->fields['fieldtype']) . 'Field';
-         $this->field = new $fieldType($oldQuestion->fields);
-         $parameters = $this->field->getUsedParameters();
+         $field = new $fieldType($oldQuestion->fields);
+         $parameters = $field->getUsedParameters();
          foreach ($parameters as $fieldName => $parameter) {
             $parameter->getFromDBByCrit([
                'plugin_formcreator_questions_id' => $questions_id,

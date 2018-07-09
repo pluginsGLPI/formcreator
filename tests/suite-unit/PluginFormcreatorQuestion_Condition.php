@@ -33,7 +33,7 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-class Question_ConditionTest extends CommonTestCase {
+class PluginFormcreatorQuestion_Condition extends CommonTestCase {
 
    static $question;
 
@@ -252,7 +252,7 @@ class Question_ConditionTest extends CommonTestCase {
     */
    public function testConditionsEvaluation($show_rule, $conditions, $answers, $expectedVisibility) {
       // create form
-      $form = new PluginFormcreatorForm();
+      $form = new \PluginFormcreatorForm();
       $form->add([
          'entities_id'           => '0',
          'name'                  => __METHOD__,
@@ -263,14 +263,14 @@ class Question_ConditionTest extends CommonTestCase {
       ]);
 
       // Create section
-      $section = new PluginFormcreatorSection();
+      $section = new \PluginFormcreatorSection();
       $section->add([
          'name'                           => 'a section',
          'plugin_formcreator_forms_id'    => $form->getID(),
       ]);
 
       // Create a question
-      self::$question = new PluginFormcreatorQuestion();
+      self::$question = new \PluginFormcreatorQuestion();
       self::$question->add([
          'name'                           => 'text question',
          'fieldtype'                      => 'text',
@@ -289,7 +289,7 @@ class Question_ConditionTest extends CommonTestCase {
       ]);
 
       for ($i = 0; $i < 4; $i++) {
-         $item = new PluginFormcreatorQuestion();
+         $item = new \PluginFormcreatorQuestion();
          $item->add([
             'fieldtype'                      => 'text',
             'name'                           => "question $i",
@@ -334,7 +334,7 @@ class Question_ConditionTest extends CommonTestCase {
       ];
       self::$question->update($input);
       self::$question->updateConditions($input);
-      $isVisible = PluginFormcreatorFields::isVisible(self::$question->getID(), $realAnswers);
+      $isVisible = \PluginFormcreatorFields::isVisible(self::$question->getID(), $realAnswers);
       $this->boolean($isVisible)->isEqualTo($expectedVisibility);
    }
 

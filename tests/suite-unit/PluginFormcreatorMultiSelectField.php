@@ -9,7 +9,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $dataset = [
          [
             'fields'          => [
-               'fieldtype'       => 'select',
+               'fieldtype'       => 'multiselect',
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
@@ -32,7 +32,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'select',
+               'fieldtype'       => 'multiselect',
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
@@ -55,7 +55,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'select',
+               'fieldtype'       => 'multiselect',
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
@@ -78,7 +78,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'select',
+               'fieldtype'       => 'multiselect',
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
@@ -101,7 +101,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          ],
          [
             'fields'          => [
-               'fieldtype'       => 'select',
+               'fieldtype'       => 'multiselect',
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
@@ -162,8 +162,10 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new PluginFormcreatorQuestion();
+      $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
+      // Re-load the question from the DB
+      $question->getFromDB($question->getID());
       $question->updateParameters($fields);
 
       $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
@@ -194,11 +196,11 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new PluginFormcreatorQuestion();
+      $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
+      $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields);
 
       // Test a value is mandatory
       $input = [

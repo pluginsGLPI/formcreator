@@ -75,27 +75,22 @@ class PluginFormcreatorSection extends CommonTestCase {
     *
     */
     public function testDuplicate() {
-      $form          = new \PluginFormcreatorForm;
-      $section       = new \PluginFormcreatorSection;
-      $question      = new \PluginFormcreatorQuestion;
+      $form = $this->getForm();
 
-      // create objects
-      $forms_id = $form->add(['name'                => "test clone form",
-                              'is_active'           => true,
-                              'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
-
+      $section = new \PluginFormcreatorSection();
+      $question = new \PluginFormcreatorQuestion();
       $sections_id = $section->add(['name'                        => "test clone section",
-                                         'plugin_formcreator_forms_id' => $forms_id]);
+                                    'plugin_formcreator_forms_id' => $form->getID()]);
 
       $questions_id_1 = $question->add(['name'                           => "test clone question 1",
                                         'fieldtype'                      => 'text',
                                         'plugin_formcreator_sections_id' => $sections_id,
                                         '_parameters' => [
                                            'text' => [
-                                           'regex' => '',
+                                           'regex' => ['regex' => ''],
                                            'range' => ['min' => '', 'max' => ''],
                                            ]
-                                        ],
+                                         ],
                                         ]);
       $questions_id_2 = $question->add(['name'                           => "test clone question 2",
                                         'fieldtype'                      => 'textarea',
@@ -103,7 +98,7 @@ class PluginFormcreatorSection extends CommonTestCase {
                                         ]);
 
       //clone it
-      $this->boolean($section->duplicate())->isTrue();
+      $this->integer($section->duplicate());
 
       //get cloned section
       $originalId = $section->getID();
@@ -118,8 +113,8 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->boolean($new_section->isNewItem())->isFalse();
 
       // check questions
-      $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$section->getID());
-      $all_new_questions = $form_question->find("plugin_formcreator_sections_id = ".$new_section->getID());
+      $all_questions = $question->find("plugin_formcreator_sections_id = ".$section->getID());
+      $all_new_questions = $question->find("plugin_formcreator_sections_id = ".$new_section->getID());
       $this->integer(count($all_new_questions))->isEqualTo(count($all_questions));
 
       // check that all question uuid are new
@@ -130,6 +125,6 @@ class PluginFormcreatorSection extends CommonTestCase {
       foreach ($all_new_questions as $question) {
          $new_uuids[] = $question['uuid'];
       }
-      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids);
+      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
    }
 }

@@ -560,6 +560,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    /**
     * Updates the conditions of the question
     * @param array $input
+    * @return boolean true if success, false otherwise
     */
    public function updateConditions($input) {
       // Delete all existing conditions for the question
@@ -592,11 +593,17 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
                            'show_logic'                        => $showLogic,
                            'order'                             => $order,
                      ]);
+                     if ($question_condition->isNewItem()) {
+                        return false;
+                     }
                   }
+                  return true;
                }
             }
          }
       }
+
+      return false;
    }
 
    /**
@@ -1319,6 +1326,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
+
+      $row['_skip_checks'] = true;
       $newQuestion_id = $newQuestion->add($row);
       if ($newQuestion_id === false) {
          return false;

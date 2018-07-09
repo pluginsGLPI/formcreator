@@ -203,7 +203,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new PluginFormcreatorQuestion();
+      $question = new \PluginFormcreatorQuestion();
       $question->add($fields);
       $question->updateParameters($fields);
 
