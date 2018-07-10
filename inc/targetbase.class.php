@@ -217,7 +217,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                ]);
 
                if ($answer->isNewItem()) {
-                  continue;
+                  continue 2;
                } else {
                   $userIds = [$answer->getField('answer')];
                }
@@ -235,7 +235,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                ]);
 
                if ($answer->isNewItem()) {
-                  continue;
+                  continue 2;
                } else {
                   $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
                }
