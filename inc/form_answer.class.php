@@ -718,6 +718,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                ], [], 0);
             }
          }
+
          $is_newFormAnswer = true;
       }
 
