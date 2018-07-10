@@ -615,7 +615,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return true;
    }
 
-
+   /**
+    *
+    * @param unknown $data
+    * @return boolean
+    */
    public function saveAnswers($data) {
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
@@ -863,6 +867,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       }
 
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
+
+      // TODO: This reveals a real refactor need in this method !
+      if ($is_newFormAnswer) {
+         return $id;
+      } else {
+         return $formAnswerId;
+      }
    }
 
    /**
@@ -894,7 +905,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      $answer_value = str_replace('\\r\\n', '\n', $answer_value);
                   }
                } else {
-                  if ($CFG_GLPI['use_rich_text']) {
+                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                      $answer_value = html_entity_decode($value);
                   } else {
                      $answer_value = $value;
