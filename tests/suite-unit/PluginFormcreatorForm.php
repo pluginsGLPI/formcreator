@@ -106,7 +106,7 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @cover PluginFormcreatorForm::export
     * @engine inline
     */
-    public function testExportForm() {
+   public function testExportForm() {
       // instanciate classes
       $form                = new \PluginFormcreatorForm;
       $form_section        = new \PluginFormcreatorSection;

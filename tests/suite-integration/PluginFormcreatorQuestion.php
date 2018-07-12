@@ -24,7 +24,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                                            'text' => [
                                            'regex' => ['regex' => ''],
                                            'range' => ['min' => '', 'max' => ''],
-                                          ]
+                                           ]
                                          ],
                                         ]);
 
