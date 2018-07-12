@@ -74,7 +74,7 @@ class PluginFormcreatorSection extends CommonTestCase {
    /**
     *
     */
-    public function testDuplicate() {
+   public function testDuplicate() {
       $form = $this->getForm();
 
       $section = new \PluginFormcreatorSection();

@@ -22,7 +22,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                      ]
                   ]
                ],
-         ],
+            ],
             'data'            => null,
             'expectedValue'   => [''],
             'expectedIsValid' => true
@@ -44,7 +44,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                      ]
                   ]
                ],
-         ],
+            ],
             'data'            => null,
             'expectedValue'   => ['2'],
             'expectedIsValid' => true
