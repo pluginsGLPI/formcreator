@@ -71,7 +71,7 @@ function plugin_formcreator_getDropdown() {
 
 function plugin_formcreator_addDefaultSelect($itemtype) {
    switch ($itemtype) {
-      case "PluginFormcreatorIssue" :
+      case PluginFormcreatorIssue::class:
          return "`glpi_plugin_formcreator_issues`.`sub_itemtype`, ";
    }
    return "";
@@ -81,7 +81,7 @@ function plugin_formcreator_addDefaultSelect($itemtype) {
 function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
    $join = "";
    switch ($itemtype) {
-      case "PluginFormcreatorIssue" :
+      case PluginFormcreatorIssue::class:
          $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
          $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`original_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
@@ -99,7 +99,7 @@ function plugin_formcreator_canValidate() {
 
 function plugin_formcreator_getCondition($itemtype) {
    $table = getTableForItemType($itemtype);
-   if ($itemtype == "PluginFormcreatorForm_Answer"
+   if ($itemtype == PluginFormcreatorForm_Answer::class
        && plugin_formcreator_canValidate()) {
       $condition = " 1=1 ";
 
@@ -119,13 +119,13 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
    $condition = "";
    $table = getTableForItemType($itemtype);
    switch ($itemtype) {
-      case "PluginFormcreatorIssue" :
+      case PluginFormcreatorIssue::class:
          $condition = Search::addDefaultWhere("Ticket");
          $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          break;
 
-      case "PluginFormcreatorForm_Answer" :
+      case PluginFormcreatorForm_Answer::class:
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
             $condition = "`$table`.`".PluginFormcreatorForm_Answer::$items_id."` = ".
@@ -142,7 +142,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, &$already_link_tables) {
    $join = "";
    switch ($itemtype) {
-      case 'PluginFormcreatorIssue':
+      case PluginFormcreatorIssue::class:
          if ($new_table == 'glpi_ticketvalidations') {
             foreach ($already_link_tables as $table) {
                if (strpos($table, $new_table) === 0) {
@@ -239,7 +239,7 @@ function plugin_formcreator_AssignToTicket($types) {
 function plugin_formcreator_MassiveActions($itemtype) {
 
    switch ($itemtype) {
-      case 'PluginFormcreatorForm' :
+      case PluginFormcreatorForm::class:
          return [
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
@@ -256,7 +256,7 @@ function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
    $field=$searchopt[$ID]["field"];
 
    switch ($itemtype) {
-      case "PluginFormcreatorIssue":
+      case PluginFormcreatorIssue::class:
          return PluginFormcreatorIssue::giveItem($itemtype, $ID, $data, $num);
          break;
    }
@@ -387,7 +387,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
-      case "PluginFormcreatorForm_Answer";
+      case PluginFormcreatorForm_Answer::class;
          if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
             if (strpos($url['path'],
                        Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {
