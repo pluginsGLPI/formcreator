@@ -269,7 +269,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       switch ($field) {
          case 'status' :
             $output = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
-                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" />';
+                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> '
+                      . __($values[$field], 'formcreator');
             return $output;
             break;
       }
