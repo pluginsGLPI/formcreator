@@ -251,10 +251,6 @@ function plugin_formcreator_MassiveActions($itemtype) {
 
 
 function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
-   $searchopt=&Search::getOptions($itemtype);
-   $table=$searchopt[$ID]["table"];
-   $field=$searchopt[$ID]["field"];
-
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
          return PluginFormcreatorIssue::giveItem($itemtype, $ID, $data, $num);

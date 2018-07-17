@@ -470,8 +470,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    public static function giveItem($itemtype, $option_id, $data, $num) {
       $searchopt = &Search::getOptions($itemtype);
-      $table=$searchopt[$option_id]["table"];
-      $field=$searchopt[$option_id]["field"];
+      $table = $searchopt[$option_id]["table"];
+      $field = $searchopt[$option_id]["field"];
 
       if (isset($data['raw']['ITEM_0_display_id'])) {
          $matches = null;
