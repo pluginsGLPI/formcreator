@@ -1,10 +1,42 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 include ('../../../inc/includes.php');
 header('Content-Type: text/javascript');
 ?>
 
 var modalWindow;
-var rootDoc          = "<?php echo $CFG_GLPI['root_doc']; ?>";
+var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
 var sortByName = false;
 var tiles = [];
@@ -135,21 +167,24 @@ $(function() {
       $('.plugin_formcreator_sort input[value=mostPopularSort]')[0].checked = true;
    }
 
-   fcInitMultiSelect();
+   // === Add better multi-select on form configuration validators ===
+   // initialize the pqSelect widget.
+      fcInitMultiSelect();
+
+   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
+      fcInitMultiSelect();
+   });
+
 });
 
 function fcInitMultiSelect() {
-   // === Add better multi-select on form configuration validators ===
-   // initialize the pqSelect widget.
-   $('#tabspanel + div.ui-tabs').on("tabsload", function( event, ui ) {
-      $("#validator_users").pqSelect({
-          multiplePlaceholder: '----',
-          checkbox: true //adds checkbox to options
-      });
-      $("#validator_groups").pqSelect({
-          multiplePlaceholder: '----',
-          checkbox: true //adds checkbox to options
-      });
+   $("#validator_users").pqSelect({
+       multiplePlaceholder: '----',
+       checkbox: true //adds checkbox to options
+   });
+   $("#validator_groups").pqSelect({
+       multiplePlaceholder: '----',
+       checkbox: true //adds checkbox to options
    });
 }
 
@@ -528,11 +563,11 @@ function deleteTarget(items_id, token, target_id) {
 var formcreatorQuestions = new Object();
 
 function formcreatorChangeValueOf(field_id, value) {
-   formcreatorQuestions[field_id] = value;
+   formcreatorQuestions['formcreator_field_' + field_id] = value;
    formcreatorShowFields();
 }
 function formcreatorAddValueOf(field_id, value) {
-   formcreatorQuestions[field_id] = value;
+   formcreatorQuestions['formcreator_field_' + field_id] = value;
 }
 
 function formcreatorShowFields() {
@@ -547,14 +582,14 @@ function formcreatorShowFields() {
       var i = 0;
       for (question in formcreatorQuestions) {
          if (questionToShow[question]) {
-            $('#form-group-field' + question).show();
+            $('#form-group-' + question).show();
             i++;
-            $('#form-group-field' + question).removeClass('line' + (i+1) % 2);
-            $('#form-group-field' + question).addClass('line' + i%2);
+            $('#form-group-' + question).removeClass('line' + (i+1) % 2);
+            $('#form-group-' + question).addClass('line' + i%2);
          } else {
-            $('#form-group-field' + question).hide();
-            $('#form-group-field' + question).removeClass('line0');
-            $('#form-group-field' + question).removeClass('line1');
+            $('#form-group-' + question).hide();
+            $('#form-group-' + question).removeClass('line0');
+            $('#form-group-' + question).removeClass('line1');
          }
       }
    });

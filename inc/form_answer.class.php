@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -32,6 +64,59 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       return true;
    }
 
+   public function canViewItem() {
+      global $DB;
+
+      if (!isset($_SESSION['glpiID'])) {
+         return false;
+      }
+
+      if (Session::haveRight('entity', UPDATE)) {
+         return true;
+      }
+
+      if ($_SESSION['glpiID'] == $this->getField('requester_id')) {
+         return true;
+      }
+
+      $request = [
+         'SELECT' => PluginFormcreatorForm_Validator::getTable() . '.*',
+         'FROM' => $this::getTable(),
+         'INNER JOIN' => [
+            PluginFormcreatorForm::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorForm::getTable() => PluginFormcreatorForm::getIndexName(),
+                  $this::getTable() => PluginFormcreatorForm::getForeignKeyField(),
+               ],
+            ],
+            PluginFormcreatorForm_Validator::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorForm::getTable() => PluginFormcreatorForm::getIndexName(),
+                  PluginFormcreatorForm_Validator::getTable() => PluginFormcreatorForm::getForeignKeyField()
+               ]
+            ]
+         ],
+         'WHERE' => [$this::getTable() . '.id' => $this->getID()],
+      ];
+      foreach ($DB->request($request) as $row) {
+         if ($row['itemtype'] == User::class) {
+            if ($_SESSION['glpiID'] == $row['items_id']) {
+               return true;
+            }
+         } else {
+            $groupUser = new Group_User();
+            $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+            foreach ($groups as $group) {
+               if ($row['items_id'] == $group['id']) {
+                  return true;
+               }
+            }
+         }
+      }
+
+      return false;
+   }
+
    /**
     * Returns the type name with consideration of plural
     *
@@ -60,14 +145,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $tab[] = [
          'id'                 => '1',
-         'table'              => $this::getTable(),
-         'field'              => 'status',
-         'name'               => __('Status'),
-         'searchtype'         => [
-            '0'                  => 'equals',
-            '1'                  => 'notequals'
-         ],
-         'datatype'           => 'specific',
+         'table'              => $this->getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
          'massiveaction'      => false
       ];
 
@@ -85,7 +166,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'id'                 => '3',
          'table'              => 'glpi_plugin_formcreator_forms',
          'field'              => 'name',
-         'name'               => __('Form'),
+         'name'               => __('Form', 'formcreator'),
          'searchtype'         => 'contains',
          'datatype'           => 'string',
          'massiveaction'      => false
@@ -105,7 +186,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'id'                 => '5',
          'table'              => 'glpi_users',
          'field'              => 'name',
-         'name'               => __('Validator user'),
+         'name'               => __('Form approver', 'formcreator'),
          'datatype'           => 'itemlink',
          'massiveaction'      => false,
          'linkfield'          => 'users_id_validator'
@@ -121,13 +202,26 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       ];
 
       $tab[] = [
-            'id'            => '7',
-            'table'         => getTableForItemType('Group'),
-            'field'         => 'completename',
-            'name'          => __('Validator group', 'formcreator'),
-            'datatype'      => 'itemlink',
-            'massiveaction' => false,
-            'linkfield'     => 'groups_id_validator',
+         'id'            => '7',
+         'table'         => getTableForItemType('Group'),
+         'field'         => 'completename',
+         'name'          => __('Form approver group', 'formcreator'),
+         'datatype'      => 'itemlink',
+         'massiveaction' => false,
+         'linkfield'     => 'groups_id_validator',
+      ];
+
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this::getTable(),
+         'field'              => 'status',
+         'name'               => __('Status'),
+         'searchtype'         => [
+            '0'                  => 'equals',
+            '1'                  => 'notequals'
+         ],
+         'datatype'           => 'specific',
+         'massiveaction'      => false
       ];
 
       if ($display_for_form) {
@@ -175,7 +269,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       switch ($field) {
          case 'status' :
             $output = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/' . $values[$field] . '.png"
-                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" />';
+                         alt="' . __($values[$field], 'formcreator') . '" title="' . __($values[$field], 'formcreator') . '" /> ';
             return $output;
             break;
       }
@@ -273,11 +367,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       // prepare params for search
       $item          = new PluginFormcreatorForm_Answer();
-      $searchOptions      = $item->getSearchOptions();
+      $searchOptions      = $item->getSearchOptionsNew();
       $filteredOptions = [];
-      foreach ($searchOptions as $key => $value) {
-         if (is_numeric($key) && $key <= 7) {
-            $filteredOptions[$key] = $value;
+      foreach ($searchOptions as $value) {
+         if (is_numeric($value['id']) && $value['id'] <= 7) {
+            $filteredOptions[$value['id']] = $value;
          }
       }
       $searchOptions = $filteredOptions;
@@ -478,7 +572,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -555,7 +649,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   // Update the answer to the question
                   $questionId = $question->getID();
                   $answer = new PluginFormcreatorAnswer();
-                  $answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_answers_id` = '$formanswers_id' AND `plugin_formcreator_questions_id` = '$questionId'");
+                  $answer->getFromDBByCrit([
+                    'AND' => [
+                      'plugin_formcreator_forms_answers_id' => $formanswers_id,
+                      'plugin_formcreator_questions_id'     => $questionId
+                    ]
+                  ]);
                   $answer->update([
                      'id'     => $answer->getID(),
                      'answer' => $answer_value,
@@ -568,7 +667,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       } else {
          // Create new form answer object
 
-         // Does the form need to be validate ?
+         // Does the form need to be validated?
          if ($form->fields['validation_required']) {
             $status = 'waiting';
          } else {
@@ -655,19 +754,19 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          }
 
          // Update issues table
+         $issue = new PluginFormcreatorIssue();
+         $formAnswerId = $this->getID();
          if ($status != 'refused') {
 
             // If cannot get itemTicket from DB it happens either
             // when no item exist
             // when several rows matches
             // Both are processed the same way
-            $formAnswerId = $this->getID();
             $itemTicket = new Item_Ticket();
             $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formAnswerId'");
             if (count($rows) != 1) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
-                  $issue = new PluginFormcreatorIssue();
                   $issue->add([
                      'original_id'     => $id,
                      'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
@@ -682,8 +781,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => '',
                   ]);
                } else {
-                  $issue = new PluginFormcreatorIssue();
-                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->getFromDBByCrit([
+                     'AND' => [
+                       'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                       'original_id'  => $formAnswerId
+                     ]
+                  ]);
                   $id = $this->getID();
                   $issue->update([
                      'id'              => $issue->getID(),
@@ -707,7 +810,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                $ticket->getFromDB($itemTicket->getField('tickets_id'));
                $ticketId = $ticket->getID();
                if ($is_newFormAnswer) {
-                  $issue = new PluginFormcreatorIssue();
                   $issue->add([
                      'original_id'     => $ticketId,
                      'sub_itemtype'    => 'Ticket',
@@ -722,8 +824,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      'comment'         => addslashes($ticket->getField('content')),
                   ]);
                } else {
-                  $issue = new PluginFormcreatorIssue();
-                  $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'PluginFormcreatorForm_Answer' AND `original_id` = '$formAnswerId'");
+                  $issue->getFromDBByCrit([
+                    'AND' => [
+                      'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                      'original_id'  => $formAnswerId
+                    ]
+                  ]);
                   $issue->update([
                      'id'              => $issue->getID(),
                      'original_id'     => $ticketId,
@@ -740,6 +846,19 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                   ]);
                }
             }
+         } else {
+            $issue->getFromDBByCrit([
+              'AND' => [
+                'sub_itemtype' => PluginFormcreatorForm_Answer::class,
+                'original_id'  => $formAnswerId
+              ]
+            ]);
+            $issue->update([
+               'id'              => $issue->getID(),
+               'sub_itemtype'    => 'PluginFormcreatorForm_Answer',
+               'original_id'     => $formAnswerId,
+               'status'          => $status,
+            ]);
          }
       }
 
@@ -752,6 +871,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @return null|string
     */
    private function transformAnswerValue(PluginFormcreatorQuestion $question, $value = null) {
+      global $CFG_GLPI;
+
       // unset the answer value
       $answer_value = null;
       $form = $question->getForm();
@@ -761,15 +882,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          if (isset($value)) {
             // If the answer is set, check if it is an array (then implode id).
             if ($value !== null) {
-               $answer_value = $value;
-               if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
-                  $answer_value = json_decode($answer_value);
-                  foreach ($answer_value as $key => $value) {
-                     $answer_value[$key] = $value;
+               if ($question->getField('fieldtype') != 'textarea') {
+                  $answer_value = $value;
+                  if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
+                     $answer_value = json_decode($answer_value);
+                     foreach ($answer_value as $key => $value) {
+                        $answer_value[$key] = $value;
+                     }
+                     $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
+                  } else {
+                     $answer_value = str_replace('\\r\\n', '\n', $answer_value);
                   }
-                  $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
                } else {
-                  $answer_value = str_replace('\\r\\n', '\n', $answer_value);
+                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+                     $answer_value = html_entity_decode($value);
+                  } else {
+                     $answer_value = $value;
+                  }
                }
             } else {
                $answer_value = '';
@@ -777,9 +906,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          } else {
             $answer_value = '';
          }
-      } else if ((isset($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))
-                 && (is_file($_FILES['formcreator_field_' . $question->getID()]['tmp_name']))) {
-         $answer_value = $this->saveDocument($form, $question, $_FILES['formcreator_field_' . $question->getID()]);
+      } else if (is_array($_POST['_formcreator_field_' . $question->getID()])
+                 && count($_POST['_formcreator_field_' . $question->getID()]) === 1) {
+         $file = current($_POST['_formcreator_field_' . $question->getID()]);
+         if (is_file(GLPI_TMP_DIR . '/' . $file)) {
+            $answer_value = $this->saveDocument($form, $question, $file);
+         }
       }
 
       return $answer_value;
@@ -805,12 +937,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                     ? $_SESSION['glpiactive_entity']
                                     : $form->getField('entities_id');
       $file_data["is_recursive"] = $form->getField('is_recursive');
-      Document::uploadDocument($file_data, $file);
+      Document::moveDocument($file_data, $file);
 
       if ($docID = $doc->add($file_data)) {
          $docID    = intval($docID);
          $table    = Document::getTable();
-         $filename = $file['name'];
+         $filename = addslashes($file);
          $query    = "UPDATE `$table` SET `filename` = '$filename'
                       WHERE `id` = '$docID'";
          $DB->query($query);
@@ -882,7 +1014,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $success = true;
 
       // Get all targets
-      $target_class    = new PluginFormcreatorTarget();
+      $target_class  = new PluginFormcreatorTarget();
       $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
@@ -892,7 +1024,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          $targetObject = new $target['itemtype'];
          $targetObject->getFromDB($target['items_id']);
          $generatedTarget = $targetObject->save($this);
-         if ($generatedTarget === null) {
+         if ($generatedTarget === false) {
             $success = false;
             break;
          }
@@ -918,9 +1050,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $answers = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'");
       $answers_values = [];
       foreach ($answers as $found_answer) {
-         $answers_values[$found_answer['plugin_formcreator_questions_id']] = stripslashes($found_answer['answer']);
+         $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = stripslashes($found_answer['answer']);
       }
       return $answers_values;
+   }
+
+   /**
+    * Gets the associated form
+    * @return PluginFormcreatorForm|null the form used to create this set of answers
+    */
+   public function getForm() {
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields[$form::getForeignKeyField()]);
+
+      if ($form->isNewItem()) {
+         return null;
+      }
+      return $form;
    }
 
    /**
@@ -933,13 +1079,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $question_no = 0;
       $output      = '';
+      $eol = '\r\n';
 
-      if ($CFG_GLPI['use_rich_text']) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
-         $output .= __('Form data', 'formcreator') . PHP_EOL;
+         $output .= __('Form data', 'formcreator') . $eol;
          $output .= '=================';
-         $output .= PHP_EOL . PHP_EOL;
+         $output .= $eol . $eol;
       }
 
       // retrieve answers
@@ -963,12 +1110,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
-            if ($CFG_GLPI['use_rich_text']) {
-               $output .= '<h2>'.$question_line['section_name'].'</h2>';
+            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+               $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
             } else {
-               $output .= PHP_EOL.$question_line['section_name'].PHP_EOL;
+               $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
                $output .= '---------------------------------';
-               $output .= PHP_EOL;
+               $output .= $eol;
             }
             $last_section = $question_line['section_name'];
          }
@@ -984,14 +1131,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          if ($question_line['fieldtype'] != 'description') {
             $question_no++;
-            if ($CFG_GLPI['use_rich_text']) {
+            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                $output .= '<div>';
                $output .= '<b>' . $question_no . ') ##question_' . $question_line['id'] . '## : </b>';
                $output .= '##answer_' . $question_line['id'] . '##';
                $output .= '</div>';
             } else {
                $output .= $question_no . ') ##question_' . $question_line['id'] . '## : ';
-               $output .= '##answer_' . $question_line['id'] . '##' . PHP_EOL . PHP_EOL;
+               $output .= '##answer_' . $question_line['id'] . '##' . $eol . $eol;
             }
          }
       }

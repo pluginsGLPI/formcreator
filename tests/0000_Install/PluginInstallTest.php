@@ -1,33 +1,35 @@
 <?php
 /**
- LICENSE
-
-Copyright (C) 2016 Teclib'
-Copyright (C) 2010-2016 by the FusionInventory Development Team.
-
-This file is part of Flyve MDM Plugin for GLPI.
-
-Flyve MDM Plugin for GLPi is a subproject of Flyve MDM. Flyve MDM is a mobile
-device management software.
-
-Flyve MDM Plugin for GLPI is free software: you can redistribute it and/or
-modify it under the terms of the GNU Affero General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-Flyve MDM Plugin for GLPI is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-You should have received a copy of the GNU Affero General Public License
-along with Flyve MDM Plugin for GLPI. If not, see http://www.gnu.org/licenses/.
- ------------------------------------------------------------------------------
- @author    Thierry Bugier Pineau
- @copyright Copyright (c) 2016 Flyve MDM plugin team
- @license   AGPLv3+ http://www.gnu.org/licenses/agpl.txt
- @link      https://github.com/flyve-mdm/flyve-mdm-glpi
- @link      http://www.glpi-project.org/
- ------------------------------------------------------------------------------
-*/
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
 
 class PluginInstallTest extends CommonTestCase
 {
@@ -49,12 +51,15 @@ class PluginInstallTest extends CommonTestCase
       $CFG_GLPI = $settings + $CFG_GLPI;
    }
 
+   /**
+    * @engine inline
+    */
    public function testInstallPlugin() {
       global $DB;
 
       $this->setupGLPI();
 
-      $this->assertTrue($DB->connected, "Problem connecting to the Database");
+      $this->assertTrue($DB->connected, 'Problem connecting to the Database');
 
       $this->login('glpi', 'glpi');
 
@@ -63,12 +68,12 @@ class PluginInstallTest extends CommonTestCase
       $config->deleteByCriteria(array('context' => 'formcreator'));
 
       // Drop tables of the plugin if they exist
-      $query = "SHOW TABLES";
+      $query = 'SHOW TABLES';
       $result = $DB->query($query);
       while ($data = $DB->fetch_array($result)) {
 
-         if (strstr($data[0], "glpi_plugin_formcreator") !== false) {
-            $DB->query("DROP TABLE ".$data[0]);
+         if (strstr($data[0], 'glpi_plugin_formcreator') !== false) {
+            $DB->query('DROP TABLE '.$data[0]);
          }
       }
 
@@ -82,11 +87,21 @@ class PluginInstallTest extends CommonTestCase
       ob_end_clean();
 
       $PluginDBTest = new PluginDB();
-      $PluginDBTest->checkInstall("formcreator", "install");
+      $PluginDBTest->checkInstall('formcreator', 'install');
+
+      // Check the version of the schema is saved
+      $config = Config::getConfigurationValues('formcreator');
+      $this->assertArrayHasKey('schema_version', $config);
+      $this->assertEquals(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $config['schema_version']);
+
+      // Check the cron task is created
+      $cronTask = new CronTask();
+      $cronTask->getFromDBbyName(PluginFormcreatorIssue::class, 'SyncIssues');
+      $this->assertFalse($cronTask->isNewItem());
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
-      $this->assertTrue($plugin->isActivated("formcreator"), "Cannot enable the plugin");
+      $this->assertTrue($plugin->isActivated('formcreator'), 'Cannot enable the plugin');
 
    }
 }

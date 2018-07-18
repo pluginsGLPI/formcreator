@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -10,6 +42,10 @@ if (!$plugin->isActivated('formcreator')) {
 if (!isset($_REQUEST['sub_itemtype'])) {
    Html::displayNotFoundError();
 }
+
+// force layout of glpi
+$layout = $_SESSION['glpilayout'];
+$_SESSION['glpilayout'] = "lefttab";
 
 $issue = new PluginFormcreatorIssue();
 if (isset($_POST['save_formanswer'])) {
@@ -33,3 +69,6 @@ if (isset($_POST['save_formanswer'])) {
       Html::footer();
    }
 }
+
+// restore layout
+$_SESSION['glpilayout'] = $layout;

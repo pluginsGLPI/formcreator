@@ -1,4 +1,35 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -28,7 +59,7 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
 
       $item_targetTicket = $this->fields;
 
-      // remove uneeded keys
+      // remove non needed keys
       unset($item_targetTicket['id'],
             $item_targetTicket['plugin_formcreator_targettickets_id']);
 
@@ -57,10 +88,10 @@ class PluginFormcreatorItem_TargetTicket extends CommonDBRelation
             // add id key
             $item_targetTicket['id'] = $item_targetTicket_id;
 
-            // prepare update item_targetticket
+            // prepare update item_target ticket
             $relationsToImport[] = $item_targetTicket;
          } else {
-            // prepare create item_targetticket
+            // prepare create item_target ticket
             $relationsToImport[] = $item_targetTicket;
          }
       } else {

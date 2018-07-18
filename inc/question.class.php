@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -238,7 +270,6 @@ class PluginFormcreatorQuestion extends CommonDBChild
             Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
             return [];
          }
-         $input['name'] = addslashes($input['name']);
       }
 
       // - field type is required
@@ -280,7 +311,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (isset($input['regex']) && !empty($input['regex'])) {
          // Avoid php notice when validating the regular expression
          set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
-         $isValid = !(preg_match($input['regex'], null) === false);
+         $regex = Toolbox::stripslashes_deep($input['regex']);
+         $isValid = !(preg_match($regex, null) === false);
          restore_error_handler();
 
          if (!$isValid) {
@@ -293,7 +325,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -312,11 +344,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
       foreach ($input as $key => $value) {
          if ($input['fieldtype'] != 'dropdown'
              || $input['fieldtype'] != 'dropdown' && $key != 'values') {
-            $input[$key] = plugin_formcreator_encode($value);
+            if ($key != 'regex' && $key != 'name') {
+               $input[$key] = plugin_formcreator_encode($value);
+            }
          }
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -324,15 +358,13 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
       if (!empty($input)) {
          // Get next order
-         $table = self::getTable();
          $sectionId = $input['plugin_formcreator_sections_id'];
-         $query  = "SELECT MAX(`order`) AS `order`
-                    FROM `$table`
-                    WHERE `plugin_formcreator_sections_id` = '$sectionId'";
-         $result = $DB->query($query);
-         $line   = $DB->fetch_array($result);
-         $input['order'] = $line['order'] + 1;
-
+         $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$sectionId'", 'order');
+         if ($maxOrder === null) {
+            $input['order'] = 1;
+         } else {
+            $input['order'] = $maxOrder + 1;
+         }
          $input = $this->serializeDefaultValue($input);
       }
 
@@ -340,7 +372,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -359,17 +391,28 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return false;
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
       // Decode (if already encoded) and encode strings to avoid problems with quotes
+      // The if() {} structures here will grow until the call to plugin_formcreator_encode
+      // becomes obsolete
       foreach ($input as $key => $value) {
          if ($input['fieldtype'] != 'dropdown'
-             || $input['fieldtype'] != 'dropdown' && $key != 'values') {
-            $input[$key] = plugin_formcreator_encode($value);
+             || $input['fieldtype'] != 'dropdown' && $key != 'values' && $key != 'default_values') {
+            if (!($input['fieldtype'] == 'select' && ($key == 'values' || $key == 'default_values'))
+                && !($input['fieldtype'] == 'checkboxes' && ($key == 'values' || $key == 'default_values'))
+                && !($input['fieldtype'] == 'radios' && ($key == 'values' || $key == 'default_values'))
+                && !($input['fieldtype'] == 'multiselect' && ($key == 'values' || $key == 'default_values'))) {
+               if ($key != 'regex' && $key != 'name') {
+                  $input[$key] = plugin_formcreator_encode($value);
+               }
+            } else {
+               $input[$key] = str_replace('\r\n', "\r\n", $input[$key]);
+            }
          }
       }
 
@@ -389,12 +432,12 @@ class PluginFormcreatorQuestion extends CommonDBChild
             $DB->query($query);
 
             // Get the order for the new section
-            $query  = "SELECT MAX(`order`) AS `order`
-                       FROM `$table`
-                       WHERE `plugin_formcreator_sections_id` = '$newId'";
-            $result = $DB->query($query);
-            $line   = $DB->fetch_array($result);
-            $input['order'] = $line['order'] + 1;
+            $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$newId'", 'order');
+            if ($maxOrder === null) {
+               $input['order'] = 1;
+            } else {
+               $input['order'] = $maxOrder + 1;
+            }
          }
 
          $input = $this->serializeDefaultValue($input);
@@ -434,9 +477,22 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $order         = $this->fields['order'];
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
       $otherItem = new static();
-      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-                                    AND `order` < '$order'
-                                    ORDER BY `order` DESC LIMIT 1");
+      if (!method_exists($otherItem, 'getFromDBByRequest')) {
+         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
+                                      AND `order` < '$order'
+                                      ORDER BY `order` DESC LIMIT 1");
+      } else {
+         $otherItem->getFromDBByRequest([
+            'WHERE' => [
+               'AND' => [
+                  'plugin_formcreator_sections_id' => $sectionId,
+                  'order'                          => ['<', $order]
+               ]
+            ],
+            'ORDER' => ['order DESC'],
+            'LIMIT' => 1
+         ]);
+      }
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),
@@ -453,9 +509,22 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $order         = $this->fields['order'];
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
       $otherItem = new static();
-      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-                                    AND `order` > '$order'
-                                    ORDER BY `order` ASC LIMIT 1");
+      if (!method_exists($otherItem, 'getFromDBByRequest')) {
+         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
+                                       AND `order` > '$order'
+                                       ORDER BY `order` ASC LIMIT 1");
+      } else {
+         $otherItem->getFromDBByRequest([
+            'WHERE' => [
+               'AND' => [
+                  'plugin_formcreator_sections_id' => $sectionId,
+                  'order'                          => ['>', $order]
+               ]
+            ],
+            'ORDER' => ['order ASC'],
+            'LIMIT' => 1
+         ]);
+      }
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),
@@ -482,7 +551,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                if ((count($input['show_field']) == count($input['show_condition'])
                      && count($input['show_value']) == count($input['show_logic'])
                      && count($input['show_field']) == count($input['show_value']))) {
-                  // Arrays all have the same count and ahve at least one item
+                  // Arrays all have the same count and have at least one item
                   $order = 0;
                   while (count($input['show_field']) > 0) {
                      $order++;
@@ -635,33 +704,34 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<div id="glpi_objects_field">';
       $optgroup = [
          __("Assets") => [
-            'Computer'           => _n("Computer", "Computers", 2),
-            'Monitor'            => _n("Monitor", "Monitors", 2),
-            'Software'           => _n("Software", "Software", 2),
-            'Networkequipment'   => _n("Network", "Networks", 2),
-            'Peripheral'         => _n("Device", "Devices", 2),
-            'Printer'            => _n("Printer", "Printers", 2),
-            'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
-            'Consumableitem'     => _n("Consumable", "Consumables", 2),
-            'Phone'              => _n("Phone", "Phones", 2)],
+            Computer::class         => Computer::getTypeName(2),
+            Monitor::class          => Monitor::getTypeName(2),
+            Software::class         => Software::getTypeName(2),
+            Networkequipment::class => Networkequipment::getTypeName(2),
+            Peripheral::class       => Peripheral::getTypeName(2),
+            Printer::class          => Printer::getTypeName(2),
+            Cartridgeitem::class    => Cartridgeitem::getTypeName(2),
+            Consumableitem::class   => Consumableitem::getTypeName(2),
+            Phone::class            => Phone::getTypeName(2),
+            Line::class             => Line::getTypeName(2)],
          __("Assistance") => [
-            'Ticket'             => _n("Ticket", "Tickets", 2),
-            'Problem'            => _n("Problem", "Problems", 2),
-            'TicketRecurrent'    => __("Recurrent tickets")],
+            Ticket::class           => Ticket::getTypeName(2),
+            Problem::class          => Problem::getTypeName(2),
+            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)],
          __("Management") => [
-            'Budget'             => _n("Budget", "Budgets", 2),
-            'Supplier'           => _n("Supplier", "Suppliers", 2),
-            'Contact'            => _n("Contact", "Contacts", 2),
-            'Contract'           => _n("Contract", "Contracts", 2),
-            'Document'           => _n("Document", "Documents", 2)],
+            Budget::class           => Budget::getTypeName(2),
+            Supplier::class         => Supplier::getTypeName(2),
+            Contact::class          => Contact::getTypeName(2),
+            Contract::class         => Contract::getTypeName(2),
+            Document::class         => Document::getTypeName(2)],
          __("Tools") => [
-            'Reminder'           => __("Notes"),
-            'RSSFeed'            => __("RSS feed")],
+            Reminder::class         => __("Notes"),
+            RSSFeed::class          => __("RSS feed")],
          __("Administration") => [
-            'User'               => _n("User", "Users", 2),
-            'Group'              => _n("Group", "Groups", 2),
-            'Entity'             => _n("Entity", "Entities", 2),
-            'Profile'            => _n("Profile", "Profiles", 2)]
+            User::class             => User::getTypeName(2),
+            Group::class            => Group::getTypeName(2),
+            Entity::class           => Entity::getTypeName(2),
+            Profile::class          => Profile::getTypeName(2)],
       ];
       array_unshift($optgroup, '---');
       Dropdown::showFromArray('glpi_objects', $optgroup, [
@@ -1246,7 +1316,7 @@ JS;
    }
 
    /**
-    * get  the form belonging the question
+    * get the form belonging to the question
     *
     * @return boolean|PluginFormcreatorForm the form or false if not found
     */

@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class PluginFormcreatorFileField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
@@ -8,9 +40,11 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          echo '<input type="hidden" class="form-control"
                   name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
 
-         echo '<input type="file" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '"
-                  id="formcreator_field_' . $this->fields['id'] . '" />';
+         echo Html::file([
+            'name'    => 'formcreator_field_' . $this->fields['id'],
+            'display' => false,
+         ]);
+
       } else {
          $doc = new Document();
          $answer = $this->getAnswer();
@@ -22,14 +56,21 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function isValid($value) {
       // If the field is required it can't be empty
-      if ($this->isRequired() && (empty($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name'])
-                                 || !is_file($_FILES['formcreator_field_' . $this->fields['id']]['tmp_name']))) {
-         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
-         return false;
+
+      if (!$this->isRequired()) {
+         return true;
       }
 
-      // All is OK
-      return true;
+      if (is_array($_POST['_formcreator_field_' . $this->fields['id']])
+         && count($_POST['_formcreator_field_' . $this->fields['id']]) === 1) {
+         $file = current($_POST['_formcreator_field_' . $this->fields['id']]);
+         if (is_file(GLPI_TMP_DIR . '/' . $file)) {
+            return true;
+         }
+      }
+
+      Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+      return false;
    }
 
    public static function getName() {

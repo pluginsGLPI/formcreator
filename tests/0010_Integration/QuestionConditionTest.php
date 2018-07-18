@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class QuestionConditionTest extends SuperAdminTestCase
 {
    protected static $formData;
@@ -11,30 +43,34 @@ class QuestionConditionTest extends SuperAdminTestCase
    public static function setUpBeforeClass() {
       parent::setUpBeforeClass();
 
-      self::$formData = array(
-            'entities_id'           => 0,
-            'name'                  => 'a form',
-            'description'           => 'form description',
-            'content'               => 'a content',
-            'is_active'             => 1,
-            'validation_required'   => 0
-      );
+      self::$formData = [
+         'entities_id'           => 0,
+         'name'                  => 'a form',
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => 0
+      ];
 
-      self::$sectionData = array(
-            array(
-                  'name'                  => 'a section',
-                  'questions'             => array (
-                        array(
-                              'name'                  => 'text question',
-                              'fieldtype'             => 'text',
-                        ),
-                        array(
-                              'name'                  => 'other text question',
-                              'fieldtype'             => 'text',
-                        ),
-                  ),
-            ),
-      );
+      self::$sectionData = [
+         [
+            'name'                  => 'a section',
+            'questions'             => [
+               [
+                  'name'                  => 'text question',
+                  'fieldtype'             => 'text',
+               ],
+               [
+                  'name'                  => 'other text question',
+                  'fieldtype'             => 'text',
+               ],
+               [
+                  'name'                  => 'third text question',
+                  'fieldtype'             => 'text',
+               ],
+            ],
+         ],
+      ];
 
       self::$targetData = [];
 
@@ -64,7 +100,12 @@ class QuestionConditionTest extends SuperAdminTestCase
             if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
                $showFieldName = $questionData['show_field'];
                $showfield = new PluginFormcreatorQuestion();
-               $showfield->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId' AND `name` = '$showFieldName'");
+               $showfield->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_sections_id' => $sectionId,
+                     'name'                           => $showFieldName
+                  ]
+               ]);
                $questionData['show_field'] = $showfield->getID();
                $question->updateConditions($questionData);
             }
@@ -82,36 +123,36 @@ class QuestionConditionTest extends SuperAdminTestCase
    }
 
    public function conditionDataProvider() {
-      return array(
-            array(
-                  array(
-                        'show_rule'       => 'hidden',
-                        'show_question'   => ['dummy'],
-                        'show_condition'  => ['=='],
-                        'show_value'      => ['an accented è character'],
-                        'show_logic'      => ['AND'],
-                  )
-            ),
-            /* This test currently fails due to Html::clean() in plugin_formcreator_encode()
-             * No solution found yet, then test disabled
-            array(
-                  array(
-                        'show_rule'       => 'hidden',
-                        'show_question'   => ['dummy'],
-                        'show_condition'  => ['=='],
-                        'show_value'      => ['a doubled  space'],
-                  )
-            ),*/
-            array(
-                  array(
-                        'show_rule'       => 'hidden',
-                        'show_question'   => ['dummy'],
-                        'show_condition'  => ['=='],
-                        'show_value'      => ['a euro € character'],
-                        'show_logic'      => ['AND'],
-                  )
-            ),
-      );
+      return [
+         [
+            [
+               'show_rule'       => 'hidden',
+               'show_question'   => ['dummy'],
+               'show_condition'  => ['=='],
+               'show_value'      => ['an accented è character'],
+               'show_logic'      => ['AND'],
+            ]
+         ],
+         /* This test currently fails due to Html::clean() in plugin_formcreator_encode()
+          * No solution found yet, then test disabled
+         [
+            [
+               'show_rule'       => 'hidden',
+               'show_question'   => ['dummy'],
+               'show_condition'  => ['=='],
+               'show_value'      => ['a doubled  space'],
+            ]
+         ],*/
+         [
+            [
+               'show_rule'       => 'hidden',
+               'show_question'   => ['dummy'],
+               'show_condition'  => ['=='],
+               'show_value'      => ['a euro € character'],
+               'show_logic'      => ['AND'],
+            ]
+         ],
+      ];
    }
 
    /**
@@ -132,8 +173,8 @@ class QuestionConditionTest extends SuperAdminTestCase
 
       //Run the condition
       $currentValues = array(
-            $firstQuestionId  => $condition['show_value'][0] . " and now for something completely different",
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => $condition['show_value'][0] . " and now for something completely different",
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
@@ -143,17 +184,17 @@ class QuestionConditionTest extends SuperAdminTestCase
       } else {
          $expected = true;
       }
-      $this->assertEquals($expected, $visibility[$secondQuestionId]);
+      $this->assertEquals($expected, $visibility["formcreator_field_$secondQuestionId"]);
 
       // Run the reversed condition
       $currentValues = array(
-            $firstQuestionId  => $condition['show_value'][0],
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => $condition['show_value'][0],
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
-      $this->assertEquals(!$expected, $visibility[$secondQuestionId]);
+      $this->assertEquals(!$expected, $visibility["formcreator_field_$secondQuestionId"]);
 
    }
 
@@ -173,10 +214,10 @@ class QuestionConditionTest extends SuperAdminTestCase
       $question->updateConditions($condition);
 
       //Run the condition
-      $currentValues = array(
-            $firstQuestionId  => array($condition['show_value'][0] . " and now for something completely different"),
-            $secondQuestionId => '',
-      );
+      $currentValues = [
+          "formcreator_field_$firstQuestionId"  => [$condition['show_value'][0] . " and now for something completely different"],
+          "formcreator_field_$secondQuestionId" => '',
+      ];
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
@@ -185,16 +226,122 @@ class QuestionConditionTest extends SuperAdminTestCase
       } else {
          $expected = true;
       }
-      $this->assertEquals($expected, $visibility[$secondQuestionId]);
+      $this->assertEquals($expected, $visibility["formcreator_field_$secondQuestionId"]);
 
       // Run the reversed condition
       $currentValues = array(
-            $firstQuestionId  => array($condition['show_value'][0]),
-            $secondQuestionId => '',
+          "formcreator_field_$firstQuestionId"  => array($condition['show_value'][0]),
+          "formcreator_field_$secondQuestionId" => '',
       );
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
-      $this->assertEquals(!$expected, $visibility[$secondQuestionId]);
+      $this->assertEquals(!$expected, $visibility["formcreator_field_$secondQuestionId"]);
+   }
+
+   public  function testConditionForManyQuestions() {
+      $form = new PluginFormcreatorForm();
+      $form->add([
+         'entities_id'           => 0,
+         'name'                  => 'a form',
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => 0
+      ]);
+
+      $section = new PluginFormcreatorSection();
+      $sectionId = $section->add([
+         'name' => 'section',
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $questions = [];
+      $questions[0] = new PluginFormcreatorQuestion();
+      $questions[1] = new PluginFormcreatorQuestion();
+      $questions[2] = new PluginFormcreatorQuestion();
+
+      // create questions
+      $firstQuestionId = $questions[0]->add([
+         'name'                  => 'text question 0',
+         'fieldtype'             => 'text',
+         'plugin_formcreator_sections_id' => $sectionId,
+      ]);
+      $secondQuestionId = $questions[1]->add([
+         'name'                  => 'text question 1',
+         'fieldtype'             => 'text',
+         'plugin_formcreator_sections_id' => $sectionId,
+         'show_rule'             => 'hidden',
+      ]);
+      $thirdQuestionId = $questions[2]->add([
+         'name'                  => 'text question 2',
+         'fieldtype'             => 'text',
+         'plugin_formcreator_sections_id' => $sectionId,
+         'show_rule'             => 'hidden',
+      ]);
+
+      // create conditions
+      $condition = new PluginFormcreatorQuestion_Condition();
+      $condition->add([
+         'plugin_formcreator_questions_id' => $secondQuestionId,
+         'show_field'      => $firstQuestionId,
+         'show_condition'  => '==',
+         'show_value'      => 'a',
+         'show_logic'      => 'OR',
+      ]);
+      $condition->add([
+         'plugin_formcreator_questions_id' => $thirdQuestionId,
+         'show_field'      => $firstQuestionId,
+         'show_condition'  => '==',
+         'show_value'      => 'c',
+         'show_logic'      => 'OR',
+      ]);
+      $condition->add([
+         'plugin_formcreator_questions_id' => $thirdQuestionId,
+         'show_field'      => $secondQuestionId,
+         'show_condition'  => '==',
+         'show_value'      => 'c',
+         'show_logic'      => 'OR',
+      ]);
+
+      // test the conditions engine
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => '',
+         "formcreator_field_$secondQuestionId" => '',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$thirdQuestionId"]);
+
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => 'a',
+         "formcreator_field_$secondQuestionId" => '',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$thirdQuestionId"]);
+
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => 'a',
+         "formcreator_field_$secondQuestionId" => 'c',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$thirdQuestionId"]);
+
+      $currentValues = [
+         "formcreator_field_$firstQuestionId"  => '',
+         "formcreator_field_$secondQuestionId" => 'c',
+         "formcreator_field_$thirdQuestionId" => '',
+      ];
+      $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+      $this->assertEquals(true, $visibility["formcreator_field_$firstQuestionId"]);
+      $this->assertEquals(false, $visibility["formcreator_field_$secondQuestionId"]);
+      $this->assertEquals(true, $visibility["formcreator_field_$thirdQuestionId"]);
    }
 }

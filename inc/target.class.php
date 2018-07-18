@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -94,7 +126,7 @@ class PluginFormcreatorTarget extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -102,11 +134,6 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // Control fields values :
       // - name is required
       if (isset($input['name'])
@@ -122,7 +149,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          }
 
          switch ($input['itemtype']) {
-            case 'PluginFormcreatorTargetTicket':
+            case PluginFormcreatorTargetTicket::class:
                $targetticket      = new PluginFormcreatorTargetTicket();
                $id_targetticket   = $targetticket->add([
                   'name'    => $input['name'],
@@ -148,7 +175,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                   ]);
                }
                break;
-            case 'PluginFormcreatorTargetChange':
+            case PluginFormcreatorTargetChange::class:
                $targetchange      = new PluginFormcreatorTargetChange();
                $id_targetchange   = $targetchange->add([
                   'name'    => $input['name'],
@@ -187,18 +214,13 @@ class PluginFormcreatorTarget extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for updating the form
+    * Prepare input data for updating the form
     *
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // generate a uniq id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -244,7 +266,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       } else {
          //create target
          $targets_id = $item->add($target);
-         $item->getFromDB('$targets_id');
+         $item->getFromDB($targets_id);
       }
 
       // import sub table

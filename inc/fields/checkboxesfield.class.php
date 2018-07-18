@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 {
    const IS_MULTIPLE    = true;
@@ -99,6 +131,17 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return __('Checkboxes', 'formcreator');
    }
 
+   public function getValue() {
+      if (isset($this->fields['answer'])) {
+         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
+            return json_decode($this->fields['answer']);
+         }
+         return $this->fields['answer'];
+      } else {
+         return explode("\r\n", $this->fields['default_values']);
+      }
+   }
+
    public function prepareQuestionInputForSave($input) {
       if (isset($input['values'])) {
          if (empty($input['values'])) {
@@ -109,14 +152,44 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             return [];
          } else {
             $input['values'] = $this->trimValue($input['values']);
-            $input['values'] = addslashes($input['values']);
          }
       }
       if (isset($input['default_values'])) {
          $input['default_values'] = $this->trimValue($input['default_values']);
-         $input['default_values'] = addslashes($input['default_values']);
       }
       return $input;
+   }
+
+   public function prepareQuestionInputForTarget($input) {
+      global $CFG_GLPI;
+
+      $value = [];
+      $values = $this->getAvailableValues();
+
+      if (empty($input)) {
+         return '';
+      }
+
+      if (is_array($input)) {
+         $tab_values = $input;
+      } else if (is_array(json_decode($input))) {
+         $tab_values = json_decode($input);
+      } else {
+         $tab_values = [$input];
+      }
+
+      foreach ($tab_values as $input) {
+         if (in_array($input, $values)) {
+            $value[] = addslashes($input);
+         }
+      }
+
+      if ($CFG_GLPI['use_rich_text']) {
+         $value = '<br />' . implode('<br />', $value);
+      } else {
+         $value = '\r\n' . implode('\r\n', $value);
+      }
+      return $value;
    }
 
    public static function getPrefs() {

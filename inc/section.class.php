@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -37,7 +69,7 @@ class PluginFormcreatorSection extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the section
+    * Prepare input data for adding the section
     * Check fields values and get the order for the new section
     *
     * @param array $input data used to add the item
@@ -47,11 +79,6 @@ class PluginFormcreatorSection extends CommonDBChild
    public function prepareInputForAdd($input) {
       global $DB;
 
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // Control fields values :
       // - name is required
       if (!isset($input['name']) ||
@@ -59,22 +86,21 @@ class PluginFormcreatorSection extends CommonDBChild
          Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
          return [];
       }
-      $input['name'] = addslashes($input['name']);
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
       // Get next order
-      $table  = self::getTable();
-      $query  = "SELECT MAX(`order`) AS `order`
-                 FROM `$table`
-                 WHERE `plugin_formcreator_forms_id` = {$input['plugin_formcreator_forms_id']}";
-      $result = $DB->query($query);
-      $line   = $DB->fetch_array($result);
-      $input['order'] = $line['order'] + 1;
+      $formId = $input['plugin_formcreator_forms_id'];
+      $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_forms_id` = '$formId'", 'order');
+      if ($maxOrder === null) {
+         $input['order'] = 1;
+      } else {
+         $input['order'] = $maxOrder + 1;
+      }
 
       return $input;
    }
@@ -87,11 +113,6 @@ class PluginFormcreatorSection extends CommonDBChild
     * @return array the modified $input array
    **/
    public function prepareInputForUpdate($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         $input[$key] = plugin_formcreator_encode($value);
-      }
-
       // Control fields values :
       // - name is required
       if (isset($input['name'])
@@ -187,9 +208,22 @@ class PluginFormcreatorSection extends CommonDBChild
       $order         = $this->fields['order'];
       $formId        = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
-      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
+      if (!method_exists($otherItem, 'getFromDBByRequest')) {
+         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
             AND `order` < '$order'
             ORDER BY `order` DESC LIMIT 1");
+      } else {
+         $otherItem->getFromDBByRequest([
+            'WHERE' => [
+               'AND' => [
+                  'plugin_formcreator_forms_id' => $formId,
+                  'order'                       => ['<', $order]
+               ]
+            ],
+            'ORDER' => ['order DESC'],
+            'LIMIT' => 1
+         ]);
+      }
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),
@@ -206,9 +240,22 @@ class PluginFormcreatorSection extends CommonDBChild
       $order         = $this->fields['order'];
       $formId     = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
-      $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
+      if (!method_exists($otherItem, 'getFromDBByRequest')) {
+         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
             AND `order` > '$order'
             ORDER BY `order` ASC LIMIT 1");
+      } else {
+         $otherItem->getFromDBByRequest([
+            'WHERE' => [
+               'AND' => [
+                  'plugin_formcreator_forms_id' => $formId,
+                  'order'                       => ['>', $order]
+               ]
+            ],
+            'ORDER' => ['order ASC'],
+            'LIMIT' => 1
+         ]);
+      }
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),

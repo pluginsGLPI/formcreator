@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -20,9 +52,6 @@ class PluginFormcreatorWizard {
          return;
       }
       $HEADER_LOADED = true;
-
-      // force layout of glpi
-      $_SESSION['glpilayout'] = "lefttab";
 
       Html::includeHeader($title);
 
@@ -68,13 +97,13 @@ class PluginFormcreatorWizard {
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">';
       echo '<span class="fa fa-paper-plane-o fc_list_icon" title="'.__('Seek assistance', 'formcreator').'"></span>';
-      echo '<label>'.__('Seek assistance', 'formcreator').'</label>';
+      echo '<span class="label">'.__('Seek assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       echo '<li class="' . ($activeMenuItem == self::MENU_LAST_FORMS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/issue.php?reset=reset' . '">';
       echo '<span class="fa fa-list fc_list_icon" title="'.__('My requests for assistance', 'formcreator').'"></span>';
-      echo '<label>'.__('My requests for assistance', 'formcreator').'</label>';
+      echo '<span class="label">'.__('My requests for assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
@@ -86,7 +115,7 @@ class PluginFormcreatorWizard {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
             echo '<span class="fa fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
-            echo '<label>'.__('Book an asset', 'formcreator').'</label>';
+            echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
             echo '</a></li>';
          }
       }
@@ -95,32 +124,42 @@ class PluginFormcreatorWizard {
          echo '<li class="' . ($activeMenuItem == self::MENU_FEEDS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
          echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizardfeeds.php' . '">';
          echo '<span class="fa fa-rss fc_list_icon" title="'.__('Consult feeds', 'formcreator').'"></span>';
-         echo '<label>'.__('Consult feeds', 'formcreator').'</label>';
+         echo '<span class="label">'.__('Consult feeds', 'formcreator').'</span>';
          echo '</a></li>';
       }
 
-      $query = "SELECT `glpi_bookmarks`.*,
-                       `glpi_bookmarks_users`.`id` AS IS_DEFAULT
-                FROM `glpi_bookmarks`
-                LEFT JOIN `glpi_bookmarks_users`
-                  ON (`glpi_bookmarks`.`itemtype` = `glpi_bookmarks_users`.`itemtype`
-                      AND `glpi_bookmarks`.`id` = `glpi_bookmarks_users`.`bookmarks_id`
-                      AND `glpi_bookmarks_users`.`users_id` = '".Session::getLoginUserID()."')
-                WHERE `glpi_bookmarks`.`is_private`='1'
-                  AND `glpi_bookmarks`.`users_id`='".Session::getLoginUserID()."'
-                  OR `glpi_bookmarks`.`is_private`='0' ".
-                     getEntitiesRestrictRequest("AND", "glpi_bookmarks", "", "", true);
+      $query = "SELECT `glpi_savedsearches`.*,
+                       `glpi_savedsearches_users`.`id` AS IS_DEFAULT
+                FROM `glpi_savedsearches`
+                LEFT JOIN `glpi_savedsearches_users`
+                  ON (`glpi_savedsearches`.`itemtype` = `glpi_savedsearches_users`.`itemtype`
+                      AND `glpi_savedsearches`.`id` = `glpi_savedsearches_users`.`savedsearches_id`
+                      AND `glpi_savedsearches_users`.`users_id` = '".Session::getLoginUserID()."')
+                WHERE `glpi_savedsearches`.`is_private`='1'
+                  AND `glpi_savedsearches`.`users_id`='".Session::getLoginUserID()."'
+                  OR `glpi_savedsearches`.`is_private`='0' ".
+                     getEntitiesRestrictRequest("AND", "glpi_savedsearches", "", "", true);
 
       if ($result = $DB->query($query)) {
          if ($DB->numrows($result)) {
+            Ajax::createSlidePanel(
+                  'showSavedSearches',
+                  [
+                     'title'     => __('Saved searches'),
+                     'url'       => $CFG_GLPI['root_doc'] . '/ajax/savedsearch.php?action=show',
+                     'icon'      => '/pics/menu_config.png',
+                     'icon_url'  => SavedSearch::getSearchURL(),
+                     'icon_txt'  => __('Manage saved searches')
+                  ]
+                  );
             echo '<li class="' . ($activeMenuItem == self::MENU_BOOKMARKS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             Ajax::createIframeModalWindow('loadbookmark',
-                  $CFG_GLPI["root_doc"]."/front/bookmark.php?action=load",
-                  ['title'         => __('Load a bookmark'),
-                        'reloadonclose' => true]);
-            echo '<a href="#" onclick="$(\'#loadbookmark\').dialog(\'open\');">';
-            echo '<span class="fa fa-star fc_list_icon" title="'.__('Load a bookmark').'"></span>';
-            echo '<label>'.__('Load a bookmark').'</label>';
+                  $CFG_GLPI["root_doc"]."/front/savedsearch.php?action=load",
+                  ['title'         => __('Saved searches'),
+                   'reloadonclose' => true]);
+            echo '<a href="#" id="showSavedSearchesLink">';
+            echo '<span class="fa fa-star fc_list_icon" title="'.__('Saved searches').'"></span>';
+            echo '<span class="label">'.__('Saved searches').'</span>';
             echo '</a>';
             echo '</li>';
          }
@@ -130,7 +169,7 @@ class PluginFormcreatorWizard {
          echo '<li class="' . ($activeMenuItem == self::MENU_HELP ? 'plugin_formcreator_selectedMenuItem' : '') . 'plugin_formcreator_helpIcon">';
          echo '<a href="' . $CFG_GLPI["helpdesk_doc_url"] . '" target="_blank">';
          echo '<span class="fa fa-question fc_list_icon" title="' . __s('Help') . '"></span>';
-         echo '<label>' . __s('Help') . '</label>';
+         echo '<span class="label">'.__('Help').'</span>';
          echo '</a>';
          echo '</li>';
       }

@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -42,15 +74,19 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    protected function getTargetItemtypeName() {
-      return 'Change';
+      return Change::class;
    }
 
    public function getItem_Actor() {
       return new PluginFormcreatorTargetChange_Actor();
    }
 
+   protected function getCategoryFilter() {
+      return "`is_change` = '1'";
+   }
+
    /**
-    * Export in an array all the data of the current instanciated targetticket
+    * Export in an array all the data of the current instanciated target ticket
     * @return array the array with all data (with sub tables)
     */
    public function export() {
@@ -96,7 +132,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Import a form's targetchange into the db
+    * Import a form's target change into the db
     * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
@@ -154,7 +190,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
@@ -175,7 +211,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
-      // General information : name
+      // General information: name
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
@@ -187,7 +223,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '</table>';
 
-      // change information : title, template...
+      // change information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
@@ -798,9 +834,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Prepare input datas for updating the target ticket
+    * Prepare input data for updating the target ticket
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
     **/
@@ -821,8 +857,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
-
-         $input['name'] = plugin_formcreator_encode($input['title']);
 
          if ($CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
@@ -880,14 +914,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Save form datas to the target
+    * Save form data to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
-    * @return Change|null generated change
+    * @return Change|false generated change
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -934,22 +968,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $data   = [];
       $change  = new Change();
-
-      $form    = new PluginFormcreatorForm();
+      $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
 
-      $form->getFromDB($formanswer->fields['plugin_formcreator_forms_id']);
+      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
-      // Get default request type
-      $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $DB->query($query) or die ($DB->error());
-      list($requesttypes_id) = $DB->fetch_array($result);
-
-      $data['requesttypes_id'] = $requesttypes_id;
-
-      // Parse datas
-      $fullform = $formanswer->getFullForm();
-
+      // Parse data
       $changeFields = [
          'name',
          'content',
@@ -960,11 +984,24 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          'checklistcontent'
       ];
       foreach ($changeFields as $changeField) {
-         $data[$changeField] = $this->fields[$changeField];
+         //TODO: 2.7.0 rename PluginFormcreatorTargetChange's comment into content
+         if ($changeField != 'content') {
+            // This handles mismatch of the column content in Change itemtype and comment in TargetChange itemtype
+            $data[$changeField] = $this->fields[$changeField];
+         } else {
+            $data[$changeField] = $this->fields['comment'];
+         }
+         $data[$changeField] = addslashes($data[$changeField]);
+         $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
          }
-         $data[$changeField]                = addslashes($this->parseTags($data[$changeField], $formanswer));
+         if ($CFG_GLPI['use_rich_text']) {
+            // replace HTML P tags with DIV tags
+            $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+         }
+
+         $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
@@ -1066,9 +1103,20 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Define due date
       if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
-                                 ' AND plugin_formcreator_questions_id = '.$this->fields['due_date_question']);
-         $date   = array_shift($found);
+         $request = [
+            'FROM' => $answer::getTable(),
+            'WHERE' => [
+               'AND' => [
+                  $formanswer::getForeignKeyField() => $formanswer->fields['id'],
+                  PluginFormcreatorQuestion::getForeignKeyField() => $this->fields['due_date_question'],
+               ],
+            ],
+         ];
+         $iterator = $DB->request($request);
+         if ($iterator->count() > 0) {
+            $iterator->rewind();
+            $date   = $iterator->current();
+         }
       } else {
          $date = null;
       }

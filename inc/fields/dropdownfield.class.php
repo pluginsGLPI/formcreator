@@ -1,9 +1,40 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         echo '<div class="form_field">';
          if (!empty($this->fields['values'])) {
             $rand     = mt_rand();
             $required = $this->fields['required'] ? ' required' : '';
@@ -43,7 +74,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $itemtype::dropdown($dparams);
          }
-         echo '</div>' . PHP_EOL;
+         echo PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
@@ -58,16 +89,33 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getAnswer() {
       $value = $this->getValue();
+      $DbUtil = new DbUtils();
       if ($this->fields['values'] == 'User') {
-         return getUserName($value);
+         return $DbUtil->getUserName($value);
       } else {
          $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
          if (!isset($decodedValues['itemtype'])) {
-            return Dropdown::getDropdownName(getTableForItemType($this->fields['values']), $value);
+            return Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $value);
          } else {
-            return Dropdown::getDropdownName(getTableForItemType($decodedValues['itemtype']), $value);
+            return Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $value);
          }
       }
+   }
+
+   public function prepareQuestionInputForTarget($input) {
+      $DbUtil = new DbUtils();
+      if ($this->fields['values'] == User::class) {
+         $value = $DbUtil->getUserName($input);
+      } else {
+         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if (!isset($decodedValues['itemtype'])) {
+            $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $input);
+         } else {
+            $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $input);
+         }
+      }
+
+      return addslashes($value);
    }
 
    public static function getName() {

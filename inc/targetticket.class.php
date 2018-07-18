@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -26,15 +58,19 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getTargetItemtypeName() {
-      return 'Ticket';
+      return Ticket::class;
    }
 
    public function getItem_Actor() {
       return new PluginFormcreatorTargetTicket_Actor();
    }
 
+   protected function getCategoryFilter() {
+      return "`is_request` = '1' OR `is_incident` = '1'";
+   }
+
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
@@ -43,9 +79,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    public function showForm($options=[]) {
       global $CFG_GLPI, $DB;
 
-      if ($CFG_GLPI['use_rich_text']) {
-         Html::requireJs('tinymce');
-      }
       $rand = mt_rand();
 
       $obj = new PluginFormcreatorTarget();
@@ -58,7 +91,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      // General information : name
+      // General information: name
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
@@ -70,7 +103,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '</table>';
 
-      // Ticket information : title, template...
+      // Ticket information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
@@ -84,7 +117,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI["use_rich_text"]) {
          Html::initEditorSystem('comment');
       }
       echo '</td>';
@@ -752,7 +785,7 @@ EOS;
                $item->getFromDB($row['items_id']);
          switch ($itemtype) {
             case Ticket::getType():
-               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
                //echo Ticket_Ticket::getLinkName($row['link']);
                echo PluginFormcreatorCommon::getLinkName($row['link']);
                echo ' ';
@@ -764,7 +797,7 @@ EOS;
                break;
 
             case PluginFormcreatorTargetTicket::getType():
-               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
                //echo Ticket_Ticket::getLinkName($row['link']);
                echo PluginFormcreatorCommon::getLinkName($row['link']);
                echo ' ';
@@ -817,9 +850,7 @@ EOS;
             return [];
          }
 
-         $input['name'] = plugin_formcreator_encode($input['title']);
-
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
          }
 
@@ -891,6 +922,13 @@ EOS;
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
+
+      $target = new PluginFormcreatorTarget();
+      $found  = $target->find('items_id = ' . $this->getID());
+      $found  = array_shift($found);
+      $target->update(['id' => $found['id'], 'name' => $input['name']]);
+      $input['name'] = $input['title'];
+      unset($input['title']);
 
       return $input;
    }
@@ -974,14 +1012,14 @@ EOS;
    }
 
    /**
-    * Save form datas to the target
+    * Save form data to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
-    * @return Ticket|null Generated ticket if success, null otherwise
+    * @return Ticket|false Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorForm_Answer $formanswer) {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -1026,19 +1064,12 @@ EOS;
          '_groups_id_assign'           => [],
       ];
 
-      $data   = [];
+      $data = Ticket::getDefaultValues();
       $ticket  = new Ticket();
-      $form    = new PluginFormcreatorForm();
+      $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
 
-      $form->getFromDB($formanswer->fields['plugin_formcreator_forms_id']);
-
-      // Get default request type
-      $query   = "SELECT id FROM `glpi_requesttypes` WHERE `name` LIKE 'Formcreator';";
-      $result  = $DB->query($query) or die ($DB->error());
-      list($requesttypes_id) = $DB->fetch_array($result);
-
-      $data['requesttypes_id'] = $requesttypes_id;
+      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
       // Get predefined Fields
       $ttp                  = new TicketTemplatePredefinedField();
@@ -1062,7 +1093,7 @@ EOS;
          unset($predefined_fields['_groups_id_requester']);
       }
       if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_observer']);
+         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
          unset($predefined_fields['_groups_id_observer']);
       }
       if (isset($predefined_fields['_groups_id_assign'])) {
@@ -1075,16 +1106,23 @@ EOS;
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $data['name'] = $this->fields['name'];
-      $data['name'] = addslashes($this->parseTags($data['name'],
-                                                  $formanswer));
+      $data['name'] = addslashes($this->fields['name']);
+      $data['name'] = $this->parseTags($data['name'], $formanswer);
 
-      $data['content'] = $this->fields['comment'];
+      $data['content'] = addslashes($this->fields['comment']);
+      $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
       }
-      $data['content'] = addslashes($this->parseTags($data['content'], $formanswer));
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+         // replace HTML P tags with DIV tags
+         $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+      }
 
+      $data['content'] = $this->parseTags($data['content'], $formanswer);
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+         $data['content'] = htmlentities($data['content']);
+      }
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
@@ -1100,14 +1138,21 @@ EOS;
          } else {
             $requesters_id = $this->requesters['_users_id_requester'][0];
          }
+
+         // If only one requester, revert array of requesters into a scalar
+         // This is needed to process business rule affecting location of a ticket with the location of the user
+         if (count($this->requesters['_users_id_requester']) == 1) {
+            $this->requesters['_users_id_requester'] = array_pop($this->requesters['_users_id_requester']);
+         }
       }
 
       // Computation of the entity
       switch ($this->fields['destination_entity']) {
          // Requester's entity
          case 'current' :
-            $data['entities_id'] = $_SESSION['glpiactive_entity'];
+            $data['entities_id'] = $formanswer->getField('entities_id');
             break;
+
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
@@ -1184,43 +1229,33 @@ EOS;
             break;
       }
 
-      // Define due date
-      if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('`plugin_formcreator_forms_answers_id` = '.$formanswer->fields['id'].
-                                 ' AND `plugin_formcreator_questions_id` = '.$this->fields['due_date_question']);
-         $date   = array_shift($found);
-      } else {
-         $date = null;
-      }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
-
-      switch ($this->fields['due_date_rule']) {
-         case 'answer':
-            $due_date = $date['answer'];
-            break;
-         case 'ticket':
-            $due_date = date('Y-m-d H:i:s', strtotime($str));
-            break;
-         case 'calcul':
-            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
-            break;
-         default:
-            $due_date = null;
-            break;
-      }
-      if (!is_null($due_date)) {
-         $data['due_date'] = $due_date;
-      }
-
-      // Define urgency
+      $data = $this->setTargetDueDate($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
-
       $data = $this->setTargetCategory($data, $formanswer);
-
       $data = $this->setTargetLocation($data, $formanswer);
 
-      $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
-      $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
+      // There is always at least one requester
+      $data = $this->requesters + $data;
+
+      // Overwrite default actors only if populated
+      if (count($this->observers['_users_id_observer']) > 0) {
+         $data = $this->observers + $data;
+      }
+      if (count($this->assigned['_users_id_assign']) > 0) {
+         $data = $this->assigned + $data;
+      }
+      if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
+         $data = $this->assignedSuppliers + $data;
+      }
+      if (count($this->requesterGroups['_groups_id_requester']) > 0) {
+         $data = $this->requesterGroups + $data;
+      }
+      if (count($this->observerGroups['_groups_id_observer']) > 0) {
+         $data = $this->observerGroups + $data;
+      }
+      if (count($this->assignedGroups['_groups_id_assign']) > 0) {
+         $data = $this->assignedGroups + $data;
+      }
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
@@ -1335,6 +1370,38 @@ EOS;
       return $data;
    }
 
+   protected function setTargetDueDate($data, $formanswer) {
+      $answer  = new PluginFormcreatorAnswer();
+      if ($this->fields['due_date_question'] !== null) {
+         $found  = $answer->find('`plugin_formcreator_forms_answers_id` = '.$formanswer->fields['id'].
+               ' AND `plugin_formcreator_questions_id` = '.$this->fields['due_date_question']);
+         $date   = array_shift($found);
+      } else {
+         $date = null;
+      }
+      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+
+      switch ($this->fields['due_date_rule']) {
+         case 'answer':
+            $due_date = $date['answer'];
+            break;
+         case 'ticket':
+            $due_date = date('Y-m-d H:i:s', strtotime($str));
+            break;
+         case 'calcul':
+            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
+            break;
+         default:
+            $due_date = null;
+            break;
+      }
+      if (!is_null($due_date)) {
+         $data['time_to_resolve'] = $due_date;
+      }
+
+      return $data;
+   }
+
    protected function setTargetUrgency($data, $formanswer) {
       switch ($this->fields['urgency_rule']) {
          case 'answer':
@@ -1425,7 +1492,7 @@ EOS;
          foreach ($rows as $id => $question_line) {
             $uuid  = $question_line['uuid'];
 
-            $content = $target_data['name'];
+            $content = $target_data['title'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['name'] = $content;
@@ -1517,6 +1584,8 @@ EOS;
       unset($target_data['id'],
             $target_data['tickettemplates_id']);
 
+      $target_data['title'] = $target_data['name'];
+      unset($target_data['name']);
       return $target_data;
    }
 }

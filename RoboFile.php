@@ -1,5 +1,37 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
+/**
  * This is project's console commands configuration for Robo task runner.
  *
  * @see http://robo.li/
@@ -26,18 +58,17 @@ class RoboFile extends RoboFilePlugin
          'save.sql',
    ];
 
-   protected function getPluginPath() {
+   protected function getProjectPath() {
       return __DIR__;
    }
 
    protected function getPluginName() {
-      return basename($this->getPluginPath());
+      return basename($this->getProjectPath());
    }
 
    protected function getVersion() {
-      $setupFile = $this->getPluginPath(). "/setup.php";
+      $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
-      $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_VERSION";
       $pattern = "#^define\('$constantName', '([^']*)'\);$#m";
       preg_match($pattern, $setupContent, $matches);
@@ -47,10 +78,21 @@ class RoboFile extends RoboFilePlugin
       throw new Exception("Could not determine version of the plugin");
    }
 
+   protected function getIsRelease() {
+      $currentRev = $this->getCurrentCommitHash();
+      $setupContent = $this->getFileFromGit('setup.php', $currentRev);
+      $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_IS_OFFICIAL_RELEASE";
+      $pattern = "#^define\('$constantName', ([^\)]*)\);$#m";
+      preg_match($pattern, $setupContent, $matches);
+      if (isset($matches[1])) {
+         return $matches[1];
+      }
+      throw new Exception("Could not determine release status of the plugin");
+   }
+
    protected function getGLPIMinVersion() {
-      $setupFile = $this->getPluginPath(). "/setup.php";
+      $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
-      $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_GLPI_MIN_VERSION";
       $pattern = "#^define\('$constantName', '([^']*)'\);$#m";
       preg_match($pattern, $setupContent, $matches);
@@ -70,32 +112,54 @@ class RoboFile extends RoboFilePlugin
    }
 
    //Own plugin's robo stuff
-   public function archiveBuild() {
+
+   /**
+    * Build an redistribuable archive
+    *
+    * @param string $release 'release' if the archive is a release
+    */
+   public function archiveBuild($release = 'release') {
+      $release = strtolower($release);
       $version = $this->getVersion();
+
+      if ($release == 'release') {
+         if ($this->getIsRelease() !== 'true') {
+            throw new Exception('The Official release constant must be true');
+         }
+      }
 
       if (!$this->isSemVer($version)) {
          throw new Exception("$version is not semver compliant. See http://semver.org/");
       }
 
-      if (!$this->tagExists($version)) {
-         throw new Exception("The tag $version does not exists yet");
+      if ($this->tagExists($version)) {
+         throw new Exception("The tag $version already exists");
       }
 
-      if (!$this->isTagMatchesCurrentCommit($version)) {
-         throw new Exception("HEAD is not pointing to the tag of the version to build");
-      }
+      //if (!$this->isTagMatchesCurrentCommit($version)) {
+         //throw new Exception("HEAD is not pointing to the tag of the version to build");
+      //}
 
       $versionTag = $this->getVersionTagFromXML($version);
       if (!is_array($versionTag)) {
          throw new Exception("The version does not exists in the XML file");
       }
 
+      // update version in package.json
+      $this->sourceUpdatePackageJson($version);
+      $this->sourceUpdateComposerJson($version);
+
+      $this->updateChangelog();
+
+      $this->gitCommit(['package.json', 'composer.json'], "build: bump version in JSON files");
+      $this->gitCommit(['CHANGELOG.md'], "build(changelog): update changelog");
+
       $pluginName = $this->getPluginName();
-      $pluginPath = $this->getPluginPath();
+      $pluginPath = $this->getProjectPath();
       $targetFile = $pluginPath. "/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
-      $toArchive = implode(' ', $this->getFileToArchive($version));
+      $toArchive = implode(' ', $this->getFileToArchive("HEAD"));
       @mkdir($pluginPath. "/dist");
-      $this->_exec("git archive --prefix=$pluginName/ $version $toArchive | bzip2 > $targetFile");
+      $this->_exec("git archive --prefix=$pluginName/ HEAD $toArchive | bzip2 > $targetFile");
    }
 
    protected function getTrackedFiles($version) {
@@ -208,9 +272,43 @@ class RoboFile extends RoboFilePlugin
       return false;
    }
 
+   /**
+    * @param array $files files to commit
+    * @param string $commitMessage commit message
+    */
+   protected function gitCommit(array $files, $commitMessage) {
+      if (count($files) < 1) {
+         $arg = '-u';
+      } else {
+         $arg = '"' . implode('" "', $files) . '"';
+      }
+       exec("git add $arg", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to add files for $commitMessage");
+      }
+
+       exec("git commit -m \"$commitMessage\"", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to commit $commitMessage");
+      }
+
+       return true;
+   }
+
+   /**
+    */
+   protected function updateChangelog() {
+       exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to update the changelog");
+      }
+
+       return true;
+   }
+
    public function localesExtract() {
-      $potfile = strtolower($this->getPluginName()) . ".pot";
-      $phpSources = "*.php ajax/*.php front/*.php inc/*.php install/*.php";
+      $potfile = strtolower("glpi.pot");
+      $phpSources = "*.php ajax/*.php front/*.php inc/*.php inc/fields/*.php install/*.php js/*.php";
       // extract locales from source code
       $command = "xgettext $phpSources -o locales/$potfile -L PHP --add-comments=TRANS --from-code=UTF-8 --force-po";
       $command.= " --keyword=_n:1,2,4t --keyword=__s:1,2t --keyword=__:1,2t --keyword=_e:1,2t --keyword=_x:1c,2,3t --keyword=_ex:1c,2,3t";
@@ -219,4 +317,191 @@ class RoboFile extends RoboFilePlugin
       return $this;
    }
 
+   /**
+    * Build MO files
+    *
+    * @return void
+    */
+   public function localesMo() {
+      $localesPath = $this->getProjectPath() . '/locales';
+      if ($handle = opendir($localesPath)) {
+         while (($file = readdir($handle)) !== false) {
+            if ($file != "." && $file != "..") {
+               $poFile = "$localesPath/$file";
+               if (pathinfo($poFile, PATHINFO_EXTENSION) == 'po') {
+                  $moFile = str_replace('.po', '.mo', $poFile);
+                  $command = "msgfmt $poFile -o $moFile";
+                  $this->_exec($command);
+               }
+            }
+         }
+         closedir($handle);
+      }
+      return $this;
+   }
+
+   /**
+    *
+    * @param string $filename
+    * @param string $version
+    */
+   protected function updateJsonFile($filename, $version) {
+       // get Package JSON
+       $filename = __DIR__ . "/$filename";
+       $jsonContent = file_get_contents($filename);
+       $jsonContent = json_decode($jsonContent, true);
+
+       // update version
+      if (empty($version)) {
+         echo "Version not found in setup.php\n";
+         return;
+      }
+       $jsonContent['version'] = $version;
+       file_put_contents($filename, json_encode($jsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
+   }
+
+   /**
+    * @param $version
+    */
+   protected function sourceUpdatePackageJson($version) {
+       $this->updateJsonFile('package.json', $version);
+   }
+
+   /**
+    * @param string $version
+    */
+   protected function sourceUpdateComposerJson($version) {
+       $this->updateJsonFile('composer.json', $version);
+   }
+
+   /**
+    * Update headers in source files
+    */
+   public function codeHeadersUpdate() {
+      $toUpdate = $this->getTrackedFiles('HEAD');
+      foreach ($toUpdate as $file) {
+         $this->replaceSourceHeader($file);
+      }
+   }
+
+   /**
+    * Read the header template from a file
+    * @throws Exception
+    * @return string
+    */
+   protected function getHeaderTemplate() {
+      if (empty($this->headerTemplate)) {
+         $this->headerTemplate = file_get_contents(__DIR__ . '/tools/HEADER');
+         if (empty($this->headerTemplate)) {
+            throw new Exception('Header template file not found');
+         }
+      }
+
+      $copyrightRegex = "#Copyright (\(c\)|©) (\d{4}\s*-\s*)(\d{4}) #iUm";
+      $year = date("Y");
+      $replacement = 'Copyright © ${2}' . $year . ' ';
+      $this->headerTemplate = preg_replace($copyrightRegex, $replacement, $this->headerTemplate);
+
+      return $this->headerTemplate;
+   }
+
+   /**
+    * Format header template for a file type based on extension
+    *
+    * @param string $extension
+    * @param string $template
+    * @return string
+    */
+   protected function getFormatedHeaderTemplate($extension, $template) {
+      switch ($extension) {
+         case 'php':
+         case 'css':
+            $lines = explode("\n", $template);
+            foreach ($lines as &$line) {
+               $line = rtrim(" * $line");
+            }
+            return implode("\n", $lines);
+            break;
+
+         default:
+            return $template;
+      }
+   }
+
+   /**
+    * Update source code header in a source file
+    * @param string $filename
+    */
+   protected function replaceSourceHeader($filename) {
+      $filename = __DIR__ . "/$filename";
+
+      // define regex for the file type
+      $ext = pathinfo($filename, PATHINFO_EXTENSION);
+      switch ($ext) {
+         case 'php':
+            $prefix              = "\<\?php\\n/\*(\*)?\\n";
+            $replacementPrefix   = "<?php\n/**\n";
+            $suffix              = "\\n( )?\*/";
+            $replacementSuffix   = "\n */";
+            break;
+
+         case 'css':
+            $prefix              = "/\*(\*)?\\n";
+            $replacementPrefix   = "/**\n";
+            $suffix              = "\\n( )?\*/";
+            $replacementSuffix   = "\n */";
+            break;
+         default:
+            // Unhandled file format
+            return;
+      }
+
+      // format header template for the file type
+      $header = trim($this->getHeaderTemplate());
+      $formatedHeader = $replacementPrefix . $this->getFormatedHeaderTemplate($ext, $header) . $replacementSuffix;
+
+      // get the content of the file to update
+      $source = file_get_contents($filename);
+
+      // update authors in formated template
+      $headerMatch = [];
+      $originalAuthors = [];
+      $authors = [];
+      $authorsRegex = "#^.*(\@author .*)$#Um";
+      preg_match('#^' . $prefix . '(.*)' . $suffix . '#Us', $source, $headerMatch);
+      if (isset($headerMatch[0])) {
+         $originalHeader = $headerMatch[0];
+         preg_match_all($authorsRegex, $originalHeader, $originalAuthors);
+         if (!is_array($originalAuthors)) {
+            $originalAuthors = [$originalAuthors];
+         }
+         if (isset($originalAuthors[1])) {
+            $originalAuthors[1] = array_unique($originalAuthors[1]);
+            $originalAuthors = $this->getFormatedHeaderTemplate($ext, implode("\n", $originalAuthors[1]));
+            $countOfAuthors = preg_match_all($authorsRegex, $formatedHeader);
+            if ($countOfAuthors !== false) {
+               // Empty all author lines except the last one
+               $formatedHeader = preg_replace($authorsRegex, '', $formatedHeader, $countOfAuthors - 1);
+               // remove the lines previously reduced to zero
+               $lines = explode("\n", $formatedHeader);
+               $formatedHeader = [];
+               foreach ($lines as $line) {
+                  if ($line !== '') {
+                     $formatedHeader[] = $line;
+                  };
+               }
+               $formatedHeader = implode("\n", $formatedHeader);
+               $formatedHeader = preg_replace($authorsRegex, $originalAuthors, $formatedHeader, 1);
+            }
+         }
+      }
+
+      // replace the header if it exists
+      $source = preg_replace('#^' . $prefix . '(.*)' . $suffix . '#Us', $formatedHeader, $source, 1);
+      if (empty($source)) {
+         throw new Exception("An error occurred while processing $filename");
+      }
+
+      file_put_contents($filename, $source);
+   }
 }

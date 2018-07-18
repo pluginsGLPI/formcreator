@@ -1,14 +1,49 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.6.0-rc1');
+define('PLUGIN_FORMCREATOR_VERSION', '2.6.4-dev');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
+// is or is not an official release of the plugin
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
+
 
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2.1');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.3');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.4');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
@@ -18,12 +53,12 @@ define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
 function plugin_version_formcreator() {
-   $version = rtrim(GLPI_VERSION, '-dev');
-   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($version, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
-      echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
+   $glpiVersion = rtrim(GLPI_VERSION, '-dev');
+   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+      echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
-   return array(
+   $requirements = [
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
@@ -32,10 +67,15 @@ function plugin_version_formcreator() {
       'requirements'   => [
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
-            'dev'            => true
          ]
       ]
-   );
+   ];
+
+   if (PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE) {
+      // This is not a development version
+      $requirements['requirements']['glpi']['max'] = PLUGIN_FORMCREATOR_GLPI_MAX_VERSION;
+   }
+   return $requirements;
 }
 
 /**
@@ -62,6 +102,9 @@ function plugin_formcreator_check_config($verbose = false) {
  */
 function plugin_init_formcreator() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
+
+   // Add specific CSS
+   $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
    // Hack for vertical display
    if (isset($CFG_GLPI['layout_excluded_pages'])) {
@@ -149,20 +192,23 @@ function plugin_init_formcreator() {
             ];
          }
 
-         // Load JS and CSS files if we are on a page witch need them
+         // Load JS and CSS files if we are on a page which need them
          if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
              || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
              || isset($_SESSION['glpiactiveprofile']) &&
                 $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-             // Add specific CSS
-            $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
 
             $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
 
             // Add specific JavaScript
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
+         }
+
+         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/targetticket.form.php") !== false) {
+            if ($CFG_GLPI['use_rich_text']) {
+               Html::requireJs('tinymce');
+            }
          }
 
          if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
@@ -267,8 +313,8 @@ function plugin_formcreator_getUuid() {
  * @param $value value to search in provided field
  *
  * @return true if succeed else false
-**/
-function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $value = "") {
+ */
+function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $value = '') {
    global $DB;
 
    // != 0 because 0 is consider as empty
@@ -280,9 +326,15 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = "", $val
 
    $field = $DB->escape($field);
    $value = $DB->escape($value);
-
-   $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
+   if (!method_exists(PluginFormcreatorForm::class, 'getFromDBByRequest')) {
+      $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
                                     .$value."' LIMIT 1");
+   } else {
+      $found = $item->getFromDBByRequest([
+         'WHERE' => [$item::getTable() . '.' . $field => $value],
+         'LIMIT' => 1
+      ]);
+   }
 
    if ($found) {
       return $item->getID();

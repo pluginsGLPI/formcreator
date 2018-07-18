@@ -2,7 +2,7 @@
    <name>FormCreator</name>
    <key>formcreator</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/TECLIB/formcreator/master/icon.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
          <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.</fr>
@@ -50,13 +50,15 @@ Features
          </en>
       </long>
    </description>
-   <homepage>https://github.com/TECLIB/formcreator</homepage>
-   <download>https://github.com/TECLIB/formcreator/releases</download>
-   <issues>https://github.com/TECLIB/formcreator/issues</issues>
-   <readme>https://github.com/TECLIB/formcreator/blob/master/README.md</readme>
+   <homepage>https://pluginsglpi.github.io/formcreator/</homepage>
+   <download>https://github.com/pluginsGLPI/formcreator/releases</download>
+   <issues>https://github.com/pluginsGLPI/formcreator/issues</issues>
+   <readme>https://github.com/pluginsGLPI/formcreator/blob/master/README.md</readme>
    <authors>
       <author>Jérémy Moreau</author>
-      <author>TECLIB'</author>
+      <author>Thierry Bugier</author>
+      <author>Alexandre Delaunay</author>
+      <author>pluginsGLPI'</author>
    </authors>
    <versions>
       <version>
@@ -162,31 +164,76 @@ Features
       <version>
          <num>2.5.0</num>
          <compatibility>9.1.2</compatibility>
+         <compatibility>9.1.3</compatibility>
+         <compatibility>9.1.4</compatibility>
+         <compatibility>9.1.5</compatibility>
+         <compatibility>9.1.6</compatibility>
+         <compatibility>9.1.7</compatibility>
       </version>
       <version>
          <num>2.5.1</num>
          <compatibility>9.1.2</compatibility>
+         <compatibility>9.1.3</compatibility>
+         <compatibility>9.1.4</compatibility>
+         <compatibility>9.1.5</compatibility>
+         <compatibility>9.1.6</compatibility>
+         <compatibility>9.1.7</compatibility>
       </version>
       <version>
          <num>2.5.2</num>
          <compatibility>9.1.2</compatibility>
+         <compatibility>9.1.3</compatibility>
+         <compatibility>9.1.4</compatibility>
+         <compatibility>9.1.5</compatibility>
+         <compatibility>9.1.6</compatibility>
+         <compatibility>9.1.7</compatibility>
       </version>
       <version>
          <num>2.6.0-rc1</num>
          <compatibility>9.2.0</compatibility>
+         <compatibility>9.2.1</compatibility>
+         <compatibility>9.2.2</compatibility>
+         <compatibility>9.2.3</compatibility>
+      </version>
+      <version>
+         <num>2.6.1</num>
+         <compatibility>9.2.1</compatibility>
+         <compatibility>9.2.2</compatibility>
+         <compatibility>9.2.3</compatibility>
+      </version>
+      <version>
+         <num>2.6.2</num>
+         <compatibility>9.2.1</compatibility>
+         <compatibility>9.2.2</compatibility>
+         <compatibility>9.2.3</compatibility>
+      </version>
+      <version>
+         <num>2.6.3</num>
+         <compatibility>9.2.1</compatibility>
+         <compatibility>9.2.2</compatibility>
+         <compatibility>9.2.3</compatibility>
+         <compatibility>9.3</compatibility>
       </version>
    </versions>
    <langs>
       <lang>ca_ES</lang>
       <lang>cs_CZ</lang>
+      <lang>de_AT</lang>
       <lang>de_DE</lang>
       <lang>en_GB</lang>
+      <lang>en_US</lang>
+      <lang>es_419</lang>
       <lang>es_AR</lang>
+      <lang>es_CL</lang>
       <lang>es_ES</lang>
+      <lang>es_MX</lang>
       <lang>fr_FR</lang>
       <lang>hu_HU</lang>
       <lang>it_IT</lang>
       <lang>lv_LV</lang>
+      <lang>nb_NO</lang>
+      <lang>nl_BE</lang>
+      <lang>nl_NL</lang>
       <lang>pl_PL</lang>
       <lang>pt_BR</lang>
       <lang>ro_RO</lang>
@@ -211,7 +258,7 @@ Features
       </en>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/TECLIB/formcreator/master/screenshot.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/TECLIB/formcreator/master/screenshot_2.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/screenshot.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/screenshot_2.png</screenshot>
    </screenshots>
 </root>

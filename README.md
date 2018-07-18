@@ -1,15 +1,34 @@
-# Introduction
+# Form Creator
 
-[![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) 
+![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
 
-| **Release channel** | **Development channel** |
-|:---:|:---:|
-| [![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg?branch=master)](https://travis-ci.org/pluginsGLPI/formcreator) | [![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg?branch=develop)](https://travis-ci.org/pluginsGLPI/formcreator) |
+[![License GPL 3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://github.com/Naylin15/formcreator/blob/develop/LICENSE.md)
+[![Telegram GLPI](https://img.shields.io/badge/Telegram-GLPI-blue.svg)](https://t.me/glpien)
+[![IRC Chat](https://img.shields.io/badge/IRC-%23GLPI-green.svg)](http://webchat.freenode.net/?channels=GLPI)
+[![Follow Twitter](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg)](https://twitter.com/GLPI_PROJECT)
+[![Join the chat at https://gitter.im/TECLIB/formcreator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/formcreator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Project Status: Active](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-Formcreator is a plugin which allow creation of custom forms of easy access.  
-At the same time, the plugin allow the creation of one or more tickets when the form is filled. 
+Extend GLPI with Plugins.
 
-## Features
+## Table of Contents
+
+* [Synopsis](#synopsis)
+* [Build Status](#build-status)
+* [Documentation](#documentation)
+* [Versioning](#versioning)
+* [Contact](#contact)
+* [Professional Services](#professional-services)
+* [Contribute](#contribute)
+* [Copying](#copying)
+
+## Synopsis
+
+Formcreator is a plugin which allow creation of custom forms of easy access.
+At the same time, the plugin allow the creation of one or more tickets when the form is filled.
+
+### Features
 
 1. Direct access to forms self-service interface in main menu
 2. Highlighting forms in homepages
@@ -26,70 +45,42 @@ At the same time, the plugin allow the creation of one or more tickets when the 
 13. Preview form created directly in the configuration.
 14. An optional service catalog to browse for forms and FAQ in an unified interface.
 
-For more information you can visit the [documentation](http://glpi-plugins.readthedocs.io/en/latest/formcreator/)
+## Build Status
 
-## Translations
+| **LTS** | **Bleeding Edge** |
+|:---:|:---:|
+| [![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg?branch=master)](https://travis-ci.org/pluginsGLPI/formcreator) | [![Build Status](https://travis-ci.org/pluginsGLPI/formcreator.svg?branch=develop)](https://travis-ci.org/pluginsGLPI/formcreator) |
 
-If you want Formcreator to be available in your native language and have a little time, you can help us:
+## Documentation
 
-Join us on [Transifex](https://www.transifex.com/teclib/glpi-project-plugin-formcreator)
+We maintain a detailed documentation of the project on the website, check the [How-tos](https://pluginsglpi.github.io/formcreator/howtos/) and [Development](https://pluginsglpi.github.io/formcreator/) section.
 
-## Upgrade to 2.6.0
+For more information you can visit [formcreator on the GLPI Plugins documentation](http://glpi-plugins.readthedocs.io/en/latest/formcreator/)
 
-When a form contains several target tickets and a file upload field, the uploaded file was attached to all generated tickets.
-Starting from the version 2.6.0 a document is attached to a generated ticket in two cases:
-* if the tag ##FULLFORM## is used
-* if the tag representing the file upload field is used. 
+## Versioning
 
-When the tag of the answer itself is used, the description of the generated ticket contains a mention of an attached document.
+In order to provide transparency on our release cycle and to maintain backward compatibility, this project is maintained under [the Semantic Versioning guidelines](http://semver.org/). We are committed to following and complying with the rules, the best we can.
 
-Please take these changes into consideration to review forms containing a file upload field before production.
+See [the tags section of our GitHub project](https://github.com/pluginsGLPI/formcreator/tags) for changelogs for each release version. Release announcement posts on [the official Teclib' blog](http://www.teclib-edition.com/en/communities/blog-posts/) contain summaries of the most noteworthy changes made in each release.
 
-## Upgrade from 1.x to 2.4.0 or later
+## Contact
 
-After upgrade of FormCreator to version 2.4.0 or later, users may encounteer display issues. This is due to major changes on CSS of the plugin. You may need to refresh the cache of your browser with Ctrl+R or Ctrl+F5. If you plan to communicate about the new presentation of the plugin or the service catalog, introduce this simple manipulation to ensure all your users have a clean cache.
+For notices about major changes and general discussion of development, subscribe to the [/r/glpi](http://www.reddit.com/r/glpi) subreddit.
+You can also chat with us via IRC in [#GLPI on freenode](http://webchat.freenode.net/?channels=GLPI) if you get stuck, and [@glpien on Telegram](https://t.me/glpien).
 
-------------------------------------------------------------------------------------------------------------------------
+## Professional Services
 
-# Introduction
+The GLPI Network services are available through our [Partner's Network](http://www.teclib-edition.com/en/partners/). We provide special training, bug fixes with editor subscription, contributions for new features, and more.
 
+Obtain a personalized service experience, associated with benefits and opportunities.
 
-Formcreator est un plugin permettant la création de formulaires personalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.
+## Contribute
 
-## Fonctionnalités
+Want to file a bug, contribute some code, or improve documentation? Excellent! Read up on our
+guidelines for [contributing](https://github.com/pluginsGLPI/formcreator/blob/develop/.github/CONTRIBUTING.md) and then check out one of our issues in the [Issues Dashboard](https://github.com/pluginsGLPI/formcreator/issues).
 
-1. Accès par menu direct en interface self-service
-2. Mise en avant de formulaires en pages d'accueil
-3. Accès des formulaires contrôlés : accès public, accès utilisateurs identifiés, accès restreint à certains profils
-4. Des formulaires simples et personnalisables
-5. Des formulaires organisés par catégories, par entités et par langues.
-6. Des questions ouvertes ou fermées, de tout type de présentation : Champs textes, listes, LDAP, fichiers, etc.
-7. Organisation des questions par sections. Choix de l'ordre d'affichage.
-8. Possibilité de n'afficher une question que selon certains critères (réponse à une autre question)
-9. Un contrôle pointu sur les réponses de formulaires : Texte, nombres, taille des champs, e-mail, champs obligatoires, expressions réguliaires, etc.
-10. Création d'un ou plusieurs tickets à partir des réponses aux formulaires
-11. Ajout de description par champs, par section de questions, par formulaires, par entités et langues.
-12. Formatage du/des ticket(s) créé(s) : réponses aux questions à afficher, gabarits de tickets.
-13. Prévisualisation du formulaire créé directement dans la configuration.
-14. Un catalogue de services optionnel pour consulter la FAQ et utiliser les formulaires dans une interface unifiée.
+## Copying
 
-Pour plus d'informations, visitez la [documentation (en anglais)](http://glpi-plugins.readthedocs.io/fr/latest/formcreator/)
-
-## Upgrade to 2.6.0
-
-Quand un formulaire contient plusieurs tickets destination et un champ d'envoi de fichier, le document téléversé était rattaché à t ous les tickets générés. A partir de la version 2.6.0 un document est rattaché à un ticket généré dans deux cas :
-* si la balise ##FULLFORM## est utilisée
-* si la balise représentant la réponse du champ d'envoi de fichier est utilisée.
-
-Quand la balise du champ est utilisée, la descrition du ticket généré contient une mention faisant référence à un document joint.
-
-Veuillez prendre ces changements en considération pour réviser tout formulaire contenant un champ d'envoi de fichier avant mise en production.
-
-# Mise à jour depuis 1.x vers 2.4.0 ou supérieur
-
-Après la mise à jour de FormCreator vers la version 2.4.0 ou supérieur, les utilisateurs peuvent rencontrer des problèmes d'affichage. Cela est dû aux changemetns majeurs de CSS dans le plugin. Vous pourriez avoir besoin de rafraichir le cache de votre navigateur avec Ctrl+R ou Ctrl+F5. Si vous prévoyez de communiquer à propos de la nouvelle présentation du plugin ou du catalogue de services, introduisez cette manipulation simple pour vous assurer que tous vos utilisateurs ont un cache à jour.
-
-![3.-Configuration](/screenshot.png "Configuration")
-
-![3.9.-Formcreators-helpdesk](/screenshot_2.png "Service catalog")
-
+* **Name**: [GLPI](http://glpi-project.org/) is a registered trademark of [Teclib'](http://www.teclib-edition.com/en/).
+* **Code**: you can redistribute it and/or modify it under the terms of the GNU General Public License ([GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)).
+* **Documentation**: released under Attribution 4.0 International ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).

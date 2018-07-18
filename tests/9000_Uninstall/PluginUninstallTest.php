@@ -1,32 +1,34 @@
 <?php
-/*
- LICENSE
-
- Copyright (C) 2016 Teclib'
- Copyright (C) 2010-2016 by the FusionInventory Development Team.
-
- This file is part of Flyve MDM Plugin for GLPI.
-
- Flyve MDM Plugin for GLPi is a subproject of Flyve MDM. Flyve MDM is a mobile
- device management software.
-
- Flyve MDM Plugin for GLPI is free software: you can redistribute it and/or
- modify it under the terms of the GNU Affero General Public License as published
- by the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- Flyve MDM Plugin for GLPI is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU Affero General Public License for more details.
- You should have received a copy of the GNU Affero General Public License
- along with Flyve MDM Plugin for GLPI. If not, see http://www.gnu.org/licenses/.
- ------------------------------------------------------------------------------
- @author    Thierry Bugier Pineau
- @copyright Copyright (c) 2016 Flyve MDM plugin team
- @license   AGPLv3+ http://www.gnu.org/licenses/agpl.txt
- @link      https://github.com/flyve-mdm/flyve-mdm-glpi
- @link      http://www.glpi-project.org/
- ------------------------------------------------------------------------------
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
  */
 
 class PluginUninstallTest extends SuperAdminTestCase
@@ -64,7 +66,10 @@ class PluginUninstallTest extends SuperAdminTestCase
       $rows = $template->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
       $this->assertCount(0, $rows);
 
-      // TODO: need to find a r eliable way to detect not clenaed
+      $config = Config::getConfigurationValues('formcreator');
+      $this->assertArrayNotHasKey('schema_version', $config);
+
+      // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
    }

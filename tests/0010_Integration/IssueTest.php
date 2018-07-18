@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class IssueTest extends SuperAdminTestCase {
 
 
@@ -17,7 +49,12 @@ class IssueTest extends SuperAdminTestCase {
       $ticketId = $ticket->getID();
       $issue = new PluginFormcreatorIssue();
       // one and only one issue must exist. If several created, getFromDB will fail
-      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
+      $issue->getFromDBByCrit([
+            'AND' => [
+                  'sub_itemtype' => Ticket::class,
+                  'original_id' => $ticketId
+            ]
+      ]);
       $this->assertFalse($issue->isNewItem());
    }
 
@@ -42,7 +79,7 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
-      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $form_answer->getFromDBByCrit(['plugin_formcreator_forms_id' => $formId]);
       $this->assertFalse($form_answer->isNewItem());
 
       // check an issue was created for the form answer
@@ -81,13 +118,18 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
-      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $form_answer->getFromDBByCrit(['plugin_formcreator_forms_id' => $formId]);
       $this->assertFalse($form_answer->isNewItem());
 
       // find the generated ticket
       $formanswerId = $form_answer->getID();
       $item_ticket = new Item_Ticket();
-      $item_ticket->getFromDBByQuery("WHERE `itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formanswerId'");
+      $item_ticket->getFromDBByCrit([
+         'AND' => [
+            'itemtype' => PluginFormcreatorForm_Answer::class,
+            'items_id' => $formanswerId
+         ]
+      ]);
       $this->assertFalse($item_ticket->isNewItem());
       $ticket = new Ticket();
       $ticket->getFromDB($item_ticket->getField('tickets_id'));
@@ -96,7 +138,12 @@ class IssueTest extends SuperAdminTestCase {
       // check an issue was created for the ticket
       $ticketId = $ticket->getID();
       $ticketIssue = new PluginFormcreatorIssue();
-      $ticketIssue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
+      $ticketIssue->getFromDBByCrit([
+         'AND' => [
+            'sub_itemtype' => Ticket::class,
+            'original_id'  => $ticketId
+         ]
+      ]);
       $this->assertFalse($ticketIssue->isNewItem());
 
       // check no issue was created for the form answer
@@ -143,7 +190,7 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
-      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $form_answer->getFromDBByCrit(['plugin_formcreator_forms_id' => $formId]);
       $this->assertFalse($form_answer->isNewItem());
 
       // find the generated tickets
@@ -171,21 +218,26 @@ class IssueTest extends SuperAdminTestCase {
    public function testDeleteTicket() {
       $this->assertTrue(true);
       $ticket = new Ticket();
-      $ticket->add(array(
-            'name'      => 'ticket to delete',
-            'content'   => 'My computer is down (again) !'
-      ));
+      $ticket->add([
+         'name'      => 'ticket to delete',
+         'content'   => 'My computer is down (again) !'
+      ]);
       $this->assertFalse($ticket->isNewItem());
 
       $ticketId = $ticket->getID();
       $issue = new PluginFormcreatorIssue();
       // one and only one issue must exist. If several created, getFromDB will fail
-      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
+      $issue->getFromDBByCrit([
+         'AND' => [
+             'sub_itemtype' => Ticket::class,
+            'original_id'   => $ticketId
+         ]
+      ]);
       $this->assertFalse($issue->isNewItem());
 
-      $ticket->delete(array(
-            'id'  => $ticketId
-      ));
+      $ticket->delete([
+         'id' => $ticketId
+      ]);
 
       $rows = $issue->find("`sub_itemtype` = 'Ticket' AND `original_id` = '$ticketId'");
       $this->assertCount(0, $rows);
@@ -194,14 +246,14 @@ class IssueTest extends SuperAdminTestCase {
    public function testDeleteFormAnswer() {
       // create a form with a target ticket
       $form = new PluginFormcreatorForm();
-      $form->add(array(
-            'entities_id'           => $_SESSION['glpiactive_entity'],
-            'name'                  => 'form with 1 target ticket',
-            'description'           => 'form description',
-            'content'               => 'a content',
-            'is_active'             => 1,
-            'validation_required'   => 0
-      ));
+      $form->add([
+         'entities_id'           => $_SESSION['glpiactive_entity'],
+         'name'                  => 'form with 1 target ticket',
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => 0
+      ]);
       $this->assertFalse($form->isNewItem());
 
       // answer the form (no matter it is empty)
@@ -212,7 +264,7 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
-      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $form_answer->getFromDBByCrit(['plugin_formcreator_forms_id' => $formId]);
       $this->assertFalse($form_answer->isNewItem());
 
       // check an issue was created for the form answer
@@ -261,7 +313,7 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
-      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $form_answer->getFromDBByCrit(['plugin_formcreator_forms_id' => $formId]);
       $this->assertFalse($form_answer->isNewItem());
 
       // check no tickets are linked to the form answer
@@ -283,7 +335,12 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated ticket
       $item_ticket = new Item_Ticket();
-      $item_ticket->getFromDBByQuery("WHERE `itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formanswerId'");
+      $item_ticket->getFromDBByCrit([
+         'AND' => [
+            'itemtype' => PluginFormcreatorForm_Answer::class,
+            'items_id' => $formanswerId
+         ]
+      ]);
       $this->assertFalse($item_ticket->isNewItem());
       $ticket = new Ticket();
       $ticket->getFromDB($item_ticket->getField('tickets_id'));
@@ -346,7 +403,7 @@ class IssueTest extends SuperAdminTestCase {
 
       // find the generated form answer
       $form_answer = new PluginFormcreatorForm_Answer();
-      $form_answer->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'");
+      $form_answer->getFromDBByCrit(['plugin_formcreator_forms_id' => $formId]);
       $this->assertFalse($form_answer->isNewItem());
       $formanswerId = $form_answer->getID();
 

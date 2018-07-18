@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
 {
    const IS_MULTIPLE    = true;
@@ -8,7 +40,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $rand     = mt_rand();
          $required = $this->fields['required'] ? ' required' : '';
 
-         echo '<div class="form_field">';
          $values = [];
 
          $obj = new PluginTagTag();
@@ -28,7 +59,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             'rand'                => $rand,
             'multiple'            => true,
          ]);
-         echo '</div>' . PHP_EOL;
+         echo PHP_EOL;
          echo '<script type="text/javascript">
                   jQuery(document).ready(function($) {
                      jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
@@ -55,6 +86,10 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       }
 
       return json_encode($return);
+   }
+
+   public function prepareQuestionInputForSave($input) {
+      return $input;
    }
 
    public static function getName() {

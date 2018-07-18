@@ -1,4 +1,35 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -7,8 +38,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorFields
 {
    /**
-    * Retrive all field types and file path
-    *
+    * Retrieve all field types and file path
     * @return Array     field_type => File_path
     */
    public static function getTypes() {
@@ -29,7 +59,6 @@ class PluginFormcreatorFields
 
    /**
     * Get type and name of all field types
-    *
     * @return Array     field_type => Name
     */
    public static function getNames() {
@@ -43,9 +72,9 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach (array_keys($tab_field_types) as $field_type) {
-         $classname                         = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
+         $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
 
-         if ($classname == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
+         if ($classname == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
             continue;
          }
 
@@ -56,29 +85,6 @@ class PluginFormcreatorFields
 
       return $tab_field_types_name;
    }
-
-   /**
-    * Get field value to display
-    *
-    * @param String $field Field object to display
-    * @param String $value the value to display
-    *
-    * @return String
-    */
-   public static function getValue($field, $value) {
-      $class_file = dirname(__FILE__).'/fields/'.$field['fieldtype'].'field.class.php';
-      if (is_file($class_file)) {
-         include_once ($class_file);
-
-         $classname = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
-         if (class_exists($classname)) {
-            $obj = new $classname($field, $value);
-            return $obj->getAnswer();
-         }
-      }
-      return $value;
-   }
-
 
    public static function printAllTabFieldsForJS() {
       $tabFieldsForJS = '';
@@ -97,7 +103,6 @@ class PluginFormcreatorFields
    }
 
    /**
-    *
     * @param unknown $field
     * @param unknown $data
     * @param string $edit
@@ -110,7 +115,7 @@ class PluginFormcreatorFields
          $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
 
          $plugin = new Plugin();
-         if ($fieldClass == 'tagField' &&(!$plugin->isInstalled('tag') || !$plugin->isActivated('tag'))) {
+         if ($fieldClass == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
             return;
          }
 
@@ -160,7 +165,7 @@ class PluginFormcreatorFields
       foreach ($questionConditions as $question_condition) {
          $conditions[] = [
             'logic'    => $question_condition->getField('show_logic'),
-            'field'    => $question_condition->getField('show_field'),
+            'field'    => 'formcreator_field_' . $question_condition->getField('show_field'),
             'operator' => $question_condition->getField('show_condition'),
             'value'    => $question_condition->getField('show_value')
          ];
@@ -181,12 +186,7 @@ class PluginFormcreatorFields
             $nextLogic = 'OR';
          }
          if (!isset($values[$condition['field']])) {
-            unset($evalQuestion[$id]);
-            return false;
-         }
-         if (!self::isVisible($condition['field'], $values)) {
-            unset($evalQuestion[$id]);
-            return false;
+            $values[$condition['field']] = '';
          }
 
          switch ($condition['operator']) {
@@ -289,7 +289,7 @@ class PluginFormcreatorFields
 
       // If the field is hidden by default, show it if condition is true
       if ($question->fields['show_rule'] == 'hidden') {
-         return $return;
+         return ($return == true);
 
          // else show it if condition is false
       } else {

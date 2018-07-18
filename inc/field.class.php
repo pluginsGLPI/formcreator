@@ -1,4 +1,35 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -12,6 +43,10 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 
    protected $fields = [];
 
+   /**
+    * @param unknown $fields
+    * @param array $data
+    */
    public function __construct($fields, $data = []) {
       $this->fields           = $fields;
       $this->fields['answer'] = $data;
@@ -25,13 +60,26 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return array input data to save as is
     */
    public function prepareQuestionInputForSave($input) {
-      return  $input;
+      return $input;
    }
 
+   /**
+    * Prepares an answer value for output in a target object
+    * @param string|array $input the answer to format for a target (ticket or change)
+    * @return string
+    */
+   public function prepareQuestionInputForTarget($input) {
+      return Toolbox::addslashes_deep($input);
+   }
+
+   /**
+    * Output HTML to display the field
+    * @param boolean $canEdit is the field editable ?
+    */
    public function show($canEdit = true) {
       $required = ($canEdit && $this->fields['required']) ? ' required' : '';
 
-      echo '<div class="form-group ' . $required . '" id="form-group-field' . $this->fields['id'] . '">';
+      echo '<div class="form-group ' . $required . '" id="form-group-formcreator_field_' . $this->fields['id'] . '">';
       echo '<label for="formcreator_field_' . $this->fields['id'] . '">';
       echo $this->getLabel();
       if ($canEdit && $this->fields['required']) {
@@ -62,7 +110,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 
    /**
     * Outputs the HTML representing the field
-    *
     * @param string $canEdit
     */
    public function displayField($canEdit = true) {
@@ -117,7 +164,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    /**
-    * Is the field valid for thegiven value ?
+    * Is the field valid for the given value?
     *
     * @param string $value
     *
@@ -138,7 +185,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    /**
-    * Is the field required ?
+    * Is the field required?
     *
     * @return boolean
     */

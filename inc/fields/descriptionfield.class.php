@@ -1,8 +1,40 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class PluginFormcreatorDescriptionField extends PluginFormcreatorField
 {
    public function show($canEdit = true) {
-      echo '<div class="description_field form-group" id="form-group-field' . $this->fields['id'] . '">';
+      echo '<div class="description_field form-group" id="form-group-formcreator_field_' . $this->fields['id'] . '">';
       echo nl2br(html_entity_decode($this->fields['description']));
       echo '</div>' . PHP_EOL;
       echo Html::scriptBlock('$(function() {
@@ -19,14 +51,17 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['description']) && empty($input['description'])) {
-         Session::addMessageAfterRedirect(
-            __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
-            false,
-            ERROR);
-         return [];
+      if (isset($input['description'])) {
+         if (strlen($input['description']) < 1) {
+            Session::addMessageAfterRedirect(
+               __('A description field should have a description:', 'formcreator') . ' ' . $input['name'],
+               false,
+               ERROR);
+            return [];
+         }
+         $input['description'] = addslashes($input['description']);
       }
-      $input['description'] = addslashes($input['description']);
+
       return $input;
    }
 

@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -37,6 +69,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    abstract protected function getTargetItemtypeName();
 
    abstract public function getItem_Actor();
+
+   abstract protected function getCategoryFilter();
 
    static function getEnumDestinationEntity() {
       return [
@@ -94,7 +128,6 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       ];
    }
 
-
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -121,7 +154,13 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       $targetItemtype = static::getType();
 
       $target = new PluginFormcreatorTarget();
-      if (!$target->getFromDBByQuery("WHERE `itemtype` = '$targetItemtype' AND `items_id` = '$targetItemId'")) {
+      $request = [
+         'AND' => [
+            'itemtype' => $targetItemtype,
+            'items_id' => $targetItemId
+         ]
+      ];
+      if (!$target->getFromDBByCrit($request)) {
          return null;
       } else {
          $form = new PluginFormcreatorForm();
@@ -170,11 +209,15 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_questions_id` = '$actorValue'
-                     AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
+               $answer->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_questions_id'     => $actorValue,
+                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                  ]
+               ]);
 
                if ($answer->isNewItem()) {
-                  continue;
+                  continue 2;
                } else {
                   $userIds = [$answer->getField('answer')];
                }
@@ -184,11 +227,15 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
-               $answer->getFromDBByQuery("WHERE `plugin_formcreator_questions_id` = '$actorValue'
-                     AND `plugin_formcreator_forms_answers_id` = '$formanswerId'");
+               $answer->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_questions_id'     => $actorValue,
+                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                  ]
+               ]);
 
                if ($answer->isNewItem()) {
-                  continue;
+                  continue 2;
                } else {
                   $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
                }
@@ -262,7 +309,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    protected function addGroupActor($role, $group) {
       switch ($role) {
          case 'requester':
-            $this->requesterGroupss['_groups_id_requester'][]  = $group;
+            $this->requesterGroups['_groups_id_requester'][]  = $group;
             break;
          case 'observer' :
             $this->observerGroups['_groups_id_observer'][]     = $group;
@@ -406,7 +453,7 @@ EOS;
    protected  function showDueDateSettings($rand) {
       global $DB;
 
-      echo '<td width="15%">' . __('Due date') . '</td>';
+      echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
       // Due date type selection
@@ -543,8 +590,9 @@ EOS;
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
       ITILCategory::dropdown([
-         'name'   => '_category_specific',
-         'value'  => $this->fields["category_question"],
+         'name'      => '_category_specific',
+         'value'     => $this->fields["category_question"],
+         'condition' => $this->getCategoryFilter(),
       ]);
       echo '</div>';
       echo '</td>';
@@ -692,7 +740,7 @@ EOS;
          ]);
          echo '</div>';
 
-         // Spécific tags
+         // Specific tags
          echo '<div id="tag_specific_value" style="display: none">';
 
          $obj = new PluginTagTag();
@@ -748,32 +796,33 @@ EOS;
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
          while ($question_line = $DB->fetch_assoc($res_questions)) {
+            $classname = 'PluginFormcreator'.ucfirst($question_line['fieldtype']).'Field';
+            if (class_exists($classname)) {
+               $fieldObject = new $classname($question_line, $question_line['answer']);
+            }
+
             $id    = $question_line['id'];
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
                $name = '';
                $value = '';
             } else {
                $name  = $question_line['name'];
-               $value = PluginFormcreatorFields::getValue($question_line, $question_line['answer']);
+               $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
-            if (is_array($value)) {
-               if ($CFG_GLPI['use_rich_text']) {
-                  $value = '<br />' . implode('<br />', $value);
-               } else {
-                  $value = "\r\n" . implode("\r\n", $value);
-               }
-            }
-
             if ($question_line['fieldtype'] !== 'file') {
-               $content = str_replace('##question_' . $id . '##', $name, $content);
+               $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
                $content = str_replace('##answer_' . $id . '##', $value, $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
-                  $content = str_replace('##question_' . $id . '##', $name, $content);
-                  $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+                  $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
+                  if ($value !== '') {
+                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
 
-                  // keep the ID of the document
-                  $this->attachedDocuments[$value] = true;
+                     // keep the ID of the document
+                     $this->attachedDocuments[$value] = true;
+                  } else {
+                     $content = str_replace('##answer_' . $id . '##', '', $content);
+                  }
                }
             }
          }

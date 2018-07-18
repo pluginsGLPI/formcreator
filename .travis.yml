@@ -2,10 +2,25 @@ language: php
 
 env:
   global:
-    - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
+    - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - PHPUNIT_ARGS="--verbose --debug"
-    - DB="glpi-test"
-    - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0
+    - CS=7.2
+  matrix:
+    - GLPI_BRANCH=9.2.1
+    - GLPI_BRANCH=9.2/bugfixes
+    - GLPI_BRANCH=9.3/bugfixes
+    - GLPI_BRANCH=master
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+  - nightly
+
+allow_failures:
+  - php: nightly
+  - env: GLPI_BRANCH=master
 
 addons:
   firefox: "latest-esr"
@@ -14,12 +29,12 @@ before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
   
 before_script:
-  - phpenv config-rm xdebug.ini || true
-  - mysql -u root -e 'create database $DB;'
-  - git clone $GLPI_SOURCE --depth 1 ../glpi && cd ../glpi
+  - mysql -u root -e 'create database glpitest;'
+  - git clone --depth=1 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
   - mv ../formcreator plugins/formcreator
   - composer install --no-dev
-  - php tools/cliinstall.php --db=$DB --user=root --tests --lang=en_US
+  - if [ -e scripts/cliinstall.php ] ; then php scripts/cliinstall.php --db=glpitest --user=root --tests ; fi
+  - if [ -e tools/cliinstall.php ] ; then php tools/cliinstall.php --db=glpitest --user=root --tests ; fi
   - cd plugins/formcreator
   - rm composer.lock
   - composer install
@@ -39,18 +54,7 @@ script:
   - mysql -u root $DB < save.sql
   - casperjs test tests/0020_Functional/*Test.js --engine=slimerjs
   - vendor/bin/phpunit $PHPUNIT_ARGS --testsuite Uninstall
-  - if [[ "$CS" == "true" ]]; then vendor/bin/robo --no-interaction code:cs; fi
-
-matrix:
-  include:
-    - php: '5.6'
-    - php: '7.0'
-    - php: '7.1'
-    - php: '7.2'
-      env: CS=true
-    - php: nightly
-  allow_failures:
-    - php: nightly
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ]] ; then vendor/bin/robo --no-interaction code:cs; fi
 
 cache:
   directories:

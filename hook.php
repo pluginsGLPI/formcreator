@@ -1,7 +1,38 @@
 <?php
 /**
- * Install all necessary elements for the plugin
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
  *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
+/**
+ * Install all necessary elements for the plugin
  * @return boolean True if success
  */
 function plugin_formcreator_install() {
@@ -40,7 +71,7 @@ function plugin_formcreator_getDropdown() {
 
 function plugin_formcreator_addDefaultSelect($itemtype) {
    switch ($itemtype) {
-      case "PluginFormcreatorIssue" :
+      case PluginFormcreatorIssue::class:
          return "`glpi_plugin_formcreator_issues`.`sub_itemtype`, ";
    }
    return "";
@@ -50,7 +81,7 @@ function plugin_formcreator_addDefaultSelect($itemtype) {
 function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link_tables) {
    $join = "";
    switch ($itemtype) {
-      case "PluginFormcreatorIssue" :
+      case PluginFormcreatorIssue::class:
          $join = Search::addDefaultJoin("Ticket", "glpi_tickets", $already_link_tables);
          $join = str_replace('`glpi_tickets`.`id`', '`glpi_plugin_formcreator_issues`.`original_id`', $join);
          $join = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $join);
@@ -68,7 +99,7 @@ function plugin_formcreator_canValidate() {
 
 function plugin_formcreator_getCondition($itemtype) {
    $table = getTableForItemType($itemtype);
-   if ($itemtype == "PluginFormcreatorForm_Answer"
+   if ($itemtype == PluginFormcreatorForm_Answer::class
        && plugin_formcreator_canValidate()) {
       $condition = " 1=1 ";
 
@@ -88,13 +119,13 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
    $condition = "";
    $table = getTableForItemType($itemtype);
    switch ($itemtype) {
-      case "PluginFormcreatorIssue" :
+      case PluginFormcreatorIssue::class:
          $condition = Search::addDefaultWhere("Ticket");
          $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          break;
 
-      case "PluginFormcreatorForm_Answer" :
+      case PluginFormcreatorForm_Answer::class:
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
             $condition = "`$table`.`".PluginFormcreatorForm_Answer::$items_id."` = ".
@@ -111,7 +142,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
 function plugin_formcreator_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, &$already_link_tables) {
    $join = "";
    switch ($itemtype) {
-      case 'PluginFormcreatorIssue':
+      case PluginFormcreatorIssue::class:
          if ($new_table == 'glpi_ticketvalidations') {
             foreach ($already_link_tables as $table) {
                if (strpos($table, $new_table) === 0) {
@@ -208,7 +239,7 @@ function plugin_formcreator_AssignToTicket($types) {
 function plugin_formcreator_MassiveActions($itemtype) {
 
    switch ($itemtype) {
-      case 'PluginFormcreatorForm' :
+      case PluginFormcreatorForm::class:
          return [
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Duplicate' => _x('button', 'Duplicate'),
             'PluginFormcreatorForm' . MassiveAction::CLASS_ACTION_SEPARATOR . 'Transfert' => __('Transfer'),
@@ -220,12 +251,8 @@ function plugin_formcreator_MassiveActions($itemtype) {
 
 
 function plugin_formcreator_giveItem($itemtype, $ID, $data, $num) {
-   $searchopt=&Search::getOptions($itemtype);
-   $table=$searchopt[$ID]["table"];
-   $field=$searchopt[$ID]["field"];
-
    switch ($itemtype) {
-      case "PluginFormcreatorIssue":
+      case PluginFormcreatorIssue::class:
          return PluginFormcreatorIssue::giveItem($itemtype, $ID, $data, $num);
          break;
    }
@@ -262,7 +289,12 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
       $id = $item->getID();
 
       $issue = new PluginFormcreatorIssue();
-      $issue->getFromDBByQuery("WHERE `sub_itemtype` = 'Ticket' AND `original_id` = '$id'");
+      $issue->getFromDBByCrit([
+         'AND' => [
+            'sub_itemtype' => Ticket::class,
+            'original_id'  => $id
+         ]
+      ]);
       $issue->update([
          'id'              => $issue->getID(),
          'original_id'     => $id,
@@ -351,7 +383,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
-      case "PluginFormcreatorForm_Answer";
+      case PluginFormcreatorForm_Answer::class;
          if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
             if (strpos($url['path'],
                        Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {

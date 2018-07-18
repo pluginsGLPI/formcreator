@@ -1,4 +1,36 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
+
 class UrgencyTest extends SuperAdminTestCase
 {
 
@@ -79,7 +111,12 @@ class UrgencyTest extends SuperAdminTestCase
             if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
                $showFieldName = $questionData['show_field'];
                $showfield = new PluginFormcreatorQuestion();
-               $showfield->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId' AND `name` = '$showFieldName'");
+               $showfield->getFromDBByCrit([
+                  'AND' => [
+                     'plugin_formcreator_sections_id' => $sectionId,
+                     'name'                           => $showFieldName
+                  ]
+               ]);
                $question->updateConditions($questionData);
             }
          }
@@ -115,9 +152,34 @@ class UrgencyTest extends SuperAdminTestCase
             $table_section = PluginFormcreatorSection::getTable();
             $table_form = PluginFormcreatorForm::getTable();
             $table_question = PluginFormcreatorQuestion::getTable();
-            $question->getFromDBByQuery("LEFT JOIN `$table_section` `s` ON (`s`.`id` = `plugin_formcreator_sections_id`)
+            if (!method_exists($question, 'getFromDBByRequest')) {
+               $question->getFromDBByQuery("LEFT JOIN `$table_section` `s` ON (`s`.`id` = `plugin_formcreator_sections_id`)
                   LEFT JOIN `$table_form` `f` ON (`f`.`id` = `s`.`plugin_formcreator_forms_id`)
                   WHERE `$table_question`.`name` = '$questionName' AND `plugin_formcreator_forms_id` = '$formId'");
+            } else {
+               $question->getFromDBByRequest([
+                  'LEFT JOIN' => [
+                     $table_section => [
+                        'FKEY' => [
+                           $table_section   => 'id',
+                           $table_question  => 'plugin_formcreator_sections_id'
+                        ]
+                     ],
+                     $table_form => [
+                        'FKEY' => [
+                           $table_form    => 'id',
+                           $table_section => 'plugin_formcreator_forms_id'
+                        ]
+                     ]
+                  ],
+                  'WHERE' => [
+                     'AND' => [
+                        $table_question . '.name'    => $questionName,
+                        'plugin_formcreator_forms_id' => $formId,
+                     ]
+                  ]
+               ]);
+            }
             $this->assertFalse($question->isNewItem());
             $questionId = $question->getID();
             $urgencyQuestions[] = array(
@@ -166,7 +228,7 @@ class UrgencyTest extends SuperAdminTestCase
          $targetTicket = $question['targetTicket'];
          $targetName = $targetTicket->getField('name');
          $ticket = new Ticket();
-         $ticket->getFromDBByQuery("WHERE `name` = '$targetName'");
+         $ticket->getFromDBByCrit(['name' => $targetName]);
          $this->assertFalse($ticket->isNewItem());
          $this->assertEquals($question['expected'], $ticket->getField('urgency'));
       }
