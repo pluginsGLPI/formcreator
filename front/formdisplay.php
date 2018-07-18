@@ -46,6 +46,7 @@ PluginFormcreatorForm::header();
 if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
 
+   $form->check($_REQUEST['id'], READ);
    if ($form->getFromDB((int) $_REQUEST['id'])) {
 
       if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
