@@ -116,6 +116,10 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return Array Array of fields to show in search engine and options for each fields
     */
    public function getSearchOptionsNew() {
+      return $this->rawSearchOptions();
+   }
+
+   public function rawSearchOptions() {
       $tab = [];
 
       $tab[] = [

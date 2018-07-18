@@ -133,6 +133,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @return Array Array of fields to show in search engine and options for each fields
     */
    public function getSearchOptionsNew() {
+      return $this->rawSearchOptions();
+   }
+
+   public function rawSearchOptions() {
       $tab = [];
 
       $display_for_form = isset($_SESSION['formcreator']['form_search_answers'])
