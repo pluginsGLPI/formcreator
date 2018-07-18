@@ -932,7 +932,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $doc                        = new Document();
 
       $file_data                 = [];
-      $file_data["name"]         = $form->getField('name'). ' - ' . $question->getField('name');
+      $file_data["name"]         = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $question->getField('name'));
       $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
                                     ? $_SESSION['glpiactive_entity']
                                     : $form->getField('entities_id');
