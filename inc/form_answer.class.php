@@ -894,7 +894,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                      $answer_value = str_replace('\\r\\n', '\n', $answer_value);
                   }
                } else {
-                  if ($CFG_GLPI['use_rich_text']) {
+                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                      $answer_value = html_entity_decode($value);
                   } else {
                      $answer_value = $value;
