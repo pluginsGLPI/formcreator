@@ -69,7 +69,6 @@ class RoboFile extends RoboFilePlugin
    protected function getVersion() {
       $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
-      $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_VERSION";
       $pattern = "#^define\('$constantName', '([^']*)'\);$#m";
       preg_match($pattern, $setupContent, $matches);
@@ -79,10 +78,21 @@ class RoboFile extends RoboFilePlugin
       throw new Exception("Could not determine version of the plugin");
    }
 
+   protected function getIsRelease() {
+      $currentRev = $this->getCurrentCommitHash();
+      $setupContent = $this->getFileFromGit('setup.php', $currentRev);
+      $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_IS_OFFICIAL_RELEASE";
+      $pattern = "#^define\('$constantName', ([^\)]*)\);$#m";
+      preg_match($pattern, $setupContent, $matches);
+      if (isset($matches[1])) {
+         return $matches[1];
+      }
+      throw new Exception("Could not determine release status of the plugin");
+   }
+
    protected function getGLPIMinVersion() {
       $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
-      $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_GLPI_MIN_VERSION";
       $pattern = "#^define\('$constantName', '([^']*)'\);$#m";
       preg_match($pattern, $setupContent, $matches);
@@ -102,8 +112,21 @@ class RoboFile extends RoboFilePlugin
    }
 
    //Own plugin's robo stuff
-   public function archiveBuild() {
+
+   /**
+    * Build an redistribuable archive
+    *
+    * @param string $release 'release' if the archive is a release
+    */
+   public function archiveBuild($release = 'release') {
+      $release = strtolower($release);
       $version = $this->getVersion();
+
+      if ($release == 'release') {
+         if ($this->getIsRelease() !== 'true') {
+            throw new Exception('The Official release constant must be true');
+         }
+      }
 
       if (!$this->isSemVer($version)) {
          throw new Exception("$version is not semver compliant. See http://semver.org/");

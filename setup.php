@@ -33,9 +33,12 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.6.3');
+define('PLUGIN_FORMCREATOR_VERSION', '2.6.4-dev');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
+// is or is not an official release of the plugin
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
+
 
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2.1');
@@ -50,12 +53,12 @@ define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
  * @return Array [name, version, author, homepage, license, minGlpiVersion]
  */
 function plugin_version_formcreator() {
-   $version = rtrim(GLPI_VERSION, '-dev');
-   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($version, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
-      echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
+   $glpiVersion = rtrim(GLPI_VERSION, '-dev');
+   if (!method_exists('Plugins', 'checkGlpiVersion') && version_compare($glpiVersion, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')) {
+      echo 'This plugin requires GLPI >= ' . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION;
       return false;
    }
-   return array(
+   $requirements = [
       'name'           => _n('Form', 'Forms', 2, 'formcreator'),
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
@@ -64,10 +67,15 @@ function plugin_version_formcreator() {
       'requirements'   => [
          'glpi'           => [
             'min'            => PLUGIN_FORMCREATOR_GLPI_MIN_VERSION,
-            'dev'            => true
          ]
       ]
-   );
+   ];
+
+   if (PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE) {
+      // This is not a development version
+      $requirements['requirements']['glpi']['max'] = PLUGIN_FORMCREATOR_GLPI_MAX_VERSION;
+   }
+   return $requirements;
 }
 
 /**

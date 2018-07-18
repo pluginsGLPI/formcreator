@@ -2,13 +2,13 @@ language: php
 
 env:
   global:
-    - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes"
+    - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - PHPUNIT_ARGS="--verbose --debug"
     - CS=7.2
-    - AFTER_SUCCESS_BRANCH=9.3/bugfixes
   matrix:
     - GLPI_BRANCH=9.2.1
     - GLPI_BRANCH=9.2/bugfixes
+    - GLPI_BRANCH=9.3/bugfixes
     - GLPI_BRANCH=master
 
 php:
@@ -20,6 +20,7 @@ php:
 
 allow_failures:
   - php: nightly
+  - env: GLPI_BRANCH=master
 
 before_script:
   - mysql -u root -e 'create database glpitest;'
