@@ -57,48 +57,93 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       }
       $initialValue = json_encode($initialValue);
       // Value needs to be non empty to allow execition of select2's initSelection
-      echo '<input
-               type="hidden"
-               name="formcreator_field_' . $this->fields['id'] . '"
-               id="actor_formcreator_field_' . $this->fields['id'] . '"
-               value=" " />';
-      echo '<script type="text/javascript">
-               jQuery(document).ready(function() {
-                  $("#actor_formcreator_field_' . $this->fields['id'] . '").select2({
-                     multiple: true,
-                     tokenSeparators: [",", ";"],
-                     minimumInputLength: 0,
-                     ajax: {
-                        url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
-                        type: "POST",
-                        dataType: "json",
-                        data: function (term, page) {
-                           return {
-                              entity_restrict: -1,
-                              searchText: term,
-                              page_limit: 100,
-                              page: page
-                           }
-                        },
-                        results: function (data, page) {
-                           var more = (data.count >= 100);
-                           return {results: data.results, more: more};
-                        }
-                     },
-                     createSearchChoice: function itemCreator(term, data) {
-                        if ($(data).filter(function() {
-                           return this.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                           return { id: term, text: term };
-                        }
-                     },
-                     initSelection: function (element, callback) {
-                        callback(JSON.parse(\'' . $initialValue . '\'));
+      if (version_compare(GLPI_VERSION, "9.3") >= 0) {
+         echo '<select multiple
+            name="formcreator_field_' . $this->fields['id'] . '[]"
+            id="formcreator_field_' . $this->fields['id']. '"
+            value="" />';
+         echo Html::scriptBlock('$(function() {
+            $("#formcreator_field_' . $this->fields['id']. '").select2({
+               tokenSeparators: [",", ";"],
+               minimumInputLength: 0,
+               ajax: {
+                  url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+                  type: "POST",
+                  dataType: "json",
+                  data: function (params, page) {
+                     return {
+                        entity_restrict: -1,
+                        searchText: params.term,
+                        page_limit: 100,
+                        page: page
                      }
-                  })
-                  $("#actor_formcreator_field_' . $this->fields['id'] . '").select2("readonly", ' . $readonly . ');
-               });
-            </script>';
+                  },
+                  results: function (data, page) {
+                     var more = (data.count >= 100);
+                     return {results: data.results, pagination: {"more": more}};
+                  }
+               },
+               createSearchChoice: function itemCreator(term, data) {
+                  if ($(data).filter(function() {
+                     return this.text.localeCompare(term) === 0;
+                  }).length === 0) {
+                     return { id: term, text: term };
+                  }
+               },
+               initSelection: function (element, callback) {
+                  callback(JSON.parse(\'' . $initialValue . '\'));
+               }
+            })
+            $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
+               var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
+               formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
+            });
+         });');
+      } else {
+         echo '<input
+            type="hidden"
+            name="formcreator_field_' . $this->fields['id'] . '"
+            id="formcreator_field_' . $this->fields['id']. '"
+            value="" />';
+         echo Html::scriptBlock('$(function() {
+            $("#formcreator_field_' . $this->fields['id']. '").select2({
+               multiple: true,
+               tokenSeparators: [",", ";"],
+               minimumInputLength: 0,
+               ajax: {
+                  url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+                  type: "POST",
+                  dataType: "json",
+                  data: function (term, page) {
+                     return {
+                        entity_restrict: -1,
+                        searchText: term,
+                        page_limit: 100,
+                        page: page
+                     }
+                  },
+                  results: function (data, page) {
+                     var more = (data.count >= 100);
+                     return {results: data.results, more: more};
+                  }
+               },
+               createSearchChoice: function itemCreator(term, data) {
+                  if ($(data).filter(function() {
+                     return this.text.localeCompare(term) === 0;
+                  }).length === 0) {
+                     return { id: term, text: term };
+                  }
+               },
+               initSelection: function (element, callback) {
+                  callback(JSON.parse(\'' . $initialValue . '\'));
+               }
+            })
+            $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
+               var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
+               formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
+            });
+         });');
+      }
    }
 
    public function serializeValue($value) {
@@ -145,7 +190,15 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
    protected function sanitizeValue($value) {
       $value = trim($value);
-      $answerValue = array_filter(explode(',', $value));
+      if (is_array(json_decode($value))) {
+         // For GLPI 9.3+
+         // the HTML field is no longer an HTML input
+         // it is now a HTML select
+         $answerValue = array_filter(json_decode($value));
+      } else {
+         // for GLPI < 9.3 and default values from DB regardless GLPI version
+         $answerValue = array_filter(explode(',', $value));
+      }
 
       $unknownUsers = [];
       $knownUsers = [];
