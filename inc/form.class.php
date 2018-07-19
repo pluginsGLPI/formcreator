@@ -427,12 +427,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // If the form is recursive, authorize the validators in sub-entities
       // If it isn't, only the validators of the entity of the form
-      if ($this->isRecursive()) {
-         $entites = getSonsOf('glpi_entities', $this->getEntityID());
-      } else {
-         $entites = $this->getEntityID();
-      }
-      $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
+      $subentities = getEntitiesRestrictRequest("", 'pu', "", $this->getEntityID(), $this->isRecursive(), true);
 
       // Select all users with ticket validation right and the groups
       $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
