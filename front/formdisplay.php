@@ -46,12 +46,15 @@ PluginFormcreatorForm::header();
 if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
 
-   $form->check($_REQUEST['id'], READ);
    if ($form->getFromDB((int) $_REQUEST['id'])) {
-
       if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
          Session::checkLoginUser();
+         if (!$form->checkEntity(true)) {
+            Html::displayRightError();
+            exit();
+         }
       }
+
       if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
          $form_profile = new PluginFormcreatorForm_Profile();
          $formId = $form->getID();
