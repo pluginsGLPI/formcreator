@@ -99,7 +99,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       echo '</div>';
 
       echo '</div>';
-      $this->setInitialValue($this->fields['answer']);
+      $answer = $this->getAnswer();
+      $this->setInitialValue($answer);
    }
 
    /**
