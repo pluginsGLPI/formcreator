@@ -880,6 +880,7 @@ a.plugin_formcreator_formTile_title {
    padding: 10px 0 3px 23px;
    margin: -10px 0 -3px -23px;
    background-color: #FFFFFF;
+   margin-left: 300px;
 }
 
 #plugin_formcreator_wizard_forms {
