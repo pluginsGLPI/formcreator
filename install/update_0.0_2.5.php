@@ -200,6 +200,32 @@ function plugin_formcreator_updateForm_Answer_2_5(Migration $migration) {
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'requester_id');
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'validator_id');
    $migration->addField('glpi_plugin_formcreator_forms_answers', 'is_deleted', 'bool');
+
+   // Update Form Answers
+   $table = 'glpi_plugin_formcreator_forms_answers';
+
+   if ($DB->fieldExists($table, 'validator_id', false)) {
+      $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
+      $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
+      $migration->addKey($table, 'users_id_validator');
+      $migration->addKey($table, 'groups_id_validator');
+      $migration->migrationOneTable($table);
+
+      $formTable = 'glpi_plugin_formcreator_forms';
+      $query = "UPDATE `$table`
+               INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
+               SET `users_id_validator` = 'validator_id'
+               WHERE `$formTable`.`validation_required` = '1'";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      $query = "UPDATE `$table`
+               INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
+               SET `groups_id_validator` = 'validator_id'
+               WHERE `$formTable`.`validation_required` = '2'";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+
+      $migration->dropKey($table, 'validator_id');
+      $migration->dropField($table, 'validator_id');
+   }
 }
 
 function plugin_formcreator_updateForm_Profile_2_5(Migration $migration) {
@@ -414,8 +440,67 @@ function plugin_formcreator_updateIssue_2_5(Migration $migration) {
             'mode'      => CronTask::MODE_EXTERNAL
          ]
    );
-   $task = new CronTask();
-   PluginFormcreatorIssue::cronSyncIssues($task);
+
+   $query = "SELECT DISTINCT
+               NULL                           AS `id`,
+               CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
+               `fanswer`.`id`                 AS `original_id`,
+               'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
+               `f`.`name`                     AS `name`,
+               `fanswer`.`status`             AS `status`,
+               `fanswer`.`request_date`       AS `date_creation`,
+               `fanswer`.`request_date`       AS `date_mod`,
+               `fanswer`.`entities_id`        AS `entities_id`,
+               `fanswer`.`is_recursive`       AS `is_recursive`,
+               `fanswer`.`requester_id`       AS `requester_id`,
+               `fanswer`.`users_id_validator` AS `validator_id`,
+               `fanswer`.`comment`            AS `comment`
+            FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
+            LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
+               ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
+            LEFT JOIN `glpi_items_tickets` AS `itic`
+               ON `itic`.`items_id` = `fanswer`.`id`
+               AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+            WHERE `fanswer`.`is_deleted` = '0'
+            GROUP BY `original_id`
+            HAVING COUNT(`itic`.`tickets_id`) != 1
+
+            UNION
+
+            SELECT DISTINCT
+               NULL                          AS `id`,
+               CONCAT('t_',`tic`.`id`)       AS `display_id`,
+               `tic`.`id`                    AS `original_id`,
+               'Ticket'                      AS `sub_itemtype`,
+               `tic`.`name`                  AS `name`,
+               `tic`.`status`                AS `status`,
+               `tic`.`date`                  AS `date_creation`,
+               `tic`.`date_mod`              AS `date_mod`,
+               `tic`.`entities_id`           AS `entities_id`,
+               0                             AS `is_recursive`,
+               `tic`.`users_id_recipient`    AS `requester_id`,
+               0                             AS `validator_id`,
+               `tic`.`content`               AS `comment`
+            FROM `glpi_tickets` AS `tic`
+            LEFT JOIN `glpi_items_tickets` AS `itic`
+               ON `itic`.`tickets_id` = `tic`.`id`
+               AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+            WHERE `tic`.`is_deleted` = 0
+            GROUP BY `original_id`
+            HAVING COUNT(`itic`.`items_id`) <= 1";
+
+   $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
+   $result = $DB->query($countQuery);
+   if ($result !== false) {
+      $count = $DB->fetch_assoc($result);
+      $table = PluginFormcreatorIssue::getTable();
+      if (countElementsInTable($table) != $count['cpt']) {
+         if ($DB->query("TRUNCATE `$table`")) {
+            $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
+            $volume = 1;
+         }
+      }
+   }
 }
 
 function plugin_formcreator_updateQuestionCondition_2_5(Migration $migration) {

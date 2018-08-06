@@ -63,27 +63,29 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    $table = 'glpi_plugin_formcreator_forms_answers';
    $migration->displayMessage("Upgrade $table");
 
-   $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
-   $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
-   $migration->addKey($table, 'users_id_validator');
-   $migration->addKey($table, 'groups_id_validator');
-   $migration->migrationOneTable($table);
+   if ($DB->fieldExists($table, 'validator_id', false)) {
+      $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
+      $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
+      $migration->addKey($table, 'users_id_validator');
+      $migration->addKey($table, 'groups_id_validator');
+      $migration->migrationOneTable($table);
 
-   $formTable = 'glpi_plugin_formcreator_forms';
-   $query = "UPDATE `$table`
-             INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
-             SET `users_id_validator` = 'validator_id'
-             WHERE `$formTable`.`validation_required` = '1'";
-   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
-   $query = "UPDATE `$table`
-             INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
-             SET `groups_id_validator` = 'validator_id'
-             WHERE `$formTable`.`validation_required` = '2'";
-   $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      $formTable = 'glpi_plugin_formcreator_forms';
+      $query = "UPDATE `$table`
+               INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
+               SET `users_id_validator` = 'validator_id'
+               WHERE `$formTable`.`validation_required` = '1'";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+      $query = "UPDATE `$table`
+               INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
+               SET `groups_id_validator` = 'validator_id'
+               WHERE `$formTable`.`validation_required` = '2'";
+      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
-   $migration->dropKey($table, 'validator_id');
-   $migration->dropField($table, 'validator_id');
-
+      $migration->dropKey($table, 'validator_id');
+      $migration->dropField($table, 'validator_id');
+   }
+   
    // add location rule
    $enum_location_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumLocationRule()))."'";
    if (!$DB->fieldExists('glpi_plugin_formcreator_targettickets', 'location_rule', false)) {
@@ -135,6 +137,7 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    $all_targetTickets = $obj->find("`uuid` IS NULL");
    foreach ($all_targetTickets as $targetTicket) {
       $targetTicket['_skip_checks'] = true;
+      $targetTicket['title'] = $targetTicket['name'];
       $obj->update($targetTicket);
    }
    unset($obj);
