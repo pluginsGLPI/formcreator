@@ -1176,15 +1176,13 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Validate form fields
       foreach ($found_questions as $id => $question) {
-         $className = 'PluginFormcreator' . ucfirst($question->getField('fieldtype')) . 'Field';
-
-         if (class_exists($className)) {
-            $obj = new $className($question->fields, $data);
-            if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
-               $valid = false;
-            }
-         } else {
+         if (!($obj = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question, $data))) {
             $valid = false;
+            break;
+         }
+         if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
+            $valid = false;
+            break;
          }
       }
       if (isset($input) && is_array($input)) {

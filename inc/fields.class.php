@@ -47,9 +47,8 @@ class PluginFormcreatorFields
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
          $matches = null;
          preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
-         if (class_exists($classname)) {
+         if (PluginFormcreatorFields::fieldTypeExists($matches[1])) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
          }
       }
@@ -328,5 +327,40 @@ class PluginFormcreatorFields
       }
 
       return $questionToShow;
+   }
+
+   /**
+    * checks if a field type exists
+    *
+    * @param string $type type of field to test for existence
+    * @return boolean
+    */
+   public static function getFieldClassname($type) {
+      return 'PluginFormcreator' . ucfirst($type) . 'Field';
+   }
+
+   /**
+    * checks if a field type exists
+    *
+    * @param string $type type of field to test for existence
+    * @return boolean
+    */
+   public static function fieldTypeExists($type) {
+      return is_a(self::getFieldClassname($type), PluginFormcreatorFieldInterface::class, true);
+   }
+
+   /**
+    * gets an instance of a field given its type
+    *
+    * @param string $type type of field to get
+    * @param PluginFormcreatorQuestion $question question representing the field
+    * @param array $data additional data
+    */
+   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = []) {
+      $className = self::getFieldClassname($type);
+      if (!self::fieldTypeExists($type)) {
+         return null;
+      }
+      return new $className($question->fields, $data);
    }
 }
