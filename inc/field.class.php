@@ -65,11 +65,21 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 
    /**
     * Prepares an answer value for output in a target object
-    * @param string|array $input the answer to format for a target (ticket or change)
+    * @param  string|array $input the answer to format for a target (ticket or change)
     * @return string
     */
    public function prepareQuestionInputForTarget($input) {
       return Toolbox::addslashes_deep($input);
+   }
+
+   /**
+    * Prepares a default value or set of values for question edition
+    *
+    * @param  string $input
+    * @return string
+    */
+   public function prepareQuestionValuesForEdit($input) {
+      return $input;
    }
 
    /**
