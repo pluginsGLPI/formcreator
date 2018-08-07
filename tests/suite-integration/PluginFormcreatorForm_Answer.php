@@ -70,10 +70,13 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
       $user->getFromDBbyName('glpi');
       $user->update([
          'id' => $user->getID(),
-         '_useremails' => ['glpi@localhost.local'],
+         '_useremails' => [$this->getUniqueEmail()],
       ]);
 
-      \config::setConfigurationValues('core', ['notifications_mailing' => '1']);
+      \config::setConfigurationValues(
+         'core',
+         ['notifications_mailing' => '1']
+      );
       $CFG_GLPI['notifications_mailing'] = '1';
 
       $form = new \PluginFormcreatorForm();
