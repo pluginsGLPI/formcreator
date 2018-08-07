@@ -827,8 +827,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</label>';
       echo '</td>';
       echo '<td>';
+      $defaultValues = "";
+      if (!$this->isNewItem()) {
+         $fieldObject = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
+         $defaultValues = $fieldObject->prepareQuestionValuesForEdit($this->fields['default_values']);
+      }
       echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
-            .'style="width: 90%">'.$this->fields['default_values'].'</textarea>';
+         .'style="width: 90%">'
+         .$defaultValues
+         .'</textarea>';
       echo '<div id="dropdown_default_value_field">';
       if (!empty($this->fields['values'])) {
          if ($this->fields['fieldtype'] == 'glpiselect' && class_exists($this->fields['values'])) {

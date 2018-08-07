@@ -269,4 +269,8 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $prefs = self::getPrefs();
       return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
+
+   public function prepareQuestionValuesForEdit($input) {
+      return $this->deserializeValue($input);
+   }
 }
