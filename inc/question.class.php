@@ -182,7 +182,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             echo '<td align="center">';
 
-            $classname = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
+            $classname = PluginFormcreatorFields::getFieldClassname($question['fieldtype']);
             $fields = $classname::getPrefs();
 
             // avoid quote js error
@@ -303,8 +303,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (!isset($input['fieldtype'])) {
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
-      $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
-      $fieldObject = new $fieldType($this->fields);
+      $fieldObject = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $this);
       $input = $fieldObject->prepareQuestionInputForSave($input);
 
       // Add leading and trailing regex marker automaticaly

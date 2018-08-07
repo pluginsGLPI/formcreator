@@ -55,7 +55,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    /**
     * Transform input to properly save it in the database
     *
-    * @param array $input data to transform before save
+    * @param  array $input data to transform before save
     *
     * @return array input data to save as is
     */
