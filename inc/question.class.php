@@ -661,7 +661,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
 
       echo '<td>';
-      $table = getTableForItemtype('PluginFormcreatorSection');
+      $dbUtil = new DbUtils();
+      $table = $dbUtil->getTableForItemtype('PluginFormcreatorSection');
       $sections = [];
       $sql = "SELECT `id`, `name`
               FROM $table
@@ -1358,8 +1359,9 @@ JS;
       global $DB;
 
       $questions = [];
-      $table_question = getTableForItemtype('PluginFormcreatorQuestion');
-      $table_section  = getTableForItemtype('PluginFormcreatorSection');
+      $dbUtil = new DbUtils();
+      $table_question = $dbUtil->getTableForItemtype('PluginFormcreatorQuestion');
+      $table_section  = $dbUtil->getTableForItemtype('PluginFormcreatorSection');
       $result = $DB->query("SELECT `q`.*
                             FROM $table_question `q`
                             LEFT JOIN $table_section `s` ON `q`.`plugin_formcreator_sections_id` = `s`.`id`
