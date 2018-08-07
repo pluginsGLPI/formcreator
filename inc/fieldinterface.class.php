@@ -41,5 +41,12 @@ interface PluginFormcreatorFieldInterface {
    public static function getJSFields();
    public function prepareQuestionInputForSave($input);
    public function prepareQuestionInputForTarget($input);
-   public function prepareQuestionValuesForEdit($input);
+
+   /**
+    * Prepares a default value or set of values for question edition
+    *
+    * @param  string $input
+    * @return string
+    */
+    public function prepareQuestionValuesForEdit($input);
 }

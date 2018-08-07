@@ -72,12 +72,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return Toolbox::addslashes_deep($input);
    }
 
-   /**
-    * Prepares a default value or set of values for question edition
-    *
-    * @param  string $input
-    * @return string
-    */
    public function prepareQuestionValuesForEdit($input) {
       return $input;
    }
