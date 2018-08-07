@@ -330,10 +330,10 @@ class PluginFormcreatorFields
    }
 
    /**
-    * checks if a field type exists
+    * gets the classname for a field given its type
     *
     * @param string $type type of field to test for existence
-    * @return boolean
+    * @return string
     */
    public static function getFieldClassname($type) {
       return 'PluginFormcreator' . ucfirst($type) . 'Field';
@@ -355,6 +355,7 @@ class PluginFormcreatorFields
     * @param string $type type of field to get
     * @param PluginFormcreatorQuestion $question question representing the field
     * @param array $data additional data
+    * @return null|PluginFormcreatorFieldInterface
     */
    public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = []) {
       $className = self::getFieldClassname($type);
