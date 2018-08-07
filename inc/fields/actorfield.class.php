@@ -212,7 +212,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             $user->getFromDB($item);
             if (!$user->isNewItem()) {
                // A user known in the DB
-               $knownUsers[$user->getID()] = $user->getField('name');
+               $knownUsers[$user->getID()] = $user->getRawName();
             }
          }
       }
