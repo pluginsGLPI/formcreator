@@ -30,6 +30,80 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($form->isNewItem())->isFalse();
    }
 
+   public function providerPrepareInputForAdd() {
+      return [
+         [
+
+            'input' => [
+               'name'         => '',
+               'description'  => '',
+               'content'      => '',
+            ],
+            'expected' => false, // An empty name should be rejected
+         ],
+         [
+            'input' => [
+               'name'         => 'être ou ne pas être',
+               'description'  => 'être ou ne pas être',
+               'content'      => '&lt;p&gt;être ou ne pas être&lt;/p&gt;',
+            ],
+            'expected' => true,
+         ],
+         [
+            'input' => [
+               'name'         => 'test d\\\'apostrophe',
+               'description'  => 'test d\\\'apostrophe',
+               'content'      => '&lt;p&gt;test d\\\'apostrophe&lt;/p&gt;',
+            ],
+            'expected' => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareInputForAdd
+    * @param array $input
+    * @param boolean $expected
+    */
+   public function testPrepareInputForAdd($input, $expected) {
+      $form = new \PluginFormcreatorForm();
+      $output = $form->prepareInputForAdd($input);
+      if ($expected === false) {
+         $this->array($output)->size->isEqualTo(0);
+      } else {
+         $this->string($output['name'])->isEqualTo($input['name']);
+         $this->string($output['description'])->isEqualTo($output['description']);
+         $this->string($output['content'])->isEqualTo($output['content']);
+         $this->array($output)->hasKey('uuid');
+      }
+   }
+
+
+   public function providerPrepareInputForUpdate() {
+      return $this->providerPrepareInputForAdd();
+   }
+
+   /**
+    * @dataProvider providerPrepareInputForUpdate
+    * @param array $input
+    * @param boolean $expected
+    */
+   public function testPrepareInputForUpdate($input, $expected) {
+      $form = new \PluginFormcreatorForm();
+      $form->add([
+         'name' => 'anything',
+      ]);
+      $output = $form->prepareInputForUpdate($input);
+      if ($expected === false) {
+         $this->array($output)->size->isEqualTo(0);
+      } else {
+         $this->string($output['name'])->isEqualTo($input['name']);
+         $this->string($output['description'])->isEqualTo($output['description']);
+         $this->string($output['content'])->isEqualTo($output['content']);
+      }
+   }
+
+
    /**
     * @dataProvider formProvider
     */
