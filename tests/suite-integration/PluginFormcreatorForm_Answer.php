@@ -50,6 +50,7 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
     * @dataProvider providerPrepareInputForAdd
     * @param array $input
     */
+   /*
    public function testPrepareInputForAdd($input) {
       $form = new \PluginFormcreatorForm();
       $form->add($input);
@@ -60,7 +61,7 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
       ]);
       $this->string($output['name'])->isEqualTo($input['name']);
    }
-
+   */
 
    public function testNotificationFormAnswerCreated() {
       global $DB, $CFG_GLPI;
