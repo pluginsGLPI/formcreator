@@ -3,7 +3,6 @@ language: php
 env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
-    - PHPUNIT_ARGS="--verbose --debug"
     - CS=7.2
   matrix:
     - GLPI_BRANCH=9.2.1
