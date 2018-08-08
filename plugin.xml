@@ -194,25 +194,28 @@ Features
          <compatibility>9.2.1</compatibility>
          <compatibility>9.2.2</compatibility>
          <compatibility>9.2.3</compatibility>
+         <compatibility>9.2.4</compatibility>
       </version>
       <version>
          <num>2.6.1</num>
          <compatibility>9.2.1</compatibility>
          <compatibility>9.2.2</compatibility>
          <compatibility>9.2.3</compatibility>
+         <compatibility>9.2.4</compatibility>
       </version>
       <version>
          <num>2.6.2</num>
          <compatibility>9.2.1</compatibility>
          <compatibility>9.2.2</compatibility>
          <compatibility>9.2.3</compatibility>
+         <compatibility>9.2.4</compatibility>
       </version>
       <version>
          <num>2.6.3</num>
          <compatibility>9.2.1</compatibility>
          <compatibility>9.2.2</compatibility>
          <compatibility>9.2.3</compatibility>
-         <compatibility>9.3</compatibility>
+         <compatibility>9.2.4</compatibility>
       </version>
    </versions>
    <langs>
