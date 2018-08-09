@@ -4,6 +4,9 @@ env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - CS=7.2
+    - DBNAME=glpitest
+    - OLDDBNAME=glpiupgradetest
+    - AFTER_SUCCESS_BRANCH=9.3/bugfixes
   matrix:
     - GLPI_BRANCH=9.2.1
     - GLPI_BRANCH=9.2/bugfixes
@@ -23,20 +26,21 @@ matrix:
     - env: GLPI_BRANCH=master
 
 before_script:
-  - mysql -u root -e 'create database glpitest;'
-  - git clone --depth=1 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
-  - mv ../formcreator plugins/formcreator
-  - composer install --no-dev
-  - if [ -e scripts/cliinstall.php ] ; then php scripts/cliinstall.php --db=glpitest --user=root --tests ; fi
-  - if [ -e tools/cliinstall.php ] ; then php tools/cliinstall.php --db=glpitest --user=root --tests ; fi
-  - cd plugins/formcreator
-  - rm composer.lock
-  - composer install
+  - "./tests/before_script.sh"
 
 script:
+  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI"; else COVERAGE="-ncc"; fi
+  - #if [ -e ../../scripts/cliinstall.php ] ; then php ../../scripts/cliinstall.php --db=$OLDDBNAME --user=root --tests ; fi
+  - #if [ -e ../../tools/cliinstall.php ] ; then php  ../../tools/cliinstall.php --db=$OLDDBNAME --user=root --tests ; fi
+  - #mysql -u root $OLDDBNAME < tests/plugin_flyvemdm_empty_2.0.0-rc.1.sql
+  - #mysql -u root $OLDDBNAME < tests/plugin_flyvemdm_config_2.0.0-rc.1.sql
+  - #php tools/cli_install.php --test
+  - #rm ../../tests/config_db.php
+  - if [ -e ../../scripts/cliinstall.php ] ; then php ../../scripts/cliinstall.php --db=$DBNAME --user=root --tests ; fi
+  - if [ -e ../../tools/cliinstall.php ] ; then php ../../tools/cliinstall.php --db=$DBNAME --user=root --tests ; fi
   - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-install -ncc
-  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit --ncc
-  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration --ncc
+  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration $COVERAGE
+  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit $COVERAGE
   - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall -ncc
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ]] ; then vendor/bin/robo --no-interaction code:cs; fi
 
