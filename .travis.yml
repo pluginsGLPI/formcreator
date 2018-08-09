@@ -42,7 +42,7 @@ script:
   - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration $COVERAGE
   - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit $COVERAGE
   - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall -ncc
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ]] ; then vendor/bin/robo --no-interaction code:cs; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/robo --no-interaction code:cs; fi
 
 cache:
   directories:

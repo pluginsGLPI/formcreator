@@ -33,4 +33,4 @@ mv ../${repo[1]} plugins/formcreator
 
 # prepare plugin to test
 cd plugins/formcreator
-
+composer install
