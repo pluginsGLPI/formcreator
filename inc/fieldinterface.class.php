@@ -59,7 +59,7 @@ interface PluginFormcreatorFieldInterface
     * @param  string $input
     * @return string
     */
-    public function prepareQuestionValuesForEdit($input);
+   public function prepareQuestionValuesForEdit($input);
 
    /**
     * Gets the parameters of the field
