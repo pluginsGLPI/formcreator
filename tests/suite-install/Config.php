@@ -118,4 +118,36 @@ class Config extends CommonTestCase {
    private function installDependancies() {
    }
 
+   public function testUpgradePlugin() {
+      global $DB;
+
+      $pluginName = TEST_PLUGIN_NAME;
+
+      $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
+      while ($fresh_table = $fresh_tables->next()) {
+         $table = $fresh_table['TABLE_NAME'];
+         $this->boolean($this->olddb->tableExists($table, false))
+            ->isTrue("Table $table does not exists from migration!");
+
+         // To be replaced by call to dbmysql::getTableSchema
+         // when GLPI 9.2.x support drops
+         $create = $this->getTableSchema($DB, $table);
+         $fresh = $create['schema'];
+         $fresh_idx = $create['index'];
+
+         // To be replaced by call to dbmysql::getTableSchema
+         // when GLPI 9.2.x support drops
+         $update = $this->getTableSchema($this->olddb, $table);
+         $updated = $update['schema'];
+         $updated_idx = $update['index'];
+
+         //compare table schema
+         $this->string($updated)->isIdenticalTo($fresh);
+         //check index
+         $fresh_diff = array_diff($fresh_idx, $updated_idx);
+         $this->array($fresh_diff)->isEmpty("Index missing in update for $table: " . implode(', ', $fresh_diff));
+         $update_diff = array_diff($updated_idx, $fresh_idx);
+         $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
+      }
+   }
 }
