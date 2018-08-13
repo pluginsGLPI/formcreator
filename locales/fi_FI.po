@@ -1,0 +1,1116 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# Markku Vepsä, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI Plugin - Formcreator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-30 10:14+0200\n"
+"PO-Revision-Date: 2018-08-07 04:01+0000\n"
+"Last-Translator: Markku Vepsä\n"
+"Language-Team: Finnish (Finland) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fi_FI/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fi_FI\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: hook.php:69 inc/category.class.php:46 inc/form.class.php:201
+msgid "Form category"
+msgid_plural "Form categories"
+msgstr[0] "Lomakkeen luokka"
+msgstr[1] "Lomakkeen luokat"
+
+#: setup.php:27 setup.php:150 ajax/homepage_link.php:39
+#: inc/entityconfig.class.php:60 inc/form.class.php:83 inc/form.class.php:528
+#: inc/form.class.php:1976 inc/form_answer.class.php:166
+#: inc/formlist.class.php:49 js/scripts.js.php:19
+msgid "Form"
+msgid_plural "Forms"
+msgstr[0] "Lomake"
+msgstr[1] "Lomakkeet"
+
+#: setup.php:140 inc/form.class.php:91 inc/formlist.class.php:57
+#: inc/formlist.class.php:58
+msgid "Forms waiting for validation"
+msgstr "Vahvistusta odottavat lomakkeet"
+
+#: front/form.php:48 front/form_answer.form.php:82
+#: front/form_answer.form.php:87 front/form_answer.php:49
+#: front/form_answer.php:54 front/issue.php:49 front/issue.php:54
+#: front/targetchange.form.php:81 front/targetticket.form.php:77
+#: inc/form.class.php:2083 inc/form.class.php:2090
+msgid "Form Creator"
+msgstr "Lomakkeen tekijä"
+
+#: front/form_answer.form.php:78 front/form_answer.php:45
+#: front/issue.form.php:60 front/issue.php:45 front/knowbaseitem.form.php:48
+#: front/reservation.form.php:47 front/reservation.php:49
+#: front/reservationitem.php:45 front/wizard.php:47 front/wizardfeeds.php:48
+#: inc/form.class.php:2078
+msgid "Service catalog"
+msgstr "Palveluluettelo"
+
+#: front/formlist.php:49 front/formlist.php:55 inc/form.class.php:2080
+msgid "Form list"
+msgstr "Lomakelista"
+
+#: front/question.form.php:51
+msgid "The question has been successfully saved!"
+msgstr "Kysymys tallennettiin onnistuneesti!"
+
+#: front/question.form.php:61
+msgid "The question has been successfully updated!"
+msgstr "Kysymys päivitettiin onnistuneesti!"
+
+#: inc/answer.class.php:70 inc/targetchange.class.php:801
+#: inc/targetticket.class.php:659
+msgid "Answer"
+msgid_plural "Answers"
+msgstr[0] "Vastaus"
+msgstr[1] "Vastaukset"
+
+#: inc/category.class.php:71
+msgid "Knowbase category"
+msgstr "Tietämyskannan luokka"
+
+#: inc/entityconfig.class.php:95
+msgid "Helpdesk"
+msgstr "Helpdesk"
+
+#: inc/entityconfig.class.php:104
+msgid "GLPi's helpdesk"
+msgstr "GLPI-tukipalvelu"
+
+#: inc/entityconfig.class.php:105
+msgid "Service catalog simplified"
+msgstr "Yksinkertaistettu palveluhakemisto"
+
+#: inc/entityconfig.class.php:106
+msgid "Service catalog extended"
+msgstr "Laajennettu palveluhakemisto"
+
+#: inc/entityconfig.class.php:109
+msgid "Helpdesk mode"
+msgstr "Helpdesk-tila"
+
+#: inc/field.class.php:179 inc/fields/actorfield.class.php:179
+#: inc/fields/checkboxesfield.class.php:108 inc/fields/datefield.class.php:79
+#: inc/fields/datetimefield.class.php:79
+#: inc/fields/glpiselectfield.class.php:60
+#: inc/fields/multiselectfield.class.php:47
+msgid "A required field is empty:"
+msgstr "Pakollinen kenttä on tyhjä:"
+
+#: inc/form.class.php:93
+msgid "Import forms"
+msgstr "Tuo lomakkeita"
+
+#: inc/form.class.php:175
+msgid "Homepage"
+msgstr "Kotisivu"
+
+#: inc/form.class.php:188
+msgid "Access"
+msgstr "Pääsy"
+
+#: inc/form.class.php:255 inc/form.class.php:310 inc/form_profile.class.php:69
+msgid "Public access"
+msgstr "Julkinen pääsy"
+
+#: inc/form.class.php:256 inc/form.class.php:314 inc/form_profile.class.php:70
+msgid "Private access"
+msgstr "Yksityinen pääsy"
+
+#: inc/form.class.php:257 inc/form.class.php:318 inc/form_profile.class.php:71
+msgid "Restricted access"
+msgstr "Rajoitettu pääsy"
+
+#: inc/form.class.php:269 inc/form.class.php:326 inc/form.class.php:380
+msgid "All langages"
+msgstr "Kaikki kielet"
+
+#: inc/form.class.php:365
+msgid "Direct access on homepage"
+msgstr "Suora pääsy kotisivulla"
+
+#: inc/form.class.php:386
+msgid "Header"
+msgid_plural "Headers"
+msgstr[0] "Otsikko"
+msgstr[1] "Otsikot"
+
+#: inc/form.class.php:392
+msgid "Need to be validate?"
+msgstr "Täytyykö vahvistaa?"
+
+#: inc/form.class.php:499
+msgid "Default form in service catalog"
+msgstr "Oletuslomake palveluluettelossa"
+
+#: inc/form.class.php:608 inc/targetbase.class.php:566
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] "Luokka"
+msgstr[1] "Luokat"
+
+#: inc/form.class.php:609
+msgid "see all"
+msgstr "näytä kaikki"
+
+#: inc/form.class.php:627
+msgid "Popularity sort"
+msgstr "Suosituimmuus lajittelu"
+
+#: inc/form.class.php:631
+msgid "Alphabetic sort"
+msgstr "Aakkosellinen lajittelu"
+
+#: inc/form.class.php:801
+msgid "Please, describe your need here"
+msgstr "Kuvaile tarpeesi tässä"
+
+#: inc/form.class.php:810
+msgid "My last forms (requester)"
+msgstr "Viimeisimmät lomakkeeni (toimeksiantaja)"
+
+#: inc/form.class.php:820
+msgid "No form posted yet"
+msgstr "Lomaketta ei ole vielä lähetetty"
+
+#: inc/form.class.php:832
+msgid "All my forms (requester)"
+msgstr "Kaikki lomakkeeni (toimeksiantaja)"
+
+#: inc/form.class.php:842
+msgid "My last forms (validator)"
+msgstr "Viimeisimmät lomakkeeni (vahvistaja)"
+
+#: inc/form.class.php:862
+msgid "No form waiting for validation"
+msgstr "Ei vahvistusta odottavaa lomaketta"
+
+#: inc/form.class.php:880
+msgid "All my forms (validator)"
+msgstr "Kaikki lomakkeeni (vahvistaja)"
+
+#: inc/form.class.php:915 inc/form_answer.class.php:454
+msgid "Print this form"
+msgstr "Tulosta tämä lomake"
+
+#: inc/form.class.php:981
+msgid "Choose a validator"
+msgstr "Valitse vahvistaja"
+
+#: inc/form.class.php:1024 inc/target.class.php:142
+msgid "The name cannot be empty!"
+msgstr "Nimi ei voi olla tyhjä!"
+
+#: inc/form.class.php:1181
+msgid "You must select validator !"
+msgstr "Sinun on valittava vahvistaja!"
+
+#: inc/form.class.php:1278
+msgid "Duplicate"
+msgstr "Monista"
+
+#: inc/form.class.php:1565
+#, php-format
+msgid "Form duplicated: %s"
+msgstr "Lomake monistettu: %s"
+
+#: inc/form.class.php:1576
+#, php-format
+msgid "Form Transfered: %s"
+msgstr "Lomake siirretty: %s"
+
+#: inc/form.class.php:1722
+msgid "Upload of JSON files not allowed."
+msgstr "JSON-tiedostojen lataaminen ei ole sallittua."
+
+#: inc/form.class.php:1725
+msgid "You may allow JSON files right now."
+msgstr "Nyt voit sallia JSON-tiedostot."
+
+#: inc/form.class.php:1726
+msgctxt "button"
+msgid "Create"
+msgstr "Luo"
+
+#: inc/form.class.php:1729 inc/form.class.php:1740
+msgid "Please contact your GLPI administrator."
+msgstr "Ota yhteyttä GLPI-ylläpitäjään."
+
+#: inc/form.class.php:1730 inc/form.class.php:1741
+msgctxt "button"
+msgid "Back"
+msgstr "Takaisin"
+
+#: inc/form.class.php:1733
+msgid "Upload of JSON files not enabled."
+msgstr "JSON-tiedostojen lataus ei ole käytössä."
+
+#: inc/form.class.php:1736 inc/form.class.php:1739
+msgid "You may enable JSON files right now."
+msgstr "Nyt voit ottaa käyttöön JSON-tiedostot."
+
+#: inc/form.class.php:1737
+msgctxt "button"
+msgid "Enable"
+msgstr "Ota käyttöön"
+
+#: inc/form.class.php:1819
+#, php-format
+msgid "Forms successfully imported from %s"
+msgstr "Lomakkeet on tuotu onnistuneesti %s"
+
+#: inc/form.class.php:1906
+msgid "Failed to create JSON document type"
+msgstr "JSON-asiakirjatyyppiä ei voitu luoda"
+
+#: inc/form.class.php:1913
+msgid "JSON document type not found"
+msgstr "JSON-dokumenttityyppiä ei löydy"
+
+#: inc/form.class.php:1920
+msgid "Failed to update JSON document type"
+msgstr "JSON-dokumenttityypin päivittäminen epäonnistui"
+
+#: inc/form.class.php:1980
+msgid "Forms without category"
+msgstr "Lomakkeet ilman luokkaa"
+
+#: inc/form_answer.class.php:124 inc/issue.class.php:440
+msgid "Form answer"
+msgid_plural "Form answers"
+msgstr[0] "Lomakevastaus"
+msgstr[1] "Lomakevastaukset"
+
+#: inc/form_answer.class.php:186 inc/issue.class.php:384
+msgid "Form approver"
+msgstr "Lomakkeen hyväksyjä"
+
+#: inc/form_answer.class.php:205
+msgid "Form approver group"
+msgstr "Lomakkeen hyväksyjäryhmä"
+
+#: inc/form_answer.class.php:297
+msgid "waiting"
+msgstr "odottaa"
+
+#: inc/form_answer.class.php:298
+msgid "accepted"
+msgstr "hyväksytty"
+
+#: inc/form_answer.class.php:299
+msgid "refused"
+msgstr "hylätty"
+
+#: inc/form_answer.class.php:471
+msgid "Form accepted by validator."
+msgstr "Vahvistaja on hyväksynyt lomakkeen."
+
+#: inc/form_answer.class.php:473
+msgid "Form successfully saved."
+msgstr "Lomake tallennettu onnistuneesti."
+
+#: inc/form_answer.class.php:529
+msgid "Comment"
+msgstr "Kommentti"
+
+#: inc/form_answer.class.php:534
+msgid "Required if refused"
+msgstr "Vaaditaan, jos hylätty"
+
+#: inc/form_answer.class.php:540
+msgid "Refuse"
+msgstr "Hylkää"
+
+#: inc/form_answer.class.php:543
+msgid "Accept"
+msgstr "Hyväksy"
+
+#: inc/form_answer.class.php:558
+msgid "Refused comment is required!"
+msgstr "Hylkäyksen syy vaaditaan!"
+
+#: inc/form_answer.class.php:742
+msgid "Cannot generate targets!"
+msgstr "Kohteita ei voi luoda!"
+
+#: inc/form_answer.class.php:862 inc/form_answer.class.php:1033
+msgid "The form has been successfully saved!"
+msgstr "Lomake on tallennettu onnistuneesti!"
+
+#: inc/form_answer.class.php:975 inc/form_answer.class.php:998
+msgid "You are not the validator of these answers"
+msgstr "Et ole näiden vastausten vahvistaja"
+
+#: inc/form_answer.class.php:1082 inc/form_answer.class.php:1084
+msgid "Form data"
+msgstr "Lomakkeen tiedot"
+
+#: inc/form_profile.class.php:48
+msgid "Target"
+msgid_plural "Targets"
+msgstr[0] "Kohde"
+msgstr[1] "Kohteet"
+
+#: inc/form_profile.class.php:63
+msgid "Access type"
+msgstr "Pääsyn tyyppi"
+
+#: inc/form_profile.class.php:78
+msgid "Link to the form"
+msgstr "Linkki lomakkeeseen"
+
+#: inc/form_profile.class.php:86
+msgid "Please active the form to view the link"
+msgstr "Aktivoi lomake nähdäksesi linkin"
+
+#: inc/issue.class.php:43 inc/issue.class.php:291
+msgid "Issue"
+msgid_plural "Issues"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/issue.class.php:56
+msgid "Update issue data from tickets and form answers"
+msgstr ""
+
+#: inc/issue.class.php:403
+msgid "Ticket approver"
+msgstr "Tiketin hyväksyjä"
+
+#: inc/notificationtargetform_answer.class.php:47
+msgid "The form as been saved"
+msgstr "Lomake on tallennettu"
+
+#: inc/notificationtargetform_answer.class.php:48 install/install.php:246
+msgid "A form need to be validate"
+msgstr "Lomake on vahvistettava"
+
+#: inc/notificationtargetform_answer.class.php:49 install/install.php:252
+msgid "The form is refused"
+msgstr "Lomake on hylätty"
+
+#: inc/notificationtargetform_answer.class.php:50 install/install.php:258
+msgid "The form is accepted"
+msgstr "Lomake on hyväksytty"
+
+#: inc/notificationtargetform_answer.class.php:51 install/install.php:264
+msgid "The form is deleted"
+msgstr "Lomake on poistettu"
+
+#: inc/notificationtargetform_answer.class.php:82
+msgid "Form #"
+msgstr "Lomake #"
+
+#: inc/notificationtargetform_answer.class.php:83
+msgid "Form name"
+msgstr "Lomakkeen nimi"
+
+#: inc/notificationtargetform_answer.class.php:84
+msgid "Requester"
+msgstr "Toimeksiantaja"
+
+#: inc/notificationtargetform_answer.class.php:85
+msgid "Validator"
+msgstr "Vahvistaja"
+
+#: inc/notificationtargetform_answer.class.php:87
+msgid "Full form answers"
+msgstr "Täydet lomakevastaukset"
+
+#: inc/notificationtargetform_answer.class.php:88
+msgid "Refused comment"
+msgstr "Hylätty kommentti"
+
+#: inc/notificationtargetform_answer.class.php:89
+msgid "Validation link"
+msgstr "Vahvistuslinkki"
+
+#: inc/notificationtargetform_answer.class.php:90
+msgid "Request #"
+msgstr "Pyyntö #"
+
+#: inc/question.class.php:69 inc/targetbase.class.php:567
+#: inc/targetbase.class.php:637 inc/targetbase.class.php:718
+#: inc/targetbase.class.php:870 inc/targetchange.class.php:799
+#: inc/targetticket.class.php:657
+msgid "Question"
+msgid_plural "Questions"
+msgstr[0] "Kysymys"
+msgstr[1] "Kysymykset"
+
+#: inc/question.class.php:140 inc/question.class.php:194
+#: inc/target.class.php:104
+msgid "Delete"
+msgstr "Poista"
+
+#: inc/question.class.php:208 inc/question.class.php:761
+msgid "Required"
+msgstr "Pakollinen"
+
+#: inc/question.class.php:237 inc/question.class.php:624
+msgid "Add a question"
+msgstr "Lisää kysymys"
+
+#: inc/question.class.php:247 inc/section.class.php:379
+msgid "Add a section"
+msgstr "Lisää osio"
+
+#: inc/question.class.php:271 inc/section.class.php:88
+#: inc/section.class.php:122
+msgid "The title is required"
+msgstr "Otsikko on pakollinen"
+
+#: inc/question.class.php:279
+msgid "The field type is required"
+msgstr "Kentän tyyppi on pakollinen"
+
+#: inc/question.class.php:286
+msgid "The section is required"
+msgstr "Osio on pakollinen"
+
+#: inc/question.class.php:296 inc/fields/checkboxesfield.class.php:150
+#: inc/fields/dropdownfield.class.php:131
+#: inc/fields/glpiselectfield.class.php:45 inc/fields/radiosfield.class.php:86
+#: inc/fields/selectfield.class.php:94
+msgid "The field value is required:"
+msgstr "Kentän arvo on pakollinen:"
+
+#: inc/question.class.php:320
+msgid "The regular expression is invalid"
+msgstr "Säännöllinen lauseke on virheellinen"
+
+#: inc/question.class.php:624
+msgid "Edit a question"
+msgstr "Muokkaa kysymystä"
+
+#: inc/question.class.php:660 inc/section.class.php:70
+#: inc/targetchange.class.php:802 inc/targetticket.class.php:660
+msgid "Section"
+msgid_plural "Sections"
+msgstr[0] "Osio"
+msgstr[1] "Osiot"
+
+#: inc/question.class.php:687 inc/fields/glpiselectfield.class.php:38
+msgid "GLPI object"
+msgid_plural "GLPI objects"
+msgstr[0] "GLPI objekti"
+msgstr[1] "GLPI objektit"
+
+#: inc/question.class.php:773
+msgid "Show empty"
+msgstr "Näytä tyhjä"
+
+#: inc/question.class.php:789
+msgid "Show ticket categories"
+msgstr "Näytä tikettien luokat"
+
+#: inc/question.class.php:794
+msgid "Request categories"
+msgstr "Pyynnön luokat"
+
+#: inc/question.class.php:795
+msgid "Incident categories"
+msgstr "Tapauksen luokat"
+
+#: inc/question.class.php:796
+msgid "Both"
+msgstr "Molemmat"
+
+#: inc/question.class.php:805
+msgid "Limit ticket categories depth"
+msgstr "Rajoita tiketin luokkien syvyyttä"
+
+#: inc/question.class.php:814
+msgid "No limit"
+msgstr "Ei rajoitusta"
+
+#: inc/question.class.php:823
+msgid "One per line for lists"
+msgstr "Yksi riviä kohden luetteloihin"
+
+#: inc/question.class.php:857
+msgid "Values"
+msgstr "Arvot"
+
+#: inc/question.class.php:858
+msgid "One per line"
+msgstr "Yksi riviä kohden"
+
+#: inc/question.class.php:870
+msgid "Filter"
+msgstr "Suodatin"
+
+#: inc/question.class.php:881
+msgid "Attribute"
+msgstr "Ominaisuus"
+
+#: inc/question.class.php:905
+msgid "Range"
+msgstr "Alue"
+
+#: inc/question.class.php:910
+msgid "Min"
+msgstr "Min"
+
+#: inc/question.class.php:916
+msgid "Max"
+msgstr "Max"
+
+#: inc/question.class.php:942
+msgid "Additional validation"
+msgstr "Lisävahvistus"
+
+#: inc/question.class.php:945
+msgid "Regular expression"
+msgstr "Säännöllinen lauseke"
+
+#: inc/question.class.php:954
+msgid ""
+"Specify the additional validation conditions in the description of the "
+"question to help users."
+msgstr "Määrittele lisävahvistuksen ehdot kysymyksen kuvauksessa käyttäjien auttamiseksi."
+
+#: inc/question.class.php:962
+msgid "Show field"
+msgstr "Näytä kenttä"
+
+#: inc/question.class.php:970
+msgid "Always displayed"
+msgstr "Aina näkyvissä"
+
+#: inc/question.class.php:971
+msgid "Hidden unless"
+msgstr "Piilotettu, ellei"
+
+#: inc/question.class.php:972
+msgid "Displayed unless"
+msgstr "Näytetään vain, jos"
+
+#: inc/section.class.php:381
+msgid "Edit a section"
+msgstr "Muokkaa osiota"
+
+#: inc/target.class.php:60
+msgid "Destination"
+msgid_plural "Destinations"
+msgstr[0] "Kohde"
+msgstr[1] "Kohteet"
+
+#: inc/target.class.php:80
+msgid "Destinations"
+msgid_plural "Destinations"
+msgstr[0] "Kohde"
+msgstr[1] "Kohteet"
+
+#: inc/target.class.php:116 inc/target.class.php:328
+msgid "Add a destination"
+msgstr "Lisää kohde"
+
+#: inc/target.class.php:148
+msgid "The type cannot be empty!"
+msgstr "Tyyppi ei voi olla tyhjä!"
+
+#: inc/target_actor.class.php:45 inc/targetchange.class.php:511
+#: inc/targetchange.class.php:618 inc/targetchange.class.php:738
+#: inc/targetticket.class.php:368 inc/targetticket.class.php:477
+#: inc/targetticket.class.php:596
+msgid "Form requester"
+msgstr "Lomakkeen toimeksiantaja"
+
+#: inc/target_actor.class.php:46 inc/targetchange.class.php:514
+#: inc/targetchange.class.php:621 inc/targetchange.class.php:741
+#: inc/targetticket.class.php:371 inc/targetticket.class.php:480
+#: inc/targetticket.class.php:599
+msgid "Form validator"
+msgstr "Lomakkeen vahvistaja"
+
+#: inc/target_actor.class.php:47
+msgid "Specific person"
+msgstr "Tietty henkilö"
+
+#: inc/target_actor.class.php:48 inc/targetchange.class.php:524
+#: inc/targetchange.class.php:631 inc/targetchange.class.php:751
+#: inc/targetticket.class.php:381 inc/targetticket.class.php:490
+#: inc/targetticket.class.php:609
+msgid "Person from the question"
+msgstr "Henkilö kysymyksestä"
+
+#: inc/target_actor.class.php:49
+msgid "Specific group"
+msgstr "Tietty ryhmä"
+
+#: inc/target_actor.class.php:50 inc/targetchange.class.php:535
+#: inc/targetchange.class.php:642 inc/targetchange.class.php:762
+#: inc/targetticket.class.php:392 inc/targetticket.class.php:501
+#: inc/targetticket.class.php:620
+msgid "Group from the question"
+msgstr "Ryhmä kysymyksestä"
+
+#: inc/target_actor.class.php:51
+msgid "Specific supplier"
+msgstr "Tietty toimittaja"
+
+#: inc/target_actor.class.php:52 inc/targetchange.class.php:779
+#: inc/targetticket.class.php:637
+msgid "Supplier from the question"
+msgstr "Toimittaja kysymyksestä"
+
+#: inc/target_actor.class.php:53 inc/targetchange.class.php:541
+#: inc/targetchange.class.php:648 inc/targetchange.class.php:768
+#: inc/targetticket.class.php:398 inc/targetticket.class.php:507
+#: inc/targetticket.class.php:626
+msgid "Actors from the question"
+msgstr "Toimijat kysymyksestä"
+
+#: inc/targetbase.class.php:78
+msgid "Current active entity"
+msgstr "Nykyinen aktiivinen yksikkö"
+
+#: inc/targetbase.class.php:79
+msgid "Default requester user's entity"
+msgstr "Oletus toimeksiantajan yksikkö"
+
+#: inc/targetbase.class.php:80
+msgid "First dynamic requester user's entity (alphabetical)"
+msgstr "Ensimmäisen dynaamisen toimeksiantajan yksikkö (aakkosellinen)"
+
+#: inc/targetbase.class.php:81
+msgid "Last dynamic requester user's entity (alphabetical)"
+msgstr "Viimeisen dynaamisen toimeksiantajan yksikkö (aakkosellinen)"
+
+#: inc/targetbase.class.php:82
+msgid "The form entity"
+msgstr "Lomakkeen yksikkö"
+
+#: inc/targetbase.class.php:83
+msgid "Default entity of the validator"
+msgstr "Vahvistajan oletusyksikkö"
+
+#: inc/targetbase.class.php:84
+msgid "Specific entity"
+msgstr "Tietty yksikkö"
+
+#: inc/targetbase.class.php:85
+msgid "Default entity of a user type question answer"
+msgstr "Oletusyksikkö käyttäjätyypin kysymyksen vastaukselle"
+
+#: inc/targetbase.class.php:86
+msgid "From a GLPI object > Entity type question answer"
+msgstr "GLPI-objektista > Yksikkötyypin kysymyksen vastaukseen"
+
+#: inc/targetbase.class.php:93
+msgid "Tags from questions"
+msgstr "Tunnisteet kysymyksistä"
+
+#: inc/targetbase.class.php:94
+msgid "Specific tags"
+msgstr "Tietyt tunnisteet"
+
+#: inc/targetbase.class.php:95
+msgid "Tags from questions and specific tags"
+msgstr "Tunnisteet kysymyksistä sekä tietyt tunnisteet"
+
+#: inc/targetbase.class.php:96
+msgid "Tags from questions or specific tags"
+msgstr "Tunnisteet kysymyksistä tai tietyt tunnisteet"
+
+#: inc/targetbase.class.php:102
+msgid "equals to the answer to the question"
+msgstr "vastaa kysymyksen vastausta"
+
+#: inc/targetbase.class.php:103
+msgid "calculated from the ticket creation date"
+msgstr "laskettu tiketin luontipäivästä"
+
+#: inc/targetbase.class.php:104
+msgid "calculated from the answer to the question"
+msgstr "laskettu vastauksesta kysymykseen "
+
+#: inc/targetbase.class.php:110
+msgid "Urgency from template or Medium"
+msgstr "Kiireellisyys mallista tai keskitaso"
+
+#: inc/targetbase.class.php:111 inc/targetchange.class.php:48
+msgid "Specific urgency"
+msgstr "Tietty kiireellisyys"
+
+#: inc/targetbase.class.php:112 inc/targetbase.class.php:120
+#: inc/targetbase.class.php:128 inc/targetchange.class.php:49
+#: inc/targetchange.class.php:57
+msgid "Equals to the answer to the question"
+msgstr "Vastaa kysymykseen annettavaan vastaukseen"
+
+#: inc/targetbase.class.php:118
+msgid "Category from template or none"
+msgstr "Luokka mallista tai ei mitään"
+
+#: inc/targetbase.class.php:119 inc/targetchange.class.php:56
+msgid "Specific category"
+msgstr "Tietty luokka"
+
+#: inc/targetbase.class.php:126
+msgid "Location from template or none"
+msgstr "Sijainti mallista tai ei mitään"
+
+#: inc/targetbase.class.php:127
+msgid "Specific location"
+msgstr "Tietty sijainti"
+
+#: inc/targetbase.class.php:387
+msgid "User type question"
+msgstr "Käyttäjätyyppinen kysymys"
+
+#: inc/targetbase.class.php:388
+msgid "Entity type question"
+msgstr "Yksikkötyyppinen kysymys"
+
+#: inc/targetbase.class.php:533
+msgid "Ticket category"
+msgstr "Tiketin luokka"
+
+#: inc/targetbase.class.php:638
+msgid "Urgency "
+msgstr "Kiireellisyys"
+
+#: inc/targetbase.class.php:677
+msgid "Ticket tags"
+msgstr "Tiketin tunnisteet"
+
+#: inc/targetbase.class.php:719
+msgid "Tags"
+msgstr "Tunnisteet"
+
+#: inc/targetbase.class.php:820
+msgid "Attached document"
+msgstr "Liitetiedosto"
+
+#: inc/targetbase.class.php:871
+msgid "Location "
+msgstr "Sijainti"
+
+#: inc/targetchange.class.php:42 inc/targetchange.class.php:230
+msgid "Target change"
+msgid_plural "Target changes"
+msgstr[0] "Kohteen muutos"
+msgstr[1] "Kohteen muutokset"
+
+#: inc/targetchange.class.php:47
+msgid "Medium"
+msgstr ""
+
+#: inc/targetchange.class.php:55
+msgid "None"
+msgstr "Ei mitään"
+
+#: inc/targetchange.class.php:218 inc/targetticket.class.php:98
+msgid "Edit a destination"
+msgstr "Muokkaa kohdetta"
+
+#: inc/targetchange.class.php:233
+msgid "Change title"
+msgstr "Vaihda otsikko"
+
+#: inc/targetchange.class.php:327 inc/targetticket.class.php:185
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: inc/targetchange.class.php:410
+msgid "Change actors"
+msgstr "Vaihda toimijoita"
+
+#: inc/targetchange.class.php:806 inc/targetticket.class.php:664
+msgid "Full form"
+msgstr "Täysi lomake"
+
+#: inc/targetchange.class.php:852 inc/targetticket.class.php:844
+msgid "The title cannot be empty!"
+msgstr "Nimike ei voi olla tyhjä!"
+
+#: inc/targetchange.class.php:858 inc/targetticket.class.php:850
+msgid "The description cannot be empty!"
+msgstr "Kuvaus ei voi olla tyhjä!"
+
+#: inc/targetticket.class.php:42 inc/targetticket.class.php:110
+msgid "Target ticket"
+msgid_plural "Target tickets"
+msgstr[0] "Kohde tiketti"
+msgstr[1] "Kohde tiketit"
+
+#: inc/targetticket.class.php:113
+msgid "Ticket title"
+msgstr "Tiketin otsikko"
+
+#: inc/targetticket.class.php:172
+msgid "Add validation message as first ticket followup"
+msgstr "Lisää vahvistusviesti ensimmäiseksi tiketin seurantaan"
+
+#: inc/targetticket.class.php:267
+msgid "Ticket actors"
+msgstr "Tiketin toimijat"
+
+#: inc/targetticket.class.php:702
+msgid "Link to an other ticket"
+msgstr "Linkki toiseen tikettiin"
+
+#: inc/targetticket.class.php:711
+msgid "An other destination of this form"
+msgstr "Toinen kohde tässä lomakkeessa"
+
+#: inc/targetticket.class.php:712
+msgid "An existing ticket"
+msgstr "Olemassa oleva tiketti"
+
+#: inc/targetticket.class.php:947
+msgid "Invalid link type"
+msgstr "Virheellinen linkkityyppi"
+
+#: inc/targetticket.class.php:963
+msgid "Invalid linked item type"
+msgstr "Virheellinen linkitetyn kohteen tyyppi"
+
+#: inc/targetticket.class.php:976
+msgid "Linked item does not exists"
+msgstr "Linkitetty kohde ei ole olemassa"
+
+#: inc/targetticket.class.php:989
+msgid "Failed to link the item"
+msgstr "Kohteen linkittäminen epäonnistui"
+
+#: inc/targetticket.class.php:1326 install/install.php:259
+msgid "Your form has been accepted by the validator"
+msgstr "Vahvistaja on hyväksynyt lomakkeesi"
+
+#: inc/wizard.class.php:100 inc/wizard.class.php:101
+msgid "Seek assistance"
+msgstr "Hae apua"
+
+#: inc/wizard.class.php:106 inc/wizard.class.php:107
+msgid "My requests for assistance"
+msgstr "Omat tukipyynnöt"
+
+#: inc/wizard.class.php:118 inc/wizard.class.php:119
+msgid "Book an asset"
+msgstr "Varaa omaisuus"
+
+#: inc/wizard.class.php:127 inc/wizard.class.php:128
+msgid "Consult feeds"
+msgstr "Kysy syötteiltä"
+
+#: inc/wizard.class.php:276
+msgid "To validate"
+msgstr "Vahvistus"
+
+#: inc/wizard.class.php:288
+msgid "Closed"
+msgstr "Suljettu"
+
+#: inc/fields/actorfield.class.php:40
+msgid "Actor"
+msgid_plural "Actors"
+msgstr[0] "Toimija"
+msgstr[1] "Toimijat"
+
+#: inc/fields/actorfield.class.php:185
+msgid "Invalid value:"
+msgstr "Virheellinen arvo:"
+
+#: inc/fields/checkboxesfield.class.php:115
+#: inc/fields/multiselectfield.class.php:52
+#, php-format
+msgid "The following question needs of at least %d answers"
+msgstr "Seuraavat kysymykset vaativat vähintään %d vastausta"
+
+#: inc/fields/checkboxesfield.class.php:121
+#: inc/fields/multiselectfield.class.php:58
+#, php-format
+msgid "The following question does not accept more than %d answers"
+msgstr "Seuraava kysymys ei hyväksy enempää kuin %d vastausta"
+
+#: inc/fields/checkboxesfield.class.php:132
+msgid "Checkboxes"
+msgstr "Valintaruudut"
+
+#: inc/fields/datetimefield.class.php:90
+msgid "Datetime"
+msgstr "Ajankohta"
+
+#: inc/fields/descriptionfield.class.php:57
+msgid "A description field should have a description:"
+msgstr "Kuvauskentällä pitäisi olla kuvaus:"
+
+#: inc/fields/dropdownfield.class.php:142
+msgid "Invalid dropdown type:"
+msgstr "Virheellinen pudotustyyppi:"
+
+#: inc/fields/emailfield.class.php:58
+msgid "This is not a valid e-mail:"
+msgstr "Tämä ei ole kelvollinen sähköpostiosoite:"
+
+#: inc/fields/filefield.class.php:73
+msgid "A required file is missing:"
+msgstr "Tarvittava tiedosto puuttuu:"
+
+#: inc/fields/floatfield.class.php:44
+msgid "This is not a number:"
+msgstr "Tämä ei ole numero:"
+
+#: inc/fields/floatfield.class.php:49 inc/fields/integerfield.class.php:49
+#, php-format
+msgid "The following number must be greater than %d:"
+msgstr "Seuraavan numeron on oltava suurempi kuin  %d:"
+
+#: inc/fields/floatfield.class.php:55 inc/fields/integerfield.class.php:55
+#, php-format
+msgid "The following number must be lower than %d:"
+msgstr "Seuraavan numeron on oltava pienempi kuin %d:"
+
+#: inc/fields/floatfield.class.php:61 inc/fields/integerfield.class.php:61
+#: inc/fields/textfield.class.php:56
+msgid "Specific format does not match:"
+msgstr "Muoto ei täsmää:"
+
+#: inc/fields/floatfield.class.php:71
+msgid "Float"
+msgstr ""
+
+#: inc/fields/integerfield.class.php:44
+msgid "This is not an integer:"
+msgstr "Tämä ei ole kokonaisluku:"
+
+#: inc/fields/integerfield.class.php:71
+msgid "Integer"
+msgstr "Kokonaisluku"
+
+#: inc/fields/ldapselectfield.class.php:95
+msgid "LDAP Select"
+msgstr "LDAP valinta"
+
+#: inc/fields/ldapselectfield.class.php:123
+msgid "Cannot recover LDAP informations!"
+msgstr "LDAP-tietoja ei voi palauttaa!"
+
+#: inc/fields/multiselectfield.class.php:133
+msgid "Multiselect"
+msgstr "Monivalinta"
+
+#: inc/fields/radiosfield.class.php:79
+msgid "Radios"
+msgstr "Valintanapit"
+
+#: inc/fields/selectfield.class.php:87
+msgid "Select"
+msgstr "Valinta"
+
+#: inc/fields/tagfield.class.php:97
+msgid "Tag"
+msgid_plural "Tags"
+msgstr[0] "Tunniste"
+msgstr[1] "Tunnisteet"
+
+#: inc/fields/textareafield.class.php:62
+msgid "Textarea"
+msgstr "Tekstialue"
+
+#: inc/fields/textfield.class.php:46
+#, php-format
+msgid "The text is too short (minimum %d characters):"
+msgstr "Teksti on liian lyhyt (vähintään %d merkkiä):"
+
+#: inc/fields/textfield.class.php:51
+#, php-format
+msgid "The text is too long (maximum %d characters):"
+msgstr "Teksti on liian pitkä (enintään %d merkkiä):"
+
+#: inc/fields/textfield.class.php:65
+msgid "Text"
+msgstr "Teksti"
+
+#: install/install.php:240
+msgid "A form has been created"
+msgstr "Lomake on luotu"
+
+#: install/install.php:241
+msgid "Your request has been saved"
+msgstr "Pyyntösi on tallennettu"
+
+#: install/install.php:242
+msgid ""
+"Hi,\\nYour request from GLPI has been successfully saved with number "
+"##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
+"see your answers onto the following link:\\n##formcreator.validation_link##"
+msgstr "Hei, \\nGLPI:n pyyntösi on tallennettu numerolla ## formcreator.request_id## ja lähetetty helpdesk-tiimiin. \\nVoit nähdä vastauksesi seuraavasta linkistä: \\n## formcreator.validation_link##"
+
+#: install/install.php:247
+msgid "A form from GLPI need to be validate"
+msgstr "GLPI-lomake on vahvistettava"
+
+#: install/install.php:248
+msgid ""
+"Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
+"validator.\\nYou can access it by clicking onto this "
+"link:\\n##formcreator.validation_link##"
+msgstr ""
+
+#: install/install.php:253
+msgid "Your form has been refused by the validator"
+msgstr "Vahvistaja on hylännyt lomakkeesi"
+
+#: install/install.php:254
+msgid ""
+"Hi,\\nWe are sorry to inform you that your form has been refused by the "
+"validator for the reason "
+"below:\\n##formcreator.validation_comment##\\n\\nYou can still modify and "
+"resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
+msgstr ""
+
+#: install/install.php:260
+msgid ""
+"Hi,\\nWe are pleased to inform you that your form has been accepted by the "
+"validator.\\nYour request will be considered soon."
+msgstr ""
+
+#: install/install.php:265
+msgid "Your form has been deleted by an administrator"
+msgstr "Järjestelmänvalvoja on poistanut lomakkeen"
+
+#: install/install.php:266
+msgid ""
+"Hi,\\nWe are sorry to inform you that your request cannot be considered and "
+"has been deleted by an administrator."
+msgstr ""
+
+#: install/install.php:464 install/update_0.0_2.5.php:415
+msgid "Formcreator - Sync service catalog issues"
+msgstr ""
+
+#: js/scripts.js.php:263
+msgid "No form found. Please choose a form below instead"
+msgstr "Lomaketta ei löytynyt. Valitse sen sijaan alla oleva lomake"
+
+#: js/scripts.js.php:281
+msgid "An error occured while querying forms"
+msgstr "Lomakkeen kyselyssä tapahtui virhe"
+
+#: js/scripts.js.php:317
+msgid "No form yet in this category"
+msgstr "Tässä luokassa ei ole vielä lomaketta"
+
+#: js/scripts.js.php:415
+msgid "Are you sure you want to delete this question?"
+msgstr "Haluatko varmasti poistaa tämän kysymyksen?"
+
+#: js/scripts.js.php:476
+msgid "Are you sure you want to delete this section?"
+msgstr "Haluatko varmasti poistaa tämän osion?"
+
+#: js/scripts.js.php:513
+msgid "Are you sure you want to delete this destination:"
+msgstr "Haluatko varmasti poistaa tämän kohteen:"
