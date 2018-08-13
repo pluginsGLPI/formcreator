@@ -41,7 +41,7 @@ Usage:
 
 Options:
    --as-user USER       Do install/upgrade as specified USER. If not provided, 'glpi' user will be used
-   --tests              Use GLPi test database
+   --tests              Use GLPI test database
 
 DOC;
 
