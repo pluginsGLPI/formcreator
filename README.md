@@ -2,7 +2,7 @@
 
 ![GLPI Banner](https://user-images.githubusercontent.com/29282308/31666160-8ad74b1a-b34b-11e7-839b-043255af4f58.png)
 
-[![License GPL 3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://github.com/Naylin15/formcreator/blob/develop/LICENSE.md)
+[![License GPL 3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://github.com/pluginsGLPI/formcreator/blob/master/LICENSE.md)
 [![Telegram GLPI](https://img.shields.io/badge/Telegram-GLPI-blue.svg)](https://t.me/glpien)
 [![IRC Chat](https://img.shields.io/badge/IRC-%23GLPI-green.svg)](http://webchat.freenode.net/?channels=GLPI)
 [![Follow Twitter](https://img.shields.io/badge/Twitter-GLPI%20Project-26A2FA.svg)](https://twitter.com/GLPI_PROJECT)
@@ -77,7 +77,7 @@ Obtain a personalized service experience, associated with benefits and opportuni
 ## Contribute
 
 Want to file a bug, contribute some code, or improve documentation? Excellent! Read up on our
-guidelines for [contributing](https://github.com/pluginsGLPI/formcreator/blob/develop/.github/CONTRIBUTING.md) and then check out one of our issues in the [Issues Dashboard](https://github.com/pluginsGLPI/formcreator/issues).
+guidelines for [contributing](https://github.com/pluginsGLPI/formcreator/blob/master/.github/CONTRIBUTING.md) and then check out one of our issues in the [Issues Dashboard](https://github.com/pluginsGLPI/formcreator/issues).
 
 ## Copying
 
