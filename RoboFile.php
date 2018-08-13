@@ -139,9 +139,9 @@ class RoboFile extends RoboFilePlugin
             throw new Exception("The tag $version already exists");
          }
 
-         if (!$this->isTagMatchesCurrentCommit($version)) {
-            throw new Exception("HEAD is not pointing to the tag of the version to build");
-         }
+         // if (!$this->isTagMatchesCurrentCommit($version)) {
+         //    throw new Exception("HEAD is not pointing to the tag of the version to build");
+         // }
 
          $versionTag = $this->getVersionTagFromXML($version);
          if (!is_array($versionTag)) {
@@ -276,6 +276,9 @@ class RoboFile extends RoboFilePlugin
       }
 
       $xml = simplexml_load_string(file_get_contents($pluginXML));
+      if ($xml === false) {
+         throw new Exception("$pluginXML is not valid XML");
+      }
       $json = json_encode($xml);
       return json_decode($json, true);
    }
