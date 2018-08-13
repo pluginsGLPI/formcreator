@@ -122,50 +122,82 @@ class RoboFile extends RoboFilePlugin
       $release = strtolower($release);
       $version = $this->getVersion();
 
-      if ($release == 'release') {
-         if ($this->getIsRelease() !== 'true') {
-            throw new Exception('The Official release constant must be true');
-         }
-      }
-
       if (!$this->isSemVer($version)) {
          throw new Exception("$version is not semver compliant. See http://semver.org/");
       }
 
-      if ($this->tagExists($version)) {
-         throw new Exception("The tag $version already exists");
-      }
+      if ($release != 'release') {
+         if ($this->getIsRelease() === 'true') {
+            throw new Exception('The Official release constant must be false');
+         }
+      } else {
+         if ($this->getIsRelease() !== 'true') {
+            throw new Exception('The Official release constant must be true');
+         }
 
-      //if (!$this->isTagMatchesCurrentCommit($version)) {
-         //throw new Exception("HEAD is not pointing to the tag of the version to build");
-      //}
+         if ($this->tagExists($version)) {
+            throw new Exception("The tag $version already exists");
+         }
 
-      $versionTag = $this->getVersionTagFromXML($version);
-      if (!is_array($versionTag)) {
-         throw new Exception("The version does not exists in the XML file");
+         if (!$this->isTagMatchesCurrentCommit($version)) {
+            throw new Exception("HEAD is not pointing to the tag of the version to build");
+         }
+
+         $versionTag = $this->getVersionTagFromXML($version);
+         if (!is_array($versionTag)) {
+            throw new Exception("The version does not exists in the XML file");
+         }
       }
 
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
-      $this->sourceUpdateComposerJson($version);
 
       $this->updateChangelog();
 
+      $diff = $this->gitDiff(['package.json']);
+      $diff = implode("\n", $diff);
+      if ($diff != '') {
+         $this->taskGitStack()
+            ->stopOnFail()
+            ->add('package.json')
+            ->commit('docs: bump version in package.json')
+            ->run();
+      }
+
       $this->taskGitStack()
          ->stopOnFail()
-         ->add('package.json')
-         ->add('composer.json')
-         ->commit('build: bump version in JSON files')
          ->add('CHANGELOG.md')
-         ->commit('build(changelog): update changelog')
+         ->commit('docs(changelog): update changelog')
          ->run();
 
+      // Update locales
+      $this->localesGenerate();
+      $this->taskGitStack()
+         ->stopOnFail()
+         ->add('locales/*')
+         ->commit('docs(locales): update translations')
+         ->run();
+
+      $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
-      $targetFile = $pluginPath. "/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
-      $toArchive = implode(' ', $this->getFileToArchive("HEAD"));
-      @mkdir($pluginPath. "/dist");
-      $this->_exec("git archive --prefix=$pluginName/ HEAD $toArchive | bzip2 > $targetFile");
+      $archiveWorkdir = "$pluginPath/output/dist/archive_workdir";
+      $archiveFile = "$pluginPath/output/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
+      $this->taskDeleteDir($archiveWorkdir)->run();
+      $this->taskDeleteDir($archiveFile)->run();
+      mkdir($archiveWorkdir, 0777, true);
+      $filesToArchive = implode(' ', $this->getFileToArchive($rev));
+
+      // Extract from the repo all files we want to have in the redistribuable archive
+      $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
+
+      // Add composer dependencies
+      $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
+
+      // Create the final archive
+      $this->taskPack($archiveFile)
+         ->addDir("$pluginName", "$archiveWorkdir/$pluginName")
+         ->run();
    }
 
    protected function getTrackedFiles($version) {
@@ -486,5 +518,46 @@ class RoboFile extends RoboFilePlugin
       }
 
       file_put_contents($filename, $source);
+   }
+
+   /**
+    * @param array $files files to commit
+    * @param string $version1
+    * @param string $version2
+    */
+   protected function gitDiff(array $files, $version1 = '', $version2 = '') {
+      if (count($files) < 1) {
+         $arg = '-u';
+      } else {
+         $arg = '"' . implode('" "', $files) . '"';
+      }
+
+      if ($version1 == '' && $version2 == '') {
+         $fromTo = '';
+      } else {
+         $fromTo = "$version1..$version2";
+      }
+
+      exec("git diff $fromTo -- $arg", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to diff $fromTo");
+      }
+
+      return $output;
+   }
+
+   /**
+    * Get a file from git tree
+    * @param string $path
+    * @param string $rev a commit hash, a tag or a branch
+    * @throws Exception
+    * @return string content of the file
+    */
+   protected function getFileFromGit($path, $rev) {
+      $output = shell_exec("git show $rev:$path");
+      if ($output === null) {
+         throw new Exception ("coult not get file from git: $rev:$path");
+      }
+      return $output;
    }
 }
