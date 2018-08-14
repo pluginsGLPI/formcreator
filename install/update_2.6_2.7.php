@@ -5,7 +5,7 @@
  *
  * @return void
  */
-function plugin_formcreator_update_2_7() {
+function plugin_formcreator_update_2_7(Migration $migration) {
    global $DB;
 
    // Migrate regex question parameters
