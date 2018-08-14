@@ -146,14 +146,14 @@ class PluginFormcreatorActorField extends CommonTestCase {
       }
    }
 
-   public function providerFieldIsValid() {
-      return providerGetValue();
+   public function providerIsValid() {
+      return $this->providerGetValue();
    }
 
    /**
-    * @dataProvider providerFieldIsValid
+    * @dataProvider providerIsValid
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
 
       $values = $fields['default_values'];
@@ -165,23 +165,19 @@ class PluginFormcreatorActorField extends CommonTestCase {
       return [
          [
             'value'     => 'glpi',
-            'expected'  => [2]
+            'expected'  => '2',
          ],
          [
             'value'     => "glpi\r\nnormal",
-            'expected'  => [2 => 'glpi', 5 => 'normal']
+            'expected'  => '2,5',
          ],
          [
             'value'     => "glpi\r\nnormal\r\nuser@localhost.local",
-            'expected'  => [
-               2 => 'glpi',
-               5 => 'normal',
-               'user@localhost.local' => 'user@localhost.local'
-            ]
+            'expected'  => '2,5,user@localhost.local',
          ],
          [
             'value'     => 'user@localhost.local',
-            'expected'  => ['user@localhost.local' => 'user@localhost.local']
+            'expected'  => 'user@localhost.local',
          ],
       ];
    }
@@ -190,10 +186,28 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
-      $output = $fieldInstance->serializeValue($value);
-      $this->array($output)->hasKeys(array_keys($expected))
-         ->containsValues($expected)
-         ->size->isEqualTo(count($expected));
+      $instance = new \PluginFormcreatorActorField([]);
+      $output = $instance->serializeValue($value);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      // swap value and expected
+      $dataSet = $this->providerSerializeValue();
+      foreach ($dataSet as &$data) {
+         $tmp = $data['expected'];
+         $data['expected'] = $data['value'];
+         $data['value'] = $tmp;
+      }
+      return $dataSet;
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorActorField([]);
+      $output = $instance->deserializeValue($value);
+      $this->string($output)->isEqualTo($expected);
    }
 }
