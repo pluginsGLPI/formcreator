@@ -109,6 +109,10 @@ class PluginFormcreatorActorField extends CommonTestCase {
       return $this->providerGetValue();
    }
 
+   public function providerFieldIsValid() {
+      return providerGetValue();
+   }
+
    /**
     * @dataProvider providerIsValid
     */
