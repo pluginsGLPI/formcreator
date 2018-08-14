@@ -33,7 +33,37 @@ namespace tests\units;
 
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
+/**
+ * @engine inline
+ */
 class Config extends CommonTestCase {
+   private $olddb;
+
+   public function beforeTestMethod($method) {
+      parent::beforeTestMethod($method);
+      switch ($method) {
+         case 'testInstallPlugin':
+            $this->login('glpi', 'glpi');
+            break;
+
+         case 'testUpgradePlugin':
+            $this->olddb = new \DB();
+            $this->string(getenv('OLDDBNAME'));
+            $this->olddb->dbdefault = getenv('OLDDBNAME');
+            $this->olddb->connect();
+            $this->boolean($this->olddb->connected)->isTrue();
+            break;
+      }
+   }
+
+   public function afterTestMethod($method) {
+      parent::afterTestMethod($method);
+      switch ($method) {
+         case 'testUpgradePlugin':
+            $this->olddb->close();
+            break;
+      }
+   }
 
    public function testInstallPlugin() {
       global $DB;
@@ -41,9 +71,7 @@ class Config extends CommonTestCase {
       $pluginname = TEST_PLUGIN_NAME;
 
       $this->given(self::setupGLPIFramework())
-           ->and($this->boolean($DB->connected)->isTrue())
-           ->and($this->configureGLPI())
-           ->and($this->installDependancies());
+           ->and($this->boolean($DB->connected)->isTrue());
 
       //Drop plugin configuration if exists
       $config = $this->newTestedInstance();
@@ -89,35 +117,6 @@ class Config extends CommonTestCase {
       $this->integer($length)->isGreaterThan(0);
    }
 
-   /**
-    * Configure GLPI to isntall the plugin
-    */
-   private function configureGLPI() {
-      global $CFG_GLPI;
-
-      $settings = [
-         'use_notifications' => '1',
-         'notifications_mailing' => '1',
-         'enable_api'  => '1',
-         'enable_api_login_credentials'  => '1',
-         'enable_api_login_external_token'  => '1',
-      ];
-      \Config::setConfigurationValues('core', $settings);
-
-      $CFG_GLPI = $settings + $CFG_GLPI;
-
-      $settings = [
-         'mqtt_broker_port' => '1884',
-      ];
-      \Config::setConfigurationValues('flyvemdm', $settings);
-   }
-
-   /**
-    * install requirements for the plugin
-    */
-   private function installDependancies() {
-   }
-
    public function testUpgradePlugin() {
       global $DB;
 
@@ -129,15 +128,11 @@ class Config extends CommonTestCase {
          $this->boolean($this->olddb->tableExists($table, false))
             ->isTrue("Table $table does not exists from migration!");
 
-         // To be replaced by call to dbmysql::getTableSchema
-         // when GLPI 9.2.x support drops
-         $create = $this->getTableSchema($DB, $table);
+         $create = $DB->getTableSchema($DB, $table);
          $fresh = $create['schema'];
          $fresh_idx = $create['index'];
 
-         // To be replaced by call to dbmysql::getTableSchema
-         // when GLPI 9.2.x support drops
-         $update = $this->getTableSchema($this->olddb, $table);
+         $update = $DB->getTableSchema($this->olddb, $table);
          $updated = $update['schema'];
          $updated_idx = $update['index'];
 

@@ -3,7 +3,13 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorActorField extends CommonTestCase {
-   public function provider() {
+
+   public function testGetName() {
+      $output = \PluginFormcreatorActorField::getName();
+      $this->string($output)->isEqualTo('Actor');
+   }
+
+   public function providerGetValue() {
       $user = new \User();
       $user->getFromDBbyName('glpi');
       $userId = $user->getID();
@@ -126,7 +132,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
    }
 
    /**
-    * @dataProvider provider
+    * @dataProvider providerGetValue
     */
    public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
@@ -140,8 +146,12 @@ class PluginFormcreatorActorField extends CommonTestCase {
       }
    }
 
+   public function providerFieldIsValid() {
+      return providerGetValue();
+   }
+
    /**
-    * @dataProvider provider
+    * @dataProvider providerFieldIsValid
     */
    public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
@@ -149,5 +159,41 @@ class PluginFormcreatorActorField extends CommonTestCase {
       $values = $fields['default_values'];
       $isValid = $fieldInstance->isValid($values);
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
+   }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value'     => 'glpi',
+            'expected'  => [2]
+         ],
+         [
+            'value'     => "glpi\r\nnormal",
+            'expected'  => [2 => 'glpi', 5 => 'normal']
+         ],
+         [
+            'value'     => "glpi\r\nnormal\r\nuser@localhost.local",
+            'expected'  => [
+               2 => 'glpi',
+               5 => 'normal',
+               'user@localhost.local' => 'user@localhost.local'
+            ]
+         ],
+         [
+            'value'     => 'user@localhost.local',
+            'expected'  => ['user@localhost.local' => 'user@localhost.local']
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
+      $output = $fieldInstance->serializeValue($value);
+      $this->array($output)->hasKeys(array_keys($expected))
+         ->containsValues($expected)
+         ->size->isEqualTo(count($expected));
    }
 }
