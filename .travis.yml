@@ -8,8 +8,7 @@ env:
     - OLDDBNAME=glpiupgradetest
     - AFTER_SUCCESS_BRANCH=9.3/bugfixes
   matrix:
-    - GLPI_BRANCH=9.2.1
-    - GLPI_BRANCH=9.2/bugfixes
+    - GLPI_BRANCH=9.3.0
     - GLPI_BRANCH=9.3/bugfixes
     - GLPI_BRANCH=master
 

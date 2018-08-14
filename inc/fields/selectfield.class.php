@@ -43,11 +43,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
-                  if (version_compare(GLPI_VERSION, '9.2.1') <= 0) {
-                     $tab_values[Html::entities_deep($value)] = $value;
-                  } else {
-                     $tab_values[$value] = $value;
-                  }
+                  $tab_values[$value] = $value;
                }
             }
 
