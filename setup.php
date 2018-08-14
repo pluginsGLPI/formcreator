@@ -37,7 +37,7 @@ define('PLUGIN_FORMCREATOR_VERSION', '2.6.4');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
 // is or is not an official release of the plugin
-define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
+define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 
 
 // Minimal GLPI version, inclusive
