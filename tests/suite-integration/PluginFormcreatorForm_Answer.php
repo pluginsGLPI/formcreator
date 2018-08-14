@@ -75,8 +75,12 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
 
       \config::setConfigurationValues(
          'core',
-         ['notifications_mailing' => '1']
+         [
+            'use_notifications'     => '1',
+            'notifications_mailing' => '1'
+         ]
       );
+      $CFG_GLPI['use_notifications'] = '1';
       $CFG_GLPI['notifications_mailing'] = '1';
 
       $form = new \PluginFormcreatorForm();
