@@ -31,7 +31,10 @@
  * ---------------------------------------------------------------------
  */
 
-function plugin_formcreator_update_2_6_3() {
+/**
+ * @param Migration $migration
+ */
+function plugin_formcreator_update_2_6_3(Migration $migration) {
    global $DB;
 
    // Change id of search option for status of form_answer
