@@ -57,93 +57,47 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       }
       $initialValue = json_encode($initialValue);
       // Value needs to be non empty to allow execition of select2's initSelection
-      if (version_compare(GLPI_VERSION, "9.3") >= 0) {
-         echo '<select multiple
-            name="formcreator_field_' . $this->fields['id'] . '[]"
-            id="formcreator_field_' . $this->fields['id']. '"
-            value="" />';
-         echo Html::scriptBlock('$(function() {
-            $("#formcreator_field_' . $this->fields['id']. '").select2({
-               tokenSeparators: [",", ";"],
-               minimumInputLength: 0,
-               ajax: {
-                  url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
-                  type: "POST",
-                  dataType: "json",
-                  data: function (params, page) {
-                     return {
-                        entity_restrict: -1,
-                        searchText: params.term,
-                        page_limit: 100,
-                        page: page
-                     }
-                  },
-                  results: function (data, page) {
-                     var more = (data.count >= 100);
-                     return {results: data.results, pagination: {"more": more}};
+      echo '<select multiple
+         name="formcreator_field_' . $this->fields['id'] . '[]"
+         id="formcreator_field_' . $this->fields['id']. '"
+         value="" />';
+      echo Html::scriptBlock('$(function() {
+         $("#formcreator_field_' . $this->fields['id']. '").select2({
+            tokenSeparators: [",", ";"],
+            minimumInputLength: 0,
+            ajax: {
+               url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+               type: "POST",
+               dataType: "json",
+               data: function (params, page) {
+                  return {
+                     entity_restrict: -1,
+                     searchText: params.term,
+                     page_limit: 100,
+                     page: page
                   }
                },
-               createSearchChoice: function itemCreator(term, data) {
-                  if ($(data).filter(function() {
-                     return this.text.localeCompare(term) === 0;
-                  }).length === 0) {
-                     return { id: term, text: term };
-                  }
-               },
-               initSelection: function (element, callback) {
-                  callback(JSON.parse(\'' . $initialValue . '\'));
+               results: function (data, page) {
+                  var more = (data.count >= 100);
+                  return {results: data.results, pagination: {"more": more}};
                }
-            })
-            $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
-               var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
-               formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-            });
-         });');
-      } else {
-         echo '<input
-            type="hidden"
-            name="formcreator_field_' . $this->fields['id'] . '"
-            id="formcreator_field_' . $this->fields['id']. '"
-            value="" />';
-         echo Html::scriptBlock('$(function() {
-            $("#formcreator_field_' . $this->fields['id']. '").select2({
-               multiple: true,
-               tokenSeparators: [",", ";"],
-               minimumInputLength: 0,
-               ajax: {
-                  url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
-                  type: "POST",
-                  dataType: "json",
-                  data: function (term, page) {
-                     return {
-                        entity_restrict: -1,
-                        searchText: term,
-                        page_limit: 100,
-                        page: page
-                     }
-                  },
-                  results: function (data, page) {
-                     var more = (data.count >= 100);
-                     return {results: data.results, more: more};
-                  }
-               },
-               createSearchChoice: function itemCreator(term, data) {
-                  if ($(data).filter(function() {
-                     return this.text.localeCompare(term) === 0;
-                  }).length === 0) {
-                     return { id: term, text: term };
-                  }
-               },
-               initSelection: function (element, callback) {
-                  callback(JSON.parse(\'' . $initialValue . '\'));
+            },
+            createSearchChoice: function itemCreator(term, data) {
+               if ($(data).filter(function() {
+                  return this.text.localeCompare(term) === 0;
+               }).length === 0) {
+                  return { id: term, text: term };
                }
-            })
-            $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
-               var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
-               formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-            });
-         });');
-      }
+            },
+            initSelection: function (element, callback) {
+               callback(JSON.parse(\'' . $initialValue . '\'));
+            }
+         })
+         $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
+            var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
+            formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
+         });
+      });');
    }
 
    public function serializeValue($value) {
