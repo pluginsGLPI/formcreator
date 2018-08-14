@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -87,7 +86,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Export in an array all the data of the current instanciated targetticket
+    * Export in an array all the data of the current instanciated target ticket
     * @return array the array with all data (with sub tables)
     */
    public function export() {
@@ -133,7 +132,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Import a form's targetchange into the db
+    * Import a form's target change into the db
     * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
@@ -191,7 +190,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
@@ -212,7 +211,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
 
-      // General information : name
+      // General information: name
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
@@ -224,7 +223,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '</table>';
 
-      // change information : title, template...
+      // change information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">' . _n('Target change', 'Target changes', 1, 'formcreator') . '</th></tr>';
@@ -835,9 +834,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Prepare input datas for updating the target ticket
+    * Prepare input data for updating the target ticket
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
     **/
@@ -915,7 +914,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Save form datas to the target
+    * Save form data to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
@@ -974,7 +973,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
-      // Parse datas
+      // Parse data
       $changeFields = [
          'name',
          'content',

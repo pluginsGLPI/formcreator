@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -71,7 +70,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
@@ -92,7 +91,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
 
-      // General information : name
+      // General information: name
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
@@ -104,7 +103,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '</table>';
 
-      // Ticket information : title, template...
+      // Ticket information: title, template...
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="4">' . _n('Target ticket', 'Target tickets', 1, 'formcreator') . '</th></tr>';
@@ -118,7 +117,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI["use_rich_text"]) {
          Html::initEditorSystem('comment');
       }
       echo '</td>';
@@ -786,7 +785,7 @@ EOS;
                $item->getFromDB($row['items_id']);
          switch ($itemtype) {
             case Ticket::getType():
-               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               //TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
                //echo Ticket_Ticket::getLinkName($row['link']);
                echo PluginFormcreatorCommon::getLinkName($row['link']);
                echo ' ';
@@ -798,7 +797,7 @@ EOS;
                break;
 
             case PluginFormcreatorTargetTicket::getType():
-               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this ia a BC)
+               // TODO: when merge of https://github.com/glpi-project/glpi/pull/2840 (this is a BC)
                //echo Ticket_Ticket::getLinkName($row['link']);
                echo PluginFormcreatorCommon::getLinkName($row['link']);
                echo ' ';
@@ -851,7 +850,7 @@ EOS;
             return [];
          }
 
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
          }
 
@@ -1013,7 +1012,7 @@ EOS;
    }
 
    /**
-    * Save form datas to the target
+    * Save form data to the target
     *
     * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
     *
@@ -1115,13 +1114,13 @@ EOS;
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
       }
-      if ($CFG_GLPI['use_rich_text']) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
          // replace HTML P tags with DIV tags
          $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
       }
 
       $data['content'] = $this->parseTags($data['content'], $formanswer);
-      if ($CFG_GLPI['use_rich_text']) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
          $data['content'] = htmlentities($data['content']);
       }
       $data['_users_id_recipient'] = $_SESSION['glpiID'];

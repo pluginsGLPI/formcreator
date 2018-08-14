@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 class PluginFormcreatorActorField extends PluginFormcreatorField
 {
    const IS_MULTIPLE    = true;
@@ -58,48 +57,93 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       }
       $initialValue = json_encode($initialValue);
       // Value needs to be non empty to allow execition of select2's initSelection
-      echo '<input
-               type="hidden"
-               name="formcreator_field_' . $this->fields['id'] . '"
-               id="actor_formcreator_field_' . $this->fields['id'] . '"
-               value=" " />';
-      echo '<script type="text/javascript">
-               jQuery(document).ready(function() {
-                  $("#actor_formcreator_field_' . $this->fields['id'] . '").select2({
-                     multiple: true,
-                     tokenSeparators: [",", ";"],
-                     minimumInputLength: 0,
-                     ajax: {
-                        url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
-                        type: "POST",
-                        dataType: "json",
-                        data: function (term, page) {
-                           return {
-                              entity_restrict: -1,
-                              searchText: term,
-                              page_limit: 100,
-                              page: page
-                           }
-                        },
-                        results: function (data, page) {
-                           var more = (data.count >= 100);
-                           return {results: data.results, more: more};
-                        }
-                     },
-                     createSearchChoice: function itemCreator(term, data) {
-                        if ($(data).filter(function() {
-                           return this.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                           return { id: term, text: term };
-                        }
-                     },
-                     initSelection: function (element, callback) {
-                        callback(JSON.parse(\'' . $initialValue . '\'));
+      if (version_compare(GLPI_VERSION, "9.3") >= 0) {
+         echo '<select multiple
+            name="formcreator_field_' . $this->fields['id'] . '[]"
+            id="formcreator_field_' . $this->fields['id']. '"
+            value="" />';
+         echo Html::scriptBlock('$(function() {
+            $("#formcreator_field_' . $this->fields['id']. '").select2({
+               tokenSeparators: [",", ";"],
+               minimumInputLength: 0,
+               ajax: {
+                  url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+                  type: "POST",
+                  dataType: "json",
+                  data: function (params, page) {
+                     return {
+                        entity_restrict: -1,
+                        searchText: params.term,
+                        page_limit: 100,
+                        page: page
                      }
-                  })
-                  $("#actor_formcreator_field_' . $this->fields['id'] . '").select2("readonly", ' . $readonly . ');
-               });
-            </script>';
+                  },
+                  results: function (data, page) {
+                     var more = (data.count >= 100);
+                     return {results: data.results, pagination: {"more": more}};
+                  }
+               },
+               createSearchChoice: function itemCreator(term, data) {
+                  if ($(data).filter(function() {
+                     return this.text.localeCompare(term) === 0;
+                  }).length === 0) {
+                     return { id: term, text: term };
+                  }
+               },
+               initSelection: function (element, callback) {
+                  callback(JSON.parse(\'' . $initialValue . '\'));
+               }
+            })
+            $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
+               var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
+               formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
+            });
+         });');
+      } else {
+         echo '<input
+            type="hidden"
+            name="formcreator_field_' . $this->fields['id'] . '"
+            id="formcreator_field_' . $this->fields['id']. '"
+            value="" />';
+         echo Html::scriptBlock('$(function() {
+            $("#formcreator_field_' . $this->fields['id']. '").select2({
+               multiple: true,
+               tokenSeparators: [",", ";"],
+               minimumInputLength: 0,
+               ajax: {
+                  url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
+                  type: "POST",
+                  dataType: "json",
+                  data: function (term, page) {
+                     return {
+                        entity_restrict: -1,
+                        searchText: term,
+                        page_limit: 100,
+                        page: page
+                     }
+                  },
+                  results: function (data, page) {
+                     var more = (data.count >= 100);
+                     return {results: data.results, more: more};
+                  }
+               },
+               createSearchChoice: function itemCreator(term, data) {
+                  if ($(data).filter(function() {
+                     return this.text.localeCompare(term) === 0;
+                  }).length === 0) {
+                     return { id: term, text: term };
+                  }
+               },
+               initSelection: function (element, callback) {
+                  callback(JSON.parse(\'' . $initialValue . '\'));
+               }
+            })
+            $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
+               var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
+               formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
+            });
+         });');
+      }
    }
 
    public function serializeValue($value) {
@@ -146,7 +190,15 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
    protected function sanitizeValue($value) {
       $value = trim($value);
-      $answerValue = array_filter(explode(',', $value));
+      if (is_array(json_decode($value))) {
+         // For GLPI 9.3+
+         // the HTML field is no longer an HTML input
+         // it is now a HTML select
+         $answerValue = array_filter(json_decode($value));
+      } else {
+         // for GLPI < 9.3 and default values from DB regardless GLPI version
+         $answerValue = array_filter(explode(',', $value));
+      }
 
       $unknownUsers = [];
       $knownUsers = [];
@@ -160,7 +212,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             $user->getFromDB($item);
             if (!$user->isNewItem()) {
                // A user known in the DB
-               $knownUsers[$user->getID()] = $user->getField('name');
+               $knownUsers[$user->getID()] = $user->getRawName();
             }
          }
       }
@@ -216,5 +268,9 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function prepareQuestionValuesForEdit($input) {
+      return $this->deserializeValue($input);
    }
 }

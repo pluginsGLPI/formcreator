@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -183,7 +182,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
 
             echo '<td align="center">';
 
-            $classname = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
+            $classname = PluginFormcreatorFields::getFieldClassname($question['fieldtype']);
             $fields = $classname::getPrefs();
 
             // avoid quote js error
@@ -304,8 +303,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       if (!isset($input['fieldtype'])) {
          $input['fieldtype'] = $this->fields['fieldtype'];
       }
-      $fieldType = 'PluginFormcreator' . ucfirst($input['fieldtype']) . 'Field';
-      $fieldObject = new $fieldType($this->fields);
+      $fieldObject = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $this);
       $input = $fieldObject->prepareQuestionInputForSave($input);
 
       // Add leading and trailing regex marker automaticaly
@@ -326,7 +324,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -351,7 +349,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          }
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -373,7 +371,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
    }
 
    /**
-    * Prepare input datas for adding the question
+    * Prepare input data for adding the question
     * Check fields values and get the order for the new question
     *
     * @param array $input data used to add the item
@@ -392,7 +390,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
          return false;
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -552,7 +550,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
                if ((count($input['show_field']) == count($input['show_condition'])
                      && count($input['show_value']) == count($input['show_logic'])
                      && count($input['show_field']) == count($input['show_value']))) {
-                  // Arrays all have the same count and ahve at least one item
+                  // Arrays all have the same count and have at least one item
                   $order = 0;
                   while (count($input['show_field']) > 0) {
                      $order++;
@@ -609,7 +607,7 @@ class PluginFormcreatorQuestion extends CommonDBChild
       $DB->query($query);
    }
 
-   public function showForm($ID, $options=[]) {
+   public function showForm($ID, $options = []) {
       global $DB, $CFG_GLPI;
 
       $rootDoc = $CFG_GLPI['root_doc'];
@@ -663,7 +661,8 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</td>';
 
       echo '<td>';
-      $table = getTableForItemtype('PluginFormcreatorSection');
+      $dbUtil = new DbUtils();
+      $table = $dbUtil->getTableForItemtype('PluginFormcreatorSection');
       $sections = [];
       $sql = "SELECT `id`, `name`
               FROM $table
@@ -705,33 +704,34 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '<div id="glpi_objects_field">';
       $optgroup = [
          __("Assets") => [
-            'Computer'           => _n("Computer", "Computers", 2),
-            'Monitor'            => _n("Monitor", "Monitors", 2),
-            'Software'           => _n("Software", "Software", 2),
-            'Networkequipment'   => _n("Network", "Networks", 2),
-            'Peripheral'         => _n("Device", "Devices", 2),
-            'Printer'            => _n("Printer", "Printers", 2),
-            'Cartridgeitem'      => _n("Cartridge", "Cartridges", 2),
-            'Consumableitem'     => _n("Consumable", "Consumables", 2),
-            'Phone'              => _n("Phone", "Phones", 2)],
+            Computer::class         => Computer::getTypeName(2),
+            Monitor::class          => Monitor::getTypeName(2),
+            Software::class         => Software::getTypeName(2),
+            Networkequipment::class => Networkequipment::getTypeName(2),
+            Peripheral::class       => Peripheral::getTypeName(2),
+            Printer::class          => Printer::getTypeName(2),
+            Cartridgeitem::class    => Cartridgeitem::getTypeName(2),
+            Consumableitem::class   => Consumableitem::getTypeName(2),
+            Phone::class            => Phone::getTypeName(2),
+            Line::class             => Line::getTypeName(2)],
          __("Assistance") => [
-            'Ticket'             => _n("Ticket", "Tickets", 2),
-            'Problem'            => _n("Problem", "Problems", 2),
-            'TicketRecurrent'    => __("Recurrent tickets")],
+            Ticket::class           => Ticket::getTypeName(2),
+            Problem::class          => Problem::getTypeName(2),
+            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)],
          __("Management") => [
-            'Budget'             => _n("Budget", "Budgets", 2),
-            'Supplier'           => _n("Supplier", "Suppliers", 2),
-            'Contact'            => _n("Contact", "Contacts", 2),
-            'Contract'           => _n("Contract", "Contracts", 2),
-            'Document'           => _n("Document", "Documents", 2)],
+            Budget::class           => Budget::getTypeName(2),
+            Supplier::class         => Supplier::getTypeName(2),
+            Contact::class          => Contact::getTypeName(2),
+            Contract::class         => Contract::getTypeName(2),
+            Document::class         => Document::getTypeName(2)],
          __("Tools") => [
-            'Reminder'           => __("Notes"),
-            'RSSFeed'            => __("RSS feed")],
+            Reminder::class         => __("Notes"),
+            RSSFeed::class          => __("RSS feed")],
          __("Administration") => [
-            'User'               => _n("User", "Users", 2),
-            'Group'              => _n("Group", "Groups", 2),
-            'Entity'             => _n("Entity", "Entities", 2),
-            'Profile'            => _n("Profile", "Profiles", 2)]
+            User::class             => User::getTypeName(2),
+            Group::class            => Group::getTypeName(2),
+            Entity::class           => Entity::getTypeName(2),
+            Profile::class          => Profile::getTypeName(2)],
       ];
       array_unshift($optgroup, '---');
       Dropdown::showFromArray('glpi_objects', $optgroup, [
@@ -827,8 +827,15 @@ class PluginFormcreatorQuestion extends CommonDBChild
       echo '</label>';
       echo '</td>';
       echo '<td>';
+      $defaultValues = "";
+      if (!$this->isNewItem()) {
+         $fieldObject = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
+         $defaultValues = $fieldObject->prepareQuestionValuesForEdit($this->fields['default_values']);
+      }
       echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
-            .'style="width: 90%">'.$this->fields['default_values'].'</textarea>';
+         .'style="width: 90%">'
+         .$defaultValues
+         .'</textarea>';
       echo '<div id="dropdown_default_value_field">';
       if (!empty($this->fields['values'])) {
          if ($this->fields['fieldtype'] == 'glpiselect' && class_exists($this->fields['values'])) {
@@ -1316,7 +1323,7 @@ JS;
    }
 
    /**
-    * get  the form belonging the question
+    * get the form belonging to the question
     *
     * @return boolean|PluginFormcreatorForm the form or false if not found
     */
@@ -1359,8 +1366,9 @@ JS;
       global $DB;
 
       $questions = [];
-      $table_question = getTableForItemtype('PluginFormcreatorQuestion');
-      $table_section  = getTableForItemtype('PluginFormcreatorSection');
+      $dbUtil = new DbUtils();
+      $table_question = $dbUtil->getTableForItemtype('PluginFormcreatorQuestion');
+      $table_section  = $dbUtil->getTableForItemtype('PluginFormcreatorSection');
       $result = $DB->query("SELECT `q`.*
                             FROM $table_question `q`
                             LEFT JOIN $table_section `s` ON `q`.`plugin_formcreator_sections_id` = `s`.`id`

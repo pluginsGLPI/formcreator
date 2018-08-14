@@ -1,36 +1,34 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
 
 /**
@@ -104,7 +102,7 @@ function plugin_formcreator_updateCategory_2_5(Migration $migration) {
    // Legacy upgrade of Categories
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_categories");
 
-   if (TableExists('glpi_plugin_formcreator_cats')) {
+   if ($DB->tableExists('glpi_plugin_formcreator_cats')) {
       $query = "INSERT IGNORE INTO `glpi_plugin_formcreator_categories` (`id`, `name`)
                 SELECT `id`,`name` FROM glpi_plugin_formcreator_cats";
       $DB->query($query);
@@ -131,7 +129,7 @@ function plugin_formcreator_updateCategory_2_5(Migration $migration) {
     *
     * @since 0.90-1.4
     */
-   if (!FieldExists('glpi_plugin_formcreator_categories', "knowbaseitemcategories_id")) {
+   if (!$DB->fieldExists('glpi_plugin_formcreator_categories', "knowbaseitemcategories_id")) {
       $migration->addField('glpi_plugin_formcreator_categories', 'completename', 'string', [
          'after' => 'comment'
       ]);
@@ -761,7 +759,7 @@ function plugin_formcreator_updateSection_2_5(Migration $migration) {
    }
 
    // Migration from previous version => Update Question table, then create a "description" question from content
-   if (FieldExists('glpi_plugin_formcreator_sections', 'content', false)) {
+   if ($DB->fieldExists('glpi_plugin_formcreator_sections', 'content', false)) {
       // Increment the order of questions which are in a section with a description
       $query = "UPDATE `PluginFormcreatorQuestion`
                 SET `order` = `order` + 1
@@ -817,7 +815,7 @@ function plugin_formcreator_updateTarget_2_5(Migration $migration) {
    $migration->displayMessage("Upgrade glpi_plugin_formcreator_targets");
 
    // Migration to 0.85-1.2.5
-   if (FieldExists('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id', false)) {
+   if ($DB->fieldExists('glpi_plugin_formcreator_targets', 'plugin_formcreator_forms_id', false)) {
       $query = "ALTER TABLE `glpi_plugin_formcreator_targets`
                 CHANGE `plugin_formcreator_forms_id` `plugin_formcreator_forms_id` INT NOT NULL;";
       $DB->query($query);

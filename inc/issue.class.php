@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -200,7 +199,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          }
       }
 
-      // in case of lefttab layout, we couldn't see "right error" message
+      // in case of left tab layout, we couldn't see "right error" message
       if ($item->get_item_to_display_tab) {
          if (isset($options["id"])
              && $options["id"]
@@ -242,7 +241,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item->showTimeline($rand);
          echo "</div>";
       } else {
-         // No ticket asociated to this issue or multiple tickets
+         // No ticket associated to this issue or multiple tickets
          // Show the form answers
          echo '<div class"center">';
          $item->showTabsContent();
@@ -278,12 +277,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $item;
    }
 
-      /**
+   /**
     * Define search options for forms
     *
     * @return Array Array of fields to show in search engine and options for each fields
     */
    public function getSearchOptionsNew() {
+      return $this->rawSearchOptions();
+   }
+
+   public function rawSearchOptions() {
       $tab = [];
 
       $tab[] = [
@@ -471,8 +474,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    public static function giveItem($itemtype, $option_id, $data, $num) {
       $searchopt = &Search::getOptions($itemtype);
-      $table=$searchopt[$option_id]["table"];
-      $field=$searchopt[$option_id]["field"];
+      $table = $searchopt[$option_id]["table"];
+      $field = $searchopt[$option_id]["field"];
 
       if (isset($data['raw']['ITEM_0_display_id'])) {
          $matches = null;
@@ -494,8 +497,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
             switch ($data['raw']['sub_itemtype']) {
                case 'Ticket':
                   $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
-                  return "<img src='".Ticket::getStatusIconURL($data['raw']["ITEM_$num"])."'
-                               alt=\"$status\" title=\"$status\">&nbsp;$status";
+                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), '9.3') < 0) {
+                     return "<img src='".Ticket::getStatusIconUrl($data['raw']["ITEM_$num"])."'
+                                 alt=\"$status\" title=\"$status\">&nbsp;$status";
+                  }
+                  return Ticket::getStatusIcon($data['raw']["ITEM_$num"]);
                   break;
 
                case 'PluginFormcreatorForm_Answer':

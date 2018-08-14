@@ -1,3 +1,35 @@
+<a name="2.6.4"></a>
+## [2.6.4](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.3...2.6.4) (2018-08-13)
+
+
+### Bug Fixes
+
+* **actorfield:** compatibility with GLPI 9.3 ([#1034](https://github.com-btry/pluginsGLPI/formcreator/issues/1034)) ([3b2051f](https://github.com-btry/pluginsGLPI/formcreator/commit/3b2051f))
+* **actors:** fix edit of an existing question of type actors ([f1606af](https://github.com-btry/pluginsGLPI/formcreator/commit/f1606af))
+* **actors:** use first / last name in generataed tickets ([1455708](https://github.com-btry/pluginsGLPI/formcreator/commit/1455708)), closes [#1016](https://github.com-btry/pluginsGLPI/formcreator/issues/1016)
+* **description:** cannot apply hide/show condition on descriptions ([8693a6a](https://github.com-btry/pluginsGLPI/formcreator/commit/8693a6a))
+* **filefield:** SQL single quote escaping ([e0b9bd6](https://github.com-btry/pluginsGLPI/formcreator/commit/e0b9bd6))
+* **form:** access to form not properly checked ([#1047](https://github.com-btry/pluginsGLPI/formcreator/issues/1047)) ([1a40790](https://github.com-btry/pluginsGLPI/formcreator/commit/1a40790))
+* **form:** check access to form only by entity ([c0973cb](https://github.com-btry/pluginsGLPI/formcreator/commit/c0973cb))
+* **form:** forbid purge of a form when there are answers ([f84b353](https://github.com-btry/pluginsGLPI/formcreator/commit/f84b353))
+* **form:** import restrictions by profile was broken ([34ae3bf](https://github.com-btry/pluginsGLPI/formcreator/commit/34ae3bf)), closes [#722](https://github.com-btry/pluginsGLPI/formcreator/issues/722)
+* **form_answer:** allow view of form if the user has update entity right ([7dad4cb](https://github.com-btry/pluginsGLPI/formcreator/commit/7dad4cb))
+* **form_answer:** fix compatibility with GLPI 9.4 ([001a82f](https://github.com-btry/pluginsGLPI/formcreator/commit/001a82f))
+* **form_answer:** fix fatal error ([c292981](https://github.com-btry/pluginsGLPI/formcreator/commit/c292981))
+* **form_profile:** UUID was not generated ([44f231b](https://github.com-btry/pluginsGLPI/formcreator/commit/44f231b))
+* compatibility with GLPI 9.4 ([6dfaae9](https://github.com-btry/pluginsGLPI/formcreator/commit/6dfaae9)), closes [#1022](https://github.com-btry/pluginsGLPI/formcreator/issues/1022)
+* **issue:** more consistent status display for status of issues ([2802a78](https://github.com-btry/pluginsGLPI/formcreator/commit/2802a78))
+* **issue:** php warnings in service catalog ([0754b5f](https://github.com-btry/pluginsGLPI/formcreator/commit/0754b5f))
+* **plugin:** update compatibility ([57c607f](https://github.com-btry/pluginsGLPI/formcreator/commit/57c607f))
+* **question:** description displayed in italic ([e572b43](https://github.com-btry/pluginsGLPI/formcreator/commit/e572b43))
+* **question:** fix loss of description ([4b39371](https://github.com-btry/pluginsGLPI/formcreator/commit/4b39371))
+* **question_condition:** fix creation of conditions ([135d6c8](https://github.com-btry/pluginsGLPI/formcreator/commit/135d6c8))
+* **target:** continue keyword in switch ([576c891](https://github.com-btry/pluginsGLPI/formcreator/commit/576c891))
+* **target:** loading of instance from DB ([1d314de](https://github.com-btry/pluginsGLPI/formcreator/commit/1d314de))
+* **target:** unescaped quote ([6afa05b](https://github.com-btry/pluginsGLPI/formcreator/commit/6afa05b))
+
+
+
 <a name="2.6.3"></a>
 ## [2.6.3](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.2...2.6.3) (2018-04-30)
 

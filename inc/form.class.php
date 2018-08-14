@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -61,7 +60,7 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return boolean True if he can read requests
     */
    public static function canView() {
-      return Session::haveRight("entity", UPDATE);
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
@@ -70,7 +69,19 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return boolean True if he can read requests
     */
    public static function canDelete() {
-      return Session::haveRight("entity", UPDATE);
+      return Session::haveRight('entity', UPDATE);
+   }
+
+   public function canPurgeItem() {
+      $DbUtil = new DbUtils();
+
+      $criteria = [
+         PluginFormcreatorForm::getForeignKeyField() => $this->getID(),
+      ];
+      if ($DbUtil->countElementsInTable(PluginFormcreatorForm_Answer::getTable(), $criteria) > 0) {
+         return false;
+      }
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
@@ -105,6 +116,10 @@ class PluginFormcreatorForm extends CommonDBTM
     * @return Array Array of fields to show in search engine and options for each fields
     */
    public function getSearchOptionsNew() {
+      return $this->rawSearchOptions();
+   }
+
+   public function rawSearchOptions() {
       $tab = [];
 
       $tab[] = [
@@ -333,11 +348,11 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Show the Form edit form the the adminsitrator in the config page
+    * Show the Form for the adminsitrator to edit in the config page
     *
     * @param  Array  $options Optional options
     *
-    * @return NULL         Nothing, just display the form
+    * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options=[]) {
       global $DB;
@@ -410,8 +425,8 @@ class PluginFormcreatorForm extends CommonDBTM
          $validators[] = $row['items_id'];
       }
 
-      // Si le formulaire est récursif, on authorise les validateurs des sous-entités
-      // Sinon uniquement les validateurs de l'entité du formulaire
+      // If the form is recursive, authorize the validators in sub-entities
+      // If it isn't, only the validators of the entity of the form
       if ($this->isRecursive()) {
          $entites = getSonsOf('glpi_entities', $this->getEntityID());
       } else {
@@ -419,7 +434,7 @@ class PluginFormcreatorForm extends CommonDBTM
       }
       $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
 
-      // Select all users with ticket validation right and there groups
+      // Select all users with ticket validation right and the groups
       $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
                 FROM `glpi_users` u
                 INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
@@ -997,12 +1012,12 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for adding the form
+    * Prepare input data for adding the form
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+    */
    public function prepareInputForAdd($input) {
       // Decode (if already encoded) and encode strings to avoid problems with quotes
       foreach ($input as $key => $value) {
@@ -1011,7 +1026,7 @@ class PluginFormcreatorForm extends CommonDBTM
          }
       }
 
-      // generate a uniq id
+      // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
@@ -1055,9 +1070,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Prepare input datas for updating the form
+    * Prepare input data for updating the form
     *
-    * @param array $input datas used to add the item
+    * @param array $input data used to add the item
     *
     * @return array the modified $input array
    **/
@@ -1161,15 +1176,13 @@ class PluginFormcreatorForm extends CommonDBTM
 
       // Validate form fields
       foreach ($found_questions as $id => $question) {
-         $className = 'PluginFormcreator' . ucfirst($question->getField('fieldtype')) . 'Field';
-
-         if (class_exists($className)) {
-            $obj = new $className($question->fields, $data);
-            if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
-               $valid = false;
-            }
-         } else {
+         if (!($obj = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question, $data))) {
             $valid = false;
+            break;
+         }
+         if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
+            $valid = false;
+            break;
          }
       }
       if (isset($input) && is_array($input)) {
@@ -1258,7 +1271,7 @@ class PluginFormcreatorForm extends CommonDBTM
     *
     * NB: Queries are made directly in SQL without GLPI's API to avoid controls made by Add(), prepareInputForAdd(), etc.
     *
-    * @return Boolean true if success, false toherwize.
+    * @return Boolean true if success, false otherwise.
     */
    public function duplicate() {
       $target              = new PluginFormcreatorTarget();
@@ -1273,7 +1286,7 @@ class PluginFormcreatorForm extends CommonDBTM
       $form_profile        = new PluginFormcreatorForm_Profile();
       $tab_questions       = [];
 
-      // From data
+      // Form data
       $form_datas              = $this->fields;
       $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
       $form_datas['is_active'] = 0;
@@ -1519,9 +1532,9 @@ class PluginFormcreatorForm extends CommonDBTM
    }
 
    /**
-    * Transfer a form to another entity. Execute transfert action for massive action.
+    * Transfer a form to another entity. Execute transfer action for massive action.
     *
-    * @return Boolean true if success, false otherwize.
+    * @return Boolean true if success, false otherwise.
     */
    public function transfer($entity) {
       global $DB;
@@ -1662,7 +1675,7 @@ class PluginFormcreatorForm extends CommonDBTM
                                         $form['entities_id']);
       }
 
-      // remove uneeded keys
+      // remove non needed keys
       unset($form['id'],
             $form['plugin_formcreator_categories_id'],
             $form['entities_id'],
@@ -1794,7 +1807,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
    /**
     * Process import of json file(s) sended by the submit of self::showImportForm
-    * @param  array  $params GET/POST data who need to contains the filename(s) in _json_file key
+    * @param  array  $params GET/POST data that need to contain the filename(s) in _json_file key
     */
    public function importJson($params = []) {
       // parse json file(s)
@@ -1861,6 +1874,22 @@ class PluginFormcreatorForm extends CommonDBTM
       } else {
          // create new form
          $forms_id = $form_obj->add($form);
+      }
+
+      // import restrictions
+      if ($forms_id) {
+         // Delete all previous restrictions
+         $FormProfile = new PluginFormcreatorForm_Profile();
+         $FormProfile->deleteByCriteria([
+            'plugin_formcreator_forms_id' => $forms_id,
+         ]);
+
+         // Import updates
+         if (isset($form['_profiles'])) {
+            foreach ($form['_profiles'] as $formProfile) {
+               PluginFormcreatorForm_Profile::import($forms_id, $formProfile);
+            }
+         }
       }
 
       // import form's sections
@@ -1951,7 +1980,7 @@ class PluginFormcreatorForm extends CommonDBTM
                       ORDER BY $form_table.name ASC";
       $result_forms = $DB->query($query_forms);
 
-      // Show categories wicth have at least one form user can access
+      // Show categories which have at least one form user can access
       $query  = "SELECT $cat_table.`name`, $cat_table.`id`
                  FROM $cat_table
                  WHERE 0 < (

@@ -1,37 +1,36 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -218,7 +217,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                ]);
 
                if ($answer->isNewItem()) {
-                  continue;
+                  continue 2;
                } else {
                   $userIds = [$answer->getField('answer')];
                }
@@ -236,7 +235,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                ]);
 
                if ($answer->isNewItem()) {
-                  continue;
+                  continue 2;
                } else {
                   $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
                }
@@ -741,7 +740,7 @@ EOS;
          ]);
          echo '</div>';
 
-         // Spécific tags
+         // Specific tags
          echo '<div id="tag_specific_value" style="display: none">';
 
          $obj = new PluginTagTag();
@@ -815,7 +814,7 @@ EOS;
                $content = str_replace('##answer_' . $id . '##', $value, $content);
             } else {
                if (strpos($content, '##answer_' . $id . '##') !== false) {
-                  $content = str_replace('##question_' . $id . '##', $name, $content);
+                  $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
                   if ($value !== '') {
                      $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
 

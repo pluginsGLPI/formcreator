@@ -1,4 +1,35 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
+ * LICENSE
+ *
+ * This file is part of Formcreator.
+ *
+ * Formcreator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Formcreator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
+ * @author    Thierry Bugier
+ * @author    Jérémy Moreau
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
+ * @link      http://plugins.glpi-project.org/#/plugin/formcreator
+ * ---------------------------------------------------------------------
+ */
 
 /**
  * This is project's console commands configuration for Robo task runner.
@@ -38,7 +69,6 @@ class RoboFile extends RoboFilePlugin
    protected function getVersion() {
       $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
-      $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_VERSION";
       $pattern = "#^define\('$constantName', '([^']*)'\);$#m";
       preg_match($pattern, $setupContent, $matches);
@@ -48,10 +78,21 @@ class RoboFile extends RoboFilePlugin
       throw new Exception("Could not determine version of the plugin");
    }
 
+   protected function getIsRelease() {
+      $currentRev = $this->getCurrentCommitHash();
+      $setupContent = $this->getFileFromGit('setup.php', $currentRev);
+      $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_IS_OFFICIAL_RELEASE";
+      $pattern = "#^define\('$constantName', ([^\)]*)\);$#m";
+      preg_match($pattern, $setupContent, $matches);
+      if (isset($matches[1])) {
+         return $matches[1];
+      }
+      throw new Exception("Could not determine release status of the plugin");
+   }
+
    protected function getGLPIMinVersion() {
       $setupFile = $this->getProjectPath(). "/setup.php";
       $setupContent = file_get_contents($setupFile);
-      $pluginName = $this->getPluginName();
       $constantName = "PLUGIN_" . strtoupper($this->getPluginName()) . "_GLPI_MIN_VERSION";
       $pattern = "#^define\('$constantName', '([^']*)'\);$#m";
       preg_match($pattern, $setupContent, $matches);
@@ -71,41 +112,92 @@ class RoboFile extends RoboFilePlugin
    }
 
    //Own plugin's robo stuff
-   public function archiveBuild() {
+
+   /**
+    * Build an redistribuable archive
+    *
+    * @param string $release 'release' if the archive is a release
+    */
+   public function archiveBuild($release = 'release') {
+      $release = strtolower($release);
       $version = $this->getVersion();
 
       if (!$this->isSemVer($version)) {
          throw new Exception("$version is not semver compliant. See http://semver.org/");
       }
 
-      if ($this->tagExists($version)) {
-         throw new Exception("The tag $version already exists");
-      }
+      if ($release != 'release') {
+         if ($this->getIsRelease() === 'true') {
+            throw new Exception('The Official release constant must be false');
+         }
+      } else {
+         if ($this->getIsRelease() !== 'true') {
+            throw new Exception('The Official release constant must be true');
+         }
 
-      //if (!$this->isTagMatchesCurrentCommit($version)) {
-         //throw new Exception("HEAD is not pointing to the tag of the version to build");
-      //}
+         if ($this->tagExists($version)) {
+            throw new Exception("The tag $version already exists");
+         }
 
-      $versionTag = $this->getVersionTagFromXML($version);
-      if (!is_array($versionTag)) {
-         throw new Exception("The version does not exists in the XML file");
+         // if (!$this->isTagMatchesCurrentCommit($version)) {
+         //    throw new Exception("HEAD is not pointing to the tag of the version to build");
+         // }
+
+         $versionTag = $this->getVersionTagFromXML($version);
+         if (!is_array($versionTag)) {
+            throw new Exception("The version does not exists in the XML file");
+         }
       }
 
       // update version in package.json
       $this->sourceUpdatePackageJson($version);
-      $this->sourceUpdateComposerJson($version);
 
       $this->updateChangelog();
 
-      $this->gitCommit(['package.json', 'composer.json'], "build: bump version in JSON files");
-      $this->gitCommit(['CHANGELOG.md'], "build(changelog): update changelog");
+      $diff = $this->gitDiff(['package.json']);
+      $diff = implode("\n", $diff);
+      if ($diff != '') {
+         $this->taskGitStack()
+            ->stopOnFail()
+            ->add('package.json')
+            ->commit('docs: bump version in package.json')
+            ->run();
+      }
 
+      $this->taskGitStack()
+         ->stopOnFail()
+         ->add('CHANGELOG.md')
+         ->commit('docs(changelog): update changelog')
+         ->run();
+
+      // Update locales
+      $this->localesGenerate();
+      $this->taskGitStack()
+         ->stopOnFail()
+         ->add('locales/*')
+         ->commit('docs(locales): update translations')
+         ->run();
+
+      $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
-      $targetFile = $pluginPath. "/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
-      $toArchive = implode(' ', $this->getFileToArchive("HEAD"));
-      @mkdir($pluginPath. "/dist");
-      $this->_exec("git archive --prefix=$pluginName/ HEAD $toArchive | bzip2 > $targetFile");
+      $archiveWorkdir = "$pluginPath/output/dist/archive_workdir";
+      $archiveFile = "$pluginPath/output/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
+      $this->taskDeleteDir($archiveWorkdir)->run();
+      $this->taskDeleteDir($archiveFile)->run();
+      mkdir($archiveWorkdir, 0777, true);
+      $filesToArchive = implode(' ', $this->getFileToArchive($rev));
+
+      // Extract from the repo all files we want to have in the redistribuable archive
+      $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
+
+      // Add composer dependencies
+      $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
+
+      // Create the final archive
+      $this->taskPack($archiveFile)
+         ->addDir("$pluginName", "$archiveWorkdir/$pluginName")
+         ->run();
    }
 
    protected function getTrackedFiles($version) {
@@ -184,6 +276,9 @@ class RoboFile extends RoboFilePlugin
       }
 
       $xml = simplexml_load_string(file_get_contents($pluginXML));
+      if ($xml === false) {
+         throw new Exception("$pluginXML is not valid XML");
+      }
       $json = json_encode($xml);
       return json_decode($json, true);
    }
@@ -216,29 +311,6 @@ class RoboFile extends RoboFilePlugin
       }
 
       return false;
-   }
-
-   /**
-    * @param array $files files to commit
-    * @param string $commitMessage commit message
-    */
-   protected function gitCommit(array $files, $commitMessage) {
-      if (count($files) < 1) {
-         $arg = '-u';
-      } else {
-         $arg = '"' . implode('" "', $files) . '"';
-      }
-       exec("git add $arg", $output, $retCode);
-      if ($retCode > 0) {
-         throw new Exception("Failed to add files for $commitMessage");
-      }
-
-       exec("git commit -m \"$commitMessage\"", $output, $retCode);
-      if ($retCode > 0) {
-         throw new Exception("Failed to commit $commitMessage");
-      }
-
-       return true;
    }
 
    /**
@@ -343,7 +415,7 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $copyrightRegex = "#Copyright (\(c\)|©) (\d{4}-)?(\d{4}) #iUm";
+      $copyrightRegex = "#Copyright (\(c\)|©) (\d{4}\s*-\s*)(\d{4}) #iUm";
       $year = date("Y");
       $replacement = 'Copyright © ${2}' . $year . ' ';
       $this->headerTemplate = preg_replace($copyrightRegex, $replacement, $this->headerTemplate);
@@ -449,5 +521,46 @@ class RoboFile extends RoboFilePlugin
       }
 
       file_put_contents($filename, $source);
+   }
+
+   /**
+    * @param array $files files to commit
+    * @param string $version1
+    * @param string $version2
+    */
+   protected function gitDiff(array $files, $version1 = '', $version2 = '') {
+      if (count($files) < 1) {
+         $arg = '-u';
+      } else {
+         $arg = '"' . implode('" "', $files) . '"';
+      }
+
+      if ($version1 == '' && $version2 == '') {
+         $fromTo = '';
+      } else {
+         $fromTo = "$version1..$version2";
+      }
+
+      exec("git diff $fromTo -- $arg", $output, $retCode);
+      if ($retCode > 0) {
+         throw new Exception("Failed to diff $fromTo");
+      }
+
+      return $output;
+   }
+
+   /**
+    * Get a file from git tree
+    * @param string $path
+    * @param string $rev a commit hash, a tag or a branch
+    * @throws Exception
+    * @return string content of the file
+    */
+   protected function getFileFromGit($path, $rev) {
+      $output = shell_exec("git show $rev:$path");
+      if ($output === null) {
+         throw new Exception ("coult not get file from git: $rev:$path");
+      }
+      return $output;
    }
 }

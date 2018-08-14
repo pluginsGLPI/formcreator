@@ -1,36 +1,34 @@
 <?php
 /**
+ * ---------------------------------------------------------------------
+ * Formcreator is a plugin which allows creation of custom forms of
+ * easy access.
+ * ---------------------------------------------------------------------
  * LICENSE
  *
- * Copyright © 2011-2018 Teclib'
+ * This file is part of Formcreator.
  *
- * This file is part of Formcreator Plugin for GLPI.
- *
- * Formcreator is a plugin that allow creation of custom, easy to access forms
- * for users when they want to create one or more GLPI tickets.
- *
- * Formcreator Plugin for GLPI is free software: you can redistribute it and/or modify
+ * Formcreator is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Formcreator Plugin for GLPI is distributed in the hope that it will be useful,
+ * Formcreator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- * If not, see http://www.gnu.org/licenses/.
- * ------------------------------------------------------------------------------
+ * You should have received a copy of the GNU General Public License
+ * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2018 Teclib
- * @license   GPLv2 https://www.gnu.org/licenses/gpl2.txt
+ * @copyright Copyright © 2011 - 2018 Teclib'
+ * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
  * @link      https://github.com/pluginsGLPI/formcreator/
+ * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
- * ------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
  */
 
 if (!defined('GLPI_ROOT')) {
@@ -40,7 +38,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorFields
 {
    /**
-    * Retrive all field types and file path
+    * Retrieve all field types and file path
     * @return Array     field_type => File_path
     */
    public static function getTypes() {
@@ -49,9 +47,8 @@ class PluginFormcreatorFields
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
          $matches = null;
          preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
 
-         if (class_exists($classname)) {
+         if (PluginFormcreatorFields::fieldTypeExists($matches[1])) {
             $tab_field_types[strtolower($matches[1])] = $class_file;
          }
       }
@@ -330,5 +327,41 @@ class PluginFormcreatorFields
       }
 
       return $questionToShow;
+   }
+
+   /**
+    * gets the classname for a field given its type
+    *
+    * @param string $type type of field to test for existence
+    * @return string
+    */
+   public static function getFieldClassname($type) {
+      return 'PluginFormcreator' . ucfirst($type) . 'Field';
+   }
+
+   /**
+    * checks if a field type exists
+    *
+    * @param string $type type of field to test for existence
+    * @return boolean
+    */
+   public static function fieldTypeExists($type) {
+      return is_a(self::getFieldClassname($type), PluginFormcreatorFieldInterface::class, true);
+   }
+
+   /**
+    * gets an instance of a field given its type
+    *
+    * @param string $type type of field to get
+    * @param PluginFormcreatorQuestion $question question representing the field
+    * @param array $data additional data
+    * @return null|PluginFormcreatorFieldInterface
+    */
+   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = []) {
+      $className = self::getFieldClassname($type);
+      if (!self::fieldTypeExists($type)) {
+         return null;
+      }
+      return new $className($question->fields, $data);
    }
 }

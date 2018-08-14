@@ -2,15 +2,16 @@ language: php
 
 env:
   global:
-    - GLPI_SOURCE="https://github.com/glpi-project/glpi -b 9.2/bugfixes" 
+    - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - PHPUNIT_ARGS="--verbose --debug"
     - CS=7.2
   matrix:
     - GLPI_BRANCH=9.2.1
     - GLPI_BRANCH=9.2/bugfixes
+    - GLPI_BRANCH=9.3/bugfixes
     - GLPI_BRANCH=master
-    
-php: 
+
+php:
   - 5.6
   - 7.0
   - 7.1
@@ -19,6 +20,7 @@ php:
 
 allow_failures:
   - php: nightly
+  - env: GLPI_BRANCH=master
 
 before_script:
   - mysql -u root -e 'create database glpitest;'
@@ -33,7 +35,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit $PHPUNIT_ARGS
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ]] ; then vendor/bin/robo --no-interaction code:cs; fi
+  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/robo --no-interaction code:cs; fi
 
 cache:
   directories:
