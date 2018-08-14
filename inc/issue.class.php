@@ -495,10 +495,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
             switch ($data['raw']['sub_itemtype']) {
                case 'Ticket':
                   $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
-                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), '9.3') < 0) {
-                     return "<img src='".Ticket::getStatusIconUrl($data['raw']["ITEM_$num"])."'
-                                 alt=\"$status\" title=\"$status\">&nbsp;$status";
-                  }
                   return Ticket::getStatusIcon($data['raw']["ITEM_$num"]);
                   break;
 
