@@ -88,5 +88,4 @@ function plugin_formcreator_update_2_7(Migration $migration) {
       $id = $row['id'];
       $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
    }
-
 }
