@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,13 +25,13 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
   INDEX `name` (`name`),
   INDEX `knowbaseitemcategories_id` (`knowbaseitemcategories_id`),
   INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `id` int(11) NOT NULL,
   `replace_helpdesk` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   INDEX `entities_id` (`entities_id`),
   INDEX `plugin_formcreator_categories_id` (`plugin_formcreator_categories_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
   INDEX `requester_id` (`requester_id`),
   INDEX `users_id_validator` (`users_id_validator`),
   INDEX `groups_id_validator` (`groups_id_validator`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_profiles` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`profiles_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unicity` (`plugin_formcreator_forms_id`,`itemtype`,`items_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_sections_id` (`plugin_formcreator_sections_id`),
   FULLTEXT KEY `Search` (`name`,`description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `category_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `changetemplates_id` (`changetemplates_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_targetchanges_id` (`plugin_formcreator_targetchanges_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `itemtype_items_id` (`itemtype`, `items_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `category_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   INDEX `entities_id` (`entities_id`),
   INDEX `requester_id` (`requester_id`),
   INDEX `validator_id` (`validator_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_items_targettickets` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_targettickets_id` (`plugin_formcreator_targettickets_id`),
   INDEX `item` (`itemtype`,`items_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questiondependencies` (
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`),
   INDEX `plugin_formcreator_questions_id_2` (`plugin_formcreator_questions_id_2`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -282,7 +282,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
   `uuid`                              varchar(255)  DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -293,4 +293,4 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
   `uuid`                              varchar(255)  DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
