@@ -78,13 +78,15 @@ function plugin_formcreator_update_2_7(Migration $migration) {
    foreach ($DB->request($request) as $row) {
       $values = html_entity_decode($row['values']);
       $defaultValues = html_entity_decode($row['default_values']);
-      $DB->query("UDATE `glpi_plugin_formcreator_questions` SET `values` = '$values', `default_values` = '$defaultValues'");
+      $id = $row['id'];
+      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values` = '$values', `default_values` = '$defaultValues' WHERE `id` = '$id'");
    }
 
    // decode html entities in name of questions
    foreach ($DB->request(['FROM' => 'glpi_plugin_formcreator_questions']) as $row) {
       $name = html_entity_decode($row['name']);
-      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name'");
+      $id = $row['id'];
+      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
    }
 
 }
