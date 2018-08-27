@@ -965,16 +965,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                     ? $_SESSION['glpiactive_entity']
                                     : $form->getField('entities_id');
       $file_data["is_recursive"] = $form->getField('is_recursive');
-      Document::moveDocument($file_data, $file);
+      $file_data['_filename'] = [$file];
 
       if ($docID = $doc->add($file_data)) {
          $docID    = intval($docID);
          $table    = Document::getTable();
-         $filename = substr(addslashes($file), 23);
-         $query    = "UPDATE `$table` SET `filename` = '$filename'
-                      WHERE `id` = '$docID'";
-         $DB->query($query);
-
          $docItem = new Document_Item();
          $docItem->add([
             'documents_id' => $docID,
