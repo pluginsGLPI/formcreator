@@ -796,10 +796,9 @@ EOS;
                              ORDER BY `questions`.`order` ASC";
          $res_questions = $DB->query($query_questions);
          while ($question_line = $DB->fetch_assoc($res_questions)) {
-            $classname = 'PluginFormcreator'.ucfirst($question_line['fieldtype']).'Field';
-            if (class_exists($classname)) {
-               $fieldObject = new $classname($question_line, $question_line['answer']);
-            }
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($question_line['id']);
+            $fieldObject = PluginFormcreatorFields::getFieldInstance($question_line['fieldtype'], $question, $question_line['answer']);
 
             $id = $question_line['id'];
             if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
