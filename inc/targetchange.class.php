@@ -858,7 +858,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             return [];
          }
 
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
          }
 
@@ -996,7 +996,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
          }
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             // replace HTML P tags with DIV tags
             $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
          }
