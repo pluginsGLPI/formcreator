@@ -152,7 +152,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!in_array($itemtype, ['Ticket', 'PluginFormcreatorForm_Answer'])) {
          html::displayRightError();
       }
-      if ($CFG_GLPI['use_rich_text']) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
          Html::requireJs('tinymce');
       }
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
