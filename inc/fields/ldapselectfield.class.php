@@ -272,8 +272,6 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-ldapselect-field.png" title="" />';
+      return '<i class="fa fa-sitemap" aria-hidden="true"></i>';
    }
 }

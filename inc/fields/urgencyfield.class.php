@@ -200,8 +200,6 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-urgency-field.png" title="" />';
+      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
    }
 }

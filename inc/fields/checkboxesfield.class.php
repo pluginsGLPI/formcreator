@@ -309,8 +309,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-checkboxes-field.png" title="" />';
+      return '<i class="fa fa-check-square" aria-hidden="true"></i>';
    }
 }

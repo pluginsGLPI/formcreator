@@ -142,8 +142,6 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-date-field.png" title="" />';
+      return '<i class="fa fa-calendar" aria-hidden="true"></i>';
    }
 }

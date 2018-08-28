@@ -134,8 +134,6 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
    }
 
    public function getHtmlIcon() {
-      global $CFG_GLPI;
-
-      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-hostname-field.png" title="" />';
+      return '<i class="fa fa-desktop" aria-hidden="true"></i>';
    }
 }

@@ -192,7 +192,9 @@ PluginFormcreatorDuplicatableInterface
          $i = 0;
          foreach ($found_questions as $question) {
             $fieldType = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
-            $field = new $fieldType($question);
+            $questionInstance = new PluginFormcreatorQuestion();
+            $questionInstance->getFromDB($question['id']);
+            $field = new $fieldType($questionInstance);
             $i++;
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
             echo '<td onclick="plugin_formcreator_editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
