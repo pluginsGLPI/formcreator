@@ -89,9 +89,6 @@ class PluginFormcreatorInstall {
             require_once(__DIR__ . '/update_2.6.2_2.6.3.php');
             plugin_formcreator_update_2_6_3($this->migration);
 
-            require_once(__DIR__ . '/update_2.6.3_2.6.4.php');
-            plugin_formcreator_update_2_6_4($this->migration);
-
          case 2.7:
          case PLUGIN_FORMCREATOR_SCHEMA_VERSION:
             //Any schema version below or equal to 2.7
