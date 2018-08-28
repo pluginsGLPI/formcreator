@@ -787,29 +787,22 @@ EOS;
       $sectionsIdString = implode(', ', array_keys($sections));
 
       if (count($sections) > 0) {
-         $query_questions = "SELECT `questions`.*, `answers`.`answer`
-                             FROM `glpi_plugin_formcreator_questions` AS questions
-                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
-                               ON `answers`.`plugin_formcreator_questions_id` = `questions`.`id`
-                               AND `plugin_formcreator_forms_answers_id` = ".$formanswer->getID()."
-                             WHERE `questions`.`plugin_formcreator_sections_id` IN ($sectionsIdString)
-                             ORDER BY `questions`.`order` ASC";
-         $res_questions = $DB->query($query_questions);
-         while ($question_line = $DB->fetch_assoc($res_questions)) {
-            $question = new PluginFormcreatorQuestion();
-            $question->getFromDB($question_line['id']);
-            $fieldObject = PluginFormcreatorFields::getFieldInstance($question_line['fieldtype'], $question, $question_line['answer']);
+         $formFk = PluginFormcreatorForm::getForeignKeyField();
+         $questions = (new PluginFormcreatorQuestion())
+            ->getQuestionsFromForm($formanswer->getField($formFk));
+         foreach ($questions as $questionId => $question) {
+            $answer = $answers_values['formcreator_field_' . $questionId];
+            $fieldObject = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question, $answer);
 
-            $id = $question_line['id'];
-            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
+            if (!PluginFormcreatorFields::isVisible($questionId, $answers_values)) {
                $name = '';
                $value = '';
             } else {
-               $name  = $question_line['name'];
+               $name  = $question->getField('name');
                $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
 
-            if ($question_line['fieldtype'] !== 'file') {
+            if ($question->getField('fieldtype') !== 'file') {
                if (is_array($value)) {
                   if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                      $value = '<br />' . implode('<br />', $value);
@@ -817,22 +810,22 @@ EOS;
                      $value = "\r\n" . implode("\r\n", $value);
                   }
                }
-               $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
-               $content = str_replace('##answer_' . $id . '##', $value, $content);
+               $content = str_replace('##question_' . $questionId . '##', addslashes($name), $content);
+               $content = str_replace('##answer_' . $questionId . '##', $value, $content);
             } else {
-               if (strpos($content, '##answer_' . $id . '##') !== false) {
-                  $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
+               if (strpos($content, '##answer_' . $questionId . '##') !== false) {
+                  $content = str_replace('##question_' . $questionId . '##', addslashes($name), $content);
                   if (!is_array($value)) {
                      $value = [$value];
                   }
                   if (count($value)) {
-                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+                     $content = str_replace('##answer_' . $questionId . '##', __('Attached document', 'formcreator'), $content);
                      // keep the ID of the document
                      foreach ($value as $documentId) {
                         $this->attachedDocuments[$documentId] = true;
                      }
                   } else {
-                     $content = str_replace('##answer_' . $id . '##', '', $content);
+                     $content = str_replace('##answer_' . $questionId . '##', '', $content);
                   }
                }
             }

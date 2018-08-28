@@ -37,7 +37,7 @@ extends PluginFormcreatorQuestionParameter
    public function getParameterForm(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question) {
       // get questions of type text in the form
       $eligibleQuestions = [];
-      $criteria = "`fieldtype` IN ('" . implode("', '", $this->fieldtype) . "')";
+      $criteria = ['fieldtype' => $this->fieldtype];
       foreach ($question->getQuestionsFromForm($form->getID(), $criteria) as $item) {
          $eligibleQuestions[$item->getID()] = $item->getField('name');
       }
