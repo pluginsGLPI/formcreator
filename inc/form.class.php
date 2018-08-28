@@ -951,7 +951,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          foreach ($questions as $question_line) {
             if (isset($data['formcreator_field_' . $question_line['id']])) {
                // multiple choice question are saved as JSON and needs to be decoded
-               $answer = (in_array($question_line['fieldtype'], ['checkboxes', 'multiselect']))
+               $answer = (in_array($question_line['fieldtype'], ['multiselect']))
                        ? json_decode($data['formcreator_field_' . $question_line['id']])
                        : $data['formcreator_field_' . $question_line['id']];
             } else {
