@@ -1530,25 +1530,43 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    /**
     * return array of question objects belonging to a form
     * @param integer $formId
+    * @param array $crit array for the WHERE clause
     * @return PluginFormcreatorQuestion[]
     */
-   public function getQuestionsFromForm($formId, $crit = '') {
+   public function getQuestionsFromForm($formId, $crit = []) {
       global $DB;
 
-      $questions = [];
-      if ($crit === '') {
-         $crit = '1';
-      }
       $dbUtil = new DbUtils();
-      $table_question = $dbUtil->getTableForItemtype('PluginFormcreatorQuestion');
-      $table_section  = $dbUtil->getTableForItemtype('PluginFormcreatorSection');
-      $result = $DB->query("SELECT `q`.*
-                            FROM $table_question `q`
-                            LEFT JOIN $table_section `s` ON `q`.`plugin_formcreator_sections_id` = `s`.`id`
-                            WHERE `s`.`plugin_formcreator_forms_id` = '$formId' AND $crit
-                            ORDER BY `s`.`order`, `q`.`order`"
-      );
-      while ($row = $DB->fetch_assoc($result)) {
+      $table_question = PluginFormcreatorQuestion::getTable();
+      $table_section  = PluginFormcreatorSection::getTable();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $request = [
+         'SELECT' => "$table_question.*",
+         'FROM' => $table_question,
+         'LEFT JOIN' => [
+            $table_section => [
+               'FKEY' => [
+                  $table_question => $sectionFk,
+                  $table_section => 'id',
+               ],
+            ],
+         ],
+         'WHERE' => [
+            $formFk => $formId,
+         ],
+         'ORDER' => [
+            "$table_section.order",
+            "$table_question.order",
+         ]
+      ];
+      if (count($crit) > 0) {
+         $request['WHERE']['AND'] = $crit;
+      }
+
+      $result = $DB->request($request);
+      $questions = [];
+      while ($row = $result->next()) {
          $question = new self();
          $question->getFromDB($row['id']);
          $questions[$row['id']] = $question;
