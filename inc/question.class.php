@@ -117,8 +117,15 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return null                     Nothing, just display the list
     */
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-      global $CFG_GLPI;
+      switch (get_class($item)) {
+         case PluginFormcreatorForm::class:
+            static::showForForm($item, $withtemplate);
+            break;
+      }
+   }
 
+   public static function showForForm(CommonDBTM $item, $withtemplate = '') {
+      global $CFG_GLPI;
       // TODO: move the content of this method into a new showForForm() method
       echo '<table class="tab_cadre_fixe">';
 
