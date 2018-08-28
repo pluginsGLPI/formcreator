@@ -69,8 +69,8 @@ class PluginFormcreatorFields
       foreach (glob(dirname(__FILE__).'/fields/*field.class.php') as $class_file) {
          $matches = null;
          preg_match("#fields/(.+)field\.class.php$#", $class_file, $matches);
-         $classname = 'PluginFormcreator' . ucfirst($matches[1]) . 'Field';
-         if (class_exists($classname)) {
+         $classname = self::getFieldClassname($matches[1]);
+         if (self::fieldTypeExists($matches[1])) {
             $classes[strtolower($matches[1])] = $classname;
          }
       }
@@ -92,8 +92,8 @@ class PluginFormcreatorFields
 
       // Get localized names of field types
       foreach (PluginFormcreatorFields::getClasses() as $field_type => $classname) {
-         $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
-         if ($classname == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
+         $classname = self::getFieldClassname($field_type);
+         if ($classname == PluginFormcreatorTagField::class && !$plugin->isActivated('tag')) {
             continue;
          }
 
@@ -112,8 +112,7 @@ class PluginFormcreatorFields
 
       // Get field types preference for JS
       foreach (array_keys($tab_field_types) as $field_type) {
-         $classname = 'PluginFormcreator' . ucfirst($field_type) . 'Field';
-
+         $classname = PluginFormcreatorFields::getFieldClassname($field_type);
          if (method_exists($classname, 'getJSFields')) {
             $tabFieldsForJS .= PHP_EOL.'            '.$classname::getJSFields();
          }

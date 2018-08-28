@@ -80,8 +80,7 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       // get a built instance of the parameter
       $question = new PluginFormcreatorquestion();
       $question->getFromDB($questions_id);
-      $fieldType = 'PluginFormcreator' . ucfirst($question->fields['fieldtype']) . 'Field';
-      $field = new $fieldType($question->fields);
+      $field = PluginFormcreatorFields::getFieldIntance($question->getField('fieldtype'), $question);
       $parameters = $field->getUsedParameters();
       $item = $parameters[$fieldName];
       $found = $item->getFromDBByCrit([
