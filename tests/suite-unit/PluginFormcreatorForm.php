@@ -108,20 +108,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       }
    }
 
-   /**
-    * @dataProvider formProvider
-    */
-   public function testPurgeForm($formData) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($formData);
-      $this->boolean($form->isNewItem())->isFalse();
-
-      $success = $form->delete([
-         'id'              => $form->getID(),
-      ], 1);
-      $this->boolean($success)->isTrue();
-   }
-
    public function testCreateValidationNotification() {
       \Config::setConfigurationValues(
          'core',
