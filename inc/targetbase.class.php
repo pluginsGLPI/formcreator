@@ -810,7 +810,7 @@ EOS;
                $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
             if (is_array($value)) {
-               if ($CFG_GLPI['use_rich_text']) {
+               if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                   $value = '<br />' . implode('<br />', $value);
                } else {
                   $value = "\r\n" . implode("\r\n", $value);

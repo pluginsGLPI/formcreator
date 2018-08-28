@@ -138,7 +138,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
             $value[] = addslashes($input);
          }
       }
-      if ($CFG_GLPI['use_rich_text']) {
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
          $value = '<br />' . implode('<br />', $value);
       } else {
          $value = '\r\n' . implode('\r\n', $value);
