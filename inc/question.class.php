@@ -191,11 +191,13 @@ PluginFormcreatorDuplicatableInterface
          $question_number   = count($found_questions);
          $i = 0;
          foreach ($found_questions as $question) {
+            $fieldType = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
+            $field = new $fieldType($question);
             $i++;
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
             echo '<td onclick="plugin_formcreator_editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
             echo "<a href='#'>";
-            echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-' . $question['fieldtype'] . '-field.png" title="" /> ';
+            echo $field->getHtmlIcon();
             echo $question['name'];
             echo "<a>";
             echo '</td>';

@@ -215,4 +215,10 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-file-field.png" title="" />';
+   }
 }
