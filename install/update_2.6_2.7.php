@@ -88,4 +88,24 @@ function plugin_formcreator_update_2_7(Migration $migration) {
       $id = $row['id'];
       $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
    }
+
+   // Add properties for dropdown of ticket categories
+   $request = [
+      'FROM'   => 'glpi_plugin_formcreator_questions',
+      'WHERE'  => [
+         'fieldtype' => 'dropdown'
+      ],
+   ];
+   foreach ($DB->request($request) as $row) {
+      $values = json_decode($row['values'], true);
+      if (!isset($values['show_ticket_categories'])) {
+         $values['show_ticket_categories'] = 'both';
+      }
+      if (!isset($values['show_ticket_categories_depth'])) {
+         $values['show_ticket_categories_depth'] = '0';
+      }
+      $id = $row['id'];
+      $values = json_encode($values);
+      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values`='$values' WHERE `id` = '$id'");
+   }
 }

@@ -961,7 +961,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       ];
       dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
          'rand'  => $rand,
-         'value' => $decodedValues['show_ticket_categories']
+         'value' => isset($decodedValues['show_ticket_categories'])
+                    ? $decodedValues['show_ticket_categories']
+                    : 'both'
       ]);
       echo '</td>';
       echo '<td>';
@@ -972,7 +974,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<td>';
       dropdown::showNumber('show_ticket_categories_depth', [
                            'rand'  => $rand,
-                           'value' => $decodedValues['show_ticket_categories_depth'],
+                           'value' => isset($decodedValues['show_ticket_categories_depth'])
+                                      ? $decodedValues['show_ticket_categories_depth']
+                                      : 0,
                            'min' => 1,
                            'max' => 16,
                            'toadd' => [0 => __('No limit', 'formcreator')],
