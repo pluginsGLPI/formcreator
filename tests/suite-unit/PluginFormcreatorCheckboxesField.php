@@ -3,7 +3,7 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorCheckboxesField extends CommonTestCase {
-   public function provider() {
+   public function providerGetAvailableValues() {
       $dataset = [
          [
             'fields'          => [
@@ -143,7 +143,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    /**
-    * @dataProvider provider
+    * @dataProvider providerGetAvailableValues
     */
    public function testGetAvailableValues($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorCheckboxesField($fields, $data);
@@ -158,8 +158,12 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       }
    }
 
+   public function providerGetValue() {
+      return $this->providerGetAvailableValues();
+   }
+
    /**
-    * @dataProvider provider
+    * @dataProvider providerGetValue
     */
    public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorCheckboxesField($fields, $data);
@@ -171,8 +175,12 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       }
    }
 
+   public function providerIsValid() {
+      return $this->providerGetAvailableValues();
+   }
+
    /**
-    * @dataProvider provider
+    * @dataProvider providerIsValid
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
@@ -201,7 +209,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
          'range_min'       => 3,
          'range_max'       => 4,
       ];
-      $fieldInstance = new \PluginFormcreatorCheckboxesField($fields);
+      $fieldInstance = $this->newTestedInstance($fields);
 
       // Test a value is mandatory
       $input = [
@@ -228,5 +236,18 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->string($out['values'])->isEqualTo('something\r\nsomething else');
       $this->string($out['default_values'])->isEqualTo("something");
+   }
+
+   /**
+    * @engine inline
+    */
+   public function testGetUsedParameters() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->getUsedParameters();
+      $this->array($output)
+         ->hasKey('range')
+         ->array($output)->size->isEqualTo(1);
+      $this->object($output['range'])
+         ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
    }
 }
