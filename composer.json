@@ -22,7 +22,7 @@
         "atoum/atoum": "^3.3",
         "atoum/stubs": "^2.5",
         "glpi-project/tools": "^0.1.0",
-        "glpi-project/coding-standard": "0.5.0"
+        "glpi-project/coding-standard": "0.7.1"
     },
     "autoload-dev": {
         "psr-4": {

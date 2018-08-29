@@ -264,7 +264,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param  Array  $options Options (optional)
     * @return Mixed           Value to be displayed
     */
-   public static function getSpecificValueToDisplay($field, $values, array $options=[]) {
+   public static function getSpecificValueToDisplay($field, $values, array $options = []) {
       global $CFG_GLPI;
 
       if (!is_array($values)) {
@@ -292,7 +292,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return String                 Html string to be displayed for the form field
     */
-   public static function getSpecificValueToSelect($field, $name='', $values='', array $options = []) {
+   public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
       if (!is_array($values)) {
          $values = [$field => $values];
       }
@@ -322,7 +322,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
          self::showForForm($item);
       } else {
@@ -350,7 +350,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
          $dbUtils = new DbUtils();
          $number = $dbUtils->countElementsInTableForMyEntities(

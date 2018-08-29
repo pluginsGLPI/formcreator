@@ -48,7 +48,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       $LOADED_PLUGINS = null;
       $PLUGINS_INCLUDED = null;
       $AJAX_INCLUDE = null;
-      $_SESSION = array();
+      $_SESSION = [];
       if (is_readable(GLPI_ROOT . "/config/config.php")) {
          $configFile = "/config/config.php";
       } else {
