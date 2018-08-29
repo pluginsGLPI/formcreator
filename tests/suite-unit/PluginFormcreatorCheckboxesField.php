@@ -190,7 +190,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    public function testPrepareInputForSave() {
-      $fields = array(
+      $fields = [
          'fieldtype'       => 'checkboxes',
          'name'            => 'question',
          'required'        => '0',
@@ -200,7 +200,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
          'show_rule'       => 'always',
          'range_min'       => 3,
          'range_max'       => 4,
-      );
+      ];
       $fieldInstance = new \PluginFormcreatorCheckboxesField($fields);
 
       // Test a value is mandatory

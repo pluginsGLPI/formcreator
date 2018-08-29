@@ -4,7 +4,7 @@ use atoum;
 
 class CommonDBTestCase extends atoum {
 
-   protected function drop_database($dbuser='', $dbhost='', $dbdefault='', $dbpassword='') {
+   protected function drop_database($dbuser = '', $dbhost = '', $dbdefault = '', $dbpassword = '') {
 
       $cmd = $this->construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysql');
 
@@ -15,26 +15,26 @@ class CommonDBTestCase extends atoum {
       $cmd = 'echo "DROP DATABASE IF EXISTS \`'.$dbdefault .'\`; CREATE DATABASE \`'.$dbdefault.'\`" | ' . $cmd ." 2>&1";
 
       $returncode = 0;
-      $output = array();
+      $output = [];
       exec(
          $cmd,
          $output,
          $returncode
       );
       array_unshift($output, "Output of '{$cmd}'");
-      return array(
+      return [
          'returncode'   => $returncode,
          'output'       => $output
-      );
+      ];
    }
 
-   protected function load_mysql_file($dbuser='', $dbhost='', $dbdefault='', $dbpassword='', $file = NULL) {
+   protected function load_mysql_file($dbuser = '', $dbhost = '', $dbdefault = '', $dbpassword = '', $file = null) {
 
       if (!file_exists($file)) {
-         return array(
+         return [
             'returncode' => 1,
-            'output' => array("ERROR: File '$file' does not exist !")
-         );
+            'output' => ["ERROR: File '$file' does not exist !"]
+         ];
       }
 
       $result = $this->construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysql');
@@ -46,31 +46,31 @@ class CommonDBTestCase extends atoum {
       $cmd = $result . " " . $dbdefault . " < ". $file ." 2>&1";
 
       $returncode = 0;
-      $output = array();
+      $output = [];
       exec(
             $cmd,
             $output,
             $returncode
             );
       array_unshift($output, "Output of '$cmd'");
-      return array(
+      return [
          'returncode'   => $returncode,
          'output'       => $output
-      );
+      ];
    }
 
-   protected function construct_mysql_options($dbuser='', $dbhost='', $dbpassword='', $cmd_base='mysql') {
-      $cmd = array();
+   protected function construct_mysql_options($dbuser = '', $dbhost = '', $dbpassword = '', $cmd_base = 'mysql') {
+      $cmd = [];
 
       if (empty($dbuser) || empty($dbhost)) {
-         return array(
+         return [
             'returncode' => 2,
-            'output' => array("ERROR: missing mysql parameters (user='{$dbuser}', host='{$dbhost}')")
-         );
+            'output' => ["ERROR: missing mysql parameters (user='{$dbuser}', host='{$dbhost}')"]
+         ];
       }
-      $cmd = array($cmd_base);
+      $cmd = [$cmd_base];
 
-      if (strpos($dbhost, ':') !== FALSE) {
+      if (strpos($dbhost, ':') !== false) {
          $dbhost = explode( ':', $dbhost);
          if (!empty($dbhost[0])) {
             $cmd[] = "--host ".$dbhost[0];
@@ -94,19 +94,19 @@ class CommonDBTestCase extends atoum {
       return implode(' ', $cmd);
    }
 
-   protected function mysql_dump($dbuser = '', $dbhost = '', $dbpassword = '', $dbdefault = '', $file = NULL) {
+   protected function mysql_dump($dbuser = '', $dbhost = '', $dbpassword = '', $dbdefault = '', $file = null) {
       if (is_null($file) or empty($file)) {
-         return array(
+         return [
             'returncode' => 1,
-            'output' => array("ERROR: mysql_dump()'s file argument must neither be null nor empty")
-         );
+            'output' => ["ERROR: mysql_dump()'s file argument must neither be null nor empty"]
+         ];
       }
 
       if (empty($dbdefault)) {
-         return array(
+         return [
             'returncode' => 2,
-            'output' => array("ERROR: mysql_dump() is missing dbdefault argument.")
-         );
+            'output' => ["ERROR: mysql_dump() is missing dbdefault argument."]
+         ];
       }
 
       $result = self::construct_mysql_options($dbuser, $dbhost, $dbpassword, 'mysqldump');
@@ -116,17 +116,17 @@ class CommonDBTestCase extends atoum {
 
       $cmd = $result . ' --opt '. $dbdefault.' > ' . $file;
       $returncode = 0;
-      $output = array();
+      $output = [];
       exec(
             $cmd,
             $output,
             $returncode
             );
       array_unshift($output, "Output of '{$cmd}'");
-      return array(
+      return [
             'returncode'=>$returncode,
             'output' => $output
-      );
+      ];
    }
 
    /**
@@ -146,11 +146,11 @@ class CommonDBTestCase extends atoum {
       $file_content = file_get_contents($filename);
       $a_lines = explode("\n", $file_content);
 
-      $a_tables_ref = array();
+      $a_tables_ref = [];
       $current_table = '';
       foreach ($a_lines as $line) {
          if (strstr($line, "CREATE TABLE ") || strstr($line, "CREATE VIEW ")) {
-            $matches = array();
+            $matches = [];
             preg_match("/`(.*)`/", $line, $matches);
             $current_table = $matches[1];
          } else {
@@ -172,8 +172,8 @@ class CommonDBTestCase extends atoum {
       }
 
       // * Get tables from MySQL
-      $a_tables_db = array();
-      $a_tables = array();
+      $a_tables_db = [];
+      $a_tables = [];
       // SHOW TABLES;
       $query = "SHOW TABLES LIKE '$filter%'";
       $result = $DB->query($query);
@@ -193,7 +193,7 @@ class CommonDBTestCase extends atoum {
             foreach ($a_lines as $line) {
                if (strstr($line, "CREATE TABLE ")
                      OR strstr($line, "CREATE VIEW")) {
-                        $matches = array();
+                        $matches = [];
                         preg_match("/`(.*)`/", $line, $matches);
                         $current_table = $matches[1];
                } else {
@@ -212,11 +212,11 @@ class CommonDBTestCase extends atoum {
          }
       }
 
-      $a_tables_ref_tableonly = array();
+      $a_tables_ref_tableonly = [];
       foreach ($a_tables_ref as $table=>$data) {
          $a_tables_ref_tableonly[] = $table;
       }
-      $a_tables_db_tableonly = array();
+      $a_tables_db_tableonly = [];
       foreach ($a_tables_db as $table=>$data) {
          $a_tables_db_tableonly[] = $table;
       }
@@ -226,8 +226,8 @@ class CommonDBTestCase extends atoum {
       $tables_toadd = array_diff($a_tables_ref_tableonly, $a_tables_db_tableonly);
 
       // See tables missing or to delete
-      $this->integer(count($tables_toadd))->isEqualTo(0, "Tables missing $when " . print_r($tables_toadd, TRUE));
-      $this->integer(count($tables_toremove))->isEqualTo(0, "Tables to delete $when " . print_r($tables_toremove, TRUE));
+      $this->integer(count($tables_toadd))->isEqualTo(0, "Tables missing $when " . print_r($tables_toadd, true));
+      $this->integer(count($tables_toremove))->isEqualTo(0, "Tables to delete $when " . print_r($tables_toremove, true));
 
       // See if fields are same
       foreach ($a_tables_db as $table=>$data) {
@@ -235,12 +235,12 @@ class CommonDBTestCase extends atoum {
             $fields_toremove = array_diff_assoc($data, $a_tables_ref[$table]);
             $fields_toadd = array_diff_assoc($a_tables_ref[$table], $data);
             $diff = "======= DB ============== Ref =======> ".$table."\n";
-            $diff .= print_r($data, TRUE);
-            $diff .= print_r($a_tables_ref[$table], TRUE);
+            $diff .= print_r($data, true);
+            $diff .= print_r($a_tables_ref[$table], true);
 
             // See tables missing or to delete
-            $this->integer(count($fields_toadd))->isEqualTo(0, "Fields missing/not good during $when $table " . print_r($fields_toadd, TRUE)." into ".$diff);
-            $this->integer(count($fields_toremove))->isEqualTo(0, "Fields to delete during  $when $table " . print_r($fields_toremove, TRUE)." into ".$diff);
+            $this->integer(count($fields_toadd))->isEqualTo(0, "Fields missing/not good during $when $table " . print_r($fields_toadd, true)." into ".$diff);
+            $this->integer(count($fields_toremove))->isEqualTo(0, "Fields to delete during  $when $table " . print_r($fields_toremove, true)." into ".$diff);
          }
       }
    }

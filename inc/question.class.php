@@ -84,7 +84,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     *
     * @return String                   Name to be displayed
     */
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
             $number      = 0;
@@ -116,7 +116,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     *
     * @return null                     Nothing, just display the list
     */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch (get_class($item)) {
          case PluginFormcreatorForm::class:
             static::showForForm($item, $withtemplate);

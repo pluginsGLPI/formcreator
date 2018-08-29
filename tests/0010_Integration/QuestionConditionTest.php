@@ -206,10 +206,10 @@ class QuestionConditionTest extends SuperAdminTestCase
       $question->updateConditions($condition);
 
       //Run the condition
-      $currentValues = array(
+      $currentValues = [
           "formcreator_field_$firstQuestionId"  => $condition['show_value'][0] . " and now for something completely different",
           "formcreator_field_$secondQuestionId" => '',
-      );
+      ];
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
@@ -221,10 +221,10 @@ class QuestionConditionTest extends SuperAdminTestCase
       $this->assertEquals($expected, $visibility["formcreator_field_$secondQuestionId"]);
 
       // Run the reversed condition
-      $currentValues = array(
+      $currentValues = [
           "formcreator_field_$firstQuestionId"  => $condition['show_value'][0],
           "formcreator_field_$secondQuestionId" => '',
-      );
+      ];
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result
@@ -263,10 +263,10 @@ class QuestionConditionTest extends SuperAdminTestCase
       $this->assertEquals($expected, $visibility["formcreator_field_$secondQuestionId"]);
 
       // Run the reversed condition
-      $currentValues = array(
-          "formcreator_field_$firstQuestionId"  => array($condition['show_value'][0]),
+      $currentValues = [
+          "formcreator_field_$firstQuestionId"  => [$condition['show_value'][0]],
           "formcreator_field_$secondQuestionId" => '',
-      );
+      ];
       $visibility = PluginFormcreatorFields::updateVisibility($currentValues);
 
       // Check the result

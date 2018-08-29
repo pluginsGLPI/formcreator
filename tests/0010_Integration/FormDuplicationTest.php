@@ -41,20 +41,20 @@ class FormDuplicationTest extends SuperAdminTestCase
    public function setUp() {
       parent::setUp();
 
-      $this->formData = array(
+      $this->formData = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => 0
-      );
+      ];
 
-      $this->sectionData = array(
-         array(
+      $this->sectionData = [
+         [
             'name'                  => 'a section',
-            'questions'             => array (
-               array(
+            'questions'             =>  [
+               [
                   'name'                  => 'text question',
                   'fieldtype'             => 'text',
                   '_parameters'     => [
@@ -68,8 +68,8 @@ class FormDuplicationTest extends SuperAdminTestCase
                         ]
                      ]
                   ],
-               ),
-               array(
+               ],
+               [
                   'name'                  => 'other text question',
                   'fieldtype'             => 'text',
                   '_parameters'     => [
@@ -83,13 +83,13 @@ class FormDuplicationTest extends SuperAdminTestCase
                         ]
                      ]
                   ],
-               ),
-            ),
-         ),
-         array(
+               ],
+            ],
+         ],
+         [
             'name'                  => 'an other section',
-            'questions'             => array (
-               array(
+            'questions'             =>  [
+               [
                   'name'                  => 'text question',
                   'fieldtype'             => 'text',
                   '_parameters'     => [
@@ -103,8 +103,8 @@ class FormDuplicationTest extends SuperAdminTestCase
                         ]
                      ]
                   ],
-               ),
-               array(
+               ],
+               [
                   'name'                  => 'other text question',
                   'fieldtype'             => 'text',
                   'show_rule'             => 'hidden',
@@ -122,21 +122,21 @@ class FormDuplicationTest extends SuperAdminTestCase
                         ]
                      ]
                   ],
-               ),
-            ),
-         ),
-      );
+               ],
+            ],
+         ],
+      ];
 
-      $this->targetData = array(
-         array(
+      $this->targetData = [
+         [
             'name'                  => 'target ticket 1',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
-         ),
-         array(
+         ],
+         [
             'name'                  => 'target ticket 2',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
-         )
-      );
+         ]
+      ];
    }
 
    public function testInitCreateForm() {

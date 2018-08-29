@@ -41,14 +41,14 @@ class UrgencyTest extends SuperAdminTestCase
    public function setUp() {
       parent::setUp();
 
-      $this->formData = array(
+      $this->formData = [
             'entities_id'           => $_SESSION['glpiactive_entity'],
             'name'                  => 'a form',
             'description'           => 'form description',
             'content'               => 'a content',
             'is_active'             => 1,
             'validation_required'   => 0
-      );
+      ];
 
       $this->sectionData = [
          [
@@ -194,17 +194,17 @@ class UrgencyTest extends SuperAdminTestCase
             }
             $this->assertFalse($question->isNewItem());
             $questionId = $question->getID();
-            $urgencyQuestions[] = array(
+            $urgencyQuestions[] = [
                   'question'     => $question,
                   'targetTicket' => $targetTicket,
                   'expected'     => $targetData['expected']
-            );
+            ];
          } else {
-            $urgencyQuestions[] = array(
+            $urgencyQuestions[] = [
                   'question'     => null,
                   'targetTicket' => $targetTicket,
                   'expected'     => $targetData['expected']
-            );
+            ];
          }
 
          // Update target ticket
