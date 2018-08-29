@@ -243,6 +243,7 @@ function plugin_formcreator_update_2_7(Migration $migration) {
             $volume = 1;
          }
       }
+   }
 
    // decode html entities in question definitions
    $request = [
