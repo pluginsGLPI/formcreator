@@ -243,5 +243,4 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          ),
       ];
    }
-
 }
