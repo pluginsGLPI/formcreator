@@ -47,17 +47,17 @@ class PluginFormcreatorSection extends CommonTestCase {
       $question  = new \PluginFormcreatorQuestion;
 
       // create objects
-      $forms_id = $form->add(array('name'                => "test clone form",
+      $forms_id = $form->add(['name'                => "test clone form",
                                    'is_active'           => true,
-                                   'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER));
-      $sections_id = $section->add(array('name'                        => "test clone section",
-                                         'plugin_formcreator_forms_id' => $forms_id));
-      $questions_id_1 = $question->add(array('name'                           => "test clone question 1",
+                                   'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
+      $sections_id = $section->add(['name'                        => "test clone section",
+                                         'plugin_formcreator_forms_id' => $forms_id]);
+      $questions_id_1 = $question->add(['name'                           => "test clone question 1",
                                              'fieldtype'                      => 'text',
-                                             'plugin_formcreator_sections_id' => $sections_id));
-      $questions_id_2 = $question->add(array('name'                           => "test clone question 2",
+                                             'plugin_formcreator_sections_id' => $sections_id]);
+      $questions_id_2 = $question->add(['name'                           => "test clone question 2",
                                              'fieldtype'                      => 'textarea',
-                                             'plugin_formcreator_sections_id' => $sections_id));
+                                             'plugin_formcreator_sections_id' => $sections_id]);
 
       //get section
       plugin_formcreator_getFromDBByField($section, 'name', "test clone section");

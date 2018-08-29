@@ -46,205 +46,205 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
    }
 
    public function answersProvider() {
-      return array(
-         'no condition' => array(
+      return [
+         'no condition' => [
             'always',
-            array(
-               'show_logic' => array(
-               ),
-               'show_field'   => array(
-               ),
-               'show_condition'  => array(
-               ),
-               'show_value' => array(
-               ),
-            ),
+            [
+               'show_logic' => [
+               ],
+               'show_field'   => [
+               ],
+               'show_condition'  => [
+               ],
+               'show_value' => [
+               ],
+            ],
             [],
             true,
-         ),
-         'simple condition' => array(
+         ],
+         'simple condition' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                      'OR',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                      0,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                      '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                      'foo',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                   0 => 'foo',
-            ),
+            ],
             true,
-         ),
-         'failed condition' => array(
+         ],
+         'failed condition' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                      'OR',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                      0,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                      '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                      'bar',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                   0 => 'foo',
-            ),
+            ],
             false,
-         ),
-         'multiple condition OR' => array(
+         ],
+         'multiple condition OR' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                   'OR',
                   'OR',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                   0,
                   1,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                   '==',
                   '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                   'val1',
                   'val2',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                0 => 'val1',
                1 => 'val2',
-            ),
+            ],
             true,
-         ),
-         'failed multiple condition OR' => array(
+         ],
+         'failed multiple condition OR' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                   'OR',
                   'OR',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                   0,
                   1,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                   '==',
                   '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                   'val1',
                   'val2',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                0 => 'val1',
                1 => 'not val2',
-            ),
+            ],
             true,
-         ),
-         'multiple condition AND' => array(
+         ],
+         'multiple condition AND' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                   'OR',
                   'AND',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                   0,
                   1,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                   '==',
                   '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                   'val1',
                   'val2',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                0 => 'val1',
                1 => 'val2',
-            ),
+            ],
             true,
-         ),
-         'failed multiple condition AND' => array(
+         ],
+         'failed multiple condition AND' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                   'OR',
                   'AND',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                   0,
                   1,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                   '==',
                   '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                   'val1',
                   'val2',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                0 => 'val1',
                1 => 'not val2',
-            ),
+            ],
             false,
-         ),
-         'operator priority' => array(
+         ],
+         'operator priority' => [
             'hidden',
-            array(
-               'show_logic' => array(
+            [
+               'show_logic' => [
                   'OR',
                   'AND',
                   'OR',
                   'AND',
-               ),
-               'show_field'   => array(
+               ],
+               'show_field'   => [
                   0,
                   1,
                   2,
                   3,
-               ),
-               'show_condition'  => array(
+               ],
+               'show_condition'  => [
                   '==',
                   '==',
                   '==',
                   '==',
-               ),
-               'show_value' => array(
+               ],
+               'show_value' => [
                   'val1',
                   'val2',
                   'val3',
                   'val4',
-               ),
-            ),
-            array(
+               ],
+            ],
+            [
                0 => 'val1',
                1 => 'val2',
                2 => 'val8',
                3 => 'val9',
-            ),
+            ],
             true,
-         ),
-      );
+         ],
+      ];
    }
 
    /**
