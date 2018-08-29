@@ -12,7 +12,7 @@ class PluginFormcreatorDateField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
-               'values'          => "2018-08-16",
+               'values'          => "",
                'order'           => '1',
                'show_rule'       => 'always',
                '_parameters'     => [
@@ -33,7 +33,7 @@ class PluginFormcreatorDateField extends CommonTestCase {
                'fieldtype'       => 'date',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '',
+               'default_values'  => '2018-08-16',
                'values'          => "",
                'order'           => '1',
                'show_rule'       => 'always',
@@ -47,7 +47,7 @@ class PluginFormcreatorDateField extends CommonTestCase {
                ],
             ],
             'data'            => null,
-            'expectedValue'   => '',
+            'expectedValue'   => '2018-08-16',
             'expectedIsValid' => true
          ],
          [
@@ -109,10 +109,6 @@ class PluginFormcreatorDateField extends CommonTestCase {
       $this->variable($value)->isEqualTo($expectedValue);
    }
 
-   public function providerIsValid() {
-      return $this->providerGetValue();
-   }
-
    public function providerGetAnswer() {
       return $this->providerGetValue();
    }
@@ -126,6 +122,10 @@ class PluginFormcreatorDateField extends CommonTestCase {
       $expected = \Html::convDate($fields['default_values']);
       $output = $instance->getAnswer();
       $this->variable($output)->isEqualTo($expected);
+   }
+
+   public function providerIsValid() {
+      return $this->providerGetValue();
    }
 
    /**
