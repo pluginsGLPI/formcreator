@@ -810,11 +810,13 @@ EOS;
                $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
             }
 
-            if (is_array($value) && $question_line['fieldtype'] !== 'file') {
-               if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-                  $value = '<br />' . implode('<br />', $value);
-               } else {
-                  $value = "\r\n" . implode("\r\n", $value);
+            if ($question_line['fieldtype'] !== 'file') {
+               if (is_array($value)) {
+                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+                     $value = '<br />' . implode('<br />', $value);
+                  } else {
+                     $value = "\r\n" . implode("\r\n", $value);
+                  }
                }
                $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
                $content = str_replace('##answer_' . $id . '##', $value, $content);
