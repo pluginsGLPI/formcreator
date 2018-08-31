@@ -33,6 +33,11 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorCheckboxesField extends CommonTestCase {
+   public function testGetName() {
+      $output = \PluginFormcreatorCheckboxesField::getName();
+      $this->string($output)->isEqualTo('Checkboxes');
+   }
+
    public function providerGetAvailableValues() {
       $dataset = [
          [
@@ -227,7 +232,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
-   public function testPrepareInputForSave() {
+   public function testPrepareQuestionInputForSave() {
       $fields = [
          'fieldtype'       => 'checkboxes',
          'name'            => 'question',
