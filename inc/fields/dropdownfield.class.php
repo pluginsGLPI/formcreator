@@ -133,15 +133,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function prepareQuestionInputForTarget($input) {
       $DbUtil = new DbUtils();
-      if ($this->fields['values'] == User::class) {
-         $value = $DbUtil->getUserName($input);
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      if (!isset($decodedValues['itemtype'])) {
+         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $input);
       } else {
-         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-         if (!isset($decodedValues['itemtype'])) {
-            $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $input);
-         } else {
-            $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $input);
-         }
+         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $input);
       }
 
       return addslashes($value);
