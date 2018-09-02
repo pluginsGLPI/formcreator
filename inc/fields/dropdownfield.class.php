@@ -116,19 +116,21 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
    }
 
+   public function getValue() {
+      if (isset($this->fields['answer'])) {
+         return $this->fields['answer'];
+      }
+      if (!empty($this->fields['default_values'])) {
+         return $this->fields['default_values'];
+      }
+      return 0;
+   }
+
    public function getAnswer() {
       $value = $this->getValue();
       $DbUtil = new DbUtils();
-      if ($this->fields['values'] == 'User') {
-         return $DbUtil->getUserName($value);
-      } else {
-         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-         if (!isset($decodedValues['itemtype'])) {
-            return Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $value);
-         } else {
-            return Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $value);
-         }
-      }
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      return Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $value);
    }
 
    public function prepareQuestionInputForTarget($input) {
@@ -157,6 +159,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             return [];
          }
          $allowedDropdownValues = [];
+         $stdtypes = Dropdown::getStandardDropdownItemTypes();
          foreach (Dropdown::getStandardDropdownItemTypes() as $categoryOfTypes) {
             $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
          }
@@ -170,7 +173,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $input['values'] = [
             'itemtype' => $input['dropdown_values'],
          ];
-         if ($input['dropdown_values'] == 'ITILCategory') {
+         if ($input['dropdown_values'] == ITILCategory::class) {
             $input['values']['show_ticket_categories'] = $input['show_ticket_categories'];
             if ($input['show_ticket_categories_depth'] != (int) $input['show_ticket_categories_depth']) {
                $input['values']['show_ticket_categories_depth'] = 0;
