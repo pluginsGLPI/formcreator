@@ -122,15 +122,17 @@ function plugin_formcreator_update_2_7(Migration $migration) {
    ];
    foreach ($DB->request($request) as $row) {
       $values = json_decode($row['values'], true);
-      if (!isset($values['show_ticket_categories'])) {
-         $values['show_ticket_categories'] = 'both';
+      if ($values['itemtype'] === ITILCategory::class) {
+         if (!isset($values['show_ticket_categories'])) {
+            $values['show_ticket_categories'] = 'both';
+         }
+         if (!isset($values['show_ticket_categories_depth'])) {
+            $values['show_ticket_categories_depth'] = '0';
+         }
+         $id = $row['id'];
+         $values = json_encode($values);
+         $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values`='$values' WHERE `id` = '$id'");
       }
-      if (!isset($values['show_ticket_categories_depth'])) {
-         $values['show_ticket_categories_depth'] = '0';
-      }
-      $id = $row['id'];
-      $values = json_encode($values);
-      $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values`='$values' WHERE `id` = '$id'");
    }
 
    // multiple files upload per field
