@@ -199,4 +199,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $this->object($output['regex'])
          ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
    }
+
+   public function testGetName() {
+      $output = \PluginFormcreatorTextField::getName();
+      $this->string($output)->isEqualTo('Text');
+   }
 }
