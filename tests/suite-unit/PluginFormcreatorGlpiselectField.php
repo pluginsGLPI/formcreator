@@ -78,7 +78,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
+            'data'            => $user->getID(),
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
             'expectedIsValid' => true
          ],
@@ -86,7 +86,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
             'fields'          => [
                'fieldtype'       => 'dropdown',
                'name'            => 'question',
-               'required'        => '0',
+               'required'        => '1',
                'default_values'  => '',
                'values'          => \User::class,
                'order'           => '1',
@@ -101,15 +101,15 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
+            'data'            => '0',
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedIsValid' => false
          ],
          [
             'fields'          => [
                'fieldtype'       => 'dropdown',
                'name'            => 'question',
-               'required'        => '0',
+               'required'        => '1',
                'default_values'  => $user->getID(),
                'values'          => \User::class,
                'order'           => '1',
@@ -124,7 +124,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
+            'data'            => $user->getID(),
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
             'expectedIsValid' => true
          ],
@@ -254,8 +254,20 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
     */
    public function testGetAnswer($fields, $data, $expectedValue, $expectedValidity) {
       $instance = $this->newTestedInstance($fields, $data);
-
       $output = $instance->getAnswer();
       $this->variable($output)->isEqualTo($expectedValue);
+   }
+
+   public function ptroviderIsValid() {
+      return $this->providerGetAnswer();
+   }
+
+   /**
+    * @dataProvider ptroviderIsValid
+    */
+   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
+      $instance = $this->newTestedInstance($fields, $data);
+      $output = $instance->isValid($data);
+      $this->boolean($output)->isEqualTo($expectedValidity);
    }
 }
