@@ -33,7 +33,7 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorRadiosField extends CommonTestCase {
-   public function testPrepareInputForSave() {
+   public function testPrepareQuestionInputForSave() {
       $fields = [
          'fieldtype'       => 'radios',
          'name'            => 'question',
@@ -73,4 +73,10 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
       $this->string($out['values'])->isEqualTo('something\r\nsomething else');
       $this->string($out['default_values'])->isEqualTo("something");
    }
+
+   public function testGetName() {
+      $output = \PluginFormcreatorRadiosField::getName();
+      $this->string($output)->isEqualTo('Radios');
+   }
+
 }
