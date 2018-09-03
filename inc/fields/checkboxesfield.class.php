@@ -150,6 +150,14 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return __('Checkboxes', 'formcreator');
    }
 
+   public function setInitialValue($value) {
+      $value = json_encode($value);
+      echo Html::scriptBlock('$(function() {
+         formcreatorAddValueOf(' . $this->fields['id'] . ', '
+            . $value . ');
+      })');
+   }
+
    public function getValue() {
       if (isset($this->fields['answer'])) {
          if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
