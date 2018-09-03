@@ -153,4 +153,9 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
+
+   public function testGetName() {
+      $output = \PluginFormcreatorSelectField::getName();
+      $this->string($output)->isEqualTo('Select');
+   }
 }
