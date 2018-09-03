@@ -41,7 +41,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
 
    public function testIsValid() {
       $instance = new \PluginFormcreatorHiddenField([]);
-      $output = $instance->isValid();
+      $output = $instance->isValid('');
       $this->boolean($output)->isTrue();
    }
 }
