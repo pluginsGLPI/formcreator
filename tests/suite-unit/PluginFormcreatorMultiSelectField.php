@@ -35,7 +35,6 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorMultiSelectField extends CommonTestCase {
 
    public function provider() {
-
       $dataset = [
          [
             'fields'          => [
@@ -160,7 +159,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldAvailableValue($fields, $data, $expectedValue, $expectedValidity) {
+   public function testGetAvailableValues($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorMultiSelectField($fields, $data);
 
       $availableValues = $fieldInstance->getAvailableValues();
@@ -188,7 +187,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
@@ -205,7 +204,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
-   public function testPrepareInputForSave() {
+   public function testPrepareQuestionInputForSave() {
       $fields = [
          'fieldtype'       => 'multiselect',
          'name'            => 'question',
@@ -257,5 +256,11 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $out = $fieldInstance->prepareQuestionInputForSave($input);
       $this->string($out['values'])->isEqualTo('something\r\nsomething else');
       $this->string($out['default_values'])->isEqualTo("something");
+   }
+
+   public function testGetName() {
+      $instance = new \PluginFormcreatorMultiSelectField([]);
+      $output = $instance->getName();
+      $this->string($output)->isEqualTo('Multiselect');
    }
 }
