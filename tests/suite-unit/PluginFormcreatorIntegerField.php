@@ -199,7 +199,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
