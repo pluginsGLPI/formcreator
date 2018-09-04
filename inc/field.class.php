@@ -54,22 +54,10 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       $this->fields['answer'] = $data;
    }
 
-   /**
-    * Transform input to properly save it in the database
-    *
-    * @param  array $input data to transform before save
-    *
-    * @return array input data to save as is
-    */
    public function prepareQuestionInputForSave($input) {
       return $input;
    }
 
-   /**
-    * Prepares an answer value for output in a target object
-    * @param  string|array $input the answer to format for a target (ticket or change)
-    * @return string
-    */
    public function prepareQuestionInputForTarget($input) {
       return Toolbox::addslashes_deep($input);
    }
