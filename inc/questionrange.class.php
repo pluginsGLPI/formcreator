@@ -76,6 +76,11 @@ extends PluginFormcreatorQuestionParameter
       return $out;
    }
 
+   public function post_getEmpty() {
+      $this->fields['range_min'] = '0';
+      $this->fields['range_max'] = '0';
+   }
+
    public function getJsShowHideSelector() {
       return "#" . $this->domId;
    }
