@@ -158,13 +158,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return explode("\r\n", $this->fields['values']);
    }
 
-   /**
-    * Is the field valid for the given value?
-    *
-    * @param string $value
-    *
-    * @return boolean True if the field has a valid value, false otherwise
-    */
    public function isValid($value) {
       // If the field is required it can't be empty
       if ($this->isRequired() && empty($value)) {
@@ -179,11 +172,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return true;
    }
 
-   /**
-    * Is the field required?
-    *
-    * @return boolean
-    */
    public function isRequired() {
       return $this->fields['required'];
    }
@@ -210,6 +198,21 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return [];
    }
 
+   public final function getParameters() {
+      $parameters = $this->getEmptyParameters();
+      foreach ($parameters as $fieldname => $parameter) {
+         $parameter->getFromDBByCrit([
+            'plugin_formcreator_questions_id'   => $this->fields['id'],
+            'fieldname'                         => $fieldname,
+         ]);
+         if ($parameter->isNewItem()) {
+            $parameter->getEmpty();
+         }
+      }
+
+      return $parameters;
+   }
+
    public final function addParameters(PluginFormcreatorQuestion $question, array $input) {
       $fieldTypeName = $this->getFieldTypeName();
       if (!isset($input['_parameters'][$fieldTypeName])) {
@@ -228,11 +231,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          return;
       }
 
-      foreach ($this->getEmptyParameters() as $fieldName => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id' => $question->getID(),
-            'fieldname' => $fieldName,
-         ]);
+      $parameters = $this->getParameters();
+      foreach ($parameters as $fieldName => $parameter) {
          $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $question->getID();
          if ($parameter->isNewItem()) {
             // In case of the parameter vanished in DB, just recreate it
