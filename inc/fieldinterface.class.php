@@ -51,6 +51,12 @@ interface PluginFormcreatorFieldInterface
     * @return array|false input data to save or false if data is rejected
     */
    public function prepareQuestionInputForSave($input);
+
+   /**
+    * Prepares an answer value for output in a target object
+    * @param  string|array $input the answer to format for a target (ticket or change)
+    * @return string
+    */
    public function prepareQuestionInputForTarget($input);
 
    /**
