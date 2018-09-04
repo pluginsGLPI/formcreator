@@ -118,7 +118,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    private function isValidValue($value) {
-      $parameters = $this->getUsedParameters();
+      $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
             'plugin_formcreator_questions_id'   => $this->fields['id'],
@@ -231,7 +231,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return "tab_fields_fields['checkboxes'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function getUsedParameters() {
+   public function getEmptyParameters() {
       return [
          'range' => new PluginFormcreatorQuestionRange(
             $this,

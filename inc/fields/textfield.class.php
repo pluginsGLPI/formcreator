@@ -49,7 +49,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    private function isValidValue($value) {
-      $parameters = $this->getUsedParameters();
+      $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
             'plugin_formcreator_questions_id'   => $this->fields['id'],
@@ -131,7 +131,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function getUsedParameters() {
+   public function getEmptyParameters() {
       $regexDoc = '<small>';
       $regexDoc.= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
       $regexDoc.= '('.__('Regular expression', 'formcreator').')';
