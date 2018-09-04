@@ -317,7 +317,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $this->field = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $this);
 
       // Check the parameters are provided
-      $parameters = $this->field->getUsedParameters();
+      $parameters = $this->field->getEmptyParameters();
       if (count($parameters) > 0) {
          if (!isset($input['_parameters'][$input['fieldtype']])) {
             // This should not happen
@@ -623,7 +623,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       $this->field = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $this);
-      $parameters = $this->field->getUsedParameters();
+      $parameters = $this->field->getEmptyParameters();
       if (isset($input['_parameters'][$this->fields['fieldtype']])) {
          foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
             // echo var_dump($parameterInput);
@@ -860,7 +860,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $showHideForFieldTypeJs.= "case '$fieldType':" . "\n";
          $field = new $classname([]);
          $evenColumnGroup = 0;
-         foreach ($field->getUsedParameters() as $parameter) {
+         foreach ($field->getEmptyParameters() as $parameter) {
             $evenColumnGroup++;
             if ($parameter->getParameterFormSize() > 0) {
                // The parameter needs a 4 columns to show its form
@@ -1343,7 +1343,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       // Form questions parameters
       $this->field = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
-      $parameters = $this->field->getUsedParameters();
+      $parameters = $this->field->getEmptyParameters();
       foreach ($parameters as $fieldName => $parameter) {
          $parameter->getFromDBByCrit([
             'plugin_formcreator_questions_id' => $oldQuestionId,
@@ -1433,7 +1433,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          }
 
          $field = PluginFormcreatorFields::getFieldInstance($question['fieldtype'], $question);
-         $parameters = $field->getUsedParameters();
+         $parameters = $field->getEmptyParameters();
          foreach ($parameters as $fieldName => $parameter) {
             $parameter->getFromDBByCrit([
                'plugin_formcreator_questions_id'   => $item->fields['id'],
@@ -1476,7 +1476,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       // get question parameters
       $question['_parameters'] = [];
       $this->field = PluginFormcreatorFields::getFieldIntance($this->getField('fieldtype'), $this);
-      $parameters = $this->field->getUsedParameters();
+      $parameters = $this->field->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
             'plugin_formcreator_questions_id'   => $this->fields['id'],

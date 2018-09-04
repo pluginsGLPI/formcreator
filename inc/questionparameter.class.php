@@ -105,7 +105,7 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       $question = new PluginFormcreatorquestion();
       $question->getFromDB($questions_id);
       $field = PluginFormcreatorFields::getFieldIntance($question->getField('fieldtype'), $question);
-      $parameters = $field->getUsedParameters();
+      $parameters = $field->getEmptyParameters();
       $item = $parameters[$fieldName];
       $found = $item->getFromDBByCrit([
          'plugin_formcreator_questions_id' => $questions_id,

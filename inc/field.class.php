@@ -206,7 +206,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return strtolower($matches[1]);
    }
 
-   public function getUsedParameters() {
+   public function getEmptyParameters() {
       return [];
    }
 
@@ -216,7 +216,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          return;
       }
 
-      foreach ($this->getUsedParameters() as $fieldName => $parameter) {
+      foreach ($this->getEmptyParameters() as $fieldName => $parameter) {
          $input['_parameters'][$fieldTypeName][$fieldName]['plugin_formcreator_questions_id'] = $question->getID();
          $parameter->add($input['_parameters'][$fieldTypeName][$fieldName]);
       }
@@ -228,7 +228,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          return;
       }
 
-      foreach ($this->getUsedParameters() as $fieldName => $parameter) {
+      foreach ($this->getEmptyParameters() as $fieldName => $parameter) {
          $parameter->getFromDBByCrit([
             'plugin_formcreator_questions_id' => $question->getID(),
             'fieldname' => $fieldName,
@@ -245,7 +245,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    }
 
    public final function deleteParameters(PluginFormcreatorQuestion $question) {
-      foreach ($this->getUsedParameters() as $parameter) {
+      foreach ($this->getEmptyParameters() as $parameter) {
          if (!$parameter->deleteByCriteria(['plugin_formcreator_questions_id' => $question->getID()])) {
             // Don't make  this error fatal, but log it anyway
             Toolbox::logInFile('php-errors', 'failed to delete parameter for question ' . $question->getID() . PHP_EOL);
