@@ -52,7 +52,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $parameters = $this->getParameters();
 
       // Check the field matches the format regex
-      $regex = $parameters['regex']->getField('regex');
+      $regex = $parameters['regex']->fields['regex'];
       if ($regex !== null && strlen($regex) > 0) {
          if (!preg_match($regex, $value)) {
             Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
@@ -61,8 +61,8 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       }
 
       // Check the field is in the range
-      $rangeMin = $parameters['range']->getField('range_min');
-      $rangeMax = $parameters['range']->getField('range_max');
+      $rangeMin = $parameters['range']->fields['range_min'];
+      $rangeMax = $parameters['range']->fields['range_max'];
       if (strlen($rangeMin) > 0 && strlen($value) < $rangeMin) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->fields['name'], false, ERROR);
          return false;
