@@ -191,7 +191,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
          $oldQuestion = new PluginFormcreatorQuestion();
          $oldQuestion->getFromDB($questions_id);
          $this->field = PluginFormcreatorFields::getFieldInstance($oldQuestion->getField('fieldtype'), $oldQuestion);
-         $parameters = $this->field->getUsedParameters();
+         $parameters = $this->field->getEmptyParameters();
          foreach ($parameters as $fieldName => $parameter) {
             $parameter->getFromDBByCrit([
                'plugin_formcreator_questions_id' => $questions_id,

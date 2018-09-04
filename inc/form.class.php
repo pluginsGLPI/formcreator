@@ -1358,7 +1358,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $oldQuestion = new PluginFormcreatorQuestion();
          $oldQuestion->getFromDB($questions_id);
          $field = PluginFormcreatorFields::getFieldInstance($oldQuestion->fields['fieldtype'], $oldQuestion);
-         $parameters = $field->getUsedParameters();
+         $parameters = $field->getEmptyParameters();
          foreach ($parameters as $fieldName => $parameter) {
             $parameter->getFromDBByCrit([
                'plugin_formcreator_questions_id' => $questions_id,

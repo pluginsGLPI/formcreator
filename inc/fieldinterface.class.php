@@ -71,7 +71,7 @@ interface PluginFormcreatorFieldInterface
     * Gets the parameters of the field
     * @return PluginFormcreatorQuestionParameter[]
     */
-   public function getUsedParameters();
+   public function getEmptyParameters();
 
    /**
     * Gets the name of the field type

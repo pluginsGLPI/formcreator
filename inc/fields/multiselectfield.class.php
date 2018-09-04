@@ -55,7 +55,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
    }
 
    private function isValidValue($value) {
-      $parameters = $this->getUsedParameters();
+      $parameters = $this->getEmptyParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $parameter->getFromDBByCrit([
             'plugin_formcreator_questions_id'   => $this->fields['id'],
@@ -170,7 +170,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       return "tab_fields_fields['multiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function getUsedParameters() {
+   public function getEmptyParameters() {
       return [
          'range' => new PluginFormcreatorQuestionRange(
             $this,
