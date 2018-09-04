@@ -49,13 +49,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    private function isValidValue($value) {
-      $parameters = $this->getEmptyParameters();
-      foreach ($parameters as $fieldname => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id'   => $this->fields['id'],
-            'fieldname'                         => $fieldname,
-         ]);
-      }
+      $parameters = $this->getParameters();
 
       // Check the field matches the format regex
       $regex = $parameters['regex']->getField('regex');

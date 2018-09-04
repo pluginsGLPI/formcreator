@@ -42,8 +42,23 @@ interface PluginFormcreatorFieldInterface
     * @return string
     */
    public static function getName();
+
    public static function getPrefs();
+
    public static function getJSFields();
+
+   /**
+    * Is the field valid for the given value?
+    * @param string $value
+    * @return boolean True if the field has a valid value, false otherwise
+    */
+   public function isValid($value);
+
+   /**
+    * Is the field required?
+    * @return boolean
+    */
+   public function isRequired();
 
    /**
     * Transform input to properly save it in the database
@@ -72,6 +87,12 @@ interface PluginFormcreatorFieldInterface
     * @return PluginFormcreatorQuestionParameter[]
     */
    public function getEmptyParameters();
+
+   /**
+    * Gets parameters of the field with their settings
+    * @return PluginFormcreatorQuestionParameterInterface[]
+    */
+   public function getParameters();
 
    /**
     * Gets the name of the field type
