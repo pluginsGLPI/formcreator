@@ -186,4 +186,17 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->boolean($isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
    }
+
+   public function testGetEmptyParameters() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->getEmptyParameters();
+      $this->array($output)
+         ->hasKey('range')
+         ->hasKey('regex')
+         ->array($output)->size->isEqualTo(2);
+      $this->object($output['range'])
+         ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
+      $this->object($output['regex'])
+         ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
+   }
 }
