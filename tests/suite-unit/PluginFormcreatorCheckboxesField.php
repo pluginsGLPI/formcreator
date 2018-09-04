@@ -274,11 +274,11 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    /**
-    * @engine inline
+    *
     */
-   public function testGetUsedParameters() {
+   public function testGetEmptyParameters() {
       $instance = $this->newTestedInstance([]);
-      $output = $instance->getUsedParameters();
+      $output = $instance->getEmptyParameters();
       $this->array($output)
          ->hasKey('range')
          ->array($output)->size->isEqualTo(1);
