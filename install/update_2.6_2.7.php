@@ -50,8 +50,8 @@ function plugin_formcreator_update_2_7(Migration $migration) {
       $migration->dropField($table, 'regex');
    }
 
-      // Migrate range question parameters
-      $table = 'glpi_plugin_formcreator_questions';
+   // Migrate range question parameters
+   $table = 'glpi_plugin_formcreator_questions';
    if ($DB->fieldExists($table, 'range_min')) {
       $request = [
       'FROM' => $table,
