@@ -263,4 +263,14 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $output = $instance->getName();
       $this->string($output)->isEqualTo('Multiselect');
    }
+
+   public function testGetEmptyParameters() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->getEmptyParameters();
+      $this->array($output)
+         ->hasKey('range')
+         ->array($output)->size->isEqualTo(1);
+      $this->object($output['range'])
+         ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
+   }
 }
