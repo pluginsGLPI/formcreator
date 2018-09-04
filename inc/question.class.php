@@ -623,14 +623,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       $this->field = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $this);
-      $parameters = $this->field->getEmptyParameters();
+      $parameters = $this->getParameters();
       if (isset($input['_parameters'][$this->fields['fieldtype']])) {
          foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
-            // echo var_dump($parameterInput);
-            $parameters[$fieldName]->getFromDBByCrit([
-               'plugin_formcreator_questions_id' => $this->getID(),
-               'fieldname' => $fieldName,
-            ]);
             $parameterInput['plugin_formcreator_questions_id'] = $this->getID();
             if ($parameters[$fieldName]->isNewItem()) {
                $parameters[$fieldName]->add($parameterInput);
@@ -1343,12 +1338,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       // Form questions parameters
       $this->field = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
-      $parameters = $this->field->getEmptyParameters();
+      $parameters = $this->getParameters();
       foreach ($parameters as $fieldName => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id' => $oldQuestionId,
-            'fieldname' => $fieldName,
-         ]);
          $row = $parameter->fields;
          $row[PluginFormcreatorQuestion::getForeignKeyField()] = $newQuestion->getID();
          unset($row['id']);
@@ -1433,12 +1424,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          }
 
          $field = PluginFormcreatorFields::getFieldInstance($question['fieldtype'], $question);
-         $parameters = $field->getEmptyParameters();
+         $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            $parameter->getFromDBByCrit([
-               'plugin_formcreator_questions_id'   => $item->fields['id'],
-               'fieldname'                         => $fieldName,
-            ]);
             $parameter::import($importLinker, $questions_id, $fieldName, $question['_parameters'][$question['fieldtype']][$fieldName]);
          }
       }
@@ -1476,12 +1463,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       // get question parameters
       $question['_parameters'] = [];
       $this->field = PluginFormcreatorFields::getFieldIntance($this->getField('fieldtype'), $this);
-      $parameters = $this->field->getEmptyParameters();
+      $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldname => $parameter) {
-         $parameter->getFromDBByCrit([
-            'plugin_formcreator_questions_id'   => $this->fields['id'],
-            'fieldname'                         => $fieldname,
-         ]);
          $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export();
       }
 
