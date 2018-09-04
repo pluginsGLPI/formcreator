@@ -623,7 +623,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       $this->field = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $this);
-      $parameters = $this->getParameters();
+      $parameters = $this->field->getParameters();
       if (isset($input['_parameters'][$this->fields['fieldtype']])) {
          foreach ($input['_parameters'][$this->fields['fieldtype']] as $fieldName => $parameterInput) {
             $parameterInput['plugin_formcreator_questions_id'] = $this->getID();
@@ -1338,7 +1338,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       // Form questions parameters
       $this->field = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
-      $parameters = $this->getParameters();
+      $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldName => $parameter) {
          $row = $parameter->fields;
          $row[PluginFormcreatorQuestion::getForeignKeyField()] = $newQuestion->getID();

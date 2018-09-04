@@ -72,6 +72,10 @@ extends PluginFormcreatorQuestionParameter
       return $out;
    }
 
+   public function post_getEmpty() {
+      $this->fields['regex'] = null;
+   }
+
    public function getJsShowHideSelector() {
       return "#" . $this->domId;
    }

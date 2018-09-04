@@ -55,7 +55,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
 
       // Check the field matches the format regex
       if (!$parameters['regex']->isNewItem()) {
-         $regex = $parameters['regex']->getField('regex');
+         $regex = $parameters['regex']->fields['regex'];
          if ($regex !== null && strlen($regex) > 0) {
             if (!preg_match($regex, $value)) {
                Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
@@ -66,8 +66,8 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
 
       // Check the field is in the range
       if (!$parameters['range']->isNewItem()) {
-         $rangeMin = $parameters['range']->getField('range_min');
-         $rangeMax = $parameters['range']->getField('range_max');
+         $rangeMin = $parameters['range']->fields['range_min'];
+         $rangeMax = $parameters['range']->fields['range_max'];
          if (strlen($rangeMin) > 0 && $value < $rangeMin) {
             $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $rangeMin);
             Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
