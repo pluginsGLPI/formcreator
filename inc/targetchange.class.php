@@ -1012,6 +1012,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          // Requester's entity
          case 'current' :
             $data['entities_id'] = $_SESSION['glpiactive_entity'];
+            break;
+
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
