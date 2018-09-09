@@ -59,7 +59,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    abstract public function save(PluginFormcreatorForm_Answer $formanswer);
 
    /**
-    * Gets an instance object for the relation between the target itemtype 
+    * Gets an instance object for the relation between the target itemtype
     * and an user
     *
     * @return CommonDBTM
@@ -67,7 +67,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    abstract protected function getItem_User();
 
    /**
-    * Gets an instance object for the relation between the target itemtype 
+    * Gets an instance object for the relation between the target itemtype
     * and a group
     *
     * @return CommonDBTM
@@ -75,7 +75,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    abstract protected function getItem_Group();
 
    /**
-    * Gets an instance object for the relation between the target itemtype 
+    * Gets an instance object for the relation between the target itemtype
     * and supplier
     *
     * @return CommonDBTM
@@ -83,7 +83,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    abstract protected function getItem_Supplier();
 
    /**
-    * Gets an instance object for the relation between the target itemtype 
+    * Gets an instance object for the relation between the target itemtype
     * and an object of any itemtype
     *
     * @return CommonDBTM
@@ -304,7 +304,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
     * @param string $role role of the user
     * @param string $user user ID or email address for anonymous users
     * @param boolean $notify true to enable notification for the actor
-    * @return void
+    * @return boolean true on success, false on error
     */
    protected function addActor($role, $user, $notify) {
       if (filter_var($user, FILTER_VALIDATE_EMAIL) !== false) {
@@ -320,25 +320,40 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       }
 
       $actorType = null;
+      $actorTypeNotif = null;
       switch ($role) {
          case 'requester':
             $actorType = &$this->requesters['_users_id_requester'];
+            $actorTypeNotif = &$this->requesters['_users_id_requester_notif'];
             break;
          case 'observer':
             $actorType = &$this->observers['_users_id_observer'];
+            $actorTypeNotif = &$this->observers['_users_id_observer_notif'];
             break;
          case 'assigned' :
             $actorType = &$this->assigned['_users_id_assign'];
+            $actorTypeNotif = &$this->assigned['_users_id_assign_notif'];
             break;
          case 'supplier' :
             $actorType = &$this->assignedSuppliers['_suppliers_id_assign'];
+            $actorTypeNotif = &$this->assignedSuppliers['_suppliers_id_assign_notif'];
             break;
          default:
             return false;
       }
-      $actorType[]                      = $userId;
-      $actorType['use_notification'][]  = ($notify == true);
-      $actorType['alternative_email'][] = $alternativeEmail;
+
+      $actorKey = array_search($userId, $actorType);
+      if ($actorKey === false) {
+         // Add the actor
+         $actorType[]                      = $userId;
+         $actorTypeNotif['use_notification'][]  = ($notify == true);
+         $actorTypeNotif['alternative_email'][] = $alternativeEmail;
+      } else {
+         // New actor settings takes precedence
+         $actorType[$actorKey] = $userId;
+         $actorTypeNotif['use_notification'][$actorKey]  = ($notify == true);
+         $actorTypeNotif['alternative_email'][$actorKey] = $alternativeEmail;
+      }
 
       return true;
    }
@@ -347,20 +362,34 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
     * Adds a group to the given actor role
     *
     * @param string $role Role of the group
-    * @param string $group Group ID 
+    * @param string $group Group ID
+    * @return boolean true on sucess, false on error
     */
-    protected function addGroupActor($role, $group) {
+   protected function addGroupActor($role, $group) {
+      $actorType = null;
       switch ($role) {
          case 'requester':
-            $this->requesterGroups['_groups_id_requester'][]  = $group;
+            $actorType = &$this->requesterGroups['_groups_id_requester'];
             break;
          case 'observer' :
-            $this->observerGroups['_groups_id_observer'][]     = $group;
+            $actorType = &$this->observerGroups['_groups_id_observer'];
             break;
          case 'assigned' :
-            $this->assignedGroups['_groups_id_assign'][]       = $group;
+            $actorType = &$this->assignedGroups['_groups_id_assign'];
             break;
+         default:
+            return false;
       }
+
+      $actorKey = array_search($userId, $actorType);
+      if ($actorKey !== false) {
+         return false;
+      }
+
+      // Add the group actor
+      $actorType[] = $group;
+
+      return true;
    }
 
    /**
