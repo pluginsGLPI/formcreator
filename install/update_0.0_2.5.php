@@ -200,32 +200,7 @@ function plugin_formcreator_updateForm_Answer_2_5(Migration $migration) {
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'requester_id');
    $migration->addKey('glpi_plugin_formcreator_forms_answers', 'validator_id');
    $migration->addField('glpi_plugin_formcreator_forms_answers', 'is_deleted', 'bool');
-
-   // Update Form Answers
-   $table = 'glpi_plugin_formcreator_forms_answers';
-
-   if ($DB->fieldExists($table, 'validator_id', false)) {
-      $migration->addField($table, 'users_id_validator', 'integer', ['after' => 'requester_id']);
-      $migration->addField($table, 'groups_id_validator', 'integer', ['after' => 'users_id_validator']);
-      $migration->addKey($table, 'users_id_validator');
-      $migration->addKey($table, 'groups_id_validator');
-      $migration->migrationOneTable($table);
-
-      $formTable = 'glpi_plugin_formcreator_forms';
-      $query = "UPDATE `$table`
-               INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
-               SET `users_id_validator` = 'validator_id'
-               WHERE `$formTable`.`validation_required` = '1'";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
-      $query = "UPDATE `$table`
-               INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
-               SET `groups_id_validator` = 'validator_id'
-               WHERE `$formTable`.`validation_required` = '2'";
-      $DB->query($query) or plugin_formcreator_upgrade_error($migration);
-
-      $migration->dropKey($table, 'validator_id');
-      $migration->dropField($table, 'validator_id');
-   }
+   $migration->migrationOneTable('glpi_plugin_formcreator_forms_answers');
 }
 
 function plugin_formcreator_updateForm_Profile_2_5(Migration $migration) {
@@ -453,7 +428,7 @@ function plugin_formcreator_updateIssue_2_5(Migration $migration) {
                `fanswer`.`entities_id`        AS `entities_id`,
                `fanswer`.`is_recursive`       AS `is_recursive`,
                `fanswer`.`requester_id`       AS `requester_id`,
-               `fanswer`.`users_id_validator` AS `validator_id`,
+               `fanswer`.`validator_id`       AS `validator_id`,
                `fanswer`.`comment`            AS `comment`
             FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
             LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
@@ -464,9 +439,7 @@ function plugin_formcreator_updateIssue_2_5(Migration $migration) {
             WHERE `fanswer`.`is_deleted` = '0'
             GROUP BY `original_id`
             HAVING COUNT(`itic`.`tickets_id`) != 1
-
             UNION
-
             SELECT DISTINCT
                NULL                          AS `id`,
                CONCAT('t_',`tic`.`id`)       AS `display_id`,
