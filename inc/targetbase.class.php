@@ -58,14 +58,43 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    abstract public function save(PluginFormcreatorForm_Answer $formanswer);
 
+   /**
+    * Gets an instance object for the relation between the target itemtype 
+    * and an user
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_User();
 
+   /**
+    * Gets an instance object for the relation between the target itemtype 
+    * and a group
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_Group();
 
+   /**
+    * Gets an instance object for the relation between the target itemtype 
+    * and supplier
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_Supplier();
 
+   /**
+    * Gets an instance object for the relation between the target itemtype 
+    * and an object of any itemtype
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_Item();
 
+   /**
+    * Gets the class name of the target itemtype
+    *
+    * @return string
+    */
    abstract protected function getTargetItemtypeName();
 
    abstract public function getItem_Actor();
@@ -146,7 +175,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       return true;
    }
 
-   /*
+   /**
     *
     */
    public function getForm() {
@@ -269,6 +298,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       }
    }
 
+   /**
+    * Adds an user to the given actor role (requester, observer assigned or supplier)
+    *
+    * @param string $role role of the user
+    * @param string $user user ID or email address for anonymous users
+    * @param boolean $notify true to enable notification for the actor
+    * @return void
+    */
    protected function addActor($role, $user, $notify) {
       if (filter_var($user, FILTER_VALIDATE_EMAIL) !== false) {
          $userId = 0;
@@ -278,35 +315,41 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          $alternativeEmail = '';
          if ($userId == '0') {
             // there is no actor
-            return;
+            return false;
          }
       }
 
+      $actorType = null;
       switch ($role) {
          case 'requester':
-            $this->requesters['_users_id_requester'][]                                    = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]          = ($notify == true);
-            $this->requesters['_users_id_requester_notif']['alternative_email'][]         = $alternativeEmail;
+            $actorType = &$this->requesters['_users_id_requester'];
             break;
-         case 'observer' :
-            $this->observers['_users_id_observer'][]                                      = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]            = ($notify == true);
-            $this->observers['_users_id_observer_notif']['alternative_email'][]           = $alternativeEmail;
+         case 'observer':
+            $actorType = &$this->observers['_users_id_observer'];
             break;
          case 'assigned' :
-            $this->assigned['_users_id_assign'][]                                         = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]               = ($notify == true);
-            $this->assigned['_users_id_assign_notif']['alternative_email'][]              = $alternativeEmail;
+            $actorType = &$this->assigned['_users_id_assign'];
             break;
          case 'supplier' :
-            $this->assignedSuppliers['_suppliers_id_assign'][]                            = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign_notif']['use_notification'][]  = ($notify == true);
-            $this->assignedSuppliers['_suppliers_id_assign_notif']['alternative_email'][] = $alternativeEmail;
+            $actorType = &$this->assignedSuppliers['_suppliers_id_assign'];
             break;
+         default:
+            return false;
       }
+      $actorType[]                      = $userId;
+      $actorType['use_notification'][]  = ($notify == true);
+      $actorType['alternative_email'][] = $alternativeEmail;
+
+      return true;
    }
 
-   protected function addGroupActor($role, $group) {
+   /**
+    * Adds a group to the given actor role
+    *
+    * @param string $role Role of the group
+    * @param string $group Group ID 
+    */
+    protected function addGroupActor($role, $group) {
       switch ($role) {
          case 'requester':
             $this->requesterGroups['_groups_id_requester'][]  = $group;
