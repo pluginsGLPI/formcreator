@@ -31,6 +31,10 @@
  * ---------------------------------------------------------------------
  */
 
+(PHP_SAPI == 'cli') or die("Only available from command line");
+
+chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
+
 include (__DIR__ . "/../vendor/docopt/docopt/src/docopt.php");
 
 $doc = <<<DOC
@@ -62,6 +66,11 @@ if (isset($args)) {
    }
 }
 
+// Prevent problem of execution time
+ini_set("max_execution_time", "0");
+ini_set("memory_limit", "-1");
+ini_set("session.use_cookies", "0");
+
 include (__DIR__ . "/../../../inc/includes.php");
 
 // Init debug variable
@@ -76,11 +85,6 @@ $CFG_GLPI["use_log_in_files"] = 1;
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 //set_error_handler('userErrorHandlerDebug');
-
-// Prevent problem of execution time
-ini_set("max_execution_time", "0");
-ini_set("memory_limit", "-1");
-ini_set("session.use_cookies", "0");
 
 $DB = new DB();
 if (!$DB->connected) {
