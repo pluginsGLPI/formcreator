@@ -116,9 +116,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
+      echo '<textarea name="content" style="width:700px;" rows="15">' . $this->fields['content'] . '</textarea>';
       if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('comment');
+         Html::initEditorSystem('content');
       }
       echo '</td>';
       echo '</tr>';
@@ -845,13 +845,13 @@ EOS;
          }
 
          // - comment is required
-         if (empty($input['comment'])) {
+         if (strlen($input['content']) < 1) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
 
          if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-            $input['comment'] = Html::entity_decode_deep($input['comment']);
+            $input['content'] = Html::entity_decode_deep($input['content']);
          }
 
          switch ($input['destination_entity']) {
@@ -1109,7 +1109,7 @@ EOS;
       $data['name'] = addslashes($this->fields['name']);
       $data['name'] = $this->parseTags($data['name'], $formanswer);
 
-      $data['content'] = addslashes($this->fields['comment']);
+      $data['content'] = addslashes($this->fields['content']);
       $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
@@ -1497,10 +1497,10 @@ EOS;
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['name'] = $content;
 
-            $content = $target_data['comment'];
+            $content = $target_data['content'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['comment'] = $content;
+            $target_data['content'] = $content;
          }
       }
 
@@ -1563,10 +1563,10 @@ EOS;
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['name'] = $content;
 
-            $content = $target_data['comment'];
+            $content = $target_data['content'];
             $content = str_replace("##question_$id##", "##question_$uuid##", $content);
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
-            $target_data['comment'] = $content;
+            $target_data['content'] = $content;
          }
       }
 

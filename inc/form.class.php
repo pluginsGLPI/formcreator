@@ -1406,8 +1406,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                foreach ($tab_questions as $id => $value) {
                   $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
                   $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
-                  $update_target_ticket['comment'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['comment']);
-                  $update_target_ticket['comment'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['comment']);
+                  $update_target_ticket['content'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['content']);
+                  $update_target_ticket['content'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['content']);
                }
 
                // update time to resolve rule
@@ -1439,7 +1439,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
                $new_target_ticket = new PluginFormcreatorTargetTicket();
                $update_target_ticket['title'] = Toolbox::addslashes_deep($update_target_ticket['name']);
-               $update_target_ticket['comment'] = Toolbox::addslashes_deep($update_target_ticket['comment']);
+               $update_target_ticket['content'] = Toolbox::addslashes_deep($update_target_ticket['content']);
                if (!$new_target_ticket->update($update_target_ticket)) {
                   return false;
                }

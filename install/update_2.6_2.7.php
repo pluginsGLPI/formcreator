@@ -168,4 +168,7 @@ function plugin_formcreator_update_2_7(Migration $migration) {
    $migration->changeField($table, 'backoutplancontent', 'backoutplancontent', 'longtext');
    $migration->changeField($table, 'checklistcontent', 'checklistcontent', 'longtext');
 
+   // Update target target columns
+   $table = 'glpi_plugin_formcreator_targettickets';
+   $migration->changeField($table, 'comment', 'content', 'longtext');
 }
