@@ -179,7 +179,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                $targetchange      = new PluginFormcreatorTargetChange();
                $id_targetchange   = $targetchange->add([
                   'name'    => $input['name'],
-                  'comment' => '##FULLFORM##'
+                  'content' => '##FULLFORM##'
                ]);
                $input['items_id'] = $id_targetchange;
 
