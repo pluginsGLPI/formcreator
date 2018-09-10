@@ -176,6 +176,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicketsData = [
          [
             'name'                  => 'target 1',
+            'content'               => '##FULLFORM##',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
             'urgency_rule'          => 'answer',
             'urgency_question'      => 'custom urgency',
@@ -183,6 +184,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          ],
          [
             'name'                  => 'target 2',
+            'content'               => '##FULLFORM##',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
             'urgency_rule'          => 'none',
             'urgency_question'      => '',

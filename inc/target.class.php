@@ -153,7 +153,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                $targetticket      = new PluginFormcreatorTargetTicket();
                $id_targetticket   = $targetticket->add([
                   'name'    => $input['name'],
-                  'comment' => '##FULLFORM##'
+                  'content' => '##FULLFORM##'
                ]);
                $input['items_id'] = $id_targetticket;
 

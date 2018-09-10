@@ -330,7 +330,7 @@ abstract class CommonTestCase extends CommonDBTestCase
    protected function _checkTargetTicket($targetticket = []) {
       $keys = [
          'title',
-         'comment',
+         'content',
          'due_date_rule',
          'due_date_question',
          'due_date_value',
