@@ -118,10 +118,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['name'] = $content;
 
-            $content = $target_data['comment'];
+            $content = $target_data['content'];
             $content = str_replace("##question_$id##", "##question_$uuid##", $content);
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
-            $target_data['comment'] = $content;
+            $target_data['content'] = $content;
          }
       }
 
@@ -169,10 +169,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['name'] = $content;
 
-            $content = $target_data['comment'];
+            $content = $target_data['content'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['comment'] = $content;
+            $target_data['content'] = $content;
          }
       }
 
@@ -236,9 +236,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
+      echo '<textarea name="content" style="width:700px;" rows="15">' . $this->fields['content'] . '</textarea>';
       if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('comment');
+         Html::initEditorSystem('content');
       }
       echo '</td>';
       echo '</tr>';
@@ -852,14 +852,14 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             return [];
          }
 
-         // - comment is required
-         if (empty($input['comment'])) {
+         // - content is required
+         if (empty($input['content'])) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
 
          if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-            $input['comment'] = Html::entity_decode_deep($input['comment']);
+            $input['content'] = Html::entity_decode_deep($input['content']);
          }
 
          switch ($input['destination_entity']) {
@@ -984,13 +984,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          'checklistcontent'
       ];
       foreach ($changeFields as $changeField) {
-         //TODO: 2.7.0 rename PluginFormcreatorTargetChange's comment into content
-         if ($changeField != 'content') {
-            // This handles mismatch of the column content in Change itemtype and comment in TargetChange itemtype
-            $data[$changeField] = $this->fields[$changeField];
-         } else {
-            $data[$changeField] = $this->fields['comment'];
-         }
+         $data[$changeField] = $this->fields[$changeField];
          $data[$changeField] = addslashes($data[$changeField]);
          $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
@@ -998,7 +992,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
          if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             // replace HTML P tags with DIV tags
-            $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+            $data[$changeField] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data[$changeField]);
          }
 
          $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);

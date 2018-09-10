@@ -1458,7 +1458,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                foreach ($tab_questions as $id => $value) {
                   $changeFields = [
                      'name',
-                     'comment',
+                     'content',
                      'impactcontent',
                      'controlistcontent',
                      'rolloutplancontent',
@@ -1503,7 +1503,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
                $new_target_change = new PluginFormcreatorTargetChange();
                $update_target_change['title'] = Toolbox::addslashes_deep($update_target_change['name']);
-               $update_target_change['comment'] = Toolbox::addslashes_deep($update_target_change['comment']);
+               $update_target_change['content'] = Toolbox::addslashes_deep($update_target_change['content']);
                if (!$new_target_change->update($update_target_change)) {
                   return false;
                }

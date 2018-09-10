@@ -158,4 +158,14 @@ function plugin_formcreator_update_2_7(Migration $migration) {
          $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer` = '$answer' WHERE `id` = '$id'");
       }
    }
+
+   // Update target change columns
+   $table = 'glpi_plugin_formcreator_targetchanges';
+   $migration->changeField($table, 'comment', 'content', 'longtext');
+   $migration->changeField($table, 'impactcontent', 'impactcontent', 'longtext');
+   $migration->changeField($table, 'controlistcontent', 'controlistcontent', 'longtext');
+   $migration->changeField($table, 'rolloutplancontent', 'rolloutplancontent', 'longtext');
+   $migration->changeField($table, 'backoutplancontent', 'backoutplancontent', 'longtext');
+   $migration->changeField($table, 'checklistcontent', 'checklistcontent', 'longtext');
+
 }
