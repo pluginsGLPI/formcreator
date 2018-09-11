@@ -72,12 +72,12 @@ function plugin_formcreator_update_2_6(Migration $migration) {
    $formTable = 'glpi_plugin_formcreator_forms';
    $query = "UPDATE `$table`
              INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
-             SET `users_id_validator` = 'validator_id'
+             SET `users_id_validator` = `validator_id`
              WHERE `$formTable`.`validation_required` = '1'";
    $DB->query($query) or plugin_formcreator_upgrade_error($migration);
    $query = "UPDATE `$table`
              INNER JOIN `$formTable` ON (`$table`.`plugin_formcreator_forms_id` = `$formTable`.`id`)
-             SET `groups_id_validator` = 'validator_id'
+             SET `groups_id_validator` = `validator_id`
              WHERE `$formTable`.`validation_required` = '2'";
    $DB->query($query) or plugin_formcreator_upgrade_error($migration);
 
