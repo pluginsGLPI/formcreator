@@ -700,3 +700,89 @@ function formcreatorChangeActorAssigned(value) {
       case 'question_supplier' : $('#block_assigned_question_supplier').show();  break;
    }
 }
+
+// === FIELDS ===
+
+
+
+
+/**
+ * Initialize an actor field
+ */
+function pluginFormcreatorInitializeActor(id, initialValue) {
+   fieldName = 'formcreator_field_' + id;
+   $("#" + fieldName).select2({
+      tokenSeparators: [",", ";"],
+      minimumInputLength: 0,
+      ajax: {
+         url: rootDoc + "/ajax/getDropdownUsers.php",
+         type: "POST",
+         dataType: "json",
+         data: function (params, page) {
+            return {
+               entity_restrict: -1,
+               searchText: params.term,
+               page_limit: 100,
+               page: page
+            }
+         },
+         results: function (data, page) {
+            var more = (data.count >= 100);
+            return {results: data.results, pagination: {"more": more}};
+         }
+      },
+      createSearchChoice: function itemCreator(term, data) {
+         if ($(data).filter(function() {
+            return this.text.localeCompare(term) === 0;
+         }).length === 0) {
+            return { id: term, text: term };
+         }
+      },
+      initSelection: function (element, callback) {
+         callback(JSON.parse(initialValue));
+      }
+   })
+   $("#" + fieldName).on("change", function(e) {
+      var selectedValues = $("#" + fieldName).val();
+      formcreatorChangeValueOf(id, selectedValues);
+   });
+}
+
+/**
+ * Initialize a checkboxes field
+ */
+function pluginFormcreatorInitializeCheckboxes(id) {
+   fieldName = 'formcreator_field_' + id;
+   jQuery("input[name='" + fieldName + "[]']").on("change", function() {
+      var tab_values = new Array();
+      jQuery("input[name='" + fieldName + "[]']").each(function() {
+         if (this.checked == true) {
+            tab_values.push(this.value);
+         }
+      });
+      formcreatorChangeValueOf(id, tab_values);
+   });
+}
+
+/**
+ * Initialize a date field
+ */
+function pluginFormcreatorInitializeDate(id, rand) {
+   fieldName = 'formcreator_field_' + id;
+   $("#showdate" + rand).on("change", function() {
+      formcreatorChangeValueOf(id, this.value);
+   });
+   $("#resetdate" + rand).on("click", function() {
+      formcreatorChangeValueOf(id, "");
+   });
+}
+
+/**
+ * Initialize a dropdown field
+ */
+function pluginFormcreatorInitializeDropdown(id, rand) {
+   fieldName = 'formcreator_field_' + id;
+   jQuery("#dropdown_formcreator_field_" + id + rand).on("select2-selecting", function(e) {
+      formcreatorChangeValueOf (id, e.val);
+   });
+}

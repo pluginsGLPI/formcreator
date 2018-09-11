@@ -35,6 +35,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
+         $id = $this->fields['id'];
          $required = ($canEdit && $this->fields['required']) ? ' required' : '';
          $rand     = mt_rand();
 
@@ -42,16 +43,9 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
             'value' => $this->getValue(),
             'rand'  => $rand,
          ]);
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     $( "#showdate' . $rand . '" ).on("change", function() {
-                        formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);
-                     });
-                     $( "#resetdate' . $rand . '" ).on("click", function() {
-                        formcreatorChangeValueOf(' . $this->fields['id'] . ', "");
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeDate($id, '$rand');
+         });");
 
       } else {
          echo $this->getAnswer();
