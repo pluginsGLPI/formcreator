@@ -58,14 +58,9 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             ]);
          }
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
-                        var selectedValues = jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").val();
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeRadios($id, '$rand');
+         });");
       } else {
          echo nl2br($this->getAnswer());
          echo PHP_EOL;

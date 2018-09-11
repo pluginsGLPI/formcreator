@@ -53,6 +53,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             $values[$id] = $data['name'];
          }
 
+         $id = $this->fields['id'];
          Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, [
             'values'               => $this->getValue(),
             'comments'            => false,
@@ -60,13 +61,9 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             'multiple'            => true,
          ]);
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', e.val);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeTag($id, '$rand');
+         });");
       } else {
          $answer = $this->getAnswer();
          echo '<div class="form_field">';

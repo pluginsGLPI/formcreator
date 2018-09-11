@@ -57,17 +57,9 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             }
             echo '</div>';
          }
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").on("change", function() {
-                        jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").each(function() {
-                           if (this.checked == true) {
-                              formcreatorChangeValueOf (' . $this->fields['id'] . ', this.value);
-                           }
-                        });
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeRadios($id, '$rand');
+         });");
 
       } else {
          echo $this->getAnswer();

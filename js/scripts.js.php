@@ -703,9 +703,6 @@ function formcreatorChangeActorAssigned(value) {
 
 // === FIELDS ===
 
-
-
-
 /**
  * Initialize an actor field
  */
@@ -751,7 +748,7 @@ function pluginFormcreatorInitializeActor(id, initialValue) {
 /**
  * Initialize a checkboxes field
  */
-function pluginFormcreatorInitializeCheckboxes(id) {
+function pluginFormcreatorInitializeCheckboxes(id, rand) {
    fieldName = 'formcreator_field_' + id;
    jQuery("input[name='" + fieldName + "[]']").on("change", function() {
       var tab_values = new Array();
@@ -783,6 +780,54 @@ function pluginFormcreatorInitializeDate(id, rand) {
 function pluginFormcreatorInitializeDropdown(id, rand) {
    fieldName = 'formcreator_field_' + id;
    jQuery("#dropdown_formcreator_field_" + id + rand).on("select2-selecting", function(e) {
+      formcreatorChangeValueOf(id, e.val);
+   });
+}
+
+/**
+ * Initialize a radios field
+ */
+function pluginFormcreatorInitializeRadios(id, rand) {
+   fieldName = 'formcreator_field_' + id;
+   jQuery("input[name='" + fieldName + "']").on("change", function() {
+      jQuery("input[name='" + fieldName + "']").each(function() {
+         if (this.checked == true) {
+            formcreatorChangeValueOf(id, this.value);
+         }
+      });
+   });
+}
+
+/**
+ * Initialize a select field
+ */
+function pluginFormcreatorInitializSelect(id, rand) {
+   fieldName = 'formcreator_field_' + id + rand;
+   jQuery("input[name='" + fieldName + "']").on("change", function() {
+      jQuery("input[name='" + fieldName + "']").each(function() {
+         if (this.checked == true) {
+            formcreatorChangeValueOf(id, this.value);
+         }
+      });
+   });
+}
+
+/**
+ * Initialize a select field
+ */
+function pluginFormcreatorInitializeTag(id, rand) {
+   fieldName = 'dropdown_formcreator_field_' + id + rand;
+   jQuery("#" + fieldName).on("select2-selecting", function(e) {
+      formcreatorChangeValueOf (id, e.val);
+   });
+}
+
+/**
+ * Initialize a select field
+ */
+function pluginFormcreatorInitializeUrgency(id, rand) {
+   fieldName = 'formcreator_field_' + id + rand;
+   jQuery("#" + fieldName).on("select2-selecting", function(e) {
       formcreatorChangeValueOf (id, e.val);
    });
 }
