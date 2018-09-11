@@ -66,7 +66,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             echo '</div>';
          }
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeCheckboxes($id);
+            pluginFormcreatorInitializeCheckboxes($id, '');
          });");
 
       } else {
