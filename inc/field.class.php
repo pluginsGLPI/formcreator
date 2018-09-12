@@ -107,12 +107,18 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param string $canEdit
     */
    public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       if ($canEdit) {
          echo '<input type="text" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '"
-                  id="formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getAnswer() . '"
-                  onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $this->getAnswer() . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
       } else {
          echo $this->getAnswer();
       }

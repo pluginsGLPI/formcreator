@@ -35,10 +35,14 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id   = $this->fields['id'];
-         $rand = mt_rand();
-         echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $id . '" value="" />' . PHP_EOL;
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         // echo '<input type="hidden" class="form-control"
+         //    name="' . $fieldName . '"
+         //    id="' . $domId . '"
+         //    value="" />' . PHP_EOL;
 
          $values = $this->getAvailableValues();
          if (!empty($values)) {
@@ -49,10 +53,10 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   $i++;
                   $checked = ($this->getValue() == $value) ? ' checked' : '';
                   echo '<input type="radio" class="form-control"
-                        name="formcreator_field_' . $id . '"
-                        id="formcreator_field_' . $id . '_' . $i . '"
+                        name="' . $fieldName . '"
+                        id="' . $domId . '_' . $i . '"
                         value="' . addslashes($value) . '"' . $checked . ' /> ';
-                  echo '<label for="formcreator_field_' . $id . '_' . $i . '">';
+                  echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
                }
@@ -60,7 +64,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             echo '</div>';
          }
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeRadios($id, '$rand');
+            pluginFormcreatorInitializeRadios('$fieldName', '$rand');
          });");
 
       } else {

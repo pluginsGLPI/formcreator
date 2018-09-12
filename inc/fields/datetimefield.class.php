@@ -35,16 +35,18 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id = $this->fields['id'];
-         $required = ($canEdit && $this->fields['required']) ? ' required' : '';
-         $rand     = mt_rand();
+         $id        = $this->fields['id'];
+         $rand      = mt_rand();
+         $fieldName = 'formcreator_field_' . $id;
+         $domId     = $fieldName . '_' . $rand;
+         $required  = ($canEdit && $this->fields['required']) ? ' required' : '';
 
-         Html::showDateTimeField('formcreator_field_' . $id, [
+         Html::showDateTimeField($fieldName, [
             'value' => $this->getValue(),
             'rand'  => $rand,
          ]);
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeDate($id, '$rand');
+            pluginFormcreatorInitializeDate('$fieldName', '$rand');
          });");
 
       } else {

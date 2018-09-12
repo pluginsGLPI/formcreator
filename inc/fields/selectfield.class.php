@@ -35,11 +35,12 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id         = $this->fields['id'];
-         $rand       = mt_rand();
-         $tab_values = [];
-         $required   = $this->fields['required'] ? ' required' : '';
-         $values     = $this->getAvailableValues();
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         $values       = $this->getAvailableValues();
+         $tab_values   = [];
 
          if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
@@ -51,7 +52,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             if ($this->fields['show_empty']) {
                $tab_values = ['' => '-----'] + $tab_values;
             }
-            Dropdown::showFromArray('formcreator_field_' . $id, $tab_values, [
+            Dropdown::showFromArray($fieldName, $tab_values, [
                'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
                'values'    => static::IS_MULTIPLE ? $this->getValue() : [],
                'rand'      => $rand,
@@ -60,7 +61,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
          }
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeRadios($id, '$rand');
+            pluginFormcreatorInitializSelect('$fieldName', '$rand');
          });");
       } else {
          echo nl2br($this->getAnswer());

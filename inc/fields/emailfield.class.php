@@ -35,13 +35,19 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $required = $this->fields['required'] ? ' required' : '';
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         $required     = $this->fields['required'] ? ' required' : '';
 
          echo '<input type="email" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '"
-                  id="formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getValue() . '"
-                  onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $this->getValue() . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeEmail('$fieldName', '$rand');
+         });");
       } else {
          echo $this->getAnswer();
       }

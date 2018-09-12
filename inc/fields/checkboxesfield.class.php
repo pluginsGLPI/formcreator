@@ -36,9 +36,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    const IS_MULTIPLE    = true;
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id = $this->fields['id'];
-         echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $id . '" value="" />' . PHP_EOL;
+         $id    = $this->fields['id'];
+         $rand  = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         // echo '<input type="hidden" class="form-control"
+         //       name="' . $fieldName . '" value="" />' . PHP_EOL;
 
          $values = [];
          $values = $this->getAvailableValues();
@@ -51,14 +54,16 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                   $current_value = null;
                   $current_value = $this->getValue();
                   echo "<div class='checkbox'>";
-                  echo Html::getCheckbox(['title'         => $value,
-                                          'id'            => 'formcreator_field_'.$id.'_'.$i,
-                                          'name'          => 'formcreator_field_'.$id . '[]',
-                                          'value'         => $value,
-                                          'zero_on_empty' => false,
-                                          'checked' => (!empty($current_value) && in_array($value, $current_value))]);
-                  echo '<label for="formcreator_field_'.$id.'_'.$i.'">';
-                  echo '&nbsp;'.$value;
+                  echo Html::getCheckbox([
+                     'title'         => $value,
+                     'id'            => $domId.'_'.$i,
+                     'name'          => $fieldName . '[]',
+                     'value'         => $value,
+                     'zero_on_empty' => false,
+                     'checked' => (!empty($current_value) && in_array($value, $current_value))
+                  ]);
+                  echo '<label for="' . $domId . '_' . $i . '">';
+                  echo '&nbsp;' . $value;
                   echo '</label>';
                   echo "</div>";
                }
@@ -66,7 +71,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             echo '</div>';
          }
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeCheckboxes($id, '');
+            pluginFormcreatorInitializeCheckboxes('$fieldName', '$rand');
          });");
 
       } else {

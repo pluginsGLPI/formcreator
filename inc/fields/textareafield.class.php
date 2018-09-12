@@ -36,18 +36,33 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       if ($canEdit) {
          $required = $this->fields['required'] ? ' required' : '';
 
-         echo '<textarea class="form-control"
-                  rows="5"
-                  name="formcreator_field_'.$this->fields['id'].'"
-                  id="formcreator_field_'.$this->fields['id'].'"
-                  onchange="formcreatorChangeValueOf('.$this->fields['id'].', this.value);">'
-                 .str_replace('\r\n', PHP_EOL, $this->getValue()).'</textarea>';
-         if ($CFG_GLPI["use_rich_text"]) {
-            Html::initEditorSystem('formcreator_field_'.$this->fields['id']);
-         }
+         // echo '<textarea class="form-control"
+         //          rows="5"
+         //          name="' . $fieldName . '"
+         //          id="' . $domId . '"
+         //          onchange="formcreatorChangeValueOf('.$this->fields['id'].', this.value);">'
+         //         .str_replace('\r\n', PHP_EOL, $this->getValue()).'</textarea>';
+         // if ($CFG_GLPI["use_rich_text"]) {
+         //    Html::initEditorSystem('formcreator_field_'.$this->fields['id']);
+         // }
+         echo Html::textarea([
+            'name'            => $fieldName,
+            'rand'            => $rand,
+            'value'           => str_replace('\r\n', PHP_EOL, $this->getValue()),
+            'rows'            => 5,
+            'display'         => false,
+            'enable_richtext' => true,
+         ]);
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
+         });");
       } else {
          if ($CFG_GLPI["use_rich_text"]) {
             echo plugin_formcreator_decode($this->getAnswer());

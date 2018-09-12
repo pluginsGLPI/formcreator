@@ -34,11 +34,15 @@
 class PluginFormcreatorIpField extends PluginFormcreatorField
 {
    public function show($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       $ip = Toolbox::getRemoteIpAddress();
       echo '<input type="hidden" class="form-control"
-               name="formcreator_field_' . $this->fields['id'] . '"
-               id="formcreator_field_' . $this->fields['id'] . '"
-               value="' . $ip . '" />' . PHP_EOL;
+         name="' . $fieldName . '"
+         id="' . $domId . '"
+         value="' . $ip . '" />' . PHP_EOL;
    }
 
    public function isValid($value) {

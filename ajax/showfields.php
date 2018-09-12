@@ -33,7 +33,6 @@
 
 include ('../../../inc/includes.php');
 
-$currentValues  = json_decode(stripslashes($_POST['values']), true);
-$visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+$visibility = PluginFormcreatorFields::updateVisibility($_POST['values']);
 echo json_encode($visibility);
 exit();

@@ -35,16 +35,19 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $rand     = mt_rand();
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
          $required = $this->fields['required'] ? ' required' : '';
-         Ticket::dropdownUrgency(['name'     => 'formcreator_field_' . $this->fields['id'],
+         Ticket::dropdownUrgency(['name'     => $fieldName,
                                   'value'    => $this->getValue(),
                                   'comments' => false,
-                                  'rand'     => $rand]
-         );
+                                  'rand'     => $rand
+         ]);
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeUrgency($id, '$rand');
+            pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
          });");
       } else {
          echo Ticket::getPriorityName($this->getValue());

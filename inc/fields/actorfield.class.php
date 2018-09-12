@@ -58,15 +58,16 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $initialValue = json_encode($initialValue);
       $id           = $this->fields['id'];
       $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
 
       // Value needs to be non empty to allow execition of select2's initSelection
-      $domId = 'formcreator_field_' . $id . $rand;
       echo '<select multiple
-         name="formcreator_field_' . $id . '"
+         name="' . $fieldName . '"
          id="' . $domId . '"
          value="" />';
       echo Html::scriptBlock("$(function() {
-         pluginFormcreatorInitializeActor('$domId', '$initialValue');
+         pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
       });");
    }
 
