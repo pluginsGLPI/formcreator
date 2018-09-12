@@ -35,16 +35,19 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $rand     = mt_rand();
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
          $required = $this->fields['required'] ? ' required' : '';
-         Ticket::dropdownUrgency(['name'     => 'formcreator_field_' . $this->fields['id'],
+         Ticket::dropdownUrgency(['name'     => $fieldName,
                                   'value'    => $this->getValue(),
                                   'comments' => false,
-                                  'rand'     => $rand]
-         );
+                                  'rand'     => $rand
+         ]);
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeUrgency($id, '$rand');
+            pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
          });");
       } else {
          echo Ticket::getPriorityName($this->getValue());
@@ -62,11 +65,18 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['values'])) {
-         $input['values'] = addslashes($input['values']);
-      }
       return $input;
    }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
+  }
 
    public static function getPrefs() {
       return [
@@ -94,14 +104,50 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function getValue() {
-      if (isset($this->fields['answer'])) {
-         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
-            return json_decode($this->fields['answer']);
+      if (isset($this->value)) {
+         if (!is_array($this->value) && is_array(json_decode($this->value))) {
+            return json_decode($this->value);
          }
-         return $this->fields['answer'];
+         return $this->value;
       } else {
          return 3;
       }
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function isValid() {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $this->value == '0') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
    }
 
    public static function getJSFields() {
@@ -109,4 +155,19 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return "tab_fields_fields['urgency'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
+   public function equals($value) {
+      return $this->getValue() == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->getValue() > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
 }

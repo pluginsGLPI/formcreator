@@ -31,8 +31,8 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
 
-$visibility = PluginFormcreatorFields::updateVisibility($_POST);
-echo json_encode($visibility);
-exit();
+class PluginFormcreatorUnknownFieldException extends Exception{}

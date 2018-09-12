@@ -33,11 +33,12 @@
 
 class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
 {
-   const IS_MULTIPLE    = true;
-
    public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . $rand;
       if ($canEdit) {
-         $rand     = mt_rand();
          $required = $this->fields['required'] ? ' required' : '';
 
          $values = [];
@@ -45,24 +46,23 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $obj = new PluginTagTag();
          $obj->getEmpty();
 
-         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
-         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'), '', '', true);
+         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR`type_menu` LIKE '%\"Change\"%' OR `type_menu` LIKE '0')";
+         $where .= getEntitiesRestrictRequest('AND', getTableForItemType(PluginTagTag::class), '', '', true);
 
          $result = $obj->find($where, "name");
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
          }
 
-         $id = $this->fields['id'];
-         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, [
-            'values'               => $this->getValue(),
+         Dropdown::showFromArray($fieldName, $values, [
+            'values'              => $this->getValue(),
             'comments'            => false,
             'rand'                => $rand,
             'multiple'            => true,
          ]);
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeTag($id, '$rand');
+            pluginFormcreatorInitializeTag('$fieldName', '$rand');
          });");
       } else {
          $answer = $this->getAnswer();
@@ -72,21 +72,83 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       }
    }
 
+   public function getValue() {
+      if (isset($this->value)) {
+         return $this->value;
+      }
+      if (!empty($this->fields['default_values'])) {
+         return $this->fields['default_values'];
+      }
+
+      return [];
+   }
+
    public function getAnswer() {
       $return = [];
       $values = $this->getValue();
 
       if (!empty($values)) {
          foreach ($values as $value) {
-            $return[] = Dropdown::getDropdownName(getTableForItemType('PluginTagTag'), $value);
+            $return[] = Dropdown::getDropdownName(getTableForItemType(PluginTagTag::class), $value);
          }
       }
 
       return json_encode($return);
    }
 
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return implode("\r\n", $this->value);
+   }
+
+   public function deserializeValue($value) {
+      $deserialized  = [];
+      $this->value = ($value !== null && $value !== '')
+                  ? explode("\r\n", $value)
+                  : [];
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return implode("\r\n", $this->value);
+   }
+
+   public function isValid() {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $this->value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
+   }
+
    public function prepareQuestionInputForSave($input) {
       return $input;
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!isset($input[$key])) {
+         $input[$key] = [];
+      } else {
+         if (!is_array($input[$key])) {
+            return false;
+         }
+      }
+
+      $this->value = $input[$key];
+      return true;
    }
 
    public static function getName() {
@@ -111,5 +173,21 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['tag'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function notEquals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 }

@@ -37,10 +37,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       global $DB, $CFG_GLPI;
 
       if ($canEdit) {
-         $id = $this->fields['id'];
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         $required     = $this->fields['required'] ? ' required' : '';
          if (!empty($this->fields['values'])) {
-            $rand     = mt_rand();
-            $required = $this->fields['required'] ? ' required' : '';
             $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
             if ($decodedValues === null) {
                $itemtype = $this->fields['values'];
@@ -48,7 +50,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                $itemtype = $decodedValues['itemtype'];
             }
 
-            $dparams = ['name'     => 'formcreator_field_' . $id,
+            $dparams = ['name'     => $fieldName,
                         'value'    => $this->getValue(),
                         'comments' => false,
                         'rand'     => $rand];
@@ -106,16 +108,38 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          }
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeDropdown($id, '$rand');
+            pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
          echo $this->getAnswer();
       }
    }
 
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
    public function getValue() {
-      if (isset($this->fields['answer'])) {
-         return $this->fields['answer'];
+      if (isset($this->value)) {
+         return $this->value;
       }
       if (!empty($this->fields['default_values'])) {
          return $this->fields['default_values'];
@@ -144,6 +168,23 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public static function getName() {
       return _n('Dropdown', 'Dropdowns', 1);
+   }
+
+   public function isValid() {
+      // If the field is required it can't be empty
+      $itemtype = json_decode($this->fields['values'], true);
+      $itemtype = $itemtype['itemtype'];
+      $dropdown = new $itemtype();
+      if ($this->isRequired() && $dropdown->isNewId($this->value)) {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -181,8 +222,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $input['values'] = json_encode($input['values']);
          unset($input['show_ticket_categories']);
          unset($input['show_ticket_categories_depth']);
-         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+         $this->value = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
       }
+
       return $input;
    }
 
@@ -240,5 +282,57 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $a_groups[$data["groups_id"]] = $data["groups_id"];
       }
       return $a_groups;
+   }
+
+   public function equals($value) {
+      $value = html_entity_decode($value);
+      $itemtype = json_decode($this->fields['values'], true);
+      $itemtype = $itemtype['itemtype'];
+      $dropdown = new $itemtype();
+      if ($dropdown->isNewId($this->value)) {
+         return ($value === '');
+      }
+      if (!$dropdown->getFromDB($this->value)) {
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+      }
+      if (is_a($dropdown, CommonTreeDropdown::class)) {
+         $name = $dropdown->getField($dropdown->getCompleteNameField());
+      } else {
+         $name = $dropdown->getField($dropdown->getNameField());
+      }
+      return $name == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $dropdown = new $itemtype();
+      if (!$dropdown->getFromDB($this->value)) {
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+      }
+      if (is_a($dropdown, CommonTreeDropdown::class)) {
+         $name = $dropdown->getField($dropdown->getCompleteNameField());
+      } else {
+         $name = $dropdown->getField($dropdown->getNameField());
+      }
+      return $name > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
    }
 }

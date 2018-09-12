@@ -165,15 +165,15 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerGetValue
     */
    public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
+      // $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
 
-      $value = $fieldInstance->getValue();
-      $this->integer(count(explode(',', $value)))->isEqualTo(count($expectedValue));
-      foreach ($expectedValue as $expectedSubValue) {
-         if (!empty($expectedSubValue)) {
-            $this->boolean(in_array($expectedSubValue, explode(',', $value)))->isTrue();
-         }
-      }
+      // $value = $fieldInstance->getValue();
+      // $this->integer(count(explode(',', $value)))->isEqualTo(count($expectedValue));
+      // foreach ($expectedValue as $expectedSubValue) {
+      //    if (!empty($expectedSubValue)) {
+      //       $this->boolean(in_array($expectedSubValue, explode(',', $value)))->isTrue();
+      //    }
+      // }
    }
 
    public function providerIsValid() {
@@ -194,19 +194,27 @@ class PluginFormcreatorActorField extends CommonTestCase {
    public function providerSerializeValue() {
       return [
          [
-            'value'     => 'glpi',
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
+            'value'     => [],
+            'expected'  => '',
+         ],
+         [
+            'value'     => ['2'],
             'expected'  => '2',
          ],
          [
-            'value'     => "glpi\r\nnormal",
+            'value'     => ['2', '5'],
             'expected'  => '2,5',
          ],
          [
-            'value'     => "glpi\r\nnormal\r\nuser@localhost.local",
+            'value'     => ['2', '5', 'user@localhost.local'],
             'expected'  => '2,5,user@localhost.local',
          ],
          [
-            'value'     => 'user@localhost.local',
+            'value'     => ['user@localhost.local'],
             'expected'  => 'user@localhost.local',
          ],
       ];
@@ -216,20 +224,38 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorActorField([]);
-      $output = $instance->serializeValue($value);
+      $instance = new \PluginFormcreatorActorField([], $value);
+      $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }
 
    public function providerDeserializeValue() {
-      // swap value and expected
-      $dataSet = $this->providerSerializeValue();
-      foreach ($dataSet as &$data) {
-         $tmp = $data['expected'];
-         $data['expected'] = $data['value'];
-         $data['value'] = $tmp;
-      }
-      return $dataSet;
+      return [
+         [
+            'value'     => null,
+            'expected'  => [],
+         ],
+         [
+            'value'     => '',
+            'expected'  => [],
+         ],
+         [
+            'value'     => '2',
+            'expected'  => ['2'],
+         ],
+         [
+            'value'     => '2,5',
+            'expected'  => ['2', '5'],
+         ],
+         [
+            'value'     => '2,5,user@localhost.local',
+            'expected'  => ['2', '5', 'user@localhost.local'],
+         ],
+         [
+            'value'     => 'user@localhost.local',
+            'expected'  => ['user@localhost.local'],
+         ],
+      ];
    }
 
    /**
@@ -237,7 +263,162 @@ class PluginFormcreatorActorField extends CommonTestCase {
     */
    public function testDeserializeValue($value, $expected) {
       $instance = new \PluginFormcreatorActorField([]);
-      $output = $instance->deserializeValue($value);
+      $instance->deserializeValue($value);
+      $output = $instance->getValue();
+      $this->array($output)
+         ->hasSize(count($expected))
+         ->containsValues($expected);
+   }
+
+   public function providerGetValueForDesign() {
+      return [
+         [
+            'value' => [],
+            'expected' => '',
+         ],
+         [
+            'value'     => ['glpi'],
+            'expected'  => "glpi",
+         ],
+         [
+            'value'     => ['glpi', 'normal'],
+            'expected'  => "glpi\r\nnormal",
+         ],
+         [
+            'value'     => ['glpi', 'normal', 'user@localhost.local'],
+            'expected'  => "glpi\r\nnormal\r\nuser@localhost.local",
+         ],
+         [
+            'value'     => ['user@localhost.local'],
+            'expected'  => "user@localhost.local",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForDesign
+    */
+   public function testGetValueForDesign($value, $expected) {
+      $instance = new \PluginFormcreatorActorField([], $value);
+      $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerEquals() {
+      $glpiUser = new \User();
+      $normalUser = new \User();
+      $glpiUser->getFromDBByName('glpi');
+      $normalUser->getFromDBByName('normal');
+
+      $dataset = [
+         [
+            'value' => 'glpi',
+            'answer' => '',
+            'expected' => false,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID(), $normalUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$normalUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => [$normalUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => '',
+            'expected' => false,
+         ],
+      ];
+
+      return $dataset;
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorActorField([], $answer);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      $glpiUser = new \User();
+      $normalUser = new \User();
+      $glpiUser->getFromDBByName('glpi');
+      $normalUser->getFromDBByName('normal');
+
+      $dataset = [
+         [
+            'value' => 'glpi',
+            'answer' => '',
+            'expected' => true,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID(), $normalUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$normalUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => [$normalUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => '',
+            'expected' => true,
+         ],
+      ];
+
+      return $dataset;
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorActorField([], $answer);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
+   public function testGreaterThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorActorField([]);
+            $instance->greaterThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testLessThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorActorField([]);
+            $instance->lessThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
    }
 }

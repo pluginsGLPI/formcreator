@@ -280,7 +280,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             Session::addMessageAfterRedirect(__('The title is required', 'formcreator'), false, ERROR);
             return [];
          }
-         $input['name'] = addslashes($input['name']);
       }
 
       // - field type is required
@@ -295,20 +294,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
           && empty($input['plugin_formcreator_sections_id'])) {
          Session::addMessageAfterRedirect(__('The section is required', 'formcreator'), false, ERROR);
          return [];
-      }
-
-      // Values are required for GLPI dropdowns, dropdowns, multiple dropdowns, checkboxes, radios
-      $itemtypes = ['select', 'multiselect', 'checkboxes', 'radios'];
-      if (in_array($input['fieldtype'], $itemtypes)) {
-         if (isset($input['values'])) {
-            if (empty($input['values'])) {
-               Session::addMessageAfterRedirect(
-                     __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-                     false,
-                     ERROR);
-               return [];
-            }
-         }
       }
 
       if (!isset($input['fieldtype'])) {
@@ -339,6 +324,10 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          return [];
       }
 
+      // Might need to merge $this->fields and $input, $input having precedence
+      // over $this->fields
+      $input['default_values'] = $this->field->serializeValue();
+
       return $input;
    }
 
@@ -361,16 +350,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          return [];
       }
 
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         if ($input['fieldtype'] != 'dropdown'
-             || $input['fieldtype'] != 'dropdown' && $key != 'values') {
-            if ($key != 'regex' && $key != 'name') {
-               $input[$key] = plugin_formcreator_encode($value);
-            }
-         }
-      }
-
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -386,7 +365,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          } else {
             $input['order'] = $maxOrder + 1;
          }
-         $input = $this->serializeDefaultValue($input);
       }
 
       return $input;
@@ -418,25 +396,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      // The if() {} structures here will grow until the call to plugin_formcreator_encode
-      // becomes obsolete
-      foreach ($input as $key => $value) {
-         if ($input['fieldtype'] != 'dropdown'
-             || $input['fieldtype'] != 'dropdown' && $key != 'values' && $key != 'default_values') {
-            if (!($input['fieldtype'] == 'select' && ($key == 'values' || $key == 'default_values'))
-                && !($input['fieldtype'] == 'checkboxes' && ($key == 'values' || $key == 'default_values'))
-                && !($input['fieldtype'] == 'radios' && ($key == 'values' || $key == 'default_values'))
-                && !($input['fieldtype'] == 'multiselect' && ($key == 'values' || $key == 'default_values'))) {
-               if ($key != 'regex' && $key != 'name') {
-                  $input[$key] = plugin_formcreator_encode($value);
-               }
-            } else {
-               $input[$key] = str_replace('\r\n', "\r\n", $input[$key]);
-            }
-         }
-      }
-
       if (!empty($input)
           && isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
@@ -460,37 +419,19 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
                $input['order'] = $maxOrder + 1;
             }
          }
-
-         $input = $this->serializeDefaultValue($input);
       }
 
       return $input;
    }
 
    protected function serializeDefaultValue($input) {
-      // Load field types
-      PluginFormcreatorFields::getTypes();
-
-      // actor field only
-      // TODO : generalize to all other field types
-      if ($input['fieldtype'] == 'actor') {
-         $actorField = new PluginFormcreatorActorField($input, $input['default_values']);
-         $input['default_values'] = $actorField->serializeValue($input['default_values']);
-      }
-
-      return $input;
-   }
-
-   protected function deserializeDefaultValue($input) {
-      // Load field types
-      PluginFormcreatorFields::getTypes();
-
-      // Actor field only
-      if ($input['fieldtype'] == 'actor') {
-         $actorField = new PluginFormcreatorActorField($input, $input['default_values']);
-         $input['default_values'] = $actorField->deserializeValue($input['default_values']);
-      }
-
+      // Might need to merge $this->fields and $input, $input having precedence
+      // over $this->fields
+      $question = new self();
+      $question->fields = $input;
+      $field = PluginFormcreatorFields::getFieldInstance($input['fieldtype'], $question);
+      $field->parseDefaultValue($input['default_values']);
+      $input['default_values'] = $field->serializeValue();
       return $input;
    }
 
@@ -498,33 +439,30 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * Moves the question up in the ordered list of questions in the section
     */
    public function moveUp() {
-      $order         = $this->fields['order'];
-      $sectionId     = $this->fields['plugin_formcreator_sections_id'];
-      $otherItem = new static();
-      if (!method_exists($otherItem, 'getFromDBByRequest')) {
-         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-                                      AND `order` < '$order'
-                                      ORDER BY `order` DESC LIMIT 1");
-      } else {
-         $otherItem->getFromDBByRequest([
-            'WHERE' => [
-               'AND' => [
-                  'plugin_formcreator_sections_id' => $sectionId,
-                  'order'                          => ['<', $order]
-               ]
-            ],
-            'ORDER' => ['order DESC'],
-            'LIMIT' => 1
-         ]);
-      }
+      $order      = $this->fields['order'];
+      $sectionId  = $this->fields['plugin_formcreator_sections_id'];
+      $otherItem  = new static();
+
+      $otherItem->getFromDBByRequest([
+         'WHERE' => [
+            'AND' => [
+               'plugin_formcreator_sections_id' => $sectionId,
+               'order'                          => ['<', $order]
+            ]
+         ],
+         'ORDER' => ['order DESC'],
+         'LIMIT' => 1
+      ]);
+
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),
             'order'  => $otherItem->getField('order'),
          ]);
          $otherItem->update([
-            'id'     => $otherItem->getID(),
-            'order'  => $order,
+            '_skip_checks' => true,
+            'id'           => $otherItem->getID(),
+            'order'        => $order,
          ]);
       }
    }
@@ -535,33 +473,40 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    public function moveDown() {
       $order         = $this->fields['order'];
       $sectionId     = $this->fields['plugin_formcreator_sections_id'];
-      $otherItem = new static();
-      if (!method_exists($otherItem, 'getFromDBByRequest')) {
-         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_sections_id` = '$sectionId'
-                                       AND `order` > '$order'
-                                       ORDER BY `order` ASC LIMIT 1");
-      } else {
-         $otherItem->getFromDBByRequest([
-            'WHERE' => [
-               'AND' => [
-                  'plugin_formcreator_sections_id' => $sectionId,
-                  'order'                          => ['>', $order]
-               ]
-            ],
-            'ORDER' => ['order ASC'],
-            'LIMIT' => 1
-         ]);
-      }
+      $otherItem->getFromDBByRequest([
+         'WHERE' => [
+            'AND' => [
+               'plugin_formcreator_sections_id' => $sectionId,
+               'order'                          => ['>', $order]
+            ]
+         ],
+         'ORDER' => ['order ASC'],
+         'LIMIT' => 1
+      ]);
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),
             'order'  => $otherItem->getField('order'),
          ]);
          $otherItem->update([
-            'id'     => $otherItem->getID(),
-            'order'  => $order,
+            '_skip_checks' => true,
+            'id'           => $otherItem->getID(),
+            'order'        => $order,
          ]);
       }
+   }
+
+   /**
+    * set or reset the required flag
+    *
+    * @param boolean $isRequired
+    */
+   public function setRequired($isRequired) {
+      $this->update([
+         'id'           => $this->getID(),
+         'required'     => $isRequired,
+         '_skip_checks' => true,
+      ]);
    }
 
    /**
@@ -669,6 +614,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $table = self::getTable();
       $question_condition_table = PluginFormcreatorQuestion_Condition::getTable();
 
+      // Update order of questions
       $order = $this->fields['order'];
       $query = "UPDATE `$table` SET
                 `order` = `order` - 1
@@ -676,6 +622,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
                 AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
       $DB->query($query);
 
+      // Always show questions with conditional display on the question being deleted
       $questionId = $this->fields['id'];
       $query = "UPDATE `$table` SET `show_rule`='always'
             WHERE `id` IN (
@@ -780,7 +727,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       Dropdown::showFromArray('dropdown_values', $optgroup, [
          'value'     => $decodedValues['itemtype'],
          'rand'      => $rand,
-         'on_change' => 'change_dropdown(); changeQuestionType();',
+         'on_change' => 'plugin_formcreator_change_dropdown("' . $rand . '"); changeQuestionType();',
       ]);
       echo '</div>';
       echo '<div id="glpi_objects_field">';
@@ -819,7 +766,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       Dropdown::showFromArray('glpi_objects', $optgroup, [
          'value'     => $this->fields['values'],
          'rand'      => $rand,
-         'on_change' => 'change_glpi_objects();',
+         'on_change' => 'plugin_formcreator_change_glpi_objects("' . $rand . '");',
       ]);
       echo '</div>';
       echo '<div id="glpi_ldap_field">';
@@ -987,10 +934,11 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</label>';
       echo '</td>';
       echo '<td>';
-      $defaultValues = "";
+      $defaultValues = '';
       if (!$this->isNewItem()) {
          $fieldObject = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
-         $defaultValues = $fieldObject->prepareQuestionValuesForEdit($this->fields['default_values']);
+         $fieldObject->deserializeValue($this->fields['default_values']);
+         $defaultValues = $fieldObject->getValueForDesign();
       }
       echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
          .'style="width: 90%">'
@@ -1229,25 +1177,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          }
       }
 
-      function toggleCondition(field) {
-         if (field.value == 'always') {
-            $('.plugin_formcreator_logicRow').hide();
-         } else {
-            if ($('.plugin_formcreator_logicRow').length < 1) {
-               addEmptyCondition(field);
-            }
-            $('.plugin_formcreator_logicRow').show();
-         }
-      }
-
-      function toggleLogic(field) {
-         if (field.value == '0') {
-            $('#'+field.id).parents('tr').next().remove();
-         } else {
-            addEmptyCondition(field);
-         }
-      }
-
       function addEmptyCondition(target) {
          $.ajax({
             url: '$rootDoc/plugins/formcreator/ajax/question_condition.php',
@@ -1259,41 +1188,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          }).done(function (data) {
             $(target).parents('tr').after(data);
             $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
-         });
-      }
-
-      function removeNextCondition(target) {
-         $(target).parents('tr').remove();
-         $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
-      }
-
-      function change_dropdown() {
-         dropdown_type = document.getElementById('dropdown_dropdown_values$rand').value;
-
-         jQuery.ajax({
-            url: '$rootDoc/plugins/formcreator/ajax/dropdown_values.php',
-            type: 'GET',
-            data: {
-               dropdown_itemtype: dropdown_type,
-               rand: '$rand'
-            },
-         }).done(function(response){
-            jQuery('#dropdown_default_value_field').html(response);
-         });
-      }
-
-      function change_glpi_objects() {
-         glpi_object = document.getElementById('dropdown_glpi_objects$rand').value;
-
-         jQuery.ajax({
-            url: '$rootDoc/plugins/formcreator/ajax/dropdown_values.php',
-            type: 'GET',
-            data: {
-               dropdown_itemtype: glpi_object,
-               rand: '$rand'
-            },
-         }).done(function(response){
-            jQuery('#dropdown_default_value_field').html(response);
          });
       }
 
@@ -1422,8 +1316,10 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          foreach ($question['_conditions'] as $condition) {
             PluginFormcreatorQuestion_Condition::import($importLinker, $questions_id, $condition);
          }
-
-         $field = PluginFormcreatorFields::getFieldInstance($question['fieldtype'], $question);
+         $questionInstance = new self();
+         $questionInstance->fields = $question;
+         $questionInstance->fields['id'] = $questions_id;
+         $field = PluginFormcreatorFields::getFieldInstance($question['fieldtype'], $questionInstance);
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
             $parameter::import($importLinker, $questions_id, $fieldName, $question['_parameters'][$question['fieldtype']][$fieldName]);

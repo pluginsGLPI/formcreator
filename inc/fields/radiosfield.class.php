@@ -35,8 +35,14 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         // echo '<input type="hidden" class="form-control"
+         //    name="' . $fieldName . '"
+         //    id="' . $domId . '"
+         //    value="" />' . PHP_EOL;
 
          $values = $this->getAvailableValues();
          if (!empty($values)) {
@@ -47,10 +53,10 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   $i++;
                   $checked = ($this->getValue() == $value) ? ' checked' : '';
                   echo '<input type="radio" class="form-control"
-                        name="formcreator_field_' . $this->fields['id'] . '"
-                        id="formcreator_field_' . $this->fields['id'] . '_' . $i . '"
+                        name="' . $fieldName . '"
+                        id="' . $domId . '_' . $i . '"
                         value="' . addslashes($value) . '"' . $checked . ' /> ';
-                  echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
+                  echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
                }
@@ -58,7 +64,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             echo '</div>';
          }
          echo Html::scriptBlock("$(function() {
-            pluginFormcreatorInitializeRadios($id, '$rand');
+            pluginFormcreatorInitializeRadios('$fieldName', '$rand');
          });");
 
       } else {
@@ -85,9 +91,24 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       }
       if (isset($input['default_values'])) {
          // trim values
-         $input['default_values'] = $this->trimValue($input['default_values']);
+         $this->value = explode('\r\n', $input['default_values']);
+         $this->value = array_map('trim', $this->value);
+         $this->value = array_filter($this->value, function($value) {
+            return ($value !== '');
+         });
+         $this->value = array_shift($this->value);
       }
       return $input;
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
    }
 
    public static function getPrefs() {
@@ -105,16 +126,57 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       ];
    }
 
+   public function parseDefaultValue($defaultValue) {
+      $this->value = explode('\r\n', $defaultValue);
+      $this->value = array_filter($this->value, function($value) {
+         return ($value !== '');
+      });
+      $this->value = array_shift($this->value);
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function isValid($value) {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
+   }
+
    public function getValue() {
-      if (isset($this->fields['answer'])) {
-         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
-            return json_decode($this->fields['answer']);
+      if (isset($this->value)) {
+         if (!is_array($this->value) && is_array(json_decode($this->value))) {
+            return json_decode($this->value);
          }
-         return $this->fields['answer'];
+         return $this->value;
       } else {
-         if (static::IS_MULTIPLE) {
-            return explode("\r\n", $this->fields['default_values']);
-         }
          return $this->fields['default_values'];
       }
    }
@@ -122,5 +184,21 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['radios'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      return $this->getValue() == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->getValue() > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 }

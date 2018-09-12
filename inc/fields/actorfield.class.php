@@ -33,8 +33,6 @@
 
 class PluginFormcreatorActorField extends PluginFormcreatorField
 {
-   const IS_MULTIPLE    = true;
-
    public static function getName() {
       return _n('Actor', 'Actors', 1, 'formcreator');
    }
@@ -43,8 +41,8 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       global $CFG_GLPI;
 
       $readonly = $canEdit ? 'false' : 'true';
-      if (isset($this->fields['answer'])) {
-         $value = $this->sanitizeValue($this->fields['answer']);
+      if (isset($this->value)) {
+         $value = $this->sanitizeValue($this->value);
       } else {
          $value = $this->sanitizeValue($this->fields['default_values']);
       }
@@ -56,79 +54,81 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          ];
       }
       $initialValue = json_encode($initialValue);
-      $id = $this->fields['id'];
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+
       // Value needs to be non empty to allow execition of select2's initSelection
       echo '<select multiple
-         name="formcreator_field_' . $id . '[]"
-         id="formcreator_field_' . $id. '"
-         value="" />';
+         name="' . $fieldName . '[]"
+         id="' . $domId . '"
+         value=""></select>';
       echo Html::scriptBlock("$(function() {
-         pluginFormcreatorInitializeActor($id, '$initialValue');
+         pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
       });");
    }
 
-   public function serializeValue($value) {
-      $serialized = [];
-      $value = explode("\r\n", $value);
-      foreach ($value as $item) {
-         if (filter_var($item, FILTER_VALIDATE_EMAIL)) {
-            // a single email address
-            $serialized[$item] = $item;
-         } else {
-            $user = new User();
-            $user->getFromDBbyName($item);
-            if (!$user->isNewItem()) {
-               // A user known in the DB
-               $serialized[$user->getID()] = $item;
-            }
-         }
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
       }
 
-      return implode(',', (array_keys($serialized)));
+      return implode(',', $this->value);
    }
 
    public function deserializeValue($value) {
       $deserialized  = [];
-      $serialized = explode(',', $value);
-      if ($serialized !== null) {
-         foreach ($serialized as $item) {
-            $item = trim($item);
-            if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-               $deserialized[$item] = $item;
-            } else if (!empty($item) && ctype_digit($item) && intval($item)) {
-               $user = new User();
-               $user->getFromDB($item);
-               if (!$user->isNewItem()) {
-                  // A user known in the DB
-                  $deserialized[$user->getID()] = $user->getField('name');
-               }
-            }
+      $serialized = ($value !== null && $value !== '')
+                  ? explode(',', $value)
+                  : [];
+      foreach ($serialized as $item) {
+         $item = trim($item);
+         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+            $deserialized[] = $item;
+         } else if (!empty($item) && ctype_digit($item) && intval($item)) {
+            $deserialized[] = $item;
          }
       }
 
-      return implode("\r\n", $deserialized);
+      $this->value = $deserialized;
    }
 
-   protected function sanitizeValue($value) {
-      $value = trim($value);
-      if (is_array(json_decode($value))) {
-         // For GLPI 9.3+
-         // the HTML field is no longer an HTML input
-         // it is now a HTML select
-         $answerValue = array_filter(json_decode($value));
-      } else {
-         // for GLPI < 9.3 and default values from DB regardless GLPI version
-         $answerValue = array_filter(explode(',', $value));
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
       }
 
+      $value = [];
+      foreach ($this->value as $item) {
+         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+            $value[] = $item;
+         } else {
+            $user = new User();
+            $user->getFromDB($item);
+            if (!$user->isNewItem()) {
+               // A user known in the DB
+               $value[] = $user->getField('name');
+            }
+         }
+      }
+      return implode("\r\n", $value);
+   }
+
+   /**
+    * Sanitize the list of users or emails
+    * @param array list of users and emails
+    * @return array cleaned list of users and emails
+    */
+   protected function sanitizeValue($value) {
       $unknownUsers = [];
       $knownUsers = [];
       $idToCheck = [];
-      foreach ($answerValue as $item) {
+      foreach ($value as $item) {
          $item = trim($item);
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
             $unknownUsers[$item] = $item;
-         } else if (!empty($item) && ctype_digit($item) && intval($item)) {
+         } else if (strlen($item) > 0 && ctype_digit($item)) {
             $user = new User();
             $user->getFromDB($item);
             if (!$user->isNewItem()) {
@@ -140,35 +140,22 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return $knownUsers + $unknownUsers;
    }
 
-   public function isValid($value) {
-      $sanitized = $this->sanitizeValue($value);
-
-      // Ignore empty values
-      $value = trim($value);
-      $value = array_filter(explode(',', $value));
+   public function isValid() {
+      $value = $this->value;
+      $sanitized = $this->sanitizeValue($this->value);
 
       // If the field is required it can't be empty
-      if ($this->isRequired() && count($value) == 0) {
+      if ($this->isRequired() && count($this->value) === 0) {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
          return false;
       }
 
       // If an item has been removed by sanitization, then the data is not valid
-      if (count($sanitized) != count($value)) {
+      if (count($sanitized) != count($this->value)) {
          Session::addMessageAfterRedirect(__('Invalid value:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
          return false;
       }
       return true;
-   }
-
-   public function getValue() {
-      if (isset($this->fields['answer'])) {
-         $value = $this->sanitizeValue($this->fields['answer']);
-      } else {
-         $value = $this->sanitizeValue($this->fields['default_values']);
-      }
-
-      return implode(',', $value);
    }
 
    public static function getPrefs() {
@@ -191,7 +178,77 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function prepareQuestionValuesForEdit($input) {
-      return $this->deserializeValue($input);
+   public function prepareQuestionInputForSave($input) {
+      $parsed  = [];
+      $defaultValue = $input['default_values'];
+      $serialized = ($defaultValue !== null && $defaultValue !== '')
+                  ? explode('\r\n', $defaultValue)
+                  : [];
+      foreach ($serialized as $item) {
+         $item = trim($item);
+         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+            $parsed[] = $item;
+         } else if (!empty($item)) {
+            $user = new User();
+            $user->getFromDBByName($item);
+            if (!$user->isNewItem()) {
+               // A user known in the DB
+               $parsed[] = $user->getID();
+            }
+         }
+      }
+
+      $this->value = $parsed;
+      $input['default_values'] = $this->serializeValue();
+
+      return $input;
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_array($input[$key])) {
+         return false;
+      }
+
+      $this->value = $input[$key];
+      return true;
+   }
+
+   public function equals($value) {
+      $user = new User();
+      if (!$user->getFromDBByName($value)) {
+         // value does not match any user, test if it is an email address
+         if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            // Not an email address,
+            // no need to test against the values of the field
+            return false;
+         }
+
+         if (!is_array($this->value)) {
+            // No content in the field, but a email in the other operand
+            return false;
+         }
+
+         // find the email address in the values of the field
+         return in_array($value, $this->value);
+      }
+      if (!is_array($this->value)) {
+         // No user selected
+         return false;
+      }
+
+      return in_array($user->getID(), $this->value);
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 }

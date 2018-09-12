@@ -33,6 +33,8 @@
 
 class PluginFormcreatorFileField extends PluginFormcreatorField
 {
+   private $uploadData = [];
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $required = $this->isRequired() ? ' required' : '';
@@ -49,27 +51,41 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       } else {
          $doc = new Document();
          $answer = $this->getAnswer();
-         if (is_numeric($answer)) {
+         if (!is_array($answer)) {
             $answer = [$answer];
          }
          foreach ($answer as $item) {
-            if ($doc->getFromDB($item)) {
+            if (is_numeric($item) && $doc->getFromDB($item)) {
                echo $doc->getDownloadLink();
             }
          }
       }
    }
 
-   public function isValid($value) {
-      // If the field is required it can't be empty
+   public function serializeValue() {
+      return '';
+   }
 
+   public function deserializeValue($value) {
+      $this->value = '';
+   }
+
+   public function getValueForDesign() {
+      return '';
+   }
+
+   public function isValid() {
       if (!$this->isRequired()) {
          return true;
       }
 
-      if (is_array($_POST['_formcreator_field_' . $this->fields['id']])
-         && count($_POST['_formcreator_field_' . $this->fields['id']]) > 0) {
-         foreach ($_POST['_formcreator_field_' . $this->fields['id']] as $file) {
+      return $this->isValidValue($this->value);
+   }
+
+   private function isValidValue($value) {
+      // If the field is required it can't be empty
+      if (count($this->uploadData) > 0) {
+         foreach ($this->uploadData as $file) {
             if (!is_file(GLPI_TMP_DIR . '/' . $file)) {
                Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
                return false;
@@ -102,5 +118,30 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['file'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_array($input[$key])) {
+         return false;
+      }
+      $this->uploadData = $input["_$key"];
+      return true;
+   }
+
+   public function equals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function notEquals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 }

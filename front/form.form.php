@@ -132,6 +132,7 @@ if (isset($_POST["add"])) {
       } else if (plugin_formcreator_replaceHelpdesk()) {
          Html::redirect('issue.php');
       } else {
+         Html::back();
          Html::redirect('formlist.php');
       }
    }

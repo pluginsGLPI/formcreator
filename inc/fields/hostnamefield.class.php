@@ -2,18 +2,35 @@
 class PluginFormcreatorHostnameField extends PluginFormcreatorField
 {
    public function show($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       if ($canEdit) {
          $hostname = gethostbyaddr(Toolbox::getRemoteIpAddress());
+         $hostname = Html::cleanInputText($hostname);
          echo '<input type="hidden" class="form-control"
-            name="formcreator_field_' . $this->fields['id'] . '"
-            id="formcreator_field_' . $this->fields['id'] . '"
+            name="' . $fieldName . '"
+            id="' . $domId . '"
             value="' . $hostname . '" />' . PHP_EOL;
       } else {
          parent::show($canEdit);
       }
    }
 
-   public function isValid($value) {
+   public function serializeValue() {
+      return '';
+   }
+
+   public function deserializeValue($value) {
+      $this->value = '';
+   }
+
+   public function getValueForDesign() {
+      return '';
+   }
+
+   public function isValid() {
       return true;
    }
 
@@ -36,8 +53,34 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       ];
    }
 
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+      $this->value = $input[$key];
+      return true;
+   }
+
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['hostname'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      return $this->getValue() == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->getValue() > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 }
