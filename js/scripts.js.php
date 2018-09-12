@@ -563,11 +563,11 @@ function deleteTarget(items_id, token, target_id) {
 var formcreatorQuestions = new Object();
 
 function formcreatorChangeValueOf(field_id, value) {
-   formcreatorQuestions['formcreator_field_' + field_id] = value;
+   //formcreatorQuestions[field_id] = value;
    formcreatorShowFields();
 }
 function formcreatorAddValueOf(field_id, value) {
-   formcreatorQuestions['formcreator_field_' + field_id] = value;
+   //formcreatorQuestions['formcreator_field_' + field_id] = value;
 }
 
 function formcreatorShowFields() {
@@ -706,9 +706,9 @@ function formcreatorChangeActorAssigned(value) {
 /**
  * Initialize an actor field
  */
-function pluginFormcreatorInitializeActor(id, initialValue) {
-   fieldName = 'formcreator_field_' + id;
-   $("#" + fieldName).select2({
+function pluginFormcreatorInitializeActor(domId, initialValue) {
+   var domId = "#" + domId;
+   $(domId).select2({
       tokenSeparators: [",", ";"],
       minimumInputLength: 0,
       ajax: {
@@ -734,14 +734,22 @@ function pluginFormcreatorInitializeActor(id, initialValue) {
          }).length === 0) {
             return { id: term, text: term };
          }
-      },
-      initSelection: function (element, callback) {
-         callback(JSON.parse(initialValue));
       }
-   })
-   $("#" + fieldName).on("change", function(e) {
-      var selectedValues = $("#" + fieldName).val();
-      formcreatorChangeValueOf(id, selectedValues);
+   });
+   initialValue = JSON.parse(initialValue);
+   for (var i = 0; i < initialValue.length; i++) {
+      var option = new Option(initialValue[i].text, initialValue[i].id, true, true);
+      $(domId).append(option).trigger('change');
+      $(domId).trigger({
+         type: 'select2.select',
+         params: {
+            data: initialValue[i]
+         }
+      });
+   }
+   $(domId).on("change", function(e) {
+      var selectedValues = $(domId).val();
+      formcreatorChangeValueOf(domId, selectedValues);
    });
 }
 

@@ -56,14 +56,17 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          ];
       }
       $initialValue = json_encode($initialValue);
-      $id = $this->fields['id'];
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+
       // Value needs to be non empty to allow execition of select2's initSelection
+      $domId = 'formcreator_field_' . $id . $rand;
       echo '<select multiple
-         name="formcreator_field_' . $id . '[]"
-         id="formcreator_field_' . $id. '"
+         name="formcreator_field_' . $id . '"
+         id="' . $domId . '"
          value="" />';
       echo Html::scriptBlock("$(function() {
-         pluginFormcreatorInitializeActor($id, '$initialValue');
+         pluginFormcreatorInitializeActor('$domId', '$initialValue');
       });");
    }
 
