@@ -35,8 +35,10 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
+         $id   = $this->fields['id'];
+         $rand = mt_rand();
          echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
+                  name="formcreator_field_' . $id . '" value="" />' . PHP_EOL;
 
          $values = $this->getAvailableValues();
          if (!empty($values)) {
@@ -47,10 +49,10 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   $i++;
                   $checked = ($this->getValue() == $value) ? ' checked' : '';
                   echo '<input type="radio" class="form-control"
-                        name="formcreator_field_' . $this->fields['id'] . '"
-                        id="formcreator_field_' . $this->fields['id'] . '_' . $i . '"
+                        name="formcreator_field_' . $id . '"
+                        id="formcreator_field_' . $id . '_' . $i . '"
                         value="' . addslashes($value) . '"' . $checked . ' /> ';
-                  echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
+                  echo '<label for="formcreator_field_' . $id . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
                }

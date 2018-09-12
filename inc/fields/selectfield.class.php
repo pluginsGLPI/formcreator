@@ -35,6 +35,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
+         $id         = $this->fields['id'];
          $rand       = mt_rand();
          $tab_values = [];
          $required   = $this->fields['required'] ? ' required' : '';
@@ -50,7 +51,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             if ($this->fields['show_empty']) {
                $tab_values = ['' => '-----'] + $tab_values;
             }
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, [
+            Dropdown::showFromArray('formcreator_field_' . $id, $tab_values, [
                'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
                'values'    => static::IS_MULTIPLE ? $this->getValue() : [],
                'rand'      => $rand,
