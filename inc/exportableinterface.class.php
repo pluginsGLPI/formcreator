@@ -29,9 +29,7 @@
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
- */
-
-interface PluginFormcreatorExportableInterface
+ */interface PluginFormcreatorExportableInterface
 {
    public function export($remove_uuid = false);
 }
