@@ -37,9 +37,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       echo '<div class="description_field form-group" id="form-group-formcreator_field_' . $this->fields['id'] . '">';
       echo nl2br(html_entity_decode($this->fields['description']));
       echo '</div>' . PHP_EOL;
-      echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "");
-         })');
    }
 
    public function isValid($value) {

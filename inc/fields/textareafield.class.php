@@ -43,15 +43,6 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       if ($canEdit) {
          $required = $this->fields['required'] ? ' required' : '';
 
-         // echo '<textarea class="form-control"
-         //          rows="5"
-         //          name="' . $fieldName . '"
-         //          id="' . $domId . '"
-         //          onchange="formcreatorChangeValueOf('.$this->fields['id'].', this.value);">'
-         //         .str_replace('\r\n', PHP_EOL, $this->getValue()).'</textarea>';
-         // if ($CFG_GLPI["use_rich_text"]) {
-         //    Html::initEditorSystem('formcreator_field_'.$this->fields['id']);
-         // }
          echo Html::textarea([
             'name'            => $fieldName,
             'rand'            => $rand,

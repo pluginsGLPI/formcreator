@@ -33,6 +33,6 @@
 
 include ('../../../inc/includes.php');
 
-$visibility = PluginFormcreatorFields::updateVisibility($_POST['values']);
+$visibility = PluginFormcreatorFields::updateVisibility($_POST);
 echo json_encode($visibility);
 exit();

@@ -89,17 +89,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       echo '</div>';
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
       // $value = json_encode($this->getAnswer());
-      if ($this->fields['fieldtype'] == 'dropdown') {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-            . str_replace("\r\n", "\\r\\n", addslashes($this->fields['answer'])) . '");
-         })');
-      } else {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-               . str_replace("\r\n", "\\r\\n", addslashes(html_entity_decode($value))) . '");
-         })');
-      }
    }
 
    /**

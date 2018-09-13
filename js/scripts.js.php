@@ -157,21 +157,6 @@ $(function() {
    searchInput = $('#plugin_formcreator_searchBar input:first');
    if (searchInput.length == 1) {
       // Dynamically update forms and faq items while the user types in the search bar
-      // var timer;
-      // searchInput.keyup(
-      //    function(event) {
-      //    if (typeof timer != "undefined") {
-      //          clearTimeout(timer);
-      //       }
-      //       if (event.which == 13) {
-      //          updateWizardFormsView(currentCategory);
-      //       } else {
-      //          timer = setTimeout(function() {
-      //             updateWizardFormsView(currentCategory);
-      //          }, 300);
-      //       }
-      //    }
-      // );
       var timer = getTimer(searchInput);
       var callback = function() {
          updateWizardFormsView(currentCategory);
@@ -592,14 +577,6 @@ function deleteTarget(items_id, token, target_id) {
 // SHOW OR HIDE FORM FIELDS
 var formcreatorQuestions = new Object();
 
-function formcreatorChangeValueOf(field_id, value) {
-   //formcreatorQuestions[field_id] = value;
-   //formcreatorShowFields(field_id);
-}
-function formcreatorAddValueOf(field_id, value) {
-   //formcreatorQuestions['formcreator_field_' + field_id] = value;
-}
-
 function formcreatorShowFields(field) {
    // better use $(element).parents('form:first')
    // assuming element is an input field of the form
@@ -616,16 +593,19 @@ function formcreatorShowFields(field) {
          // Do nothing for now
       }
       var i = 0;
-      for (question in formcreatorQuestions) {
-         if (questionToShow[question]) {
-            $('#form-group-' + question).show();
-            i++;
-            $('#form-group-' + question).removeClass('line' + (i+1) % 2);
-            $('#form-group-' + question).addClass('line' + i%2);
-         } else {
-            $('#form-group-' + question).hide();
-            $('#form-group-' + question).removeClass('line0');
-            $('#form-group-' + question).removeClass('line1');
+      for (var questionKey in questionToShow) {
+         var questionId = parseInt(questionKey.replace('formcreator_field_', ''));
+         if (!isNaN(questionId)) {
+            if (questionToShow[questionKey]) {
+               $('#form-group-' + questionId).show();
+               i++;
+               $('#form-group-' + questionId).removeClass('line' + (i+1) % 2);
+               $('#form-group-' + questionId).addClass('line' + i%2);
+            } else {
+               $('#form-group-' + questionId).hide();
+               $('#form-group-' + questionId).removeClass('line0');
+               $('#form-group-' + questionId).removeClass('line1');
+            }
          }
       }
    });
@@ -886,7 +866,7 @@ function pluginFormcreatorInitializeTag(fieldName, rand) {
 function pluginFormcreatorInitializeTextarea(fieldName, rand) {
    var field = $('input[name="' + fieldName + '"]');
    field.on("change", function(e) {
-      formcreatorChangeValueOf(field);
+      formcreatorShowFields(field);
    });
 }
 
