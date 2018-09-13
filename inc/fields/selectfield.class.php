@@ -35,10 +35,12 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $rand       = mt_rand();
-         $tab_values = [];
-         $required   = $this->fields['required'] ? ' required' : '';
-         $values     = $this->getAvailableValues();
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         $values       = $this->getAvailableValues();
+         $tab_values   = [];
 
          if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
@@ -50,7 +52,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             if ($this->fields['show_empty']) {
                $tab_values = ['' => '-----'] + $tab_values;
             }
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, [
+            Dropdown::showFromArray($fieldName, $tab_values, [
                'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
                'values'    => static::IS_MULTIPLE ? $this->getValue() : [],
                'rand'      => $rand,
@@ -58,14 +60,9 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
             ]);
          }
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
-                        var selectedValues = jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").val();
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializSelect('$fieldName', '$rand');
+         });");
       } else {
          echo nl2br($this->getAnswer());
          echo PHP_EOL;

@@ -325,25 +325,18 @@ class PluginFormcreatorFields
     * @rturn array
     */
    public static function updateVisibility($currentValues) {
-      foreach ($currentValues as &$value) {
-         if (is_array($value)) {
-            foreach ($value as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value, false);
-            }
-         } else if (is_array(json_decode($value))) {
-            $tab = json_decode($value);
-            foreach ($tab as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value, false);
-            }
-            $value = json_encode($tab);
-         } else {
-            $value = stripslashes($value);
+      $adaptedValues = [];
+      foreach ($currentValues as $key => $value) {
+         $id = (int) str_replace('formcreator_field_', '', $key);
+         if ($id !== 0) {
+            // Ignore keys not matching a field name
+            $adaptedValues[$id] = $value;
          }
       }
-      unset ($value);
+
       $questionToShow = [];
       foreach ($currentValues as $id => $value) {
-         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
+         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $adaptedValues);
       }
 
       return $questionToShow;

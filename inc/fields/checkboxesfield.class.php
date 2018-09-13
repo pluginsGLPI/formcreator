@@ -36,8 +36,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    const IS_MULTIPLE    = true;
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
+         $id    = $this->fields['id'];
+         $rand  = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         // echo '<input type="hidden" class="form-control"
+         //       name="' . $fieldName . '" value="" />' . PHP_EOL;
 
          $values = [];
          $values = $this->getAvailableValues();
@@ -50,33 +54,25 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                   $current_value = null;
                   $current_value = $this->getValue();
                   echo "<div class='checkbox'>";
-                  echo Html::getCheckbox(['title'         => $value,
-                                          'id'            => 'formcreator_field_'.$this->fields['id'].'_'.$i,
-                                          'name'          => 'formcreator_field_'.$this->fields['id'] . '[]',
-                                          'value'         => $value,
-                                          'zero_on_empty' => false,
-                                          'checked' => (!empty($current_value) && in_array($value, $current_value))]);
-                  echo '<label for="formcreator_field_'.$this->fields['id'].'_'.$i.'">';
-                  echo '&nbsp;'.$value;
+                  echo Html::getCheckbox([
+                     'title'         => $value,
+                     'id'            => $domId.'_'.$i,
+                     'name'          => $fieldName . '[]',
+                     'value'         => $value,
+                     'zero_on_empty' => false,
+                     'checked' => (!empty($current_value) && in_array($value, $current_value))
+                  ]);
+                  echo '<label for="' . $domId . '_' . $i . '">';
+                  echo '&nbsp;' . $value;
                   echo '</label>';
                   echo "</div>";
                }
             }
             echo '</div>';
          }
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("input[name=\'formcreator_field_' . $this->fields['id']. '[]\']").on("change", function() {
-                        var tab_values = new Array();
-                        jQuery("input[name=\'formcreator_field_' . $this->fields['id']. '[]\']").each(function() {
-                           if (this.checked == true) {
-                              tab_values.push(this.value);
-                           }
-                        });
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', tab_values);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeCheckboxes('$fieldName', '$rand');
+         });");
 
       } else {
          $answer = null;

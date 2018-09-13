@@ -89,17 +89,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       echo '</div>';
       $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
       // $value = json_encode($this->getAnswer());
-      if ($this->fields['fieldtype'] == 'dropdown') {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-            . str_replace("\r\n", "\\r\\n", addslashes($this->fields['answer'])) . '");
-         })');
-      } else {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-               . str_replace("\r\n", "\\r\\n", addslashes(html_entity_decode($value))) . '");
-         })');
-      }
    }
 
    /**
@@ -107,12 +96,18 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param string $canEdit
     */
    public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       if ($canEdit) {
          echo '<input type="text" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '"
-                  id="formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getAnswer() . '"
-                  onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $this->getAnswer() . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
       } else {
          echo $this->getAnswer();
       }

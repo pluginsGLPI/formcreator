@@ -34,10 +34,14 @@
 class PluginFormcreatorHiddenField extends PluginFormcreatorField
 {
    public function show($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       echo '<input type="hidden" class="form-control"
-               name="formcreator_field_' . $this->fields['id'] . '"
-               id="formcreator_field_' . $this->fields['id'] . '"
-               value="' . $this->fields['default_values'] . '" />' . PHP_EOL;
+         name="' . $fieldName . '"
+         id="' . $domId . '"
+         value="' . $this->fields['default_values'] . '" />' . PHP_EOL;
    }
 
    public function isValid($value) {

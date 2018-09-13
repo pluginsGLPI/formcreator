@@ -56,48 +56,19 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          ];
       }
       $initialValue = json_encode($initialValue);
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+
       // Value needs to be non empty to allow execition of select2's initSelection
       echo '<select multiple
-         name="formcreator_field_' . $this->fields['id'] . '[]"
-         id="formcreator_field_' . $this->fields['id']. '"
+         name="' . $fieldName . '"
+         id="' . $domId . '"
          value="" />';
-      echo Html::scriptBlock('$(function() {
-         $("#formcreator_field_' . $this->fields['id']. '").select2({
-            tokenSeparators: [",", ";"],
-            minimumInputLength: 0,
-            ajax: {
-               url: "' . $CFG_GLPI['root_doc'] . '/ajax/getDropdownUsers.php",
-               type: "POST",
-               dataType: "json",
-               data: function (params, page) {
-                  return {
-                     entity_restrict: -1,
-                     searchText: params.term,
-                     page_limit: 100,
-                     page: page
-                  }
-               },
-               results: function (data, page) {
-                  var more = (data.count >= 100);
-                  return {results: data.results, pagination: {"more": more}};
-               }
-            },
-            createSearchChoice: function itemCreator(term, data) {
-               if ($(data).filter(function() {
-                  return this.text.localeCompare(term) === 0;
-               }).length === 0) {
-                  return { id: term, text: term };
-               }
-            },
-            initSelection: function (element, callback) {
-               callback(JSON.parse(\'' . $initialValue . '\'));
-            }
-         })
-         $("#formcreator_field_' . $this->fields['id'] . '").on("change", function(e) {
-            var selectedValues = $("#formcreator_field_' . $this->fields['id'] . '").val();
-            formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-         });
-      });');
+      echo Html::scriptBlock("$(function() {
+         pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
+      });");
    }
 
    public function serializeValue($value) {

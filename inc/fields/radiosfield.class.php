@@ -35,8 +35,14 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         // echo '<input type="hidden" class="form-control"
+         //    name="' . $fieldName . '"
+         //    id="' . $domId . '"
+         //    value="" />' . PHP_EOL;
 
          $values = $this->getAvailableValues();
          if (!empty($values)) {
@@ -47,27 +53,19 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   $i++;
                   $checked = ($this->getValue() == $value) ? ' checked' : '';
                   echo '<input type="radio" class="form-control"
-                        name="formcreator_field_' . $this->fields['id'] . '"
-                        id="formcreator_field_' . $this->fields['id'] . '_' . $i . '"
+                        name="' . $fieldName . '"
+                        id="' . $domId . '_' . $i . '"
                         value="' . addslashes($value) . '"' . $checked . ' /> ';
-                  echo '<label for="formcreator_field_' . $this->fields['id'] . '_' . $i . '">';
+                  echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
                }
             }
             echo '</div>';
          }
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").on("change", function() {
-                        jQuery("input[name=\'formcreator_field_' . $this->fields['id'] . '\']").each(function() {
-                           if (this.checked == true) {
-                              formcreatorChangeValueOf (' . $this->fields['id'] . ', this.value);
-                           }
-                        });
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeRadios('$fieldName', '$rand');
+         });");
 
       } else {
          echo $this->getAnswer();

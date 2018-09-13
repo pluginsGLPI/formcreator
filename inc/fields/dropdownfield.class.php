@@ -37,9 +37,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       global $DB, $CFG_GLPI;
 
       if ($canEdit) {
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         $required     = $this->fields['required'] ? ' required' : '';
          if (!empty($this->fields['values'])) {
-            $rand     = mt_rand();
-            $required = $this->fields['required'] ? ' required' : '';
             $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
             if ($decodedValues === null) {
                $itemtype = $this->fields['values'];
@@ -47,7 +50,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                $itemtype = $decodedValues['itemtype'];
             }
 
-            $dparams = ['name'     => 'formcreator_field_' . $this->fields['id'],
+            $dparams = ['name'     => $fieldName,
                         'value'    => $this->getValue(),
                         'comments' => false,
                         'rand'     => $rand];
@@ -104,13 +107,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $itemtype::dropdown($dparams);
          }
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', e.val);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
+         });");
       } else {
          echo $this->getAnswer();
       }

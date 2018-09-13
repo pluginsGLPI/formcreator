@@ -36,8 +36,11 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    const IS_MULTIPLE    = true;
 
    public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . $rand;
       if ($canEdit) {
-         $rand     = mt_rand();
          $required = $this->fields['required'] ? ' required' : '';
 
          $values = [];
@@ -45,28 +48,25 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $obj = new PluginTagTag();
          $obj->getEmpty();
 
-         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR `type_menu` LIKE '0')";
-         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'), '', '', true);
+         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR`type_menu` LIKE '%\"Change\"%' OR `type_menu` LIKE '0')";
+         $where .= getEntitiesRestrictRequest('AND', getTableForItemType(PluginTagTag::class), '', '', true);
 
          $result = $obj->find($where, "name");
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
          }
 
-         Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $values, [
-            'values'               => $this->getValue(),
+         $id = $this->fields['id'];
+         Dropdown::showFromArray($fieldName, $values, [
+            'values'              => json_decode($this->getValue(), true),
             'comments'            => false,
             'rand'                => $rand,
             'multiple'            => true,
          ]);
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', e.val);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeTag('$fieldName', '$rand');
+         });");
       } else {
          $answer = $this->getAnswer();
          echo '<div class="form_field">';
