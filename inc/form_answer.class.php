@@ -387,8 +387,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $params = Search::manageParams(__CLASS__, $params);
       $data   = Search::prepareDatasForSearch(__CLASS__, $params, $forcedisplay);
       Search::constructSQL($data);
-      Search::constructDatas($data);
-      Search::displayDatas($data);
+      Search::constructData($data);
+      Search::displayData($data);
 
       // remove previous session var (restore default view)
       unset($_SESSION['formcreator']['form_search_answers']);
@@ -903,7 +903,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $form = $question->getForm();
 
       if ($question->getField('fieldtype') != 'file') {
-         // If the answer is set, check if it is an array (then implode id).
          if (isset($value)) {
             // If the answer is set, check if it is an array (then implode id).
             if ($value !== null) {
