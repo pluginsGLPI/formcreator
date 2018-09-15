@@ -35,11 +35,11 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
   `entities_id` int(11) NOT NULL DEFAULT '0',
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
   `access_rights` tinyint(1) NOT NULL DEFAULT '1',
   `requesttype` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `content` longtext,
   `plugin_formcreator_categories_id` int(11) unsigned NOT NULL DEFAULT '0',
@@ -99,9 +99,9 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
   `plugin_formcreator_sections_id` int(11) NOT NULL,
   `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
-  `name` varchar(255) NOT NULL,
   `required` tinyint(1) NOT NULL DEFAULT '0',
   `show_empty` tinyint(1) NOT NULL DEFAULT '0',
   `default_values` text,
@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_forms_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `plugin_formcreator_forms_id` int(11) NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -231,10 +231,10 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets_actors` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
   `display_id` varchar(255) NOT NULL,
   `original_id` int(11) NOT NULL DEFAULT '0',
   `sub_itemtype` varchar(100) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
   `status` varchar(255) NOT NULL DEFAULT '',
   `date_creation` datetime NOT NULL,
   `date_mod` datetime NOT NULL,
