@@ -80,7 +80,7 @@ if (isset($_REQUEST['id'])
          }
       }
 
-      $form->displayUserForm($form);
+      $form->displayUserForm();
 
    } else {
       Html::displayNotFoundError();
