@@ -903,11 +903,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    /**
     * Display the Form end-user form to be filled
     *
-    * @param  CommonGLPI   $item       Instance of the Form to be displayed
-    *
     * @return Null                     Nothing, just display the form
     */
-   public function displayUserForm(CommonGLPI $item) {
+   public function displayUserForm() {
       global $CFG_GLPI, $DB;
 
       if (isset($_SESSION['formcreator']['data'])) {
@@ -921,19 +919,19 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
       // Display form
-      echo "<form name='formcreator_form".$item->getID()."' method='post' role='form' enctype='multipart/form-data'
+      echo "<form name='formcreator_form".$this->getID()."' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc']."/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
-      echo $item->fields['name']."&nbsp;";
+      echo $this->fields['name']."&nbsp;";
       echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
                  title='".__("Print this form", 'formcreator')."' onclick='window.print();'>";
       echo '</h1>';
 
       // Form Header
-      if (!empty($item->fields['content'])) {
+      if (!empty($this->fields['content'])) {
          echo '<div class="form_header">';
-         echo html_entity_decode($item->fields['content']);
+         echo html_entity_decode($this->fields['content']);
          echo '</div>';
       }
       // Get and display sections of the form
@@ -941,7 +939,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $questions     = [];
 
       $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $item->getID(), '`order` ASC');
+      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $this->getID(), '`order` ASC');
       echo '<div class="form_section">';
       foreach ($find_sections as $section_line) {
          echo '<h2>' . $section_line['name'] . '</h2>';
@@ -965,12 +963,12 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       })');
 
       // Show validator selector
-      if ($item->fields['validation_required'] > 0) {
+      if ($this->fields['validation_required'] > 0) {
          $table_form_validator = PluginFormcreatorForm_Validator::getTable();
          $validators = [0 => Dropdown::EMPTY_VALUE];
 
          // Groups
-         if ($item->fields['validation_required'] == 2) {
+         if ($this->fields['validation_required'] == 2) {
             $query = "SELECT g.`id`, g.`completename`
                       FROM `glpi_groups` g
                       LEFT JOIN `$table_form_validator` fv ON fv.`items_id` = g.`id` AND fv.itemtype = 'Group'
@@ -1005,9 +1003,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo '<input type="submit" name="submit_formcreator" class="submit_button" value="' . __('Send') . '" />';
       echo '</div>';
 
-      echo '<input type="hidden" name="formcreator_form" value="' . $item->getID() . '">';
+      echo '<input type="hidden" name="formcreator_form" value="' . $this->getID() . '">';
       echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
-      echo '<input type="hidden" name="uuid" value="' .$item->fields['uuid'] . '">';
+      echo '<input type="hidden" name="uuid" value="' .$this->fields['uuid'] . '">';
       echo '</form>';
    }
 
