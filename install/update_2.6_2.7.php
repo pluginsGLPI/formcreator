@@ -171,4 +171,15 @@ function plugin_formcreator_update_2_7(Migration $migration) {
    // Update target target columns
    $table = 'glpi_plugin_formcreator_targettickets';
    $migration->changeField($table, 'comment', 'content', 'longtext');
+
+   // Reorder columns on some tables
+   $tables = [
+      'glpi_plugin_formcreator_forms',
+      'glpi_plugin_formcreator_questions',
+      'glpi_plugin_formcreator_sections',
+      'glpi_plugin_formcreator_issues',
+   ];
+   foreach ($tables as $table) {
+      $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id']);
+   }
 }
