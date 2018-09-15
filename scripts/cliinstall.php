@@ -31,11 +31,15 @@
  * ---------------------------------------------------------------------
  */
 
-(PHP_SAPI == 'cli') or die("Only available from command line");
+(PHP_SAPI == 'cli') or die('Only available from command line');
 
 chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
 
-include (__DIR__ . "/../vendor/docopt/docopt/src/docopt.php");
+if (!is_readable(__DIR__ . '/../vendor/autoload.php')) {
+   echo 'Please run composer install --no-dev in the plugin directory' . PHP_EOL;
+   exit(1);
+}
+include (__DIR__ . '/../vendor/docopt/docopt/src/docopt.php');
 
 $doc = <<<DOC
 cliinstall.php
