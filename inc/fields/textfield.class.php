@@ -33,6 +33,25 @@
 
 class PluginFormcreatorTextField extends PluginFormcreatorField
 {
+   public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
+      if ($canEdit) {
+         echo '<input type="text" class="form-control"
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
+      } else {
+         echo $this->value;
+      }
+   }
+
    public function serializeValue() {
       if ($this->value === null || $this->value === '') {
          return '';
@@ -55,9 +74,9 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function isValid($value) {
+   public function isValid() {
       // If the field is required it can't be empty
-      if ($this->isRequired() && $value == '') {
+      if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
@@ -65,9 +84,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
          return false;
       }
 
-      $value = utf8_decode(stripcslashes($value));
-
-      if (!$this->isValidValue($value)) {
+      if (!$this->isValidValue($this->value)) {
          return false;
       }
 
@@ -186,7 +203,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
@@ -194,7 +211,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return $this->getValue() > $value;
+      return $this->value > $value;
    }
 
    public function lessThan($value) {

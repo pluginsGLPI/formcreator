@@ -51,7 +51,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             }
 
             $dparams = ['name'     => $fieldName,
-                        'value'    => $this->getValue(),
+                        'value'    => $this->value,
                         'comments' => false,
                         'rand'     => $rand];
 
@@ -111,7 +111,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         echo $this->getAnswer();
+         echo $this->value();
       }
    }
 
@@ -135,23 +135,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       }
 
       return $this->value;
-   }
-
-   public function getValue() {
-      if (isset($this->value)) {
-         return $this->value;
-      }
-      if (!empty($this->fields['default_values'])) {
-         return $this->fields['default_values'];
-      }
-      return 0;
-   }
-
-   public function getAnswer() {
-      $value = $this->getValue();
-      $DbUtil = new DbUtils();
-      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-      return Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $value);
    }
 
    public function prepareQuestionInputForTarget($input) {

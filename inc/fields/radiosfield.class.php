@@ -51,7 +51,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
-                  $checked = ($this->getValue() == $value) ? ' checked' : '';
+                  $checked = ($this->value == $value) ? ' checked' : '';
                   echo '<input type="radio" class="form-control"
                         name="' . $fieldName . '"
                         id="' . $domId . '_' . $i . '"
@@ -68,7 +68,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          });");
 
       } else {
-         echo $this->getAnswer();
+         echo $this->value;
       }
    }
 
@@ -103,8 +103,13 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
-      if (!is_string($input[$key])) {
-         return false;
+      if (isset($input[$key])) {
+         if (!is_string($input[$key])) {
+            return false;
+         }
+      } else {
+         $this->value = '';
+         return true;
       }
 
        $this->value = $input[$key];
@@ -156,9 +161,9 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function isValid($value) {
+   public function isValid() {
       // If the field is required it can't be empty
-      if ($this->isRequired() && $value == '') {
+      if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
@@ -170,24 +175,13 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       return true;
    }
 
-   public function getValue() {
-      if (isset($this->value)) {
-         if (!is_array($this->value) && is_array(json_decode($this->value))) {
-            return json_decode($this->value);
-         }
-         return $this->value;
-      } else {
-         return $this->fields['default_values'];
-      }
-   }
-
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['radios'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
@@ -195,7 +189,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return $this->getValue() > $value;
+      return $this->value > $value;
    }
 
    public function lessThan($value) {

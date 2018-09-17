@@ -40,7 +40,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
          $required     = $this->fields['required'] ? ' required' : '';
-         $defaultValue = Html::cleanInputText($this->getValue());
+         $defaultValue = Html::cleanInputText($this->value);
 
          echo '<input type="email" class="form-control"
                   name="' . $fieldName . '"
@@ -50,7 +50,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
             pluginFormcreatorInitializeEmail('$fieldName', '$rand');
          });");
       } else {
-         echo $this->getAnswer();
+         echo $this->value;
       }
    }
 
@@ -120,14 +120,6 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       return "tab_fields_fields['email'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function getValue() {
-      if (isset($this->value)) {
-         return $this->value;
-      } else {
-         return $this->fields['default_values'];
-      }
-   }
-
    public function prepareQuestionInputForSave($input) {
       $input['values'] = '';
       $this->value = $input['default_values'];
@@ -139,7 +131,10 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       if (!is_string($input[$key])) {
          return false;
       }
-      if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+      if ($input[$key] === '') {
+         return true;
+      }
+      if (!filter_var($input[$key], FILTER_VALIDATE_EMAIL)) {
          return false;
       }
 
@@ -148,7 +143,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {

@@ -42,7 +42,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
          $required  = ($canEdit && $this->fields['required']) ? ' required' : '';
 
          Html::showDateField($fieldName, [
-            'value' => $this->getValue(),
+            'value' => (strtotime($this->value) != '') ? $this->value : '',
             'rand'  => $rand,
          ]);
          echo Html::scriptBlock("$(function() {
@@ -50,21 +50,8 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
          });");
 
       } else {
-         echo $this->getAnswer();
+         echo $this->value();
       }
-   }
-
-   public function getValue() {
-      if (isset($this->value)) {
-         $date = $this->value;
-      } else {
-         $date = $this->fields['default_values'];
-      }
-      return (strtotime($date) != '') ? $date : null;
-   }
-
-   public function getAnswer() {
-      return Html::convDate($this->getValue());
    }
 
    public function serializeValue() {
@@ -118,7 +105,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      if (empty($this->value)) {
+      if ($this->value === '') {
          $answer = '0000-00-00 00:00';
       } else {
          $answer = $this->value;

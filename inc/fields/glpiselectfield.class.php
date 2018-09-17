@@ -68,16 +68,6 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       return true;
    }
 
-   public function getAnswer() {
-      $value = $this->getValue();
-      $DbUtil = new DbUtils();
-      if ($this->fields['values'] == User::class) {
-         return $DbUtil->getUserName($value);
-      } else {
-         return Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $value);
-      }
-   }
-
    public static function getPrefs() {
       return [
          'required'       => 1,

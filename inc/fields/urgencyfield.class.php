@@ -41,7 +41,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
          $domId        = $fieldName . '_' . $rand;
          $required = $this->fields['required'] ? ' required' : '';
          Ticket::dropdownUrgency(['name'     => $fieldName,
-                                  'value'    => $this->getValue(),
+                                  'value'    => $this->value,
                                   'comments' => false,
                                   'rand'     => $rand
          ]);
@@ -50,13 +50,13 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
             pluginFormcreatorInitializeUrgency('$fieldName', '$rand');
          });");
       } else {
-         echo Ticket::getPriorityName($this->getValue());
+         echo Ticket::getPriorityName($this->value);
       }
    }
 
    public function getAnswer() {
       $values = $this->getAvailableValues();
-      $value  = $this->getValue();
+      $value  = $this->value;
       return in_array($value, $values) ? $value : $this->fields['default_values'];
    }
 
@@ -95,23 +95,12 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
    public function getAvailableValues() {
       return [
-         _x('urgency', 'Very high'),
-         _x('urgency', 'High'),
-         _x('urgency', 'Medium'),
-         _x('urgency', 'Low'),
-         _x('urgency', 'Very low'),
+         5 =>_x('urgency', 'Very high'),
+         4 =>_x('urgency', 'High'),
+         3 =>_x('urgency', 'Medium'),
+         2 =>_x('urgency', 'Low'),
+         1 =>_x('urgency', 'Very low'),
       ];
-   }
-
-   public function getValue() {
-      if (isset($this->value)) {
-         if (!is_array($this->value) && is_array(json_decode($this->value))) {
-            return json_decode($this->value);
-         }
-         return $this->value;
-      } else {
-         return 3;
-      }
    }
 
    public function serializeValue() {
@@ -156,7 +145,8 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      $available = $this->getAvailableValues();
+      return strcasecmp($available[$this->value], $value) === 0;
    }
 
    public function notEquals($value) {
@@ -164,7 +154,8 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return $this->getValue() > $value;
+      $available = $this->getAvailableValues();
+      return strcasecmp($available[$this->value], $value) > 0;
    }
 
    public function lessThan($value) {

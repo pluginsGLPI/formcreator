@@ -107,7 +107,7 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {

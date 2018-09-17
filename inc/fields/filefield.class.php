@@ -50,9 +50,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
       } else {
          $doc = new Document();
-         $answer = $this->getAnswer();
-         if (!is_array($answer)) {
-            $answer = [$answer];
+         $answer = $this->value();
+         if (!is_array($this->value)) {
+            $answer = [$this->value];
          }
          foreach ($answer as $item) {
             if (is_numeric($item) && $doc->getFromDB($item)) {
@@ -122,10 +122,15 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
-      if (!is_array($input[$key])) {
-         return false;
+      if (isset($input["_$key"])) {
+         if (!is_array($input["_$key"])) {
+            return false;
+         }
+
+         $this->uploadData = $input["_$key"];
+         return true;
       }
-      $this->uploadData = $input["_$key"];
+      $this->uploadData = [];
       return true;
    }
 

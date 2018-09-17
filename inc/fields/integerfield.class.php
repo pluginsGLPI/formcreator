@@ -33,11 +33,22 @@
 
 class PluginFormcreatorIntegerField extends PluginFormcreatorField
 {
-   public function getValue() {
-      if (isset($this->value)) {
-         return $this->value;
+   public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
+      if ($canEdit) {
+         echo '<input type="text" class="form-control"
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
       } else {
-         return $this->fields['default_values'];
+         echo $this->value;
       }
    }
 
@@ -209,7 +220,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return ((int) $this->getValue()) === ((int) $value);
+      return ((int) $this->value) === ((int) $value);
    }
 
    public function notEquals($value) {
@@ -217,7 +228,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return ((int) $this->getValue()) > ((int) $value);
+      return ((int) $this->value) > ((int) $value);
    }
 
    public function lessThan($value) {

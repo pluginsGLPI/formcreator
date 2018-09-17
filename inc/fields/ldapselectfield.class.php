@@ -165,12 +165,6 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return $input;
    }
 
-   public function getAnswer() {
-      $values = $this->getAvailableValues();
-      $value  = $this->getValue();
-      return in_array($value, $values) ? $value : $this->fields['default_values'];
-   }
-
    public static function getPrefs() {
       return [
          'required'       => 1,

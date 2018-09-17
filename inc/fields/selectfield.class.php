@@ -51,7 +51,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
 
             Dropdown::showFromArray($fieldName, $tab_values, [
                'display_emptychoice' => $this->fields['show_empty'] == 1,
-               'value'     => $this->getValue(),
+               'value'     => $this->value,
                'values'    => [],
                'rand'      => $rand,
                'multiple'  => false,
@@ -62,26 +62,14 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
             pluginFormcreatorInitializeSelect('$fieldName', '$rand');
          });");
       } else {
-         echo nl2br($this->getAnswer());
+         echo nl2br($this->value);
          echo PHP_EOL;
       }
    }
 
-   public function getValue() {
-      if (isset($this->value)) {
-         return $this->value;
-      }
-      if (!$this->fields['show_empty'] && $this->fields['default_values'] === '') {
-         $availableValues = $this->getAvailableValues();
-         return array_shift($availableValues);
-      }
-
-      return $this->fields['default_values'];
-   }
-
    public function getAnswer() {
       $values = $this->getAvailableValues();
-      $value  = $this->getValue();
+      $value  = $this->value;
       return in_array($value, $values) ? $value : $this->fields['default_values'];
    }
 
@@ -162,7 +150,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
@@ -170,7 +158,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function greaterThan($value) {
-      return $this->getValue() > $value;
+      return $this->value > $value;
    }
 
    public function lessThan($value) {

@@ -39,8 +39,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          $rand  = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
-         // echo '<input type="hidden" class="form-control"
-         //       name="' . $fieldName . '" value="" />' . PHP_EOL;
 
          $values = [];
          $values = $this->getAvailableValues();
@@ -50,8 +48,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $i++;
-                  $current_value = null;
-                  $current_value = $this->getValue();
+                  $current_value = $this->value;
                   echo "<div class='checkbox'>";
                   echo Html::getCheckbox([
                      'title'         => $value,
@@ -59,7 +56,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                      'name'          => $fieldName . '[]',
                      'value'         => $value,
                      'zero_on_empty' => false,
-                     'checked' => (!empty($current_value) && in_array($value, $current_value))
+                     'checked' => in_array($value, $this->value)
                   ]);
                   echo '<label for="' . $domId . '_' . $i . '">';
                   echo '&nbsp;' . $value;
@@ -74,20 +71,20 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          });");
 
       } else {
-         $answer = null;
-         $answer = $this->getAnswer();
-         if (!empty($answer)) {
-            if (is_array($answer)) {
-               echo implode("<br />", $answer);
-            } else if (is_array(json_decode($answer))) {
-               echo implode("<br />", json_decode($answer));
-            } else {
-               echo $this->getAnswer();
-            }
+         if (count($this->value)) {
+            echo implode('<br />', $this->value);
          } else {
             echo '';
          }
       }
+   }
+
+   /**
+    * Gets the available values for the field
+    * @return array available values
+    */
+    public function getAvailableValues() {
+      return explode("\r\n", $this->fields['values']);
    }
 
    public function serializeValue() {
@@ -260,7 +257,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      if (!is_array( $this->value)) {
+      if (!is_array($this->value)) {
          // No checkbox enabled
          return ($value === '');
       }

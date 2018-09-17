@@ -83,10 +83,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       echo '<div class="form_field">';
       $this->displayField($canEdit);
       echo '</div>';
-
       echo '</div>';
-      $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
-      // $value = json_encode($this->getAnswer());
    }
 
    /**
@@ -119,22 +116,6 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     */
    public function getLabel() {
       return $this->fields['name'];
-   }
-
-   /**
-    * Get the value of the answer
-    * @return mixed
-    */
-   public function getValue() {
-      return $this->value;
-   }
-
-   /**
-    * Get the value of the answer
-    * @return mixed
-    */
-    public function getAnswer() {
-      return $this->getValue();
    }
 
    /**

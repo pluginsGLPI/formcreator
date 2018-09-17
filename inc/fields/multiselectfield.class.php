@@ -52,7 +52,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
             Dropdown::showFromArray($fieldName, $tab_values, [
                'display_emptychoice' => $this->fields['show_empty'] == 1,
                'value'     => '',
-               'values'    => $this->getValue(),
+               'values'    => $this->value,
                'rand'      => $rand,
                'multiple'  => true,
             ]);
@@ -62,8 +62,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
             pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
          });");
       } else {
-         $answer = $this->getAnswer();
-         echo empty($answer) ? '' : implode('<br />', $answer);
+         echo empty($this->value) ? '' : implode('<br />', $this->value);
       }
    }
 
@@ -129,22 +128,10 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       return true;
    }
 
-   public function getValue() {
-      if (isset($this->value)) {
-         $value = $this->value;
-      }
-      $value = $this->fields['default_values'];
-      if ($value == '') {
-         return [];
-      }
-
-      return explode("\r\n", $value);
-   }
-
    public function getAnswer() {
       $return = [];
       $values = $this->getAvailableValues();
-      $value  = $this->getValue();
+      $value  = $this->value;
 
       if (empty($value)) {
          return '';

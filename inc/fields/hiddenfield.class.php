@@ -101,7 +101,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
@@ -109,7 +109,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return $this->getValue() > $value;
+      return $this->value > $value;
    }
 
    public function lessThan($value) {

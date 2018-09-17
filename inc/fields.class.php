@@ -120,37 +120,14 @@ class PluginFormcreatorFields
       return $tabFieldsForJS;
    }
 
-   // /**
-   //  *
-   //  * @param array $field fields of a PluginFormcreatorQuestion instance
-   //  * @param mixed|null $data
-   //  * @param boolean $edit
-   //  */
-   // public static function showField($field, $data = null, $edit = true) {
-   //    // Get field types and file path
-   //    $tab_field_types = self::getTypes();
-
-   //    if (array_key_exists($field['fieldtype'], $tab_field_types)) {
-   //       $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
-
-   //       $plugin = new Plugin();
-   //       if ($fieldClass == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
-   //          return;
-   //       }
-
-   //       $obj = new $fieldClass($field, $data);
-   //       $obj->show($edit);
-   //    }
-   // }
-
    /**
-    * Check if a field should be shown or not
+    * Check if a question should be shown or not
     *
-    * @param   integer     $id         ID of the current question
-    * @param   array       $values     Array of current fields values (id => value)
-    * @return  boolean                 Should be shown or not
+    * @param   integer     $id         ID of the question tested for visibility
+    * @param   array       $fields     Array of fields instances (question id => instance)
+    * @return  boolean                 If true the question should be visible
     */
-   public static function isVisible($id, $values) {
+   public static function isVisible($id, $fields) {
       /**
        * Keep track of questions being evaluated to detect infinite loops
        */
@@ -183,10 +160,10 @@ class PluginFormcreatorFields
 
       foreach ($questionConditions as $question_condition) {
          $conditions[] = [
-            'logic'    => $question_condition->getField('show_logic'),
-            'field'    => 'formcreator_field_' . $question_condition->getField('show_field'),
-            'operator' => $question_condition->getField('show_condition'),
-            'value'    => $question_condition->getField('show_value')
+            'logic'    => $question_condition->fields['show_logic'],
+            'field'    => $question_condition->fields['show_field'],
+            'operator' => $question_condition->fields['show_condition'],
+            'value'    => $question_condition->fields['show_value']
          ];
       }
 
@@ -204,15 +181,11 @@ class PluginFormcreatorFields
             // To ensure the low precedence return part is used at the end of the whole evaluation
             $nextLogic = 'OR';
          }
-         if (!isset($values[$condition['field']])) {
-            $values[$condition['field']] = '';
-         }
 
          // TODO: find the best behavior if the question does not exists
          $conditionQuestion = new PluginFormcreatorQuestion();
          $conditionQuestion->getFromDB($condition['field']);
-         $conditionField = PluginFormcreatorFields::getFieldInstance($conditionQuestion->fields['fieldtype'], $conditionQuestion);
-         $conditionField->prepareAnswerValueForSave($values[$condition['field']]);
+         $conditionField = $fields[$condition['field']];
          switch ($condition['operator']) {
             case '!=' :
                try {
@@ -319,15 +292,26 @@ class PluginFormcreatorFields
    /**
     * compute visibility of all fields of a form
     *
-    * @param array $values    values of all fields of the form
-    *                         id => mixed value of a field
+    * @param array $input     values of all fields of the form
     *
     * @rturn array
     */
-   public static function updateVisibility($currentValues) {
+   public static function updateVisibility($input) {
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
+
+      $formId = $input['formcreator_form'];
+      $found_questions = $question->getQuestionsFromForm($formId);
+      foreach ($found_questions as $id => $question) {
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
+         $fields[$id]->parseAnswerValues($input);
+      }
+
       $questionToShow = [];
-      foreach ($currentValues as $id => $value) {
-         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
+      foreach ($input as $id => $value) {
+         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);
       }
 
       return $questionToShow;

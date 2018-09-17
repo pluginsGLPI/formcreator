@@ -948,21 +948,18 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          // Display all fields of the section
          $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
          foreach ($questions as $question_line) {
-            if (isset($data['formcreator_field_' . $question_line['id']])) {
-               // multiple choice question are saved as JSON and needs to be decoded
-               $answer = $data['formcreator_field_' . $question_line['id']];
-            } else {
-               $answer = null;
-            }
             $question = new PluginFormcreatorQuestion();
             $question->getFromDB($question_line['id']);
             $field = PluginFormcreatorFields::getFieldInstance(
                $question->fields['fieldtype'],
-               $question,
-               $answer
+               $question
             );
+            if (isset($data['formcreator_field_' . $question_line['id']])) {
+               $field->parseAnswerValues($data);
+            } else {
+               $field->deserializeValue($question->fields['default_values']);
+            }
             $field->show();
-            //PluginFormcreatorFields::showField($question_line, $answer);
          }
       }
       echo Html::scriptBlock('$(function() {
@@ -1156,8 +1153,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     */
    public function saveForm($input) {
       $valid = true;
-      $data  = [];
       $fields = [];
+      $fieldValidities = [];
 
       // Prepare form fields for validation
       $question = new PluginFormcreatorQuestion();
@@ -1166,22 +1163,19 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       foreach ($found_questions as $id => $question) {
          $key = 'formcreator_field_' . $id;
          $fields[$id] = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
-         if ($fields[$id]->parseAnswerValues($input) === false) {
-            $valid = false;
-         }
+         $fieldValidities[$id] = $fields[$id]->parseAnswerValues($input);
       }
+      // any invalid field will invalidate the answers
+      $valid = !in_array(false, $fieldValidities, true);
 
-         if (PluginFormcreatorFields::isVisible($id, $input) && !$fields[$id]->isValid()) {
-            $valid = false;
-            break;
+      if ($valid) {
+         foreach ($found_questions as $id => $question) {
+            $key = 'formcreator_field_' . $id;
+            if (PluginFormcreatorFields::isVisible($id, $fields) && !$fields[$id]->isValid()) {
+               $valid = false;
+               break;
+            }
          }
-         if (PluginFormcreatorFields::isVisible($id, $data) && !$obj->isValid($data['formcreator_field_' . $id])) {
-            $valid = false;
-            break;
-         }
-      }
-      if (isset($input) && is_array($input)) {
-         $data = $data + $input;
       }
 
       // Check required_validator

@@ -41,11 +41,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       global $CFG_GLPI;
 
       $readonly = $canEdit ? 'false' : 'true';
-      if (isset($this->value)) {
-         $value = $this->sanitizeValue($this->value);
-      } else {
-         $value = $this->sanitizeValue($this->fields['default_values']);
-      }
+      $value = $this->sanitizeValue($this->value);
       $initialValue = [];
       foreach ($value as $id => $item) {
          $initialValue[] = [

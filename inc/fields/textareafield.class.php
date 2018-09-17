@@ -40,25 +40,30 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
+      $required = $this->fields['required'] ? ' required' : '';
+      $useRichText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
       if ($canEdit) {
-         $required = $this->fields['required'] ? ' required' : '';
-
+         if ($useRichText) {
+            $value = nl2br($this->value);
+         } else {
+            $value = $this->value;
+         }
          echo Html::textarea([
             'name'            => $fieldName,
             'rand'            => $rand,
-            'value'           => str_replace('\r\n', PHP_EOL, $this->getValue()),
+            'value'           => $value,
             'rows'            => 5,
             'display'         => false,
-            'enable_richtext' => true,
+            'enable_richtext' => $useRichText,
          ]);
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
          });");
       } else {
-         if ($CFG_GLPI["use_rich_text"]) {
-            echo plugin_formcreator_decode($this->getAnswer());
+         if ($useRichText) {
+            echo $this->value;
          } else {
-            echo nl2br($this->getAnswer());
+            echo nl2br($this->value);
          }
       }
    }
@@ -79,6 +84,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       $this->value = ($value !== null && $value !== '')
                   ? $value
                   : '';
+      //$this->value = str_replace('\r\n', "\r\n", $this->value);
    }
 
    public function getValueForDesign() {
@@ -89,9 +95,9 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return $this->value;
    }
 
-   public function isValid($value) {
+   public function isValid() {
       // If the field is required it can't be empty
-      if ($this->isRequired() && $value == '') {
+      if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
@@ -119,7 +125,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function equals($value) {
-      return $this->getValue() == $value;
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
@@ -127,7 +133,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function greaterThan($value) {
-      return $this->getValue() > $value;
+      return $this->value > $value;
    }
 
    public function lessThan($value) {

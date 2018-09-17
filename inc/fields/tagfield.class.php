@@ -55,7 +55,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          }
 
          Dropdown::showFromArray($fieldName, $values, [
-            'values'              => $this->getValue(),
+            'values'              => $this->value,
             'comments'            => false,
             'rand'                => $rand,
             'multiple'            => true,
@@ -65,35 +65,10 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
             pluginFormcreatorInitializeTag('$fieldName', '$rand');
          });");
       } else {
-         $answer = $this->getAnswer();
          echo '<div class="form_field">';
-         echo empty($answer) ? '' : implode('<br />', json_decode($answer));
+         echo empty($this->value) ? '' : implode('<br />', json_decode($this->value));
          echo '</div>';
       }
-   }
-
-   public function getValue() {
-      if (isset($this->value)) {
-         return $this->value;
-      }
-      if (!empty($this->fields['default_values'])) {
-         return $this->fields['default_values'];
-      }
-
-      return [];
-   }
-
-   public function getAnswer() {
-      $return = [];
-      $values = $this->getValue();
-
-      if (!empty($values)) {
-         foreach ($values as $value) {
-            $return[] = Dropdown::getDropdownName(getTableForItemType(PluginTagTag::class), $value);
-         }
-      }
-
-      return json_encode($return);
    }
 
    public function serializeValue() {
@@ -176,7 +151,28 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function equals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      // find the tag to check for existence
+      $tag = new PluginTagTag();
+      $tag->getFromDBByRequest([
+         'name' => $value
+      ]);
+      if ($tag->isNewItem()) {
+         return false;
+      }
+
+      // Check it is available for the target itemtypes
+      $types = json_decode($tag->fields['type_menu'], true);
+      if (!isset($types[Ticket::class])
+         && !isset($types[Change::class])
+         && !isset($types['0'])
+      ) {
+         // Tag must be available for tickets, changes or all types
+         // Do 0 means all ?
+         return false;
+      }
+
+      // check it is in the tags if this question
+      return (in_array($tag->getID(), $this->value));
    }
 
    public function notEquals($value) {

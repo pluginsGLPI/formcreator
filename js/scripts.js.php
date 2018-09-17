@@ -907,7 +907,7 @@ function pluginFormcreatorInitializeRadios(fieldName, rand) {
 }
 
 /**
- * Initialize a select field
+ * Initialize a multiselect field
  */
 function pluginFormcreatorInitializeMultiselect(fieldName, rand) {
    var field = $('select[name="' + fieldName + '[]"]');
