@@ -47,18 +47,20 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
             return [];
          }
          $input['values']         = $input['glpi_objects'];
-         $input['default_values'] = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
+         $this->value = isset($input['dropdown_default_value']) ? $input['dropdown_default_value'] : '';
       }
       return $input;
    }
 
-   public function isValid($value) {
+   public function isValid() {
       // If the field is required it can't be empty (0 is a valid value for entity)
-      if ($this->isRequired() && empty($value) && ($value == '0' && $this->fields['values'] != Entity::class)) {
+      $itemtype = $this->fields['values'];
+      $item = new $itemtype();
+      if ($this->isRequired() && $item->isNewID($this->value)) {
          Session::addMessageAfterRedirect(
-               __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-               false,
-               ERROR);
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
          return false;
       }
 
@@ -94,5 +96,36 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['glpiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $item = new $itemtype();
+      if ($item->isNewId($this->value)) {
+         return ($value === '');
+      }
+      if (!$item->getFromDB($this->value)) {
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+      }
+      return $item->getField($item->getNameField()) == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      $value = html_entity_decode($value);
+      $itemtype = $this->fields['values'];
+      $item = new $itemtype();
+      if (!$item->getFromDB($this->value)) {
+         throw new PluginFormcreatorComparisonException('Item not found for comparison');
+      }
+      return $item->getField($item->getNameField()) > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 }

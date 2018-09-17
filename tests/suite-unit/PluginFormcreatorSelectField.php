@@ -96,7 +96,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
             ],
             'data'            => null,
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => true
          ],
          [
             'fields'          => [
@@ -111,7 +111,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
             ],
             'data'            => null,
             'expectedValue'   => '',
-            'expectedIsValid' => false
+            'expectedIsValid' => true
          ],
       ];
 
@@ -150,7 +150,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
    public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $fieldInstance = new \PluginFormcreatorSelectField($fields, $data);
 
-      $isValid = $fieldInstance->isValid($fields['default_values']);
+      $isValid = $fieldInstance->isValid($fieldInstance->getValue());
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 

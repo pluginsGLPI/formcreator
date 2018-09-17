@@ -299,8 +299,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       foreach ($export["_profiles"] as $form_profile) {
          $this->_checkFormProfile($form_profile);
       }
-
-      return $export;
    }
 
    protected function _checkForm($form = []) {

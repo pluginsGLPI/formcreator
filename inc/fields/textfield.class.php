@@ -33,8 +33,35 @@
 
 class PluginFormcreatorTextField extends PluginFormcreatorField
 {
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
    public function isValid($value) {
-      if (!parent::isValid($value)) {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
          return false;
       }
 
@@ -96,12 +123,10 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
          }
       }
       if (!$success) {
-         return false;
+         return [];
       }
+      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
 
-      if (isset($input['default_values'])) {
-         $input['default_values'] = addslashes($input['default_values']);
-      }
       return $input;
    }
 
@@ -123,6 +148,16 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+       $this->value = str_replace('\r\n', "\r\n", $input[$key]);
+       return true;
    }
 
    public function getEmptyParameters() {
@@ -148,5 +183,21 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
             ]
          ),
       ];
+   }
+
+   public function equals($value) {
+      return $this->getValue() == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->getValue() > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 }

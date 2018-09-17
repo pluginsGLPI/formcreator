@@ -919,13 +919,14 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
       // Display form
-      echo "<form name='formcreator_form".$this->getID()."' method='post' role='form' enctype='multipart/form-data'
-               action='". $CFG_GLPI['root_doc']."/plugins/formcreator/front/form.form.php'
+      $formName = 'formcreator_form' . $this->getID();
+      echo "<form name='" . $formName . "' method='post' role='form' enctype='multipart/form-data'
+               action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
-      echo $this->fields['name']."&nbsp;";
+      echo $this->fields['name'] . "&nbsp;";
       echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
-                 title='".__("Print this form", 'formcreator')."' onclick='window.print();'>";
+                 title='" . __("Print this form", 'formcreator') . "' onclick='window.print();'>";
       echo '</h1>';
 
       // Form Header
@@ -949,17 +950,23 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          foreach ($questions as $question_line) {
             if (isset($data['formcreator_field_' . $question_line['id']])) {
                // multiple choice question are saved as JSON and needs to be decoded
-               $answer = (in_array($question_line['fieldtype'], ['multiselect']))
-                       ? json_decode($data['formcreator_field_' . $question_line['id']])
-                       : $data['formcreator_field_' . $question_line['id']];
+               $answer = $data['formcreator_field_' . $question_line['id']];
             } else {
                $answer = null;
             }
-            PluginFormcreatorFields::showField($question_line, $answer);
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($question_line['id']);
+            $field = PluginFormcreatorFields::getFieldInstance(
+               $question->fields['fieldtype'],
+               $question,
+               $answer
+            );
+            $field->show();
+            //PluginFormcreatorFields::showField($question_line, $answer);
          }
       }
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields();
+         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
       })');
 
       // Show validator selector
@@ -1150,31 +1157,21 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public function saveForm($input) {
       $valid = true;
       $data  = [];
+      $fields = [];
 
       // Prepare form fields for validation
       $question = new PluginFormcreatorQuestion();
+
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
-         // If field was not post, it's value is empty
-         if (isset($input['formcreator_field_' . $id])) {
-            $data['formcreator_field_' . $id] = is_array($input['formcreator_field_' . $id])
-                           ? json_encode($input['formcreator_field_' . $id], JSON_UNESCAPED_UNICODE)
-                           : $input['formcreator_field_' . $id];
-
-            // Replace "," by "." if field is a float field and remove spaces
-            if ($question->getField('fieldtype') == 'float') {
-               $data['formcreator_field_' . $id] = str_replace(',', '.', $data['formcreator_field_' . $id]);
-               $data['formcreator_field_' . $id] = str_replace(' ', '', $data['formcreator_field_' . $id]);
-            }
-            unset($input['formcreator_field_' . $id]);
-         } else {
-            $data['formcreator_field_' . $id] = '';
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
+         if ($fields[$id]->parseAnswerValues($input) === false) {
+            $valid = false;
          }
       }
 
-      // Validate form fields
-      foreach ($found_questions as $id => $question) {
-         if (!($obj = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question, $data))) {
+         if (PluginFormcreatorFields::isVisible($id, $input) && !$fields[$id]->isValid()) {
             $valid = false;
             break;
          }
@@ -1188,34 +1185,18 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Check required_validator
-      if ($this->fields['validation_required'] && empty($data['formcreator_validator'])) {
+      if ($this->fields['validation_required'] && empty($input['formcreator_validator'])) {
          Session::addMessageAfterRedirect(__('You must select validator !', 'formcreator'), false, ERROR);
          $valid = false;
       }
 
       // If not valid back to form
       if (!$valid) {
-         foreach ($data as $key => $value) {
-            if (is_array($value)) {
-               foreach ($value as $key2 => $value2) {
-                  $data[$key][$key2] = plugin_formcreator_encode($value2);
-               }
-            } else if (is_array(json_decode($value))) {
-               $value = json_decode($value);
-               foreach ($value as $key2 => $value2) {
-                  $value[$key2] = plugin_formcreator_encode($value2);
-               }
-               $data[$key] = json_encode($value);
-            } else {
-               $data[$key] = plugin_formcreator_encode($value);
-            }
-         }
-
-         $_SESSION['formcreator']['data'] = $data;
+         $_SESSION['formcreator']['data'] = $input;
          // Save form
       } else {
          $formanswer = new PluginFormcreatorForm_Answer();
-         $formanswer->saveAnswers($data);
+         $formanswer->saveAnswers($input);
       }
 
       return $valid;

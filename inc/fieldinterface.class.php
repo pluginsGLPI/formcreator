@@ -52,13 +52,37 @@ interface PluginFormcreatorFieldInterface
     * @param string $value
     * @return boolean True if the field has a valid value, false otherwise
     */
-   public function isValid($value);
+   //public function isValid($value);
 
    /**
     * Is the field required?
     * @return boolean
     */
    public function isRequired();
+
+   /**
+    * Serialize a value for save in the database
+    * Used to save a default value or a value
+    *
+    * @return string JSON encoded string
+    */
+   public function serializeValue();
+
+   /**
+    * Deserialize a JSON encoded value or default value
+    * Used to retrieve the default value from a question
+    * or the value of an answer
+    *
+    * @param string $value
+    */
+   public function deserializeValue($value);
+
+   /**
+    * Get the value of the field for display in the form designer
+    *
+    * @return string
+    */
+   public function getValueForDesign();
 
    /**
     * Transform input to properly save it in the database
@@ -68,19 +92,18 @@ interface PluginFormcreatorFieldInterface
    public function prepareQuestionInputForSave($input);
 
    /**
+    * Read the value of the field from answers
+    * @param array $input answers of all questions of the form
+    * @return boolean true on sucess, false otherwise
+    */
+   public function parseAnswerValues($input);
+
+   /**
     * Prepares an answer value for output in a target object
     * @param  string|array $input the answer to format for a target (ticket or change)
     * @return string
     */
    public function prepareQuestionInputForTarget($input);
-
-   /**
-    * Prepares a default value or set of values for question edition
-    *
-    * @param  string $input
-    * @return string
-    */
-   public function prepareQuestionValuesForEdit($input);
 
    /**
     * Gets the parameters of the field
@@ -120,4 +143,28 @@ interface PluginFormcreatorFieldInterface
     * @return boolean true if success, false otherwise
     */
    public function deleteParameters(PluginFormcreatorQuestion $question);
+
+   /**
+    * Tests if the given value equals the field value
+    * @return boolean True if the value equals the field value
+    */
+   public function equals($value);
+
+   /**
+    * Tests if the given value is not equal to field value
+    * @return boolean True if the value is not equal to the field value
+    */
+   public function notEquals($value);
+
+   /**
+    * Tests if the given value is greater than the field value
+    * @return boolean True if the value is greater than the field value
+    */
+   public function greaterThan($value);
+
+   /**
+    * Tests if the given value is less than the field value
+    * @return boolean True if the value is less than the field value
+    */
+   public function LessThan($value);
 }

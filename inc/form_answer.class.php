@@ -516,8 +516,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
          }
       }
+      $formName = 'formcreator_form' . $formId;
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields();
+         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
       })');
 
       // Display submit button
@@ -620,11 +621,20 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
-    * Create or update answers of a gorm
+    * Create or update answers of a form
     * @param array $data answers
     * @return boolean
     */
    public function saveAnswers($data) {
+
+      // temoprary disable the method
+
+      return;
+
+
+
+
+
       $form   = new PluginFormcreatorForm();
       $answer = new PluginFormcreatorAnswer();
 
@@ -636,6 +646,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $question = new PluginFormcreatorQuestion();
       $questions = $question->getQuestionsFromForm($data['formcreator_form']);
+      $fields = [];
+      foreach ($questions as $questionId => $question) {
+         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+      }
 
       // Update form answers
       if (isset($data['save_formanswer'])) {
@@ -648,9 +665,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Update questions answers
          if ($status == 'waiting') {
-            foreach ($questions as $question) {
+            foreach ($questions as $questionId => $question) {
                // unset the answer value
-               $answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
+               //$answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
+               $answer_value = $fields[$questionId]->prepareAnswerValueForSave($data['formcreator_field_' . $questionIs]);
 
                // $answer_value may be still null if the field type is file and no file was uploaded
                if ($answer_value !== null) {

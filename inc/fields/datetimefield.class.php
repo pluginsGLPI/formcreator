@@ -35,32 +35,40 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $required = ($canEdit && $this->fields['required']) ? ' required' : '';
-         $rand     = mt_rand();
+         $id        = $this->fields['id'];
+         $rand      = mt_rand();
+         $fieldName = 'formcreator_field_' . $id;
+         $domId     = $fieldName . '_' . $rand;
+         $required  = ($canEdit && $this->fields['required']) ? ' required' : '';
 
-         Html::showDateTimeField('formcreator_field_' . $this->fields['id'], [
+         Html::showDateTimeField($fieldName, [
             'value' => $this->getValue(),
             'rand'  => $rand,
          ]);
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     $( "#showdate' . $rand . '" ).on("change", function() {
-                        formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);
-                     });
-                     $( "#resetdate' . $rand . '" ).on("click", function() {
-                        formcreatorChangeValueOf(' . $this->fields['id'] . ', "");
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeDate('$fieldName', '$rand');
+         });");
 
       } else {
          echo $this->getAnswer();
       }
    }
 
+   public function serializeValue() {
+      return '';
+   }
+
+   public function deserializeValue($value) {
+      $this->value = '';
+   }
+
+   public function getValueForDesign() {
+      return '';
+   }
+
    public function getValue() {
-      if (isset($this->fields['answer'])) {
-         $date = $this->fields['answer'];
+      if (isset($this->value)) {
+         $date = $this->value;
       } else {
          $date = $this->fields['default_values'];
       }
@@ -71,9 +79,9 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return Html::convDateTime($this->getValue());
    }
 
-   public function isValid($value) {
+   public function isValid() {
       // If the field is required it can't be empty
-      if ($this->isRequired() && (strtotime($value) == '')) {
+      if ($this->isRequired() && (strtotime($this->value) == '')) {
          Session::addMessageAfterRedirect(
             __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
             false,
@@ -107,5 +115,45 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['datetime'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      if (empty($this->value)) {
+         $answer = '0000-00-00 00:00';
+      } else {
+         $answer = $this->value;
+      }
+      $answerDatetime = DateTime::createFromFormat("Y-m-d H:i", $answer);
+      $compareDatetime = DateTime::createFromFormat("Y-m-d H:i", $value);
+      return $answerDatetime == $compareDatetime;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      if (empty($this->value)) {
+         $answer = '0000-00-00 00:00';
+      } else {
+         $answer = $this->value;
+      }
+      $answerDatetime = DateTime::createFromFormat("Y-m-d H:i", $answer);
+      $compareDatetime = DateTime::createFromFormat("Y-m-d H:i", $value);
+      return $answerDatetime > $compareDatetime;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+      $this->value = $input[$key];
+      return true;
    }
 }

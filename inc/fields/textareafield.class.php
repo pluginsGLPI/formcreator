@@ -36,18 +36,24 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
       if ($canEdit) {
          $required = $this->fields['required'] ? ' required' : '';
 
-         echo '<textarea class="form-control"
-                  rows="5"
-                  name="formcreator_field_'.$this->fields['id'].'"
-                  id="formcreator_field_'.$this->fields['id'].'"
-                  onchange="formcreatorChangeValueOf('.$this->fields['id'].', this.value);">'
-                 .str_replace('\r\n', PHP_EOL, $this->getValue()).'</textarea>';
-         if ($CFG_GLPI["use_rich_text"]) {
-            Html::initEditorSystem('formcreator_field_'.$this->fields['id']);
-         }
+         echo Html::textarea([
+            'name'            => $fieldName,
+            'rand'            => $rand,
+            'value'           => str_replace('\r\n', PHP_EOL, $this->getValue()),
+            'rows'            => 5,
+            'display'         => false,
+            'enable_richtext' => true,
+         ]);
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeTextarea('$fieldName', '$rand');
+         });");
       } else {
          if ($CFG_GLPI["use_rich_text"]) {
             echo plugin_formcreator_decode($this->getAnswer());
@@ -61,6 +67,47 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return __('Textarea', 'formcreator');
    }
 
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function isValid($value) {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
+   }
+
+   public function prepareQuestionInputForSave($input) {
+      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
+      return $input;
+   }
+
    public function prepareQuestionInputForTarget($input) {
       $input = str_replace("\r\n", '\r\n', addslashes($input));
       return $input;
@@ -69,5 +116,21 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['textarea'] = 'showFields(".implode(', ', $prefs).");';";
+   }
+
+   public function equals($value) {
+      return $this->getValue() == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->getValue() > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 }
