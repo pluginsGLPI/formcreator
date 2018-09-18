@@ -50,23 +50,35 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
          });");
 
       } else {
-         echo $this->value();
+         echo $this->value;
       }
    }
 
    public function serializeValue() {
-      return '';
+      return $this->value;
    }
 
    public function deserializeValue($value) {
-      $this->value = '';
+      $this->value = $value;
    }
 
    public function getValueForDesign() {
-      return '';
+      return $this->value;
    }
 
-   public function isValid() {
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
+  public function isValid() {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) == '')) {
          Session::addMessageAfterRedirect(

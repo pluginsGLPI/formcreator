@@ -530,13 +530,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
-         case "PluginFormcreatorConfig":
+         case PluginFormcreatorConfig::class:
             $object  = new self;
             $found = $object->find();
             $number  = count($found);
             return self::createTabEntry(self::getTypeName($number), $number);
             break;
-         case "PluginFormcreatorForm":
+         case PluginFormcreatorForm::class:
             return __('Preview');
             break;
          case 'Central':
@@ -1144,11 +1144,11 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
    }
 
+
    /**
     * Validates answers of a form and saves them in database
     *
-    * @param array $input
-    *
+    * @param array $input fields from the HTML form
     * @return boolean true if the form is valid, false otherwise
     */
    public function saveForm($input) {
@@ -1184,16 +1184,16 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $valid = false;
       }
 
-      // If not valid back to form
       if (!$valid) {
+         // Save answers in session to display it again with the same values
          $_SESSION['formcreator']['data'] = $input;
-         // Save form
-      } else {
-         $formanswer = new PluginFormcreatorForm_Answer();
-         $formanswer->saveAnswers($input);
+         return false;
       }
 
-      return $valid;
+      $formanswer = new PluginFormcreatorForm_Answer();
+      $formanswer->saveAnswers($this, $input, $fields);
+
+      return true;
    }
 
    public function increaseUsageCount() {

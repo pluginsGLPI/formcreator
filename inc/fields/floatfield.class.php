@@ -74,6 +74,18 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return $this->value;
    }
 
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
    public function isValid() {
       if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(

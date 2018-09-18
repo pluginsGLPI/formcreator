@@ -95,11 +95,11 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    }
 
    public function serializeValue() {
-      return '';
+      return $this->value;
    }
 
    public function deserializeValue($value) {
-      $this->value = '';
+      $this->value = $value;
    }
 
    public function getValueForDesign() {

@@ -54,12 +54,6 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       }
    }
 
-   public function getAnswer() {
-      $values = $this->getAvailableValues();
-      $value  = $this->value;
-      return in_array($value, $values) ? $value : $this->fields['default_values'];
-   }
-
    public static function getName() {
       return __('Urgency');
    }
@@ -123,6 +117,19 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       }
 
       return $this->value;
+   }
+
+   public function getValueForTargetText() {
+      $available = $this->getAvailableValues();
+      return $available[$this->value];
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
    }
 
    public function isValid() {

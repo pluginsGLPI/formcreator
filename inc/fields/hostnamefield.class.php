@@ -19,15 +19,27 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
    }
 
    public function serializeValue() {
-      return '';
+      return $this->value;
    }
 
    public function deserializeValue($value) {
-      $this->value = '';
+      $this->value = $value;
    }
 
    public function getValueForDesign() {
       return '';
+   }
+
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
    }
 
    public function isValid() {

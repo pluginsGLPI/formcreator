@@ -191,25 +191,17 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return $input;
    }
 
-   public function prepareQuestionInputForTarget($input) {
+   public function getValueForTargetText() {
       global $CFG_GLPI;
 
       $value = [];
       $values = $this->getAvailableValues();
 
-      if (empty($input)) {
+      if (count($this->value) === 0) {
          return '';
       }
 
-      if (is_array($input)) {
-         $tab_values = $input;
-      } else if (is_array(json_decode($input))) {
-         $tab_values = json_decode($input);
-      } else {
-         $tab_values = [$input];
-      }
-
-      foreach ($tab_values as $input) {
+      foreach ($this->value as $input) {
          if (in_array($input, $values)) {
             $value[] = addslashes($input);
          }
@@ -221,6 +213,14 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          $value = '\r\n' . implode('\r\n', $value);
       }
       return $value;
+   }
+
+   public function getValueForTargetField() {
+      return null;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
    }
 
    public static function getPrefs() {

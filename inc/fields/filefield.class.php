@@ -50,7 +50,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
       } else {
          $doc = new Document();
-         $answer = $this->value();
+         $answer = $this->value;
          if (!is_array($this->value)) {
             $answer = [$this->value];
          }
@@ -63,15 +63,35 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    }
 
    public function serializeValue() {
-      return '';
+      return json_encode($this->uploadData, true);
    }
 
    public function deserializeValue($value) {
-      $this->value = '';
+      $this->uploadData = json_decode($value, true);
+      if ($this->uploadData === null) {
+         $this->uploadData = [];
+      }
+      if (count($this->uploadData) === 0) {
+         $this->value = __('Attached document', 'formcreator');
+      } else {
+         $this->value = '';
+      }
    }
 
    public function getValueForDesign() {
       return '';
+   }
+
+   public function getValueForTargetText() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return $this->uploadData;
+   }
+
+   public function getValueForTargetField() {
+      return $this->uploadData;
    }
 
    public function isValid() {
@@ -120,6 +140,62 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return "tab_fields_fields['file'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
+   /**
+    * Save an uploaded file into a document object, link it to the answers
+    * and returns the document ID
+    * @param PluginFormcreatorForm $form
+    * @param PluginFormcreatorQuestion $question
+    * @param array $file                         an item from $_FILES array
+    *
+    * @return integer|NULL
+    */
+    private function saveDocument($file) {
+      global $DB;
+
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBByRequest([
+         'LEFT JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $sectionTable => $formFk,
+                  $formTable => 'id'
+               ]
+            ],
+            $questionTable => [
+               'FKEY' => [
+                  $sectionTable => 'id',
+                  $questionTable => $sectionFk
+               ]
+            ]
+         ],
+         'WHERE' => [
+            "$questionTable.id" => $this->fields['id'],
+         ],
+      ]);
+      if ($form->isNewItem()) {
+         // A problem occured while finding the form of the field
+         return;
+      }
+
+      $doc                        = new Document();
+      $file_data                 = [];
+      $file_data["name"]         = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
+      $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
+                                    ? $_SESSION['glpiactive_entity']
+                                    : $form->getField('entities_id');
+      $file_data["is_recursive"] = $form->getField('is_recursive');
+      $file_data['_filename'] = [$file];
+      if ($docID = $doc->add($file_data)) {
+         return $docID;
+      }
+      return null;
+   }
+
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (isset($input["_$key"])) {
@@ -127,10 +203,18 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             return false;
          }
 
-         $this->uploadData = $input["_$key"];
+         $answer_value = [];
+         foreach ($input["_$key"] as $document) {
+            if (is_file(GLPI_TMP_DIR . '/' . $document)) {
+               $answer_value[] = $this->saveDocument($document);
+            }
+         }
+         $this->uploadData = $answer_value;
+         $this->value = __('Attached document', 'formcreator');
          return true;
       }
       $this->uploadData = [];
+      $this->value = '';
       return true;
    }
 

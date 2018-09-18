@@ -85,6 +85,27 @@ interface PluginFormcreatorFieldInterface
    public function getValueForDesign();
 
    /**
+    * Get the value of the field for display in a target
+    *
+    * @return string
+    */
+   public function getValueForTargetText();
+
+   /**
+    * Get the value of the field for use in a field of a target
+    *
+    * @return string
+    */
+   public function getValueForTargetField();
+
+   /**
+    * Gets the documents IDs
+    *
+    * @return void
+    */
+   public function getDocumentsForTarget();
+
+   /**
     * Transform input to properly save it in the database
     * @param array $input data to transform before save
     * @return array|false input data to save or false if data is rejected
@@ -103,7 +124,7 @@ interface PluginFormcreatorFieldInterface
     * @param  string|array $input the answer to format for a target (ticket or change)
     * @return string
     */
-   public function prepareQuestionInputForTarget($input);
+   //public function prepareQuestionInputForTarget($input);
 
    /**
     * Gets the parameters of the field

@@ -67,12 +67,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       }
    }
 
-   public function getAnswer() {
-      $values = $this->getAvailableValues();
-      $value  = $this->value;
-      return in_array($value, $values) ? $value : $this->fields['default_values'];
-   }
-
    public static function getName() {
       return __('Select', 'formcreator');
    }
@@ -113,6 +107,10 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       }
 
       return $this->value;
+   }
+
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function isValid() {

@@ -40,29 +40,32 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
-      $readonly = $canEdit ? 'false' : 'true';
-      $value = $this->sanitizeValue($this->value);
-      $initialValue = [];
-      foreach ($value as $id => $item) {
-         $initialValue[] = [
-            'id'     => $id,
-            'text'   => $item,
-         ];
-      }
-      $initialValue = json_encode($initialValue);
-      $id           = $this->fields['id'];
-      $rand         = mt_rand();
-      $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
+      if ($canEdit) {
+         $value = $this->sanitizeValue($this->value);
+         $initialValue = [];
+         foreach ($value as $id => $item) {
+            $initialValue[] = [
+               'id'     => $id,
+               'text'   => $item,
+            ];
+         }
+         $initialValue = json_encode($initialValue);
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
 
-      // Value needs to be non empty to allow execition of select2's initSelection
-      echo '<select multiple
-         name="' . $fieldName . '[]"
-         id="' . $domId . '"
-         value=""></select>';
-      echo Html::scriptBlock("$(function() {
-         pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
-      });");
+         // Value needs to be non empty to allow execition of select2's initSelection
+         echo '<select multiple
+            name="' . $fieldName . '[]"
+            id="' . $domId . '"
+            value=""></select>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
+         });");
+      } else {
+         echo empty($this->value) ? '' : implode('<br />', $this->value);
+      }
    }
 
    public function serializeValue() {
@@ -109,6 +112,28 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          }
       }
       return implode("\r\n", $value);
+   }
+
+   public function getValueForTargetText() {
+      $value = [];
+      foreach ($this->value as $item) {
+         if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+            $value[] = $item;
+         } else {
+            $user = new User();
+            $user->getFromDB($item);
+            $value[] = $user->getRawName();
+         }
+      }
+      return implode(', ', Toolbox::addslashes_deep($value));
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
    }
 
    /**

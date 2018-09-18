@@ -408,6 +408,10 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       }
    }
 
+   public function addAttachedDocument($documentId) {
+      $this->attachedDocuments[$documentId] = true;
+   }
+
    protected function showDestinationEntitySetings($rand) {
       global $DB;
 
@@ -854,51 +858,49 @@ EOS;
       // retrieve answers
       $answers_values = $formanswer->getAnswers($formanswer->getID());
 
-      $section = new PluginFormcreatorSection();
-      $sections = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
-      $sectionsIdString = implode(', ', array_keys($sections));
+      // Retrieve questions
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $questions = (new PluginFormcreatorQuestion())
+         ->getQuestionsFromForm($formanswer->getField($formFk));
 
-      if (count($sections) > 0) {
-         $formFk = PluginFormcreatorForm::getForeignKeyField();
-         $questions = (new PluginFormcreatorQuestion())
-            ->getQuestionsFromForm($formanswer->getField($formFk));
-         foreach ($questions as $questionId => $question) {
-            $answer = $answers_values['formcreator_field_' . $questionId];
-            $fieldObject = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question, $answer);
+      $fields = [];
 
-            if (!PluginFormcreatorFields::isVisible($questionId, $answers_values)) {
-               $name = '';
-               $value = '';
-            } else {
-               $name  = $question->getField('name');
-               $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
-            }
+      // Prepare all fields of the form
+      foreach ($questions as $questionId => $question) {
+         $answer = $answers_values['formcreator_field_' . $questionId];
+         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question);
+         $fields[$questionId]->deserializeValue($answer);
+      }
 
-            if ($question->getField('fieldtype') !== 'file') {
-               if (is_array($value)) {
-                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-                     $value = '<br />' . implode('<br />', $value);
-                  } else {
-                     $value = "\r\n" . implode("\r\n", $value);
-                  }
+      foreach ($questions as $questionId => $question) {
+         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {
+            $name = '';
+            $value = '';
+         } else {
+            $name  = $question->getField('name');
+            $value = $fields[$questionId]->getValueForTargetText();
+         }
+
+         $content = str_replace('##question_' . $questionId . '##', addslashes($name), $content);
+         $content = str_replace('##answer_' . $questionId . '##', $value, $content);
+         foreach ( $fields[$questionId]->getDocumentsForTarget() as $documentId) {
+            $this->addAttachedDocument($documentId);
+         }
+         if ($question->getField('fieldtype') !== 'file') {
+            if (is_array($value)) {
+               if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+                  $value = '<br />' . implode('<br />', $value);
+               } else {
+                  $value = "\r\n" . implode("\r\n", $value);
                }
-               $content = str_replace('##question_' . $questionId . '##', addslashes($name), $content);
-               $content = str_replace('##answer_' . $questionId . '##', $value, $content);
-            } else {
-               if (strpos($content, '##answer_' . $questionId . '##') !== false) {
-                  $content = str_replace('##question_' . $questionId . '##', addslashes($name), $content);
-                  if (!is_array($value)) {
-                     $value = [$value];
-                  }
-                  if (count($value)) {
-                     $content = str_replace('##answer_' . $questionId . '##', __('Attached document', 'formcreator'), $content);
-                     // keep the ID of the document
-                     foreach ($value as $documentId) {
-                        $this->attachedDocuments[$documentId] = true;
-                     }
-                  } else {
-                     $content = str_replace('##answer_' . $questionId . '##', '', $content);
-                  }
+            }
+         } else {
+            if (strpos($content, '##answer_' . $questionId . '##') !== false) {
+               if (!is_array($value)) {
+                  $value = [$value];
+               }
+               if (count($value)) {
+                  // keep the ID of the document
                }
             }
          }

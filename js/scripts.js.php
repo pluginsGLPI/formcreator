@@ -809,6 +809,7 @@ function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
    field.select2({
       tokenSeparators: [",", ";"],
       minimumInputLength: 0,
+      tags: true,
       ajax: {
          url: rootDoc + "/ajax/getDropdownUsers.php",
          type: "POST",
@@ -826,13 +827,19 @@ function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
             return {results: data.results, pagination: {"more": more}};
          }
       },
-      createSearchChoice: function itemCreator(term, data) {
-         if ($(data).filter(function() {
-            return this.text.localeCompare(term) === 0;
-         }).length === 0) {
-            return { id: term, text: term };
+      createTag: function(params) {
+         var term = $.trim(params.term);
+
+         if (term == '') {
+            return null;
          }
-      }
+
+         return {
+            id: term,
+            text: term,
+            newTag: true
+         }
+      },
    });
    initialValue = JSON.parse(initialValue);
    for (var i = 0; i < initialValue.length; i++) {

@@ -128,31 +128,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       return true;
    }
 
-   public function getAnswer() {
-      $return = [];
-      $values = $this->getAvailableValues();
-      $value  = $this->value;
-
-      if (empty($value)) {
-         return '';
-      }
-
-      if (is_array($value)) {
-         $tab_values = $value;
-      } else if (is_array(json_decode($value))) {
-         $tab_values = json_decode($value);
-      } else {
-         $tab_values = [$value];
-      }
-
-      foreach ($tab_values as $value) {
-         if (in_array($value, $values)) {
-            $return[] = $value;
-         }
-      }
-      return $return;
-   }
-
    public function prepareQuestionInputForSave($input) {
       if (isset($input['values'])) {
          if (empty($input['values'])) {
@@ -177,9 +152,10 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       return $input;
    }
 
-   public function prepareQuestionInputForTarget($input) {
+   public function getValueForTargetText() {
       global $CFG_GLPI;
 
+      $input = $this->value;
       $value = [];
       $values = $this->getAvailableValues();
 
@@ -206,6 +182,14 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          $value = '\r\n' . implode('\r\n', $value);
       }
       return $value;
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
    }
 
    public static function getName() {

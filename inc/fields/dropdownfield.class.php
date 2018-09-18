@@ -111,7 +111,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         echo $this->value();
+         echo $this->value;
       }
    }
 
@@ -137,16 +137,24 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function prepareQuestionInputForTarget($input) {
+   public function getValueForTargetText() {
       $DbUtil = new DbUtils();
       $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
       if (!isset($decodedValues['itemtype'])) {
-         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $input);
+         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $this->value);
       } else {
-         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $input);
+         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $this->value);
       }
 
-      return addslashes($value);
+      return Toolbox::addslashes_deep($value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
    }
 
    public static function getName() {

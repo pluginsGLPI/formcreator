@@ -114,9 +114,8 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return $input;
    }
 
-   public function prepareQuestionInputForTarget($input) {
-      $input = str_replace("\r\n", '\r\n', addslashes($input));
-      return $input;
+   public function getValueForTargetText() {
+      return str_replace("\r\n", '\r\n', Toolbox::addslashes_deep($this->value));
    }
 
    public static function getJSFields() {

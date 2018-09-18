@@ -60,8 +60,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return $input;
    }
 
-   public function prepareQuestionInputForTarget($input) {
-      return Toolbox::addslashes_deep($input);
+   public function getValueForTarget() {
+      return Toolbox::addslashes_deep($this->value);
    }
 
    /**
@@ -95,7 +95,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->getAnswer());
+      $defaultValue = Html::cleanInputText($this->value);
       if ($canEdit) {
          echo '<input type="text" class="form-control"
                   name="' . $fieldName . '"
@@ -105,7 +105,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
             pluginFormcreatorInitializeField('$fieldName', '$rand');
          });");
       } else {
-         echo $this->getAnswer();
+         echo $this->value;
       }
    }
 
