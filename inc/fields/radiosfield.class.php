@@ -97,6 +97,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
             return ($value !== '');
          });
          $this->value = array_shift($this->value);
+         $input['default_values'] = $this->value;
       }
       return $input;
    }
