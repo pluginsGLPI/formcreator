@@ -129,36 +129,6 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       return $dataset;
    }
 
-   /**
-    * @dataProvider providerGetValue
-    */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
-
-      $value = $instance->getValue();
-      $this->variable($value)->isEqualTo($expectedValue);
-   }
-
-   public function providerGetAnswer() {
-      return $this->providerGetValue();
-   }
-
-   /**
-    * @dataProvider providerGetAnswer
-    * @engine inline
-    */
-   public function testGetAnswer($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
-
-      $expected =  \Html::convDateTime($fields['default_values']);
-      // FIXME: this shows an inconsistency with this field type
-      if ($expected == ' ') {
-         $expected = null;
-      }
-      $output = $instance->getAnswer();
-      $this->variable($output)->isEqualTo($expected);
-   }
-
    public function providerIsValid() {
       return $this->providerGetValue();
    }
@@ -177,4 +147,66 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $output = \PluginFormcreatorDatetimeField::getName();
       $this->string($output)->isEqualTo('Date & time');
    }
-}
+
+   public function providerparseAnswerValue() {
+      return [
+         [
+            'id' => '1',
+            'input' => [
+               'formcreator_field_1' => ''
+            ],
+            'expected' => false,
+            'expectedValue' => null,
+         ],
+         [
+            'id' => '1',
+            'input' => [
+               'formcreator_field_1' => [
+                  'glpi'
+               ]
+            ],
+            'expected' => false,
+            'expectedValue' => [2],
+         ],
+      ];
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @dataProvider providerparseAnswerValue
+    *
+    * @param [type] $id
+    * @param [type] $input
+    * @param [type] $expected
+    * @param [type] $expectedValue
+    * @return void
+    */
+   public function testParseAnswerValue($id, $input, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->parseAnswerValue($input);
+      $outputValue = $instance->getValueForTargetField();
+      $this->boolean($output)->isEqualTo($expected);
+      $outputValue = $instance->getValueForTargetField();
+      if ($expected === false) {
+         $this->variable($outputValue)->isNull();
+      } else {
+         $this->array($outputValue)
+            ->hasSize(count($expectedValue))
+            ->containsValues($expectedValue);
+      }
+   }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'id' => '1',
+            'input' => []
+         ]
+      ];
+   }
+
+   public function testSerializeValue() {
+      $instance = $this->newTestedInstance([]);
+    }
+ }

@@ -133,7 +133,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    /**
@@ -162,7 +162,6 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function isValid() {
-      $value = $this->value;
       $sanitized = $this->sanitizeValue($this->value);
 
       // If the field is required it can't be empty

@@ -234,7 +234,6 @@ class PluginFormcreatorFields extends CommonTestCase {
 
    /**
     * @dataProvider answersProvider
-    * @engine inline
     */
    public function testIsVisible($show_rule, $conditions, $answers, $expectedVisibility) {
       // create form
@@ -302,7 +301,9 @@ class PluginFormcreatorFields extends CommonTestCase {
       }
       $realAnswers = [];
       foreach ($answers as $id => $answer) {
-         $realAnswers['formcreator_field_' . $questionPool[$id]] = $answers[$id];
+         $realAnswers[$id] = \PluginFormcreatorFields::getFieldInstance(
+            $questionPool[$id]->fields['fieldtype'],$questionPool[$id]
+         );
       }
       $input = $conditions + [
          'id'        => $question->getID(),
