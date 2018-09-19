@@ -189,16 +189,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorIntegerField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->integer((integer) $value)->isEqualTo((integer) $expectedValue);
-   }
-
-   /**
-    * @dataProvider provider
-    */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();

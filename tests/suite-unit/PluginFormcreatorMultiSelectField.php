@@ -174,19 +174,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->integer(count($value))->isEqualTo(count($expectedValue));
-      foreach ($expectedValue as $expectedSubValue) {
-         $this->array($value)->contains($expectedSubValue);
-      }
-   }
-
-   /**
-    * @dataProvider provider
-    */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();

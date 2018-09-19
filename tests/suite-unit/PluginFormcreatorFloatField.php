@@ -165,16 +165,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorFloatField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->string($value)->isEqualTo($expectedValue);
-   }
-
-   /**
-    * @dataProvider provider
-    */
    public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
