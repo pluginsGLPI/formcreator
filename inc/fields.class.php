@@ -305,7 +305,10 @@ class PluginFormcreatorFields
       $found_questions = $question->getQuestionsFromForm($formId);
       foreach ($found_questions as $id => $question) {
          $key = 'formcreator_field_' . $id;
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+            );
          $fields[$id]->parseAnswerValues($input);
       }
 

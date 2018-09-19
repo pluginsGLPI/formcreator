@@ -50,9 +50,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param array $fields fields of a PluginFormcreatorQuestion instance
     * @param array $data value of all fields
     */
-   public function __construct($fields, $data = []) {
+   public function __construct($fields) {
       $this->fields  = $fields;
-      $this->value   = $data;
    }
 
    public function prepareQuestionInputForSave($input) {

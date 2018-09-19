@@ -33,6 +33,9 @@
 
 class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 {
+   /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
+   protected $fields = null;
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $id        = $this->fields['id'];

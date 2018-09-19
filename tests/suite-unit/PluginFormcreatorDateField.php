@@ -138,8 +138,9 @@ class PluginFormcreatorDateField extends CommonTestCase {
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $instance = $this->newTestedInstance($fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $instance->isValid($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 

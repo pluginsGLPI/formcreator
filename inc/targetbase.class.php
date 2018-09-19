@@ -868,7 +868,10 @@ EOS;
       // Prepare all fields of the form
       foreach ($questions as $questionId => $question) {
          $answer = $answers_values['formcreator_field_' . $questionId];
-         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance($question->getField('fieldtype'), $question);
+         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
+            $question->getField('fieldtype'),
+            $question
+         );
          $fields[$questionId]->deserializeValue($answer);
       }
 

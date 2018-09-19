@@ -1162,7 +1162,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
          $key = 'formcreator_field_' . $id;
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
          $fieldValidities[$id] = $fields[$id]->parseAnswerValues($input);
       }
       // any invalid field will invalidate the answers
@@ -1330,7 +1333,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       foreach ($tab_questions as $questions_id => $new_questions_id) {
          $oldQuestion = new PluginFormcreatorQuestion();
          $oldQuestion->getFromDB($questions_id);
-         $field = PluginFormcreatorFields::getFieldInstance($oldQuestion->fields['fieldtype'], $oldQuestion);
+         $field = PluginFormcreatorFields::getFieldInstance(
+            $oldQuestion->fields['fieldtype'],
+            $oldQuestion
+         );
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
             $newQuestion = new PluginFormcreatorQuestion();

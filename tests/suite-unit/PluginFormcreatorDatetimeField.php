@@ -138,8 +138,9 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $instance = $this->newTestedInstance($fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $instance->isValid($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
@@ -155,7 +156,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
             'input' => [
                'formcreator_field_1' => ''
             ],
-            'expected' => false,
+            'expected' => true,
             'expectedValue' => null,
          ],
          [
@@ -182,18 +183,18 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
     * @param [type] $expectedValue
     * @return void
     */
-   public function testParseAnswerValue($id, $input, $expected, $expectedValue) {
-      $instance = $this->newTestedInstance([]);
-      $output = $instance->parseAnswerValue($input);
+   public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance(['id' => $id]);
+      $output = $instance->parseAnswerValues($input);
+
       $outputValue = $instance->getValueForTargetField();
       $this->boolean($output)->isEqualTo($expected);
       $outputValue = $instance->getValueForTargetField();
       if ($expected === false) {
          $this->variable($outputValue)->isNull();
       } else {
-         $this->array($outputValue)
-            ->hasSize(count($expectedValue))
-            ->containsValues($expectedValue);
+         $this->string($outputValue)
+            ->isEqualTo($expectedValue);
       }
    }
 

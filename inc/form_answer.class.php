@@ -1022,7 +1022,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $found_questions = $question->getQuestionsFromForm($this->fields['plugin_formcreator_forms_id']);
       foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance($question->fields['fieldtype'], $question);
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
          $fields[$id]->parseAnswerValues($answers_values);
       }
 
