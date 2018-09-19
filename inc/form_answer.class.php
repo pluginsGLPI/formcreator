@@ -748,6 +748,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                if (!$this->generateTarget()) {
                   Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
+                  // TODO: find a way to validate the answers
+                  // It the form is not being validated, nothing gives the power to anyone to validate the answers
                   $this->update([
                      'id'     => $this->getID(),
                      'status' => 'waiting',
