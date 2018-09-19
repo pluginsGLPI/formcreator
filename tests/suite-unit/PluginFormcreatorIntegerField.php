@@ -197,9 +197,10 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $question->add($fields);
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorIntegerField($question->fields, $data);
+      $instance = new \PluginFormcreatorIntegerField($question->fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $fieldInstance->isValid($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 }
