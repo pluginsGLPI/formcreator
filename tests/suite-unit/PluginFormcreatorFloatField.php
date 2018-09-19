@@ -165,7 +165,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
@@ -174,8 +174,9 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorFloatField($question->fields, $data);
-      $isValid = $fieldInstance->isValid($fields['default_values']);
+      $instance = new \PluginFormcreatorFloatField($question->fields, $data);
+      $instance->deserializeValue($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
