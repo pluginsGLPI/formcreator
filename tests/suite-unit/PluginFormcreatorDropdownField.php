@@ -58,7 +58,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                'name' => $name,
                'values' => json_encode(['itemtype' => \Location::class]),
                'dropdown_values' => \Location::class,
-               'default_values' => '',
             ]
          ],
          [
@@ -76,7 +75,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'show_ticket_categories_depth' => '3',
                ]),
                'dropdown_values' => \ITILCategory::class,
-               'default_values' => '',
             ]
          ],
       ];
