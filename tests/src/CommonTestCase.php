@@ -161,6 +161,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       }
       $form = new \PluginFormcreatorForm();
       $form->add($input);
+      $form->getFromDB($form->getID());
 
       return $form;
    }

@@ -631,7 +631,9 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    /**
     * Create or update answers of a form
     *
+    * @param PluginFormcreatorForm $form
     * @param array $data answers
+    * @param array $fields array of field: question id => instance
     * @return boolean
     */
    public function saveAnswers(PluginFormcreatorForm $form, $data, $fields) {
@@ -882,6 +884,31 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       } else {
          return $formAnswerId;
       }
+   }
+
+   /**
+    * Update the answers
+    *
+    * @param [type] $input
+    * @return void
+    */
+   public function updateAnswers($input) {
+      $form = new PluginFormcreatorForm();
+      $form->getID((int) $_POST['formcreator_form']);
+      $input['status'] = 'waiting';
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
+
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+      }
+      $this->saveAnswers($form, $input, $fields);
    }
 
    /**
