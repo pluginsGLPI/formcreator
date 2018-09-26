@@ -71,6 +71,10 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return Html::convDateTime($this->getValue());
    }
 
+   public function prepareQuestionInputForTarget($input) {
+      return Toolbox::addslashes_deep(Html::convDateTime($input));
+   }
+
    public function isValid($value) {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($value) == '')) {
