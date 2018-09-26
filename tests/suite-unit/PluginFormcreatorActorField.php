@@ -153,7 +153,8 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorActorField([], $value);
+      $instance = new \PluginFormcreatorActorField(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
       $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }
@@ -294,7 +295,8 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerEquals
     */
    public function testEquals($value, $answer, $expected) {
-      $instance = new \PluginFormcreatorActorField([], $answer);
+      $instance = new \PluginFormcreatorActorField(['id' => '1']);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
 
@@ -344,7 +346,8 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerNotEquals
     */
    public function testNotEquals($value, $answer, $expected) {
-      $instance = new \PluginFormcreatorActorField([], $answer);
+      $instance = new \PluginFormcreatorActorField(['id' => '1'], $answer);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
 
