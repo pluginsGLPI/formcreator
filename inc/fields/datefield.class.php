@@ -67,6 +67,10 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       return (strtotime($date) != '') ? $date : null;
    }
 
+   public function prepareQuestionInputForTarget($input) {
+      return Toolbox::addslashes_deep(Html::convDate($input));
+   }
+
    public function getAnswer() {
       return Html::convDate($this->getValue());
    }
