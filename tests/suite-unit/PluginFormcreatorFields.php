@@ -236,79 +236,43 @@ class PluginFormcreatorFields extends CommonTestCase {
     * @dataProvider answersProvider
     */
    public function testIsVisible($show_rule, $conditions, $answers, $expectedVisibility) {
-      // create form
-      $form = new \PluginFormcreatorForm();
-      $form->add([
-         'entities_id'           => '0',
-         'name'                  => 'a form',
-         'description'           => 'form description',
-         'content'               => 'a content',
-         'is_active'             => 1,
-         'validation_required'   => 0
-      ]);
-
       // Create section
-      $section = new \PluginFormcreatorSection();
-      $section->add([
-         'name'                           => 'a section',
-         'plugin_formcreator_forms_id'    => $form->getID(),
-      ]);
+      $section = $this->getSection();
+      $this->boolean($section->isNewItem())->isFalse();
 
       // Create a question
-      $question = new \PluginFormcreatorQuestion();
-      $question->add([
+      $question = $this->getQuestion([
          'name'                           => 'text question',
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $section->getID(),
-         '_parameters'     => [
-            'text' => [
-               'range' => [
-                  'range_min' => '',
-                  'range_max' => '',
-               ],
-               'regex' => [
-                  'regex' => ''
-               ]
-            ]
-         ],
       ]);
       $this->boolean($question->isNewItem())->isFalse();
 
       $questionPool = [];
       for ($i = 0; $i < 4; $i++) {
-         $item = new \PluginFormcreatorQuestion();
-         $item->add([
+         $item = $this->getQuestion([
             'fieldtype'                      => 'text',
             'name'                           => "question $i",
             'plugin_formcreator_sections_id' => $section->getID(),
-            '_parameters'     => [
-               'text' => [
-                  'range' => [
-                     'range_min' => '',
-                     'range_max' => '',
-                  ],
-                  'regex' => [
-                     'regex' => ''
-                  ]
-               ]
-            ]
          ]);
-         $questionPool[$i] = $item->getID();
+         $questionPool[$i] = $item;
       }
 
       foreach ($conditions['show_field'] as $id => &$showField) {
-         $showField = $questionPool[$showField];
+         $showField = $questionPool[$showField]->getID();
       }
       $realAnswers = [];
       foreach ($answers as $id => $answer) {
-         $realAnswers[$id] = \PluginFormcreatorFields::getFieldInstance(
-            $questionPool[$id]->fields['fieldtype'],$questionPool[$id]
+         $realAnswers[$questionPool[$id]->getID()] = \PluginFormcreatorFields::getFieldInstance(
+            $questionPool[$id]->fields['fieldtype'], $questionPool[$id]
          );
+         $realAnswers[$questionPool[$id]->getID()]->deserializeValue($answer);
       }
       $input = $conditions + [
          'id'        => $question->getID(),
          'fieldtype' => 'text',
          'show_rule' => $show_rule,
+         'default_values' => '',
          '_parameters'     => [
             'text' => [
                'range' => [
