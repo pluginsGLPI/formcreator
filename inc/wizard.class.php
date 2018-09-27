@@ -43,6 +43,7 @@ class PluginFormcreatorWizard {
    const MENU_FEEDS        = 4;
    const MENU_BOOKMARKS    = 5;
    const MENU_HELP         = 6;
+   const MENU_LINKS        = 7;
 
    public static function header($title) {
       global $CFG_GLPI, $HEADER_LOADED, $DB;
@@ -163,6 +164,57 @@ class PluginFormcreatorWizard {
             echo '</a>';
             echo '</li>';
          }
+      }
+
+      $link = new Link;
+      $ar_links = $link->find("name LIKE 'Helpdesk%'");
+      foreach ($ar_links as $id => $a_link) {
+         Toolbox::logInFile("plugin-form", "A link: ". serialize($a_link) ."\n");
+         /*
+          * The link name is filtered and trimmed to remove the 'Helpdesk' string and extra whitespaces:
+          * Helpdesk 1 - the first link
+          * will display: the first link.
+          */
+         $label = trim(str_replace('Helpdesk', '', $a_link['name']));
+
+         /*
+          * If the link data field contains a line starting with Icon:, this line is used as a class icon
+          * for the link. As an example, this line:
+          * Icon: fa fa-dashboard
+          * will use the font awesome fa-dashboard icon for the current link.
+          * As default, the fa-globe icon is used.
+          */
+         preg_match_all("/^Icon:(.*)$/m",$a_link['data'], $found);
+         $icon = "fa fa-globe";
+         if ((count($found) > 0) and (count($found[0]) > 0)) {
+            $icon = trim(str_replace('Icon:', '', $found[0][0]));
+         }
+
+         /*
+          * If the link data field contains a line starting with Title:, this line is used to find the title used
+          * for the link. As an example, this line:
+          * Title: this is my title
+          * will define a new title for the current link.
+          * As default, the link name is used.
+          */
+         preg_match_all("/^Label:(.*)$/m",$a_link['data'], $found);
+         $title = $a_link['name'];
+         if ((count($found) > 0) and (count($found[0]) > 0)) {
+            $title = trim(str_replace('Title:', '', $found[0][0]));
+         }
+         /*
+          * If the external link uses a new window...
+          */
+         $target = "";
+         if ($a_link['open_window'] == "1") {
+            $target = 'target="_blank"';
+         }
+         echo '<li class="' . ($activeMenuItem == self::MENU_LINKS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
+         echo '<a href="' . $a_link['link'] . '" '. $target .'>';
+         echo '<span class="'. $icon .' fc_list_icon" title="' . $title . '"></span>';
+         echo '<span class="label">'. $label .'</span>';
+         echo '</a>';
+         echo '</li>';
       }
 
       if (isset($CFG_GLPI["helpdesk_doc_url"]) && !empty($CFG_GLPI["helpdesk_doc_url"])) {
