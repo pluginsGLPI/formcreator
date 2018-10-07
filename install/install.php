@@ -73,25 +73,20 @@ class PluginFormcreatorInstall {
       // All cases are run starting from the one matching the current schema version
       switch ($fromSchemaVersion) {
          case '0.0':
-         case '2.5':
-            //Any schema version below or equal 2.5
             require_once(__DIR__ . '/update_0.0_2.5.php');
             plugin_formcreator_update_2_5($this->migration);
 
-         case '2.6':
-            //Any schema version below or equal 2.6
+         case '2.5':
             require_once(__DIR__ . '/update_2.5_2.6.php');
             plugin_formcreator_update_2_6($this->migration);
 
+         case '2.6':
             require_once(__DIR__ . '/update_2.6_2.6.1.php');
             plugin_formcreator_update_2_6_1($this->migration);
 
             require_once(__DIR__ . '/update_2.6.2_2.6.3.php');
             plugin_formcreator_update_2_6_3($this->migration);
 
-         case 2.7:
-         case PLUGIN_FORMCREATOR_SCHEMA_VERSION:
-            //Any schema version below or equal to 2.7
             require_once(__DIR__ . '/update_2.6_2.7.php');
             plugin_formcreator_update_2_7($this->migration);
 

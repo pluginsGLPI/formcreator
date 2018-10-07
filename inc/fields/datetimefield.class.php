@@ -70,7 +70,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText() {
-      return Toolbox::addslashes_deep($this->value);
+      return Toolbox::addslashes_deep(Html::convDateTime($this->value));
    }
 
    public function getValueForTargetField() {
