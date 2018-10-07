@@ -148,7 +148,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          $this->value = array_filter($this->value, function($value) {
             return ($value !== '');
          });
-         $input['default_values'] = implode('\r\n', $this->value);$;
+         $input['default_values'] = implode('\r\n', $this->value);
       }
       return $input;
    }

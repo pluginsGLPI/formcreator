@@ -119,6 +119,7 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
          'validation_required'   => '0'
       ]);
       $this->boolean($form->isNewItem())->isFalse();
+      $form->getFromDB($form->getID());
 
       // Answer the form
       $form->saveForm(['formcreator_form' => $form->getID()]);
@@ -172,6 +173,7 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
          'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
       ]);
       $this->boolean($form->isNewItem())->isFalse();
+      $form->getFromDB($form->getID());
 
       $section = new \PluginFormcreatorSection();
       $section->add([

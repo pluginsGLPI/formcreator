@@ -81,7 +81,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return [];;
    }
 
-  public function isValid() {
+   public function isValid() {
       // If the field is required it can't be empty
       if ($this->isRequired() && (strtotime($this->value) == '')) {
          Session::addMessageAfterRedirect(

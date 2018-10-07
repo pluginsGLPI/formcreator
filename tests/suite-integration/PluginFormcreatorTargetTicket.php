@@ -124,6 +124,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                [
                   'name'                  => 'text question',
                   'fieldtype'             => 'text',
+                  'default_values'        => '',
                   '_parameters' => [
                      'text' => [
                      'regex' => ['regex' => ''],
@@ -211,34 +212,28 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             $table_section = \PluginFormcreatorSection::getTable();
             $table_form = \PluginFormcreatorForm::getTable();
             $table_question = \PluginFormcreatorQuestion::getTable();
-            if (!method_exists($question, 'getFromDBByRequest')) {
-               $question->getFromDBByQuery("LEFT JOIN `$table_section` `s` ON (`s`.`id` = `plugin_formcreator_sections_id`)
-                  LEFT JOIN `$table_form` `f` ON (`f`.`id` = `s`.`plugin_formcreator_forms_id`)
-                  WHERE `$table_question`.`name` = '$questionName' AND `plugin_formcreator_forms_id` = '$formId'");
-            } else {
-               $question->getFromDBByRequest([
-                  'LEFT JOIN' => [
-                     \PluginFormcreatorSection::getTable() => [
-                        'FKEY' => [
-                           \PluginFormcreatorSection::getTable() => 'id',
-                           \PluginFormcreatorQuestion::getTable() => \PluginFormcreatorSection::getForeignKeyField()
-                        ]
-                     ],
-                     \PluginFormcreatorForm::getTable() => [
-                        'FKEY' => [
-                              \PluginFormcreatorForm::getTable() => 'id',
-                              \PluginFormcreatorSection::getTable() => \PluginFormcreatorForm::getForeignKeyField()
-                        ]
+            $question->getFromDBByRequest([
+               'LEFT JOIN' => [
+                  \PluginFormcreatorSection::getTable() => [
+                     'FKEY' => [
+                        \PluginFormcreatorSection::getTable() => 'id',
+                        \PluginFormcreatorQuestion::getTable() => \PluginFormcreatorSection::getForeignKeyField()
                      ]
                   ],
-                  'WHERE' => [
-                     'AND' => [
-                        \PluginFormcreatorQuestion::getTable() . '.name' => $questionName,
-                        \PluginFormcreatorForm::getForeignKeyField() => $formId,
+                  \PluginFormcreatorForm::getTable() => [
+                     'FKEY' => [
+                           \PluginFormcreatorForm::getTable() => 'id',
+                           \PluginFormcreatorSection::getTable() => \PluginFormcreatorForm::getForeignKeyField()
                      ]
                   ]
-               ]);
-            }
+               ],
+               'WHERE' => [
+                  'AND' => [
+                     \PluginFormcreatorQuestion::getTable() . '.name' => $questionName,
+                     \PluginFormcreatorForm::getForeignKeyField() => $formId,
+                  ]
+               ]
+            ]);
             $this->boolean($question->isNewItem())->isFalse();
             $questionId = $question->getID();
             $urgencyQuestions[] = [
