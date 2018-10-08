@@ -34,11 +34,6 @@
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorQuestion_Condition extends CommonTestCase {
-
-   static $question;
-
-   static $questionPool = [];
-
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
 
@@ -59,7 +54,12 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
                'show_value' => [
                ],
             ],
-            [],
+            [
+               0 => 'val1',
+               1 => 'val2',
+               2 => 'val8',
+               3 => 'val9',
+            ],
             true,
          ],
          'simple condition' => [
@@ -79,7 +79,10 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
                ],
             ],
             [
-                  0 => 'foo',
+               0 => 'foo',
+               1 => 'val2',
+               2 => 'val8',
+               3 => 'val9',
             ],
             true,
          ],
@@ -127,6 +130,8 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
             [
                0 => 'val1',
                1 => 'val2',
+               2 => 'val8',
+               3 => 'val9',
             ],
             true,
          ],
@@ -153,6 +158,8 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
             [
                0 => 'val1',
                1 => 'not val2',
+               2 => 'val8',
+               3 => 'val9',
             ],
             true,
          ],
@@ -179,6 +186,8 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
             [
                0 => 'val1',
                1 => 'val2',
+               2 => 'val8',
+               3 => 'val9',
             ],
             true,
          ],
@@ -251,30 +260,18 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
     * @dataProvider answersProvider
     */
    public function testConditionsEvaluation($show_rule, $conditions, $answers, $expectedVisibility) {
-      // create form
+      $section = $this->getSection();
       $form = new \PluginFormcreatorForm();
-      $form->add([
-         'entities_id'           => '0',
-         'name'                  => __METHOD__,
-         'description'           => 'form description',
-         'content'               => 'a content',
-         'is_active'             => 1,
-         'validation_required'   => 0
-      ]);
-
-      // Create section
-      $section = new \PluginFormcreatorSection();
-      $section->add([
-         'name'                           => 'a section',
-         'plugin_formcreator_forms_id'    => $form->getID(),
-      ]);
+      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
+      $questionPool = [];
 
       // Create a question
-      self::$question = new \PluginFormcreatorQuestion();
-      self::$question->add([
+      $question = new \PluginFormcreatorQuestion();
+      $question->add([
          'name'                           => 'text question',
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $section->getID(),
+         'default_values'                 => '',
          '_parameters'     => [
             'text' => [
                'range' => [
@@ -287,6 +284,7 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
             ]
          ],
       ]);
+      $questionPool[] = $question;
 
       for ($i = 0; $i < 4; $i++) {
          $item = new \PluginFormcreatorQuestion();
@@ -294,6 +292,7 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
             'fieldtype'                      => 'text',
             'name'                           => "question $i",
             'plugin_formcreator_sections_id' => $section->getID(),
+            'default_values'                 => '',
             '_parameters'     => [
                'text' => [
                   'range' => [
@@ -306,20 +305,23 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
                ]
             ],
          ]);
-         self::$questionPool[$i] = $item->getID();
+         $questionPool[] = $item;
       }
 
       foreach ($conditions['show_field'] as $id => &$showField) {
-         $showField = self::$questionPool[$showField];
+         $showField = $questionPool[$showField];
       }
-      $realAnswers = [];
+      $saveFormData = [];
       foreach ($answers as $id => $answer) {
-         $realAnswers['formcreator_field_' . self::$questionPool[$id]] = $answers[$id];
+         $saveFormData['formcreator_field_' . $questionPool[$id]->getID()] = $answer;
       }
+      $saveFormData['formcreator_form'] = $form->getID();
+      $form->saveForm($saveFormData);
       $input = $conditions + [
-         'id'        => self::$question->getID(),
-         'fieldtype' => 'text',
-         'show_rule' => $show_rule,
+         'id'                             => $question->getID(),
+         'fieldtype'                      => 'text',
+         'show_rule'                      => $show_rule,
+         'default_values'                 => '',
          '_parameters'     => [
             'text' => [
                'range' => [
@@ -332,10 +334,9 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
             ]
          ],
       ];
-      self::$question->update($input);
-      self::$question->updateConditions($input);
-      $isVisible = \PluginFormcreatorFields::isVisible(self::$question->getID(), $realAnswers);
+      $question->update($input);
+      $question->updateConditions($input);
+      $isVisible = \PluginFormcreatorFields::isVisible($question->getID(), $questionPool);
       $this->boolean($isVisible)->isEqualTo($expectedVisibility);
    }
-
 }
