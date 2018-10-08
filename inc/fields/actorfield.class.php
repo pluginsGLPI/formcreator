@@ -64,7 +64,20 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             pluginFormcreatorInitializeActor('$fieldName', '$rand', '$initialValue');
          });");
       } else {
-         echo empty($this->value) ? '' : implode('<br />', $this->value);
+         if (empty($this->value)) {
+            echo '';
+         } else {
+            foreach ($this->value as $item) {
+               if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
+                  $value[] = $item;
+               } else {
+                  $user = new User();
+                  $user->getFromDB($item);
+                  $value[] = $user->getRawName();
+               }
+            }
+            echo implode('<br>', $value);
+         }
       }
    }
 
@@ -73,13 +86,13 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          return '';
       }
 
-      return implode(',', $this->value);
+      return json_encode($this->value);
    }
 
    public function deserializeValue($value) {
       $deserialized  = [];
       $serialized = ($value !== null && $value !== '')
-                  ? explode(',', $value)
+                  ? json_decode($value, JSON_OBJECT_AS_ARRAY)
                   : [];
       foreach ($serialized as $item) {
          $item = trim($item);

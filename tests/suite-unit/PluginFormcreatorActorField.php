@@ -49,7 +49,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '',
+               'default_values'  => json_encode([]),
                'values'          => '',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -63,7 +63,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '',
+               'default_values'  => json_encode([]),
                'values'          => 'glpi',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -77,7 +77,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => 'email@something.com',
+               'default_values'  => json_encode(['email@something.com']),
                'values'          => '',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -91,7 +91,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => $userId . ',email@something.com',
+               'default_values'  => json_encode([$userId, 'email@something.com']),
                'values'          => '',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -128,23 +128,23 @@ class PluginFormcreatorActorField extends CommonTestCase {
          ],
          [
             'value'     => [],
-            'expected'  => '',
+            'expected'  => json_encode([]),
          ],
          [
             'value'     => ['2'],
-            'expected'  => '2',
+            'expected'  => json_encode(['2']),
          ],
          [
             'value'     => ['2', '5'],
-            'expected'  => '2,5',
+            'expected'  => json_encode(['2','5']),
          ],
          [
             'value'     => ['2', '5', 'user@localhost.local'],
-            'expected'  => '2,5,user@localhost.local',
+            'expected'  => json_encode(['2','5','user@localhost.local']),
          ],
          [
             'value'     => ['user@localhost.local'],
-            'expected'  => 'user@localhost.local',
+            'expected'  => json_encode(['user@localhost.local']),
          ],
       ];
    }
@@ -175,19 +175,19 @@ class PluginFormcreatorActorField extends CommonTestCase {
             'expected'  => [],
          ],
          [
-            'value'     => "$glpiId",
+            'value'     => json_encode(["$glpiId"]),
             'expected'  => [$glpiId],
          ],
          [
-            'value'     => "$glpiId,$normalId",
+            'value'     => json_encode(["$glpiId","$normalId"]),
             'expected'  => [$glpiId, $normalId],
          ],
          [
-            'value'     => "$glpiId,$normalId,user@localhost.local",
+            'value'     => json_encode(["$glpiId","$normalId","user@localhost.local"]),
             'expected'  => [$glpiId, $normalId, 'user@localhost.local'],
          ],
          [
-            'value'     => "user@localhost.local",
+            'value'     => json_encode(["user@localhost.local"]),
             'expected'  => ['user@localhost.local'],
          ],
       ];
@@ -217,19 +217,19 @@ class PluginFormcreatorActorField extends CommonTestCase {
             'expected' => '',
          ],
          [
-            'value'     => "$glpiId",
+            'value'     => json_encode(["$glpiId"]),
             'expected'  => "glpi",
          ],
          [
-            'value'     => "$glpiId,$normalId",
+            'value'     => json_encode(["$glpiId", "$normalId"]),
             'expected'  => "glpi\r\nnormal",
          ],
          [
-            'value'     => "$glpiId, $normalId,user@localhost.local",
+            'value'     => json_encode(["$glpiId", "$normalId", "user@localhost.local"]),
             'expected'  => "glpi\r\nnormal\r\nuser@localhost.local",
          ],
          [
-            'value'     => "user@localhost.local",
+            'value'     => json_encode(["user@localhost.local"]),
             'expected'  => "user@localhost.local",
          ],
       ];
