@@ -184,7 +184,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       if (!isset($input['name'])) {
          $input['name'] = 'question';
       }
-      $sectionFk = \PluginFormcreatorForm::getForeignKeyField();
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
       if (!isset($input[$sectionFk])) {
          $sectionId = $this->getSection()->getID();
          $input[$sectionFk] = $sectionId;

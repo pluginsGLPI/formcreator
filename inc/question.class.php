@@ -349,7 +349,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
           || !$input['_skip_checks']) {
          $input = $this->checkBeforeSave($input);
       }
-      if (count($input) == 0) {
+      if (count($input) === 0) {
          return [];
       }
 
@@ -359,15 +359,13 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (!empty($input)) {
-         // Get next order
-         $sectionId = $input['plugin_formcreator_sections_id'];
-         $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$sectionId'", 'order');
-         if ($maxOrder === null) {
-            $input['order'] = 1;
-         } else {
-            $input['order'] = $maxOrder + 1;
-         }
+      // Get next order
+      $sectionId = $input['plugin_formcreator_sections_id'];
+      $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$sectionId'", 'order');
+      if ($maxOrder === null) {
+         $input['order'] = 1;
+      } else {
+         $input['order'] = $maxOrder + 1;
       }
 
       return $input;
