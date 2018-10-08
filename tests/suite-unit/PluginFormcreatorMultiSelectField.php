@@ -184,9 +184,9 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $question->getFromDB($question->getID());
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
-
-      $isValid = $fieldInstance->isValid($fieldInstance->getValue());
+      $instance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
+      $instance->deserializeValue($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
