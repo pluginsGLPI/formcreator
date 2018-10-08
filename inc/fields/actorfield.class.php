@@ -31,7 +31,12 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorActorField extends PluginFormcreatorField
+/**
+ * Actors field is a field which accepts several users. Those users may be 
+ * users from the itemtype User or email addresses. Email addresses allows to 
+ * add actors who don't have an account in GLPI.
+ */
+ class PluginFormcreatorActorField extends PluginFormcreatorField
 {
    public static function getName() {
       return _n('Actor', 'Actors', 1, 'formcreator');
