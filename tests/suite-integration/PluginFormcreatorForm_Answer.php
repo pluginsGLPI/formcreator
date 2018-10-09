@@ -33,7 +33,7 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 /**
- * The the methods conflict when running in parallel
+ * The methods conflict when running in parallel
  * @engine inline
  */
 class PluginFormcreatorForm_Answer extends CommonTestCase {

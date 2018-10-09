@@ -208,7 +208,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    /**
     * @cover PluginFormcreatorForm::export
-    * @engine inline
     */
    public function testExportForm() {
       // instanciate classes
