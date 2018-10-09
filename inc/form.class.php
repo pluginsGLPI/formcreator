@@ -1529,7 +1529,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
             case PluginFormcreatorTargetChange::class:
                // Drop default actors
-               $target_ticket_actor->deleteByCriteria([
+               $target_change_actor->deleteByCriteria([
                   'plugin_formcreator_targetchanges_id' => $new_target_item_id
                ]);
 
