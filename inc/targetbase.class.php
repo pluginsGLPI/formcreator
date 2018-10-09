@@ -886,7 +886,7 @@ EOS;
 
          $content = str_replace('##question_' . $questionId . '##', addslashes($name), $content);
          $content = str_replace('##answer_' . $questionId . '##', $value, $content);
-         foreach ( $fields[$questionId]->getDocumentsForTarget() as $documentId) {
+         foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
             $this->addAttachedDocument($documentId);
          }
          if ($question->getField('fieldtype') !== 'file') {
@@ -901,9 +901,6 @@ EOS;
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
                if (!is_array($value)) {
                   $value = [$value];
-               }
-               if (count($value)) {
-                  // keep the ID of the document
                }
             }
          }

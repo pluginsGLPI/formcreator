@@ -149,7 +149,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
     *
     * @return integer|NULL
     */
-    private function saveDocument($file) {
+   private function saveDocument($file) {
       global $DB;
 
       $sectionTable = PluginFormcreatorSection::getTable();
@@ -159,23 +159,23 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $form = new PluginFormcreatorForm();
       $form->getFromDBByRequest([
-         'LEFT JOIN' => [
-            $sectionTable => [
-               'FKEY' => [
-                  $sectionTable => $formFk,
-                  $formTable => 'id'
-               ]
-            ],
-            $questionTable => [
-               'FKEY' => [
-                  $sectionTable => 'id',
-                  $questionTable => $sectionFk
-               ]
-            ]
-         ],
-         'WHERE' => [
-            "$questionTable.id" => $this->fields['id'],
-         ],
+        'LEFT JOIN' => [
+           $sectionTable => [
+              'FKEY' => [
+                 $sectionTable => $formFk,
+                 $formTable => 'id'
+              ]
+           ],
+           $questionTable => [
+              'FKEY' => [
+                 $sectionTable => 'id',
+                 $questionTable => $sectionFk
+              ]
+           ]
+        ],
+        'WHERE' => [
+           "$questionTable.id" => $this->fields['id'],
+        ],
       ]);
       if ($form->isNewItem()) {
          // A problem occured while finding the form of the field
@@ -186,8 +186,8 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       $file_data                 = [];
       $file_data["name"]         = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
       $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
-                                    ? $_SESSION['glpiactive_entity']
-                                    : $form->getField('entities_id');
+                                   ? $_SESSION['glpiactive_entity']
+                                   : $form->getField('entities_id');
       $file_data["is_recursive"] = $form->getField('is_recursive');
       $file_data['_filename'] = [$file];
       if ($docID = $doc->add($file_data)) {

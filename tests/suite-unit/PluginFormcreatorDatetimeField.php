@@ -209,5 +209,5 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
 
    public function testSerializeValue() {
       $instance = $this->newTestedInstance([]);
-    }
- }
+   }
+}

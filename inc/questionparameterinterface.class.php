@@ -31,7 +31,7 @@
  * ---------------------------------------------------------------------
  */
 
- interface PluginFormcreatorQuestionParameterInterface {
+interface PluginFormcreatorQuestionParameterInterface {
    /**
     * Gets the HTML form part for the parameters
     * @param PluginFormcreatorForm $form a form used as context when displaying parameters

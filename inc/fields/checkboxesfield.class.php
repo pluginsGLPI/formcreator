@@ -83,7 +83,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
     * Gets the available values for the field
     * @return array available values
     */
-    public function getAvailableValues() {
+   public function getAvailableValues() {
       return explode("\r\n", $this->fields['values']);
    }
 

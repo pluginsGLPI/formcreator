@@ -111,7 +111,7 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
 
       $this->value = $input[$key];
       return true;
-  }
+   }
 
    public static function getJSFields() {
       $prefs = self::getPrefs();

@@ -70,7 +70,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
        $this->value = $input[$key];
        return true;
-  }
+   }
 
    public static function getPrefs() {
       return [
