@@ -122,17 +122,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'name'                  => 'a section',
             'questions'             =>  [
                [
-                  'name'                  => 'text question',
-                  'fieldtype'             => 'text',
-                  'default_values'        => '',
-                  '_parameters' => [
-                     'text' => [
-                     'regex' => ['regex' => ''],
-                     'range' => ['min' => '', 'max' => ''],
-                     ]
-                  ],
-               ],
-               [
                   'name'                  => 'custom urgency',
                   'fieldtype'             => 'urgency',
                ],
@@ -181,7 +170,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'itemtype'              => 'PluginFormcreatorTargetTicket',
             'urgency_rule'          => 'answer',
             'urgency_question'      => 'custom urgency',
-            'expected'              => 5
+            'expected'              => '5'
          ],
          [
             'name'                  => 'target 2',
@@ -189,7 +178,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'itemtype'              => 'PluginFormcreatorTargetTicket',
             'urgency_rule'          => 'none',
             'urgency_question'      => '',
-            'expected'              => 3
+            'expected'              => '3'
          ]
       ];
       foreach ($targetTicketsData as $targetData) {
@@ -265,6 +254,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          }
       }
       $saveFormData['formcreator_form'] = $form->getID();
+      $form->getFromDB($form->getID());
       $form->saveForm($saveFormData);
       $formAnswer = new \PluginFormcreatorForm_Answer();
       $formAnswer->getFromDbByCrit([
@@ -288,7 +278,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'id'   => $tickets
          ]);
          $this->boolean($ticket->isNewItem())->isFalse();
-         $this->integer((int) $ticket->getField('urgency'))->isEqualTo($question['expected']);
+         $this->integer((int) $ticket->fields['urgency'])->isEqualTo($question['expected']);
       }
    }
 }
