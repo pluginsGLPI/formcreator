@@ -35,27 +35,73 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
 {
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $required = $this->fields['required'] ? ' required' : '';
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . '_' . $rand;
+         $required     = $this->fields['required'] ? ' required' : '';
+         $defaultValue = Html::cleanInputText($this->value);
 
          echo '<input type="email" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '"
-                  id="formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getValue() . '"
-                  onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeEmail('$fieldName', '$rand');
+         });");
       } else {
-         echo $this->getAnswer();
+         echo $this->value;
       }
    }
 
-   public function isValid($value) {
-      if (!parent::isValid($value)) {
-         return false;
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
       }
 
-      // Specific format not set or well match
-      if (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
-         Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
-         return false;
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
+   public function isValid() {
+      if ($this->value == '') {
+         if ($this->isRequired()) {
+            Session::addMessageAfterRedirect(
+               __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+               false,
+               ERROR);
+            return false;
+         }
+      } else {
+         if (!filter_var($this->value, FILTER_VALIDATE_EMAIL)) {
+            Session::addMessageAfterRedirect(__('This is not a valid e-mail:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
+            return false;
+         }
       }
 
       // All is OK
@@ -84,5 +130,43 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['email'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function prepareQuestionInputForSave($input) {
+      $input['values'] = '';
+      $this->value = $input['default_values'];
+      return $input;
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+      if ($input[$key] === '') {
+         return true;
+      }
+      if (!filter_var($input[$key], FILTER_VALIDATE_EMAIL)) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
+   }
+
+   public function equals($value) {
+      return $this->value == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 }

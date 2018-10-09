@@ -182,23 +182,21 @@ class PluginFormcreatorForm extends CommonTestCase {
             'glpi@localhost.com',
          ]
       ]);
-      $form = new \PluginFormcreatorForm();
-      $form->add([
+      $form = $this->getForm([
          'name'                  => 'validation notification',
          'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
          '_validator_users'      => [$_SESSION['glpiID']],
       ]);
-      $section = new \PluginFormcreatorSection();
-      $section->add([
+      $section =$this->getSection([
          $form::getForeignKeyField() => $form->getID(),
          'name' => 'section',
       ]);
 
       $formAnswer = new \PluginFormcreatorForm_Answer();
-      $formAnswerId = $formAnswer->saveAnswers([
+      $formAnswerId = $formAnswer->saveAnswers($form, [
          'formcreator_form'         => $form->getID(),
          'formcreator_validator'    => $_SESSION['glpiID'],
-      ]);
+      ], []);
       $this->integer($formAnswerId)->isGreaterThan(0);
 
       // 1 notification to the validator
@@ -210,7 +208,6 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    /**
     * @cover PluginFormcreatorForm::export
-    * @engine inline
     */
    public function testExportForm() {
       // instanciate classes
@@ -299,8 +296,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       foreach ($export["_profiles"] as $form_profile) {
          $this->_checkFormProfile($form_profile);
       }
-
-      return $export;
    }
 
    protected function _checkForm($form = []) {

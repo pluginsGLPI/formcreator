@@ -33,12 +33,69 @@
 
 class PluginFormcreatorFloatField extends PluginFormcreatorField
 {
-   public function isValid($value) {
-      if (!parent::isValid($value)) {
+   public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
+      if ($canEdit) {
+         echo '<input type="text" class="form-control"
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
+      } else {
+         echo $this->value;
+      }
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return strval((float) $this->value);
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
+   public function isValid() {
+      if ($this->isRequired() && $this->value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
          return false;
       }
 
-      if (!$this->isValidValue($value)) {
+      if (!$this->isValidValue($this->value)) {
          return false;
       }
 
@@ -107,20 +164,25 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          return false;
       }
 
-      if (isset($input['range_min'])
-          && isset($input['range_max'])
-          && isset($input['default_values'])) {
-         $input['default_values'] = !empty($input['default_values'])
-                                  ? (float) str_replace(',', '.', $input['default_values'])
-                                  : null;
-         $input['range_min']      = !empty($input['range_min'])
-                                  ? (float) str_replace(',', '.', $input['range_min'])
-                                  : null;
-         $input['range_max']      = !empty($input['range_max'])
-                                  ? (float) str_replace(',', '.', $input['range_max'])
-                                  : null;
+      if (isset($input['default_values'])) {
+         $this->value = (float) str_replace(',', '.', $input['default_values']);
       }
+      $input['values'] = '';
+
       return $input;
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+      if ($input[$key] != (float) str_replace(',', '.', $input[$key])) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
    }
 
    public static function getPrefs() {
@@ -168,4 +230,20 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       ];
    }
 
+
+   public function equals($value) {
+      return ((float) $this->value) === ((float) $value);
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return ((float) $this->value) > ((float) $value);
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
 }

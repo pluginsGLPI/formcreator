@@ -129,31 +129,6 @@ class PluginFormcreatorDateField extends CommonTestCase {
       return $dataset;
    }
 
-   /**
-    * @dataProvider providerGetValue
-    */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
-
-      $value = $instance->getValue();
-      $this->variable($value)->isEqualTo($expectedValue);
-   }
-
-   public function providerGetAnswer() {
-      return $this->providerGetValue();
-   }
-
-   /**
-    * @dataProvider providerGetAnswer
-    */
-   public function testGetAnswer($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
-
-      $expected = \Html::convDate($fields['default_values']);
-      $output = $instance->getAnswer();
-      $this->variable($output)->isEqualTo($expected);
-   }
-
    public function providerIsValid() {
       return $this->providerGetValue();
    }
@@ -163,8 +138,9 @@ class PluginFormcreatorDateField extends CommonTestCase {
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $instance = $this->newTestedInstance($fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $instance->isValid($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 

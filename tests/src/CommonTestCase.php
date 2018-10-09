@@ -155,31 +155,41 @@ abstract class CommonTestCase extends CommonDBTestCase
       }
    }
 
-   protected function getForm() {
+   protected function getForm($input = []) {
+      if (!isset($input['name'])) {
+         $input['name'] = 'form';
+      }
       $form = new \PluginFormcreatorForm();
-      $form->add([
-         'name' => 'form'
-      ]);
+      $form->add($input);
+      $form->getFromDB($form->getID());
 
       return $form;
    }
 
-   protected function getSection() {
-      $form = $this->getForm();
+   protected function getSection($input = []) {
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input[$formFk])) {
+         $formId = $this->getForm()->getID();
+         $input[$formFk] = $formId;
+      }
+      if (!isset($input['name'])) {
+         $input['name'] = 'section';
+      }
       $section = new \PluginFormcreatorSection();
-      $section->add([
-         $form::getForeignKeyField() => $form->getID(),
-         'name' => 'section',
-      ]);
+      $section->add($input);
       return $section;
    }
 
-   protected function getQuestion() {
-      $section = $this->getSection();
-      $question = new \PluginFormcreatorQuestion();
-      $question->add([
-         'name'                           => 'question',
-         'plugin_formcreator_sections_id' => $section->getID(),
+   protected function getQuestion($input = []) {
+      if (!isset($input['name'])) {
+         $input['name'] = 'question';
+      }
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      if (!isset($input[$sectionFk])) {
+         $sectionId = $this->getSection()->getID();
+         $input[$sectionFk] = $sectionId;
+      }
+      $defaultInput = [
          'fieldtype'                      => 'text',
          'values'                         => "",
          'required'                       => '0',
@@ -199,7 +209,10 @@ abstract class CommonTestCase extends CommonDBTestCase
                ]
             ]
          ],
-      ]);
+      ];
+      $input = array_merge($defaultInput, $input);
+      $question = new \PluginFormcreatorQuestion();
+      $question->add($input);
 
       return $question;
    }

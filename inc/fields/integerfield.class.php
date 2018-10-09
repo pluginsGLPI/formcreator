@@ -33,20 +33,78 @@
 
 class PluginFormcreatorIntegerField extends PluginFormcreatorField
 {
-   public function isValid($value) {
-      if (!parent::isValid($value)) {
+   public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
+      if ($canEdit) {
+         echo '<input type="text" class="form-control"
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
+      } else {
+         echo $this->value;
+      }
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return strval((int) $this->value);
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function getValueForTargetText() {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
+   public function isValid() {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $this->value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
          return false;
       }
 
-      if (!$this->isValidValue($value)) {
+      if (!$this->isValidValue($this->value)) {
          return false;
       }
 
       return true;
    }
 
-   private function isValidValue($value) {
-      if (!empty($value) && !ctype_digit($value)) {
+   public function isValidValue() {
+      if (!empty($this->value) && !ctype_digit($this->value)) {
          Session::addMessageAfterRedirect(__('This is not an integer:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
          return false;
       }
@@ -57,7 +115,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       if (!$parameters['regex']->isNewItem()) {
          $regex = $parameters['regex']->fields['regex'];
          if ($regex !== null && strlen($regex) > 0) {
-            if (!preg_match($regex, $value)) {
+            if (!preg_match($regex, $this->value)) {
                Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
                return false;
             }
@@ -68,13 +126,13 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       if (!$parameters['range']->isNewItem()) {
          $rangeMin = $parameters['range']->fields['range_min'];
          $rangeMax = $parameters['range']->fields['range_max'];
-         if (strlen($rangeMin) > 0 && $value < $rangeMin) {
+         if (strlen($rangeMin) > 0 && $this->value < $rangeMin) {
             $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $rangeMin);
             Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
             return false;
          }
 
-         if (strlen($rangeMax) > 0 && $value > $rangeMax) {
+         if (strlen($rangeMax) > 0 && $this->value > $rangeMax) {
             $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $rangeMax);
             Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
             return false;
@@ -107,19 +165,11 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
          return false;
       }
 
-      if (isset($input['range_min'])
-          && isset($input['range_max'])
-          && isset($input['default_values'])) {
-         $input['default_values'] = !empty($input['default_values'])
-                                  ? (float) str_replace(',', '.', $input['default_values'])
-                                  : null;
-         $input['range_min']      = !empty($input['range_min'])
-                                  ? (float) str_replace(',', '.', $input['range_min'])
-                                  : null;
-         $input['range_max']      = !empty($input['range_max'])
-                                  ? (float) str_replace(',', '.', $input['range_max'])
-                                  : null;
+      if (isset($input['default_values'])) {
+         $this->value = (int) $input['default_values'];
       }
+      $input['values'] = '';
+
       return $input;
    }
 
@@ -168,4 +218,32 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       ];
    }
 
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+      if ($input[$key] != (int) $input[$key]) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
+   }
+
+   public function equals($value) {
+      return ((int) $this->value) === ((int) $value);
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return ((int) $this->value) > ((int) $value);
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
 }

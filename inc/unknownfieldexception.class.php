@@ -31,12 +31,8 @@
  * ---------------------------------------------------------------------
  */
 
-namespace tests\units;
-use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-class PluginFormcreatorQuestion_Condition extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
-
-      self::login('glpi', 'glpi');
-   }
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
 }
+
+class PluginFormcreatorUnknownFieldException extends Exception{}

@@ -152,7 +152,7 @@ function plugin_formcreator_update_2_7(Migration $migration) {
       ]
    ];
    foreach ($DB->request($request) as $row) {
-      if (!is_array(json_decode($row['answer']))) {
+      if (!is_array(json_decode($row['answer'], true))) {
          $id = $row['id'];
          $answer = json_encode([$row['answer']]);
          $DB->query("UPDATE `glpi_plugin_formcreator_answers` SET `answer` = '$answer' WHERE `id` = '$id'");

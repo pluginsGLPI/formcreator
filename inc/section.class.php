@@ -190,7 +190,10 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       foreach ($tab_questions as $questions_id => $new_questions_id) {
          $oldQuestion = new PluginFormcreatorQuestion();
          $oldQuestion->getFromDB($questions_id);
-         $this->field = PluginFormcreatorFields::getFieldInstance($oldQuestion->getField('fieldtype'), $oldQuestion);
+         $this->field = PluginFormcreatorFields::getFieldInstance(
+            $oldQuestion->getField('fieldtype'),
+            $oldQuestion
+         );
          $parameters = $this->field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
             if (!$parameter->isNewItem()) {

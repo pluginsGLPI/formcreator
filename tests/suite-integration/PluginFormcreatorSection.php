@@ -115,6 +115,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       $questions_id_1 = $question->add(['name'                           => "test clone question 1",
                                         'fieldtype'                      => 'text',
                                         'plugin_formcreator_sections_id' => $sections_id,
+                                        'default_values' => '',
                                         '_parameters' => [
                                            'text' => [
                                            'regex' => ['regex' => ''],

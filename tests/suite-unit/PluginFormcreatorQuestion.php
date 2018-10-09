@@ -95,7 +95,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
     * @cover PluginFormcreatorQuestion::clone
     */
    public function testDuplicate() {
-      $question      = $this->getQuestion();
+      $question = $this->getQuestion();
 
       //clone it
       $newQuestion_id = $question->duplicate();

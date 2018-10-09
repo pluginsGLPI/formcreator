@@ -37,12 +37,33 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       echo '<div class="description_field form-group" id="form-group-formcreator_field_' . $this->fields['id'] . '">';
       echo nl2br(html_entity_decode($this->fields['description']));
       echo '</div>' . PHP_EOL;
-      echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "");
-         })');
    }
 
-   public function isValid($value) {
+   public function serializeValue() {
+      return '';
+   }
+
+   public function deserializeValue($value) {
+      $this->value = '';
+   }
+
+   public function getValueForDesign() {
+      return '';
+   }
+
+   public function getValueForTargetText() {
+      return '';
+   }
+
+   public function getValueForTargetField() {
+      return '';
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
+   public function isValid() {
       return true;
    }
 
@@ -61,6 +82,7 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
          }
          $input['description'] = addslashes($input['description']);
       }
+      $this->value = '';
 
       return $input;
    }
@@ -83,5 +105,25 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['description'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function notEquals($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function greaterThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function lessThan($value) {
+      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+   }
+
+   public function parseAnswerValues($input) {
+      return true;
    }
 }

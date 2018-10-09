@@ -124,6 +124,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                [
                   'name'                  => 'text question',
                   'fieldtype'             => 'text',
+                  'default_values'        => '',
                   '_parameters'     => [
                      'text' => [
                         'range' => [
@@ -139,6 +140,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                [
                   'name'                  => 'other text question',
                   'fieldtype'             => 'text',
+                  'default_values'        => '',
                   '_parameters'     => [
                      'text' => [
                         'range' => [
@@ -159,6 +161,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                [
                   'name'                  => 'text question',
                   'fieldtype'             => 'text',
+                  'default_values'        => '',
                   '_parameters'     => [
                      'text' => [
                         'range' => [
@@ -174,6 +177,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                [
                   'name'                  => 'other text question',
                   'fieldtype'             => 'text',
+                  'default_values'        => '',
                   'show_rule'             => 'hidden',
                   'show_field'            => ['text question'],
                   'show_condition'        => ['=='],

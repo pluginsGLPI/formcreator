@@ -249,15 +249,6 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       return $dataset;
    }
 
-   /**
-    * @dataProvider providerGetAnswer
-    */
-   public function testGetAnswer($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
-      $output = $instance->getAnswer();
-      $this->variable($output)->isEqualTo($expectedValue);
-   }
-
    public function ptroviderIsValid() {
       return $this->providerGetAnswer();
    }
@@ -267,7 +258,9 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $instance = $this->newTestedInstance($fields, $data);
-      $output = $instance->isValid($data);
+      $instance->deserializeValue($fields['default_values']);
+
+      $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expectedValidity);
    }
 }

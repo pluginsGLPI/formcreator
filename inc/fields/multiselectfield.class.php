@@ -31,23 +31,76 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
+class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
 {
-   const IS_MULTIPLE    = true;
+   public function displayField($canEdit = true) {
+      if ($canEdit) {
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . $rand;
+         $values       = $this->getAvailableValues();
+         $tab_values   = [];
 
-   public function isValid($value) {
-      $value = json_decode($value);
-      if (is_null($value)) {
-         $value = [];
+         if (!empty($this->fields['values'])) {
+            foreach ($values as $value) {
+               if ((trim($value) != '')) {
+                  $tab_values[$value] = $value;
+               }
+            }
+
+            Dropdown::showFromArray($fieldName, $tab_values, [
+               'display_emptychoice' => $this->fields['show_empty'] == 1,
+               'value'     => '',
+               'values'    => $this->value,
+               'rand'      => $rand,
+               'multiple'  => true,
+            ]);
+         }
+         echo PHP_EOL;
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeMultiselect('$fieldName', '$rand');
+         });");
+      } else {
+         echo empty($this->value) ? '' : implode('<br />', $this->value);
+      }
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return implode("\r\n", $this->value);
+   }
+
+   public function deserializeValue($value) {
+      $deserialized  = [];
+      $this->value = ($value !== null && $value !== '')
+                  ? explode("\r\n", $value)
+                  : [];
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return implode("\r\n", $this->value);
+   }
+
+   public function isValid() {
+      if ($this->value == '') {
+         $this->value = [];
       }
 
       // If the field is required it can't be empty
-      if ($this->isRequired() && empty($value)) {
+      if ($this->isRequired() && $this->value == '') {
          Session::addMessageAfterRedirect(__('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(), false, ERROR);
          return false;
 
       }
-      if (!$this->isValidValue($value)) {
+      if (!$this->isValidValue($this->value)) {
          return false;
       }
 
@@ -75,43 +128,35 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       return true;
    }
 
-   public function displayField($canEdit = true) {
-      if ($canEdit) {
-         parent::displayField($canEdit);
-      } else {
-         $answer = $this->getAnswer();
-         echo empty($answer) ? '' : implode('<br />', $answer);
-      }
-   }
-
-   public function getAnswer() {
-      $return = [];
-      $values = $this->getAvailableValues();
-      $value  = $this->getValue();
-
-      if (empty($value)) {
-         return '';
-      }
-
-      if (is_array($value)) {
-         $tab_values = $value;
-      } else if (is_array(json_decode($value))) {
-         $tab_values = json_decode($value);
-      } else {
-         $tab_values = [$value];
-      }
-
-      foreach ($tab_values as $value) {
-         if (in_array($value, $values)) {
-            $return[] = $value;
+   public function prepareQuestionInputForSave($input) {
+      if (isset($input['values'])) {
+         if (empty($input['values'])) {
+            Session::addMessageAfterRedirect(
+               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
+               false,
+               ERROR);
+            return [];
+         } else {
+            // trim values
+            $input['values'] = $this->trimValue($input['values']);
          }
       }
-      return $return;
+      if (isset($input['default_values'])) {
+         // trim values
+         $this->value = explode('\r\n', $input['default_values']);
+         $this->value = array_map('trim', $this->value);
+         $this->value = array_filter($this->value, function($value) {
+            return ($value !== '');
+         });
+         $input['default_values'] = implode('\r\n', $this->value);
+      }
+      return $input;
    }
 
-   public function prepareQuestionInputForTarget($input) {
+   public function getValueForTargetText() {
       global $CFG_GLPI;
 
+      $input = $this->value;
       $value = [];
       $values = $this->getAvailableValues();
 
@@ -140,6 +185,14 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       return $value;
    }
 
+   public function getValueForTargetField() {
+      return $this->value;
+   }
+
+   public function getDocumentsForTarget() {
+      return [];;
+   }
+
    public static function getName() {
       return __('Multiselect', 'formcreator');
    }
@@ -159,6 +212,20 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
       ];
    }
 
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!isset($input[$key])) {
+         $input[$key] = [];
+      } else {
+         if (!is_array($input[$key])) {
+            return false;
+         }
+      }
+
+      $this->value = $input[$key];
+      return true;
+   }
+
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['multiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
@@ -175,5 +242,41 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorSelectField
             ]
          ),
       ];
+   }
+
+   public function equals($value) {
+      if (!is_array( $this->value)) {
+         // No selection
+         return ($value === '');
+      }
+      return in_array($value, $this->value);
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      if (count($this->value) < 1) {
+         return false;
+      }
+      foreach ($this->value as $answer) {
+         if ($answer <= $value) {
+            return false;
+         }
+      }
+      return true;
+   }
+
+   public function lessThan($value) {
+      if (count($this->value) < 1) {
+         return false;
+      }
+      foreach ($this->value as $answer) {
+         if ($answer >= $value) {
+            return false;
+         }
+      }
+      return true;
    }
 }

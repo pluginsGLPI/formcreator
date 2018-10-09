@@ -189,16 +189,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorIntegerField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->integer((integer) $value)->isEqualTo((integer) $expectedValue);
-   }
-
-   /**
-    * @dataProvider provider
-    */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
@@ -207,9 +197,10 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $question->add($fields);
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorIntegerField($question->fields, $data);
+      $instance = new \PluginFormcreatorIntegerField($question->fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $fieldInstance->isValid($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 }

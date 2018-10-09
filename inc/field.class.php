@@ -39,31 +39,28 @@ require_once(realpath(dirname(__FILE__ ) . '/../../../inc/includes.php'));
 
 abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
 {
-   const IS_MULTIPLE = false;
-
    /** @var array $fields Fields of an instance of PluginFormcreatorQuestion */
    protected $fields = [];
+
+   /** @var mixed $answer Value of the field */
+   protected $value = null;
 
    /**
     *
     * @param array $fields fields of a PluginFormcreatorQuestion instance
     * @param array $data value of all fields
     */
-   public function __construct($fields, $data = []) {
-      $this->fields           = $fields;
-      $this->fields['answer'] = $data;
+   public function __construct($fields) {
+      $this->fields  = $fields;
    }
 
    public function prepareQuestionInputForSave($input) {
+      $this->value = $input['default_values'];
       return $input;
    }
 
-   public function prepareQuestionInputForTarget($input) {
-      return Toolbox::addslashes_deep($input);
-   }
-
-   public function prepareQuestionValuesForEdit($input) {
-      return $input;
+   public function getValueForTarget() {
+      return Toolbox::addslashes_deep($this->value);
    }
 
    /**
@@ -85,21 +82,7 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       echo '<div class="form_field">';
       $this->displayField($canEdit);
       echo '</div>';
-
       echo '</div>';
-      $value = is_array($this->getAnswer()) ? json_encode($this->getAnswer()) : $this->getAnswer();
-      // $value = json_encode($this->getAnswer());
-      if ($this->fields['fieldtype'] == 'dropdown') {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-            . str_replace("\r\n", "\\r\\n", addslashes($this->fields['answer'])) . '");
-         })');
-      } else {
-         echo Html::scriptBlock('$(function() {
-            formcreatorAddValueOf(' . $this->fields['id'] . ', "'
-               . str_replace("\r\n", "\\r\\n", addslashes(html_entity_decode($value))) . '");
-         })');
-      }
    }
 
    /**
@@ -107,14 +90,21 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @param string $canEdit
     */
    public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
       if ($canEdit) {
          echo '<input type="text" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '"
-                  id="formcreator_field_' . $this->fields['id'] . '"
-                  value="' . $this->getAnswer() . '"
-                  onchange="formcreatorChangeValueOf(' . $this->fields['id'] . ', this.value);" />';
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
       } else {
-         echo $this->getAnswer();
+         echo $this->value;
       }
    }
 
@@ -127,49 +117,12 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return $this->fields['name'];
    }
 
-   public function getValue() {
-      if (isset($this->fields['answer'])) {
-         if (!is_array($this->fields['answer']) && is_array(json_decode($this->fields['answer']))) {
-            return json_decode($this->fields['answer']);
-         }
-         return $this->fields['answer'];
-      } else {
-         if (static::IS_MULTIPLE) {
-            return explode("\r\n", $this->fields['default_values']);
-         }
-         if (!$this->fields['show_empty'] && empty($this->fields['default_values'])) {
-            $availableValues = $this->getAvailableValues();
-            return array_shift($availableValues);
-         }
-         return $this->fields['default_values'];
-      }
-   }
-
-   public function getAnswer() {
-      return $this->getValue();
-   }
-
    /**
     * Gets the available values for the field
-    *
-    * @return array
+    * @return array available values
     */
    public function getAvailableValues() {
       return explode("\r\n", $this->fields['values']);
-   }
-
-   public function isValid($value) {
-      // If the field is required it can't be empty
-      if ($this->isRequired() && empty($value)) {
-         Session::addMessageAfterRedirect(
-            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
-            false,
-            ERROR);
-         return false;
-      }
-
-      // All is OK
-      return true;
    }
 
    public function isRequired() {
@@ -182,9 +135,9 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
     * @return string
     */
    protected function trimValue($value) {
-      $value = explode('\\r\\n', $value);
+      $value = explode('\r\n', $value);
       $value = array_map('trim', $value);
-      return implode('\\r\\n', $value);
+      return implode('\r\n', $value);
    }
 
    public function getFieldTypeName() {

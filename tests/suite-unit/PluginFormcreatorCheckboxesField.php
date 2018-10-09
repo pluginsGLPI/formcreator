@@ -181,32 +181,16 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
     * @dataProvider providerGetAvailableValues
     */
    public function testGetAvailableValues($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorCheckboxesField($fields, $data);
+      $instance = new \PluginFormcreatorCheckboxesField($fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $availableValues = $fieldInstance->getAvailableValues();
+      $availableValues = $instance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
 
-      $this->integer(count($availableValues))->isEqualTo(count($expectedAvaliableValues));
+      $this->array($availableValues)->hasSize(count($expectedAvaliableValues));
 
       foreach ($expectedAvaliableValues as $expectedValue) {
          $this->array($availableValues)->contains($expectedValue);
-      }
-   }
-
-   public function providerGetValue() {
-      return $this->providerGetAvailableValues();
-   }
-
-   /**
-    * @dataProvider providerGetValue
-    */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorCheckboxesField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->integer(count($value))->isEqualTo(count($expectedValue));
-      foreach ($expectedValue as $expectedSubValue) {
-         $this->array($value)->contains($expectedSubValue);
       }
    }
 
@@ -225,11 +209,11 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $question->add($fields);
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorCheckboxesField($question->fields, $data);
+      $instance = new \PluginFormcreatorCheckboxesField($question->fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $values = json_encode(explode("\r\n", $fields['default_values']), JSON_OBJECT_AS_ARRAY);
-      $isValid = $fieldInstance->isValid($values);
-      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
+      $isValid = $instance->isValid();
+      $this->boolean($isValid)->isEqualTo($expectedValidity);
    }
 
    public function testPrepareQuestionInputForSave() {

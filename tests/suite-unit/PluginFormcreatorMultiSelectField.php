@@ -56,7 +56,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                ],
             ],
             'data'            => null,
-            'expectedValue'   => [''],
+            'expectedValue'   => [],
             'expectedIsValid' => true
          ],
          [
@@ -174,19 +174,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->integer(count($value))->isEqualTo(count($expectedValue));
-      foreach ($expectedValue as $expectedSubValue) {
-         $this->array($value)->contains($expectedSubValue);
-      }
-   }
-
-   /**
-    * @dataProvider provider
-    */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
@@ -197,10 +184,9 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $question->getFromDB($question->getID());
       $question->updateParameters($fields);
 
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
-
-      $values = json_encode(explode("\r\n", $fields['default_values']), JSON_OBJECT_AS_ARRAY);
-      $isValid = $fieldInstance->isValid($values);
+      $instance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
+      $instance->deserializeValue($fields['default_values']);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 

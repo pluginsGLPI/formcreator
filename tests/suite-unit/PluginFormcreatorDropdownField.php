@@ -46,142 +46,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       $this->string($output)->isEqualTo('Dropdown');
    }
 
-   public function providerGetValue() {
-      $location = new \Location();
-      $locationName = $this->getUniqueString();
-      $locationId = $location->import([
-         'completename' => $locationName,
-         'entities_id'  => 0,
-         'is_recursive' => 1,
-      ]);
-      $this->integer($locationId);
-      $dataset = [
-         [
-            'fields'          => [
-               'fieldtype'       => 'dropdown',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'values'          => json_encode(['itemtype' => \Location::class]),
-               'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
-            'expectedValue'   => 0,
-            'expectedIsValid' => true
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'dropdown',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $locationId,
-               'values'          => json_encode(['itemtype' => \Location::class]),
-               'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
-            'expectedValue'   => $locationId,
-            'expectedIsValid' => true
-         ],
-      ];
-      return $dataset;
-   }
-
-   /**
-    * @dataProvider providerGetValue
-    */
-   public function testGetValue($fields, $data, $expectedValue, $expectedIsValid) {
-      $instance = new \PluginFormcreatorDropdownField($fields, $data);
-      $output = $instance->getValue();
-      $this->variable($output)->isIdenticalTo($expectedValue);
-
-   }
-
-   public function providerGetAnswer() {
-      $location = new \Location();
-      $locationName = $this->getUniqueString();
-      $locationId = $location->import([
-         'completename' => $locationName,
-         'entities_id'  => 0,
-         'is_recursive' => 1,
-      ]);
-      $this->integer($locationId);
-      $dataset = [
-         [
-            'fields'          => [
-               'fieldtype'       => 'dropdown',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => '',
-               'values'          => json_encode(['itemtype' => \Location::class]),
-               'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
-            'expectedValue'   => "&nbsp;",
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'dropdown',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $locationId,
-               'values'          => json_encode(['itemtype' => \Location::class]),
-               'order'           => '1',
-               'show_rule'       => 'always',
-               '_parameters'     => [
-                  'checkboxes' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
-            ],
-            'data'            => null,
-            'expectedValue'   => $locationName,
-         ],
-      ];
-      return $dataset;
-   }
-
-   /**
-    * @dataProvider providerGetAnswer
-    */
-   public function testgetAnswer($fields, $data, $expectedValue) {
-      $instance = new \PluginFormcreatorDropdownField($fields, $data);
-      $output = $instance->getAnswer();
-      $DbUtil = new \DbUtils();
-      $itemtype = json_decode($fields['values'], JSON_OBJECT_AS_ARRAY);
-      $itemtype = $itemtype['itemtype'];
-      $this->variable($output)->isIdenticalTo($expectedValue);
-   }
-
    public function providerPrepareQuestionInputForSave() {
       $name = $this->getUniqueString();
       return [
@@ -194,7 +58,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                'name' => $name,
                'values' => json_encode(['itemtype' => \Location::class]),
                'dropdown_values' => \Location::class,
-               'default_values' => '',
             ]
          ],
          [
@@ -212,7 +75,6 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'show_ticket_categories_depth' => '3',
                ]),
                'dropdown_values' => \ITILCategory::class,
-               'default_values' => '',
             ]
          ],
       ];

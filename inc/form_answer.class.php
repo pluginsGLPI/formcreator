@@ -512,12 +512,21 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          if ($canEdit
             || ($question_line['fieldtype'] != "description"
-                && $question_line['fieldtype'] != "hidden")) {
-            PluginFormcreatorFields::showField($question_line, $question_line['answer'], $canEdit);
+                && $question_line['fieldtype'] != "hidden")
+         ) {
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($question_line['id']);
+            $field = PluginFormcreatorFields::getFieldInstance(
+               $question_line['fieldtype'],
+               $question
+            );
+            $field->deserializeValue($question_line['answer']);
+            $field->show($canEdit);
          }
       }
+      $formName = 'formcreator_form' . $formId;
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields();
+         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
       })');
 
       // Display submit button
@@ -620,15 +629,15 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
-    * Create or update answers of a gorm
+    * Create or update answers of a form
+    *
+    * @param PluginFormcreatorForm $form
     * @param array $data answers
+    * @param array $fields array of field: question id => instance
     * @return boolean
     */
-   public function saveAnswers($data) {
-      $form   = new PluginFormcreatorForm();
+   public function saveAnswers(PluginFormcreatorForm $form, $data, $fields) {
       $answer = new PluginFormcreatorAnswer();
-
-      $form->getFromDB($data['formcreator_form']);
 
       $formanswers_id = isset($data['id'])
                         ? intval($data['id'])
@@ -648,31 +657,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Update questions answers
          if ($status == 'waiting') {
-            foreach ($questions as $question) {
-               // unset the answer value
-               $answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
+            foreach ($questions as $questionId => $question) {
+               $answer_value = $fields[$questionId]->serializeValue($data['formcreator_field_' . $questionId]);
 
-               // $answer_value may be still null if the field type is file and no file was uploaded
-               if ($answer_value !== null) {
-                  if (!is_array(answer_value)) {
-                     $answer_value = [$answer_value];
-                  }
-                  foreach ($answer_value as $value) {
-                     // Update the answer to the question
-                     $questionId = $question->getID();
-                     $answer = new PluginFormcreatorAnswer();
-                     $answer->getFromDBByCrit([
-                        'AND' => [
-                           'plugin_formcreator_forms_answers_id' => $formanswers_id,
-                           'plugin_formcreator_questions_id'     => $questionId
-                        ]
-                     ]);
-                     $answer->update([
-                        'id'     => $answer->getID(),
-                        'answer' => $value,
-                     ], 0);
-                  }
-               }
+               $answer->update([
+                  'id'     => $answer->getID(),
+                  'answer' => $answer_value,
+               ], 0);
             }
          }
          $is_newFormAnswer = false;
@@ -718,22 +709,25 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          ]);
 
          // Save questions answers
-         foreach ($questions as $question) {
-            // unset the answer value
-            $answer_value = $this->transformAnswerValue($question, $data['formcreator_field_' . $question->getID()]);
+         foreach ($questions as $questionId => $question) {
+            if (!isset($data['formcreator_field_' . $questionId])) {
+               $answer_value = '';
+            } else {
+               $answer_value = $fields[$questionId]->serializeValue($data['formcreator_field_' . $questionId]);
+            }
 
-            if ($answer_value !== null) {
-               if (!is_array($answer_value)) {
-                  $answer_value = [$answer_value];
-               }
-               foreach ($answer_value as $val) {
-                  // Save the answer to the question
-                  $answer->add([
-                     'plugin_formcreator_forms_answers_id'  => $id,
-                     'plugin_formcreator_questions_id'      => $question->getID(),
-                     'answer'                               => $val,
-                  ], [], 0);
-               }
+            $answer->add([
+               'plugin_formcreator_forms_answers_id'  => $id,
+               'plugin_formcreator_questions_id'      => $question->getID(),
+               'answer'                               => $answer_value,
+            ], [], 0);
+            foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
+               $docItem = new Document_Item();
+               $docItem->add([
+                  'documents_id' => $docID,
+                  'itemtype'     => __CLASS__,
+                  'items_id'     => $this->getID(),
+               ]);
             }
          }
          $is_newFormAnswer = true;
@@ -762,6 +756,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                if (!$this->generateTarget()) {
                   Session::addMessageAfterRedirect(__('Cannot generate targets!', 'formcreator'), true, ERROR);
 
+                  // TODO: find a way to validate the answers
+                  // It the form is not being validated, nothing gives the power to anyone to validate the answers
                   $this->update([
                      'id'     => $this->getID(),
                      'status' => 'waiting',
@@ -891,94 +887,28 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    }
 
    /**
+    * Update the answers
     *
-    * @param array|string $value
-    * @return null|string
+    * @param [type] $input
+    * @return void
     */
-   private function transformAnswerValue(PluginFormcreatorQuestion $question, $value = null) {
-      global $CFG_GLPI;
+   public function updateAnswers($input) {
+      $form = new PluginFormcreatorForm();
+      $form->getID((int) $_POST['formcreator_form']);
+      $input['status'] = 'waiting';
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
 
-      // unset the answer value
-      $answer_value = null;
-      $form = $question->getForm();
-
-      if ($question->getField('fieldtype') != 'file') {
-         if (isset($value)) {
-            // If the answer is set, check if it is an array (then implode id).
-            if ($value !== null) {
-               if ($question->getField('fieldtype') != 'textarea') {
-                  $answer_value = $value;
-                  if (is_array(json_decode($answer_value, JSON_UNESCAPED_UNICODE))) {
-                     $answer_value = json_decode($answer_value);
-                     foreach ($answer_value as $key => $value) {
-                        $answer_value[$key] = $value;
-                     }
-                     $answer_value = json_encode($answer_value, JSON_UNESCAPED_UNICODE);
-                  } else {
-                     $answer_value = str_replace('\\r\\n', '\n', $answer_value);
-                  }
-               } else {
-                  if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-                     $answer_value = html_entity_decode($value);
-                  } else {
-                     $answer_value = $value;
-                  }
-               }
-            } else {
-               $answer_value = '';
-            }
-         } else {
-            $answer_value = '';
-         }
-      } else if (isset($_POST['_formcreator_field_' . $question->getID()])) {
-         $documents = $_POST['_formcreator_field_' . $question->getID()];
-         $answer_value = [];
-         foreach ($documents as $document) {
-            if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-               $answer_value[] = $this->saveDocument($form, $question, $document);
-            }
-         }
-         $answer_value = json_encode($answer_value);
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
       }
-
-      return $answer_value;
-   }
-
-   /**
-    * Save an uploaded file into a document object, link it to the answers
-    * and returns the document ID
-    * @param PluginFormcreatorForm $form
-    * @param PluginFormcreatorQuestion $question
-    * @param array $file                         an item from $_FILES array
-    *
-    * @return integer|NULL
-    */
-   private function saveDocument(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question, $file) {
-      global $DB;
-
-      $doc                        = new Document();
-
-      $file_data                 = [];
-      $file_data["name"]         = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $question->getField('name'));
-      $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
-                                    ? $_SESSION['glpiactive_entity']
-                                    : $form->getField('entities_id');
-      $file_data["is_recursive"] = $form->getField('is_recursive');
-      $file_data['_filename'] = [$file];
-
-      if ($docID = $doc->add($file_data)) {
-         $docID    = intval($docID);
-         $table    = Document::getTable();
-         $docItem = new Document_Item();
-         $docItem->add([
-            'documents_id' => $docID,
-            'itemtype'     => __CLASS__,
-            'items_id'     => $this->getID(),
-         ]);
-         return $docID;
-      }
-
-      return null;
+      $this->saveAnswers($form, $input, $fields);
    }
 
    /**
@@ -1064,7 +994,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * Gets answers of all fields of a form answer
     *
     * @param integer $formAnswerId
-    *
     * @return array
     */
    public function getAnswers($formAnswerId) {
@@ -1079,6 +1008,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
    /**
     * Gets the associated form
+    *
     * @return PluginFormcreatorForm|null the form used to create this set of answers
     */
    public function getForm() {
@@ -1113,6 +1043,18 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       // retrieve answers
       $answers_values = $this->getAnswers($this->getID());
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
+
+      $found_questions = $question->getQuestionsFromForm($this->fields['plugin_formcreator_forms_id']);
+      foreach ($found_questions as $id => $question) {
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+         $fields[$id]->parseAnswerValues($answers_values);
+      }
 
       // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
       // compute all questions
@@ -1147,7 +1089,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
             continue;
          }
 
-         if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
+         if (!PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
             continue;
          }
 

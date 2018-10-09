@@ -49,7 +49,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '',
+               'default_values'  => json_encode([]),
                'values'          => '',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -63,7 +63,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => '',
+               'default_values'  => json_encode([]),
                'values'          => 'glpi',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -77,35 +77,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => 'nonexistent',
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       => 'always'
-            ],
-            'data'            => null,
-            'expectedValue'   => [''],
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => 'email@incomplete',
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       => 'always'
-            ],
-            'data'            => null,
-            'expectedValue'   => [''],
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => 'email@something.com',
+               'default_values'  => json_encode(['email@something.com']),
                'values'          => '',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -119,7 +91,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'fieldtype'       => 'actor',
                'name'            => 'question',
                'required'        => '0',
-               'default_values'  => $userId . ',email@something.com',
+               'default_values'  => json_encode([$userId, 'email@something.com']),
                'values'          => '',
                'order'           => '1',
                'show_rule'       => 'always'
@@ -128,52 +100,9 @@ class PluginFormcreatorActorField extends CommonTestCase {
             'expectedValue'   => ['glpi', 'email@something.com'],
             'expectedIsValid' => true
          ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $userId . ',email@something.com,nonexistent',
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       => 'always'
-            ],
-            'data'            => null,
-            'expectedValue'   => ['glpi', 'email@something.com'],
-            'expectedIsValid' => false
-         ],
-         [
-            'fields'          => [
-               'fieldtype'       => 'actor',
-               'name'            => 'question',
-               'required'        => '0',
-               'default_values'  => $userId . ',email@something.com,email@incomplete',
-               'values'          => '',
-               'order'           => '1',
-               'show_rule'       => 'always'
-            ],
-            'data'            => null,
-            'expectedValue'   => ['glpi', 'email@something.com'],
-            'expectedIsValid' => false
-         ],
       ];
 
       return $dataset;
-   }
-
-   /**
-    * @dataProvider providerGetValue
-    */
-   public function testGetValue($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
-
-      $value = $fieldInstance->getValue();
-      $this->integer(count(explode(',', $value)))->isEqualTo(count($expectedValue));
-      foreach ($expectedValue as $expectedSubValue) {
-         if (!empty($expectedSubValue)) {
-            $this->boolean(in_array($expectedSubValue, explode(',', $value)))->isTrue();
-         }
-      }
    }
 
    public function providerIsValid() {
@@ -184,30 +113,38 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerIsValid
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorActorField($fields, $data);
+      $instance = new \PluginFormcreatorActorField($fields, $data);
+      $instance->deserializeValue($fields['default_values']);
 
-      $values = $fields['default_values'];
-      $isValid = $fieldInstance->isValid($values);
+      $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
    public function providerSerializeValue() {
       return [
          [
-            'value'     => 'glpi',
-            'expected'  => '2',
+            'value'     => null,
+            'expected'  => '',
          ],
          [
-            'value'     => "glpi\r\nnormal",
-            'expected'  => '2,5',
+            'value'     => [],
+            'expected'  => json_encode([]),
          ],
          [
-            'value'     => "glpi\r\nnormal\r\nuser@localhost.local",
-            'expected'  => '2,5,user@localhost.local',
+            'value'     => ['2'],
+            'expected'  => json_encode(['2']),
          ],
          [
-            'value'     => 'user@localhost.local',
-            'expected'  => 'user@localhost.local',
+            'value'     => ['2', '5'],
+            'expected'  => json_encode(['2','5']),
+         ],
+         [
+            'value'     => ['2', '5', 'user@localhost.local'],
+            'expected'  => json_encode(['2','5','user@localhost.local']),
+         ],
+         [
+            'value'     => ['user@localhost.local'],
+            'expected'  => json_encode(['user@localhost.local']),
          ],
       ];
    }
@@ -216,20 +153,44 @@ class PluginFormcreatorActorField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorActorField([]);
-      $output = $instance->serializeValue($value);
+      $instance = new \PluginFormcreatorActorField(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
       $this->string($output)->isEqualTo($expected);
    }
 
    public function providerDeserializeValue() {
-      // swap value and expected
-      $dataSet = $this->providerSerializeValue();
-      foreach ($dataSet as &$data) {
-         $tmp = $data['expected'];
-         $data['expected'] = $data['value'];
-         $data['value'] = $tmp;
-      }
-      return $dataSet;
+      $user = new \User();
+      $user->getFromDBbyName('glpi');
+      $glpiId = $user->getID();
+      $user->getFromDBbyName('normal');
+      $normalId = $user->getID();
+      return [
+         [
+            'value'     => null,
+            'expected'  => [],
+         ],
+         [
+            'value'     => '',
+            'expected'  => [],
+         ],
+         [
+            'value'     => json_encode(["$glpiId"]),
+            'expected'  => [$glpiId],
+         ],
+         [
+            'value'     => json_encode(["$glpiId","$normalId"]),
+            'expected'  => [$glpiId, $normalId],
+         ],
+         [
+            'value'     => json_encode(["$glpiId","$normalId","user@localhost.local"]),
+            'expected'  => [$glpiId, $normalId, 'user@localhost.local'],
+         ],
+         [
+            'value'     => json_encode(["user@localhost.local"]),
+            'expected'  => ['user@localhost.local'],
+         ],
+      ];
    }
 
    /**
@@ -237,7 +198,174 @@ class PluginFormcreatorActorField extends CommonTestCase {
     */
    public function testDeserializeValue($value, $expected) {
       $instance = new \PluginFormcreatorActorField([]);
-      $output = $instance->deserializeValue($value);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetField();
+      $this->array($output)
+         ->hasSize(count($expected))
+         ->containsValues($expected);
+   }
+
+   public function providerGetValueForDesign() {
+      $user = new \User();
+      $user->getFromDBbyName('glpi');
+      $glpiId = $user->getID();
+      $user->getFromDBbyName('normal');
+      $normalId = $user->getID();
+      return [
+         [
+            'value' => '',
+            'expected' => '',
+         ],
+         [
+            'value'     => json_encode(["$glpiId"]),
+            'expected'  => "glpi",
+         ],
+         [
+            'value'     => json_encode(["$glpiId", "$normalId"]),
+            'expected'  => "glpi\r\nnormal",
+         ],
+         [
+            'value'     => json_encode(["$glpiId", "$normalId", "user@localhost.local"]),
+            'expected'  => "glpi\r\nnormal\r\nuser@localhost.local",
+         ],
+         [
+            'value'     => json_encode(["user@localhost.local"]),
+            'expected'  => "user@localhost.local",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForDesign
+    *
+    * @param [type] $value
+    * @param [type] $expected
+    * @return void
+    */
+   public function testGetValueForDesign($value, $expected) {
+      $instance = new \PluginFormcreatorActorField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerEquals() {
+      $glpiUser = new \User();
+      $normalUser = new \User();
+      $glpiUser->getFromDBByName('glpi');
+      $normalUser->getFromDBByName('normal');
+
+      $dataset = [
+         [
+            'value' => 'glpi',
+            'answer' => '',
+            'expected' => false,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID(), $normalUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$normalUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => [$normalUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => '',
+            'expected' => false,
+         ],
+      ];
+
+      return $dataset;
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorActorField(['id' => '1']);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      $glpiUser = new \User();
+      $normalUser = new \User();
+      $glpiUser->getFromDBByName('glpi');
+      $normalUser->getFromDBByName('normal');
+
+      $dataset = [
+         [
+            'value' => 'glpi',
+            'answer' => '',
+            'expected' => true,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$glpiUser->getID(), $normalUser->getID()],
+            'expected' => false,
+         ],
+         [
+            'value' => 'glpi',
+            'answer' => [$normalUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => [$normalUser->getID()],
+            'expected' => true,
+         ],
+         [
+            'value' => 'nonexisting',
+            'answer' => '',
+            'expected' => true,
+         ],
+      ];
+
+      return $dataset;
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorActorField(['id' => '1'], $answer);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
+   public function testGreaterThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorActorField([]);
+            $instance->greaterThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testLessThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorActorField([]);
+            $instance->lessThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
    }
 }

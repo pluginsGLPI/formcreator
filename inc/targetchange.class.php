@@ -1196,7 +1196,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $itemlink->add([
          'itemtype'     => 'PluginFormcreatorForm_Answer',
          'items_id'     => $formanswer->fields['id'],
-         'changess_id'  => $changeID,
+         'changes_id'  => $changeID,
       ]);
 
       $this->attachDocument($formanswer->getID(), Change::class, $changeID);

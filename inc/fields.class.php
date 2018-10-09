@@ -121,42 +121,19 @@ class PluginFormcreatorFields
    }
 
    /**
+    * Check if a question should be shown or not
     *
-    * @param array $field fields of a PluginFormcreatorQuestion instance
-    * @param mixed|null $data
-    * @param boolean $edit
+    * @param   integer     $id         ID of the question tested for visibility
+    * @param   array       $fields     Array of fields instances (question id => instance)
+    * @return  boolean                 If true the question should be visible
     */
-   public static function showField($field, $data = null, $edit = true) {
-      // Get field types and file path
-      $tab_field_types = self::getTypes();
-
-      if (array_key_exists($field['fieldtype'], $tab_field_types)) {
-         $fieldClass = 'PluginFormcreator'.ucfirst($field['fieldtype']).'Field';
-
-         $plugin = new Plugin();
-         if ($fieldClass == 'PluginFormcreatorTagField' && !$plugin->isActivated('tag')) {
-            return;
-         }
-
-         $obj = new $fieldClass($field, $data);
-         $obj->show($edit);
-      }
-   }
-
-   /**
-    * Check if a field should be shown or not
-    *
-    * @param   Integer     $id         ID of the current question
-    * @param   Array       $values     Array of current fields values (id => value)
-    * @return  boolean                 Should be shown or not
-    */
-   public static function isVisible($id, $values) {
+   public static function isVisible($id, $fields) {
       /**
        * Keep track of questions being evaluated to detect infinite loops
        */
       static $evalQuestion = [];
       if (isset($evalQuestion[$id])) {
-         // TODO : how to deal a infinite loop while evaulating visibility of question ?
+         // TODO : how to deal a infinite loop while evaluating visibility of question ?
          return true;
       }
       $evalQuestion[$id]   = $id;
@@ -183,10 +160,10 @@ class PluginFormcreatorFields
 
       foreach ($questionConditions as $question_condition) {
          $conditions[] = [
-            'logic'    => $question_condition->getField('show_logic'),
-            'field'    => 'formcreator_field_' . $question_condition->getField('show_field'),
-            'operator' => $question_condition->getField('show_condition'),
-            'value'    => $question_condition->getField('show_value')
+            'logic'    => $question_condition->fields['show_logic'],
+            'field'    => $question_condition->fields['show_field'],
+            'operator' => $question_condition->fields['show_condition'],
+            'value'    => $question_condition->fields['show_value']
          ];
       }
 
@@ -204,65 +181,61 @@ class PluginFormcreatorFields
             // To ensure the low precedence return part is used at the end of the whole evaluation
             $nextLogic = 'OR';
          }
-         if (!isset($values[$condition['field']])) {
-            $values[$condition['field']] = '';
-         }
 
+         // TODO: find the best behavior if the question does not exists
+         $conditionQuestion = new PluginFormcreatorQuestion();
+         $conditionQuestion->getFromDB($condition['field']);
+         $conditionField = $fields[$condition['field']];
          switch ($condition['operator']) {
             case '!=' :
-               if (empty($values[$condition['field']])) {
-                  $value = true;
-               } else {
-                  if (is_array($values[$condition['field']])) {
-                     $decodedConditionField = null;
-                  } else {
-                     $decodedConditionField = json_decode($values[$condition['field']]);
-                  }
-                  if (is_array($values[$condition['field']])) {
-                     $value = !in_array($condition['value'], $values[$condition['field']]);
-                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                     $value = !in_array($condition['value'], $decodedConditionField);
-                  } else {
-                     $value = $condition['value'] != $values[$condition['field']];
-                  }
+               try {
+                  $value = $conditionField->notEquals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
                }
                break;
 
             case '==' :
-               if (empty($condition['value'])) {
+               try {
+                  $value = $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
-               } else {
-                  if (is_array($values[$condition['field']])) {
-                     $decodedConditionField = null;
-                  } else {
-                     $decodedConditionField = json_decode($values[$condition['field']]);
-                  }
-                  if (is_array($values[$condition['field']])) {
-                     $value = in_array($condition['value'], $values[$condition['field']]);
-                  } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                     $value = in_array($condition['value'], $decodedConditionField);
-                  } else {
-                     $value = $condition['value'] == $values[$condition['field']];
-                  }
                }
                break;
 
-            default:
-               if (is_array($values[$condition['field']])) {
-                  $decodedConditionField = null;
-               } else {
-                  $decodedConditionField = json_decode($values[$condition['field']]);
+            case '>':
+               try {
+                  $value = $conditionField->greaterThan($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
                }
-               if (is_array($values[$condition['field']])) {
-                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array('.implode(',', $values[$condition['field']]).');');
-               } else if ($decodedConditionField !== null && $decodedConditionField != $values[$condition['field']]) {
-                  eval('$value = "'.$condition['value'].'" '.$condition['operator']
-                    .' Array(' .implode(',', $decodedConditionField).');');
-               } else {
-                  eval('$value = "'.$values[$condition['field']].'" '
-                    .$condition['operator'].' "'.$condition['value'].'";');
+               break;
+
+            case '<':
+               try {
+                  $value = $conditionField->lessThan($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
                }
+               break;
+
+            case '>=':
+               try {
+                  $value = $conditionField->greaterThan($condition['value'])
+                           || $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
+               break;
+
+            case '<=':
+               try {
+                  $value = $conditionField->lessThan($condition['value'])
+                           || $conditionField->equals($condition['value']);
+               } catch (PluginFormcreatorComparisonException $e) {
+                  $value = false;
+               }
+               break;
          }
 
          // Combine all condition with respect of operator precedence
@@ -319,31 +292,29 @@ class PluginFormcreatorFields
    /**
     * compute visibility of all fields of a form
     *
-    * @param array $values    values of all fields of the form
-    *                         id => mixed value of a field
+    * @param array $input     values of all fields of the form
     *
     * @rturn array
     */
-   public static function updateVisibility($currentValues) {
-      foreach ($currentValues as &$value) {
-         if (is_array($value)) {
-            foreach ($value as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value, false);
-            }
-         } else if (is_array(json_decode($value))) {
-            $tab = json_decode($value);
-            foreach ($tab as &$sub_value) {
-               $sub_value = plugin_formcreator_encode($sub_value, false);
-            }
-            $value = json_encode($tab);
-         } else {
-            $value = stripslashes($value);
-         }
+   public static function updateVisibility($input) {
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
+
+      $formId = $input['formcreator_form'];
+      $found_questions = $question->getQuestionsFromForm($formId);
+      foreach ($found_questions as $id => $question) {
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+            );
+         $fields[$id]->parseAnswerValues($input);
       }
-      unset ($value);
+
       $questionToShow = [];
-      foreach ($currentValues as $id => $value) {
-         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $currentValues);
+      foreach ($input as $id => $value) {
+         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);
       }
 
       return $questionToShow;
@@ -377,7 +348,7 @@ class PluginFormcreatorFields
     * @param array $data additional data
     * @return null|PluginFormcreatorFieldInterface
     */
-   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = []) {
+   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = null) {
       $className = self::getFieldClassname($type);
       if (!self::fieldTypeExists($type)) {
          return null;
