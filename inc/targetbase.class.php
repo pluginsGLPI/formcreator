@@ -266,7 +266,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                if ($answer->isNewItem()) {
                   continue 2;
                } else {
-                  $userIds = array_filter(explode(',', trim($answer->getField('answer'))));
+                  $userIds = json_decode($answer->fields['answer'], JSON_OBJECT_AS_ARRAY);
                }
                $notify = $actor['use_notification'];
                break;
@@ -311,7 +311,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          $userId = 0;
          $alternativeEmail = $user;
       } else {
-         $userId = intval($user);
+         $userId = (int) $user;
          $alternativeEmail = '';
          if ($userId == '0') {
             // there is no actor

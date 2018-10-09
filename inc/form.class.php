@@ -1308,6 +1308,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          unset($sectionRow['id'],
                $sectionRow['uuid']);
          $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
+         $sectionRow = Toolbox::addslashes_deep($sectionRow);
          if (!$new_sections_id = $form_section->add($sectionRow)) {
             return false;
          }
@@ -1318,6 +1319,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             unset($questionRow['id'],
                   $questionRow['uuid']);
             $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
+            $questionRow = Toolbox::addslashes_deep($questionRow);
             $questionRow['_skip_checks'] = true;
             if (!$new_questions_id = $section_question->add($questionRow)) {
                return false;
