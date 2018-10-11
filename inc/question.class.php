@@ -1383,7 +1383,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       // get question parameters
       $question['_parameters'] = [];
-      $this->field = PluginFormcreatorFields::getFieldIntance($this->getField('fieldtype'), $this);
+      $this->field = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
       $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldname => $parameter) {
          $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export();
