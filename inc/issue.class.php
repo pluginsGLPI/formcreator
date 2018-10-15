@@ -394,7 +394,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'table'              => $this::getTable(),
          'field'              => 'comment',
          'name'               => __('Comment'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'massiveaction'      => false
       ];
 
