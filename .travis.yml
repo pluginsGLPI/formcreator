@@ -18,9 +18,10 @@ php:
   - 7.2
   - nightly
 
-allow_failures:
-  - php: nightly
-  - env: GLPI_BRANCH=master
+matrix:
+  allow_failures:
+    - php: nightly
+    - env: GLPI_BRANCH=master
 
 before_script:
   - mysql -u root -e 'create database glpitest;'

@@ -196,7 +196,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=[]) {
+   public function showForm($options = []) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -1002,6 +1002,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
+
+         // This targer does not supports rich text
+         $data[$changeField] = strip_tags($data[$changeField], '<p>');
+         $data[$changeField] = str_replace('<p>', '', $data[$changeField]);
+         $data[$changeField] = str_replace('</p>', '\r\n', $data[$changeField]);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
