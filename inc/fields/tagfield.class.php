@@ -43,6 +43,11 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . $rand;
       if ($canEdit) {
+         if (!class_exists(PluginTagTag::class)) {
+            // Plugin Tag not available
+            echo '';
+            return;
+         }
          $required = $this->fields['required'] ? ' required' : '';
 
          $values = [];
