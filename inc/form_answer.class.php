@@ -646,23 +646,32 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $question = new PluginFormcreatorQuestion();
       $questions = $question->getQuestionsFromForm($data['formcreator_form']);
 
+      //Collect answers
+      $answer_value = [];
+      foreach ($questions as $questionId => $question) {
+         if (!isset($data['formcreator_field_' . $questionId])) {
+            $answer_value[$questionId] = '';
+         } else {
+            $answer_value[$questionId] = $fields[$questionId]
+               ->serializeValue($data['formcreator_field_' . $questionId]);
+         }
+      }
+
       // Update form answers
       if (isset($data['save_formanswer'])) {
          $status = $data['status'];
          $this->update([
-            'id'                          => $formanswers_id,
-            'status'                      => $status,
-            'comment'                     => isset($data['comment']) ? $data['comment'] : 'NULL'
+            'id'        => $formanswers_id,
+            'status'    => $status,
+            'comment'   => isset($data['comment']) ? $data['comment'] : 'NULL'
          ]);
 
          // Update questions answers
          if ($status == 'waiting') {
             foreach ($questions as $questionId => $question) {
-               $answer_value = $fields[$questionId]->serializeValue($data['formcreator_field_' . $questionId]);
-
                $answer->update([
                   'id'     => $answer->getID(),
-                  'answer' => $answer_value,
+                  'answer' => $answer_value[$questionId],
                ], 0);
             }
          }
@@ -710,16 +719,10 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          // Save questions answers
          foreach ($questions as $questionId => $question) {
-            if (!isset($data['formcreator_field_' . $questionId])) {
-               $answer_value = '';
-            } else {
-               $answer_value = $fields[$questionId]->serializeValue($data['formcreator_field_' . $questionId]);
-            }
-
             $answer->add([
                'plugin_formcreator_forms_answers_id'  => $id,
                'plugin_formcreator_questions_id'      => $question->getID(),
-               'answer'                               => $answer_value,
+               'answer'                               => $answer_value[$questionId],
             ], [], 0);
             foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
                $docItem = new Document_Item();

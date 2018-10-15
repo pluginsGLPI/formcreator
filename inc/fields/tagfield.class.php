@@ -160,6 +160,11 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function equals($value) {
+      if (!class_exists(PluginTagTag::class)) {
+         // Plugin Tag not available
+         return false;
+      }
+
       // find the tag to check for existence
       $tag = new PluginTagTag();
       $tag->getFromDBByRequest([
