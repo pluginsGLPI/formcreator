@@ -196,7 +196,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=[]) {
+   public function showForm($options = []) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
