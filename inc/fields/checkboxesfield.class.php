@@ -55,10 +55,10 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                   $current_value = $this->value;
                   echo "<div class='checkbox'>";
                   echo Html::getCheckbox([
-                     'title'         => $value,
+                     'title'         => htmlentities($value, ENT_QUOTES),
                      'id'            => $domId.'_'.$i,
-                     'name'          => $fieldName . '[]',
-                     'value'         => $value,
+                     'name'          => htmlentities($fieldName, ENT_QUOTES) . '[]',
+                     'value'         => htmlentities($value, ENT_QUOTES),
                      'zero_on_empty' => false,
                      'checked' => in_array($value, $this->value)
                   ]);
