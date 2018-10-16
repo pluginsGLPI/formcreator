@@ -57,23 +57,20 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       }
    }
 
-   /**
-    * @see CommonTreeDropdown::getAdditionalFields()
-    */
    public function getAdditionalFields() {
       return [
-            [
-                  'name'      => 'knowbaseitemcategories_id',
-                  'type'      => 'dropdownValue',
-                  'label'     => __('Knowbase category', 'formcreator'),
-                  'list'      => false
-            ],
-            [
-                  'name'      => $this->getForeignKeyField(),
-                  'type'      => 'parent',
-                  'label'     => __('As child of'),
-                  'list'      => false
-            ]
+         [
+            'name'      => KnowbaseItemCategory::getForeignKeyField(),
+            'type'      => 'dropdownValue',
+            'label'     => __('Knowbase category', 'formcreator'),
+            'list'      => false
+         ],
+         [
+            'name'      => $this->getForeignKeyField(),
+            'type'      => 'parent',
+            'label'     => __('As child of'),
+            'list'      => false
+         ]
       ];
    }
 
@@ -83,9 +80,9 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @return array Tree of form categories as nested array
     */
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
-      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
-      $form_table = getTableForItemType('PluginFormcreatorForm');
-      $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
+      $cat_table  = PluginFormcreatorCategory::getTable();
+      $form_table = PluginFormcreatorForm::getTable();
+      $table_fp   = PluginFormcreatorForm_Profile::getTable();
       if ($helpdeskHome) {
          $helpdesk   = "AND $form_table.`helpdesk_home` = 1";
       } else {

@@ -36,6 +36,36 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    protected $formData;
 
+   public function providerGetTypeName() {
+      return [
+         [
+            0,
+            'Forms'
+         ],
+         [
+            1,
+            'Form'
+         ],
+         [
+            2,
+            'Forms'
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetTypeName
+    *
+    * @param integer $nb
+    * @param string $expected
+    * @return void
+    */
+   public function testGetTypeName($nb, $expected) {
+      $instance = new $this->newTestedInstance();
+      $output = $instance->getTypeName($nb);
+      $this->string($output)->isEqualTo($expected);
+   }
+
    protected function formProvider() {
       return [
          [
@@ -51,25 +81,16 @@ class PluginFormcreatorForm extends CommonTestCase {
       ];
    }
 
-   /**
-    * @dataProvider formProvider
-    */
-   public function testCreateForm($formData) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($formData);
-      $this->boolean($form->isNewItem())->isFalse();
-   }
-
    public function providerPrepareInputForAdd() {
       return [
          [
-
             'input' => [
                'name'         => '',
                'description'  => '',
                'content'      => '',
             ],
             'expected' => false, // An empty name should be rejected
+            'message'  => 'The name cannot be empty!',
          ],
          [
             'input' => [
@@ -78,6 +99,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                'content'      => '&lt;p&gt;être ou ne pas être&lt;/p&gt;',
             ],
             'expected' => true,
+            'message' => '',
          ],
          [
             'input' => [
@@ -86,6 +108,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                'content'      => '&lt;p&gt;test d\\\'apostrophe&lt;/p&gt;',
             ],
             'expected' => true,
+            'message' => '',
          ],
       ];
    }
@@ -93,14 +116,15 @@ class PluginFormcreatorForm extends CommonTestCase {
    /**
     * @dataProvider providerPrepareInputForAdd
     * @param array $input
-    * @param boolean $expected
+    * @param array|boolean $expected
+    * @param string $message
     */
-   /*
-   public function testPrepareInputForAdd($input, $expected) {
-      $form = new \PluginFormcreatorForm();
-      $output = $form->prepareInputForAdd($input);
+   public function testPrepareInputForAdd($input, $expected, $expectedMessage) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->prepareInputForAdd($input);
       if ($expected === false) {
          $this->array($output)->size->isEqualTo(0);
+         $this->sessionHasMessage($expectedMessage, ERROR);
       } else {
          $this->string($output['name'])->isEqualTo($input['name']);
          $this->string($output['description'])->isEqualTo($output['description']);
@@ -108,7 +132,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          $this->array($output)->hasKey('uuid');
       }
    }
-   */
 
    public function providerPrepareInputForUpdate() {
       return $this->providerPrepareInputForAdd();
@@ -119,13 +142,12 @@ class PluginFormcreatorForm extends CommonTestCase {
     * @param array $input
     * @param boolean $expected
     */
-   /*
-   public function testPrepareInputForUpdate($input, $expected) {
-      $form = new \PluginFormcreatorForm();
-      $form->add([
+   public function testPrepareInputForUpdate($input, $expected, $expectedMessage) {
+      $instance = new \PluginFormcreatorForm();
+      $instance->add([
          'name' => 'anything',
       ]);
-      $output = $form->prepareInputForUpdate($input);
+      $output = $instance->prepareInputForUpdate($input);
       if ($expected === false) {
          $this->array($output)->size->isEqualTo(0);
       } else {
@@ -133,23 +155,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          $this->string($output['description'])->isEqualTo($output['description']);
          $this->string($output['content'])->isEqualTo($output['content']);
       }
-   }
-   */
-
-   /**
-    * @dataProvider formProvider
-    */
-   public function testUpdateForm($formData) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($formData);
-      $this->boolean($form->isNewItem())->isFalse();
-
-      $success = $form->update([
-         'id'                    => $form->getID(),
-         'name'                  => 'an updated form',
-         'validation_required'   => 0
-      ]);
-      $this->boolean($success)->isTrue(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
    }
 
    /**
@@ -327,5 +332,47 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($form)
          ->hasKeys($keys)
          ->size->isEqualTo(count($keys));
+   }
+
+   public function testGetInterface() {
+      // test Public access
+      \Session::destroy();
+      $output = \PluginFormcreatorForm::getInterface();
+      $this->string($output)->isEqualTo('public');
+
+      // test normal interface
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorForm::getInterface();
+      $this->string($output)->isEqualTo('central');
+
+      // test simplified interface
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->update([
+         'id' => '0',
+         'replace_helpdesk' => '0',
+      ]);
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::getInterface();
+      $this->string($output)->isEqualTo('self-service');
+
+      // test service catalog
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->update([
+         'id' => '0',
+         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG,
+      ]);
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::getInterface();
+      $this->string($output)->isEqualTo('servicecatalog');
+
+      $entityConfig = new \PluginFormcreatorEntityConfig();
+      $entityConfig->update([
+         'id' => '0',
+         'replace_helpdesk' => \PluginFormcreatorEntityConfig::CONFIG_EXTENDED_SERVICE_CATALOG,
+      ]);
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::getInterface();
+      $this->string($output)->isEqualTo('servicecatalog');
+
    }
 }

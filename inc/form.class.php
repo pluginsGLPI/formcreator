@@ -51,7 +51,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return boolean True if he can create and modify requests
     */
    public static function canCreate() {
-      return Session::haveRight("entity", UPDATE);
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
@@ -1033,7 +1033,11 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       // - name is required
       if (isset($input['name'])) {
          if (empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+            Session::addMessageAfterRedirect(
+               __('The name cannot be empty!', 'formcreator'),
+               false,
+               ERROR
+            );
             return [];
          }
       }
@@ -2164,11 +2168,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             && ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk')) {
          if (plugin_formcreator_replaceHelpdesk()) {
             return 'servicecatalog';
-         } else {
-            return 'self-service';
          }
-
-      } else if (!empty($_SESSION['glpiactiveprofile'])) {
+         return 'self-service';
+      }
+      if (!empty($_SESSION['glpiactiveprofile'])) {
          return 'central';
       }
 
