@@ -1226,6 +1226,9 @@ span.fc_list_icon {
    width: 190px;
    height: 40px;
 }
+.plugin_formcreator_user_name {
+   margin-right: 10px !important;
+}
 .plugin_formcreator_entityProfile > li {
    line-height: normal;
    top: 20%;

@@ -54,9 +54,16 @@ function plugin_formcreator_install() {
  * @return boolean True if success
  */
 function plugin_formcreator_uninstall() {
+   global $PFC_CONFIG;
+
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
    $install->uninstall();
+
+   // Delete plugin configuration values
+   foreach ($PFC_CONFIG as $key => $value) {
+      Config::deleteConfigurationValues('formcreator', [$key]);
+   }
 }
 
 /**

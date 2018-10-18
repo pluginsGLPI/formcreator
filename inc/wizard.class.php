@@ -46,7 +46,7 @@ class PluginFormcreatorWizard {
    const MENU_LINKS        = 7;
 
    public static function header($title) {
-      global $CFG_GLPI, $HEADER_LOADED, $DB;
+      global $CFG_GLPI, $HEADER_LOADED, $DB, $PFC_CONFIG;
 
       // Print a nice HTML-head for help page
       if ($HEADER_LOADED) {
@@ -167,15 +167,14 @@ class PluginFormcreatorWizard {
       }
 
       $link = new Link;
-      $ar_links = $link->find("name LIKE 'Helpdesk%'");
+      $ar_links = $link->find("name LIKE '". $PFC_CONFIG['external_links_prefix'] ."%'");
       foreach ($ar_links as $id => $a_link) {
-         Toolbox::logInFile("plugin-form", "A link: ". serialize($a_link) ."\n");
          /*
           * The link name is filtered and trimmed to remove the 'Helpdesk' string and extra whitespaces:
           * Helpdesk 1 - the first link
           * will display: the first link.
           */
-         $label = trim(str_replace('Helpdesk', '', $a_link['name']));
+         $label = trim(str_replace($PFC_CONFIG['external_links_prefix'], '', $a_link['name']));
 
          /*
           * If the link data field contains a line starting with Icon:, this line is used as a class icon
@@ -184,10 +183,10 @@ class PluginFormcreatorWizard {
           * will use the font awesome fa-dashboard icon for the current link.
           * As default, the fa-globe icon is used.
           */
-         preg_match_all("/^Icon:(.*)$/m",$a_link['data'], $found);
+         preg_match_all("/^". $PFC_CONFIG['external_links_icon'] ."(.*)$/m", $a_link['data'], $found);
          $icon = "fa fa-globe";
          if ((count($found) > 0) and (count($found[0]) > 0)) {
-            $icon = trim(str_replace('Icon:', '', $found[0][0]));
+            $icon = trim(str_replace($PFC_CONFIG['external_links_icon'], '', $found[0][0]));
          }
 
          /*
@@ -197,10 +196,10 @@ class PluginFormcreatorWizard {
           * will define a new title for the current link.
           * As default, the link name is used.
           */
-         preg_match_all("/^Label:(.*)$/m",$a_link['data'], $found);
+         preg_match_all("/^". $PFC_CONFIG['external_links_title'] ."(.*)$/m", $a_link['data'], $found);
          $title = $a_link['name'];
          if ((count($found) > 0) and (count($found[0]) > 0)) {
-            $title = trim(str_replace('Title:', '', $found[0][0]));
+            $title = trim(str_replace($PFC_CONFIG['external_links_title'], '', $found[0][0]));
          }
          /*
           * If the external link uses a new window...
@@ -247,16 +246,18 @@ class PluginFormcreatorWizard {
    }
 
    public static function showHeaderTopContent() {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $PFC_CONFIG;
 
       // icons
       echo '</ul>';
       echo '<ul class="plugin_formcreator_userMenu_icons">';
       // preferences
-      echo '<li id="plugin_formcreator_preferences_icon">';
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" class="fa fa-cog" title="'.
+      if ($PFC_CONFIG['user_preferences']) {
+         echo '<li id="plugin_formcreator_preferences_icon">';
+         echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php" class="fa fa-cog" title="'.
             __s('My settings').'"><span id="preferences_icon" title="'.__s('My settings').'" alt="'.__s('My settings').'" class="button-icon"></span>';
-      echo '</a></li>';
+         echo '</a></li>';
+      }
       // Logout
       echo '<li id="plugin_formcreator_logoutIcon" ><a href="'.$CFG_GLPI["root_doc"].'/front/logout.php';      /// logout without noAuto login for extauth
       if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
@@ -268,24 +269,46 @@ class PluginFormcreatorWizard {
 
       echo '</ul>';
 
-      // avatar
-      echo '<span id="plugin_formcreator_avatar">';
+      // Get formatted user name
       $user = new User;
       $user->getFromDB($_SESSION['glpiID']);
-      echo '<a href="'.$CFG_GLPI["root_doc"].'/front/preference.php"
-               title="'.formatUserName (0, $_SESSION["glpiname"],
-                                           $_SESSION["glpirealname"],
-                                           $_SESSION["glpifirstname"], 0, 20).'">
-            <img src="'.User::getThumbnailURLForPicture($user->fields['picture']).'"/>
-            </a>
-            </span>';
+      $dbu = new DbUtils();
+      $user_name = $dbu->formatUserName(0, $_SESSION["glpiname"],
+         $_SESSION["glpirealname"], $_SESSION["glpifirstname"], 0, 20);
+
+      if ($PFC_CONFIG['avatar']) {
+         // avatar
+         echo '<span id="plugin_formcreator_avatar">';
+         if ($PFC_CONFIG['user_preferences']) {
+            echo '<a href="' . $CFG_GLPI["root_doc"] . '/front/preference.php">';
+         }
+         echo '<img title="'. $user_name. '" src="' . User::getThumbnailURLForPicture($user->fields['picture']) . '"/>';
+         if ($PFC_CONFIG['user_preferences']) {
+            echo '</a>';
+         }
+         echo '</span>';
+      }
 
       // Profile and entity selection
-      echo '<ul class="plugin_formcreator_entityProfile">';
-      if (Session::getLoginUserID()) {
-         Html::showProfileSelecter($CFG_GLPI["root_doc"]."/front/helpdesk.public.php");
+      if ($PFC_CONFIG['profile_selector'] or $PFC_CONFIG['user_name']) {
+         echo '<ul class="plugin_formcreator_entityProfile">';
+         if ($PFC_CONFIG['user_name']) {
+            echo '<li>';
+            echo '<span class="plugin_formcreator_user_name">';
+            echo $user_name;
+            echo '</span>';
+            echo '</li>';
+         }
+
+         if ($PFC_CONFIG['profile_selector']) {
+            echo '<li>';
+            if (Session::getLoginUserID()) {
+               Html::showProfileSelecter($CFG_GLPI["root_doc"] . "/front/helpdesk.public.php");
+            }
+            echo '</li>';
+         }
+         echo "</ul>";
       }
-      echo "</ul>";
    }
 
    public static function showTicketSummary() {
@@ -343,7 +366,7 @@ class PluginFormcreatorWizard {
          return self::MENU_CATALOG;
       }
       if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/issue.php") !== false
-          || strpos($_SERVER['REQUEST_URI'], "formcreator/front/issue.form.php") !== false) {
+         || strpos($_SERVER['REQUEST_URI'], "formcreator/front/issue.form.php") !== false) {
          return self::MENU_LAST_FORMS;
       }
       if (strpos($_SERVER['REQUEST_URI'], "formcreator/front/reservationitem.php") !== false) {

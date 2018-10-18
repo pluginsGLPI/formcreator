@@ -46,6 +46,10 @@ define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.4');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
+// Plugin global configuration
+$PFC_CONFIG = [];
+
+
 /**
  * Define the plugin's version and informations
  *
@@ -100,7 +104,7 @@ function plugin_formcreator_check_config($verbose = false) {
  * Initialize all classes and generic variables of the plugin
  */
 function plugin_init_formcreator() {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
+   global $PLUGIN_HOOKS, $CFG_GLPI, $PFC_CONFIG;
 
    // Add specific CSS
    $PLUGIN_HOOKS['add_css']['formcreator'][] = "css/styles.css";
@@ -138,6 +142,10 @@ function plugin_init_formcreator() {
    $plugin = new Plugin();
    if ($plugin->isInstalled('formcreator') && $plugin->isActivated('formcreator')) {
       spl_autoload_register('plugin_formcreator_autoload');
+
+      // Plugin configuration parameters - set the content of the global $PFC_CONFIG
+      $paConfig = new PluginFormcreatorConfig();
+      $paConfig->loadConfiguration();
 
       if (isset($_SESSION['glpiactiveentities_string'])) {
          // Redirect to helpdesk replacement
@@ -218,6 +226,8 @@ function plugin_init_formcreator() {
 
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
+
+         Plugin::registerClass('PluginFormcreatorConfig', ['addtabon' => 'Config']);
 
          Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
 
