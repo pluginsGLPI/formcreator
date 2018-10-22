@@ -98,7 +98,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"></textarea</td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '" /></td>';
       echo '</tr>';
 
       echo '</table>';
@@ -110,7 +110,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea</td>';
+      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"/></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
