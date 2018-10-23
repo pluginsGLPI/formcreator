@@ -218,7 +218,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"></textarea</td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"/></td>';
       echo '</tr>';
 
       echo '</table>';
@@ -230,16 +230,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea</td>';
+      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('comment');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -247,9 +244,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Impacts') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="impactcontent" style="width:700px;" rows="15">' . $this->fields['impactcontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('impactcontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -257,9 +251,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Control list') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="controlistcontent" style="width:700px;" rows="15">' . $this->fields['controlistcontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('controlistcontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -267,9 +258,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="rolloutplancontent" style="width:700px;" rows="15">' . $this->fields['rolloutplancontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('rolloutplancontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -277,9 +265,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="backoutplancontent" style="width:700px;" rows="15">' . $this->fields['backoutplancontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('backoutplancontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -287,9 +272,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Checklist') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="checklistcontent" style="width:700px;" rows="15">' . $this->fields['checklistcontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('checklistcontent');
-      }
       echo '</td>';
       echo '</tr>';
 
