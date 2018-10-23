@@ -100,15 +100,15 @@ function plugin_formcreator_update_2_7(Migration $migration) {
       ]
    ];
    foreach ($DB->request($request) as $row) {
-      $values = html_entity_decode($row['values']);
-      $defaultValues = html_entity_decode($row['default_values']);
+      $values = Toolbox::addslashes_deep(html_entity_decode($row['values']));
+      $defaultValues = Toolbox::addslashes_deep(html_entity_decode($row['default_values']));
       $id = $row['id'];
       $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `values` = '$values', `default_values` = '$defaultValues' WHERE `id` = '$id'");
    }
 
    // decode html entities in name of questions
    foreach ($DB->request(['FROM' => 'glpi_plugin_formcreator_questions']) as $row) {
-      $name = html_entity_decode($row['name']);
+      $name = Toolbox::addslashes_deep(html_entity_decode($row['name']));
       $id = $row['id'];
       $DB->query("UPDATE `glpi_plugin_formcreator_questions` SET `name`='$name' WHERE `id` = '$id'");
    }
@@ -181,5 +181,17 @@ function plugin_formcreator_update_2_7(Migration $migration) {
    ];
    foreach ($tables as $table) {
       $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id']);
+   }
+
+   //remove html entities in forms
+   $request = [
+      'FROM'   => 'glpi_plugin_formcreator_forms',
+   ];
+   foreach ($DB->request($request) as $row) {
+      $name = Toolbox::addslashes_deep(html_entity_decode($row['name']));
+      $description = Toolbox::addslashes_deep(html_entity_decode($row['description']));
+      $content = Toolbox::addslashes_deep(html_entity_decode($row['content']));
+      $id = $row['id'];
+      $DB->query("UPDATE `glpi_plugin_formcreator_forms` SET `name` = '$name', `description` = '$description', `content` = '$content' WHERE `id` = '$id'");
    }
 }

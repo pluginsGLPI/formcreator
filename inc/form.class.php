@@ -1021,13 +1021,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         if (!is_array($value)) {
-            $input[$key] = plugin_formcreator_encode($value);
-         }
-      }
-
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -1041,15 +1034,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
-         $input['name'] = addslashes($input['name']);
-      }
-
-      if (isset($input['description'])) {
-         $input['description'] = addslashes($input['description']);
-      }
-
-      if (isset($input['content'])) {
-         $input['content'] = addslashes($input['content']);
       }
 
       if (!isset($input['requesttype'])) {
@@ -1934,6 +1918,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $form = []) {
+      global $DB;
+
       $form_obj = new self;
       $entity   = new Entity;
       $form_cat = new PluginFormcreatorCategory;
@@ -1960,7 +1946,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                                                           $form['uuid'])) {
          // add id key
          $form['id'] = $forms_id;
-
+         foreach (['name', 'description', 'content'] as $key) {
+            $form[$key] = $DB->escape($form[$key]);
+         }
          // update existing form
          $form_obj->update($form);
       } else {
