@@ -686,7 +686,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Find forms accessible by the current user
-      $keywords = preg_replace("/[^A-Za-z0-9 ]/", '', $keywords);
       if (!empty($keywords)) {
          // Determine the optimal search mode
          $searchMode = "BOOLEAN MODE";
@@ -696,13 +695,15 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             $row = $DB->fetch_assoc($result);
             if ($row['Rows'] > 20) {
                $searchMode = "NATURAL LANGUAGE MODE";
+            } else {
+               $keywords = PluginFormcreatorCommon::prepareBooleanKeywords($keywords);
             }
          }
          $keywords = $DB->escape($keywords);
          $highWeightedMatch = " MATCH($table_form.`name`, $table_form.`description`)
-               AGAINST('$keywords*' IN $searchMode)";
+               AGAINST('$keywords' IN $searchMode)";
          $lowWeightedMatch = " MATCH($table_question.`name`, $table_question.`description`)
-               AGAINST('$keywords*' IN $searchMode)";
+               AGAINST('$keywords' IN $searchMode)";
          $where_form .= " AND ($highWeightedMatch OR $lowWeightedMatch)";
       }
       $query_forms = "SELECT
