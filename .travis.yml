@@ -1,10 +1,13 @@
 language: php
+addons:
+  chrome: stable
 
 env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - CS=7.2
-    - DBUSER=root
+    - FUNCTIONAL_TESTS=7.2
+      DBUSER=root
     - DBNAME=glpitest
     - OLDDBNAME=glpiupgradetest
     - AFTER_SUCCESS_BRANCH=9.4/bugfixes
@@ -37,6 +40,11 @@ after_success:
   # let's update the documentation and locales
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then tests/after_success.sh; fi
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "$APIDOCS_PHP" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then tests/apidocs.sh; fi
+  - |
+    if [ "${TRAVIS_PHP_VERSION:0:3}" == "${FUNCTIONAL_TESTS}" ]; then
+      php -S 127.0.0.1:8000 -t ../.. ../../tests/router.php > /dev/null 2>&1 &
+      vendor/bin/atoum -ft -bf tests/functional-bootstrap.php -d tests/functional -ncc
+    fi
 
 cache:
   directories:
