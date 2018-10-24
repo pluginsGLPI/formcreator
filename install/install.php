@@ -218,11 +218,18 @@ class PluginFormcreatorInstall {
          Toolbox::logInFile('sql-errors', $DB->error());
          die ($DB->error());
       }
+      /*
+       * Configure the helpdesk mode and all other configuration parameters.
+       * Set some default values for the main entity and set a "parent entity" value for all other entities
+       */
       while ($row = $DB->fetch_assoc($result)) {
          $entityConfig = new PluginFormcreatorEntityconfig();
          $entityConfig->add([
-               'id'                 => $row['id'],
-               'replace_helpdesk'   => ($row['id'] == 0) ? 0 : PluginFormcreatorEntityconfig::CONFIG_PARENT
+            'id'                    => $row['id'],
+            'replace_helpdesk'      => ($row['id'] == 0) ? 0 : PluginFormcreatorEntityconfig::CONFIG_PARENT,
+            'external_links_prefix' => ($row['id'] == 0) ? 'Helpdesk' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING,
+            'external_links_icon'   => ($row['id'] == 0) ? 'Icon:' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING,
+            'external_links_title'  => ($row['id'] == 0) ? 'Title:' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING
          ]);
       }
    }

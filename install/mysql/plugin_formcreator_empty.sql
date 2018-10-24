@@ -30,6 +30,9 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_categories` (
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
   `id` int(11) NOT NULL,
   `replace_helpdesk` int(11) NOT NULL DEFAULT '0',
+  `external_links_prefix` varchar(255) NOT NULL DEFAULT '-/-',
+  `external_links_icon` varchar(255) NOT NULL DEFAULT '-/-',
+  `external_links_title` varchar(255) NOT NULL DEFAULT '-/-',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
