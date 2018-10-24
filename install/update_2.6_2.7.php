@@ -8,6 +8,14 @@
 function plugin_formcreator_update_2_7() {
    global $DB;
 
+   // Upgrade plugin configuration table
+   $table = 'glpi_plugin_formcreator_entityconfigs';
+   $migration->displayMessage("Upgrade $table");
+   $migration->addField($table, 'external_links_prefix', 'string', ['after' => 'id']);
+   $migration->addField($table, 'external_links_icon', 'integer', ['after' => 'id']);
+   $migration->addField($table, 'external_links_title', 'integer', ['after' => 'id']);
+   $migration->migrationOneTable($table);
+
    // Migrate regex question parameters
    $table = 'glpi_plugin_formcreator_questions';
    if ($DB->fieldExists($table, 'regex')) {
