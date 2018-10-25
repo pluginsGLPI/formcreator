@@ -5,7 +5,7 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       return true;
    }
 
-  public function show($canEdit = true) {
+   public function show($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;

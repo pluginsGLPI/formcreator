@@ -186,8 +186,12 @@ class PluginFormcreatorFields
          $conditionQuestion = new PluginFormcreatorQuestion();
          $conditionQuestion->getFromDB($condition['field']);
          $conditionField = $fields[$condition['field']];
+
          switch ($condition['operator']) {
             case '!=' :
+               if (!$conditionField->isPrerequisites()) {
+                  return true;
+               }
                try {
                   $value = $conditionField->notEquals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
@@ -196,6 +200,9 @@ class PluginFormcreatorFields
                break;
 
             case '==' :
+               if (!$conditionField->isPrerequisites()) {
+                  return false;
+               }
                try {
                   $value = $conditionField->equals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
@@ -204,6 +211,9 @@ class PluginFormcreatorFields
                break;
 
             case '>':
+               if (!$conditionField->isPrerequisites()) {
+                  return false;
+               }
                try {
                   $value = $conditionField->greaterThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
@@ -212,6 +222,9 @@ class PluginFormcreatorFields
                break;
 
             case '<':
+               if (!$conditionField->isPrerequisites()) {
+                  return false;
+               }
                try {
                   $value = $conditionField->lessThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
@@ -220,6 +233,9 @@ class PluginFormcreatorFields
                break;
 
             case '>=':
+               if (!$conditionField->isPrerequisites()) {
+                  return false;
+               }
                try {
                   $value = $conditionField->greaterThan($condition['value'])
                            || $conditionField->equals($condition['value']);
@@ -229,6 +245,9 @@ class PluginFormcreatorFields
                break;
 
             case '<=':
+               if (!$conditionField->isPrerequisites()) {
+                  return false;
+               }
                try {
                   $value = $conditionField->lessThan($condition['value'])
                            || $conditionField->equals($condition['value']);
