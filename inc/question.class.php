@@ -536,9 +536,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
                   $order = 0;
                   while (count($input['show_field']) > 0) {
                      $order++;
-                     $value            = plugin_formcreator_encode(array_shift($input['show_value']), false);
+                     $value            = array_shift($input['show_value']);
                      $showField       = (int) array_shift($input['show_field']);
-                     $showCondition   = plugin_formcreator_decode(array_shift($input['show_condition']));
+                     $showCondition   = array_shift($input['show_condition']);
                      $showLogic        = array_shift($input['show_logic']);
                      $question_condition = new PluginFormcreatorQuestion_Condition();
                      $question_condition->add([
