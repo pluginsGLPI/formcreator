@@ -2091,7 +2091,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                echo '&nbsp;';
                echo '<a href="' . $CFG_GLPI['root_doc']
                . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
-                  title="' . plugin_formcreator_encode($form['description']) . '">'
+                  title="' . $form['description'] . '">'
                               . $form['name']
                               . '</a></td>';
                               echo '</tr>';
@@ -2131,7 +2131,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   echo '&nbsp;';
                   echo '<a href="' . $CFG_GLPI['root_doc']
                   . '/plugins/formcreator/front/formdisplay.php?id=' . $form['id'] . '"
-                     title="' . plugin_formcreator_encode($form['description']) . '">'
+                     title="' . $form['description'] . '">'
                                  . $form['name']
                                  . '</a></td>';
                                  echo '</tr>';
