@@ -61,7 +61,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          });");
       } else {
          if ($useRichText) {
-            echo $this->value;
+            echo Toolbox::getHtmlToDisplay($this->value);
          } else {
             echo nl2br($this->value);
          }
