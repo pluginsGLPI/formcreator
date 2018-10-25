@@ -344,7 +344,7 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
 
 /**
  * Autoloader
- * @param unknown $classname
+ * @param string $classname
  */
 function plugin_formcreator_autoload($classname) {
    if (strpos($classname, 'PluginFormcreator') === 0) {
