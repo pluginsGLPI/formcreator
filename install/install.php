@@ -229,7 +229,12 @@ class PluginFormcreatorInstall {
             'replace_helpdesk'      => ($row['id'] == 0) ? 0 : PluginFormcreatorEntityconfig::CONFIG_PARENT,
             'external_links_prefix' => ($row['id'] == 0) ? 'Helpdesk' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING,
             'external_links_icon'   => ($row['id'] == 0) ? 'Icon:' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING,
-            'external_links_title'  => ($row['id'] == 0) ? 'Title:' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING
+            'external_links_title'  => ($row['id'] == 0) ? 'Title:' : PluginFormcreatorEntityconfig::CONFIG_PARENT_STRING,
+            'tickets_summary'       => ($row['id'] == 0) ? 1 : PluginFormcreatorEntityconfig::CONFIG_PARENT,
+            'user_preferences'      => ($row['id'] == 0) ? 1 : PluginFormcreatorEntityconfig::CONFIG_PARENT,
+            'avatar'                => ($row['id'] == 0) ? 1 : PluginFormcreatorEntityconfig::CONFIG_PARENT,
+            'user_name'             => ($row['id'] == 0) ? 0 : PluginFormcreatorEntityconfig::CONFIG_PARENT,
+            'profile_selector'      => ($row['id'] == 0) ? 1 : PluginFormcreatorEntityconfig::CONFIG_PARENT
          ]);
       }
    }
