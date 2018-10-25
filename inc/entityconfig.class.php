@@ -166,6 +166,73 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<em>" . __('A line of text in the link description that starts with this prefix is supposed to contain the title used when hovering the link in the menu.', 'formcreator') . "</em>";
       echo "</td></tr>";
 
+      // Header bar configuration
+      echo "<tr><th colspan='2'>" . __('Header bar configuration', 'formcreator') . "</th></tr>";
+      echo "<tr>";
+      echo "<td >" . __('Display the tickets summary', 'formcreator') . "</td>";
+      echo "<td>";
+      $value = $this->fields["tickets_summary"];
+      $inheritedValue = self::getUsedConfig('tickets_summary', $ID, self::CONFIG_PARENT);
+      if ($value == self::CONFIG_PARENT) {
+         Dropdown::showYesNo("tickets_summary", $inheritedValue);
+         echo '<div class="green">' . __('Inheritance of the parent entity') . '</div>';
+      } else {
+         Dropdown::showYesNo("tickets_summary", $value);
+      }
+      echo "</td></tr>";
+
+      echo "<tr>";
+      echo "<td >" . __('Allow to change user preferences', 'formcreator') . "</td>";
+      echo "<td>";
+      $value = $this->fields["user_preferences"];
+      $inheritedValue = self::getUsedConfig('user_preferences', $ID, self::CONFIG_PARENT);
+      if ($value == self::CONFIG_PARENT) {
+         Dropdown::showYesNo("user_preferences", $inheritedValue);
+         echo '<div class="green">' . __('Inheritance of the parent entity') . '</div>';
+      } else {
+         Dropdown::showYesNo("user_preferences", $value);
+      }
+      echo "</td></tr>";
+
+      echo "<tr>";
+      echo "<td >" . __('Display user avatar', 'formcreator') . "</td>";
+      echo "<td>";
+      $value = $this->fields["avatar"];
+      $inheritedValue = self::getUsedConfig('avatar', $ID, self::CONFIG_PARENT);
+      if ($value == self::CONFIG_PARENT) {
+         Dropdown::showYesNo("avatar", $inheritedValue);
+         echo '<div class="green">' . __('Inheritance of the parent entity') . '</div>';
+      } else {
+         Dropdown::showYesNo("avatar", $value);
+      }
+      echo "</td></tr>";
+
+      echo "<tr>";
+      echo "<td >" . __('Display user name', 'formcreator') . "</td>";
+      echo "<td>";
+      $value = $this->fields["user_name"];
+      $inheritedValue = self::getUsedConfig('user_name', $ID, self::CONFIG_PARENT);
+      if ($value == self::CONFIG_PARENT) {
+         Dropdown::showYesNo("user_name", $inheritedValue);
+         echo '<div class="green">' . __('Inheritance of the parent entity') . '</div>';
+      } else {
+         Dropdown::showYesNo("user_name", $value);
+      }
+      echo "</td></tr>";
+
+      echo "<tr>";
+      echo "<td >" . __('Display profile selector', 'formcreator') . "</td>";
+      echo "<td>";
+      $value = $this->fields["profile_selector"];
+      $inheritedValue = self::getUsedConfig('profile_selector', $ID, self::CONFIG_PARENT);
+      if ($value == self::CONFIG_PARENT) {
+         Dropdown::showYesNo("profile_selector", $inheritedValue);
+         echo '<div class="green">' . __('Inheritance of the parent entity') . '</div>';
+      } else {
+         Dropdown::showYesNo("profile_selector", $value);
+      }
+      echo "</td></tr>";
+
       if ($canedit) {
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
@@ -217,5 +284,32 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
 
       return $default_value;
+   }
+
+   /**
+    * Load the plugin configuration in a global variable $PFC_CONFIG
+    *
+    * @global array $PFC_CONFIG
+    */
+   static function loadConfiguration() {
+      global $PFC_CONFIG;
+
+      // Get global configuration parameters
+      $PFC_CONFIG['tickets_summary'] = self::getUsedConfig('tickets_summary',
+         $_SESSION['glpiactive_entity']);
+      $PFC_CONFIG['user_preferences'] = self::getUsedConfig('user_preferences',
+         $_SESSION['glpiactive_entity']);
+      $PFC_CONFIG['avatar'] = self::getUsedConfig('avatar',
+         $_SESSION['glpiactive_entity']);
+      $PFC_CONFIG['user_name'] = self::getUsedConfig('user_name',
+         $_SESSION['glpiactive_entity']);
+      $PFC_CONFIG['profile_selector'] = self::getUsedConfig('profile_selector',
+         $_SESSION['glpiactive_entity']);
+      $PFC_CONFIG['external_links_prefix'] = self::getUsedConfig('external_links_prefix',
+         $_SESSION['glpiactive_entity'], self::CONFIG_PARENT_STRING);
+      $PFC_CONFIG['external_links_icon'] = self::getUsedConfig('external_links_icon',
+         $_SESSION['glpiactive_entity'], self::CONFIG_PARENT_STRING);
+      $PFC_CONFIG['external_links_title'] = self::getUsedConfig('external_links_title',
+         $_SESSION['glpiactive_entity'], self::CONFIG_PARENT_STRING);
    }
 }
