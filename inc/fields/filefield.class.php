@@ -35,6 +35,10 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 {
    private $uploadData = [];
 
+   public function isPrerequisites() {
+      return true;
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $required = $this->isRequired() ? ' required' : '';

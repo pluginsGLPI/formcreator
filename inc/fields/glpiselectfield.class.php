@@ -33,6 +33,10 @@
 
 class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public static function getName() {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }

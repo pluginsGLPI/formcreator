@@ -33,6 +33,10 @@
 
 class PluginFormcreatorHiddenField extends PluginFormcreatorField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public function show($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();

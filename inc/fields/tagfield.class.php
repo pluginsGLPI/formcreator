@@ -33,6 +33,10 @@
 
 class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
 {
+   public function isPrerequisites() {
+      return class_exists(PluginTagTag::class);
+   }
+
    public function displayField($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();
@@ -49,7 +53,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          $where = "(`type_menu` LIKE '%\"Ticket\"%' OR`type_menu` LIKE '%\"Change\"%' OR `type_menu` LIKE '0')";
          $where .= getEntitiesRestrictRequest('AND', getTableForItemType(PluginTagTag::class), '', '', true);
 
-         $result = $obj->find($where, "name");
+         $result = $obj->find($where, 'name');
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
          }

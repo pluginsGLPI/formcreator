@@ -954,6 +954,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                $question->fields['fieldtype'],
                $question
             );
+            if (!$field->isPrerequisites()) {
+               continue;
+            }
             if (isset($data['formcreator_field_' . $question_line['id']])) {
                $field->parseAnswerValues($data);
             } else {

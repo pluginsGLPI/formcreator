@@ -33,6 +33,10 @@
 
 class PluginFormcreatorTextField extends PluginFormcreatorField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public function displayField($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();

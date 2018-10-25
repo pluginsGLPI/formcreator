@@ -38,6 +38,10 @@
  */
 class PluginFormcreatorActorField extends PluginFormcreatorField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public static function getName() {
       return _n('Actor', 'Actors', 1, 'formcreator');
    }

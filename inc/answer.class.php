@@ -67,48 +67,4 @@ class PluginFormcreatorAnswer extends CommonDBChild
    public static function getTypeName($nb = 0) {
       return _n('Answer', 'Answers', $nb, 'formcreator');
    }
-
-   /**
-    * Prepare input data for adding the question
-    * Check fields values and get the order for the new question
-    *
-    * @param array $input data used to add the item
-    *
-    * @return array the modified $input array
-    */
-   public function prepareInputForAdd($input) {
-      global $DB;
-
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         if (is_array($value)) {
-            foreach ($value as $key2 => $value2) {
-               $input[$key][$key2] = plugin_formcreator_encode($value2, false);
-            }
-         } else if (is_array(json_decode($value))) {
-            //$value = json_decode($value);
-            //foreach ($value as $key2 => $value2) {
-               //$value[$key2] = plugin_formcreator_encode($value2, false);
-            //}
-            //$input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
-            $input[$key] = $DB->escape($value);
-         } else {
-            $input[$key] = $value;
-         }
-      }
-
-      return $input;
-   }
-
-   /**
-    * Prepare input data for adding the question
-    * Check fields values and get the order for the new question
-    *
-    * @param array $input data used to add the item
-    *
-    * @return array the modified $input array
-    */
-   public function prepareInputForUpdate($input) {
-      return $this->prepareInputForAdd($input);
-   }
 }

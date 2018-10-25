@@ -33,6 +33,10 @@
 
 class PluginFormcreatorDropdownField extends PluginFormcreatorField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public function displayField($canEdit = true) {
       global $DB, $CFG_GLPI;
 

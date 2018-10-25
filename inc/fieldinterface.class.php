@@ -48,11 +48,15 @@ interface PluginFormcreatorFieldInterface
    public static function getJSFields();
 
    /**
+    * Are the prerequisites met to use this field ?
+    */
+   public function isPrerequisites();
+
+   /**
     * Is the field valid for the given value?
-    * @param string $value
     * @return boolean True if the field has a valid value, false otherwise
     */
-   //public function isValid($value);
+   public function isValid();
 
    /**
     * Is the field required?

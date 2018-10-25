@@ -33,6 +33,10 @@
 
 class PluginFormcreatorDateField extends PluginFormcreatorField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $id        = $this->fields['id'];
