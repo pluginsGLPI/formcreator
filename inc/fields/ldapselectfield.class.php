@@ -187,6 +187,9 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
+      if (!isset($input[$key])) {
+         $input[$key] = '';
+      }
       if (!is_string($input[$key])) {
          return false;
       }
