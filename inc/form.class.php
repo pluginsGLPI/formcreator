@@ -1072,6 +1072,30 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       if (isset($input['access_rights'])
             || isset($_POST['massiveaction'])
             || isset($input['usage_count'])) {
+
+         if (isset($input['access_rights'])
+            && $input['access_right'] == self::ACCESS_PUBLIC
+         ) {
+            // check that accessibility to eh form is compatible with its questions
+            $question = new PluginFormcreatorQuestion();
+            $questions = $question->getQuestionsFromForm($this->getID());
+            $incompatibleQuestion = false;
+            foreach ($questions as $question) {
+               $field = PluginFormcreatorFields::getFieldInstance(
+                  $question->fields['fieldtype'],
+                  $question
+               );
+               if (!$field->isAnonymousFormCompatible()) {
+                  $incompatibleQuestion = true;
+                  $message = __('The question %s is not compatible with public forms', 'formcreator');
+                  Session::addMessageAfterRedirect(sprintf($message, $question->fields['name']), false, ERROR);
+               }
+            }
+            if ($incompatibleQuestion) {
+               return [];
+            }
+         }
+
          return $input;
       } else {
          $this->updateValidators();
