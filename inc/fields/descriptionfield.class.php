@@ -130,4 +130,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    public function parseAnswerValues($input) {
       return true;
    }
+
+   public function isAnonymousFormCompatible() {
+      return true;
+   }
 }

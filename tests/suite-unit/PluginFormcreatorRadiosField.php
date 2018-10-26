@@ -79,4 +79,10 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
       $this->string($output)->isEqualTo('Radios');
    }
 
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorRadiosField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

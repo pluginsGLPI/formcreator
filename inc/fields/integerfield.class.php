@@ -250,4 +250,8 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
    public function lessThan($value) {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
+
+   public function isAnonymousFormCompatible() {
+      return true;
+   }
 }

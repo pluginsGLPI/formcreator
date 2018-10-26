@@ -368,4 +368,11 @@ class PluginFormcreatorActorField extends CommonTestCase {
          }
       )->isInstanceOf(\PluginFormcreatorComparisonException::class);
    }
+
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorActorField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isFalse();
+   }
 }

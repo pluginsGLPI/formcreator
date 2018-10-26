@@ -204,4 +204,10 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $output = \PluginFormcreatorTextField::getName();
       $this->string($output)->isEqualTo('Text');
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorTextField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

@@ -151,32 +151,33 @@ abstract class CommonTestCase extends CommonDBTestCase
          session_start();
          session_regenerate_id();
          session_id();
-         //$_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
       }
    }
 
    protected function getForm($input = []) {
       if (!isset($input['name'])) {
-         $input['name'] = 'form';
+         $input['name'] = $this->getUniqueString();
       }
       $form = new \PluginFormcreatorForm();
       $form->add($input);
+      $this->boolean($form->isNewItem())->isFalse();
       $form->getFromDB($form->getID());
 
       return $form;
    }
 
-   protected function getSection($input = []) {
+   protected function getSection($input = [], $formInput = []) {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
-         $formId = $this->getForm()->getID();
+         $formId = $this->getForm($formInput)->getID();
          $input[$formFk] = $formId;
       }
       if (!isset($input['name'])) {
-         $input['name'] = 'section';
+         $input['name'] = $this->getUniqueString();
       }
       $section = new \PluginFormcreatorSection();
       $section->add($input);
+      $this->boolean($section->isNewItem())->isFalse();
       return $section;
    }
 

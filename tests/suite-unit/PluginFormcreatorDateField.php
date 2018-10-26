@@ -148,4 +148,10 @@ class PluginFormcreatorDateField extends CommonTestCase {
       $output = \PluginFormcreatorDateField::getName();
       $this->string($output)->isEqualTo('Date');
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorDateField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

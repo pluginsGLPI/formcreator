@@ -192,4 +192,10 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $this->object($output['regex'])
          ->isInstanceOf(\PluginFormcreatorQuestionRegex::class);
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorFloatField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }
