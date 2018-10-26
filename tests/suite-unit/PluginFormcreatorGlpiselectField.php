@@ -263,4 +263,10 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expectedValidity);
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorGlpiselectField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isFalse();
+   }
 }

@@ -44,4 +44,10 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
       $output = $instance->isValid('');
       $this->boolean($output)->isTrue();
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorHiddenField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

@@ -280,4 +280,8 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    public function lessThan($value) {
       throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
+
+   public function isAnonymousFormCompatible() {
+      return true;
+   }
 }

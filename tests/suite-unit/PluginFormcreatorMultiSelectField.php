@@ -259,4 +259,10 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $this->object($output['range'])
          ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorMultiSelectField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

@@ -2215,4 +2215,27 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             return Html::nullFooter();
       }
    }
+
+   /**
+    * Is the form accessible anonymously (without being logged in) ?
+    * @return boolean true if the form is accessible anonymously
+    */
+   public function isPublicAccess() {
+      if ($this->isNewItem()) {
+         return false;
+      }
+      return ($this->getField('access_rights') === (string) \PluginFormcreatorForm::ACCESS_PUBLIC);
+   }
+
+   /**
+    * gets the form containing the given section
+    * @param PluginFormcreatorSection $section
+    * @return boolean true if success else false
+    */
+   public function getFromDBBySection(PluginFormcreatorSection $section) {
+      if ($section->isNewItem()) {
+         return false;
+      }
+      return $this->getFromDB($section->getField(self::getForeignKeyField()));
+   }
 }

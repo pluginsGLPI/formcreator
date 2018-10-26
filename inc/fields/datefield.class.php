@@ -160,4 +160,8 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
       $this->value = $input[$key];
       return true;
    }
+
+   public function isAnonymousFormCompatible() {
+      return true;
+   }
 }

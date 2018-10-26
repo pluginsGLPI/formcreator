@@ -110,10 +110,20 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    }
 
    public function providerPrepareInputForAdd() {
-      return [
+      $section1 = $this->getSection(
+         [],
+         []
+      );
+      $section2 = $this->getSection(
+         [],
+         [
+            'access_rights' => \PluginFormcreatorForm::ACCESS_PUBLIC,
+         ]
+      );
+      $dataset = [
          [
             'input' => [
-               'plugin_formcreator_sections_id' => $this->section->getID(),
+               'plugin_formcreator_sections_id' => $section1->getID(),
                'fieldtype'                      => 'radios',
                'name'                           => "it\'s nice",
                'values'                         => "it\'s nice\r\nit's good",
@@ -136,7 +146,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                ],
             ],
             'expected' => [
-               'plugin_formcreator_sections_id' => $this->section->getID(),
+               'plugin_formcreator_sections_id' => $section1->getID(),
                'fieldtype'                      => 'radios',
                'name'                           => "it\'s nice",
                'values'                         => "it\'s nice\r\nit's good",
@@ -157,9 +167,66 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                      ]
                   ]
                ],
-            ]
+            ],
+            'expecetedError' => null,
+         ],
+         'field type incompatible' => [
+            'input' => [
+               'plugin_formcreator_sections_id' => $section2->getID(),
+               'fieldtype'                      => 'actor',
+               'name'                           => "a question",
+               'values'                         => "",
+               'required'                       => '1',
+               'show_empty'                     => '0',
+               'default_values'                 => 'it\'s nice',
+               'desription'                     => "it\'s excellent",
+               'order'                          => '1',
+               'show_rule'                      => 'always',
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => [
+                        'regex' => ''
+                     ]
+                  ]
+               ],
+            ],
+            'expected' => [],
+            'expecetedError' => 'This type of question is not compatible with public forms.',
+         ],
+         'non existent field type' => [
+            'input' => [
+               'plugin_formcreator_sections_id' => $section2->getID(),
+               'fieldtype'                      => 'nonexistent',
+               'name'                           => "question-name",
+               'values'                         => "",
+               'required'                       => '1',
+               'show_empty'                     => '0',
+               'default_values'                 => 'it\'s nice',
+               'desription'                     => "it\'s excellent",
+               'order'                          => '1',
+               'show_rule'                      => 'always',
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => [
+                        'regex' => ''
+                     ]
+                  ]
+               ],
+            ],
+            'expected' => [],
+            'expecetedError' => 'Field type nonexistent is not available for question question-name.',
          ],
       ];
+
+      return $dataset;
    }
 
    public function providerPrepareInputForUpdate() {
@@ -169,20 +236,23 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    /**
     * @dataProvider providerPrepareInputForAdd
     */
-   public function testPrepareInputForAdd($input, $expected) {
-      $section = $this->getSection();
-      $input[$section::getForeignKeyField()] = $section->getID();
-
+   public function testPrepareInputForAdd($input, $expected, $expectedError) {
       $instance = new \PluginFormcreatorQuestion();
       $output = $instance->prepareInputForAdd($input);
-      $this->array($output)->hasKeys(array_keys($expected));
-      /*
-      // Disabled for now
-      $this->array($output)->containsValues($expected);
-      */
-      $this->array($output)->hasKey('uuid');
-      // The method added a UUID key
-      $this->array($output)->size->isEqualTo(count($expected) + 1);
+
+      if ($expectedError !== null) {
+         $this->sessionHasMessage($expectedError, ERROR);
+         $this->array($output)->hasSize(0);
+      } else {
+         $this->array($output)->hasKeys(array_keys($expected));
+         /*
+         // Disabled for now
+         $this->array($output)->containsValues($expected);
+         */
+         $this->array($output)->hasKey('uuid');
+         // The method added a UUID key
+         $this->array($output)->size->isEqualTo(count($expected) + 1);
+      }
    }
 
    /**

@@ -269,4 +269,10 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $this->object($output['range'])
          ->isInstanceOf(\PluginFormcreatorQuestionRange::class);
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorCheckboxesField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }
