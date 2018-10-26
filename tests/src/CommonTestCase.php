@@ -467,4 +467,20 @@ abstract class CommonTestCase extends CommonDBTestCase
          $targets,
       ];
    }
+
+   /**
+    * Tests the session has a specific message
+    * this may be replaced by a custom asserter for atoum
+    * @see http://docs.atoum.org/en/latest/asserters.html#custom-asserter
+    *
+    * @param string $message
+    * @param integer $message_type
+    */
+   protected function sessionHasMessage($message, $message_type = INFO) {
+      if (!is_array($message)) {
+         $message = [$message];
+      }
+      $this->array($_SESSION['MESSAGE_AFTER_REDIRECT'][$message_type])
+         ->containsValues($message);
+   }
 }
