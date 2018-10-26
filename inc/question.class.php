@@ -419,8 +419,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (!empty($input)
-          && isset($input['plugin_formcreator_sections_id'])) {
+      if (isset($input['plugin_formcreator_sections_id'])) {
          // If change section, reorder questions
          if ($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
             $oldId = $this->fields['plugin_formcreator_sections_id'];
@@ -484,11 +483,12 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $this->update([
             'id'     => $this->getID(),
             'order'  => $otherItem->getField('order'),
+            '_skip_checks' => true,
          ]);
          $otherItem->update([
-            '_skip_checks' => true,
             'id'           => $otherItem->getID(),
             'order'        => $order,
+            '_skip_checks' => true,
          ]);
       }
    }
@@ -497,8 +497,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * Moves the question down in the ordered list of questions in the section
     */
    public function moveDown() {
-      $order         = $this->fields['order'];
-      $sectionId     = $this->fields['plugin_formcreator_sections_id'];
+      $order      = $this->fields['order'];
+      $sectionId  = $this->fields['plugin_formcreator_sections_id'];
+      $otherItem  = new static();
       $otherItem->getFromDBByRequest([
          'WHERE' => [
             'AND' => [
@@ -513,11 +514,12 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $this->update([
             'id'     => $this->getID(),
             'order'  => $otherItem->getField('order'),
+            '_skip_checks' => true,
          ]);
          $otherItem->update([
-            '_skip_checks' => true,
             'id'           => $otherItem->getID(),
             'order'        => $order,
+            '_skip_checks' => true,
          ]);
       }
    }
@@ -622,7 +624,10 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    public function post_updateItem($history = 1) {
       if (!in_array('fieldtype', $this->updates)) {
          // update question parameters into the database
-         $this->field->updateParameters($this, $this->input);
+         if ($this->field instanceof PluginFormcreatorFieldInterface) {
+            // Set by self::checkBeforeSave()
+            $this->field->updateParameters($this, $this->input);
+         }
       } else {
          // Field type changed
          // Drop old parameters
