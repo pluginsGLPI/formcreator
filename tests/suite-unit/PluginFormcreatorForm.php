@@ -375,4 +375,66 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->string($output)->isEqualTo('servicecatalog');
 
    }
+
+
+   public function providerIsPublicAcess() {
+      return [
+         'not public' =>[
+            'input' => [
+               'access_rights' => (string) \PluginFormcreatorForm::ACCESS_PRIVATE,
+               'name' => $this->getUniqueString()
+            ],
+            'expected' => false,
+         ],
+         'public' =>[
+            'input' => [
+               'access_rights' => (string) \PluginFormcreatorForm::ACCESS_PUBLIC,
+               'name' => $this->getUniqueString()
+            ],
+            'expected' => true,
+         ],
+         'by profile' =>[
+            'input' => [
+               'access_rights' => (string) \PluginFormcreatorForm::ACCESS_RESTRICTED,
+               'name' => $this->getUniqueString()
+            ],
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerIsPublicAcess
+    */
+   public function testIsPublicAcess($input, $expected) {
+      $instance = new $this->newTestedInstance();
+      $instance->add($input);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $output = $instance->isPublicAccess();
+      $this->boolean($output)->isEqualTo($expected);
+   }
+   public function providerGetFromSection() {
+      $section = $this->getSection();
+      $formId = $section->getField(\PluginFormcreatorForm::getForeignKeyField());
+      $dataset = [
+         [
+            'section'  => $section,
+            'expectedId' => true,
+         ],
+         [
+            'section'  => new \PluginFormcreatorSection(),
+            'expected' => false,
+         ],
+      ];
+      return $dataset;
+   }
+
+   /**
+    * @dataProvider providerGetFromSection
+    */
+   public function testgetFormFromSection($section, $expected) {
+      $form = new \PluginFormcreatorForm();
+      $output = $form->getFromDBBySection($section);
+      $this->boolean($output)->isEqualTo($expected);
+   }
 }

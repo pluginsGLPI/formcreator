@@ -264,13 +264,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
    /**
     * Validate form fields before add or update a question
-    *
     * @param  Array $input Datas used to add the item
-    *
     * @return Array        The modified $input array
-    *
-    * @param  array $input
-    * @return array
     */
    private function checkBeforeSave($input) {
       // Control fields values :
@@ -303,19 +298,46 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $input['fieldtype'],
          $this
       );
+      if ($this->field === null) {
+         Session::addMessageAfterRedirect(
+            // TRANS: $%1$s is a type of field, %2$s is the label of a question
+            sprintf(
+               __('Field type %1$s is not available for question %2$s.', 'formcreator'),
+               $input['fieldtype'],
+               $input['name']
+               ),
+            false,
+            ERROR
+         );
+         return [];
+      }
+      // - field type is compatible with accessibility of the form
+      $section = new PluginFormcreatorSection();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      if (isset($input[$sectionFk])) {
+         $section->getFromDB($input[$sectionFk]);
+      } else {
+         $section->getFromDB($this->fields[$sectionFk]);
+      }
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBBySection($section);
+      if ($form->isPublicAccess() && !$this->field->isAnonymousFormCompatible()) {
+         Session::addMessageAfterRedirect(__('This type of question is not compatible with public forms.', 'formcreator'), false, ERROR);
+         return [];
+      }
 
       // Check the parameters are provided
       $parameters = $this->field->getEmptyParameters();
       if (count($parameters) > 0) {
          if (!isset($input['_parameters'][$input['fieldtype']])) {
             // This should not happen
-            Session::addMessageAfterRedirect(__('This type of question requires parameters', 'formcreator'));
+            Session::addMessageAfterRedirect(__('This type of question requires parameters', 'formcreator'), false, ERROR);
             return [];
          }
          foreach ($parameters as $parameter) {
             if (!isset($input['_parameters'][$input['fieldtype']][$parameter->getFieldName()])) {
                // This should not happen
-               Session::addMessageAfterRedirect(__('A parameter is missing for this question type', 'formcreator'));
+               Session::addMessageAfterRedirect(__('A parameter is missing for this question type', 'formcreator'), false, ERROR);
                return [];
             }
          }

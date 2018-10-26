@@ -149,4 +149,10 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       $output = \PluginFormcreatorSelectField::getName();
       $this->string($output)->isEqualTo('Select');
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorSelectField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

@@ -213,4 +213,8 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    public function lessThan($value) {
       throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
+
+   public function isAnonymousFormCompatible() {
+      return false;
+   }
 }

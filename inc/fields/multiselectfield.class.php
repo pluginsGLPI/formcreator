@@ -283,4 +283,8 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       }
       return true;
    }
+
+   public function isAnonymousFormCompatible() {
+      return true;
+   }
 }

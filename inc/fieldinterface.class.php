@@ -192,4 +192,10 @@ interface PluginFormcreatorFieldInterface
     * @return boolean True if the value is less than the field value
     */
    public function LessThan($value);
+
+   /**
+    * Is the field compatible with anonymous form ?
+    * @return boolean true if the field can work with anonymous forms
+    */
+   public function isAnonymousFormCompatible();
 }

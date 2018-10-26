@@ -122,4 +122,8 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
    public function lessThan($value) {
       return !$this->greaterThan($value) && !$this->equals($value);
    }
+
+   public function isAnonymousFormCompatible() {
+      return false;
+   }
 }

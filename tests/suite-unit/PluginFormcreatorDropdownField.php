@@ -91,4 +91,10 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
          $this->variable($output[$key])->isIdenticalTo($value);
       }
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorDropdownField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isFalse();
+   }
 }

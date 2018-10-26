@@ -203,4 +203,10 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorIntegerField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

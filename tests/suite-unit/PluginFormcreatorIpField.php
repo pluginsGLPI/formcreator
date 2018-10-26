@@ -47,4 +47,10 @@ class PluginFormcreatorIpField extends CommonTestCase {
       $output = $instance->isValid('');
       $this->boolean($output)->isTrue();
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorIpField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

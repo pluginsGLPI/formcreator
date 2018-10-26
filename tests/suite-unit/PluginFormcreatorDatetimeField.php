@@ -210,4 +210,11 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    public function testSerializeValue() {
       $instance = $this->newTestedInstance([]);
    }
+
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorDatetimeField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }

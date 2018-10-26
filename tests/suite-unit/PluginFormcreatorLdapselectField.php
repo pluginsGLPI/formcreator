@@ -41,4 +41,10 @@ class PluginFormcreatorLdapselectField extends CommonTestCase {
       $output = $instance->getName();
       $this->string($output)->isEqualTo('LDAP Select');
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorLdapselectField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isFalse();
+   }
 }

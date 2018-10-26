@@ -93,4 +93,10 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
          }
       }
    }
+
+   public function testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorDescriptionField([]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isTrue();
+   }
 }
