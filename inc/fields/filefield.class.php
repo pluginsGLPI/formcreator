@@ -108,16 +108,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    private function isValidValue($value) {
       // If the field is required it can't be empty
-      if (count($this->uploadData) > 0) {
-         foreach ($this->uploadData as $file) {
-            if (!is_file(GLPI_TMP_DIR . '/' . $file)) {
-               Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
-               return false;
-            }
-         }
-      }
-
-      return true;
+      return (count($this->uploadData) > 0);
    }
 
    public static function getName() {
