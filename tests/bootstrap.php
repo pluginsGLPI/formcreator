@@ -1,6 +1,6 @@
 <?php
 // fix empty CFG_GLPI on boostrap; see https://github.com/sebastianbergmann/phpunit/issues/325
-global $CFG_GLPI;
+global $CFG_GLPI, $GLPI_CACHE;
 
 //disable session cookies
 ini_set('session.use_cookies', 0);
@@ -20,6 +20,7 @@ if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
    echo "config_db.php missing. Did GLPI successfully initialized ?\n";
    exit(1);
 }
+
 define('GLPI_LOG_DIR', __DIR__ . '/logs');
 @mkdir(GLPI_LOG_DIR);
 if (!defined('STDERR')) {
@@ -35,6 +36,9 @@ if ($key) {
 }
 
 include (GLPI_ROOT . "/inc/includes.php");
+
+//init cache
+$GLPI_CACHE = Config::getCache('cache_db');
 
 // If GLPI debug mode is disabled, atoum cannot produce backtaces
 //\Toolbox::setDebugMode(Session::DEBUG_MODE);
