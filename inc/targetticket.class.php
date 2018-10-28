@@ -924,9 +924,16 @@ EOS;
       }
 
       $target = new PluginFormcreatorTarget();
-      $found  = $target->find('items_id = ' . $this->getID());
-      $found  = array_shift($found);
-      $target->update(['id' => $found['id'], 'name' => $input['name']]);
+      $target->getFromDBByCrit([
+         'itemtype' => self::class,
+         'items_id' => $this->getID()
+      ]);
+      if (!$target->isNewItem()) {
+         $target->update([
+            'id' => $target->getID(),
+            'name' => $input['name'],
+         ]);
+      }
       $input['name'] = $input['title'];
       unset($input['title']);
 

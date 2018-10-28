@@ -840,7 +840,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             return [];
          }
 
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
          }
 
@@ -891,6 +891,20 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                                        : '';
          }
       }
+
+      $target = new PluginFormcreatorTarget();
+      $target->getFromDBByCrit([
+         'itemtype' => self::class,
+         'items_id' => $this->getID()
+      ]);
+      if (!$target->isNewItem()) {
+         $target->update([
+            'id' => $target->getID(),
+            'name' => $input['name'],
+         ]);
+      }
+      $input['name'] = $input['title'];
+      unset($input['title']);
 
       return $input;
    }
