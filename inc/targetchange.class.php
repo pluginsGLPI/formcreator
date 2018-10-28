@@ -1090,44 +1090,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             break;
       }
 
-      // Define due date
-      if ($this->fields['due_date_question'] !== null) {
-         $request = [
-            'FROM' => $answer::getTable(),
-            'WHERE' => [
-               'AND' => [
-                  $formanswer::getForeignKeyField() => $formanswer->fields['id'],
-                  PluginFormcreatorQuestion::getForeignKeyField() => $this->fields['due_date_question'],
-               ],
-            ],
-         ];
-         $iterator = $DB->request($request);
-         if ($iterator->count() > 0) {
-            $iterator->rewind();
-            $date   = $iterator->current();
-         }
-      } else {
-         $date = null;
-      }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
-
-      switch ($this->fields['due_date_rule']) {
-         case 'answer':
-            $due_date = $date['answer'];
-            break;
-         case 'ticket':
-            $due_date = date('Y-m-d H:i:s', strtotime($str));
-            break;
-         case 'calcul':
-            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
-            break;
-         default:
-            $due_date = null;
-            break;
-      }
-      if (!is_null($due_date)) {
-         $data['due_date'] = $due_date;
-      }
+      $data = $this->setTargetDueDate($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
@@ -1140,7 +1103,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Add tag if presents
       $plugin = new Plugin();
       if ($plugin->isActivated('tag')) {
-
          $tagObj = new PluginTagTagItem();
          $tags   = [];
 
