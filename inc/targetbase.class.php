@@ -980,4 +980,56 @@ JAVASCRIPT;
       echo '</td>';
       echo '</tr>';
    }
+
+   /**
+    * Sets the time to resolve of the target object
+    *
+    * @param array $data data of the target object
+    * @param PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    * @return array updated data of the target object
+    */
+   protected function setTargetDueDate($data, PluginFormcreatorForm_Answer $formanswer) {
+      global $DB;
+
+      $answer  = new PluginFormcreatorAnswer();
+      if ($this->fields['due_date_question'] !== null) {
+         $request = [
+            'FROM' => $answer::getTable(),
+            'WHERE' => [
+               'AND' => [
+                  $formanswer::getForeignKeyField() => $formanswer->fields['id'],
+                  PluginFormcreatorQuestion::getForeignKeyField() => $this->fields['due_date_question'],
+               ],
+            ],
+         ];
+         $iterator = $DB->request($request);
+         if ($iterator->count() > 0) {
+            $iterator->rewind();
+            $date   = $iterator->current();
+         }
+      } else {
+         $date = null;
+      }
+      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+
+      switch ($this->fields['due_date_rule']) {
+         case 'answer':
+            $due_date = $date['answer'];
+            break;
+         case 'ticket':
+            $due_date = date('Y-m-d H:i:s', strtotime($str));
+            break;
+         case 'calcul':
+            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
+            break;
+         default:
+            $due_date = null;
+            break;
+      }
+      if (!is_null($due_date)) {
+         $data['time_to_resolve'] = $due_date;
+      }
+
+      return $data;
+   }
 }
