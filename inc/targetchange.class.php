@@ -236,6 +236,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
+      echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
       echo '</td>';
       echo '</tr>';
 
@@ -890,6 +891,20 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                                        : '';
          }
       }
+
+      $target = new PluginFormcreatorTarget();
+      $target->getFromDBByCrit([
+         'itemtype' => self::class,
+         'items_id' => $this->getID()
+      ]);
+      if (!$target->isNewItem()) {
+         $target->update([
+            'id' => $target->getID(),
+            'name' => $input['name'],
+         ]);
+      }
+      $input['name'] = $input['title'];
+      unset($input['title']);
 
       return $input;
    }
