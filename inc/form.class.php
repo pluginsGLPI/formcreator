@@ -1190,7 +1190,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             if (!$fields[$id]->isPrerequisites()) {
                continue;
             }
-            $key = 'formcreator_field_' . $id;
             if (PluginFormcreatorFields::isVisible($id, $fields) && !$fields[$id]->isValid()) {
                $valid = false;
                break;

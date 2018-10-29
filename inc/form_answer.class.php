@@ -905,7 +905,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
-         $key = 'formcreator_field_' . $id;
          $fields[$id] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
@@ -939,7 +938,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
-         $key = 'formcreator_field_' . $id;
          $fields[$id] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
@@ -979,7 +977,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
-         $key = 'formcreator_field_' . $id;
          $fields[$id] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
