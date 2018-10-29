@@ -495,11 +495,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
             switch ($data['raw']['sub_itemtype']) {
                case 'Ticket':
                   $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
-                  return Ticket::getStatusIcon($data['raw']["ITEM_$num"]);
+                  return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
                   break;
 
                case 'PluginFormcreatorForm_Answer':
-                  return PluginFormcreatorForm_Answer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"]);
+                  return PluginFormcreatorForm_Answer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
+                     ." ".__($data['raw']["ITEM_$num"], 'formcreator');
                   break;
             }
             break;
