@@ -381,7 +381,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             return false;
       }
 
-      $actorKey = array_search($userId, $actorType);
+      $actorKey = array_search($group, $actorType);
       if ($actorKey !== false) {
          return false;
       }
