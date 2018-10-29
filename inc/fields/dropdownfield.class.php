@@ -77,6 +77,15 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      case 'incident':
                         $dparams['condition'] .= " AND `is_incident` = '1'";
                         break;
+                     case 'both':
+                        $dparams['condition'] .= " AND `is_incident` = '1' OR `is_request` = '1' ";
+                        break;
+                     case 'change':
+                        $dparams['condition'] .= " AND `is_change` = '1'";
+                        break;
+                     case 'all':
+                        $dparams['condition'] .= " AND `is_change` = '1' OR `is_incident` = '1' OR  `is_request` = '1'";
+                        break;
                   }
                   if (isset($decodedValues['show_ticket_categories_depth'])
                      && $decodedValues['show_ticket_categories_depth'] > 0) {

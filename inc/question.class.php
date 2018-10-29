@@ -934,9 +934,11 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</td>';
       echo '<td>';
       $ticketCategoriesOptions = [
-         'request'   => __('Request categories', 'formcreator'),
-         'incident'  => __('Incident categories', 'formcreator'),
-         'both'      => __('Both', 'formcreator'),
+         'request'  => __('Request categories', 'formcreator'),
+         'incident' => __('Incident categories', 'formcreator'),
+         'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
+         'change'   => __('Change'),
+         'all'      => __('All'),
       ];
       dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
          'rand'  => $rand,
