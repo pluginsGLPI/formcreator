@@ -144,7 +144,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
     *
     * @return integer|NULL
     */
-   private function saveDocument($file) {
+   private function saveDocument($file, $prefix) {
       global $DB;
 
       $sectionTable = PluginFormcreatorSection::getTable();
@@ -177,14 +177,15 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          return;
       }
 
-      $doc                        = new Document();
-      $file_data                 = [];
-      $file_data["name"]         = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
-      $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
-                                   ? $_SESSION['glpiactive_entity']
-                                   : $form->getField('entities_id');
-      $file_data["is_recursive"] = $form->getField('is_recursive');
-      $file_data['_filename'] = [$file];
+      $doc                          = new Document();
+      $file_data                       = [];
+      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
+      $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
+                                       ? $_SESSION['glpiactive_entity']
+                                       : $form->getField('entities_id');
+      $file_data["is_recursive"]       = $form->getField('is_recursive');
+      $file_data['_filename']          = [$file];
+      $file_data['_prefix_filename']   = [$prefix];
       if ($docID = $doc->add($file_data)) {
          return $docID;
       }
@@ -199,10 +200,13 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          }
 
          $answer_value = [];
+         $index = 0;
          foreach ($input["_$key"] as $document) {
             if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-               $answer_value[] = $this->saveDocument($document);
+               $prefix = $input['_prefix_formcreator_field_' . $this->fields['id']][$index];
+               $answer_value[] = $this->saveDocument($document, $prefix);
             }
+            $index++;
          }
          $this->uploadData = $answer_value;
          $this->value = __('Attached document', 'formcreator');
