@@ -929,12 +929,24 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $form   = new PluginFormcreatorForm();
       $form->getFromDB($data['plugin_formcreator_forms_id']);
 
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
       if (!$this->canValidate($form, $this)) {
          Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
          return false;
       }
 
-      return $this->saveAnswers($data);
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+      }
+
+      return $this->saveAnswers($form, $data, $fields);
    }
 
    /**
@@ -957,7 +969,24 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          return false;
       }
 
-      return $this->saveAnswers($data);
+      $fields = [];
+      // Prepare form fields for validation
+      $question = new PluginFormcreatorQuestion();
+      if (!$this->canValidate($form, $this)) {
+         Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
+         return false;
+      }
+
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
+         $key = 'formcreator_field_' . $id;
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+      }
+
+      return $this->saveAnswers($form, $data, $fields);
    }
 
    /**
