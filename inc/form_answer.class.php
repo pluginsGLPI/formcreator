@@ -529,6 +529,12 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          formcreatorShowFields($("form[name=\'' . $formName . '\']"));
       })');
 
+      //add requester info
+      echo '<div class="form-group">';
+      echo '<label for="requester">' . __('Requester', 'formcreator') . '</label>';
+      echo Dropdown::getDropdownName('glpi_users', $this->fields['requester_id']);
+      echo '</div>';
+
       // Display submit button
       if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
          echo '<div class="form-group line'.(($questionsCount + 1) % 2).'">';
