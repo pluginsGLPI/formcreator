@@ -933,10 +933,14 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       } else if (isset($_POST['_formcreator_field_' . $question->getID()])) {
          $documents = $_POST['_formcreator_field_' . $question->getID()];
          $answer_value = [];
+         $index = 0;
          foreach ($documents as $document) {
             if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-               $answer_value[] = $this->saveDocument($form, $question, $document);
+               //retrive prefix of doc uploaded to clean his name on add
+               $prefix = $_POST['_prefix_formcreator_field_' . $question->getID()][$index];
+               $answer_value[] = $this->saveDocument($form, $question, $document, $prefix);
             }
+            $index++;
          }
          $answer_value = json_encode($answer_value);
       }
@@ -950,21 +954,23 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @param PluginFormcreatorForm $form
     * @param PluginFormcreatorQuestion $question
     * @param array $file                         an item from $_FILES array
+    * @param string $prefix                      the prefix of item from $_FILES array
     *
     * @return integer|NULL
     */
-   private function saveDocument(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question, $file) {
+   private function saveDocument(PluginFormcreatorForm $form, PluginFormcreatorQuestion $question, $file, $prefix) {
       global $DB;
 
       $doc                        = new Document();
 
-      $file_data                 = [];
-      $file_data["name"]         = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $question->getField('name'));
-      $file_data["entities_id"]  = isset($_SESSION['glpiactive_entity'])
-                                    ? $_SESSION['glpiactive_entity']
-                                    : $form->getField('entities_id');
-      $file_data["is_recursive"] = $form->getField('is_recursive');
-      $file_data['_filename'] = [$file];
+      $file_data                       = [];
+      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $question->getField('name'));
+      $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
+                                             ? $_SESSION['glpiactive_entity']
+                                             : $form->getField('entities_id');
+      $file_data["is_recursive"]       = $form->getField('is_recursive');
+      $file_data['_filename']          = [$file];
+      $file_data['_prefix_filename']   = [$prefix];
 
       if ($docID = $doc->add($file_data)) {
          $docID    = intval($docID);
