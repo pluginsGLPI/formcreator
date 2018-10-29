@@ -19,7 +19,6 @@ function plugin_formcreator_update_2_7() {
    $migration->addField($table, 'avatar', 'integer', ['after' => 'id', 'value' => '1']);
    $migration->addField($table, 'user_name', 'integer', ['after' => 'id', 'value' => '0']);
    $migration->addField($table, 'profile_selector', 'integer', ['after' => 'id', 'value' => '1']);
-   $migration->migrationOneTable($table);
 
    // Migrate regex question parameters
    $table = 'glpi_plugin_formcreator_questions';
