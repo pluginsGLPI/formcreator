@@ -987,7 +987,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          } else {
             $data[$changeField] = $this->fields['comment'];
          }
-         $data[$changeField] = addslashes($data[$changeField]);
          $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
@@ -999,10 +998,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
          $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
 
-         // This targer does not supports rich text
+         // This target does not supports rich text
          $data[$changeField] = strip_tags($data[$changeField], '<p>');
          $data[$changeField] = str_replace('<p>', '', $data[$changeField]);
          $data[$changeField] = str_replace('</p>', '\r\n', $data[$changeField]);
+         $data[$changeField] = Toolbox::addslashes_deep($data[$changeField]);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
