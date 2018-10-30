@@ -1113,10 +1113,10 @@ EOS;
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $data['name'] = addslashes($this->fields['name']);
+      $data['name'] = $this->fields['name'];
       $data['name'] = $this->parseTags($data['name'], $formanswer);
+      $data['name'] = Toolbox::addslashes_deep($data['name']);
 
-      $data['content'] = addslashes($this->fields['content']);
       $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
@@ -1128,8 +1128,9 @@ EOS;
 
       $data['content'] = $this->parseTags($data['content'], $formanswer);
       if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-         $data['content'] = htmlentities($data['content']);
+         $data['content'] = htmlentities($data['content'], ENT_NOQUOTES);
       }
+      $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
