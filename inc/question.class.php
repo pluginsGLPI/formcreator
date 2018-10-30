@@ -1283,25 +1283,26 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
    /**
     * Duplicate a question
+    * @param PluginFormcreatorSection $section destination section of the duplicated questioin
     *
-    * @return integer|boolean ID of  the new question, false otherwise
+    * @return integer|boolean ID of the new question, false otherwise
     */
-   public function duplicate() {
-      $oldQuestionId       = $this->getID();
-      $newQuestion         = new static();
-      $question_condition  = new PluginFormcreatorQuestion_Condition();
+   public function duplicate(PluginFormcreatorSection $section = null) {
+      $newQuestion   = new static();
+      $sectionFk     = PluginFormcreatorSection::getForeignKeyField();
 
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
-
+      $row[$sectionFk] = $section !== null ? $section->getID() : $this->fields[$sectionFk];
+      $row = Toolbox::addslashes_deep($row);
       $row['_skip_checks'] = true;
       $newQuestion_id = $newQuestion->add($row);
       if ($newQuestion_id === false) {
          return false;
       }
 
-      // Form questions parameters
+      // duplicate questions parameters
       $this->field = PluginFormcreatorFields::getFieldInstance(
          $this->getField('fieldtype'),
          $this
@@ -1312,17 +1313,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $row[PluginFormcreatorQuestion::getForeignKeyField()] = $newQuestion->getID();
          unset($row['id']);
          $parameter->add($row);
-      }
-
-      // Form questions conditions
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$oldQuestionId')");
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_questions_id'] = $newQuestion_id;
-         if (!$question_condition->add($row)) {
-            return false;
-         }
       }
 
       return $newQuestion_id;

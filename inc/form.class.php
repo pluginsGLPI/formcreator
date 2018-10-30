@@ -1270,6 +1270,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return Boolean true if success, false otherwise.
     */
    public function duplicate() {
+      $newForm             = new static();
       $target              = new PluginFormcreatorTarget();
       $target_ticket       = new PluginFormcreatorTargetTicket();
       $target_change       = new PluginFormcreatorTargetChange();
@@ -1283,15 +1284,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $tab_questions       = [];
 
       // Form data
-      $form_datas              = $this->fields;
-      $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
-      $form_datas['is_active'] = 0;
-
-      unset($form_datas['id'], $form_datas['uuid']);
-
+      $row              = $this->fields;
+      $row['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
+      $row['is_active'] = 0;
+      unset($row['id'], $row['uuid']);
       $old_form_id = $this->getID();
-      $form_datas = Toolbox::addslashes_deep($form_datas);
-      $new_form_id = $this->add($form_datas);
+      $row = Toolbox::addslashes_deep($row);
+      $new_form_id = $newForm->add($row);
       if ($new_form_id === false) {
          return false;
       }
@@ -1319,13 +1318,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form sections
-      $sectionRows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'", "`order` ASC");
-      foreach ($sectionRows as $sections_id => $sectionRow) {
-         unset($sectionRow['id'],
-               $sectionRow['uuid']);
-         $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
-         $sectionRow = Toolbox::addslashes_deep($sectionRow);
-         if (!$new_sections_id = $form_section->add($sectionRow)) {
+      $sections = $form_section->getSectionsFromForm("`plugin_formcreator_forms_id` = '$old_form_id'", "`order` ASC");
+      foreach ($sections as $section) {
+         $new_sections_id->duplicate($newForm);
+         if ($new_sections_id === false) {
             return false;
          }
 

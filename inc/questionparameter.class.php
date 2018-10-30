@@ -145,21 +145,19 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
 
    /**
     * Duplicates a parameter
-    * @param PluginFormcreatorQuestion $newQuestion question which will contain the new parameter
-    * @param array $tab_questions map old question ID => new question ID
-    * @return PluginFormcreatorQuestionParameter new isntance (not saved in DB)
+    *
+    * @param array $map map old / new objects
+    * @param PluginFormcreatorQuestion $question question which will contain the new parameter
+    * @return integer|false new isntance (not saved in DB)
     */
-   public function duplicate(PluginFormcreatorQuestion $newQuestion, array $tab_questions) {
+   public function duplicate(array $map, PluginFormcreatorQuestion $question = null) {
       $parameter = new static($this->field, ['fieldName' => $this->fieldName, 'label' => $this->label]);
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
       $row = $this->fields;
       unset($row['id']);
+      unset($row['uuid']);
+      $row[$questionFk] = $question !== null ? $question->getID() : $this->fields[$questionFk];
 
-      // Update the question ID linked to the parameter with the old/new question ID map
-      $questionKey = PluginFormcreatorQuestion::getForeignKeyField();
-      $row[$questionKey] = $tab_questions[$this->fields[$questionKey]];
-
-      // return  the new instance, not saved yet in DB
-      $parameter->fields = $row;
-      return $parameter;
+      return $parameter->add($row);
    }
 }

@@ -153,80 +153,60 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
 
    /**
     * Duplicate a section
+    * @param array $map Mapping old / new items
+    * @param PluginFormcreatorForm $form destination form of the duplicated section
     *
     * @return integer|boolean ID of the new section, false otherwise
     */
-   public function duplicate() {
-      $oldSectionId        = $this->getID();
-      $newSection          = new static();
-      $section_question    = new PluginFormcreatorQuestion();
-      $question_condition  = new PluginFormcreatorQuestion_Condition();
-
-      $tab_questions       = [];
+   public function duplicate(array $map, PluginFormcreatorForm $form = null) {
+      $newSection   = new static();
+      $question     = new PluginFormcreatorQuestion();
+      $formFk       = PluginFormcreatorForm::getForeignKeyField();
 
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
+      $row[$formFk] = $form !== null ? $form->getID() : $this->fields[$formFk];
+      $row = Toolbox::addslashes_deep($row);
       $newSection_id = $newSection->add($row);
       if ($newSection_id === false) {
          return false;
       }
 
-      // Form questions
-      $rows = $section_question->find("`plugin_formcreator_sections_id` = '$oldSectionId'", "`order` ASC");
-      foreach ($rows as $questions_id => $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_sections_id'] = $newSection_id;
-         $row['_skip_checks'] = true;
-         if (!$new_questions_id = $section_question->add($row)) {
+      // duplicate questions in the section
+      $questions = $question->getQuestionsFromSection($newSection);
+      foreach ($questions as $question) {
+         $newQuestionId = $question->duplicate($newSection);
+         if ($newQuestionId === false) {
             return false;
          }
-
-         $tab_questions[$questions_id] = $new_questions_id;
+         $map['questions'][$question->getID()] = $newQuestionId;
       }
 
-      // Form questions parameters
-      foreach ($tab_questions as $questions_id => $new_questions_id) {
-         $oldQuestion = new PluginFormcreatorQuestion();
-         $oldQuestion->getFromDB($questions_id);
-         $this->field = PluginFormcreatorFields::getFieldInstance(
-            $oldQuestion->getField('fieldtype'),
-            $oldQuestion
+      $questionCondition = new PluginFormcreatorQuestion_Condition();
+      foreach ($questions as $question) {
+         $newQuestion = new PluginFormcreatorQuestion();
+         $newQuestion->getFromDB($map['questions'][$question->getID()]);
+
+         //duplicate parameters of questions
+         $field = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
          );
-         $parameters = $this->field->getParameters();
+         $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            if (!$parameter->isNewItem()) {
-               // Should always happen
-               $newQuestion = new PluginFormcreatorQuestion();
-               $newQuestion->getFromDB($new_questions_id);
-               $parameter = $parameter->duplicate($newQuestion, $tab_questions);
-               $parameter->add($parameter->fields);
-            }
+            $parameter = $parameter->duplicate($map, $newQuestion);
          }
-      }
 
-      // Form questions conditions
-      if (count($tab_questions) > 0) {
-         $questionIds = implode("', '", array_keys($tab_questions));
-         $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-         foreach ($rows as $row) {
-            unset($row['id'],
-                  $row['uuid']);
-            if (isset($tab_questions[$row['show_field']])) {
-               // update show_field if id in show_field belongs to the section being duplicated
-               $row['show_field'] = $tab_questions[$row['show_field']];
-            }
-            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-            if (!$question_condition->add($row)) {
-               return false;
-            }
+         // duplicate conditions of questions
+         $conditions = $questionCondition->getConditionsFromQuestion();
+         foreach ($conditions as $condition) {
+            $condition->duplicate($map, $newQuestion);
          }
       }
 
       return $newSection_id;
    }
-
 
    public function moveUp() {
       $order         = $this->fields['order'];

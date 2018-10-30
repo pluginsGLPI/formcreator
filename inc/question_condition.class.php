@@ -262,4 +262,23 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
 
       return $html;
    }
+
+   /**
+    * Duplicates a parameter
+    *
+    * @param array $map map old / new objects
+    * @param PluginFormcreatorQuestion $question question which will contain the new parameter
+    * @return integer|false instance ID if success, false otherwise
+    */
+    public function duplicate(array $map, PluginFormcreatorQuestion $question = null) {
+      $newCondition = new static();
+      $questionFk   = PluginFormcreatorQuestion::getForeignKeyField();
+      $row = $this->fields;
+      unset($row['id']);
+      unset($row['uuid']);
+      $row['show_field'] = $map['questions'][$this->fields[$questionFk]];
+      $row = Toolbox::addslashes_deep($row);
+
+      return $newCondition->add($row);
+   }
 }
