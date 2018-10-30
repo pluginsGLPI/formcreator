@@ -1356,6 +1356,7 @@ class PluginFormcreatorForm extends CommonDBTM
                $row['uuid']);
          $row['show_field'] = $tab_questions[$row['show_field']];
          $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+         $row['show_value'] = Toolbox::addslashes_deep($row['show_value']);
          if (!$question_condition->add($row)) {
             return false;
          }
