@@ -1293,8 +1293,9 @@ class PluginFormcreatorForm extends CommonDBTM
 
       unset($form_datas['id'], $form_datas['uuid']);
 
-      $old_form_id             = $this->getID();
-      $new_form_id             = $this->add($form_datas);
+      $old_form_id = $this->getID();
+      $form_datas = Toolbox::addslashes_deep($form_datas);
+      $new_form_id = $this->add($form_datas);
       if ($new_form_id === false) {
          return false;
       }
