@@ -134,7 +134,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       echo "<tr><td colspan='2'>";
       echo "<em>" . __('All the Glpi external links which name starts with this prefix will be displayed in the helpdesk menu.', 'formcreator') . "</em>";
       echo "</td></tr>";
- 
+
       echo "<tr>";
       echo "<td >" . __('Prefix for icon name', 'Icon:') . "</td>";
       echo "<td>";
