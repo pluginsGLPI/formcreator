@@ -38,13 +38,17 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
 
       if ($canEdit) {
          $required = $this->fields['required'] ? ' required' : '';
-
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+            $value = '<p>' . str_replace("\r\n", '</p><p>', $this->getValue()) . '</p>';
+         } else {
+            $value = str_replace('\r\n', PHP_EOL, $this->getValue());
+         }
          echo '<textarea class="form-control"
                   rows="5"
                   name="formcreator_field_'.$this->fields['id'].'"
                   id="formcreator_field_'.$this->fields['id'].'"
                   onchange="formcreatorChangeValueOf('.$this->fields['id'].', this.value);">'
-                 .str_replace('\r\n', PHP_EOL, $this->getValue()).'</textarea>';
+                 .$value.'</textarea>';
          if ($CFG_GLPI["use_rich_text"]) {
             Html::initEditorSystem('formcreator_field_'.$this->fields['id']);
          }
@@ -62,7 +66,15 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function prepareQuestionInputForTarget($input) {
-      $input = str_replace("\r\n", '\r\n', addslashes($input));
+      global $CFG_GLPI;
+
+      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+         $input = str_replace("</p><p>", "\r\n", addslashes($input));
+         $input = str_replace("</p>", '', addslashes($input));
+         $input = str_replace("<p>", '', addslashes($input));
+      } else {
+         $input = str_replace("\r\n", '\r\n', addslashes($input));
+      }
       return $input;
    }
 
