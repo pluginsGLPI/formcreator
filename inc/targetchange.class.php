@@ -983,7 +983,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $data[$changeField] = $this->fields[$changeField];
          $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
-            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
+            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(true), $data[$changeField]);
          }
          if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             // replace HTML P tags with DIV tags
