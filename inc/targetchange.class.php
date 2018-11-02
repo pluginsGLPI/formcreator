@@ -989,16 +989,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
          $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
-            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
+            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(true), $data[$changeField]);
          }
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             // replace HTML P tags with DIV tags
-            $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+            $data[$changeField] = str_replace('\r\n', "\r\n", $data[$changeField]);
          }
 
          $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
 
          // This target does not supports rich text
+         $data[$changeField] = str_replace('<br>', '\r\n', $data[$changeField]);
          $data[$changeField] = strip_tags($data[$changeField], '<p>');
          $data[$changeField] = str_replace('<p>', '', $data[$changeField]);
          $data[$changeField] = str_replace('</p>', '\r\n', $data[$changeField]);
