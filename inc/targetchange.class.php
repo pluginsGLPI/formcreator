@@ -1070,7 +1070,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
             // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
             ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1086,7 +1086,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
             // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
             ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1123,7 +1123,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
                   $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_forms_answers_id` = " . (int) $formanswer->fields['id'] . "
                       AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
                   $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
