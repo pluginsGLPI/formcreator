@@ -72,8 +72,6 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          $input = str_replace("</p><p>", "\r\n", addslashes($input));
          $input = str_replace("</p>", '', addslashes($input));
          $input = str_replace("<p>", '', addslashes($input));
-      } else {
-         $input = str_replace("\r\n", '\r\n', addslashes($input));
       }
       return $input;
    }

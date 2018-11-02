@@ -1085,7 +1085,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $question_no = 0;
       $output      = '';
-      $eol = '\r\n';
+      $eol = "\r\n";
 
       if ($disableRichText === false
          && (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']))

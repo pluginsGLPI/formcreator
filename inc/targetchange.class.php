@@ -987,7 +987,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          } else {
             $data[$changeField] = $this->fields['comment'];
          }
-         $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
+         $data[$changeField] = str_replace('\r\n', "\r\n", $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
             $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(true), $data[$changeField]);
          }
