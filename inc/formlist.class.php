@@ -49,8 +49,6 @@ class PluginFormcreatorFormList extends CommonGLPI
    }
 
    static function getMenuContent() {
-      global $CFG_GLPI;
-
       $menu = parent::getMenuContent();
       $image = '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/check.png"
                   title="' . __('Forms waiting for validation', 'formcreator') . '"
@@ -65,5 +63,4 @@ class PluginFormcreatorFormList extends CommonGLPI
 
       return $menu;
    }
-
 }
