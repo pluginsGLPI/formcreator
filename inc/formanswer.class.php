@@ -1017,6 +1017,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
+
       return $this->saveAnswers($form, $input, $fields);
    }
 
@@ -1050,6 +1051,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
+
       return $this->saveAnswers($form, $input, $fields);
    }
 
