@@ -1110,7 +1110,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $question_no = 0;
       $output      = '';
-      $eol = '\n';
+      $eol = "\n";
 
       if ($richText) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
