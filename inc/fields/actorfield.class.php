@@ -248,6 +248,11 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
+      if (!isset($input[$key])) {
+         $this->value = [];
+         return true;
+      }
+
       if (!is_array($input[$key])) {
          return false;
       }

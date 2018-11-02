@@ -203,6 +203,97 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    }
 
    /**
+    * Undocumented function
+    *
+    * @param PluginFormcreatorForm_Answer $formanswer
+    * @param integer $requesters_id ID of the requester of the answers
+    * @return integer ID of the entity where the target must be generated
+    */
+   protected function getTargetEntity(PluginFormcreatorForm_Answer $formanswer, $requesters_id) {
+      global $DB;
+
+      $entityId = 0;
+      switch ($this->fields['destination_entity']) {
+         // Requester's entity
+         case 'current' :
+            $entityId = $formanswer->fields[Entity::getForeignKeyField()];
+            break;
+
+         case 'requester' :
+            $userObj = new User();
+            $userObj->getFromDB($requesters_id);
+            $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            break;
+
+         // Requester's first dynamic entity
+         case 'requester_dynamic_first' :
+            $order_entities = "`glpi_profiles`.`name` ASC";
+         case 'requester_dynamic_last' :
+            if (!isset($order_entities)) {
+               $order_entities = "`glpi_profiles`.`name` DESC";
+            }
+            $query_entities = "SELECT `glpi_profiles_users`.`entities_id`
+                      FROM `glpi_profiles_users`
+                      LEFT JOIN `glpi_profiles`
+                        ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
+                      WHERE `glpi_profiles_users`.`users_id` = $requesters_id
+                     ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
+            $res_entities = $DB->query($query_entities);
+            $data_entities = [];
+            while ($entity = $DB->fetch_array($res_entities)) {
+               $data_entities[] = $entity;
+            }
+            $first_entity = array_shift($data_entities);
+            $entityId = $first_entity[Entity::getForeignKeyField()];
+            break;
+
+         // Specific entity
+         case 'specific' :
+            $entityId = $this->fields['destination_entity_value'];
+            break;
+
+         // The form entity
+         case 'form' :
+            $entityId = $formanswer->getForm()->fields[Entity::getForeignKeyField()];
+            break;
+
+         // The validator entity
+         case 'validator' :
+            $userObj = new User();
+            $userObj->getFromDB($formanswer->fields['users_id_validator']);
+            $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            break;
+
+         // Default entity of a user from the answer of a user's type question
+         case 'user' :
+            $answer  = new PluginFormcreatorAnswer();
+            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+               ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
+            $user    = array_shift($found);
+            $user_id = $user['answer'];
+
+            if ($user_id > 0) {
+               $userObj = new User();
+               $userObj->getFromDB($user_id);
+               $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            }
+            break;
+
+         // Entity from the answer of an entity's type question
+         case 'entity' :
+            $answer  = new PluginFormcreatorAnswer();
+            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+                                    ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
+            $entity = array_shift($found);
+
+            $entityId = $entity['answer'];
+            break;
+      }
+
+      return $entityId;
+   }
+
+   /**
     * find all actors and prepare data for the ticket being created
     */
    protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formanswer) {

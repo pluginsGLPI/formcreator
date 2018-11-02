@@ -218,6 +218,44 @@ abstract class CommonTestCase extends CommonDBTestCase
       return $question;
    }
 
+   protected function getTargetTicket($input = []) {
+      if (!isset($input['name'])) {
+         $input['name'] = $this->getUniqueString();
+      }
+
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input[$formFk])) {
+         $input[$formFk] = $this->getForm();
+      }
+
+      $input['itemtype'] = \PluginFormcreatorTargetTicket::class;
+      $target = new \PluginFormcreatorTarget();
+      $target->add($input);
+      $targetTicket = new \PluginFormcreatorTargetTicket();
+      $targetTicket->getFromDB($target->fields['items_id']);
+
+      return $targetTicket;
+   }
+
+   protected function getTargetChange($input = []) {
+      if (!isset($input['name'])) {
+         $input['name'] = $this->getUniqueString();
+      }
+
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($inoput[$formFk])) {
+         $inoput[$formFk] = $this->getForm();
+      }
+
+      $input['itemtype'] = \PluginFormcreatorTargetChange::class;
+      $target = new \PluginFormcreatorTarget();
+      $target->add($input);
+      $targetChange = new \PluginFormcreatorTargetChange();
+      $targetChange->getFromDB($target->fields['items_id']);
+
+      return $targetChange;
+   }
+
    protected function _checkForm($form = []) {
       $this->assertArrayNotHasKey('id', $export);
       $this->assertArrayNotHasKey('plugin_formcreator_categories_id', $export);

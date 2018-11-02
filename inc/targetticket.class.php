@@ -923,19 +923,23 @@ EOS;
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      $target = new PluginFormcreatorTarget();
-      $target->getFromDBByCrit([
-         'itemtype' => self::class,
-         'items_id' => $this->getID()
-      ]);
-      if (!$target->isNewItem()) {
-         $target->update([
-            'id' => $target->getID(),
-            'name' => $input['name'],
+      if (isset($input['name'])) {
+         $target = new PluginFormcreatorTarget();
+         $target->getFromDBByCrit([
+            'itemtype' => self::class,
+            'items_id' => $this->getID()
          ]);
+         if (!$target->isNewItem()) {
+            $target->update([
+               'id' => $target->getID(),
+               'name' => $input['name'],
+            ]);
+         }
       }
-      $input['name'] = $input['title'];
-      unset($input['title']);
+      if (isset($input['title'])) {
+         $input['name'] = $input['title'];
+         unset($input['title']);
+      }
 
       return $input;
    }
@@ -1155,87 +1159,7 @@ EOS;
       }
 
       // Computation of the entity
-      switch ($this->fields['destination_entity']) {
-         // Requester's entity
-         case 'current' :
-            $data['entities_id'] = $formanswer->getField('entities_id');
-            break;
-
-         case 'requester' :
-            $userObj = new User();
-            $userObj->getFromDB($requesters_id);
-            $data['entities_id'] = $userObj->fields['entities_id'];
-            break;
-
-         // Requester's first dynamic entity
-         case 'requester_dynamic_first' :
-            $order_entities = "`glpi_profiles`.`name` ASC";
-         case 'requester_dynamic_last' :
-            if (!isset($order_entities)) {
-               $order_entities = "`glpi_profiles`.`name` DESC";
-            }
-            $query_entities = "SELECT `glpi_profiles_users`.`entities_id`
-                      FROM `glpi_profiles_users`
-                      LEFT JOIN `glpi_profiles`
-                        ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
-                      WHERE `glpi_profiles_users`.`users_id` = $requesters_id
-                     ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
-            $res_entities = $DB->query($query_entities);
-            $data_entities = [];
-            while ($entity = $DB->fetch_array($res_entities)) {
-               $data_entities[] = $entity;
-            }
-            $first_entity = array_shift($data_entities);
-            $data['entities_id'] = $first_entity['entities_id'];
-            break;
-
-         // Specific entity
-         case 'specific' :
-            $data['entities_id'] = $this->fields['destination_entity_value'];
-            break;
-
-         // The form entity
-         case 'form' :
-            $data['entities_id'] = $form->fields['entities_id'];
-            break;
-
-         // The validator entity
-         case 'validator' :
-            $userObj = new User();
-            $userObj->getFromDB($formanswer->fields['users_id_validator']);
-            $data['entities_id'] = $userObj->fields['entities_id'];
-            break;
-
-         // Default entity of a user from the answer of a user's type question
-         case 'user' :
-            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
-                                     ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
-            $user    = array_shift($found);
-            $user_id = $user['answer'];
-
-            if ($user_id > 0) {
-               $userObj = new User();
-               $userObj->getFromDB($user_id);
-               $data['entities_id'] = $userObj->fields['entities_id'];
-            } else {
-               $data['entities_id'] = 0;
-            }
-            break;
-
-         // Entity from the answer of an entity's type question
-         case 'entity' :
-            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
-                                    ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
-            $entity = array_shift($found);
-
-            $data['entities_id'] = $entity['answer'];
-            break;
-
-         // Requester current entity
-         default :
-            $data['entities_id'] = 0;
-            break;
-      }
+      $data['entities_id'] = $this->getTargetEntity($formanswer, $requesters_id);
 
       $data = $this->setTargetDueDate($data, $formanswer);
       $data = $this->setTargetUrgency($data, $formanswer);
