@@ -143,7 +143,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
-  `changetemplates_id` int(11) DEFAULT NULL,
   `content` longtext,
   `impactcontent` longtext,
   `controlistcontent` longtext,
@@ -164,8 +163,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `tag_specifics` varchar(255) NOT NULL,
   `category_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
   `category_question` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  INDEX `changetemplates_id` (`changetemplates_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (

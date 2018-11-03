@@ -32,6 +32,10 @@
 function plugin_formcreator_update_2_7(Migration $migration) {
    global $DB;
 
+   // Changes don't support templates, remove the relation
+   $table = 'glpi_plugin_formcreator_targetchanges';
+   $migration->dropField($table, 'changetemplates_id');
+
    // Migrate regex question parameters
    $table = 'glpi_plugin_formcreator_questions';
    if ($DB->fieldExists($table, 'regex')) {
