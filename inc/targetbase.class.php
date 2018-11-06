@@ -1123,4 +1123,33 @@ JAVASCRIPT;
 
       return $data;
    }
+
+   public function prepareInputForUpdate($input) {
+      // generate a unique id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      if (isset($input['name'])) {
+         $target = new PluginFormcreatorTarget();
+         $target->getFromDBByCrit([
+            'itemtype' => self::class,
+            'items_id' => $this->getID()
+         ]);
+         if (!$target->isNewItem()) {
+            $target->update([
+               'id' => $target->getID(),
+               'name' => $input['name'],
+            ]);
+         }
+      }
+
+      if (isset($input['title'])) {
+         $input['name'] = $input['title'];
+         unset($input['title']);
+      }
+
+      return $input;
+   }
 }
