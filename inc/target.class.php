@@ -142,6 +142,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          return [];
       }
       // - field type is required
+      // TODO: remove this if() and use the default case of the switch structure
       if (isset($input['itemtype'])) {
          if (empty($input['itemtype'])) {
             Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
@@ -201,6 +202,10 @@ class PluginFormcreatorTarget extends CommonDBTM
                   ]);
                }
                break;
+
+            default:
+               Session::addMessageAfterRedirect(__('Bad type of target', 'formcreator'), false, ERROR);
+               return [];
          }
       }
 

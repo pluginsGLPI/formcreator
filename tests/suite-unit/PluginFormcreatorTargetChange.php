@@ -32,9 +32,9 @@
 
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy;
+use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetChangeDummy;
 
-class PluginFormcreatorTargetTicket extends CommonTestCase {
+class PluginFormcreatorTargetChange extends CommonTestCase {
 
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
@@ -46,84 +46,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    /**
-    * Tests that deleting a target ticket of a form also deletes relations between tickets and generated tickets
-    *
-    * @covers PluginFormcreatorTargetTicket::pre_deleteItem
-    */
-   public function testDeleteLinkedTickets() {
-      global $CFG_GLPI;
-
-      // Disable notification to avoid output to console
-      $CFG_GLPI['use_notifications'] = '0';
-
-      // setup the test
-      $ticket = new \Ticket();
-      $ticket->add([
-         'name'               => 'ticket',
-         'content'            => 'help !',
-         'users_id_recipient' => '0',
-      ]);
-      $this->boolean($ticket->isNewItem())->isFalse();
-
-      $form = new \PluginFormcreatorForm();
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      $form->add([
-         'name' => 'a form'
-      ]);
-      $this->boolean($form->isNewItem())->isFalse();
-
-      $target_1 = new \PluginFormcreatorTarget();
-      $target_1->add([
-         'name'      => 'target 1',
-         $formFk     => $form->getID(),
-         'itemtype'  => \PluginFormcreatorTargetTicket::class,
-      ]);
-      $this->boolean($target_1->isNewItem())->isFalse();
-
-      $target_2 = new \PluginFormcreatorTarget();
-      $target_2->add([
-         'name'      => 'target 2',
-         $formFk     => $form->getID(),
-         'itemtype'  => \PluginFormcreatorTargetTicket::class,
-      ]);
-      $this->boolean($target_2->isNewItem())->isFalse();
-
-      $targetTicket_1 = new \PluginFormcreatorTargetTicket();
-      $targetTicket_1->getFromDB($target_1->getField('items_id'));
-      $this->boolean($targetTicket_1->isNewItem())->isFalse();
-
-      $targetTicket_2 = new \PluginFormcreatorTargetTicket();
-      $targetTicket_2->getFromDB($target_2->getField('items_id'));
-      $this->boolean($targetTicket_2->isNewItem())->isFalse();
-
-      $targetTicketFk = \PluginFormcreatorTargetTicket::getForeignKeyField();
-      $item_targetticket_1 = new \PluginFormcreatorItem_TargetTicket();
-      $item_targetticket_1->add([
-         $targetTicketFk   => $targetTicket_1->getID(),
-         'link'            => \Ticket_Ticket::LINK_TO,
-         'itemtype'        => \Ticket::class,
-         'items_id'        => $ticket->getID(),
-      ]);
-      $this->boolean($item_targetticket_1->isNewItem())->isFalse();
-
-      $item_targetticket_2 = new \PluginFormcreatorItem_TargetTicket();
-      $item_targetticket_2->add([
-         $targetTicketFk   => $targetTicket_1->getID(),
-         'link'            => \Ticket_Ticket::LINK_TO,
-         'itemtype'        => \PluginFormcreatorTargetTicket::class,
-         'items_id'        => $targetTicket_2->getID(),
-      ]);
-      $this->boolean($item_targetticket_2->isNewItem())->isFalse();
-
-      // delete the target ticket
-      $target_1->delete(['id' => $target_1->getID()]);
-
-      // Check the linked ticket or target ticket are deleted
-      $this->boolean($item_targetticket_1->getFromDB($item_targetticket_1->getID()))->isFalse();
-      $this->boolean($item_targetticket_2->getFromDB($item_targetticket_2->getID()))->isFalse();
-   }
-
-   /**
     * @engine inline
     *
     * @return void
@@ -131,13 +53,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function  testGetTargetEntity() {
       $form = $this->getForm();
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      $targetTicket = $this->getTargetTicket([
+      $targetChange = $this->getTargetChange([
          $formFk => $form->getID(),
       ]);
 
       // Use a dummy class to access protected methods
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $instance->getFromDB($targetTicket->getID());
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $instance->getFromDB($targetChange->getID());
 
       // Test current entity of the requester
       $entity = new \Entity();
@@ -145,13 +67,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString()
       ]);
-      $targetTicket->update([
-         'id' => $targetTicket->getID(),
+      $targetChange->update([
+         'id' => $targetChange->getID(),
          '_skip_checks' => true,
          'destination_entity' => 'current',
          'destination_entity_value' => '0',
       ]);
-      $instance->getFromDB($targetTicket->getID());
+      $instance->getFromDB($targetChange->getID());
       $formAnswer = new \PluginFormcreatorForm_Answer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
@@ -163,13 +85,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo($entityId);
 
       // Test requester's entity
-      $targetTicket->update([
-         'id' => $targetTicket->getID(),
+      $targetChange->update([
+         'id' => $targetChange->getID(),
          '_skip_checks' => true,
          'destination_entity' => 'requester',
          'destination_entity_value' => '0',
       ]);
-      $instance->getFromDB($targetTicket->getID());
+      $instance->getFromDB($targetChange->getID());
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
@@ -180,13 +102,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo(0);
 
       // Test requester's first entity (alphanumeric order)
-      $targetTicket->update([
-         'id' => $targetTicket->getID(),
+      $targetChange->update([
+         'id' => $targetChange->getID(),
          '_skip_checks' => true,
          'destination_entity' => 'requester_dynamic_first',
          'destination_entity_value' => '0',
       ]);
-      $instance->getFromDB($targetTicket->getID());
+      $instance->getFromDB($targetChange->getID());
       $entityId = $entity->import([
          'entities_id' => '0',
          'name' => $this->getUniqueString(),
@@ -216,13 +138,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $output)->isEqualTo($entityId);
 
       // Test requester's last entity (alphanumeric order)
-      $targetTicket->update([
-         'id' => $targetTicket->getID(),
+      $targetChange->update([
+         'id' => $targetChange->getID(),
          '_skip_checks' => true,
          'destination_entity' => 'requester_dynamic_last',
          'destination_entity_value' => '0',
       ]);
-      $instance->getFromDB($targetTicket->getID());
+      $instance->getFromDB($targetChange->getID());
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
@@ -238,13 +160,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString(),
       ]);
-      $targetTicket->update([
-         'id' => $targetTicket->getID(),
+      $targetChange->update([
+         'id' => $targetChange->getID(),
          '_skip_checks' => true,
          'destination_entity' => 'specific',
          'destination_entity_value' => "$entityId",
       ]);
-      $instance->getFromDB($targetTicket->getID());
+      $instance->getFromDB($targetChange->getID());
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -258,8 +180,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString(),
       ]);
-      $targetTicket->update([
-         'id' => $targetTicket->getID(),
+      $targetChange->update([
+         'id' => $targetChange->getID(),
          '_skip_checks' => true,
          'destination_entity' => 'form',
          'destination_entity_value' => '0',
@@ -268,7 +190,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'id' => $form->getID(),
          'entities_id' => $entityId,
       ]);
-      $instance->getFromDB($targetTicket->getID());
+      $instance->getFromDB($targetChange->getID());
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,

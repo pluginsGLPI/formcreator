@@ -124,7 +124,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
       return [
          [
             'value'     => null,
-            'expected'  => '',
+            'expected'  => json_encode([]),
          ],
          [
             'value'     => [],
