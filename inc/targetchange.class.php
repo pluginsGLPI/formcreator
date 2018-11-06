@@ -892,24 +892,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
-      if (isset($input['name'])) {
-         $target = new PluginFormcreatorTarget();
-         $target->getFromDBByCrit([
-            'itemtype' => self::class,
-            'items_id' => $this->getID()
-         ]);
-         if (!$target->isNewItem()) {
-            $target->update([
-               'id' => $target->getID(),
-               'name' => $input['name'],
-            ]);
-         }
-      }
-      if (isset($input['title'])) {
-         $input['name'] = $input['title'];
-         unset($input['title']);
-      }
-      return $input;
+      return parent::prepareInputForUpdate($input);
    }
 
    /**
