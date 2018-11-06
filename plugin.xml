@@ -5,12 +5,51 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
-         <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.</fr>
-         <en>Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.</en>
+         <cs>Vytváření formulářů je zásuvný modul který umožňuje vytváření vlastních, snadno přístupných formulářů pro uživatele, když chtějí vytvořit jeden nebo více požadavků v GLPI.</cs>
+         <en>Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.</en>
+         <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.</fr>
       </short>
       <long>
+         <cs>
+Vytváření formulářů je zásuvný modul který umožňuje vytváření vlastních, snadno přístupných formulářů pro uživatele, když chtějí vytvořit jeden nebo více požadavků v GLPI.
+
+Funkce
+--------
+1. Přímý přístup k samoobslužným formulářům v hlavní nabídce
+2. Zvýrazňování formulářů v domovských stránkách
+3. Řízený přístup k formulářům: veřejný přístup, přístup identifikovanému uživateli, přístup jen některým uživatelům
+4. Jednoduché a přizpůsobitelné formuláře
+5. Formuláře uspořádané podle kategorií, entit a jazyků.
+6. Dotazy v libovolné formě: textové oblasti, seznamy, LDAP, soubory, atd.
+7. Dotazy uspořádané v sekcích. Volba pořadí zobrazení.
+8. Možnost zobrazit dotaz na základě určitých kritérií (odpověď na další otázku)
+9. Podrobná kontrola odpovědí z formulářů: text, čísla, délka v kolonkách, e-mail, povinné kolonky, regulární výrazy, atd.
+10. Vytváření jednoho nebo více požadavků nebo změn na základě odpovědí ve formuláři
+11. Přidání popisu k jednotlivým kolonkám, sekcím, formulářům, entitám nebo jazykům.
+12. Formátování sady požadavku: zobrazené odpovědi na dotazy, šablony požadavků.
+13. Náhled vytvořeného formuláře přímo v nastavení.
+         </cs>
+         <en>
+Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.
+
+Features
+--------
+1. Direct access to forms self-service interface in main menu
+2. Highlighting forms in homepages
+3. Access to forms controlled: public access, identified user access, restricted access to some profiles
+4. Simple and customizable forms
+5. Forms organized by categories, entities and languages.
+6. Questions of any type of presentation: Textareas, lists, LDAP, files, etc.
+7. Questions organised in sections. Choice of the display order.
+8. Possibility to display a question based on certain criteria (response to a further question)
+9. A sharp control on responses from forms: text, numbers, size of fields, email, mandatory fields, regular expressions, etc.
+10. Creation of one or more tickets or changes from form answers
+11. Adding a description per fields, per sections, per forms, entities or languages.
+12. Formatting the ticket set: answers to questions displayed, tickets templates.
+13. Preview form created directly in the configuration.
+         </en>
          <fr>
-Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.
+Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.
 
 Fonctionnalités
 ---------------
@@ -29,25 +68,6 @@ Fonctionnalités
 12. Formatage du/des ticket(s) créé(s) : réponses aux questions à afficher, gabarits de tickets.
 13. Prévisualisation du formulaire créé directement dans la configuration.
          </fr>
-         <en>
-Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.
-
-Features
---------
-1. Direct access to forms self-service interface in main menu
-2. Highlighting forms in homepages
-3. Access to forms controlled: public access, identified user access, restricted access to some profiles
-4. Simple and customizable forms
-5. Forms organized by categories, entities and languages.
-6. Questions of any type of presentation: Textareas, lists, LDAP, files, etc.
-7. Questions organised in sections. Choice of the display order.
-8. Possibility to display a question based on certain criteria (response to a further question)
-9. A sharp control on responses from forms: text, numbers, size of fields, email, mandatory fields, regular expressions, etc.
-10. Creation of one or more tickets or changes from form answers
-11. Adding a description per fields, per sections, per forms, entities or languages.
-12. Formatting the ticket set: answers to questions displayed, tickets templates.
-13. Preview form created directly in the configuration.
-         </en>
       </long>
    </description>
    <homepage>https://pluginsglpi.github.io/formcreator/</homepage>
@@ -314,12 +334,6 @@ Features
          <tag>configuration</tag>
          <tag>formulaire</tag>
       </fr>
-      <en>
-         <tag>helpdesk</tag>
-         <tag>data</tag>
-         <tag>setup</tag>
-         <tag>forms</tag>
-      </en>
    </tags>
    <screenshots>
       <screenshot>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/screenshot.png</screenshot>
