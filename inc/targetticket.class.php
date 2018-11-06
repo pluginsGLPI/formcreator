@@ -98,7 +98,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"></textarea</td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '" /></td>';
       echo '</tr>';
 
       echo '</table>';
@@ -110,7 +110,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea</td>';
+      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"/></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
@@ -924,9 +924,16 @@ EOS;
       }
 
       $target = new PluginFormcreatorTarget();
-      $found  = $target->find('items_id = ' . $this->getID());
-      $found  = array_shift($found);
-      $target->update(['id' => $found['id'], 'name' => $input['name']]);
+      $target->getFromDBByCrit([
+         'itemtype' => self::class,
+         'items_id' => $this->getID()
+      ]);
+      if (!$target->isNewItem()) {
+         $target->update([
+            'id' => $target->getID(),
+            'name' => $input['name'],
+         ]);
+      }
       $input['name'] = $input['title'];
       unset($input['title']);
 
@@ -1106,10 +1113,11 @@ EOS;
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $data['name'] = addslashes($this->fields['name']);
+      $data['name'] = $this->fields['name'];
       $data['name'] = $this->parseTags($data['name'], $formanswer);
+      $data['name'] = Toolbox::addslashes_deep($data['name']);
 
-      $data['content'] = addslashes($this->fields['comment']);
+      $data['content'] = $this->fields['comment'];
       $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
@@ -1121,8 +1129,9 @@ EOS;
 
       $data['content'] = $this->parseTags($data['content'], $formanswer);
       if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-         $data['content'] = htmlentities($data['content']);
+         $data['content'] = htmlentities($data['content'], ENT_NOQUOTES);
       }
+      $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
@@ -1365,38 +1374,6 @@ EOS;
       }
       if ($category !== null) {
          $data['itilcategories_id'] = $category;
-      }
-
-      return $data;
-   }
-
-   protected function setTargetDueDate($data, $formanswer) {
-      $answer  = new PluginFormcreatorAnswer();
-      if ($this->fields['due_date_question'] !== null) {
-         $found  = $answer->find('`plugin_formcreator_forms_answers_id` = '.$formanswer->fields['id'].
-               ' AND `plugin_formcreator_questions_id` = '.$this->fields['due_date_question']);
-         $date   = array_shift($found);
-      } else {
-         $date = null;
-      }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
-
-      switch ($this->fields['due_date_rule']) {
-         case 'answer':
-            $due_date = $date['answer'];
-            break;
-         case 'ticket':
-            $due_date = date('Y-m-d H:i:s', strtotime($str));
-            break;
-         case 'calcul':
-            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
-            break;
-         default:
-            $due_date = null;
-            break;
-      }
-      if (!is_null($due_date)) {
-         $data['time_to_resolve'] = $due_date;
       }
 
       return $data;

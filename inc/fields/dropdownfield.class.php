@@ -80,6 +80,10 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("select2-selecting", function(e) {
                         formcreatorChangeValueOf (' . $this->fields['id']. ', e.val);
                      });
+                     var field = $("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '");
+                     field.on("change", function(e) {
+                        formcreatorChangeValueOf (' . $this->fields['id']. ', e.target.value);
+                     });
                   });
                </script>';
       } else {

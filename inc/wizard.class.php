@@ -241,53 +241,45 @@ class PluginFormcreatorWizard {
       echo "<span id='formcreator_servicecatalogue_ticket_summary'>";
       $status_count = PluginFormcreatorIssue::getTicketSummary();
 
-      if (count($status_count[Ticket::INCOMING]) > 0) {
-         echo "<span class='status status_incoming'>
-               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getIncomingCriteria(), '&amp;')."'>
-               <span class='status_number'>".
-               $status_count[Ticket::INCOMING]."
-               </span>
-               <label class='status_label'>".__('Processing')."</label>
-               </a>
-               </span>";
-      }
+      echo "<span class='status status_incoming'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                     Toolbox::append_params(PluginFormcreatorIssue::getIncomingCriteria(), '&amp;')."'>
+            <span class='status_number'>".
+            $status_count[Ticket::INCOMING]."
+            </span>
+            <label class='status_label'>".__('Processing')."</label>
+            </a>
+            </span>";
 
-      if (count($status_count[Ticket::WAITING]) > 0) {
-         echo "<span class='status status_waiting'>
-               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getWaitingCriteria(), '&amp;')."'>
-               <span class='status_number'>".
-               $status_count[Ticket::WAITING]."
-               </span>
-               <label class='status_label'>".__('Pending')."</label>
-               </a>
-               </span>";
-      }
+      echo "<span class='status status_waiting'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                     Toolbox::append_params(PluginFormcreatorIssue::getWaitingCriteria(), '&amp;')."'>
+            <span class='status_number'>".
+            $status_count[Ticket::WAITING]."
+            </span>
+            <label class='status_label'>".__('Pending')."</label>
+            </a>
+            </span>";
 
-      if (count($status_count['to_validate']) > 0) {
-         echo "<span class='status status_validate'>
-               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(), '&amp;')."'>
-               <span class='status_number'>".
-               $status_count['to_validate']."
-               </span>
-               <label class='status_label'>".__('To validate', 'formcreator')."</label>
-               </a>
-               </span>";
-      }
+      echo "<span class='status status_validate'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                     Toolbox::append_params(PluginFormcreatorIssue::getValidateCriteria(), '&amp;')."'>
+            <span class='status_number'>".
+            $status_count['to_validate']."
+            </span>
+            <label class='status_label'>".__('To validate', 'formcreator')."</label>
+            </a>
+            </span>";
 
-      if (count($status_count[Ticket::SOLVED]) > 0) {
-         echo "<span class='status status_solved'>
-               <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                       Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(), '&amp;')."'>
-               <span class='status_number'>".
-               $status_count[Ticket::SOLVED]."
-               </span>
-               <label class='status_label'>".__('Closed', 'formcreator')."</label>
-               </a>
-               </span>";
-      }
+      echo "<span class='status status_solved'>
+            <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
+                     Toolbox::append_params(PluginFormcreatorIssue::getSolvedCriteria(), '&amp;')."'>
+            <span class='status_number'>".
+            $status_count[Ticket::SOLVED]."
+            </span>
+            <label class='status_label'>".__('Closed', 'formcreator')."</label>
+            </a>
+            </span>";
 
       echo '</span>'; // formcreator_servicecatalogue_ticket_summary
    }

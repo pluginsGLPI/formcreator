@@ -61,7 +61,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          echo '<select multiple
             name="formcreator_field_' . $this->fields['id'] . '[]"
             id="formcreator_field_' . $this->fields['id']. '"
-            value="" />';
+            value=""></select>';
          echo Html::scriptBlock('$(function() {
             $("#formcreator_field_' . $this->fields['id']. '").select2({
                tokenSeparators: [",", ";"],

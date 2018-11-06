@@ -299,7 +299,9 @@ function showTiles(tiles, defaultForms) {
    //Display tiles
    $('#plugin_formcreator_wizard_forms').empty();
    $('#plugin_formcreator_wizard_forms').prepend(html);
-   $('#plugin_formcreator_formlist').masonry();
+   $('#plugin_formcreator_formlist').masonry({
+      horizontalOrder: true
+   });
 }
 
 function updateWizardFormsView(categoryId) {
@@ -313,7 +315,9 @@ function updateWizardFormsView(categoryId) {
          html = '<p><?php echo __('An error occured while querying forms', 'formcreator')?></p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
-         $('#plugin_formcreator_formlist').masonry();
+         $('#plugin_formcreator_formlist').masonry({
+            horizontalOrder: true
+         });
       }
    );
 }

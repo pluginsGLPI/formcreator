@@ -1293,8 +1293,9 @@ class PluginFormcreatorForm extends CommonDBTM
 
       unset($form_datas['id'], $form_datas['uuid']);
 
-      $old_form_id             = $this->getID();
-      $new_form_id             = $this->add($form_datas);
+      $old_form_id = $this->getID();
+      $form_datas = Toolbox::addslashes_deep($form_datas);
+      $new_form_id = $this->add($form_datas);
       if ($new_form_id === false) {
          return false;
       }
@@ -1327,6 +1328,7 @@ class PluginFormcreatorForm extends CommonDBTM
          unset($sectionRow['id'],
                $sectionRow['uuid']);
          $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
+         $sectionRow = Toolbox::addslashes_deep($sectionRow);
          if (!$new_sections_id = $form_section->add($sectionRow)) {
             return false;
          }
@@ -1337,6 +1339,7 @@ class PluginFormcreatorForm extends CommonDBTM
             unset($questionRow['id'],
                   $questionRow['uuid']);
             $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
+            $questionRow = Toolbox::addslashes_deep($questionRow);
             if (!$new_questions_id = $section_question->add($questionRow)) {
                return false;
             }
@@ -1354,6 +1357,7 @@ class PluginFormcreatorForm extends CommonDBTM
                $row['uuid']);
          $row['show_field'] = $tab_questions[$row['show_field']];
          $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+         $row['show_value'] = Toolbox::addslashes_deep($row['show_value']);
          if (!$question_condition->add($row)) {
             return false;
          }
@@ -1510,7 +1514,7 @@ class PluginFormcreatorForm extends CommonDBTM
 
             case PluginFormcreatorTargetChange::class:
                // Drop default actors
-               $target_ticket_actor->deleteByCriteria([
+               $target_change_actor->deleteByCriteria([
                   'plugin_formcreator_targetchanges_id' => $new_target_item_id
                ]);
 

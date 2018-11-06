@@ -394,7 +394,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'table'              => $this::getTable(),
          'field'              => 'comment',
          'name'               => __('Comment'),
-         'datatype'           => 'string',
+         'datatype'           => 'text',
          'massiveaction'      => false
       ];
 
@@ -423,6 +423,46 @@ class PluginFormcreatorIssue extends CommonDBTM {
                ],
                '1'                  => [
                   'table'              => 'glpi_ticketvalidations'
+               ]
+            ]
+         ]
+      ];
+
+      $tab[] = [
+         'id'                 => '14',
+         'table'              => User::getTable(),
+         'field'              => 'name',
+         'linkfield'          => 'users_id',
+         'name'               => __('Technician'),
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => false,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'beforejoin'         => [
+               'table'              => Ticket_User::getTable(),
+               'linkfield'          => 'original_id',
+               'joinparams'         => [
+                  'jointype'           => 'empty',
+               ]
+            ]
+         ]
+      ];
+
+      $tab[] = [
+         'id'                 => '15',
+         'table'              => Group::getTable(),
+         'field'              => 'name',
+         'linkfield'          => 'groups_id',
+         'name'               => __('Technician group'),
+         'datatype'           => 'dropdown',
+         'forcegroupby'       => false,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'beforejoin'         => [
+               'table'              => Group_Ticket::getTable(),
+               'linkfield'          => 'original_id',
+               'joinparams'         => [
+                  'jointype'           => 'empty',
                ]
             ]
          ]

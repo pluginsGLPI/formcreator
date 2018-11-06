@@ -1,3 +1,66 @@
+<a name="2.6.5"></a>
+## [2.6.5](https://github.com-btry/pluginsglpi/formcreator/compare/2.6.3...2.6.5) (2018-11-06)
+
+
+### Bug Fixes
+
+* **actorfield:** compatibility with GLPI 9.3 ([#1034](https://github.com-btry/pluginsglpi/formcreator/issues/1034)) ([3b2051f](https://github.com-btry/pluginsglpi/formcreator/commit/3b2051f))
+* **actors:** fix broken select tag ([82509e8](https://github.com-btry/pluginsglpi/formcreator/commit/82509e8))
+* **actors:** fix edit of an existing question of type actors ([f1606af](https://github.com-btry/pluginsglpi/formcreator/commit/f1606af))
+* **actors:** use first / last name in generataed tickets ([1455708](https://github.com-btry/pluginsglpi/formcreator/commit/1455708)), closes [#1016](https://github.com-btry/pluginsglpi/formcreator/issues/1016)
+* **build:** check consistency of manifest XML file ([fb06543](https://github.com-btry/pluginsglpi/formcreator/commit/fb06543))
+* **checkboxedfield:** single quote rendering ([888b13f](https://github.com-btry/pluginsglpi/formcreator/commit/888b13f))
+* **date:** format dates for target generation ([10c70fc](https://github.com-btry/pluginsglpi/formcreator/commit/10c70fc)), closes [#1050](https://github.com-btry/pluginsglpi/formcreator/issues/1050)
+* **description:** cannot apply hide/show condition on descriptions ([8693a6a](https://github.com-btry/pluginsglpi/formcreator/commit/8693a6a))
+* **filefield:** SQL single quote escaping ([e0b9bd6](https://github.com-btry/pluginsglpi/formcreator/commit/e0b9bd6))
+* **form:** access to form not properly checked ([#1047](https://github.com-btry/pluginsglpi/formcreator/issues/1047)) ([1a40790](https://github.com-btry/pluginsglpi/formcreator/commit/1a40790))
+* **form:** check access to form only by entity ([c0973cb](https://github.com-btry/pluginsglpi/formcreator/commit/c0973cb))
+* **form:** duplicate may fail ([a29f806](https://github.com-btry/pluginsglpi/formcreator/commit/a29f806))
+* **form:** duplicate may fail ([b9b2547](https://github.com-btry/pluginsglpi/formcreator/commit/b9b2547))
+* **form:** duplicate with quote ([ec6460f](https://github.com-btry/pluginsglpi/formcreator/commit/ec6460f))
+* **form:** forbid purge of a form when there are answers ([f84b353](https://github.com-btry/pluginsglpi/formcreator/commit/f84b353))
+* **form:** import restrictions by profile was broken ([34ae3bf](https://github.com-btry/pluginsglpi/formcreator/commit/34ae3bf)), closes [#722](https://github.com-btry/pluginsglpi/formcreator/issues/722)
+* **form_answer:** allow view of form if the user has update entity right ([7dad4cb](https://github.com-btry/pluginsglpi/formcreator/commit/7dad4cb))
+* **form_answer:** fix compatibility with GLPI 9.4 ([001a82f](https://github.com-btry/pluginsglpi/formcreator/commit/001a82f))
+* **form_answer:** fix fatal error ([c292981](https://github.com-btry/pluginsglpi/formcreator/commit/c292981))
+* **form_profile:** UUID was not generated ([44f231b](https://github.com-btry/pluginsglpi/formcreator/commit/44f231b))
+* **glpiselect:** compatibility with GLPI 9.3 ([a9aea5a](https://github.com-btry/pluginsglpi/formcreator/commit/a9aea5a))
+* **install:** bad logic for upgrade steps ([c324e1c](https://github.com-btry/pluginsglpi/formcreator/commit/c324e1c))
+* **issue:** avoid truncate of comment ([8a98b0d](https://github.com-btry/pluginsglpi/formcreator/commit/8a98b0d))
+* **issue:** more consistent status display for status of issues ([2802a78](https://github.com-btry/pluginsglpi/formcreator/commit/2802a78))
+* **issue:** php warnings in service catalog ([0754b5f](https://github.com-btry/pluginsglpi/formcreator/commit/0754b5f))
+* **plugin:** update compatibility ([57c607f](https://github.com-btry/pluginsglpi/formcreator/commit/57c607f))
+* **question:** description displayed in italic ([e572b43](https://github.com-btry/pluginsglpi/formcreator/commit/e572b43))
+* **question:** fix loss of description ([4b39371](https://github.com-btry/pluginsglpi/formcreator/commit/4b39371))
+* **question_condition:** fix creation of conditions ([135d6c8](https://github.com-btry/pluginsglpi/formcreator/commit/135d6c8))
+* **target:** actors not inserted on tarrgets ([18b5662](https://github.com-btry/pluginsglpi/formcreator/commit/18b5662))
+* **target:** continue keyword in switch ([576c891](https://github.com-btry/pluginsglpi/formcreator/commit/576c891))
+* **target:** loading of instance from DB ([1d314de](https://github.com-btry/pluginsglpi/formcreator/commit/1d314de))
+* **target:** unescaped quote ([6afa05b](https://github.com-btry/pluginsglpi/formcreator/commit/6afa05b))
+* **targetbase:** fix double quote renderiing in targets ([40811d8](https://github.com-btry/pluginsglpi/formcreator/commit/40811d8))
+* **targetchange:** apply fix [#267](https://github.com-btry/pluginsglpi/formcreator/issues/267) to target changes ([3eafa29](https://github.com-btry/pluginsglpi/formcreator/commit/3eafa29))
+* **targetchange:** changes  does not supports rich text ([8d7bad0](https://github.com-btry/pluginsglpi/formcreator/commit/8d7bad0)), closes [#1139](https://github.com-btry/pluginsglpi/formcreator/issues/1139)
+* **targetchange:** duplication leaves default actors ([854191d](https://github.com-btry/pluginsglpi/formcreator/commit/854191d))
+* **targetchange:** entity from a question ([40cc7eb](https://github.com-btry/pluginsglpi/formcreator/commit/40cc7eb))
+* **targetchange:** fix creation if relation between change and form answer ([8259899](https://github.com-btry/pluginsglpi/formcreator/commit/8259899))
+* compatibility with GLPI 9.4 ([6dfaae9](https://github.com-btry/pluginsglpi/formcreator/commit/6dfaae9)), closes [#1022](https://github.com-btry/pluginsglpi/formcreator/issues/1022)
+* **targetchange:** rendering with rich text ([e842b0f](https://github.com-btry/pluginsglpi/formcreator/commit/e842b0f))
+* **targetchange:** rich text does not exists for changes ([e39028b](https://github.com-btry/pluginsglpi/formcreator/commit/e39028b))
+* **targetchange:** time to resolve not populated when required ([b1240d6](https://github.com-btry/pluginsglpi/formcreator/commit/b1240d6))
+* fix plugin manifest xml file ([7608920](https://github.com-btry/pluginsglpi/formcreator/commit/7608920))
+* **targetchange:** title edition fails ([32eb4db](https://github.com-btry/pluginsglpi/formcreator/commit/32eb4db))
+* **targetticket:** fix HTML ([00f81fc](https://github.com-btry/pluginsglpi/formcreator/commit/00f81fc))
+* **textarea:** rendering without rich text mode ([b41a9b2](https://github.com-btry/pluginsglpi/formcreator/commit/b41a9b2))
+* **textareafield:**  rendering for rich text ([8735189](https://github.com-btry/pluginsglpi/formcreator/commit/8735189))
+* **wizard:** warnings ([6a355f9](https://github.com-btry/pluginsglpi/formcreator/commit/6a355f9)), closes [#1076](https://github.com-btry/pluginsglpi/formcreator/issues/1076)
+
+
+### Features
+
+* **core:** add search option to get assign group / tech to ticket ([5f1eb35](https://github.com-btry/pluginsglpi/formcreator/commit/5f1eb35))
+
+
+
 <a name="2.6.4"></a>
 ## [2.6.4](https://github.com-btry/pluginsGLPI/formcreator/compare/2.6.3...2.6.4) (2018-08-13)
 

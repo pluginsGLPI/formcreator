@@ -196,7 +196,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=[]) {
+   public function showForm($options = []) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -218,7 +218,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"></textarea</td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"/></td>';
       echo '</tr>';
 
       echo '</table>';
@@ -230,16 +230,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea</td>';
+      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('comment');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -247,9 +244,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Impacts') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="impactcontent" style="width:700px;" rows="15">' . $this->fields['impactcontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('impactcontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -257,9 +251,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Control list') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="controlistcontent" style="width:700px;" rows="15">' . $this->fields['controlistcontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('controlistcontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -267,9 +258,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="rolloutplancontent" style="width:700px;" rows="15">' . $this->fields['rolloutplancontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('rolloutplancontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -277,9 +265,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="backoutplancontent" style="width:700px;" rows="15">' . $this->fields['backoutplancontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('backoutplancontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -287,9 +272,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Checklist') . ' </strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="checklistcontent" style="width:700px;" rows="15">' . $this->fields['checklistcontent'] . '</textarea>';
-      if ($CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('checklistcontent');
-      }
       echo '</td>';
       echo '</tr>';
 
@@ -858,7 +840,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             return [];
          }
 
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             $input['comment'] = Html::entity_decode_deep($input['comment']);
          }
 
@@ -909,6 +891,20 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                                        : '';
          }
       }
+
+      $target = new PluginFormcreatorTarget();
+      $target->getFromDBByCrit([
+         'itemtype' => self::class,
+         'items_id' => $this->getID()
+      ]);
+      if (!$target->isNewItem()) {
+         $target->update([
+            'id' => $target->getID(),
+            'name' => $input['name'],
+         ]);
+      }
+      $input['name'] = $input['title'];
+      unset($input['title']);
 
       return $input;
    }
@@ -991,17 +987,23 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          } else {
             $data[$changeField] = $this->fields['comment'];
          }
-         $data[$changeField] = addslashes($data[$changeField]);
-         $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
+         $data[$changeField] = str_replace('\r\n', "\r\n", $data[$changeField]);
          if (strpos($data[$changeField], '##FULLFORM##') !== false) {
-            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
+            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(true), $data[$changeField]);
          }
-         if ($CFG_GLPI['use_rich_text']) {
+         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
             // replace HTML P tags with DIV tags
-            $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
+            $data[$changeField] = str_replace('\r\n', "\r\n", $data[$changeField]);
          }
 
          $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
+
+         // This target does not supports rich text
+         $data[$changeField] = str_replace('<br>', '\r\n', $data[$changeField]);
+         $data[$changeField] = strip_tags($data[$changeField], '<p>');
+         $data[$changeField] = str_replace('<p>', '', $data[$changeField]);
+         $data[$changeField] = str_replace('</p>', '\r\n', $data[$changeField]);
+         $data[$changeField] = Toolbox::addslashes_deep($data[$changeField]);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
@@ -1025,6 +1027,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          // Requester's entity
          case 'current' :
             $data['entities_id'] = $_SESSION['glpiactive_entity'];
+            break;
+
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
@@ -1072,7 +1076,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
             // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
             ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1088,7 +1092,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
             // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_formanwers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
             ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1101,44 +1105,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             break;
       }
 
-      // Define due date
-      if ($this->fields['due_date_question'] !== null) {
-         $request = [
-            'FROM' => $answer::getTable(),
-            'WHERE' => [
-               'AND' => [
-                  $formanswer::getForeignKeyField() => $formanswer->fields['id'],
-                  PluginFormcreatorQuestion::getForeignKeyField() => $this->fields['due_date_question'],
-               ],
-            ],
-         ];
-         $iterator = $DB->request($request);
-         if ($iterator->count() > 0) {
-            $iterator->rewind();
-            $date   = $iterator->current();
-         }
-      } else {
-         $date = null;
-      }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
-
-      switch ($this->fields['due_date_rule']) {
-         case 'answer':
-            $due_date = $date['answer'];
-            break;
-         case 'ticket':
-            $due_date = date('Y-m-d H:i:s', strtotime($str));
-            break;
-         case 'calcul':
-            $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
-            break;
-         default:
-            $due_date = null;
-            break;
-      }
-      if (!is_null($due_date)) {
-         $data['due_date'] = $due_date;
-      }
+      $data = $this->setTargetDueDate($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
@@ -1151,7 +1118,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Add tag if presents
       $plugin = new Plugin();
       if ($plugin->isActivated('tag')) {
-
          $tagObj = new PluginTagTagItem();
          $tags   = [];
 
@@ -1163,7 +1129,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
                   $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanwers_id` = " . (int) $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_forms_answers_id` = " . (int) $formanswer->fields['id'] . "
                       AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
                   $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1200,7 +1166,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $itemlink->add([
          'itemtype'     => 'PluginFormcreatorForm_Answer',
          'items_id'     => $formanswer->fields['id'],
-         'changess_id'  => $changeID,
+         'changes_id'  => $changeID,
       ]);
 
       $this->attachDocument($formanswer->getID(), Change::class, $changeID);
