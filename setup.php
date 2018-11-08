@@ -192,8 +192,8 @@ function plugin_init_formcreator() {
          }
 
          // Load JS and CSS files if we are on a page which need them
-         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
-             || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
+         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+             || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
              || isset($_SESSION['glpiactiveprofile']) &&
                 $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
 
@@ -204,32 +204,32 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
          }
 
-         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/targetticket.form.php") !== false) {
+         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/targetticket.form.php') !== false) {
             if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                Html::requireJs('tinymce');
             }
          }
 
-         if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
-               || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
-               || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
-               || strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false) {
+         if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
 
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
-         Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
+         Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
 
          // Load field class and all its method to manage fields
-         Plugin::registerClass('PluginFormcreatorFields');
+         Plugin::registerClass(PluginFormcreatorFields::class);
 
          // Notification
-         Plugin::registerClass('PluginFormcreatorForm_Answer', [
+         Plugin::registerClass(PluginFormcreatorForm_Answer::class, [
             'notificationtemplates_types' => true
          ]);
 
-         Plugin::registerClass('PluginFormcreatorEntityconfig', ['addtabon' => 'Entity']);
+         Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
       }
    }
 }
