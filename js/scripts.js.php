@@ -596,17 +596,18 @@ function formcreatorShowFields(form) {
       }
       var i = 0;
       for (var questionKey in questionToShow) {
-         var questionId = parseInt(questionKey.replace('formcreator_field_', ''));
+         var questionId = questionKey;
+         questionId = parseInt(questionKey.replace('formcreator_field_', ''));
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
-               $('#form-group-' + questionKey).show();
+               $('#form-group-field' + questionKey).show();
                i++;
-               $('#form-group-' + questionKey).removeClass('line' + (i+1) % 2);
-               $('#form-group-' + questionKey).addClass('line' + i%2);
+               $('#form-group-field' + questionKey).removeClass('line' + (i+1) % 2);
+               $('#form-group-field' + questionKey).addClass('line' + i%2);
             } else {
-               $('#form-group-' + questionKey).hide();
-               $('#form-group-' + questionKey).removeClass('line0');
-               $('#form-group-' + questionKey).removeClass('line1');
+               $('#form-group-field' + questionKey).hide();
+               $('#form-group-field' + questionKey).removeClass('line0');
+               $('#form-group-field' + questionKey).removeClass('line1');
             }
          }
       }

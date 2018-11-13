@@ -268,11 +268,11 @@ class PluginFormcreatorFields
          } else {
             switch ($currentLogic) {
                case 'AND' :
-                  $return &= $value;
+                  $return = ($return and $value);
                   break;
 
                case 'OR'  :
-                  $return |= $value;
+                  $return = ($return or $value);
                   break;
 
                default :
@@ -282,28 +282,27 @@ class PluginFormcreatorFields
 
          if ($currentLogic == 'AND' && $nextLogic != 'AND') {
             if ($lowPrecedenceLogic == 'OR') {
-               $return |= $lowPrecedenceReturnPart;
+               $return = ($return or $lowPrecedenceReturnPart);
             } else {
-               $return ^= $lowPrecedenceReturnPart;
+               $return = ($return xor $lowPrecedenceReturnPart);
             }
          }
       }
 
       // Ensure the low precedence part is used if last condition has logic == AND
       if ($lowPrecedenceLogic == 'OR') {
-         $return |= $lowPrecedenceReturnPart;
+         $return = ($return or $lowPrecedenceReturnPart);
       } else {
-         $return ^= $lowPrecedenceReturnPart;
+         $return = ($return xor $lowPrecedenceReturnPart);
       }
 
       unset($evalQuestion[$id]);
 
-      // If the field is hidden by default, show it if condition is true
       if ($question->fields['show_rule'] == 'hidden') {
-         return ($return == true);
-
-         // else show it if condition is false
+         // If the field is hidden by default, show it if condition is true
+         return $return;
       } else {
+         // else show it if condition is false
          return !$return;
       }
    }
@@ -313,7 +312,7 @@ class PluginFormcreatorFields
     *
     * @param array $input     values of all fields of the form
     *
-    * @rturn array
+    * @return array
     */
    public static function updateVisibility($input) {
       $fields = [];
@@ -332,7 +331,7 @@ class PluginFormcreatorFields
       }
 
       $questionToShow = [];
-      foreach ($input as $id => $value) {
+      foreach ($fields as $id => $value) {
          $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);
       }
 
