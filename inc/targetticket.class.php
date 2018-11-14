@@ -1097,6 +1097,7 @@ EOS;
       $data['name'] = $this->parseTags($data['name'], $formanswer);
       $data['name'] = Toolbox::addslashes_deep($data['name']);
 
+      $data['content'] = $this->fields['content'];
       $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
          $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
