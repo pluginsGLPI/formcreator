@@ -485,25 +485,57 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       echo '<div class="form_section">';
 
-      // Display all fields of the section
-      $query_questions = "SELECT `sections`.`name` AS `section_name`,
-                                 `questions`.*,
-                                 `answers`.`answer`
-                          FROM `glpi_plugin_formcreator_questions` AS `questions`
-                          LEFT JOIN `glpi_plugin_formcreator_answers` AS `answers`
-                            ON `answers`.`plugin_formcreator_questions_id` = `questions`.`id`
-                            AND `answers`.`plugin_formcreator_forms_answers_id` = '$ID'
-                          INNER JOIN `glpi_plugin_formcreator_sections` AS `sections`
-                            ON `questions`.`plugin_formcreator_sections_id` = `sections`.`id`
-                            AND `plugin_formcreator_forms_id` = " . $form->getID() . "
-                          GROUP BY `questions`.`id`
-                          ORDER BY `sections`.`order` ASC,
-                                   `sections`.`id` ASC,
-                                   `questions`.`order` ASC";
-      $res_questions = $DB->query($query_questions);
-      $last_section = "";
-      $questionsCount = $DB->numrows($res_questions);
-      while ($question_line = $DB->fetch_assoc($res_questions)) {
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $answerTable = PluginFormcreatorAnswer::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $formAnswerFk = PluginFormcreatorForm_Answer::getForeignKeyField();
+      $request = [
+         'SELECT' => [
+            $sectionTable => ['name as section_name'],
+            $questionTable => ['*'],
+            $answerTable => ['answer'],
+         ],
+         'FROM' => [
+            $questionTable,
+         ],
+         'LEFT JOIN' => [
+            $answerTable => [
+               'FKEY' => [
+                  $answerTable => $questionFk,
+                  $questionTable => 'id',
+                  ['AND' => [
+                     "$answerTable.$formAnswerFk" => $ID,
+                  ]],
+               ],
+            ],
+         ],
+         'INNER JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $questionTable => $sectionFk,
+                  $sectionTable => 'id',
+                  ['AND' => [
+                     "$sectionTable.$formFk" => $form->getID(),
+                  ]],
+               ],
+            ],
+         ],
+         'GROUPBY' => [
+            "$questionTable.id",
+         ],
+         'ORDER' => [
+            "$sectionTable.order ASC",
+            "$sectionTable.id ASC",
+            "$questionTable.order *ASC",
+         ],
+      ];
+      $questions = $DB->request($request);
+      $last_section = '';
+      $questionsCount = $questions->count();
+      while ($question_line = $questions->next()) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             echo '<h2>'.$question_line['section_name'].'</h2>';
