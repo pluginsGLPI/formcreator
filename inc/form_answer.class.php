@@ -485,6 +485,8 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       echo '<div class="form_section">';
 
+      // TODO: code very close to PluginFormcreatorTargetBase::getFullForm() (factorizable ?)
+      // compute all questions
       $questionTable = PluginFormcreatorQuestion::getTable();
       $sectionTable = PluginFormcreatorSection::getTable();
       $answerTable = PluginFormcreatorAnswer::getTable();
@@ -506,9 +508,6 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                'FKEY' => [
                   $answerTable => $questionFk,
                   $questionTable => 'id',
-                  ['AND' => [
-                     "$answerTable.$formAnswerFk" => $ID,
-                  ]],
                ],
             ],
          ],
@@ -517,10 +516,13 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                'FKEY' => [
                   $questionTable => $sectionFk,
                   $sectionTable => 'id',
-                  ['AND' => [
-                     "$sectionTable.$formFk" => $form->getID(),
-                  ]],
                ],
+            ],
+         ],
+         'WHERE' => [
+            'AND' => [
+               "$answerTable.$formAnswerFk" => $ID,
+               "$sectionTable.$formFk" => $form->getID(),
             ],
          ],
          'GROUPBY' => [
@@ -1126,20 +1128,42 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
       // compute all questions
-      $query_questions = "SELECT sections.`name` as section_name,
-                                 questions.*
-                          FROM `glpi_plugin_formcreator_questions` AS questions
-                          INNER JOIN `glpi_plugin_formcreator_sections` as sections
-                            ON questions.`plugin_formcreator_sections_id` = sections.`id`
-                            AND plugin_formcreator_forms_id = ".$this->fields['plugin_formcreator_forms_id']."
-                          GROUP BY questions.`id`
-                          ORDER BY sections.`order` ASC,
-                                sections.`id` ASC,
-                                questions.`order` ASC";
-      $res_questions = $DB->query($query_questions);
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $questions = $DB->request([
+         'SELECT' => [
+            $sectionTable => ['name as section_name'],
+            $questionTable => ['*'],
+         ],
+         'FROM' => [
+            $questionTable,
+         ],
+         'INNER JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $questionTable => $sectionFk,
+                  $sectionTable => 'id',
+               ],
+            ],
+         ],
+         'WHERE' => [
+            'AND' => [
+               "$sectionTable.$formFk" => $this->fields['plugin_formcreator_forms_id'],
+            ],
+         ],
+         'GROUPBY' => [
+            "$questionTable.id",
+         ],
+         'ORDER' => [
+            "$sectionTable.order ASC",
+            "$sectionTable.id ASC",
+            "$questionTable.order *ASC",
+         ],
+      ]);
       $last_section = "";
-      while ($question_line = $DB->fetch_assoc($res_questions)) {
-
+      while ($question_line = $questions->next()) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             if ($disableRichText === false
