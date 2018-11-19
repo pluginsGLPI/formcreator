@@ -57,6 +57,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
                         'comments' => false,
+                        'entity'   => $_SESSION['glpiactive_entity'],
                         'rand'     => $rand];
 
             switch ($itemtype) {
@@ -78,13 +79,13 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                         $dparams['condition'] .= " AND `is_incident` = '1'";
                         break;
                      case 'both':
-                        $dparams['condition'] .= " AND `is_incident` = '1' OR `is_request` = '1' ";
+                        $dparams['condition'] .= " AND (`is_incident` = '1' OR `is_request` = '1')";
                         break;
                      case 'change':
                         $dparams['condition'] .= " AND `is_change` = '1'";
                         break;
                      case 'all':
-                        $dparams['condition'] .= " AND `is_change` = '1' OR `is_incident` = '1' OR  `is_request` = '1'";
+                        $dparams['condition'] .= " AND (`is_change` = '1' OR `is_incident` = '1' OR  `is_request` = '1')";
                         break;
                   }
                   if (isset($decodedValues['show_ticket_categories_depth'])
