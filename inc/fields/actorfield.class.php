@@ -150,9 +150,6 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return implode(', ', Toolbox::addslashes_deep($value));
    }
 
-   public function getValueForTargetField() {
-      return $this->value;
-   }
 
    public function getDocumentsForTarget() {
       return [];

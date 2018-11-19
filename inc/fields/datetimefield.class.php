@@ -77,10 +77,6 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return Toolbox::addslashes_deep(Html::convDateTime($this->value));
    }
 
-   public function getValueForTargetField() {
-      return $this->value;
-   }
-
    public function getDocumentsForTarget() {
       return [];;
    }

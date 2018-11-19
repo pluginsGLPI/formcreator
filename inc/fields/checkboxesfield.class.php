@@ -220,10 +220,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return $value;
    }
 
-   public function getValueForTargetField() {
-      return null;
-   }
-
    public function getDocumentsForTarget() {
       return [];;
    }

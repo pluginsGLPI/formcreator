@@ -59,10 +59,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return '';
    }
 
-   public function getValueForTargetField() {
-      return '';
-   }
-
    public function getDocumentsForTarget() {
       return [];;
    }

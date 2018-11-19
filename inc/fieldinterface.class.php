@@ -96,13 +96,6 @@ interface PluginFormcreatorFieldInterface
    public function getValueForTargetText();
 
    /**
-    * Get the value of the field for use in a field of a target
-    *
-    * @return string
-    */
-   public function getValueForTargetField();
-
-   /**
     * Gets the documents IDs
     *
     * @return void

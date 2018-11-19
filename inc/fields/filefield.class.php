@@ -94,10 +94,6 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return $this->uploadData;
    }
 
-   public function getValueForTargetField() {
-      return $this->uploadData;
-   }
-
    public function isValid() {
       if (!$this->isRequired()) {
          return true;
