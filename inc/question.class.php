@@ -979,7 +979,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $defaultValues = '';
       if (!$this->isNewItem()) {
          $fieldObject = PluginFormcreatorFields::getFieldInstance(
-            $this->getField('fieldtype'),
+            $this->fields['fieldtype'],
             $this
          );
          $fieldObject->deserializeValue($this->fields['default_values']);
