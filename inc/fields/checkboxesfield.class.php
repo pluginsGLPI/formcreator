@@ -225,7 +225,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public static function getPrefs() {
