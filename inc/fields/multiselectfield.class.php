@@ -178,7 +178,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
 
       foreach ($tab_values as $input) {
          if (in_array($input, $values)) {
-            $value[] = addslashes($input);
+            $value[] = Toolbox::addslashes_deep($input);
          }
       }
       if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
@@ -190,7 +190,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public static function getName() {

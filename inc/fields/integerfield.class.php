@@ -83,7 +83,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public function isValid() {

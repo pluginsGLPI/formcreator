@@ -60,7 +60,7 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public function isValid() {

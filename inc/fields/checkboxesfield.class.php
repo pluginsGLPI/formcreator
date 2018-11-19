@@ -208,7 +208,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 
       foreach ($this->value as $input) {
          if (in_array($input, $values)) {
-            $value[] = addslashes($input);
+            $value[] = Toolbox::addslashes_deep($input);
          }
       }
 
@@ -221,7 +221,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public static function getPrefs() {
