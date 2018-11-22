@@ -34,7 +34,7 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
       return '';
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       return Toolbox::addslashes_deep($this->value);
    }
 

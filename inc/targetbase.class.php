@@ -938,12 +938,12 @@ EOS;
    /**
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
-    * @param  String $content                            String to be parsed
+    * @param  string $content                            String to be parsed
     * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
-    * @param  String                                     full form
-    * @return String                                     Parsed string with tags replaced by form values
+    * @param  boolean $richText                   Disable rich text mode for field rendering
+    * @return string                                     Parsed string with tags replaced by form values
     */
-   protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
+   protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $richText = false) {
       global $DB, $CFG_GLPI;
 
       // retrieve answers
@@ -972,7 +972,7 @@ EOS;
             $value = '';
          } else {
             $name  = $question->getField('name');
-            $value = $fields[$questionId]->getValueForTargetText($disableRichText);
+            $value = $fields[$questionId]->getValueForTargetText($richText);
          }
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
@@ -980,15 +980,7 @@ EOS;
          foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
             $this->addAttachedDocument($documentId);
          }
-         if ($question->getField('fieldtype') !== 'file') {
-            if (is_array($value)) {
-               if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-                  $value = '<br />' . implode('<br />', $value);
-               } else {
-                  $value = "\r\n" . implode("\r\n", $value);
-               }
-            }
-         } else {
+         if ($question->getField('fieldtype') === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
                if (!is_array($value)) {
                   $value = [$value];

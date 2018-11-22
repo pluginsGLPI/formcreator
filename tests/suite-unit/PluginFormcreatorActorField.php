@@ -176,15 +176,15 @@ class PluginFormcreatorActorField extends CommonTestCase {
          ],
          [
             'value'     => json_encode(["$glpiId"]),
-            'expected'  => [$glpiId],
+            'expected'  => ['glpi'],
          ],
          [
             'value'     => json_encode(["$glpiId","$normalId"]),
-            'expected'  => [$glpiId, $normalId],
+            'expected'  => ['glpi', 'normal'],
          ],
          [
             'value'     => json_encode(["$glpiId","$normalId","user@localhost.local"]),
-            'expected'  => [$glpiId, $normalId, 'user@localhost.local'],
+            'expected'  => ['glpi', 'normal', 'user@localhost.local'],
          ],
          [
             'value'     => json_encode(["user@localhost.local"]),
@@ -199,10 +199,8 @@ class PluginFormcreatorActorField extends CommonTestCase {
    public function testDeserializeValue($value, $expected) {
       $instance = new \PluginFormcreatorActorField([]);
       $instance->deserializeValue($value);
-      $output = $instance->getValueForTargetField();
-      $this->array($output)
-         ->hasSize(count($expected))
-         ->containsValues($expected);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo(implode(', ', $expected));
    }
 
    public function providerGetValueForDesign() {

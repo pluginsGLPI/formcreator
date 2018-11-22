@@ -86,7 +86,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return '';
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       return $this->value;
    }
 

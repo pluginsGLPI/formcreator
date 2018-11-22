@@ -150,7 +150,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
       $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
       if (!isset($decodedValues['itemtype'])) {

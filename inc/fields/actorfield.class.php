@@ -136,7 +136,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return implode("\r\n", $value);
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       $value = [];
       foreach ($this->value as $item) {
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
@@ -148,10 +148,10 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          }
       }
 
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+      if ($richText) {
          $value = '<br />' . implode('<br />', $value);
       } else {
-         $value = '\r\n' . implode('\r\n', $value);
+         $value = implode(', ', $value);
       }
       return $value;
    }

@@ -55,7 +55,7 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return '';
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       return '';
    }
 

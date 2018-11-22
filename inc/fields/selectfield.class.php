@@ -113,7 +113,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return $this->value;
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       return Toolbox::addslashes_deep($this->value);
    }
 

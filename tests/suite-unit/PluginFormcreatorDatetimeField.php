@@ -149,25 +149,23 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $this->string($output)->isEqualTo('Date & time');
    }
 
-   public function providerparseAnswerValue() {
+   public function providerparseAnswerValues() {
       return [
          [
             'id' => '1',
             'input' => [
                'formcreator_field_1' => ''
             ],
-            'expected' => true,
+            'expected' => false,
             'expectedValue' => null,
          ],
          [
             'id' => '1',
             'input' => [
-               'formcreator_field_1' => [
-                  'glpi'
-               ]
+               'formcreator_field_1' => '2018-12-25 23:00',
             ],
-            'expected' => false,
-            'expectedValue' => [2],
+            'expected' => true,
+            'expectedValue' => '2018-12-25 23:00',
          ],
       ];
    }
@@ -175,7 +173,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    /**
     * Undocumented function
     *
-    * @dataProvider providerparseAnswerValue
+    * @dataProvider providerparseAnswerValues
     *
     * @param [type] $id
     * @param [type] $input
@@ -186,10 +184,9 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
       $instance = $this->newTestedInstance(['id' => $id]);
       $output = $instance->parseAnswerValues($input);
-
-      $outputValue = $instance->getValueForTargetField();
       $this->boolean($output)->isEqualTo($expected);
-      $outputValue = $instance->getValueForTargetField();
+
+      $outputValue = $instance->getValueForTargetText(false);
       if ($expected === false) {
          $this->variable($outputValue)->isNull();
       } else {
