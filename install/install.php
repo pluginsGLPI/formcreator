@@ -46,9 +46,17 @@ class PluginFormcreatorInstall {
     * Exemple: an entry '2.0' => '2.1' tells that versions 2.0
     * are upgradable to 2.1
     *
+    * When posible avoid schema upgrade between bugfix releases. The schema
+    * version iscontains major.minor numbers only. If an upgrade of the schema
+    * occurs between bugfix releases, then the upgrade will start from the
+    * major.minor.0 version up to the end of the the versions list.
+    * Exemple: if previous version is 2.6.1 and current code is 2.6.3 then
+    * the upgrade will start from 2.6.0 to 2.6.3 and replay schema changes
+    * between 2.6.0 and 2.6.1. This means that upgrade must be _repeatable_.
+    *
     * @var array
     */
-    private $upgradeSteps = [
+   private $upgradeSteps = [
       '0.0'    => '2.5',
       '2.5'    => '2.6',
       '2.6'    => '2.6.1',

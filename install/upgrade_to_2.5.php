@@ -39,7 +39,7 @@ class PluginFormcreatorUpgradeTo2_5 {
    /**
     * @param Migration $migration
     */
-    public function upgrade(Migration $migration) {
+   public function upgrade(Migration $migration) {
       global $DB;
 
       $migration->displayMessage("Upgrade to schema version 2.5");
