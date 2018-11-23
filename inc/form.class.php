@@ -837,13 +837,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       } else {
          while ($form = $DB->fetch_assoc($result)) {
                echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="form_answer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
+               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
                echo '</li>';
          }
          echo "</ul>";
          echo '<div align="center">';
-         echo '<a href="form_answer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
+         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -879,7 +879,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             echo "<ul>";
             while ($form = $DB->fetch_assoc($result)) {
                echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="form_answer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
+               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
                echo '</li>';
             }
@@ -891,7 +891,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                       . "&criteria[1][searchtype]=equals"
                       . "&criteria[1][value]=mygroups";
 
-            echo '<a href="form_answer.php?' . $criteria . '">';
+            echo '<a href="formanswer.php?' . $criteria . '">';
             echo __('All my forms (validator)', 'formcreator');
             echo '</a>';
             echo '</div>';

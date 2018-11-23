@@ -337,7 +337,7 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    if ($item instanceof Ticket) {
       $id = $item->getID();
 
-      // mark form_answers as deleted
+      // mark formanswers as deleted
       $item_ticket = new Item_Ticket();
       $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {

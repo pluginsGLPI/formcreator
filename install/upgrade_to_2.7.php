@@ -40,25 +40,62 @@ class PluginFormcreatorUpgradeTo2_7 {
       $displayPreference = new DisplayPreference();
       $DB->update(
          'glpi_displaypreferences', [
-            'itemtype'      => 'PluginFormcreatorFormAnswer',
+            'itemtype' => 'PluginFormcreatorFormAnswer',
          ], [
             'itemtype' => 'PluginFormcreatorForm_Answer'
          ]
       );
       $DB->update(
          'glpi_items_tickets', [
-            'itemtype'      => 'PluginFormcreatorFormAnswer',
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ], [
+            'itemtype' => 'PluginFormcreatorForm_Answer'
+         ]
+      );
+      $DB->update(
+         'glpi_notifications', [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ], [
+            'itemtype' => 'PluginFormcreatorForm_Answer'
+         ]
+      );
+      $DB->update(
+         'glpi_notificationtemplates', [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
          ], [
             'itemtype' => 'PluginFormcreatorForm_Answer'
          ]
       );
       $DB->update(
          'glpi_queuednotifications', [
-            'itemtype'      => 'PluginFormcreatorFormAnswer',
+            'itemtype' => 'PluginFormcreatorFormAnswer',
          ], [
             'itemtype' => 'PluginFormcreatorForm_Answer'
          ]
       );
+      $DB->update(
+         'glpi_plugin_formcreator_issues', [
+            'sub_itemtype' => 'PluginFormcreatorFormAnswer',
+         ], [
+            'sub_itemtype' => 'PluginFormcreatorForm_Answer'
+         ]
+      );
+      if (false && isCommandLine()) {
+         $DB->update(
+            'glpi_logs', [
+               'itemtype_link' => 'PluginFormcreatorFormAnswer',
+            ], [
+               'itemtype_link' => 'PluginFormcreatorForm_Answer'
+            ]
+         );
+         $DB->update(
+            'glpi_logs', [
+               'itemtype' => 'PluginFormcreatorFormAnswer',
+            ], [
+               'itemtype' => 'PluginFormcreatorForm_Answer'
+            ]
+         );
+      }
       $table = 'glpi_plugin_formcreator_formanswers';
       $migration->renameTable('glpi_plugin_formcreator_forms_answers', $table);
       $table = 'glpi_plugin_formcreator_answers';

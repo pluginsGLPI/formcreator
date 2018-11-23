@@ -69,8 +69,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $volume = 0;
 
       // Request which merges tickets and formanswers
-      // 1 ticket not linked to a form_answer => 1 issue which is the ticket sub_itemtype
-      // 1 form_answer not linked to a ticket => 1 issue which is the form_answer sub_itemtype
+      // 1 ticket not linked to a formanswer => 1 issue which is the ticket sub_itemtype
+      // 1 form_answer not linked to a ticket => 1 issue which is the formanswer sub_itemtype
       // 1 ticket linked to 1 form_answer => 1 issue which is the ticket sub_itemtype
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
       $query = "SELECT DISTINCT
