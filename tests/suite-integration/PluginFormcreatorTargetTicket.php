@@ -256,7 +256,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $saveFormData['formcreator_form'] = $form->getID();
       $form->getFromDB($form->getID());
       $form->saveForm($saveFormData);
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDbByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -267,7 +267,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $targetName = $targetTicket->getField('name');
          $itemTicket = new \Item_Ticket();
          $tickets = [];
-         $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorForm_Answer'
+         $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorFormAnswer'
             AND `items_id` = '" . $formAnswer->getID() . "'");
          foreach ($rows as $row) {
             $tickets[] = $row['tickets_id'];

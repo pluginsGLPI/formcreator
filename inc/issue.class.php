@@ -77,7 +77,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   NULL                           AS `id`,
                   CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
                   `fanswer`.`id`                 AS `original_id`,
-                  'PluginFormcreatorForm_Answer' AS `sub_itemtype`,
+                  'PluginFormcreatorFormAnswer' AS `sub_itemtype`,
                   `f`.`name`                     AS `name`,
                   `fanswer`.`status`             AS `status`,
                   `fanswer`.`request_date`       AS `date_creation`,
@@ -92,7 +92,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
                LEFT JOIN `glpi_items_tickets` AS `itic`
                   ON `itic`.`items_id` = `fanswer`.`id`
-                  AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+                  AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
                WHERE `fanswer`.`is_deleted` = '0'
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`tickets_id`) != 1
@@ -116,7 +116,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                FROM `glpi_tickets` AS `tic`
                LEFT JOIN `glpi_items_tickets` AS `itic`
                   ON `itic`.`tickets_id` = `tic`.`id`
-                  AND `itic`.`itemtype` = 'PluginFormcreatorForm_Answer'
+                  AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
                WHERE `tic`.`is_deleted` = 0
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`items_id`) <= 1";
@@ -149,7 +149,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       global $CFG_GLPI;
 
       $itemtype = $options['sub_itemtype'];
-      if (!in_array($itemtype, ['Ticket', 'PluginFormcreatorForm_Answer'])) {
+      if (!in_array($itemtype, [Ticket::class, PluginFormcreatorFormAnswer::class])) {
          html::displayRightError();
       }
       if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
@@ -174,7 +174,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       // if ticket(s) exist(s), show it/them
       $options['_item'] = $item;
-      if ($item Instanceof PluginFormcreatorForm_Answer) {
+      if ($item Instanceof PluginFormcreatorFormAnswer) {
          $item = $this->getTicketsForDisplay($options);
       }
 
@@ -223,7 +223,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       // retrieve associated tickets
       $options['_item'] = $item;
-      if ($item Instanceof PluginFormcreatorForm_Answer) {
+      if ($item Instanceof PluginFormcreatorFormAnswer) {
          $item = $this->getTicketsForDisplay($options);
       }
 
@@ -259,7 +259,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $item = $options['_item'];
       $formanswerId = $options['id'];
       $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer'
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer'
                                   AND `items_id` = $formanswerId", "`tickets_id` ASC");
 
       if (count($rows) == 1) {
@@ -269,7 +269,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          $item->getFromDB($ticket['tickets_id']);
       } else if (count($rows) > 1) {
          // multiple tickets, force ticket tab in form anser
-         Session::setActiveTab('PluginFormcreatorForm_Answer', 'Ticket$1');
+         Session::setActiveTab(PluginFormcreatorFormAnswer::class, 'Ticket$1');
       }
 
       return $item;
@@ -415,7 +415,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   'table'              => 'glpi_items_tickets',
                   'joinparams'         => [
                      'jointype'           => 'itemtypeonly',
-                     'specific_itemtype'  => 'PluginFormcreatorForm_Answer',
+                     'specific_itemtype'  => PluginFormcreatorFormAnswer::class,
                      'condition'          => 'AND `REFTABLE`.`original_id` = `NEWTABLE`.`items_id`'
                   ]
                ],
@@ -477,8 +477,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
       switch ($field) {
          case 'sub_itemtype':
             return Dropdown::showFromArray($name,
-                                           ['Ticket'                      => __('Ticket'),
-                                            'PluginFormcreatorForm_Answer' => __('Form answer', 'formcreator')],
+                                           [Ticket::class                      => __('Ticket'),
+                                            PluginFormcreatorFormAnswer::class => __('Form answer', 'formcreator')],
                                            ['display' => false,
                                             'value'   => $values[$field]]);
          case 'status' :
@@ -533,13 +533,13 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
          case "glpi_plugin_formcreator_issues.status":
             switch ($data['raw']['sub_itemtype']) {
-               case 'Ticket':
+               case Ticket::class:
                   $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
                   return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
                   break;
 
-               case 'PluginFormcreatorForm_Answer':
-                  return PluginFormcreatorForm_Answer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
+               case PluginFormcreatorFormAnswer::class:
+                  return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
                      ." ".__($data['raw']["ITEM_$num"], 'formcreator');
                   break;
             }
@@ -633,25 +633,25 @@ class PluginFormcreatorIssue extends CommonDBTM {
          Ticket::SOLVED => 0
       ];
 
-      $searchIncoming = Search::getDatas('PluginFormcreatorIssue',
+      $searchIncoming = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getIncomingCriteria());
       if ($searchIncoming['data']['totalcount'] > 0) {
          $status[Ticket::INCOMING] = $searchIncoming['data']['totalcount'];
       }
 
-      $searchWaiting = Search::getDatas('PluginFormcreatorIssue',
+      $searchWaiting = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getWaitingCriteria());
       if ($searchWaiting['data']['totalcount'] > 0) {
          $status[Ticket::WAITING] = $searchWaiting['data']['totalcount'];
       }
 
-      $searchValidate = Search::getDatas('PluginFormcreatorIssue',
+      $searchValidate = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getValidateCriteria());
       if ($searchValidate['data']['totalcount'] > 0) {
          $status['to_validate'] = $searchValidate['data']['totalcount'];
       }
 
-      $searchSolved = Search::getDatas('PluginFormcreatorIssue',
+      $searchSolved = Search::getDatas(PluginFormcreatorIssue::class,
                                          self::getSolvedCriteria());
       if ($searchSolved['data']['totalcount'] > 0) {
          $status[Ticket::SOLVED] = $searchSolved['data']['totalcount'];
@@ -668,7 +668,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          return false;
       }
 
-      if ($input['sub_itemtype'] == 'PluginFormcreatorForm_Answer') {
+      if ($input['sub_itemtype'] == PluginFormcreatorFormAnswer::class) {
          $input['display_id'] = 'f_' . $input['original_id'];
       } else if ($input['sub_itemtype'] == 'Ticket') {
          $input['display_id'] = 't_' . $input['original_id'];
@@ -684,7 +684,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          return false;
       }
 
-      if ($input['sub_itemtype'] == 'PluginFormcreatorForm_Answer') {
+      if ($input['sub_itemtype'] == PluginFormcreatorFormAnswer::class) {
          $input['display_id'] = 'f_' . $input['original_id'];
       } else if ($input['sub_itemtype'] == 'Ticket') {
          $input['display_id'] = 't_' . $input['original_id'];

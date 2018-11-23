@@ -78,7 +78,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $criteria = [
          PluginFormcreatorForm::getForeignKeyField() => $this->getID(),
       ];
-      if ($DbUtil->countElementsInTable(PluginFormcreatorForm_Answer::getTable(), $criteria) > 0) {
+      if ($DbUtil->countElementsInTable(PluginFormcreatorFormAnswer::getTable(), $criteria) > 0) {
          return false;
       }
       return Session::haveRight('entity', UPDATE);
@@ -104,7 +104,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                                 title="' . __('Import forms', 'formcreator') . '">';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
-      $menu['links'][$validation_image] = PluginFormcreatorForm_Answer::getSearchURL(false);
+      $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false);
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
 
       return $menu;
@@ -581,11 +581,11 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public function defineTabs($options = []) {
       $ong = [];
       $this->addDefaultFormTab($ong);
-      $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
-      $this->addStandardTab('PluginFormcreatorForm_Profile', $ong, $options);
-      $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
+      $this->addStandardTab(PluginFormcreatorQuestion::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorTarget::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
-      $this->addStandardTab('PluginFormcreatorForm_Answer', $ong, $options);
+      $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       return $ong;
    }
 
@@ -825,7 +825,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
-                      INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
+                      INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                       WHERE fa.`requester_id` = '$userId'
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
@@ -865,7 +865,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
                 INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
-                INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
+                INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                 WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`users_id_validator` = '$userId'
                    OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdListString) AND fv.`itemtype` = 'Group' AND `fa`.`groups_id_validator` IN ($groupIdListString)
                 )
@@ -1210,7 +1210,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          return false;
       }
 
-      $formanswer = new PluginFormcreatorForm_Answer();
+      $formanswer = new PluginFormcreatorFormAnswer();
       return $formanswer->saveAnswers($this, $input, $fields);
    }
 

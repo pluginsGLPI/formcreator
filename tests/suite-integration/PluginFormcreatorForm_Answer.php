@@ -36,7 +36,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
  * The methods conflict when running in parallel
  * @engine inline
  */
-class PluginFormcreatorForm_Answer extends CommonTestCase {
+class PluginFormcreatorFormAnswer extends CommonTestCase {
 
    public function beforeTestMethod($method) {
       switch ($method) {
@@ -85,7 +85,7 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
       $form = new \PluginFormcreatorForm();
       $form->add($input);
 
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $output = $formAnswer->prepareInputForAdd([
          $form::getForeignKeyField() => $form->getID(),
       ]);
@@ -137,14 +137,14 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
             ]
          ],
          'WHERE' => [
-            'itemtype'  => \PluginFormcreatorForm_Answer::class,
+            'itemtype'  => \PluginFormcreatorFormAnswer::class,
             'event'     => 'plugin_formcreator_form_created',
          ]
       ]);
       $this->integer($result->count())->isEqualTo(1);
       $row = $result->next();
 
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDBByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);
@@ -152,7 +152,7 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
       $queued = new \QueuedNotification();
       $queued->getFromDBByCrit([
          \NotificationTemplate::getForeignKeyField() => $row[\NotificationTemplate::getForeignKeyField()],
-         'itemtype'  => \PluginFormcreatorForm_Answer::class,
+         'itemtype'  => \PluginFormcreatorFormAnswer::class,
          'items_id'  => $formAnswer->getID(),
       ]);
 
@@ -190,8 +190,8 @@ class PluginFormcreatorForm_Answer extends CommonTestCase {
       ]);
       $this->boolean($formValidator->isNewItem())->isFalse();
 
-      $formAnswer = new \PluginFormcreatorForm_Answer();
-      $formAnswer_table = \PluginFormcreatorForm_Answer::getTable();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer_table = \PluginFormcreatorFormAnswer::getTable();
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
       $maxId = $DB->fetch_assoc($result);

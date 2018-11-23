@@ -173,7 +173,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          return;
       }
 
-      $doc                          = new Document();
+      $doc                             = new Document();
       $file_data                       = [];
       $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
       $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])

@@ -115,8 +115,8 @@ function plugin_init_formcreator() {
 
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
-   array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorForm_Answer');
-   array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
+   array_push($CFG_GLPI["ticket_types"], PluginFormcreatorFormAnswer::class);
+   array_push($CFG_GLPI["document_types"], PluginFormcreatorFormAnswer::class);
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
@@ -230,7 +230,7 @@ function plugin_init_formcreator() {
          Plugin::registerClass(PluginFormcreatorFields::class);
 
          // Notification
-         Plugin::registerClass(PluginFormcreatorForm_Answer::class, [
+         Plugin::registerClass(PluginFormcreatorFormAnswer::class, [
             'notificationtemplates_types' => true
          ]);
 

@@ -37,8 +37,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorAnswer extends CommonDBChild
 {
-   static public $itemtype = "PluginFormcreatorForm_Answer";
-   static public $items_id = "plugin_formcreator_forms_answers_id";
+   static public $itemtype = PluginFormcreatorFormAnswer::class;
+   static public $items_id = "plugin_formcreator_formanswers_id";
 
    /**
     * Check if current user have the right to create and modify requests

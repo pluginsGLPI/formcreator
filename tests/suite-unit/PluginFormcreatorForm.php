@@ -197,7 +197,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'name' => 'section',
       ]);
 
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswerId = $formAnswer->saveAnswers($form, [
          'formcreator_form'         => $form->getID(),
          'formcreator_validator'    => $_SESSION['glpiID'],
@@ -207,7 +207,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       // 1 notification to the validator
       // 1 notification to the requester
       $notification = new \QueuedNotification();
-      $foundNotifications = $notification->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `items_id` = '$formAnswerId'");
+      $foundNotifications = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `items_id` = '$formAnswerId'");
       $this->integer(count($foundNotifications))->isEqualTo(2);
    }
 

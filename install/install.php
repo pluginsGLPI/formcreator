@@ -221,15 +221,15 @@ class PluginFormcreatorInstall {
 
       // Create standard display preferences
       $displayprefs = new DisplayPreference();
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
       if (count($found_dprefs) == 0) {
          $query = "INSERT IGNORE INTO `glpi_displaypreferences`
                    (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorForm_Answer', 2, 2, 0),
-                   (NULL, 'PluginFormcreatorForm_Answer', 3, 3, 0),
-                   (NULL, 'PluginFormcreatorForm_Answer', 4, 4, 0),
-                   (NULL, 'PluginFormcreatorForm_Answer', 5, 5, 0),
-                   (NULL, 'PluginFormcreatorForm_Answer', 6, 6, 0)";
+                   (NULL, 'PluginFormcreatorFormAnswer', 2, 2, 0),
+                   (NULL, 'PluginFormcreatorFormAnswer', 3, 3, 0),
+                   (NULL, 'PluginFormcreatorFormAnswer', 4, 4, 0),
+                   (NULL, 'PluginFormcreatorFormAnswer', 5, 5, 0),
+                   (NULL, 'PluginFormcreatorFormAnswer', 6, 6, 0)";
          $DB->query($query) or die ($DB->error());
       }
 
@@ -311,14 +311,14 @@ class PluginFormcreatorInstall {
 
       foreach ($notifications as $event => $data) {
          // Check if notification already exists
-         $exists = $notification->find("itemtype = 'PluginFormcreatorForm_Answer' AND event = '$event'");
+         $exists = $notification->find("itemtype = 'PluginFormcreatorFormAnswer' AND event = '$event'");
 
          // If it doesn't exists, create it
          if (count($exists) == 0) {
             $template_id = $template->add([
                'name'     => Toolbox::addslashes_deep($data['name']),
                'comment'  => '',
-               'itemtype' => 'PluginFormcreatorForm_Answer',
+               'itemtype' => PluginFormcreatorFormAnswer::class,
             ]);
 
             // Add a default translation for the template
@@ -337,7 +337,7 @@ class PluginFormcreatorInstall {
                'entities_id'              => 0,
                'is_recursive'             => 1,
                'is_active'                => 1,
-               'itemtype'                 => 'PluginFormcreatorForm_Answer',
+               'itemtype'                 => PluginFormcreatorFormAnswer::class,
                'notificationtemplates_id' => $template_id,
                'event'                    => $event,
                'mode'                     => 'mail',
@@ -372,13 +372,13 @@ class PluginFormcreatorInstall {
             ]
          ],
          'WHERE' => [
-            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+            NotificationTemplate::getTable() . '.itemtype' => PluginFormcreatorFormAnswer::class
          ]
       ]);
 
       // Delete notification templates
       $template = new NotificationTemplate();
-      $template->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
+      $template->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
 
       // Delete notification targets
       $target = new NotificationTarget();
@@ -392,21 +392,21 @@ class PluginFormcreatorInstall {
             ]
          ],
          'WHERE' => [
-            Notification::getTable() . '.itemtype' => PluginFormcreatorForm_Answer::class
+            Notification::getTable() . '.itemtype' => PluginFormcreatorFormAnswer::class
          ],
       ]);
 
       // Delete notifications and their templates
       $notification = new Notification();
       $notification_notificationTemplate = new Notification_NotificationTemplate();
-      $rows = $notification->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      $rows = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
       foreach ($rows as $row) {
          $notification_notificationTemplate->deleteByCriteria(['notifications_id' => $row['id']]);
          $notification->delete($row);
       }
 
       $notification = new Notification();
-      $notification->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
+      $notification->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
    }
 
    protected function deleteTicketRelation() {
@@ -417,7 +417,7 @@ class PluginFormcreatorInstall {
       PluginFormcreatorCommon::setNotification(false);
 
       $item_ticket = new Item_Ticket();
-      $item_ticket->deleteByCriteria(['itemtype' => 'PluginFormcreatorForm_Answer']);
+      $item_ticket->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
 
       PluginFormcreatorCommon::setNotification($use_mailing);
    }
@@ -433,7 +433,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorAnswer',
          'PluginFormcreatorCategory',
          'PluginFormcreatorEntityconfig',
-         'PluginFormcreatorForm_Answer',
+         'PluginFormcreatorFormAnswer',
          'PluginFormcreatorForm_Profile',
          'PluginFormcreatorForm_Validator',
          'PluginFormcreatorForm',
@@ -467,7 +467,7 @@ class PluginFormcreatorInstall {
       $DB->query('DROP VIEW IF EXISTS `glpi_plugin_formcreator_issues`');
 
       $displayPreference = new DisplayPreference();
-      $displayPreference->deleteByCriteria(['itemtype' => 'PluginFormCreatorIssue']);
+      $displayPreference->deleteByCriteria(['itemtype' => PluginFormCreatorIssue::class]);
    }
 
    /**

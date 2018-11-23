@@ -41,7 +41,7 @@ if (!$plugin->isActivated("formcreator")) {
    Html::displayNotFoundError();
 }
 
-$formanswer = new PluginFormcreatorForm_Answer();
+$formanswer = new PluginFormcreatorFormAnswer();
 
 // Edit an existing target ticket
 if (isset($_POST['update'])) {

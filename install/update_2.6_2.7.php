@@ -32,6 +32,33 @@
 function plugin_formcreator_update_2_7(Migration $migration) {
    global $DB;
 
+   // Rename PluginFormcreatorForm_Answer into PluginFormcreatorFormAnswer
+   $displayPreference = new DisplayPreference();
+   $DB->update(
+      'glpi_displaypreferences', [
+         'itemtype'      => 'PluginFormcreatorFormAnswer',
+      ], [
+         'itemtype' => 'PluginFormcreatorForm_Answer'
+      ]
+   );
+   $DB->update(
+      'glpi_items_tickets', [
+         'itemtype'      => 'PluginFormcreatorFormAnswer',
+      ], [
+         'itemtype' => 'PluginFormcreatorForm_Answer'
+      ]
+   );
+   $table = 'glpi_plugin_formcreator_answers';
+   $migration->changeField(
+      $table,
+      'plugin_formcreator_forms_answers',
+      'plugin_formcreator_formanswers',
+      'integer'
+   );
+   $migration->migrationOneTable($table);
+   $migration->dropKey($table, 'plugin_formcreator_forms_answers_id');
+   $migration->addKey($table, ['plugin_formcreator_formanswers_id'], 'plugin_formcreator_formanswers_id');
+
    // Changes don't support templates, remove the relation
    $table = 'glpi_plugin_formcreator_targetchanges';
    $migration->dropField($table, 'changetemplates_id');

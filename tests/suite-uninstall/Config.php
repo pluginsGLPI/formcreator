@@ -73,11 +73,11 @@ class Config extends CommonTestCase
 
       // Check the notifications of the plugin no longer exist
       $notification = new \Notification();
-      $rows = $notification->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      $rows = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
       $this->integer(count($rows))->isEqualTo(0);
 
       $template = new \NotificationTemplate();
-      $rows = $template->find("`itemtype` = 'PluginFormcreatorForm_Answer'");
+      $rows = $template->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
       $this->integer(count($rows))->isEqualTo(0);
 
       // TODO: need to find a reliable way to detect not clenaed

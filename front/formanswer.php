@@ -39,7 +39,7 @@ if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
 
-if (PluginFormcreatorForm_Answer::canView()) {
+if (PluginFormcreatorFormAnswer::canView()) {
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {
@@ -58,7 +58,7 @@ if (PluginFormcreatorForm_Answer::canView()) {
       }
    }
 
-   Search::show('PluginFormcreatorForm_Answer');
+   Search::show(PluginFormcreatorFormAnswer::class);
 
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::footer();
