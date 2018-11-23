@@ -39,6 +39,24 @@ class PluginFormcreatorInstall {
    protected $migration;
 
    /**
+    * array of upgrade steps key => value
+    * key   is the version to upgrade from
+    * value is the version to upgrade to
+    *
+    * Exemple: an entry '2.0' => '2.1' tells that versions 2.0
+    * are upgradable to 2.1
+    *
+    * @var array
+    */
+    private $upgradeSteps = [
+      '0.0'    => '2.5',
+      '2.5'    => '2.6',
+      '2.6'    => '2.6.1',
+      '2.6.1'  => '2.6.3',
+      '2.6.3'  => '2.7',
+   ];
+
+   /**
     * Install the plugin
     * @param Migration $migration
     *
@@ -66,43 +84,21 @@ class PluginFormcreatorInstall {
     */
    public function upgrade(Migration $migration) {
       $this->migration = $migration;
-      $fromSchemaVersion = $this->getSchemaVersion();
-
-      $this->installSchema();
-
-      // All cases are run starting from the one matching the current schema version
-      switch ($fromSchemaVersion) {
-         case '0.0':
-            require_once(__DIR__ . '/update_0.0_2.5.php');
-            plugin_formcreator_update_2_5($this->migration);
-
-         case '2.5':
-            require_once(__DIR__ . '/update_2.5_2.6.php');
-            plugin_formcreator_update_2_6($this->migration);
-
-         case '2.6':
-            require_once(__DIR__ . '/update_2.6_2.6.1.php');
-            plugin_formcreator_update_2_6_1($this->migration);
-
-            require_once(__DIR__ . '/update_2.6.2_2.6.3.php');
-            plugin_formcreator_update_2_6_3($this->migration);
-
-            require_once(__DIR__ . '/update_2.6_2.7.php');
-            plugin_formcreator_update_2_7($this->migration);
-
-         default:
-            // Must be the last case
-            if ($this->endsWith(PLUGIN_FORMCREATOR_VERSION, "-dev")) {
-               if (is_readable(__DIR__ . "/update_dev.php") && is_file(__DIR__ . "/update_dev.php")) {
-                  include_once __DIR__ . "/update_dev.php";
-                  $updateDevFunction = 'plugin_formcreator_update_dev';
-                  if (function_exists($updateDevFunction)) {
-                     $updateDevFunction($this->migration);
-                  }
-               }
-            }
+      if (isset($_SESSION['plugin_formcreator']['cli']) && $_SESSION['plugin_formcreator']['cli'] == 'force-upgrade') {
+         // Might return false
+         $fromSchemaVersion = array_search(PLUGIN_FORMCREATOR_SCHEMA_VERSION, $this->upgradeSteps);
+      } else {
+         $fromSchemaVersion = $this->getSchemaVersion();
       }
+
+      while ($fromSchemaVersion && isset($this->upgradeSteps[$fromSchemaVersion])) {
+         $this->upgradeOneStep($this->upgradeSteps[$fromSchemaVersion]);
+         $fromSchemaVersion = $this->upgradeSteps[$fromSchemaVersion];
+      }
+
       $this->migration->executeMigration();
+      // if the schema contains new tables
+      $this->installSchema();
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
@@ -110,6 +106,28 @@ class PluginFormcreatorInstall {
       Config::setConfigurationValues('formcreator', ['schema_version' => PLUGIN_FORMCREATOR_SCHEMA_VERSION]);
 
       return true;
+   }
+
+   /**
+    * Proceed to upgrade of the plugin to the given version
+    *
+    * @param string $toVersion
+    */
+   protected function upgradeOneStep($toVersion) {
+      ini_set("max_execution_time", "0");
+      ini_set("memory_limit", "-1");
+
+      $suffix = str_replace('.', '_', $toVersion);
+      $includeFile = __DIR__ . "/upgrade_to_$toVersion.php";
+      if (is_readable($includeFile) && is_file($includeFile)) {
+         include_once $includeFile;
+         $updateClass = "PluginFormcreatorUpgradeTo$suffix";
+         $this->migration->addNewMessageArea("Upgrade to $toVersion");
+         $upgradeStep = new $updateClass();
+         $upgradeStep->upgrade($this->migration);
+         $this->migration->executeMigration();
+         $this->migration->displayMessage('Done');
+      }
    }
 
    /**

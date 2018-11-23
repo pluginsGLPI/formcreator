@@ -42,7 +42,9 @@ function plugin_formcreator_install() {
    $migration = new Migration($version['version']);
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
-   if (!$install->isPluginInstalled()) {
+   if (!$install->isPluginInstalled()
+      || isset($_SESSION['plugin_formcreator']['cli'])
+      && $_SESSION['plugin_formcreator']['cli'] == 'force-install') {
       return $install->install($migration);
    }
    return $install->upgrade($migration);
