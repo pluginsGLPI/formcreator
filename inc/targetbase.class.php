@@ -940,7 +940,7 @@ EOS;
     *
     * @param  string $content                            String to be parsed
     * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
-    * @param  boolean $richText                   Disable rich text mode for field rendering
+    * @param  boolean $richText                          Disable rich text mode for field rendering
     * @return string                                     Parsed string with tags replaced by form values
     */
    protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $richText = false) {
@@ -1143,5 +1143,28 @@ JAVASCRIPT;
       }
 
       return $input;
+   }
+
+   /**
+    * Prepare the template of the target
+    *
+    * @param string $template
+    * @param PluginFormcreatorForm_Answer $formAnswer form answer to render
+    * @param boolean $richText Disable rich text output
+    * @return string
+    */
+   protected function prepareTemplate($template, PluginFormcreatorForm_Answer $formAnswer, $richText = false) {
+      global $CFG_GLPI;
+
+      if (strpos($template, '##FULLFORM##') !== false) {
+         $template = str_replace('##FULLFORM##', $formAnswer->getFullForm($richText), $template);
+      }
+
+      if ($richText) {
+         $template = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $template);
+         $template = Html::entities_deep($template);
+      }
+
+      return $template;
    }
 }

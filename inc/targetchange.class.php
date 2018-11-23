@@ -966,11 +966,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          'checklistcontent'
       ];
       foreach ($changeFields as $changeField) {
-         $data[$changeField] = $this->fields[$changeField];
-         $data[$changeField] = str_replace("\r\n", '\r\n', $data[$changeField]);
-         if (strpos($data[$changeField], '##FULLFORM##') !== false) {
-            $data[$changeField] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data[$changeField]);
-         }
+         $data[$changeField] = $this->prepareTemplate(
+            $this->fields[$changeField],
+            $formanswer,
+            true
+         );
 
          $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
       }

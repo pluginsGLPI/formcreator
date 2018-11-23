@@ -684,7 +684,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                         : -1;
 
       $question = new PluginFormcreatorQuestion();
-      $questions = $question->getQuestionsFromForm($data['formcreator_form']);
+      $questions = $question->getQuestionsFromForm($form->getID());
 
       //Collect answers
       $answer_value = [];
@@ -747,7 +747,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                                                 ? $_SESSION['glpiactive_entity']
                                                 : $form->fields['entities_id'],
             'is_recursive'                => $form->fields['is_recursive'],
-            'plugin_formcreator_forms_id' => $data['formcreator_form'],
+            'plugin_formcreator_forms_id' => $form->getID(),
             'requester_id'                => isset($_SESSION['glpiID'])
                                                 ? $_SESSION['glpiID']
                                                 : 0,
@@ -961,12 +961,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @return boolean
     */
    public function refuseAnswers($data) {
-      $data['plugin_formcreator_forms_id'] = intval($data['formcreator_form']);
-      $data['status']                      = 'refused';
-      $data['save_formanswer']             = true;
+      $data['status']          = 'refused';
+      $data['save_formanswer'] = true;
 
       $form   = new PluginFormcreatorForm();
-      $form->getFromDB($data['plugin_formcreator_forms_id']);
+      $form->getFromDB((int) $data['formcreator_form']);
 
       $fields = [];
       // Prepare form fields for validation
@@ -995,12 +994,11 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
     * @return boolean
     */
    public function acceptAnswers($data) {
-      $data['plugin_formcreator_forms_id'] = intval($data['formcreator_form']);
       $data['status']                      = 'accepted';
       $data['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
-      $form->getFromDB($data['plugin_formcreator_forms_id']);
+      $form->getFromDB((int) $data['formcreator_form']);
 
       if (!$this->canValidate($form, $this)) {
          Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
@@ -1101,7 +1099,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $question_no = 0;
       $output      = '';
-      $eol = "\r\n";
+      $eol = "\n";
 
       if ($richText) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
@@ -1170,8 +1168,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
                $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
             } else {
                $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
-               $output .= '---------------------------------';
-               $output .= $eol;
+               $output .= '---------------------------------' . $eol;
             }
             $last_section = $question_line['section_name'];
          }

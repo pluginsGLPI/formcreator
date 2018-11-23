@@ -1163,7 +1163,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * Validates answers of a form and saves them in database
     *
     * @param array $input fields from the HTML form
-    * @return boolean true if the form is valid, false otherwise
+    * @return integer|boolean ID of the form_answer if sucess, false otherwise
     */
    public function saveForm($input) {
       $valid = true;
@@ -1199,7 +1199,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // Check required_validator
       if ($this->fields['validation_required'] && empty($input['formcreator_validator'])) {
-         Session::addMessageAfterRedirect(__('You must select validator !', 'formcreator'), false, ERROR);
+         Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
          $valid = false;
       }
 
@@ -1210,9 +1210,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       $formanswer = new PluginFormcreatorForm_Answer();
-      $formanswer->saveAnswers($this, $input, $fields);
-
-      return true;
+      return $formanswer->saveAnswers($this, $input, $fields);
    }
 
    public function increaseUsageCount() {

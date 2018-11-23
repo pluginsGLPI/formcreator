@@ -277,4 +277,69 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
       $this->integer((int) $output)->isEqualTo($entityId);
    }
+
+   public function providerPrepareTemplate() {
+      $question = $this->getQuestion([
+         'fieldtype' => 'textarea',
+         '_parameters' => [
+            'textarea' => [
+               'range' => [
+                  'range_min' => '',
+                  'range_max' => '',
+               ],
+               'regex' => [
+                  'regex' => ''
+               ],
+            ],
+         ],
+      ]);
+      $this->boolean($question->isNewItem())->isFalse();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
+      $form = new \PluginFormcreatorForm();
+      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
+      $formAnswerId = $form->saveForm([
+         'validation_required' => 0,
+         'formcreator_field_' . $question->getID() => 'foo',
+      ]);
+      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer->getFromDB($formAnswerId);
+      $sectionName = $section->fields['name'];
+      $questionTag = '##question_' . $question->getID() . '##';
+      $answerTag = '##answer_' . $question->getID() . '##';
+      $eolSimple = "\n";
+      $eolRich = "\r\n";
+      // 2 expected values
+      // 0 : Rich text mode disabled
+      // 1 : Rich text mode enabled
+      return [
+         [
+            'template' => '##FULLFORM##',
+            'form_answer' => $formAnswer,
+            'expected' => [
+               0 => 'Form data' . $eolSimple
+                  . '=================' . $eolSimple
+                  . $eolSimple
+                  . $eolSimple . \Toolbox::addslashes_deep($sectionName) . $eolSimple
+                  . '---------------------------------' . $eolSimple
+                  . '1) ' . $questionTag . ' : ' . $answerTag . $eolSimple . $eolSimple,
+               1 => '&lt;h1&gt;Form data&lt;/h1&gt;'
+                  . '&lt;h2&gt;' . \Toolbox::addslashes_deep($sectionName) . '&lt;/h2&gt;'
+                  . '&lt;div&gt;&lt;b&gt;1) ' . $questionTag . ' : &lt;/b&gt;' . $answerTag . '&lt;/div&gt;',
+            ],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareTemplate
+    */
+   public function testPrepareTemplate($template, $formAnswer, $expected) {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicPrepareTemplate($template, $formAnswer);
+      $this->string($output)->isEqualTo($expected[0]);
+
+      $output = $instance->publicPrepareTemplate($template, $formAnswer, true);
+      $this->string($output)->isEqualTo($expected[1]);
+   }
 }
