@@ -52,6 +52,13 @@ class PluginFormcreatorUpgradeTo2_7 {
             'itemtype' => 'PluginFormcreatorForm_Answer'
          ]
       );
+      $DB->update(
+         'glpi_queuednotifications', [
+            'itemtype'      => 'PluginFormcreatorFormAnswer',
+         ], [
+            'itemtype' => 'PluginFormcreatorForm_Answer'
+         ]
+      );
       $table = 'glpi_plugin_formcreator_formanswers';
       $migration->renameTable('glpi_plugin_formcreator_forms_answers', $table);
       $table = 'glpi_plugin_formcreator_answers';
