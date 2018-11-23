@@ -976,7 +976,7 @@ EOS;
          }
 
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
-         $content = str_replace('##answer_' . $questionId . '##', $value, $content);
+         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
          foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
             $this->addAttachedDocument($documentId);
          }

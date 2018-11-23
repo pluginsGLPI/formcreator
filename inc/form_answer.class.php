@@ -1068,7 +1068,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       $answers = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'");
       $answers_values = [];
       foreach ($answers as $found_answer) {
-         $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = stripslashes($found_answer['answer']);
+         $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];
       }
       return $answers_values;
    }
@@ -1099,7 +1099,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
       $question_no = 0;
       $output      = '';
-      $eol = "\n";
+      $eol = '\n';
 
       if ($richText) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
