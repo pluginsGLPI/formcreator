@@ -136,23 +136,26 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       return implode("\r\n", $value);
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       $value = [];
       foreach ($this->value as $item) {
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {
-            $value[] = $item;
+            $value[] = Toolbox::addslashes_deep($item);
          } else {
             $user = new User();
             $user->getFromDB($item);
-            $value[] = $user->getRawName();
+            $value[] = Toolbox::addslashes_deep($user->getRawName());
          }
       }
-      return implode(', ', Toolbox::addslashes_deep($value));
+
+      if ($richText) {
+         $value = '<br />' . implode('<br />', $value);
+      } else {
+         $value = implode(', ', $value);
+      }
+      return $value;
    }
 
-   public function getValueForTargetField() {
-      return $this->value;
-   }
 
    public function getDocumentsForTarget() {
       return [];

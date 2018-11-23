@@ -1088,11 +1088,12 @@ EOS;
          unset($predefined_fields['_groups_id_assign']);
       }
 
-      $data                = array_merge($data, $predefined_fields);
+      $data = array_merge($data, $predefined_fields);
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
+      $richText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
       $data['name'] = $this->fields['name'];
       $data['name'] = $this->parseTags($data['name'], $formanswer);
       $data['name'] = Toolbox::addslashes_deep($data['name']);
@@ -1100,15 +1101,15 @@ EOS;
       $data['content'] = $this->fields['content'];
       $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
       if (strpos($data['content'], '##FULLFORM##') !== false) {
-         $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
+         $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm($richText), $data['content']);
       }
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+      if ($richText) {
          // replace HTML P tags with DIV tags
          $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
       }
 
-      $data['content'] = $this->parseTags($data['content'], $formanswer);
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+      $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
+      if ($richText) {
          $data['content'] = htmlentities($data['content'], ENT_NOQUOTES);
       }
       $data['content'] = Toolbox::addslashes_deep($data['content']);

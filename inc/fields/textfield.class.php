@@ -78,16 +78,12 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       return Toolbox::addslashes_deep($this->value);
    }
 
-   public function getValueForTargetField() {
-      return $this->value;
-   }
-
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public function isValid() {

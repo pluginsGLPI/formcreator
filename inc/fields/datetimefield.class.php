@@ -73,12 +73,8 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       return Toolbox::addslashes_deep(Html::convDateTime($this->value));
-   }
-
-   public function getValueForTargetField() {
-      return $this->value;
    }
 
    public function getDocumentsForTarget() {
@@ -156,6 +152,10 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!is_string($input[$key])) {
+         return false;
+      }
+
+      if (DateTime::createFromFormat("Y-m-d H:i", $input[$key]) === false) {
          return false;
       }
 

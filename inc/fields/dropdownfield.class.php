@@ -151,7 +151,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return $this->value;
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
       $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
       if (!isset($decodedValues['itemtype'])) {
@@ -163,12 +163,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return Toolbox::addslashes_deep($value);
    }
 
-   public function getValueForTargetField() {
-      return $this->value;
-   }
-
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public static function getName() {

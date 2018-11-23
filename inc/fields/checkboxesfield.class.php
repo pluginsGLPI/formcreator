@@ -196,7 +196,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       return $input;
    }
 
-   public function getValueForTargetText() {
+   public function getValueForTargetText($richText) {
       global $CFG_GLPI;
 
       $value = [];
@@ -208,20 +208,16 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 
       foreach ($this->value as $input) {
          if (in_array($input, $values)) {
-            $value[] = addslashes($input);
+            $value[] = Toolbox::addslashes_deep($input);
          }
       }
 
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
+      if ($richText) {
          $value = '<br />' . implode('<br />', $value);
       } else {
-         $value = '\r\n' . implode('\r\n', $value);
+         $value = implode(', ', $value);
       }
       return $value;
-   }
-
-   public function getValueForTargetField() {
-      return null;
    }
 
    public function getDocumentsForTarget() {

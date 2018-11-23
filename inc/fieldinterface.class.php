@@ -91,16 +91,10 @@ interface PluginFormcreatorFieldInterface
    /**
     * Get the value of the field for display in a target
     *
+    * @param  boolean $disableRichText    Disable rich text mode for field rendering
     * @return string
     */
-   public function getValueForTargetText();
-
-   /**
-    * Get the value of the field for use in a field of a target
-    *
-    * @return string
-    */
-   public function getValueForTargetField();
+   public function getValueForTargetText($disableRichText);
 
    /**
     * Gets the documents IDs

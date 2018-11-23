@@ -1093,17 +1093,17 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
    /**
     * Get entire form to be inserted into a target content
     *
+    * @param boolean $richText If true, enable rich text output
     * @return String Full form questions and answers to be print
     */
-   public function getFullForm($disableRichText = false) {
+   public function getFullForm($richText = false) {
       global $CFG_GLPI, $DB;
 
       $question_no = 0;
       $output      = '';
       $eol = "\r\n";
 
-      if ($disableRichText === false
-         && (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'])) {
+      if ($richText) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
       } else {
          $output .= __('Form data', 'formcreator') . $eol;
@@ -1166,8 +1166,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
       while ($question_line = $questions->next()) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
-            if ($disableRichText === false
-               && (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'])) {
+            if ($richText) {
                $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
             } else {
                $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
@@ -1188,8 +1187,7 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
 
          if ($question_line['fieldtype'] != 'description') {
             $question_no++;
-            if ($disableRichText === false
-               && (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'])) {
+            if ($richText) {
                $output .= '<div>';
                $output .= '<b>' . $question_no . ') ##question_' . $question_line['id'] . '## : </b>';
                $output .= '##answer_' . $question_line['id'] . '##';
