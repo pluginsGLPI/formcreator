@@ -1097,13 +1097,13 @@ EOS;
       $data['name'] = $this->prepareTemplate(
          $this->fields['name'],
          $formanswer,
-         true
+         false
       );
       $data['name'] = $this->parseTags($data['name'], $formanswer);
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],
          $formanswer,
-         false
+         $richText
       );
 
       $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);

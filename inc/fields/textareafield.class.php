@@ -115,7 +115,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function getValueForTargetText($richText) {
-      return str_replace("\r\n", '\r\n', Toolbox::addslashes_deep($this->value));
+      return $this->value;
    }
 
    public static function getJSFields() {

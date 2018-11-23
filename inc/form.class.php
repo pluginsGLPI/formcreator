@@ -1205,7 +1205,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       if (!$valid) {
          // Save answers in session to display it again with the same values
-         $_SESSION['formcreator']['data'] = $input;
+         $_SESSION['formcreator']['data'] = Toolbox::stripslashes_deep($input);
          return false;
       }
 
