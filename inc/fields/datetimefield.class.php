@@ -96,7 +96,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
    }
 
    public static function getName() {
-      return __('Datetime', 'formcreator');
+      return __('Date & time', 'formcreator');
    }
 
    public static function getPrefs() {
@@ -155,7 +155,8 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
          return false;
       }
 
-      if (DateTime::createFromFormat("Y-m-d H:i", $input[$key]) === false) {
+      if ($input[$key] != ''
+         && DateTime::createFromFormat("Y-m-d H:i", $input[$key]) === false) {
          return false;
       }
 

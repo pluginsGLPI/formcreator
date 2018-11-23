@@ -156,8 +156,8 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
             'input' => [
                'formcreator_field_1' => ''
             ],
-            'expected' => false,
-            'expectedValue' => null,
+            'expected' => true,
+            'expectedValue' => ' ',
          ],
          [
             'id' => '1',
