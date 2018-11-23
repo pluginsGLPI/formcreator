@@ -1094,25 +1094,20 @@ EOS;
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
       $richText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
-      $data['name'] = $this->fields['name'];
+      $data['name'] = $this->prepareTemplate(
+         $this->fields['name'],
+         $formanswer,
+         true
+      );
       $data['name'] = $this->parseTags($data['name'], $formanswer);
-      $data['name'] = Toolbox::addslashes_deep($data['name']);
-
-      $data['content'] = $this->fields['content'];
-      $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
-      if (strpos($data['content'], '##FULLFORM##') !== false) {
-         $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm($richText), $data['content']);
-      }
-      if ($richText) {
-         // replace HTML P tags with DIV tags
-         $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
-      }
+      $data['content'] = $this->prepareTemplate(
+         $this->fields['content'],
+         $formanswer,
+         false
+      );
 
       $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
-      if ($richText) {
-         $data['content'] = htmlentities($data['content'], ENT_NOQUOTES);
-      }
-      $data['content'] = Toolbox::addslashes_deep($data['content']);
+
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 

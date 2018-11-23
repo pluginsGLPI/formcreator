@@ -42,4 +42,8 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
    public function publicGetTargetEntity(\PluginFormcreatorForm_Answer $formanswer, $requesters_id) {
       return $this->getTargetEntity($formanswer, $requesters_id);
    }
+
+   public function publicPrepareTemplate($template, \PluginFormcreatorForm_Answer $formAnswer, $disableRichText = false) {
+      return $this->prepareTemplate($template, $formAnswer, $disableRichText);
+   }
 }

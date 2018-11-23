@@ -120,7 +120,7 @@ if (isset($_POST["add"])) {
       }
 
       // Save form
-      if (!$form->saveForm($_POST)) {
+      if ($form->saveForm($_POST) === false) {
          Html::back();
       }
       $form->increaseUsageCount();
