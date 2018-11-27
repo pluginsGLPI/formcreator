@@ -582,8 +582,6 @@ function deleteTarget(items_id, token, target_id) {
 var formcreatorQuestions = new Object();
 
 function formcreatorShowFields(form) {
-   //var form = $(field[0].form);
-
    $.ajax({
       url: '../ajax/showfields.php',
       type: "POST",
@@ -600,14 +598,14 @@ function formcreatorShowFields(form) {
          questionId = parseInt(questionKey.replace('formcreator_field_', ''));
          if (!isNaN(questionId)) {
             if (questionToShow[questionKey]) {
-               $('#form-group-field' + questionKey).show();
+               $('#form-group-field-' + questionKey).show();
                i++;
-               $('#form-group-field' + questionKey).removeClass('line' + (i+1) % 2);
-               $('#form-group-field' + questionKey).addClass('line' + i%2);
+               $('#form-group-field-' + questionKey).removeClass('line' + (i+1) % 2);
+               $('#form-group-field-' + questionKey).addClass('line' + i%2);
             } else {
-               $('#form-group-field' + questionKey).hide();
-               $('#form-group-field' + questionKey).removeClass('line0');
-               $('#form-group-field' + questionKey).removeClass('line1');
+               $('#form-group-field-' + questionKey).hide();
+               $('#form-group-field-' + questionKey).removeClass('line0');
+               $('#form-group-field-' + questionKey).removeClass('line1');
             }
          }
       }
