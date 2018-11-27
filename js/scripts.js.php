@@ -583,7 +583,7 @@ var formcreatorQuestions = new Object();
 
 function formcreatorShowFields(form) {
    $.ajax({
-      url: '../ajax/showfields.php',
+      url: rootDoc + '/plugins/formcreator/ajax/showfields.php',
       type: "POST",
       data: form.serializeArray()
    }).done(function(response){

@@ -537,7 +537,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $questions = $DB->request($request);
       $last_section = '';
       $questionsCount = $questions->count();
+      $fields = [];
       while ($question_line = $questions->next()) {
+         $question = new PluginFormcreatorQuestion();
+         $question->getFromDB($question_line['id']);
+         $fields[$question_line['id']] = PluginFormcreatorFields::getFieldInstance(
+            $question_line['fieldtype'],
+            $question
+         );
+         $fields[$question_line['id']]->deserializeValue($question_line['answer']);
+      }
+      $questions->rewind();
+      while ($question_line = $questions->current()) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             echo '<h2>'.$question_line['section_name'].'</h2>';
@@ -548,19 +559,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             || ($question_line['fieldtype'] != "description"
                 && $question_line['fieldtype'] != "hidden")
          ) {
-            $question = new PluginFormcreatorQuestion();
-            $question->getFromDB($question_line['id']);
-            $field = PluginFormcreatorFields::getFieldInstance(
-               $question_line['fieldtype'],
-               $question
-            );
-            $field->deserializeValue($question_line['answer']);
-            $field->show($canEdit);
+            // if (PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
+            // }
+            $fields[$question_line['id']]->show($canEdit);
          }
+         $questions->next();
       }
-      $formName = 'formcreator_form' . $formId;
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
+         formcreatorShowFields($("form[name=\'form\']"));
       })');
 
       //add requester info
@@ -599,6 +605,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
             echo '</div>';
             echo '</div>';
+            $options['canedit'] = true;
+            $options['candel'] = false;
          }
       }
 

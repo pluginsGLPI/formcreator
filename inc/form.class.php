@@ -920,7 +920,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // Display form
       $formName = 'formcreator_form' . $this->getID();
-      echo "<form name='" . $formName . "' method='post' role='form' enctype='multipart/form-data'
+      echo "<form name='form' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
@@ -966,7 +966,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
+         formcreatorShowFields($("form[name=\'form\']"));
       })');
 
       // Show validator selector
