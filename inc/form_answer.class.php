@@ -228,6 +228,16 @@ class PluginFormcreatorForm_Answer extends CommonDBChild
          'massiveaction'      => false
       ];
 
+      $tab[] = [
+         'id' => '9',
+         'table' => PluginFormcreatorForm::getTable(),
+         'field' => 'id',
+         'name' => __('ID'),
+         'searchtype' => 'contains',
+         'datatype' => 'integer',
+         'massiveaction' => false,
+      ];
+
       if ($display_for_form) {
          $optindex = self::SOPTION_ANSWER;
          $question = new PluginFormcreatorQuestion;
