@@ -73,6 +73,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'itemtype' => \ITILCategory::class,
                   'show_ticket_categories' => '2',
                   'show_ticket_categories_depth' => '3',
+                  'show_ticket_categories_root'  => '',
                ]),
                'dropdown_values' => \ITILCategory::class,
             ]
