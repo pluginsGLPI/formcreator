@@ -74,7 +74,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,

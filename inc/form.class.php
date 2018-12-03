@@ -78,7 +78,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $criteria = [
          PluginFormcreatorForm::getForeignKeyField() => $this->getID(),
       ];
-      if ($DbUtil->countElementsInTable(PluginFormcreatorForm_Answer::getTable(), $criteria) > 0) {
+      if ($DbUtil->countElementsInTable(PluginFormcreatorFormAnswer::getTable(), $criteria) > 0) {
          return false;
       }
       return Session::haveRight('entity', UPDATE);
@@ -104,7 +104,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                                 title="' . __('Import forms', 'formcreator') . '">';
       $menu['links']['search']          = PluginFormcreatorFormList::getSearchURL(false);
       $menu['links']['config']          = PluginFormcreatorForm::getSearchURL(false);
-      $menu['links'][$validation_image] = PluginFormcreatorForm_Answer::getSearchURL(false);
+      $menu['links'][$validation_image] = PluginFormcreatorFormAnswer::getSearchURL(false);
       $menu['links'][$import_image]     = PluginFormcreatorForm::getFormURL(false)."?import_form=1";
 
       return $menu;
@@ -581,11 +581,11 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public function defineTabs($options = []) {
       $ong = [];
       $this->addDefaultFormTab($ong);
-      $this->addStandardTab('PluginFormcreatorQuestion', $ong, $options);
-      $this->addStandardTab('PluginFormcreatorForm_Profile', $ong, $options);
-      $this->addStandardTab('PluginFormcreatorTarget', $ong, $options);
+      $this->addStandardTab(PluginFormcreatorQuestion::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
+      $this->addStandardTab(PluginFormcreatorTarget::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
-      $this->addStandardTab('PluginFormcreatorForm_Answer', $ong, $options);
+      $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       return $ong;
    }
 
@@ -825,7 +825,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
       $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                       FROM glpi_plugin_formcreator_forms f
-                      INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
+                      INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                       WHERE fa.`requester_id` = '$userId'
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
@@ -837,13 +837,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       } else {
          while ($form = $DB->fetch_assoc($result)) {
                echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="form_answer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
+               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
                echo '</li>';
          }
          echo "</ul>";
          echo '<div align="center">';
-         echo '<a href="form_answer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
+         echo '<a href="formanswer.php?criteria[0][field]=4&criteria[0][searchtype]=equals&criteria[0][value]='.$userId.'">';
          echo __('All my forms (requester)', 'formcreator');
          echo '</a>';
          echo '</div>';
@@ -865,7 +865,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
                 FROM glpi_plugin_formcreator_forms f
                 INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
-                INNER JOIN glpi_plugin_formcreator_forms_answers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
+                INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
                 WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`users_id_validator` = '$userId'
                    OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdListString) AND fv.`itemtype` = 'Group' AND `fa`.`groups_id_validator` IN ($groupIdListString)
                 )
@@ -879,7 +879,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             echo "<ul>";
             while ($form = $DB->fetch_assoc($result)) {
                echo '<li class="plugin_formcreator_answer">';
-               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="form_answer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
+               echo ' <a class="plugin_formcreator_'.$form['status'].'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
                echo '</li>';
             }
@@ -891,7 +891,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                       . "&criteria[1][searchtype]=equals"
                       . "&criteria[1][value]=mygroups";
 
-            echo '<a href="form_answer.php?' . $criteria . '">';
+            echo '<a href="formanswer.php?' . $criteria . '">';
             echo __('All my forms (validator)', 'formcreator');
             echo '</a>';
             echo '</div>';
@@ -920,7 +920,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // Display form
       $formName = 'formcreator_form' . $this->getID();
-      echo "<form name='" . $formName . "' method='post' role='form' enctype='multipart/form-data'
+      echo "<form name='form' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
@@ -966,7 +966,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
+         formcreatorShowFields($("form[name=\'form\']"));
       })');
 
       // Show validator selector
@@ -1210,7 +1210,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          return false;
       }
 
-      $formanswer = new PluginFormcreatorForm_Answer();
+      $formanswer = new PluginFormcreatorFormAnswer();
       return $formanswer->saveAnswers($this, $input, $fields);
    }
 

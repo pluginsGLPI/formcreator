@@ -1001,11 +1001,11 @@ EOS;
    /**
     * Save form data to the target
     *
-    * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
     * @return Ticket|false Generated ticket if success, null otherwise
     */
-   public function save(PluginFormcreatorForm_Answer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer) {
       global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
@@ -1185,7 +1185,7 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                      ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1201,7 +1201,7 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                     ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1262,7 +1262,7 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_forms_answers_id` = " . $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1297,7 +1297,7 @@ EOS;
       // Add link between Ticket and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
-         'itemtype'   => 'PluginFormcreatorForm_Answer',
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ]);
@@ -1337,7 +1337,7 @@ EOS;
             $answer  = new PluginFormcreatorAnswer();
             $formAnswerId = $formanswer->fields['id'];
             $categoryQuestion = $this->fields['category_question'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
                   AND `plugin_formcreator_questions_id` = '$categoryQuestion'");
             $category = array_shift($found);
             $category = $category['answer'];
@@ -1361,7 +1361,7 @@ EOS;
             $answer  = new PluginFormcreatorAnswer();
             $formAnswerId = $formanswer->fields['id'];
             $urgencyQuestion = $this->fields['urgency_question'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
                   AND `plugin_formcreator_questions_id` = '$urgencyQuestion'");
             $urgency = array_shift($found);
             $urgency = $urgency['answer'];
@@ -1385,7 +1385,7 @@ EOS;
             $answer  = new PluginFormcreatorAnswer();
             $formAnswerId = $formanswer->fields['id'];
             $locationQuestion = $this->fields['location_question'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
                   AND `plugin_formcreator_questions_id` = '$locationQuestion'");
             $location = array_shift($found);
             $location = $location['answer'];

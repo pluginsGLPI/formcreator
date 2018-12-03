@@ -56,7 +56,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    abstract public function export($remove_uuid = false);
 
-   abstract public function save(PluginFormcreatorForm_Answer $formanswer);
+   abstract public function save(PluginFormcreatorFormAnswer $formanswer);
 
    /**
     * Gets an instance object for the relation between the target itemtype
@@ -205,11 +205,11 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    /**
     * Undocumented function
     *
-    * @param PluginFormcreatorForm_Answer $formanswer
+    * @param PluginFormcreatorFormAnswer $formanswer
     * @param integer $requesters_id ID of the requester of the answers
     * @return integer ID of the entity where the target must be generated
     */
-   protected function getTargetEntity(PluginFormcreatorForm_Answer $formanswer, $requesters_id) {
+   protected function getTargetEntity(PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
       global $DB;
 
       $entityId = 0;
@@ -267,7 +267,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          // Default entity of a user from the answer of a user's type question
          case 'user' :
             $answer  = new PluginFormcreatorAnswer();
-            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -282,7 +282,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          // Entity from the answer of an entity's type question
          case 'entity' :
             $answer  = new PluginFormcreatorAnswer();
-            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                     ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -296,7 +296,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    /**
     * find all actors and prepare data for the ticket being created
     */
-   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formanswer) {
+   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormAnswer $formanswer) {
       $targetId = $this->getID();
       $target_actor = $this->getItem_Actor();
       $foreignKey = $this->getForeignKeyField();
@@ -332,7 +332,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                $answer->getFromDBByCrit([
                   'AND' => [
                      'plugin_formcreator_questions_id'     => $actorValue,
-                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                     'plugin_formcreator_formanswers_id' => $formanswerId
                   ]
                ]);
 
@@ -350,7 +350,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                $answer->getFromDBByCrit([
                   'AND' => [
                      'plugin_formcreator_questions_id'     => $actorValue,
-                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                     'plugin_formcreator_formanswers_id' => $formanswerId
                   ]
                ]);
 
@@ -939,11 +939,11 @@ EOS;
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  string $content                            String to be parsed
-    * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
+    * @param  PluginFormcreatorFormAnswer $formanswer   Formanswer object where answers are stored
     * @param  boolean $richText                          Disable rich text mode for field rendering
     * @return string                                     Parsed string with tags replaced by form values
     */
-   protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $richText = false) {
+   protected function parseTags($content, PluginFormcreatorFormAnswer $formanswer, $richText = false) {
       global $DB, $CFG_GLPI;
 
       // retrieve answers
@@ -1068,10 +1068,10 @@ JAVASCRIPT;
     * Sets the time to resolve of the target object
     *
     * @param array $data data of the target object
-    * @param PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    * @param PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     * @return array updated data of the target object
     */
-   protected function setTargetDueDate($data, PluginFormcreatorForm_Answer $formanswer) {
+   protected function setTargetDueDate($data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
       $answer  = new PluginFormcreatorAnswer();
@@ -1149,11 +1149,11 @@ JAVASCRIPT;
     * Prepare the template of the target
     *
     * @param string $template
-    * @param PluginFormcreatorForm_Answer $formAnswer form answer to render
+    * @param PluginFormcreatorFormAnswer $formAnswer form answer to render
     * @param boolean $richText Disable rich text output
     * @return string
     */
-   protected function prepareTemplate($template, PluginFormcreatorForm_Answer $formAnswer, $richText = false) {
+   protected function prepareTemplate($template, PluginFormcreatorFormAnswer $formAnswer, $richText = false) {
       global $CFG_GLPI;
 
       if (strpos($template, '##FULLFORM##') !== false) {

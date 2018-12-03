@@ -152,7 +152,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
@@ -302,7 +302,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'validation_required' => 0,
          'formcreator_field_' . $question->getID() => 'foo',
       ]);
-      $formAnswer = new \PluginFormcreatorForm_Answer();
+      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDB($formAnswerId);
       $sectionName = $section->fields['name'];
       $questionTag = '##question_' . $question->getID() . '##';

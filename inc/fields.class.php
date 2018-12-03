@@ -326,7 +326,7 @@ class PluginFormcreatorFields
          $fields[$id] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
-            );
+         );
          $fields[$id]->parseAnswerValues($input);
       }
 

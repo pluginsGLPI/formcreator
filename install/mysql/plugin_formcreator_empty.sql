@@ -3,11 +3,11 @@
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_forms_answers_id` int(11) NOT NULL,
+  `plugin_formcreator_formanswers_id` int(11) NOT NULL,
   `plugin_formcreator_questions_id` int(11) NOT NULL,
   `answer` text,
   PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_forms_answers_id` (`plugin_formcreator_forms_answers_id`),
+  INDEX `plugin_formcreator_formanswers_id` (`plugin_formcreator_formanswers_id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   FULLTEXT KEY `Search` (`name`,`description`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_answers` (
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `entities_id` int(11) NOT NULL DEFAULT '0',

@@ -45,11 +45,13 @@ $doc = <<<DOC
 cliinstall.php
 
 Usage:
-   cliinstall.php [--as-user USER] [ --tests ]
+   cliinstall.php [--as-user USER] [ --tests ] [ --force-upgrade | --force-install ]
 
 Options:
    --as-user USER       Do install/upgrade as specified USER. If not provided, 'glpi' user will be used
    --tests              Use GLPI test database
+   --force-upgrade      Force upgrade to the latest version
+   --force-install      ignore previous instalation and install from scratch
 
 DOC;
 
@@ -114,6 +116,12 @@ if (!$plugin->getFromDBbyDir("formcreator")) {
    exit(1);
 }
 print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
+if ($args['--force-install']) {
+   $_SESSION['plugin_formcreator']['cli'] = 'force-install';
+}
+if ($args['--force-upgrade']) {
+   $_SESSION['plugin_formcreator']['cli'] = 'force-upgrade';
+}
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
 ob_end_clean();

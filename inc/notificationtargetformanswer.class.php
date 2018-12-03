@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
+class PluginFormcreatorNotificationTargetFormAnswer extends NotificationTarget
 {
    const AUTHOR   = 101;
    const APPROVER = 102;
@@ -57,7 +57,7 @@ class PluginFormcreatorNotificationTargetForm_answer extends NotificationTarget
       $form = new PluginFormcreatorForm();
       $form->getFromDB($this->obj->fields['plugin_formcreator_forms_id']);
       $link = $CFG_GLPI['url_base'];
-      $link .= '/plugins/formcreator/front/form_answer.form.php?id=' . $this->obj->getID();
+      $link .= '/plugins/formcreator/front/formanswer.form.php?id=' . $this->obj->getID();
 
       $requester = new User();
       $requester->getFromDB($this->obj->fields['requester_id']);

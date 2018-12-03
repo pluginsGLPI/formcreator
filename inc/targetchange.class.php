@@ -898,11 +898,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    /**
     * Save form data to the target
     *
-    * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
     * @return Change|false generated change
     */
-   public function save(PluginFormcreatorForm_Answer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer) {
       global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
@@ -1018,7 +1018,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
                   $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_forms_answers_id` = " . (int) $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_formanswers_id` = " . (int) $formanswer->fields['id'] . "
                       AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
                   $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1053,7 +1053,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Add link between Change and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
-         'itemtype'     => 'PluginFormcreatorForm_Answer',
+         'itemtype'     => PluginFormcreatorFormAnswer::class,
          'items_id'     => $formanswer->fields['id'],
          'changes_id'  => $changeID,
       ]);

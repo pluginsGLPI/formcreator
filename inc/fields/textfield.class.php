@@ -181,6 +181,9 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
+      if (!isset($input[$key])) {
+         return false;
+      }
       if (!is_string($input[$key])) {
          return false;
       }
