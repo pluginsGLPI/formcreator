@@ -92,6 +92,15 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      && $decodedValues['show_ticket_categories_depth'] > 0) {
                      $dparams['condition'] .= " AND `level` <= '" . $decodedValues['show_ticket_categories_depth'] . "'";
                   }
+                  if (isset($decodedValues['show_ticket_categories_root'])
+                     && (int) $decodedValues['show_ticket_categories_root'] > 0) {
+                        $sons = (new DBUtils)->getSonsOf(
+                           ItilCategory::getTable(),
+                           $decodedValues['show_ticket_categories_root']
+                        );
+                        $sons = "'" . implode("', '", $sons) . "'";
+                     $dparams['condition'] .= " AND `id` IN ('" . $decodedValues['show_ticket_categories_root'] . "')";
+                  }
                   break;
 
                default:
@@ -219,6 +228,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             } else {
                $input['values']['show_ticket_categories_depth'] = $input['show_ticket_categories_depth'];
             }
+            $input['values']['show_ticket_categories_root'] = isset($input['show_ticket_categories_root'])
+                                                              ? $input['show_ticket_categories_root']
+                                                              : '';
          }
          $input['values'] = json_encode($input['values']);
          unset($input['show_ticket_categories']);

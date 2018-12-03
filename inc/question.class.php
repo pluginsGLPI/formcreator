@@ -965,6 +965,29 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</td>';
       echo '</tr>';
 
+      echo '<tr class="line1" id="cat_root_tr">';
+      echo '<td>';
+      echo '<label for="dropdown_root_ticket_categories'.$rand.'" id="label_root_ticket_categories">';
+      echo __('ticket categories root', 'formcreator');
+      echo '</label>';
+      echo '</td>';
+      echo '<td>';
+      $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $rootValue = isset($decodedValue['show_ticket_categories_root'])
+                     ? $decodedValue['show_ticket_categories_root']
+                     : Dropdown::EMPTY_VALUE;
+      Dropdown::show(ITILCategory::class, [
+         'name'  => 'show_ticket_categories_root',
+         'value' => $rootValue,
+         'rand'  => $rand,
+      ]);
+      echo '</td>';
+      echo '<td>';
+      echo '</td>';
+      echo '<td>';
+      echo '</td>';
+      echo '</tr>';
+
       echo '<tr class="line1" id="values_tr">';
       echo '<td>';
       echo '<label for="dropdown_default_values'.$rand.'" id="label_default_values">';
@@ -1172,26 +1195,29 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             ddvalue = dd.options[dd.selectedIndex].value;
             if(ddvalue == 'ITILCategory') {
                document.getElementById('cat_restrict_tr').style.display                      = 'table-row';
+               document.getElementById('cat_root_tr').style.display                          = 'table-row';
             } else {
                document.getElementById('cat_restrict_tr').style.display                      = 'none';
+               document.getElementById('cat_root_tr').style.display                          = 'none';
             }
          } else {
             document.getElementById('dropdown_values_field').style.display = 'none';
             document.getElementById('label_dropdown_values').style.display                   = 'none';
             document.getElementById('cat_restrict_tr').style.display                         = 'none';
+            document.getElementById('cat_root_tr').style.display                             = 'none';
          }
          if(glpi_object) {
             document.getElementById('glpi_objects_field').style.display = 'inline';
-            document.getElementById('label_glpi_objects').style.display                   = 'inline';
+            document.getElementById('label_glpi_objects').style.display                      = 'inline';
          } else {
             document.getElementById('glpi_objects_field').style.display = 'none';
-            document.getElementById('label_glpi_objects').style.display                   = 'none';
+            document.getElementById('label_glpi_objects').style.display                      = 'none';
          }
          if (dropdown_value || glpi_object) {
-            document.getElementById('dropdown_default_value_field').style.display = 'inline';
+            document.getElementById('dropdown_default_value_field').style.display            = 'inline';
             document.getElementById('label_dropdown_default_value').style.display            = 'inline';
          } else {
-            document.getElementById('dropdown_default_value_field').style.display = 'none';
+            document.getElementById('dropdown_default_value_field').style.display            = 'none';
             document.getElementById('label_dropdown_default_value').style.display            = 'none';
          }
          if(show_empty) {
