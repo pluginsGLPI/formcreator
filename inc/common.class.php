@@ -154,4 +154,17 @@ class PluginFormcreatorCommon {
 
       return implode(' ', $matches);
    }
+
+   /**
+    * Clean a pattern used in an external link:
+    * - removes $pattern from $subject
+    * - strips and returns the resulting string
+    *
+    * @param string $pattern
+    * @param string $subject
+    * @return string
+    */
+   public static function cleanPattern($pattern, $subject) {
+      return (trim(str_replace($pattern, '', $subject)));
+   }
 }
