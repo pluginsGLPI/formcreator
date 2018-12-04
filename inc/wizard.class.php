@@ -177,7 +177,8 @@ class PluginFormcreatorWizard {
           * Helpdesk 1 - the first link
           * will display: the first link.
           */
-         $label = trim(str_replace($_SESSION['plugin_formcretor']['external_links_prefix'], '', $a_link['name']));
+         $label = PluginFormcreatorCommon::cleanPattern(
+            $_SESSION['plugin_formcretor']['external_links_prefix'], $a_link['name']);
 
          /*
           * If the link data field contains a line starting with Icon:, this line is used as a class icon
@@ -189,7 +190,8 @@ class PluginFormcreatorWizard {
          preg_match_all("/^". $_SESSION['plugin_formcretor']['external_links_icon'] ."(.*)$/m", $a_link['data'], $found);
          $icon = "fa fa-globe";
          if ((count($found) > 0) and (count($found[0]) > 0)) {
-            $icon = trim(str_replace($_SESSION['plugin_formcretor']['external_links_icon'], '', $found[0][0]));
+            $icon = PluginFormcreatorCommon::cleanPattern(
+               $_SESSION['plugin_formcretor']['external_links_icon'], $found[0][0]);
          }
 
          /*
@@ -202,7 +204,8 @@ class PluginFormcreatorWizard {
          preg_match_all("/^". $_SESSION['plugin_formcretor']['external_links_title'] ."(.*)$/m", $a_link['data'], $found);
          $title = $a_link['name'];
          if ((count($found) > 0) and (count($found[0]) > 0)) {
-            $title = trim(str_replace($_SESSION['plugin_formcretor']['external_links_title'], '', $found[0][0]));
+            $title = PluginFormcreatorCommon::cleanPattern(
+               $_SESSION['plugin_formcretor']['external_links_title'], $found[0][0]);
          }
          /*
           * If the external link uses a new window...
