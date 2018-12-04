@@ -47,7 +47,7 @@ define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.5');
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
 // Plugin global configuration
-$_SESSION['plugin_formcretor'] = [];
+$_SESSION['plugin_formcreator'] = [];
 
 /**
  * Define the plugin's version and informations
@@ -144,7 +144,7 @@ function plugin_init_formcreator() {
 
       /*
        * Plugin configuration parameters -
-       * set the content of the global $_SESSION['plugin_formcretor'] variable according to the current session identifier
+       * set the content of the global $_SESSION['plugin_formcreator'] variable according to the current session identifier
        */
       PluginFormcreatorEntityconfig::loadConfiguration();
 
