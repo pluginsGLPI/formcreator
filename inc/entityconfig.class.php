@@ -287,9 +287,9 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    }
 
    /**
-    * Load the plugin configuration in a global variable $_SESSION['plugin_formcretor']
+    * Load the plugin configuration in a global variable $_SESSION['plugin_formcreator']
     *
-    * @global array $_SESSION['plugin_formcretor']
+    * @global array $_SESSION['plugin_formcreator']
     */
    static function loadConfiguration() {
       // Protect if session is not opened
@@ -298,21 +298,21 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       }
 
       // Get global configuration parameters
-      $_SESSION['plugin_formcretor']['tickets_summary'] = self::getUsedConfig('tickets_summary',
+      $_SESSION['plugin_formcreator']['tickets_summary'] = self::getUsedConfig('tickets_summary',
          $_SESSION['glpiactive_entity']);
-      $_SESSION['plugin_formcretor']['user_preferences'] = self::getUsedConfig('user_preferences',
+      $_SESSION['plugin_formcreator']['user_preferences'] = self::getUsedConfig('user_preferences',
          $_SESSION['glpiactive_entity']);
-      $_SESSION['plugin_formcretor']['avatar'] = self::getUsedConfig('avatar',
+      $_SESSION['plugin_formcreator']['avatar'] = self::getUsedConfig('avatar',
          $_SESSION['glpiactive_entity']);
-      $_SESSION['plugin_formcretor']['user_name'] = self::getUsedConfig('user_name',
+      $_SESSION['plugin_formcreator']['user_name'] = self::getUsedConfig('user_name',
          $_SESSION['glpiactive_entity']);
-      $_SESSION['plugin_formcretor']['profile_selector'] = self::getUsedConfig('profile_selector',
+      $_SESSION['plugin_formcreator']['profile_selector'] = self::getUsedConfig('profile_selector',
          $_SESSION['glpiactive_entity']);
-      $_SESSION['plugin_formcretor']['external_links_prefix'] = self::getUsedConfig('external_links_prefix',
+      $_SESSION['plugin_formcreator']['external_links_prefix'] = self::getUsedConfig('external_links_prefix',
          $_SESSION['glpiactive_entity'], self::CONFIG_PARENT_STRING);
-      $_SESSION['plugin_formcretor']['external_links_icon'] = self::getUsedConfig('external_links_icon',
+      $_SESSION['plugin_formcreator']['external_links_icon'] = self::getUsedConfig('external_links_icon',
          $_SESSION['glpiactive_entity'], self::CONFIG_PARENT_STRING);
-      $_SESSION['plugin_formcretor']['external_links_title'] = self::getUsedConfig('external_links_title',
+      $_SESSION['plugin_formcreator']['external_links_title'] = self::getUsedConfig('external_links_title',
          $_SESSION['glpiactive_entity'], self::CONFIG_PARENT_STRING);
    }
 }
