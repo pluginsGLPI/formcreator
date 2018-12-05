@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -132,7 +132,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForAdd($input) {
       // Control fields values :
       // - name is required
@@ -142,6 +142,7 @@ class PluginFormcreatorTarget extends CommonDBTM
          return [];
       }
       // - field type is required
+      // TODO: remove this if() and use the default case of the switch structure
       if (isset($input['itemtype'])) {
          if (empty($input['itemtype'])) {
             Session::addMessageAfterRedirect(__('The type cannot be empty!', 'formcreator'), false, ERROR);
@@ -153,7 +154,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                $targetticket      = new PluginFormcreatorTargetTicket();
                $id_targetticket   = $targetticket->add([
                   'name'    => $input['name'],
-                  'comment' => '##FULLFORM##'
+                  'content' => '##FULLFORM##'
                ]);
                $input['items_id'] = $id_targetticket;
 
@@ -179,7 +180,7 @@ class PluginFormcreatorTarget extends CommonDBTM
                $targetchange      = new PluginFormcreatorTargetChange();
                $id_targetchange   = $targetchange->add([
                   'name'    => $input['name'],
-                  'comment' => '##FULLFORM##'
+                  'content' => '##FULLFORM##'
                ]);
                $input['items_id'] = $id_targetchange;
 
@@ -201,6 +202,10 @@ class PluginFormcreatorTarget extends CommonDBTM
                   ]);
                }
                break;
+
+            default:
+               Session::addMessageAfterRedirect(__('Bad type of target', 'formcreator'), false, ERROR);
+               return [];
          }
       }
 
@@ -219,7 +224,7 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param array $input data used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForUpdate($input) {
       // generate a uniq id
       if (!isset($input['uuid'])

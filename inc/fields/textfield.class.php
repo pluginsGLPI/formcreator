@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -33,30 +33,102 @@
 
 class PluginFormcreatorTextField extends PluginFormcreatorField
 {
-   public function isValid($value) {
-      if (!parent::isValid($value)) {
+   public function isPrerequisites() {
+      return true;
+   }
+
+   public function displayField($canEdit = true) {
+      $id           = $this->fields['id'];
+      $rand         = mt_rand();
+      $fieldName    = 'formcreator_field_' . $id;
+      $domId        = $fieldName . '_' . $rand;
+      $defaultValue = Html::cleanInputText($this->value);
+      if ($canEdit) {
+         echo '<input type="text" class="form-control"
+                  name="' . $fieldName . '"
+                  id="' . $domId . '"
+                  value="' . $defaultValue . '" />';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeField('$fieldName', '$rand');
+         });");
+      } else {
+         echo $this->value;
+      }
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function getValueForTargetText($richText) {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function getDocumentsForTarget() {
+      return [];
+   }
+
+   public function isValid() {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $this->value == '') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
          return false;
       }
 
-      $value = utf8_decode(stripcslashes($value));
-
-      // Min range not set or text length longer than min length
-      if (!empty($this->fields['range_min']) && strlen($value) < $this->fields['range_min']) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $this->fields['range_min']) . ' ' . $this->fields['name'], false, ERROR);
+      if (!$this->isValidValue($this->value)) {
          return false;
-
-         // Max range not set or text length shorter than max length
-      } else if (!empty($this->fields['range_max']) && strlen($value) > $this->fields['range_max']) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $this->fields['range_max']) . ' ' . $this->fields['name'], false, ERROR);
-         return false;
-
-         // Specific format not set or well match
-      } else if (!empty($this->fields['regex']) && !preg_match($this->fields['regex'], $value)) {
-          Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
-          return false;
       }
 
        // All is OK
+      return true;
+   }
+
+   private function isValidValue($value) {
+      $parameters = $this->getParameters();
+
+      // Check the field matches the format regex
+      $regex = $parameters['regex']->fields['regex'];
+      if ($regex !== null && strlen($regex) > 0) {
+         if (!preg_match($regex, $value)) {
+            Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+            return false;
+         }
+      }
+
+      // Check the field is in the range
+      $rangeMin = $parameters['range']->fields['range_min'];
+      $rangeMax = $parameters['range']->fields['range_max'];
+      if (strlen($rangeMin) > 0 && strlen($value) < $rangeMin) {
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->fields['name'], false, ERROR);
+         return false;
+      }
+
+      if (strlen($rangeMax) > 0 && strlen($value) > $rangeMax) {
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
+         return false;
+      }
+
       return true;
    }
 
@@ -65,9 +137,25 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['default_values'])) {
-         $input['default_values'] = addslashes($input['default_values']);
+      $success = true;
+      $fieldType = $this->getFieldTypeName();
+      // Add leading and trailing regex marker automaticaly
+      if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
+         // Avoid php notice when validating the regular expression
+         set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
+         $isValid = !(preg_match($input['_parameters'][$fieldType]['regex']['regex'], null) === false);
+         restore_error_handler();
+
+         if (!$isValid) {
+            Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
+            $success = false;
+         }
       }
+      if (!$success) {
+         return [];
+      }
+      $this->value = str_replace('\r\n', "\r\n", $input['default_values']);
+
       return $input;
    }
 
@@ -89,5 +177,63 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!isset($input[$key])) {
+         return false;
+      }
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+       $this->value = str_replace('\r\n', "\r\n", $input[$key]);
+       return true;
+   }
+
+   public function getEmptyParameters() {
+      $regexDoc = '<small>';
+      $regexDoc.= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';
+      $regexDoc.= '('.__('Regular expression', 'formcreator').')';
+      $regexDoc.= '</small>';
+      return [
+         'regex' => new PluginFormcreatorQuestionRegex(
+            $this,
+            [
+               'fieldName' => 'regex',
+               'label'     => __('Additional validation', 'formcreator') . $regexDoc,
+               'fieldType' => ['text'],
+            ]
+         ),
+         'range' => new PluginFormcreatorQuestionRange(
+            $this,
+            [
+               'fieldName' => 'range',
+               'label'     => __('Range', 'formcreator'),
+               'fieldType' => ['text'],
+            ]
+         ),
+      ];
+   }
+
+   public function equals($value) {
+      return $this->value == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->value > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function isAnonymousFormCompatible() {
+      return true;
    }
 }

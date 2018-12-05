@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -33,15 +33,14 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.6.5');
+define('PLUGIN_FORMCREATOR_VERSION', '2.7.0-beta.1');
 // Schema version of this version
-define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.6');
+define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.7');
 // is or is not an official release of the plugin
 define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 
-
 // Minimal GLPI version, inclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.2.1');
+define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.3.0');
 // Maximum GLPI version, exclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.4');
 
@@ -116,8 +115,8 @@ function plugin_init_formcreator() {
 
    // Can assign FormAnswer to tickets
    $PLUGIN_HOOKS['assign_to_ticket']['formcreator'] = true;
-   array_push($CFG_GLPI["ticket_types"], 'PluginFormcreatorForm_Answer');
-   array_push($CFG_GLPI["document_types"], 'PluginFormcreatorForm_Answer');
+   array_push($CFG_GLPI["ticket_types"], PluginFormcreatorFormAnswer::class);
+   array_push($CFG_GLPI["document_types"], PluginFormcreatorFormAnswer::class);
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
@@ -152,6 +151,11 @@ function plugin_init_formcreator() {
                      Html::redirect($CFG_GLPI["root_doc"]."/plugins/formcreator/front/wizard.php");
                   }
                }
+            }
+         }
+         if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
+            if (plugin_formcreator_replaceHelpdesk()) {
+               Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket');
             }
          }
 
@@ -193,8 +197,8 @@ function plugin_init_formcreator() {
          }
 
          // Load JS and CSS files if we are on a page which need them
-         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator") !== false
-             || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
+         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+             || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
              || isset($_SESSION['glpiactiveprofile']) &&
                 $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
 
@@ -205,32 +209,32 @@ function plugin_init_formcreator() {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
          }
 
-         if (strpos($_SERVER['REQUEST_URI'], "plugins/formcreator/front/targetticket.form.php") !== false) {
-            if ($CFG_GLPI['use_rich_text']) {
+         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/targetticket.form.php') !== false) {
+            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                Html::requireJs('tinymce');
             }
          }
 
-         if (strpos($_SERVER['REQUEST_URI'], "helpdesk") !== false
-               || strpos($_SERVER['REQUEST_URI'], "central.php") !== false
-               || strpos($_SERVER['REQUEST_URI'], "formcreator/front/formlist.php") !== false
-               || strpos($_SERVER['REQUEST_URI'], "formcreator/front/wizard.php") !== false) {
+         if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/formlist.php') !== false
+               || strpos($_SERVER['REQUEST_URI'], 'formcreator/front/wizard.php') !== false) {
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/slinky/assets/js/jquery.slinky.js';
 
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/masonry.pkgd.min.js';
          }
 
-         Plugin::registerClass('PluginFormcreatorForm', ['addtabon' => 'Central']);
+         Plugin::registerClass(PluginFormcreatorForm::class, ['addtabon' => Central::class]);
 
          // Load field class and all its method to manage fields
-         Plugin::registerClass('PluginFormcreatorFields');
+         Plugin::registerClass(PluginFormcreatorFields::class);
 
          // Notification
-         Plugin::registerClass('PluginFormcreatorForm_Answer', [
+         Plugin::registerClass(PluginFormcreatorFormAnswer::class, [
             'notificationtemplates_types' => true
          ]);
 
-         Plugin::registerClass('PluginFormcreatorEntityconfig', ['addtabon' => 'Entity']);
+         Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
       }
    }
 }
@@ -345,7 +349,7 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
 
 /**
  * Autoloader
- * @param unknown $classname
+ * @param string $classname
  */
 function plugin_formcreator_autoload($classname) {
    if (strpos($classname, 'PluginFormcreator') === 0) {

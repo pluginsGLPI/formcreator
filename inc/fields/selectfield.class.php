@@ -24,62 +24,51 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorSelectField extends PluginFormcreatorField
+class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
 {
+   public function isPrerequisites() {
+      return true;
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $rand       = mt_rand();
-         $tab_values = [];
-         $required   = $this->fields['required'] ? ' required' : '';
-         $values     = $this->getAvailableValues();
+         $id           = $this->fields['id'];
+         $rand         = mt_rand();
+         $fieldName    = 'formcreator_field_' . $id;
+         $domId        = $fieldName . $rand;
+         $values       = $this->getAvailableValues();
+         $tab_values   = [];
 
          if (!empty($this->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
-                  if (version_compare(GLPI_VERSION, '9.2.1') <= 0) {
-                     $tab_values[Html::entities_deep($value)] = $value;
-                  } else {
-                     $tab_values[$value] = $value;
-                  }
+                  $tab_values[$value] = $value;
                }
             }
 
-            if ($this->fields['show_empty']) {
-               $tab_values = ['' => '-----'] + $tab_values;
-            }
-            Dropdown::showFromArray('formcreator_field_' . $this->fields['id'], $tab_values, [
-               'value'     => static::IS_MULTIPLE ? '' : $this->getValue(),
-               'values'    => static::IS_MULTIPLE ? $this->getValue() : [],
+            Dropdown::showFromArray($fieldName, $tab_values, [
+               'display_emptychoice' => $this->fields['show_empty'] == 1,
+               'value'     => $this->value,
+               'values'    => [],
                'rand'      => $rand,
-               'multiple'  => static::IS_MULTIPLE,
+               'multiple'  => false,
             ]);
          }
          echo PHP_EOL;
-         echo '<script type="text/javascript">
-                  jQuery(document).ready(function($) {
-                     jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").on("change", function(e) {
-                        var selectedValues = jQuery("#dropdown_formcreator_field_' . $this->fields['id'] . $rand . '").val();
-                        formcreatorChangeValueOf (' . $this->fields['id']. ', selectedValues);
-                     });
-                  });
-               </script>';
+         echo Html::scriptBlock("$(function() {
+            pluginFormcreatorInitializeSelect('$fieldName', '$rand');
+         });");
       } else {
-         echo nl2br($this->getAnswer());
+         echo nl2br($this->value);
          echo PHP_EOL;
       }
-   }
-
-   public function getAnswer() {
-      $values = $this->getAvailableValues();
-      $value  = $this->getValue();
-      return in_array($value, $values) ? $value : $this->fields['default_values'];
    }
 
    public static function getName() {
@@ -87,23 +76,59 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
-      if (isset($input['values'])) {
-         if (empty($input['values'])) {
-            Session::addMessageAfterRedirect(
-               __('The field value is required:', 'formcreator') . ' ' . $input['name'],
-               false,
-               ERROR);
-            return [];
-         } else {
-            // trim values
-            $input['values'] = $this->trimValue($input['values']);
-         }
-      }
-      if (isset($input['default_values'])) {
-         // trim values
-         $input['default_values'] = $this->trimValue($input['default_values']);
-      }
+      $input = parent::prepareQuestionInputForSave($input);
+      $this->value = array_shift($this->value);
       return $input;
+   }
+
+   public function parseAnswerValues($input) {
+      $key = 'formcreator_field_' . $this->fields['id'];
+      if (!is_string($input[$key])) {
+         return false;
+      }
+
+       $this->value = $input[$key];
+       return true;
+   }
+
+   public function serializeValue() {
+      if ($this->value === null || $this->value === '') {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function deserializeValue($value) {
+      $this->value = ($value !== null && $value !== '')
+                  ? $value
+                  : '';
+   }
+
+   public function getValueForDesign() {
+      if ($this->value === null) {
+         return '';
+      }
+
+      return $this->value;
+   }
+
+   public function getValueForTargetText($richText) {
+      return Toolbox::addslashes_deep($this->value);
+   }
+
+   public function isValid() {
+      // If the field is required it can't be empty
+      if ($this->isRequired() && $this->value == '0') {
+         Session::addMessageAfterRedirect(
+            __('A required field is empty:', 'formcreator') . ' ' . $this->getLabel(),
+            false,
+            ERROR);
+         return false;
+      }
+
+      // All is OK
+      return true;
    }
 
    public static function getPrefs() {
@@ -124,5 +149,25 @@ class PluginFormcreatorSelectField extends PluginFormcreatorField
    public static function getJSFields() {
       $prefs = self::getPrefs();
       return "tab_fields_fields['select'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   }
+
+   public function equals($value) {
+      return $this->value == $value;
+   }
+
+   public function notEquals($value) {
+      return !$this->equals($value);
+   }
+
+   public function greaterThan($value) {
+      return $this->value > $value;
+   }
+
+   public function lessThan($value) {
+      return !$this->greaterThan($value) && !$this->equals($value);
+   }
+
+   public function isAnonymousFormCompatible() {
+      return true;
    }
 }

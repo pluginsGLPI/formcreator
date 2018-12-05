@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -76,7 +76,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @return NULL         Nothing, just display the form
     */
-   public function showForm($options=[]) {
+   public function showForm($options = []) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
@@ -116,9 +116,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="comment" style="width:700px;" rows="15">' . $this->fields['comment'] . '</textarea>';
+      echo '<textarea name="content" style="width:700px;" rows="15">' . $this->fields['content'] . '</textarea>';
       if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('comment');
+         Html::initEditorSystem('content');
       }
       echo '</td>';
       echo '</tr>';
@@ -555,21 +555,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '</div>';
 
       echo '<div id="block_assigned_question_group" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, array(
+      Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_actors" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, array(
+      Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
             'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_supplier" style="display:none">';
-      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, array(
+      Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, [
          'value' => $this->fields['due_date_question'],
-      ));
+      ]);
       echo '</div>';
 
       echo '<div>';
@@ -831,7 +831,7 @@ EOS;
     * @param array $input datas used to add the item
     *
     * @return array the modified $input array
-   **/
+   */
    public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
@@ -845,13 +845,13 @@ EOS;
          }
 
          // - comment is required
-         if (empty($input['comment'])) {
+         if (strlen($input['content']) < 1) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
 
          if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-            $input['comment'] = Html::entity_decode_deep($input['comment']);
+            $input['content'] = Html::entity_decode_deep($input['content']);
          }
 
          switch ($input['destination_entity']) {
@@ -917,27 +917,7 @@ EOS;
          $input = $this->saveLinkedItem($input);
       }
 
-      // generate a unique id
-      if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
-
-      $target = new PluginFormcreatorTarget();
-      $target->getFromDBByCrit([
-         'itemtype' => self::class,
-         'items_id' => $this->getID()
-      ]);
-      if (!$target->isNewItem()) {
-         $target->update([
-            'id' => $target->getID(),
-            'name' => $input['name'],
-         ]);
-      }
-      $input['name'] = $input['title'];
-      unset($input['title']);
-
-      return $input;
+      return parent::prepareInputForUpdate($input);
    }
 
    /**
@@ -1021,11 +1001,11 @@ EOS;
    /**
     * Save form data to the target
     *
-    * @param  PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
     * @return Ticket|false Generated ticket if success, null otherwise
     */
-   public function save(PluginFormcreatorForm_Answer $formanswer) {
+   public function save(PluginFormcreatorFormAnswer $formanswer) {
       global $DB, $CFG_GLPI;
 
       // Prepare actors structures for creation of the ticket
@@ -1108,30 +1088,26 @@ EOS;
          unset($predefined_fields['_groups_id_assign']);
       }
 
-      $data                = array_merge($data, $predefined_fields);
+      $data = array_merge($data, $predefined_fields);
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $data['name'] = $this->fields['name'];
+      $richText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
+      $data['name'] = $this->prepareTemplate(
+         $this->fields['name'],
+         $formanswer,
+         false
+      );
       $data['name'] = $this->parseTags($data['name'], $formanswer);
-      $data['name'] = Toolbox::addslashes_deep($data['name']);
+      $data['content'] = $this->prepareTemplate(
+         $this->fields['content'],
+         $formanswer,
+         $richText
+      );
 
-      $data['content'] = $this->fields['comment'];
-      $data['content'] = str_replace("\r\n", '\r\n', $data['content']);
-      if (strpos($data['content'], '##FULLFORM##') !== false) {
-         $data['content'] = str_replace('##FULLFORM##', $formanswer->getFullForm(), $data['content']);
-      }
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-         // replace HTML P tags with DIV tags
-         $data['content'] = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $data['content']);
-      }
+      $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
 
-      $data['content'] = $this->parseTags($data['content'], $formanswer);
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-         $data['content'] = htmlentities($data['content'], ENT_NOQUOTES);
-      }
-      $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
 
@@ -1209,7 +1185,7 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                      ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $user    = array_shift($found);
             $user_id = $user['answer'];
@@ -1225,7 +1201,7 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_forms_answers_id = '.$formanswer->fields['id'].
+            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
                                     ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
             $entity = array_shift($found);
 
@@ -1268,7 +1244,7 @@ EOS;
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {
-         return false;
+         return null;
       }
 
       // Add tag if presents
@@ -1286,7 +1262,7 @@ EOS;
 
             $query = "SELECT answer
                       FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_forms_answers_id` = " . $formanswer->fields['id'] . "
+                      WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
@@ -1321,7 +1297,7 @@ EOS;
       // Add link between Ticket and FormAnswer
       $itemlink = $this->getItem_Item();
       $itemlink->add([
-         'itemtype'   => 'PluginFormcreatorForm_Answer',
+         'itemtype'   => PluginFormcreatorFormAnswer::class,
          'items_id'   => $formanswer->fields['id'],
          'tickets_id' => $ticketID,
       ]);
@@ -1361,7 +1337,7 @@ EOS;
             $answer  = new PluginFormcreatorAnswer();
             $formAnswerId = $formanswer->fields['id'];
             $categoryQuestion = $this->fields['category_question'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
                   AND `plugin_formcreator_questions_id` = '$categoryQuestion'");
             $category = array_shift($found);
             $category = $category['answer'];
@@ -1385,7 +1361,7 @@ EOS;
             $answer  = new PluginFormcreatorAnswer();
             $formAnswerId = $formanswer->fields['id'];
             $urgencyQuestion = $this->fields['urgency_question'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
                   AND `plugin_formcreator_questions_id` = '$urgencyQuestion'");
             $urgency = array_shift($found);
             $urgency = $urgency['answer'];
@@ -1409,7 +1385,7 @@ EOS;
             $answer  = new PluginFormcreatorAnswer();
             $formAnswerId = $formanswer->fields['id'];
             $locationQuestion = $this->fields['location_question'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
                   AND `plugin_formcreator_questions_id` = '$locationQuestion'");
             $location = array_shift($found);
             $location = $location['answer'];
@@ -1474,10 +1450,10 @@ EOS;
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['name'] = $content;
 
-            $content = $target_data['comment'];
+            $content = $target_data['content'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['comment'] = $content;
+            $target_data['content'] = $content;
          }
       }
 
@@ -1504,7 +1480,7 @@ EOS;
     * Export in an array all the data of the current instanciated targetticket
     * @return array the array with all data (with sub tables)
     */
-   public function export() {
+   public function export($remove_uuid = false) {
       if (!$this->getID()) {
          return false;
       }
@@ -1540,10 +1516,10 @@ EOS;
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
             $target_data['name'] = $content;
 
-            $content = $target_data['comment'];
+            $content = $target_data['content'];
             $content = str_replace("##question_$id##", "##question_$uuid##", $content);
             $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
-            $target_data['comment'] = $content;
+            $target_data['content'] = $content;
          }
       }
 

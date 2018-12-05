@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -35,10 +35,10 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion_Condition extends CommonDBChild
+class PluginFormcreatorQuestion_Condition extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
-   static public $itemtype = "PluginFormcreatorQuestion";
-   static public $items_id = "plugin_formcreator_questions_id";
+   static public $itemtype = PluginFormcreatorQuestion::class;
+   static public $items_id = 'plugin_formcreator_questions_id';
 
    public function prepareInputForAdd($input) {
       // generate a unique id
@@ -61,12 +61,13 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
     * Import a question's condition into the db
     * @see PluginFormcreatorQuestion::import
     *
-    * @param  integer $questions_id  id of the parent question
-    * @param  array   $condition the condition data (match the condition table)
-    * @param boolean  storeOnly
+    * @param integer  $questions_id  id of the parent question
+    * @param array    $condition the condition data (match the condition table)
+    * @param boolean  $storeOnly
     *
     * @return integer the condition's id
     */
+   /*
    public static function import($questions_id = 0, $condition = [], $storeOnly = true) {
       static $conditionsToImport = [];
 
@@ -99,6 +100,35 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
          }
          $conditionsToImport = [];
       }
+   }
+   */
+
+   public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $condition = []) {
+      $item = new static();
+
+      if ($showField
+          = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
+                                                'uuid',
+                                                $condition['show_field'])) {
+         $importLinker->postponeImport($condition['uuid'], $item->getType(), $condition, $questions_id);
+         return false;
+      }
+
+      $condition['show_field'] = $showField;
+      $condition['plugin_formcreator_questions_id'] = $questions_id;
+
+      if ($conditions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $condition['uuid'])) {
+         // add id key
+         $condition['id'] = $conditions_id;
+
+         // prepare update condition
+         $item->update($condition);
+      } else {
+         // prepare create condition
+         $item->add($condition);
+      }
+      $importLinker->addImportedObject($condition['uuid'], $item);
+      return $conditions_id;
    }
 
    /**
@@ -198,7 +228,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild
       $html.= '<div class="div_show_condition_field">';
       $html.= Dropdown::showFromArray('show_field[]', $questions_tab, [
          'display'      => false,
-         'used'         => array($questionId => ''),
+         'used'         => [$questionId => ''],
          'value'        => $show_field,
          'rand'         => $rand,
       ]);

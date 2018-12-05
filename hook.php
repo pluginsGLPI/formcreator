@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -42,7 +42,9 @@ function plugin_formcreator_install() {
    $migration = new Migration($version['version']);
    require_once(__DIR__ . '/install/install.php');
    $install = new PluginFormcreatorInstall();
-   if (!$install->isPluginInstalled()) {
+   if (!$install->isPluginInstalled()
+      || isset($_SESSION['plugin_formcreator']['cli'])
+      && $_SESSION['plugin_formcreator']['cli'] == 'force-install') {
       return $install->install($migration);
    }
    return $install->upgrade($migration);
@@ -99,7 +101,7 @@ function plugin_formcreator_canValidate() {
 
 function plugin_formcreator_getCondition($itemtype) {
    $table = getTableForItemType($itemtype);
-   if ($itemtype == PluginFormcreatorForm_Answer::class
+   if ($itemtype == PluginFormcreatorFormAnswer::class
        && plugin_formcreator_canValidate()) {
       $condition = " 1=1 ";
 
@@ -125,10 +127,10 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          break;
 
-      case PluginFormcreatorForm_Answer::class:
+      case PluginFormcreatorFormAnswer::class:
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
-            $condition = "`$table`.`".PluginFormcreatorForm_Answer::$items_id."` = ".
+            $condition = "`$table`.`".PluginFormcreatorFormAnswer::$items_id."` = ".
                          $_SESSION['formcreator']['form_search_answers'];
          } else {
             $condition = plugin_formcreator_getCondition($itemtype);
@@ -248,7 +250,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
 
 
 function plugin_formcreator_AssignToTicket($types) {
-   $types['PluginFormcreatorForm_Answer'] = PluginFormcreatorForm_Answer::getTypeName();
+   $types[PluginFormcreatorFormAnswer::class] = PluginFormcreatorFormAnswer::getTypeName();
 
    return $types;
 }
@@ -335,11 +337,11 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
    if ($item instanceof Ticket) {
       $id = $item->getID();
 
-      // mark form_answers as deleted
+      // mark formanswers as deleted
       $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
-         $form_answer = new PluginFormcreatorForm_Answer();
+         $form_answer = new PluginFormcreatorFormAnswer();
          $form_answer->update([
             'id'           => $row['id'],
             'is_deleted'   => 1,
@@ -361,9 +363,9 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
 
       // Restore deletes form_answers
       $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorForm_Answer' AND `tickets_id` = '$id'");
+      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `tickets_id` = '$id'");
       foreach ($rows as $row) {
-         $form_answer = new PluginFormcreatorForm_Answer();
+         $form_answer = new PluginFormcreatorFormAnswer();
          $form_answer->update([
             'id'           => $row['id'],
             'is_deleted'   => 0,
@@ -401,7 +403,7 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
 
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
-      case PluginFormcreatorForm_Answer::class;
+      case PluginFormcreatorFormAnswer::class;
          if ($url = parse_url($_SERVER['HTTP_REFERER'])) {
             if (strpos($url['path'],
                        Toolbox::getItemTypeFormURL("PluginFormcreatorForm")) !== false) {
@@ -409,7 +411,7 @@ function plugin_formcreator_dynamicReport($params) {
                if (isset($query['id'])) {
                   $item = new PluginFormcreatorForm;
                   $item->getFromDB($query['id']);
-                  PluginFormcreatorForm_Answer::showForForm($item, $params);
+                  PluginFormcreatorFormAnswer::showForForm($item, $params);
                   return true;
                }
             }

@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild
+class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
    static public $itemtype = "PluginFormcreatorForm";
    static public $items_id = "plugin_formcreator_forms_id";
@@ -136,7 +136,7 @@ class PluginFormcreatorSection extends CommonDBChild
     * Reorder other sections
     *
     * @return void
-   **/
+   */
    public function post_purgeItem() {
       global $DB;
 
@@ -154,7 +154,7 @@ class PluginFormcreatorSection extends CommonDBChild
    /**
     * Duplicate a section
     *
-    * @return boolean
+    * @return integer|boolean ID of the new section, false otherwise
     */
    public function duplicate() {
       $oldSectionId        = $this->getID();
@@ -167,7 +167,8 @@ class PluginFormcreatorSection extends CommonDBChild
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
-      if (!$newSection->add($row)) {
+      $newSection_id = $newSection->add($row);
+      if ($newSection_id === false) {
          return false;
       }
 
@@ -176,7 +177,8 @@ class PluginFormcreatorSection extends CommonDBChild
       foreach ($rows as $questions_id => $row) {
          unset($row['id'],
                $row['uuid']);
-         $row['plugin_formcreator_sections_id'] = $newSection->getID();
+         $row['plugin_formcreator_sections_id'] = $newSection_id;
+         $row['_skip_checks'] = true;
          if (!$new_questions_id = $section_question->add($row)) {
             return false;
          }
@@ -184,23 +186,45 @@ class PluginFormcreatorSection extends CommonDBChild
          $tab_questions[$questions_id] = $new_questions_id;
       }
 
-      // Form questions conditions
-      $questionIds = implode("', '", array_keys($tab_questions));
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         if (isset($tab_questions[$row['show_field']])) {
-            // update show_field if id in show_field belongs to the section being duplicated
-            $row['show_field'] = $tab_questions[$row['show_field']];
-         }
-         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-         if (!$question_condition->add($row)) {
-            return false;
+      // Form questions parameters
+      foreach ($tab_questions as $questions_id => $new_questions_id) {
+         $oldQuestion = new PluginFormcreatorQuestion();
+         $oldQuestion->getFromDB($questions_id);
+         $this->field = PluginFormcreatorFields::getFieldInstance(
+            $oldQuestion->getField('fieldtype'),
+            $oldQuestion
+         );
+         $parameters = $this->field->getParameters();
+         foreach ($parameters as $fieldName => $parameter) {
+            if (!$parameter->isNewItem()) {
+               // Should always happen
+               $newQuestion = new PluginFormcreatorQuestion();
+               $newQuestion->getFromDB($new_questions_id);
+               $parameter = $parameter->duplicate($newQuestion, $tab_questions);
+               $parameter->add($parameter->fields);
+            }
          }
       }
 
-      return true;
+      // Form questions conditions
+      if (count($tab_questions) > 0) {
+         $questionIds = implode("', '", array_keys($tab_questions));
+         $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+         foreach ($rows as $row) {
+            unset($row['id'],
+                  $row['uuid']);
+            if (isset($tab_questions[$row['show_field']])) {
+               // update show_field if id in show_field belongs to the section being duplicated
+               $row['show_field'] = $tab_questions[$row['show_field']];
+            }
+            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+            if (!$question_condition->add($row)) {
+               return false;
+            }
+         }
+      }
+
+      return $newSection_id;
    }
 
 
@@ -276,6 +300,7 @@ class PluginFormcreatorSection extends CommonDBChild
     * @param  array   $section the section data (match the section table)
     * @return integer the section's id
     */
+   /*
    public static function import($forms_id = 0, $section = []) {
       $item = new self;
 
@@ -300,12 +325,50 @@ class PluginFormcreatorSection extends CommonDBChild
             if ($a['order'] == $b['order']) {
                return 0;
             }
-               return ($a['order'] < $b['order']) ? -1 : 1;
+            return ($a['order'] < $b['order']) ? -1 : 1;
          }
          );
 
          foreach ($section['_questions'] as $question) {
             PluginFormcreatorQuestion::import($sections_id, $question);
+         }
+      }
+
+      return $sections_id;
+   }
+   */
+
+   public static function import(PluginFormcreatorImportLinker $importLinker, $forms_id = 0, $section = []) {
+      $item = new self;
+
+      $section['plugin_formcreator_forms_id'] = $forms_id;
+      $section['_skip_checks']                = true;
+
+      if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
+         // add id key
+         $section['id'] = $sections_id;
+
+         // update section
+         $item->update($section);
+      } else {
+         //create section
+         $sections_id = $item->add($section);
+      }
+
+      if ($sections_id
+          && isset($section['_questions'])) {
+         $importLinker->addImportedObject($section['uuid'], $item);
+         // sort questions by order
+         usort($section['_questions'], function ($a, $b) {
+            if ($a['order'] == $b['order']) {
+               return 0;
+            }
+            return ($a['order'] < $b['order']) ? -1 : 1;
+         }
+         );
+
+         foreach ($section['_questions'] as $question) {
+            PluginFormcreatorQuestion::import($importLinker, $sections_id, $question);
          }
       }
 
@@ -347,7 +410,9 @@ class PluginFormcreatorSection extends CommonDBChild
    }
 
    /**
-    * get all sections in a form
+    * gets all sections in a form
+    * @param integer $formId ID of a form
+    * @return array sections in a form
     */
    public function getSectionsFromForm($formId) {
       $sections = [];

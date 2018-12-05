@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -50,7 +50,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     */
    public $dohistory                   = true;
 
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       $tabNames = [];
       if (!$withtemplate) {
@@ -61,7 +61,7 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
       return $tabNames;
    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'Entity') {
          $config = new self();
@@ -140,8 +140,8 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
     * @param $entities_id
     * @param $fieldval        string   name of the field that we want value (default '')
     * @param $default_value   integer  value to return (default -2)
-    **/
-   static function getUsedConfig($fieldref, $entities_id, $fieldval='', $default_value=-2) {
+    */
+   static function getUsedConfig($fieldref, $entities_id, $fieldval = '', $default_value = -2) {
 
       // for calendar
       if (empty($fieldval)) {

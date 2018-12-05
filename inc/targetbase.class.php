@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -35,7 +35,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTargetBase extends CommonDBTM
+abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginFormcreatorExportableInterface
 {
 
    protected $requesters;
@@ -54,18 +54,47 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
 
    protected $attachedDocuments = [];
 
-   abstract public function export();
+   abstract public function export($remove_uuid = false);
 
-   abstract public function save(PluginFormcreatorForm_Answer $formanswer);
+   abstract public function save(PluginFormcreatorFormAnswer $formanswer);
 
+   /**
+    * Gets an instance object for the relation between the target itemtype
+    * and an user
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_User();
 
+   /**
+    * Gets an instance object for the relation between the target itemtype
+    * and a group
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_Group();
 
+   /**
+    * Gets an instance object for the relation between the target itemtype
+    * and supplier
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_Supplier();
 
+   /**
+    * Gets an instance object for the relation between the target itemtype
+    * and an object of any itemtype
+    *
+    * @return CommonDBTM
+    */
    abstract protected function getItem_Item();
 
+   /**
+    * Gets the class name of the target itemtype
+    *
+    * @return string
+    */
    abstract protected function getTargetItemtypeName();
 
    abstract public function getItem_Actor();
@@ -146,7 +175,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       return true;
    }
 
-   /*
+   /**
     *
     */
    public function getForm() {
@@ -174,9 +203,100 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
    }
 
    /**
+    * Undocumented function
+    *
+    * @param PluginFormcreatorFormAnswer $formanswer
+    * @param integer $requesters_id ID of the requester of the answers
+    * @return integer ID of the entity where the target must be generated
+    */
+   protected function getTargetEntity(PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
+      global $DB;
+
+      $entityId = 0;
+      switch ($this->fields['destination_entity']) {
+         // Requester's entity
+         case 'current' :
+            $entityId = $formanswer->fields[Entity::getForeignKeyField()];
+            break;
+
+         case 'requester' :
+            $userObj = new User();
+            $userObj->getFromDB($requesters_id);
+            $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            break;
+
+         // Requester's first dynamic entity
+         case 'requester_dynamic_first' :
+            $order_entities = "`glpi_profiles`.`name` ASC";
+         case 'requester_dynamic_last' :
+            if (!isset($order_entities)) {
+               $order_entities = "`glpi_profiles`.`name` DESC";
+            }
+            $query_entities = "SELECT `glpi_profiles_users`.`entities_id`
+                      FROM `glpi_profiles_users`
+                      LEFT JOIN `glpi_profiles`
+                        ON `glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`
+                      WHERE `glpi_profiles_users`.`users_id` = $requesters_id
+                     ORDER BY `glpi_profiles_users`.`is_dynamic` DESC, $order_entities";
+            $res_entities = $DB->query($query_entities);
+            $data_entities = [];
+            while ($entity = $DB->fetch_array($res_entities)) {
+               $data_entities[] = $entity;
+            }
+            $first_entity = array_shift($data_entities);
+            $entityId = $first_entity[Entity::getForeignKeyField()];
+            break;
+
+         // Specific entity
+         case 'specific' :
+            $entityId = $this->fields['destination_entity_value'];
+            break;
+
+         // The form entity
+         case 'form' :
+            $entityId = $formanswer->getForm()->fields[Entity::getForeignKeyField()];
+            break;
+
+         // The validator entity
+         case 'validator' :
+            $userObj = new User();
+            $userObj->getFromDB($formanswer->fields['users_id_validator']);
+            $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            break;
+
+         // Default entity of a user from the answer of a user's type question
+         case 'user' :
+            $answer  = new PluginFormcreatorAnswer();
+            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
+               ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
+            $user    = array_shift($found);
+            $user_id = $user['answer'];
+
+            if ($user_id > 0) {
+               $userObj = new User();
+               $userObj->getFromDB($user_id);
+               $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            }
+            break;
+
+         // Entity from the answer of an entity's type question
+         case 'entity' :
+            $answer  = new PluginFormcreatorAnswer();
+            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
+                                    ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
+            $entity = array_shift($found);
+
+            $entityId = $entity['answer'];
+            break;
+      }
+
+      return $entityId;
+   }
+
+   /**
     * find all actors and prepare data for the ticket being created
     */
-   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorForm_Answer $formanswer) {
+   protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormAnswer $formanswer) {
       $targetId = $this->getID();
       $target_actor = $this->getItem_Actor();
       $foreignKey = $this->getForeignKeyField();
@@ -212,7 +332,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer->getFromDBByCrit([
                   'AND' => [
                      'plugin_formcreator_questions_id'     => $actorValue,
-                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                     'plugin_formcreator_formanswers_id' => $formanswerId
                   ]
                ]);
 
@@ -230,7 +350,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
                $answer->getFromDBByCrit([
                   'AND' => [
                      'plugin_formcreator_questions_id'     => $actorValue,
-                     'plugin_formcreator_forms_answers_id' => $formanswerId
+                     'plugin_formcreator_formanswers_id' => $formanswerId
                   ]
                ]);
 
@@ -269,6 +389,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
       }
    }
 
+   /**
+    * Adds an user to the given actor role (requester, observer assigned or supplier)
+    *
+    * @param string $role role of the user
+    * @param string $user user ID or email address for anonymous users
+    * @param boolean $notify true to enable notification for the actor
+    * @return boolean true on success, false on error
+    */
    protected function addActor($role, $user, $notify) {
       if (filter_var($user, FILTER_VALIDATE_EMAIL) !== false) {
          $userId = 0;
@@ -278,46 +406,81 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
          $alternativeEmail = '';
          if ($userId == '0') {
             // there is no actor
-            return;
+            return false;
          }
       }
 
+      $actorType = null;
+      $actorTypeNotif = null;
       switch ($role) {
          case 'requester':
-            $this->requesters['_users_id_requester'][]                                    = $userId;
-            $this->requesters['_users_id_requester_notif']['use_notification'][]          = ($notify == true);
-            $this->requesters['_users_id_requester_notif']['alternative_email'][]         = $alternativeEmail;
+            $actorType = &$this->requesters['_users_id_requester'];
+            $actorTypeNotif = &$this->requesters['_users_id_requester_notif'];
             break;
-         case 'observer' :
-            $this->observers['_users_id_observer'][]                                      = $userId;
-            $this->observers['_users_id_observer_notif']['use_notification'][]            = ($notify == true);
-            $this->observers['_users_id_observer_notif']['alternative_email'][]           = $alternativeEmail;
+         case 'observer':
+            $actorType = &$this->observers['_users_id_observer'];
+            $actorTypeNotif = &$this->observers['_users_id_observer_notif'];
             break;
          case 'assigned' :
-            $this->assigned['_users_id_assign'][]                                         = $userId;
-            $this->assigned['_users_id_assign_notif']['use_notification'][]               = ($notify == true);
-            $this->assigned['_users_id_assign_notif']['alternative_email'][]              = $alternativeEmail;
+            $actorType = &$this->assigned['_users_id_assign'];
+            $actorTypeNotif = &$this->assigned['_users_id_assign_notif'];
             break;
          case 'supplier' :
-            $this->assignedSuppliers['_suppliers_id_assign'][]                            = $userId;
-            $this->assignedSuppliers['_suppliers_id_assign_notif']['use_notification'][]  = ($notify == true);
-            $this->assignedSuppliers['_suppliers_id_assign_notif']['alternative_email'][] = $alternativeEmail;
+            $actorType = &$this->assignedSuppliers['_suppliers_id_assign'];
+            $actorTypeNotif = &$this->assignedSuppliers['_suppliers_id_assign_notif'];
             break;
+         default:
+            return false;
       }
+
+      $actorKey = array_search($userId, $actorType);
+      if ($actorKey === false) {
+         // Add the actor
+         $actorType[]                      = $userId;
+         $actorTypeNotif['use_notification'][]  = ($notify == true);
+         $actorTypeNotif['alternative_email'][] = $alternativeEmail;
+      } else {
+         // New actor settings takes precedence
+         $actorType[$actorKey] = $userId;
+         $actorTypeNotif['use_notification'][$actorKey]  = ($notify == true);
+         $actorTypeNotif['alternative_email'][$actorKey] = $alternativeEmail;
+      }
+
+      return true;
    }
 
+   /**
+    * Adds a group to the given actor role
+    *
+    * @param string $role Role of the group
+    * @param string $group Group ID
+    * @return boolean true on sucess, false on error
+    */
    protected function addGroupActor($role, $group) {
+      $actorType = null;
       switch ($role) {
          case 'requester':
-            $this->requesterGroups['_groups_id_requester'][]  = $group;
+            $actorType = &$this->requesterGroups['_groups_id_requester'];
             break;
          case 'observer' :
-            $this->observerGroups['_groups_id_observer'][]     = $group;
+            $actorType = &$this->observerGroups['_groups_id_observer'];
             break;
          case 'assigned' :
-            $this->assignedGroups['_groups_id_assign'][]       = $group;
+            $actorType = &$this->assignedGroups['_groups_id_assign'];
             break;
+         default:
+            return false;
       }
+
+      $actorKey = array_search($group, $actorType);
+      if ($actorKey !== false) {
+         return false;
+      }
+
+      // Add the group actor
+      $actorType[] = $group;
+
+      return true;
    }
 
    /**
@@ -334,6 +497,10 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM
             ]);
          }
       }
+   }
+
+   public function addAttachedDocument($documentId) {
+      $this->attachedDocuments[$documentId] = true;
    }
 
    protected function showDestinationEntitySetings($rand) {
@@ -771,58 +938,52 @@ EOS;
    /**
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
-    * @param  String $content                            String to be parsed
-    * @param  PluginFormcreatorForm_Answer $formanswer   Formanswer object where answers are stored
-    * @param  String                                     full form
-    * @return String                                     Parsed string with tags replaced by form values
+    * @param  string $content                            String to be parsed
+    * @param  PluginFormcreatorFormAnswer $formanswer   Formanswer object where answers are stored
+    * @param  boolean $richText                          Disable rich text mode for field rendering
+    * @return string                                     Parsed string with tags replaced by form values
     */
-   protected function parseTags($content, PluginFormcreatorForm_Answer $formanswer, $fullform = "") {
+   protected function parseTags($content, PluginFormcreatorFormAnswer $formanswer, $richText = false) {
       global $DB, $CFG_GLPI;
 
       // retrieve answers
       $answers_values = $formanswer->getAnswers($formanswer->getID());
 
-      $section     = new PluginFormcreatorSection();
-      $sections    = $section->getSectionsFromForm($formanswer->fields['plugin_formcreator_forms_id']);
-      $sectionsIdString = implode(', ', array_keys($sections));
+      // Retrieve questions
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $questions = (new PluginFormcreatorQuestion())
+         ->getQuestionsFromForm($formanswer->getField($formFk));
 
-      if (count($sections) > 0) {
-         $query_questions = "SELECT `questions`.*, `answers`.`answer`
-                             FROM `glpi_plugin_formcreator_questions` AS questions
-                             LEFT JOIN `glpi_plugin_formcreator_answers` AS answers
-                               ON `answers`.`plugin_formcreator_questions_id` = `questions`.`id`
-                               AND `plugin_formcreator_forms_answers_id` = ".$formanswer->getID()."
-                             WHERE `questions`.`plugin_formcreator_sections_id` IN ($sectionsIdString)
-                             ORDER BY `questions`.`order` ASC";
-         $res_questions = $DB->query($query_questions);
-         while ($question_line = $DB->fetch_assoc($res_questions)) {
-            $classname = 'PluginFormcreator'.ucfirst($question_line['fieldtype']).'Field';
-            if (class_exists($classname)) {
-               $fieldObject = new $classname($question_line, $question_line['answer']);
-            }
+      $fields = [];
 
-            $id    = $question_line['id'];
-            if (!PluginFormcreatorFields::isVisible($question_line['id'], $answers_values)) {
-               $name = '';
-               $value = '';
-            } else {
-               $name  = $question_line['name'];
-               $value = $fieldObject->prepareQuestionInputForTarget($fieldObject->getValue());
-            }
-            if ($question_line['fieldtype'] !== 'file') {
-               $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
-               $content = str_replace('##answer_' . $id . '##', $value, $content);
-            } else {
-               if (strpos($content, '##answer_' . $id . '##') !== false) {
-                  $content = str_replace('##question_' . $id . '##', addslashes($name), $content);
-                  if ($value !== '') {
-                     $content = str_replace('##answer_' . $id . '##', __('Attached document', 'formcreator'), $content);
+      // Prepare all fields of the form
+      foreach ($questions as $questionId => $question) {
+         $answer = $answers_values['formcreator_field_' . $questionId];
+         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
+            $question->getField('fieldtype'),
+            $question
+         );
+         $fields[$questionId]->deserializeValue($answer);
+      }
 
-                     // keep the ID of the document
-                     $this->attachedDocuments[$value] = true;
-                  } else {
-                     $content = str_replace('##answer_' . $id . '##', '', $content);
-                  }
+      foreach ($questions as $questionId => $question) {
+         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {
+            $name = '';
+            $value = '';
+         } else {
+            $name  = $question->getField('name');
+            $value = $fields[$questionId]->getValueForTargetText($richText);
+         }
+
+         $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
+         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
+         foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
+            $this->addAttachedDocument($documentId);
+         }
+         if ($question->getField('fieldtype') === 'file') {
+            if (strpos($content, '##answer_' . $questionId . '##') !== false) {
+               if (!is_array($value)) {
+                  $value = [$value];
                }
             }
          }
@@ -907,10 +1068,10 @@ JAVASCRIPT;
     * Sets the time to resolve of the target object
     *
     * @param array $data data of the target object
-    * @param PluginFormcreatorForm_Answer $formanswer    Answers previously saved
+    * @param PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     * @return array updated data of the target object
     */
-   protected function setTargetDueDate($data, PluginFormcreatorForm_Answer $formanswer) {
+   protected function setTargetDueDate($data, PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
 
       $answer  = new PluginFormcreatorAnswer();
@@ -953,5 +1114,57 @@ JAVASCRIPT;
       }
 
       return $data;
+   }
+
+   public function prepareInputForUpdate($input) {
+      // generate a unique id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+
+      if (isset($input['name'])) {
+         $target = new PluginFormcreatorTarget();
+         $target->getFromDBByCrit([
+            'itemtype' => self::class,
+            'items_id' => $this->getID()
+         ]);
+         if (!$target->isNewItem()) {
+            $target->update([
+               'id' => $target->getID(),
+               'name' => $input['name'],
+            ]);
+         }
+      }
+
+      if (isset($input['title'])) {
+         $input['name'] = $input['title'];
+         unset($input['title']);
+      }
+
+      return $input;
+   }
+
+   /**
+    * Prepare the template of the target
+    *
+    * @param string $template
+    * @param PluginFormcreatorFormAnswer $formAnswer form answer to render
+    * @param boolean $richText Disable rich text output
+    * @return string
+    */
+   protected function prepareTemplate($template, PluginFormcreatorFormAnswer $formAnswer, $richText = false) {
+      global $CFG_GLPI;
+
+      if (strpos($template, '##FULLFORM##') !== false) {
+         $template = str_replace('##FULLFORM##', $formAnswer->getFullForm($richText), $template);
+      }
+
+      if ($richText) {
+         $template = str_replace(['<p>', '</p>'], ['<div>', '</div>'], $template);
+         $template = Html::entities_deep($template);
+      }
+
+      return $template;
    }
 }

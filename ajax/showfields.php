@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -33,7 +33,6 @@
 
 include ('../../../inc/includes.php');
 
-$currentValues  = json_decode(stripslashes($_POST['values']), true);
-$visibility = PluginFormcreatorFields::updateVisibility($currentValues);
+$visibility = PluginFormcreatorFields::updateVisibility($_POST);
 echo json_encode($visibility);
 exit();

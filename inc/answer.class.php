@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -37,8 +37,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorAnswer extends CommonDBChild
 {
-   static public $itemtype = "PluginFormcreatorForm_Answer";
-   static public $items_id = "plugin_formcreator_forms_answers_id";
+   static public $itemtype = PluginFormcreatorFormAnswer::class;
+   static public $items_id = "plugin_formcreator_formanswers_id";
 
    /**
     * Check if current user have the right to create and modify requests
@@ -66,49 +66,5 @@ class PluginFormcreatorAnswer extends CommonDBChild
     */
    public static function getTypeName($nb = 0) {
       return _n('Answer', 'Answers', $nb, 'formcreator');
-   }
-
-   /**
-    * Prepare input data for adding the question
-    * Check fields values and get the order for the new question
-    *
-    * @param array $input data used to add the item
-    *
-    * @return array the modified $input array
-   **/
-   public function prepareInputForAdd($input) {
-      global $DB;
-
-      // Decode (if already encoded) and encode strings to avoid problems with quotes
-      foreach ($input as $key => $value) {
-         if (is_array($value)) {
-            foreach ($value as $key2 => $value2) {
-               $input[$key][$key2] = plugin_formcreator_encode($value2, false);
-            }
-         } else if (is_array(json_decode($value))) {
-            //$value = json_decode($value);
-            //foreach ($value as $key2 => $value2) {
-               //$value[$key2] = plugin_formcreator_encode($value2, false);
-            //}
-            //$input[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
-            $input[$key] = $DB->escape($value);
-         } else {
-            $input[$key] = $value;
-         }
-      }
-
-      return $input;
-   }
-
-   /**
-    * Prepare input data for adding the question
-    * Check fields values and get the order for the new question
-    *
-    * @param array $input data used to add the item
-    *
-    * @return array the modified $input array
-   **/
-   public function prepareInputForUpdate($input) {
-      return $this->prepareInputForAdd($input);
    }
 }

@@ -24,7 +24,7 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
@@ -42,11 +42,11 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
    static public $itemtype_2 = 'Profile';
    static public $items_id_2 = 'profiles_id';
 
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return _n('Target', 'Targets', $nb, 'formcreator');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
          return self::getTypeName(2);
    }
 
@@ -67,7 +67,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       return $input;
    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $DB, $CFG_GLPI;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'

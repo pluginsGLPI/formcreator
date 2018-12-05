@@ -24,24 +24,34 @@
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
- * @license   GPLv3+ http://www.gnu.org/licenses/gpl.txt
+ * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
 
-include (__DIR__ . "/../vendor/docopt/docopt/src/docopt.php");
+(PHP_SAPI == 'cli') or die('Only available from command line');
+
+chdir(dirname($_SERVER["SCRIPT_FILENAME"]));
+
+if (!is_readable(__DIR__ . '/../vendor/autoload.php')) {
+   echo 'Please run composer install --no-dev in the plugin directory' . PHP_EOL;
+   exit(1);
+}
+include (__DIR__ . '/../vendor/docopt/docopt/src/docopt.php');
 
 $doc = <<<DOC
 cliinstall.php
 
 Usage:
-   cliinstall.php [--as-user USER] [ --tests ]
+   cliinstall.php [--as-user USER] [ --tests ] [ --force-upgrade | --force-install ]
 
 Options:
    --as-user USER       Do install/upgrade as specified USER. If not provided, 'glpi' user will be used
-   --tests              Use GLPi test database
+   --tests              Use GLPI test database
+   --force-upgrade      Force upgrade to the latest version
+   --force-install      ignore previous instalation and install from scratch
 
 DOC;
 
@@ -62,6 +72,11 @@ if (isset($args)) {
    }
 }
 
+// Prevent problem of execution time
+ini_set("max_execution_time", "0");
+ini_set("memory_limit", "-1");
+ini_set("session.use_cookies", "0");
+
 include (__DIR__ . "/../../../inc/includes.php");
 
 // Init debug variable
@@ -76,11 +91,6 @@ $CFG_GLPI["use_log_in_files"] = 1;
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 //set_error_handler('userErrorHandlerDebug');
-
-// Prevent problem of execution time
-ini_set("max_execution_time", "0");
-ini_set("memory_limit", "-1");
-ini_set("session.use_cookies", "0");
 
 $DB = new DB();
 if (!$DB->connected) {
@@ -106,6 +116,12 @@ if (!$plugin->getFromDBbyDir("formcreator")) {
    exit(1);
 }
 print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
+if ($args['--force-install']) {
+   $_SESSION['plugin_formcreator']['cli'] = 'force-install';
+}
+if ($args['--force-upgrade']) {
+   $_SESSION['plugin_formcreator']['cli'] = 'force-upgrade';
+}
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
 ob_end_clean();
