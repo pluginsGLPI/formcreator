@@ -63,6 +63,9 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function prepareQuestionInputForSave($input) {
+      $this->value = $input['default_values'] != ''
+                     ? (int) $input['default_values']
+                     : '3';
       return $input;
    }
 
@@ -103,7 +106,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
    public function serializeValue() {
       if ($this->value === null || $this->value === '') {
-         return '';
+         return '3';
       }
 
       return $this->value;
@@ -112,7 +115,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    public function deserializeValue($value) {
       $this->value = ($value !== null && $value !== '')
                   ? $value
-                  : '';
+                  : '3';
    }
 
    public function getValueForDesign() {

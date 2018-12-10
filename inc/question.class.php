@@ -264,8 +264,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
    /**
     * Validate form fields before add or update a question
-    * @param  Array $input Datas used to add the item
-    * @return Array        The modified $input array
+    * @param  array $input Datas used to add the item
+    * @return array        The modified $input array
     */
    private function checkBeforeSave($input) {
       // Control fields values :

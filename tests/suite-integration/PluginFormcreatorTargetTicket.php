@@ -124,6 +124,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                [
                   'name'                  => 'custom urgency',
                   'fieldtype'             => 'urgency',
+                  'default_values'        => '3',
                ],
             ],
          ],
