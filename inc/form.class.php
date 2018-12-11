@@ -417,10 +417,14 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       ]);
 
       // Validators users
+      $rows = $DB->request([
+         'SELECT' => ['items_id'],
+         'FROM'   => PluginFormcreatorForm_Validator::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getID()
+         ]
+      ]);
       $validators = [];
-      $formId = $this->getID();
-      $form_validator = new PluginFormcreatorForm_Validator();
-      $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$formId'");
       foreach ($rows as $row) {
          $validators[] = $row['items_id'];
       }
@@ -529,11 +533,12 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return String                   Name to be displayed
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      global $DB;
+
       switch ($item->getType()) {
          case PluginFormcreatorConfig::class:
-            $object  = new self;
-            $found = $object->find();
-            $number  = count($found);
+            $found  = $DB->request(self::getTable(), []);
+            $number = count($found);
             return self::createTabEntry(self::getTypeName($number), $number);
             break;
          case PluginFormcreatorForm::class:
@@ -919,7 +924,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
       // Display form
-      $formName = 'formcreator_form' . $this->getID();
       echo "<form name='form' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
@@ -936,17 +940,29 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          echo '</div>';
       }
       // Get and display sections of the form
-      $question      = new PluginFormcreatorQuestion();
       $questions     = [];
 
-      $section_class = new PluginFormcreatorSection();
-      $find_sections = $section_class->find('plugin_formcreator_forms_id = ' . $this->getID(), '`order` ASC');
+      $find_sections = $DB->request([
+         'SELECT' => ['id', 'name'],
+         'FROM'   => PluginFormcreatorSection::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getID()
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       echo '<div class="form_section">';
       foreach ($find_sections as $section_line) {
          echo '<h2>' . $section_line['name'] . '</h2>';
 
          // Display all fields of the section
-         $questions = $question->find('plugin_formcreator_sections_id = ' . $section_line['id'], '`order` ASC');
+         $questions = $DB->request([
+            'SELECT' => ['id'],
+            'FROM'   => PluginFormcreatorQuestion::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_sections_id' => $section_line['id']
+            ],
+            'ORDER'  => 'order ASC'
+         ]);
          foreach ($questions as $question_line) {
             $question = new PluginFormcreatorQuestion();
             $question->getFromDB($question_line['id']);
@@ -1176,7 +1192,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       $found_questions = $question->getQuestionsFromForm($this->getID());
       foreach ($found_questions as $id => $question) {
-         $key = 'formcreator_field_' . $id;
          $fields[$id] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
@@ -1270,6 +1285,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return Boolean true if success, false otherwise.
     */
    public function duplicate() {
+      global $DB;
+
       $target              = new PluginFormcreatorTarget();
       $target_ticket       = new PluginFormcreatorTargetTicket();
       $target_change       = new PluginFormcreatorTargetChange();
@@ -1297,7 +1314,12 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form profiles
-      $rows = $form_profile->find("`plugin_formcreator_forms_id` = '$old_form_id'");
+      $rows = $DB->request([
+         'FROM'    => $form_profile::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_forms_id' => $old_form_id
+         ]
+      ]);
       foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
@@ -1308,7 +1330,12 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form validators
-      $rows = $form_validator->find("`plugin_formcreator_forms_id` = '$old_form_id'");
+      $rows = $DB->request([
+         'FROM'    => $form_validator::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_forms_id' => $old_form_id
+         ]
+      ]);
       foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
@@ -1319,8 +1346,15 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form sections
-      $sectionRows = $form_section->find("`plugin_formcreator_forms_id` = '$old_form_id'", "`order` ASC");
-      foreach ($sectionRows as $sections_id => $sectionRow) {
+      $sectionRows = $DB->request([
+         'FROM'  => $form_section::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_forms_id' => $old_form_id
+         ],
+         'ORDER' => 'order ASC'
+      ]);
+      foreach ($sectionRows as $sectionRow) {
+         $sections_id = $sectionRow['id'];
          unset($sectionRow['id'],
                $sectionRow['uuid']);
          $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
@@ -1330,8 +1364,15 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
 
          // Form questions
-         $questionRows = $section_question->find("`plugin_formcreator_sections_id` = '$sections_id'", "`order` ASC");
-         foreach ($questionRows as $questions_id => $questionRow) {
+         $questionRows = $DB->request([
+            'FROM'  => $section_question::getTable(),
+            'WHERE' => [
+               'plugin_formcreator_sections_id' => $sections_id
+            ],
+            'ORDER' => 'order ASC'
+         ]);
+         foreach ($questionRows as $questionRow) {
+            $questions_id = $questionRow['id'];
             unset($questionRow['id'],
                   $questionRow['uuid']);
             $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
@@ -1356,7 +1397,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             $oldQuestion
          );
          $parameters = $field->getParameters();
-         foreach ($parameters as $fieldName => $parameter) {
+         foreach ($parameters as $parameter) {
             $newQuestion = new PluginFormcreatorQuestion();
             $newQuestion->getFromDB($new_questions_id);
             $parameter = $parameter->duplicate($newQuestion, $tab_questions);
@@ -1365,22 +1406,33 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form questions conditions
-      $questionIds = implode("', '", array_keys($tab_questions));
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['show_field'] = $tab_questions[$row['show_field']];
-         $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-         $row['show_value'] = Toolbox::addslashes_deep($row['show_value']);
-         if (!$question_condition->add($row)) {
-            return false;
+      if (count($tab_questions)) {
+         $qc_rows = $DB->request([
+            'FROM'  => $question_condition::getTable(),
+            'WHERE' => [
+               'plugin_formcreator_questions_id' => $tab_questions
+            ]
+         ]);
+         foreach ($qc_rows as $row) {
+            unset($row['id'],
+                  $row['uuid']);
+            $row['show_field'] = $tab_questions[$row['show_field']];
+            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
+            $row['show_value'] = Toolbox::addslashes_deep($row['show_value']);
+            if (!$question_condition->add($row)) {
+               return false;
+            }
          }
       }
 
       // Form targets
-      $rows = $target->find("`plugin_formcreator_forms_id` = '$old_form_id'");
-      foreach ($rows as $target_values) {
+      $t_rows = $DB->request([
+         'FROM'  => $target::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_forms_id' => $old_form_id
+         ]
+      ]);
+      foreach ($t_rows as $target_values) {
          unset($target_values['id'],
                $target_values['uuid']);
          $target_values['plugin_formcreator_forms_id'] = $new_form_id;
@@ -1516,12 +1568,17 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                ]);
 
                // Form target tickets actors
-               $rows = $target_ticket_actor->find("`plugin_formcreator_targettickets_id` = '{$target_values['items_id']}'");
-               foreach ($rows as $row) {
-                  unset($row['id'],
-                        $row['uuid']);
-                  $row['plugin_formcreator_targettickets_id'] = $new_target_item_id;
-                  if (!$target_ticket_actor->add($row)) {
+               $tta_rows = $DB->request([
+                  'FROM'  => $target_ticket_actor::getTable(),
+                  'WHERE' => [
+                     'plugin_formcreator_targettickets_id' => $target_values['items_id']
+                  ]
+               ]);
+               foreach ($tta_rows as $tta_row) {
+                  unset($tta_row['id'],
+                        $tta_row['uuid']);
+                  $tta_row['plugin_formcreator_targettickets_id'] = $new_target_item_id;
+                  if (!$target_ticket_actor->add($tta_row)) {
                      return false;
                   }
                }
@@ -1534,12 +1591,17 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                ]);
 
                // Form target change actors
-               $rows = $target_change_actor->find("`plugin_formcreator_targetchanges_id` = '{$target_values['items_id']}'");
-               foreach ($rows as $row) {
-                  unset($row['id'],
-                        $row['uuid']);
-                  $row['plugin_formcreator_targetchanges_id'] = $new_target_item_id;
-                  if (!$target_change_actor->add($row)) {
+               $tca_rows = $DB->request([
+                  'FROM'  => $target_change_actor::getTable(),
+                  'WHERE' => [
+                     'plugin_formcreator_targetchanges_id' => $target_values['items_id']
+                  ]
+               ]);
+               foreach ($tca_rows as $tca_row) {
+                  unset($tca_row['id'],
+                        $tca_row['uuid']);
+                  $tca_row['plugin_formcreator_targetchanges_id'] = $new_target_item_id;
+                  if (!$target_change_actor->add($tca_row)) {
                      return false;
                   }
                }
@@ -1672,6 +1734,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return array the array with all data (with sub tables)
     */
    function export($remove_uuid = false) {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -1702,7 +1766,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // get sections
       $form['_sections'] = [];
-      $all_sections = $form_section->find("plugin_formcreator_forms_id = ".$this->getID());
+      $all_sections = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_section::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getID()
+         ]
+      ]);
       foreach ($all_sections as $section) {
          $form_section->getFromDB($section['id']);
          $form['_sections'][] = $form_section->export($remove_uuid);
@@ -1710,7 +1780,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // get validators
       $form['_validators'] = [];
-      $all_validators = $form_validator->find("plugin_formcreator_forms_id = ".$this->getID());
+      $all_validators = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_validator::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getID()
+         ]
+      ]);
       foreach ($all_validators as $validator) {
          $form_validator->getFromDB($validator['id']);
          $form['_validators'][] = $form_validator->export($remove_uuid);
@@ -1718,7 +1794,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // get targets
       $form['_targets'] = [];
-      $all_target = $form_target->find("plugin_formcreator_forms_id = ".$this->getID());
+      $all_target = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_target::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getID()
+         ]
+      ]);
       foreach ($all_target as $target) {
          $form_target->getFromDB($target['id']);
          $form['_targets'][] = $form_target->export($remove_uuid);
@@ -1726,7 +1808,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // get profiles
       $form['_profiles'] = [];
-      $all_profiles = $form_profile->find("plugin_formcreator_forms_id = ".$this->getID());
+      $all_profiles = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_profile::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getID()
+         ]
+      ]);
       foreach ($all_profiles as $profile) {
          $form_profile->getFromDB($profile['id']);
          $form['_profiles'][] = $form_profile->export($remove_uuid);

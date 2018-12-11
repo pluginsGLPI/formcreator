@@ -246,9 +246,14 @@ class PluginFormcreatorInstall {
       $this->migration->displayMessage("create default display preferences");
 
       // Create standard display preferences
-      $displayprefs = new DisplayPreference();
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
-      if (count($found_dprefs) == 0) {
+      $found_dprefs = $DB->request([
+         'COUNT'  => 'cpt',
+         'FROM'   => DisplayPreference::getTable(),
+         'WHERE'  => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ]
+      ])->next();
+      if ($found_dprefs['cpt'] == 0) {
          $query = "INSERT IGNORE INTO `glpi_displaypreferences`
                    (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
                    (NULL, 'PluginFormcreatorFormAnswer', 2, 2, 0),
@@ -259,9 +264,14 @@ class PluginFormcreatorInstall {
          $DB->query($query) or die ($DB->error());
       }
 
-      $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorForm'");
-      if (count($found_dprefs) == 0) {
+      $found_dprefs = $DB->request([
+         'COUNT'  => 'cpt',
+         'FROM'   => DisplayPreference::getTable(),
+         'WHERE'  => [
+            'itemtype' => 'PluginFormcreatorForm',
+         ]
+      ])->next();
+      if ($found_dprefs['cpt'] == 0) {
          $query = "INSERT IGNORE INTO `glpi_displaypreferences`
                    (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
                    (NULL, 'PluginFormcreatorForm', 30, 1, 0),
@@ -273,9 +283,14 @@ class PluginFormcreatorInstall {
          $DB->query($query) or die ($DB->error());
       }
 
-      $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorIssue'");
-      if (count($found_dprefs) == 0) {
+      $found_dprefs = $DB->request([
+         'COUNT'  => 'cpt',
+         'FROM'   => DisplayPreference::getTable(),
+         'WHERE'  => [
+            'itemtype' => 'PluginFormcreatorIssue',
+         ]
+      ])->next();
+      if ($found_dprefs['cpt'] == 0) {
          $query = "INSERT IGNORE INTO `glpi_displaypreferences`
                    (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
                    (NULL, 'PluginFormcreatorIssue', 1, 1, 0),
@@ -293,6 +308,8 @@ class PluginFormcreatorInstall {
     * Declares the notifications that the plugin handles
     */
    protected function createNotifications() {
+      global $DB;
+
       $this->migration->displayMessage("create notifications");
 
       $notifications = [
@@ -337,10 +354,17 @@ class PluginFormcreatorInstall {
 
       foreach ($notifications as $event => $data) {
          // Check if notification already exists
-         $exists = $notification->find("itemtype = 'PluginFormcreatorFormAnswer' AND event = '$event'");
+         $exists = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $notification::getTable(),
+            'WHERE'  => [
+               'itemtype' => 'PluginFormcreatorFormAnswer',
+               'event'    => $event,
+            ]
+         ])->next();
 
          // If it doesn't exists, create it
-         if (count($exists) == 0) {
+         if ($exists['cpt'] == 0) {
             $template_id = $template->add([
                'name'     => Toolbox::addslashes_deep($data['name']),
                'comment'  => '',
@@ -386,6 +410,8 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteNotifications() {
+      global $DB;
+
       // Delete translations
       $translation = new NotificationTemplateTranslation();
       $translation->deleteByCriteria([
@@ -425,13 +451,18 @@ class PluginFormcreatorInstall {
       // Delete notifications and their templates
       $notification = new Notification();
       $notification_notificationTemplate = new Notification_NotificationTemplate();
-      $rows = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $notification::getTable(),
+         'WHERE'  => [
+            'itemtype' => 'PluginFormcreatorFormAnswer'
+         ]
+      ]);
       foreach ($rows as $row) {
          $notification_notificationTemplate->deleteByCriteria(['notifications_id' => $row['id']]);
          $notification->delete($row);
       }
 
-      $notification = new Notification();
       $notification->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
    }
 

@@ -80,18 +80,19 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
     * @return array Tree of form categories as nested array
     */
    public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {
+      global $DB;
+
       $cat_table  = PluginFormcreatorCategory::getTable();
       $form_table = PluginFormcreatorForm::getTable();
       $table_fp   = PluginFormcreatorForm_Profile::getTable();
+      $helpdesk   = '';
       if ($helpdeskHome) {
          $helpdesk   = "AND $form_table.`helpdesk_home` = 1";
-      } else {
-         $helpdesk   = '';
       }
 
       $query_faqs = KnowbaseItem::getListRequest([
-            'faq'      => '1',
-            'contains' => ''
+         'faq'      => '1',
+         'contains' => ''
       ]);
 
       // Selects categories containing forms or sub-categories
@@ -118,18 +119,33 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          AND `faqs`.`knowbaseitemcategories_id` <> '0'
       ) > 0";
 
-      $formCategory = new self();
       if ($rootId == 0) {
-         $items = $formCategory->find("`level`='1' AND ($where)", '`name`');
+         $query = "SELECT *
+                   FROM $cat_table
+                   WHERE `level` = '1'
+                     AND ($where)
+                   ORDER BY `name`";
          $name = '';
          $parent = 0;
       } else {
-         $items = $formCategory->find("`plugin_formcreator_categories_id`='$rootId' AND ($where)",
-                                      '`name`');
+         $query = "SELECT *
+                   FROM $cat_table
+                   WHERE `plugin_formcreator_categories_id` = '$rootId'
+                     AND ($where)
+                   ORDER BY `name`";
          $formCategory = new self();
          $formCategory->getFromDB($rootId);
          $name = $formCategory->getField('name');
          $parent = $formCategory->getField('plugin_formcreator_categories_id');
+      }
+
+      $items = [];
+      if ($result = $DB->query($query)) {
+         if ($DB->numrows($result)) {
+            while ($item = $DB->fetch_assoc($result)) {
+               $items[$item['id']] = $item;
+            }
+         }
       }
 
       // No sub-categories, then return

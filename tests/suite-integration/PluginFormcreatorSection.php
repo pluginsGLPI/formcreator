@@ -105,6 +105,8 @@ class PluginFormcreatorSection extends CommonTestCase {
     *
     */
    public function testDuplicate() {
+      global $DB;
+
       $form = $this->getForm();
 
       $section = new \PluginFormcreatorSection();
@@ -112,7 +114,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       $sections_id = $section->add(['name'                        => "test clone section",
                                     'plugin_formcreator_forms_id' => $form->getID()]);
 
-      $questions_id_1 = $question->add(['name'                           => "test clone question 1",
+      $question->add(['name'                           => "test clone question 1",
                                         'fieldtype'                      => 'text',
                                         'plugin_formcreator_sections_id' => $sections_id,
                                         'default_values' => '',
@@ -123,7 +125,7 @@ class PluginFormcreatorSection extends CommonTestCase {
                                            ]
                                          ],
                                         ]);
-      $questions_id_2 = $question->add(['name'                           => "test clone question 2",
+      $question->add(['name'                           => "test clone question 2",
                                         'fieldtype'                      => 'textarea',
                                         'plugin_formcreator_sections_id' => $sections_id
                                         ]);
@@ -132,7 +134,6 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer($section->duplicate());
 
       //get cloned section
-      $originalId = $section->getID();
       $new_section   = new \PluginFormcreatorSection;
       $new_section->getFromDBByCrit([
          'AND' => [
@@ -144,8 +145,20 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->boolean($new_section->isNewItem())->isFalse();
 
       // check questions
-      $all_questions = $question->find("plugin_formcreator_sections_id = ".$section->getID());
-      $all_new_questions = $question->find("plugin_formcreator_sections_id = ".$new_section->getID());
+      $all_questions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'  => $question::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_sections_id' => $section->getID(),
+         ]
+      ]);
+      $all_new_questions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'  => $question::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_sections_id' => $new_section->getID(),
+         ]
+      ]);
       $this->integer(count($all_new_questions))->isEqualTo(count($all_questions));
 
       // check that all question uuid are new

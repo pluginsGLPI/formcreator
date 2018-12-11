@@ -50,17 +50,26 @@ class PluginFormcreatorUpgradeTo2_6 {
       $table = 'glpi_plugin_formcreator_questions';
       $migration->displayMessage("Upgrade $table");
 
-      $question = new PluginFormcreatorQuestion();
-      $rows = $question->find("`fieldtype` = 'dropdown' AND `values` = 'ITILCategory'");
-      foreach ($rows as $id => $row) {
+      $rows = $DB->request([
+         'SELECT' => ['id', 'values'],
+         'FROM'   => PluginFormcreatorQuestion::getTable(),
+         'WHERE'  => [
+            'fieldtype' => 'dropdown',
+            'values'    => 'ITILCategory'
+         ]
+      ]);
+      foreach ($rows as $row) {
          $updatedValue = json_encode([
             'itemtype'                       => $row['values'],
             'show_ticket_categories'         => 'both',
             'show_ticket_categories_depth'   => 0
          ]);
          // Don't use update() method because the json will be HTML-entities-ified (see prepareInputForUpdate() )
-         $query = "UPDATE `$table` SET `values`='$updatedValue' WHERE `id`='$id'";
-         $DB->query($query) or plugin_formcreator_upgrade_error($migration);
+         $DB->update($table, [
+            'values' => $updatedValue
+         ], [
+            'id' => $row['id']
+         ]) or plugin_formcreator_upgrade_error($migration);
       }
 
       // Update Form Answers
@@ -136,7 +145,12 @@ class PluginFormcreatorUpgradeTo2_6 {
       $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
       $migration->migrationOneTable($table);
       $obj = new PluginFormcreatorTargetTicket();
-      $all_targetTickets = $obj->find("`uuid` IS NULL");
+      $all_targetTickets = $DB->request([
+         'FROM'   => $obj::getTable(),
+         'WHERE'  => [
+            'uuid' => null,
+         ]
+      ]);
       foreach ($all_targetTickets as $targetTicket) {
          $targetTicket['_skip_checks'] = true;
          $targetTicket['title'] = $targetTicket['name'];

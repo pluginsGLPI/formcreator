@@ -77,8 +77,6 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
     * @return array the modified $input array
    **/
    public function prepareInputForAdd($input) {
-      global $DB;
-
       // Control fields values :
       // - name is required
       if (!isset($input['name']) ||
@@ -95,7 +93,9 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
 
       // Get next order
       $formId = $input['plugin_formcreator_forms_id'];
-      $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_forms_id` = '$formId'", 'order');
+      $maxOrder = PluginFormcreatorCommon::getMax($this, [
+         "plugin_formcreator_forms_id" => $formId
+      ], 'order');
       if ($maxOrder === null) {
          $input['order'] = 1;
       } else {
@@ -157,6 +157,8 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
     * @return integer|boolean ID of the new section, false otherwise
     */
    public function duplicate() {
+      global $DB;
+
       $oldSectionId        = $this->getID();
       $newSection          = new static();
       $section_question    = new PluginFormcreatorQuestion();
@@ -173,7 +175,13 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       }
 
       // Form questions
-      $rows = $section_question->find("`plugin_formcreator_sections_id` = '$oldSectionId'", "`order` ASC");
+      $rows = $DB->request([
+         'FROM'  => $section_question::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_sections_id' => $oldSectionId
+         ],
+         'ORDER' => 'order ASC'
+      ]);
       foreach ($rows as $questions_id => $row) {
          unset($row['id'],
                $row['uuid']);
@@ -195,7 +203,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
             $oldQuestion
          );
          $parameters = $this->field->getParameters();
-         foreach ($parameters as $fieldName => $parameter) {
+         foreach ($parameters as $parameter) {
             if (!$parameter->isNewItem()) {
                // Should always happen
                $newQuestion = new PluginFormcreatorQuestion();
@@ -208,8 +216,12 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
 
       // Form questions conditions
       if (count($tab_questions) > 0) {
-         $questionIds = implode("', '", array_keys($tab_questions));
-         $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$questionIds')");
+         $rows = $DB->request([
+            'FROM'    => $question_condition::getTable(),
+            'WHERE'   => [
+               'plugin_formcreator_questions_id' => $tab_questions
+            ]
+         ]);
          foreach ($rows as $row) {
             unset($row['id'],
                   $row['uuid']);
@@ -382,6 +394,8 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -395,7 +409,13 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
 
       // get questions
       $section['_questions'] = [];
-      $all_questions = $form_question->find("plugin_formcreator_sections_id = ".$this->getID());
+      $all_questions = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_question::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_sections_id' => $this->getID()
+         ]
+      ]);
       foreach ($all_questions as $question) {
          if ($form_question->getFromDB($question['id'])) {
             $section['_questions'][] = $form_question->export($remove_uuid);
@@ -415,8 +435,17 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
     * @return array sections in a form
     */
    public function getSectionsFromForm($formId) {
+      global $DB;
+
       $sections = [];
-      $rows = $this->find("`plugin_formcreator_forms_id` = '$formId'", "`order` ASC");
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => self::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $formId
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       foreach ($rows as $row) {
          $section = new self();
          $section->getFromDB($row['id']);

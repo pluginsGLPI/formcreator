@@ -107,11 +107,12 @@ class PluginFormcreatorWizard {
       echo '</a></li>';
 
       if (Session::haveRight("reservation", ReservationItem::RESERVEANITEM)) {
-         $reservation_item = new reservationitem;
-         $entity_filter = getEntitiesRestrictRequest("", 'glpi_reservationitems', 'entities_id',
-                                                     $_SESSION['glpiactiveentities']);
-         $found_available_res = $reservation_item->find($entity_filter);
-         if (count($found_available_res)) {
+         $found_available_res = $DB->request([
+            'COUNT' => 'cpt',
+            'FROM'  => ReservationItem::getTable(),
+            'WHERE' => getEntitiesRestrictCriteria(ReservationItem::getTable(), 'entities_id'),
+         ])->next();
+         if ($found_available_res['cpt'] > 0) {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
             echo '<span class="fa fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';

@@ -38,27 +38,30 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function displayField($canEdit = true) {
+      global $DB;
+
       $id           = $this->fields['id'];
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . $rand;
       if ($canEdit) {
          if (!class_exists(PluginTagTag::class)) {
             // Plugin Tag not available
             echo '';
             return;
          }
-         $required = $this->fields['required'] ? ' required' : '';
-
+         $result = $DB->request([
+            'SELECT' => ['id', 'name'],
+            'FROM'   => PluginTagTag::getTable(),
+            'WHERE'  => [
+               'OR' => [
+                  ['type_menu' => ['LIKE', '%\"Ticket\"%']],
+                  ['type_menu' => ['LIKE', '%\"Change\"%']],
+                  ['type_menu' => ['LIKE', '0']],
+               ]
+            ] + getEntitiesRestrictCriteria(PluginTagTag::getTable(), '', '', true),
+            'ORDER'  => 'name'
+         ]);
          $values = [];
-
-         $obj = new PluginTagTag();
-         $obj->getEmpty();
-
-         $where = "(`type_menu` LIKE '%\"Ticket\"%' OR`type_menu` LIKE '%\"Change\"%' OR `type_menu` LIKE '0')";
-         $where .= getEntitiesRestrictRequest('AND', getTableForItemType(PluginTagTag::class), '', '', true);
-
-         $result = $obj->find($where, 'name');
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
          }

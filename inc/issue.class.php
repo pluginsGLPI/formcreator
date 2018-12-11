@@ -256,15 +256,21 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @return mixed the provide _item key replaced if needed
     */
    public function getTicketsForDisplay($options) {
+      global $DB;
+
       $item = $options['_item'];
       $formanswerId = $options['id'];
-      $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer'
-                                  AND `items_id` = $formanswerId", "`tickets_id` ASC");
-
+      $rows = $DB->request([
+         'FROM'  => Item_Ticket::getTable(),
+         'WHERE' => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'items_id' => $formanswerId
+         ],
+         'ORDER' => 'tickets_id ASC'
+      ]);
       if (count($rows) == 1) {
          // one ticket, replace item
-         $ticket = array_shift($rows);
+         $ticket = $rows->next();
          $item = new Ticket;
          $item->getFromDB($ticket['tickets_id']);
       } else if (count($rows) > 1) {
