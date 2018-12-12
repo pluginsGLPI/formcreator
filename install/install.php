@@ -242,66 +242,12 @@ class PluginFormcreatorInstall {
    }
 
    protected function createDefaultDisplayPreferences() {
-      global $DB;
       $this->migration->displayMessage("create default display preferences");
-
-      // Create standard display preferences
-      $found_dprefs = $DB->request([
-         'COUNT'  => 'cpt',
-         'FROM'   => DisplayPreference::getTable(),
-         'WHERE'  => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
-         ]
-      ])->next();
-      if ($found_dprefs['cpt'] == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                   (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorFormAnswer', 2, 2, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 3, 3, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 4, 4, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 5, 5, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 6, 6, 0)";
-         $DB->query($query) or die ($DB->error());
-      }
-
-      $found_dprefs = $DB->request([
-         'COUNT'  => 'cpt',
-         'FROM'   => DisplayPreference::getTable(),
-         'WHERE'  => [
-            'itemtype' => 'PluginFormcreatorForm',
-         ]
-      ])->next();
-      if ($found_dprefs['cpt'] == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                   (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorForm', 30, 1, 0),
-                   (NULL, 'PluginFormcreatorForm', 3, 2, 0),
-                   (NULL, 'PluginFormcreatorForm', 10, 3, 0),
-                   (NULL, 'PluginFormcreatorForm', 7, 4, 0),
-                   (NULL, 'PluginFormcreatorForm', 8, 5, 0),
-                   (NULL, 'PluginFormcreatorForm', 9, 6, 0);";
-         $DB->query($query) or die ($DB->error());
-      }
-
-      $found_dprefs = $DB->request([
-         'COUNT'  => 'cpt',
-         'FROM'   => DisplayPreference::getTable(),
-         'WHERE'  => [
-            'itemtype' => 'PluginFormcreatorIssue',
-         ]
-      ])->next();
-      if ($found_dprefs['cpt'] == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                   (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorIssue', 1, 1, 0),
-                   (NULL, 'PluginFormcreatorIssue', 2, 2, 0),
-                   (NULL, 'PluginFormcreatorIssue', 4, 3, 0),
-                   (NULL, 'PluginFormcreatorIssue', 5, 4, 0),
-                   (NULL, 'PluginFormcreatorIssue', 6, 5, 0),
-                   (NULL, 'PluginFormcreatorIssue', 7, 6, 0),
-                   (NULL, 'PluginFormcreatorIssue', 8, 7, 0)";
-         $DB->query($query) or die ($DB->error());
-      }
+      $this->migration->updateDisplayPrefs([
+         'PluginFormcreatorFormAnswer' => [2, 3, 4, 5, 6],
+         'PluginFormcreatorForm'       => [30, 3, 10, 7, 8, 9],
+         'PluginFormcreatorIssue'      => [1, 2, 4, 5, 6, 7, 8],
+      ]);
    }
 
    /**
