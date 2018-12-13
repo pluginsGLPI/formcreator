@@ -66,6 +66,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getCategoryFilter() {
+      // TODO remove if and the next raw query when 9.3/bf compat will no be needed anymore
+      if (version_compare(GLPI_VERSION, "9.4.0", '>=')) {
+         return [
+            'OR' => [
+               'is_request'  => 1,
+               'is_incident' => 1
+            ]
+         ];
+      }
       return "`is_request` = '1' OR `is_incident` = '1'";
    }
 
@@ -768,18 +777,40 @@ EOS;
       // dropdown of target tickets
       echo '<span id="plugin_formcreator_link_target">';
       $excludedTargetTicketsIds[] = $this->getID();
+      $condition = "`id` IN (
+         SELECT `items_id` FROM `glpi_plugin_formcreator_targets` AS `t1`
+         WHERE `plugin_formcreator_forms_id` = (
+            SELECT `plugin_formcreator_forms_id` FROM `glpi_plugin_formcreator_targets` AS `t2`
+            WHERE `t2`.`itemtype` = 'PluginFormcreatorTargetTicket' AND `t2`.`items_id` = '$targetTicketId'
+         )
+         AND `t1`.`itemtype` = 'PluginFormcreatorTargetTicket'
+      )";
+      // TODO remove if and the above raw query when 9.3/bf compat will no be needed anymore
+      if (version_compare(GLPI_VERSION, "9.4.0", '>=')) {
+         $condition = [
+            'id' => new QuerySubQuery([
+               'SELECT' => ['items_id'],
+               'FROM'   => 'glpi_plugin_formcreator_targets AS t1',
+               'WHERE'  => [
+                  't1.itemtype'                 => 'PluginFormcreatorTargetTicket',
+                  'plugin_formcreator_forms_id' => new QuerySubQuery([
+                     'SELECT' => ['plugin_formcreator_forms_id'],
+                     'FROM'   => 'glpi_plugin_formcreator_targets AS t2',
+                     'WHERE'  => [
+                        't2.itemtype' => 'PluginFormcreatorTargetTicket',
+                        't2.items_id' => $targetTicketId
+                     ]
+                  ]),
+               ]
+            ]),
+         ];
+      }
       echo PluginFormcreatorTargetTicket::dropdown([
-         'name' => '_link_targettickets_id',
-         'rand' => $rand,
-         'display' => false,
-         'used'   => $excludedTargetTicketsIds,
-         'condition' => "`id` IN (
-            SELECT `items_id` FROM `glpi_plugin_formcreator_targets` AS `t1`
-            WHERE `plugin_formcreator_forms_id` = (
-               SELECT `plugin_formcreator_forms_id` FROM `glpi_plugin_formcreator_targets` AS `t2`
-               WHERE `t2`.`itemtype` = 'PluginFormcreatorTargetTicket' AND `t2`.`items_id` = '$targetTicketId'
-            )
-            AND `t1`.`itemtype` = 'PluginFormcreatorTargetTicket')",
+         'name'      => '_link_targettickets_id',
+         'rand'      => $rand,
+         'display'   => false,
+         'used'      => $excludedTargetTicketsIds,
+         'condition' => $condition,
       ]);
       echo '</span>';
       echo '</div>';
