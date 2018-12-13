@@ -330,15 +330,10 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
 
    $field = $DB->escape($field);
    $value = $DB->escape($value);
-   if (!method_exists(PluginFormcreatorForm::class, 'getFromDBByRequest')) {
-      $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
-                                    .$value."' LIMIT 1");
-   } else {
-      $found = $item->getFromDBByRequest([
-         'WHERE' => [$item::getTable() . '.' . $field => $value],
-         'LIMIT' => 1
-      ]);
-   }
+   $found = $item->getFromDBByRequest([
+      'WHERE' => [$item::getTable() . '.' . $field => $value],
+      'LIMIT' => 1
+   ]);
 
    if ($found) {
       return $item->getID();

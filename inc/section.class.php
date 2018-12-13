@@ -244,22 +244,16 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $order         = $this->fields['order'];
       $formId        = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
-      if (!method_exists($otherItem, 'getFromDBByRequest')) {
-         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
-            AND `order` < '$order'
-            ORDER BY `order` DESC LIMIT 1");
-      } else {
-         $otherItem->getFromDBByRequest([
-            'WHERE' => [
-               'AND' => [
-                  'plugin_formcreator_forms_id' => $formId,
-                  'order'                       => ['<', $order]
-               ]
-            ],
-            'ORDER' => ['order DESC'],
-            'LIMIT' => 1
-         ]);
-      }
+      $otherItem->getFromDBByRequest([
+         'WHERE' => [
+            'AND' => [
+               'plugin_formcreator_forms_id' => $formId,
+               'order'                       => ['<', $order]
+            ]
+         ],
+         'ORDER' => ['order DESC'],
+         'LIMIT' => 1
+      ]);
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),
@@ -276,22 +270,16 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $order         = $this->fields['order'];
       $formId     = $this->fields['plugin_formcreator_forms_id'];
       $otherItem = new static();
-      if (!method_exists($otherItem, 'getFromDBByRequest')) {
-         $otherItem->getFromDBByQuery("WHERE `plugin_formcreator_forms_id` = '$formId'
-            AND `order` > '$order'
-            ORDER BY `order` ASC LIMIT 1");
-      } else {
-         $otherItem->getFromDBByRequest([
-            'WHERE' => [
-               'AND' => [
-                  'plugin_formcreator_forms_id' => $formId,
-                  'order'                       => ['>', $order]
-               ]
-            ],
-            'ORDER' => ['order ASC'],
-            'LIMIT' => 1
-         ]);
-      }
+      $otherItem->getFromDBByRequest([
+         'WHERE' => [
+            'AND' => [
+               'plugin_formcreator_forms_id' => $formId,
+               'order'                       => ['>', $order]
+            ]
+         ],
+         'ORDER' => ['order ASC'],
+         'LIMIT' => 1
+      ]);
       if (!$otherItem->isNewItem()) {
          $this->update([
             'id'     => $this->getID(),

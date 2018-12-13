@@ -127,15 +127,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return _n('Form answer', 'Form answers', $nb, 'formcreator');
    }
 
-   /**
-    * Define search options for forms
-    *
-    * @return Array Array of fields to show in search engine and options for each fields
-    */
-   public function getSearchOptionsNew() {
-      return $this->rawSearchOptions();
-   }
-
    public function rawSearchOptions() {
       $tab = [];
 
@@ -380,8 +371,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $_SESSION['formcreator']['form_search_answers'] = $form->getID();
 
       // prepare params for search
-      $item          = new PluginFormcreatorFormAnswer();
-      $searchOptions      = $item->getSearchOptionsNew();
+      $item            = new PluginFormcreatorFormAnswer();
+      $searchOptions   = $item->rawSearchOptions();
       $filteredOptions = [];
       foreach ($searchOptions as $value) {
          if (is_numeric($value['id']) && $value['id'] <= 7) {
@@ -426,7 +417,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             WHERE `itemtype` = 'Group' AND `plugin_formcreator_forms_id` = '$formId'
             )";
             // TODO remove if and the above raw query when 9.3/bf compat will no be needed anymore
-            if (version_compare(GLPI_VERSION, "9.4.0", '>=')) {
+            if (version_compare(GLPI_VERSION, "9.4", '>=')) {
                $condition = [
                   'glpi_groups.id' => new QuerySubQuery([
                      'SELECT' => ['items_id'],

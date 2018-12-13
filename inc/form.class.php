@@ -110,15 +110,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       return $menu;
    }
 
-   /**
-    * Define search options for forms
-    *
-    * @return Array Array of fields to show in search engine and options for each fields
-    */
-   public function getSearchOptionsNew() {
-      return $this->rawSearchOptions();
-   }
-
    public function rawSearchOptions() {
       $tab = [];
 
@@ -1245,36 +1236,25 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public  function getByQuestionId($questionId) {
       $table_sections = PluginFormcreatorSection::getTable();
       $table_questions = PluginFormcreatorQuestion::getTable();
-      if (!method_exists($this, 'getFromDBByRequest')) {
-         $this->getFromDBByQuery(
-            "WHERE `id` = (
-                SELECT `plugin_formcreator_forms_id` FROM `$table_sections`
-                INNER JOIN `$table_questions`
-                   ON `$table_questions`.`plugin_formcreator_sections_id` = `$table_sections`.`id`
-                WHERE `$table_questions`.`id` = '$questionId'
-            )"
-         );
-      } else {
-         $this->getFromDBByRequest([
-            'INNER JOIN' => [
-               PluginFormcreatorSection::getTable() => [
-                  'FKEY' => [
-                     PluginFormcreatorForm::getTable()    => 'id',
-                     PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getForeignKeyField(),
-                  ]
-               ],
-               PluginFormcreatorQuestion::getTable() => [
-                  'FKEY' => [
-                     PluginFormcreatorQuestion::getTable() => PluginFormcreatorSection::getForeignKeyField(),
-                     PluginFormcreatorSection::getTable()  => 'id'
-                  ]
+      $this->getFromDBByRequest([
+         'INNER JOIN' => [
+            PluginFormcreatorSection::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorForm::getTable()    => 'id',
+                  PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getForeignKeyField(),
                ]
             ],
-            'WHERE' => [
-               PluginFormcreatorQuestion::getTable() . '.id' => $questionId,
+            PluginFormcreatorQuestion::getTable() => [
+               'FKEY' => [
+                  PluginFormcreatorQuestion::getTable() => PluginFormcreatorSection::getForeignKeyField(),
+                  PluginFormcreatorSection::getTable()  => 'id'
+               ]
             ]
-         ]);
-      }
+         ],
+         'WHERE' => [
+            PluginFormcreatorQuestion::getTable() . '.id' => $questionId,
+         ]
+      ]);
    }
 
    /**

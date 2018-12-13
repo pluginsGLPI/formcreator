@@ -151,7 +151,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             // TODO remove if and the above raw queries (in $dparams['condition'])
             // when 9.3/bf compat will no be needed anymore
-            if (version_compare(GLPI_VERSION, "9.4.0", '>=')) {
+            if (version_compare(GLPI_VERSION, "9.4", '>=')) {
                $dparams['condition'] = $dparams_cond_crit;
             }
 
@@ -336,7 +336,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       if (!$dropdown->getFromDB($this->value)) {
          throw new PluginFormcreatorComparisonException('Item not found for comparison');
       }
-      if (is_a($dropdown, CommonTreeDropdown::class)) {
+      if ($dropdown instanceof CommonTreeDropdown) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());
       } else {
          $name = $dropdown->getField($dropdown->getNameField());
@@ -355,7 +355,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       if (!$dropdown->getFromDB($this->value)) {
          throw new PluginFormcreatorComparisonException('Item not found for comparison');
       }
-      if (is_a($dropdown, CommonTreeDropdown::class)) {
+      if ($dropdown instanceof CommonTreeDropdown) {
          $name = $dropdown->getField($dropdown->getCompleteNameField());
       } else {
          $name = $dropdown->getField($dropdown->getNameField());
