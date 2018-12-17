@@ -1082,7 +1082,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             || isset($input['usage_count'])) {
 
          if (isset($input['access_rights'])
-            && $input['access_right'] == self::ACCESS_PUBLIC
+            && $input['access_rights'] == self::ACCESS_PUBLIC
          ) {
             // check that accessibility to eh form is compatible with its questions
             $question = new PluginFormcreatorQuestion();
