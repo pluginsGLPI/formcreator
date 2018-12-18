@@ -159,7 +159,7 @@ abstract class CommonTestCase extends CommonDBTestCase
          $input['name'] = $this->getUniqueString();
       }
       if (!isset($input['is_active'])) {
-         $input['is_active'] = true;
+         $input['is_active'] = 1;
       }
       $form = new \PluginFormcreatorForm();
       $form->add($input);
