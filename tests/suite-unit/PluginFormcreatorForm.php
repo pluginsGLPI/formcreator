@@ -172,6 +172,8 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testCreateValidationNotification() {
+      global $DB;
+
       \Config::setConfigurationValues(
          'core',
          ['use_notifications' => 1, 'notifications_mailing' => 1]
@@ -192,7 +194,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
          '_validator_users'      => [$_SESSION['glpiID']],
       ]);
-      $section =$this->getSection([
+      $this->getSection([
          $form::getForeignKeyField() => $form->getID(),
          'name' => 'section',
       ]);
@@ -206,9 +208,15 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       // 1 notification to the validator
       // 1 notification to the requester
-      $notification = new \QueuedNotification();
-      $foundNotifications = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `items_id` = '$formAnswerId'");
-      $this->integer(count($foundNotifications))->isEqualTo(2);
+      $foundNotifications = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => \QueuedNotification::getTable(),
+         'WHERE' => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'items_id' => $formAnswerId,
+         ]
+      ])->next();
+      $this->integer((int) $foundNotifications['cpt'])->isEqualTo(2);
    }
 
    /**
@@ -272,8 +280,8 @@ class PluginFormcreatorForm extends CommonTestCase {
          'content'      => '##FULLFORM##'
       ]);
       $form_target->getFromDB($targets_id);
-      $targettickets_id = $form_target->fields['items_id'];
-      $form_profiles_id = $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
+      $form_target->fields['items_id'];
+      $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
                                                    'profiles_id' => 1]);
       $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
                                'link'     => \Ticket_Ticket::LINK_TO,
@@ -415,7 +423,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
    public function providerGetFromSection() {
       $section = $this->getSection();
-      $formId = $section->getField(\PluginFormcreatorForm::getForeignKeyField());
+      $section->getField(\PluginFormcreatorForm::getForeignKeyField());
       $dataset = [
          [
             'section'  => $section,

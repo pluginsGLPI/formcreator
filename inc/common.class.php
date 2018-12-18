@@ -121,14 +121,22 @@ class PluginFormcreatorCommon {
    /**
     * Get the maximum value of a column for a given itemtype
     * @param CommonDBTM $item
-    * @param string $condition
+    * @param array $condition
     * @param string $fieldName
     * @return NULL|integer
     */
-   public static function getMax(CommonDBTM $item, $condition, $fieldName) {
-      $rows = $item->find($condition, "`$fieldName` DESC", '1');
-      $line = array_pop($rows);
-      if ($line === null) {
+   public static function getMax(CommonDBTM $item, array $condition, $fieldName) {
+      global $DB;
+
+      $line = $DB->request([
+         'SELECT' => [$fieldName],
+         'FROM'   => $item::getTable(),
+         'WHERE'  => $condition,
+         'ORDER'  => "$fieldName DESC",
+         'LIMIT'  => 1
+      ])->next();
+
+      if ($line === false) {
          return null;
       }
       return (int) $line[$fieldName];

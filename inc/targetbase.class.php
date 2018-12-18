@@ -266,10 +266,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $answer  = new PluginFormcreatorAnswer();
-            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
-               ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
-            $user    = array_shift($found);
+            $user = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['destination_entity_value'],
+               ]
+            ])->next();
             $user_id = $user['answer'];
 
             if ($user_id > 0) {
@@ -281,11 +285,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $answer  = new PluginFormcreatorAnswer();
-            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
-                                    ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
-            $entity = array_shift($found);
-
+            $entity = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['destination_entity_value'],
+               ]
+            ])->next();
             $entityId = $entity['answer'];
             break;
       }
@@ -297,11 +304,17 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
     * find all actors and prepare data for the ticket being created
     */
    protected function prepareActors(PluginFormcreatorForm $form, PluginFormcreatorFormAnswer $formanswer) {
-      $targetId = $this->getID();
-      $target_actor = $this->getItem_Actor();
-      $foreignKey = $this->getForeignKeyField();
-      $rows = $target_actor->find("`$foreignKey` = '$targetId'");
+      global $DB;
 
+      $target_actor = $this->getItem_Actor();
+      $foreignKey   = $this->getForeignKeyField();
+
+      $rows = $DB->request([
+         'FROM'   => $target_actor::getTable(),
+         'WHERE'  => [
+            $foreignKey => $this->getID(),
+         ]
+      ]);
       foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
          if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
@@ -910,14 +923,16 @@ EOS;
          // Specific tags
          echo '<div id="tag_specific_value" style="display: none">';
 
-         $obj = new PluginTagTag();
-         $obj->getEmpty();
-
-         $targetItemtype = $this->getTargetItemtypeName();
-         $where = "(`type_menu` LIKE '%\"$targetItemtype\"%' OR `type_menu` LIKE '0')";
-         $where .= getEntitiesRestrictRequest('AND', getTableForItemType('PluginTagTag'));
-
-         $result = $obj->find($where);
+         $result = $DB->request([
+            'SELECT' => ['name'],
+            'FROM'   => PluginTagTag::getTable(),
+            'WHERE'  => [
+               'OR' => [
+                  ['type_menu' => ['LIKE', $this->getTargetItemtypeName()]],
+                  ['type_menu' => ['LIKE', '0']],
+               ] + getEntitiesRestrictCriteria(PluginTagTag::getTable())
+            ]
+         ]);
          $values = [];
          foreach ($result AS $id => $data) {
             $values[$id] = $data['name'];
@@ -944,7 +959,7 @@ EOS;
     * @return string                                     Parsed string with tags replaced by form values
     */
    protected function parseTags($content, PluginFormcreatorFormAnswer $formanswer, $richText = false) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       // retrieve answers
       $answers_values = $formanswer->getAnswers($formanswer->getID());
@@ -1154,8 +1169,6 @@ JAVASCRIPT;
     * @return string
     */
    protected function prepareTemplate($template, PluginFormcreatorFormAnswer $formAnswer, $richText = false) {
-      global $CFG_GLPI;
-
       if (strpos($template, '##FULLFORM##') !== false) {
          $template = str_replace('##FULLFORM##', $formAnswer->getFullForm($richText), $template);
       }

@@ -60,9 +60,21 @@ class PluginFormcreatorComposite
    }
 
    public function buildCompositeRelations() {
+      global $DB;
+
       if (isset($this->targets['PluginFormcreatorTargetTicket'])) {
          foreach ($this->targets['PluginFormcreatorTargetTicket'] as $targetId => $generatedObject) {
-            $rows = $this->item_targetTicket->find("`plugin_formcreator_targettickets_id` = '$targetId'");
+            $rows = $DB->request([
+               'SELECT' => [
+                  'itemtype',
+                  'items_id',
+                  'link'
+               ],
+               'FROM'   => $this->item_targetTicket->getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_targettickets_id' => $targetId
+               ]
+            ]);
             foreach ($rows as $row) {
                switch ($row['itemtype']) {
                   case 'Ticket':

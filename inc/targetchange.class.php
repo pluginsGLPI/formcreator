@@ -82,6 +82,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    protected function getCategoryFilter() {
+      // TODO remove if and the next raw query when 9.3/bf compat will no be needed anymore
+      if (version_compare(GLPI_VERSION, "9.4", '>=')) {
+         return ['is_change' => 1];
+      }
       return "`is_change` = '1'";
    }
 
@@ -90,6 +94,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -97,20 +103,30 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $target_data = $this->fields;
 
       // convert questions ID into uuid for change description
-      $formId        = $this->getForm()->getID();
-      $section       = new PluginFormcreatorSection();
-      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
-            "`order` ASC");
+      $found_section = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => PluginFormcreatorSection::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getForm()->getID()
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if (!empty($tab_section)) {
-         $sectionList = "'" . implode(', ', $tab_section) . "'";
-         $question = new PluginFormcreatorQuestion();
-         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
-         foreach ($rows as $id => $question_line) {
+         $rows = $DB->request([
+            'SELECT' => ['id', 'uuid'],
+            'FROM'   => PluginFormcreatorQuestion::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_sections_id' => $tab_section
+            ],
+            'ORDER'  => 'order ASC'
+         ]);
+         foreach ($rows as $question_line) {
+            $id    = $question_line['id'];
             $uuid  = $question_line['uuid'];
 
             $content = $target_data['name'];
@@ -140,6 +156,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return integer the targetticket's id
     */
    public static function import($targetitems_id = 0, $target_data = []) {
+      global $DB;
+
       $item = new self;
 
       $target_data['_skip_checks'] = true;
@@ -148,21 +166,31 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // convert question uuid into id
       $targetTicket = new PluginFormcreatorTargetTicket();
       $targetTicket->getFromDB($targetitems_id);
-      $formId        = $targetTicket->getForm()->getID();
-      $section       = new PluginFormcreatorSection();
-      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
-            "`order` ASC");
+      $found_section = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => PluginFormcreatorSection::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $targetTicket->getForm()->getID()
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if (!empty($tab_section)) {
-         $sectionList = "'" . implode(', ', $tab_section) . "'";
-         $question = new PluginFormcreatorQuestion();
-         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
-         foreach ($rows as $id => $question_line) {
-            $uuid  = $question_line['uuid'];
+         $rows = $DB->request([
+            'SELECT' => ['id', 'uuid'],
+            'FROM'   => PluginFormcreatorQuestion::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_sections_id' => $tab_section
+            ],
+            'ORDER'  => 'order ASC'
+         ]);
+         foreach ($rows as $question_line) {
+            $id      = $question_line['id'];
+            $uuid    = $question_line['uuid'];
 
             $content = $target_data['name'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
@@ -201,9 +229,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $rand = mt_rand();
 
-      $obj = new PluginFormcreatorTarget();
-      $found = $obj->find("itemtype = '" . __CLASS__ . "' AND items_id = " . (int) $this->getID());
-      $target = array_shift($found);
+      $target = $DB->request([
+         'FROM'    => PluginFormcreatorTarget::getTable(),
+         'WHERE'   => [
+            'itemtype' => __CLASS__,
+            'items_id' => (int) $this->getID()
+         ]
+      ])->next();
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($target['plugin_formcreator_forms_id']);
@@ -903,7 +935,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return Change|false generated change
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
@@ -951,7 +983,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $data   = [];
       $change  = new Change();
       $form    = $formanswer->getForm();
-      $answer  = new PluginFormcreatorAnswer();
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 

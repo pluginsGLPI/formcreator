@@ -40,15 +40,17 @@ $plugin = new Plugin();
 if (!$plugin->isActivated('formcreator')) {
    Html::displayNotFoundError();
 }
-$targetticket = new PluginFormcreatorTargetChange();
+$targetchange = new PluginFormcreatorTargetChange();
 
 // Edit an existing target change
 if (isset($_POST["update"])) {
-   $target = new PluginFormcreatorTarget();
-   $found  = $target->find('items_id = ' . (int) $_POST['id']);
-   $found  = array_shift($found);
-   $target->update(['id' => $found['id'], 'name' => $_POST['name']]);
-   $targetticket->update($_POST);
+   $DB->update(PluginFormcreatorTarget::getTable(), [
+      'name'     => $_POST['name']
+   ], [
+      'items_id' => (int) $_POST['id'],
+      'itemtype' => 'PluginFormcreatorTargetChange'
+   ]);
+   $targetchange->update($_POST);
    Html::back();
 
 } else if (isset($_POST['actor_role'])) {
@@ -84,9 +86,15 @@ if (isset($_POST["update"])) {
          );
 
    $itemtype = "PluginFormcreatorTargetChange";
-   $target   = new PluginFormcreatorTarget;
-   $found    = $target->find("itemtype = '$itemtype' AND items_id = " . (int) $_REQUEST['id']);
-   $first    = array_shift($found);
+   $iterator = $DB->request([
+      'SELECT' => ['plugin_formcreator_forms_id'],
+      'FROM'   => PluginFormcreatorTarget::getTable(),
+      'WHERE'  => [
+         'itemtype' => $itemtype,
+         'items_id' => (int) $_REQUEST['id'],
+      ]
+   ]);
+   $first = $iterator->next();
    $form     = new PluginFormcreatorForm;
    $form->getFromDB($first['plugin_formcreator_forms_id']);
 
@@ -94,7 +102,7 @@ if (isset($_POST["update"])) {
          $form->getTypeName(1), $form->getName());
    $_SESSION['glpilisturl'][$itemtype]   = $form->getFormURL()."?id=".$form->getID();
 
-   $targetticket->display($_REQUEST);
+   $targetchange->display($_REQUEST);
 
    Html::footer();
 }

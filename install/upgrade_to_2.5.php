@@ -240,14 +240,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->migrationOneTable('glpi_plugin_formcreator_forms_profiles');
 
       // fill missing uuid
-      $obj = new PluginFormcreatorForm_Profile();
-      $all_form_profiles = $obj->find("uuid IS NULL");
-      foreach ($all_form_profiles as $form_profiles_id => $form_profile) {
-         $obj->update([
-            'id'   => $form_profiles_id,
-            'uuid' => plugin_formcreator_getUuid()
-         ]);
-      }
+      $DB->update(PluginFormcreatorForm_Profile::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateFormValidator_2_5(Migration $migration) {
@@ -280,12 +277,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid
-      $obj = new PluginFormcreatorForm_Validator();
-      $all_validators = $obj->find("uuid IS NULL");
-      foreach ($all_validators as $validators_id => $validator) {
-         $obj->update(['id'   => $validators_id,
-            'uuid' => plugin_formcreator_getUuid()]);
-      }
+      $DB->update(PluginFormcreatorForm_Validator::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateForm_2_5(Migration $migration) {
@@ -368,12 +364,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->migrationOneTable('glpi_plugin_formcreator_forms');
 
       // fill missing uuid (force update of forms, see PluginFormcreatorForm::prepareInputForUpdate)
-      $obj = new PluginFormcreatorForm();
-      $all_forms = $obj->find("uuid IS NULL");
-      foreach ($all_forms as $forms_id => $form) {
-         $obj->update(['id' => $forms_id]);
-      }
-      unset($obj);
+      $DB->update(PluginFormcreatorForm::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateHeader_2_5(Migration $migration) {
@@ -572,12 +567,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->addKey('glpi_plugin_formcreator_questions_conditions', 'plugin_formcreator_questions_id');
 
       // fill missing uuid (force update of questions, see PluginFormcreatorQuestoin_Condition::prepareInputForUpdate)
-      $condition_obj = new PluginFormcreatorQuestion_Condition();
-      $all_conditions = $condition_obj->find("uuid IS NULL");
-      foreach ($all_conditions as $conditions_id => $condition) {
-         $condition_obj->update(['id'   => $conditions_id,
-                                 'uuid' => plugin_formcreator_getUuid()]);
-      }
+      $DB->update(PluginFormcreatorQuestion_Condition::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateQuestion_2_5(Migration $migration) {
@@ -780,12 +774,12 @@ class PluginFormcreatorUpgradeTo2_5 {
 
       $migration->addKey('glpi_plugin_formcreator_questions', 'plugin_formcreator_sections_id');
 
-      // fill missing uuid (force update of questions, see PlugiinFormcreatorQuestion::prepareInputForUpdate)
-      $obj = new PluginFormcreatorQuestion();
-      $all_questions = $obj->find("uuid IS NULL");
-      foreach ($all_questions as $questions_id => $question) {
-         $obj->update(['id' => $questions_id]);
-      }
+      // fill missing uuid (force update of questions, see PluginFormcreatorQuestion::prepareInputForUpdate)
+      $DB->update(PluginFormcreatorQuestion::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateSection_2_5(Migration $migration) {
@@ -863,11 +857,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       $migration->addKey('glpi_plugin_formcreator_sections', 'plugin_formcreator_forms_id');
 
       // fill missing uuid (force update of sections, see PluginFormcreatorSection::prepareInputForUpdate)
-      $obj = new PluginFormcreatorSection();
-      $all_sections = $obj->find("uuid IS NULL");
-      foreach ($all_sections as $sections_id => $section) {
-         $obj->update(['id' => $sections_id]);
-      }
+      $DB->update(PluginFormcreatorSection::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateTarget_2_5(Migration $migration) {
@@ -1023,11 +1017,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid (force update of targets, see PluginFormcreatorTarget::prepareInputForUpdate)
-      $obj   = new PluginFormcreatorTarget();
-      $all_targets = $obj->find("uuid IS NULL");
-      foreach ($all_targets as $targets_id => $target) {
-         $obj->update(['id' => $targets_id]);
-      }
+      $DB->update(PluginFormcreatorTarget::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateTargetChange_Actor_2_5(Migration $migration) {
@@ -1073,13 +1067,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid
-      $obj = new PluginFormcreatorTargetChange_Actor();
-      $all_actor = $obj->find("uuid IS NULL");
-      foreach ($all_actor as $actors_id => $actor) {
-         $obj->update(['id'   => $actors_id,
-            'uuid' => plugin_formcreator_getUuid()]);
-      }
-
+      $DB->update(PluginFormcreatorTargetChange_Actor::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateTargetTicket_Actor_2_5(Migration $migration) {
@@ -1116,12 +1108,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       // fill missing uuid
-      $obj = new PluginFormcreatorTargetTicket_Actor();
-      $all_actor = $obj->find("uuid IS NULL");
-      foreach ($all_actor as $actors_id => $actor) {
-         $obj->update(['id'   => $actors_id,
-            'uuid' => plugin_formcreator_getUuid()]);
-      }
+      $DB->update(PluginFormcreatorTargetTicket_Actor::getTable(), [
+         'uuid' => plugin_formcreator_getUuid()
+      ], [
+         'uuid' => null
+      ]);
    }
 
    function updateTargetTicket_2_5(Migration $migration) {

@@ -42,7 +42,7 @@ define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', false);
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.3.0');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.4');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.5');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
@@ -330,15 +330,10 @@ function plugin_formcreator_getFromDBByField(CommonDBTM $item, $field = '', $val
 
    $field = $DB->escape($field);
    $value = $DB->escape($value);
-   if (!method_exists(PluginFormcreatorForm::class, 'getFromDBByRequest')) {
-      $found = $item->getFromDBByQuery("WHERE `".$item::getTable()."`.`$field` = '"
-                                    .$value."' LIMIT 1");
-   } else {
-      $found = $item->getFromDBByRequest([
-         'WHERE' => [$item::getTable() . '.' . $field => $value],
-         'LIMIT' => 1
-      ]);
-   }
+   $found = $item->getFromDBByRequest([
+      'WHERE' => [$item::getTable() . '.' . $field => $value],
+      'LIMIT' => 1
+   ]);
 
    if ($found) {
       return $item->getID();

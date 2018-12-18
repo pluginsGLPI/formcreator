@@ -66,6 +66,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getCategoryFilter() {
+      // TODO remove if and the next raw query when 9.3/bf compat will no be needed anymore
+      if (version_compare(GLPI_VERSION, "9.4", '>=')) {
+         return [
+            'OR' => [
+               'is_request'  => 1,
+               'is_incident' => 1
+            ]
+         ];
+      }
       return "`is_request` = '1' OR `is_incident` = '1'";
    }
 
@@ -81,9 +90,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $rand = mt_rand();
 
-      $obj = new PluginFormcreatorTarget();
-      $found = $obj->find("itemtype = '" . __CLASS__ . "' AND items_id = " . $this->getID());
-      $target = array_shift($found);
+      $target = $DB->request([
+         'FROM'    => PluginFormcreatorTarget::getTable(),
+         'WHERE'   => [
+            'itemtype' => __CLASS__,
+            'items_id' => (int) $this->getID()
+         ]
+      ])->next();
 
       $form = new PluginFormcreatorForm();
       $form->getFromDB($target['plugin_formcreator_forms_id']);
@@ -696,6 +709,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @param string $rand
     */
    protected function showCompositeTicketSettings($rand) {
+      global $DB;
+
       echo '<tr class="line1">';
       echo '<td>';
       echo __('Link to an other ticket', 'formcreator');
@@ -729,8 +744,12 @@ EOS;
       echo Html::scriptBlock($script);
       // get already linked items
       $targetTicketId = $this->getID();
-      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
-      $rows = $item_targetTicket->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
+      $rows = $DB->request([
+         'FROM'   => PluginFormcreatorItem_TargetTicket::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_targettickets_id' => $targetTicketId
+         ]
+      ]);
       $excludedTargetTicketsIds = [];
       $excludedTicketIds = [];
       foreach ($rows as $row) {
@@ -758,18 +777,40 @@ EOS;
       // dropdown of target tickets
       echo '<span id="plugin_formcreator_link_target">';
       $excludedTargetTicketsIds[] = $this->getID();
+      $condition = "`id` IN (
+         SELECT `items_id` FROM `glpi_plugin_formcreator_targets` AS `t1`
+         WHERE `plugin_formcreator_forms_id` = (
+            SELECT `plugin_formcreator_forms_id` FROM `glpi_plugin_formcreator_targets` AS `t2`
+            WHERE `t2`.`itemtype` = 'PluginFormcreatorTargetTicket' AND `t2`.`items_id` = '$targetTicketId'
+         )
+         AND `t1`.`itemtype` = 'PluginFormcreatorTargetTicket'
+      )";
+      // TODO remove if and the above raw query when 9.3/bf compat will no be needed anymore
+      if (version_compare(GLPI_VERSION, "9.4", '>=')) {
+         $condition = [
+            'id' => new QuerySubQuery([
+               'SELECT' => ['items_id'],
+               'FROM'   => 'glpi_plugin_formcreator_targets AS t1',
+               'WHERE'  => [
+                  't1.itemtype'                 => 'PluginFormcreatorTargetTicket',
+                  'plugin_formcreator_forms_id' => new QuerySubQuery([
+                     'SELECT' => ['plugin_formcreator_forms_id'],
+                     'FROM'   => 'glpi_plugin_formcreator_targets AS t2',
+                     'WHERE'  => [
+                        't2.itemtype' => 'PluginFormcreatorTargetTicket',
+                        't2.items_id' => $targetTicketId
+                     ]
+                  ]),
+               ]
+            ]),
+         ];
+      }
       echo PluginFormcreatorTargetTicket::dropdown([
-         'name' => '_link_targettickets_id',
-         'rand' => $rand,
-         'display' => false,
-         'used'   => $excludedTargetTicketsIds,
-         'condition' => "`id` IN (
-            SELECT `items_id` FROM `glpi_plugin_formcreator_targets` AS `t1`
-            WHERE `plugin_formcreator_forms_id` = (
-               SELECT `plugin_formcreator_forms_id` FROM `glpi_plugin_formcreator_targets` AS `t2`
-               WHERE `t2`.`itemtype` = 'PluginFormcreatorTargetTicket' AND `t2`.`items_id` = '$targetTicketId'
-            )
-            AND `t1`.`itemtype` = 'PluginFormcreatorTargetTicket')",
+         'name'      => '_link_targettickets_id',
+         'rand'      => $rand,
+         'display'   => false,
+         'used'      => $excludedTargetTicketsIds,
+         'condition' => $condition,
       ]);
       echo '</span>';
       echo '</div>';
@@ -1185,9 +1226,14 @@ EOS;
 
          // Default entity of a user from the answer of a user's type question
          case 'user' :
-            $found   = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
-                                     ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
-            $user    = array_shift($found);
+            $user = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => $answer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['destination_entity_value']
+               ]
+            ])->next();
             $user_id = $user['answer'];
 
             if ($user_id > 0) {
@@ -1201,9 +1247,14 @@ EOS;
 
          // Entity from the answer of an entity's type question
          case 'entity' :
-            $found  = $answer->find('plugin_formcreator_formanswers_id = '.$formanswer->fields['id'].
-                                    ' AND plugin_formcreator_questions_id = '.$this->fields['destination_entity_value']);
-            $entity = array_shift($found);
+            $entity = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => $answer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['destination_entity_value']
+               ]
+            ])->next();
 
             $data['entities_id'] = $entity['answer'];
             break;
@@ -1332,14 +1383,18 @@ EOS;
    }
 
    protected function setTargetCategory($data, $formanswer) {
+      global $DB;
+
       switch ($this->fields['category_rule']) {
          case 'answer':
-            $answer  = new PluginFormcreatorAnswer();
-            $formAnswerId = $formanswer->fields['id'];
-            $categoryQuestion = $this->fields['category_question'];
-            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
-                  AND `plugin_formcreator_questions_id` = '$categoryQuestion'");
-            $category = array_shift($found);
+            $category = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['category_question']
+               ]
+            ])->next();
             $category = $category['answer'];
             break;
          case 'specific':
@@ -1356,14 +1411,18 @@ EOS;
    }
 
    protected function setTargetUrgency($data, $formanswer) {
+      global $DB;
+
       switch ($this->fields['urgency_rule']) {
          case 'answer':
-            $answer  = new PluginFormcreatorAnswer();
-            $formAnswerId = $formanswer->fields['id'];
-            $urgencyQuestion = $this->fields['urgency_question'];
-            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
-                  AND `plugin_formcreator_questions_id` = '$urgencyQuestion'");
-            $urgency = array_shift($found);
+            $urgency = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['urgency_question']
+               ]
+            ])->next();
             $urgency = $urgency['answer'];
             break;
          case 'specific':
@@ -1380,14 +1439,18 @@ EOS;
    }
 
    protected function setTargetLocation($data, $formanswer) {
+      global $DB;
+
       switch ($this->fields['location_rule']) {
          case 'answer':
-            $answer  = new PluginFormcreatorAnswer();
-            $formAnswerId = $formanswer->fields['id'];
-            $locationQuestion = $this->fields['location_question'];
-            $found  = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'
-                  AND `plugin_formcreator_questions_id` = '$locationQuestion'");
-            $location = array_shift($found);
+            $location = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['location_question']
+               ]
+            ])->next();
             $location = $location['answer'];
             break;
          case 'specific':
@@ -1421,6 +1484,8 @@ EOS;
     * @return integer the targetticket's id
     */
    public static function import($targetitems_id = 0, $target_data = []) {
+      global $DB;
+
       $item = new self;
 
       $target_data['_skip_checks'] = true;
@@ -1429,20 +1494,30 @@ EOS;
       // convert question uuid into id
       $targetTicket = new PluginFormcreatorTargetTicket();
       $targetTicket->getFromDB($targetitems_id);
-      $formId        = $targetTicket->getForm()->getID();
-      $section       = new PluginFormcreatorSection();
-      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
-            "`order` ASC");
+      $found_section = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => PluginFormcreatorSection::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $targetTicket->getForm()->getID()
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if (!empty($tab_section)) {
-         $sectionList = "'" . implode(', ', $tab_section) . "'";
-         $question = new PluginFormcreatorQuestion();
-         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
-         foreach ($rows as $id => $question_line) {
+         $rows = $DB->request([
+            'SELECT' => ['id', 'uuid'],
+            'FROM'   => PluginFormcreatorQuestion::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_sections_id' => $tab_section
+            ],
+            'ORDER'  => 'order ASC'
+         ]);
+         foreach ($rows as $question_line) {
+            $id    = $question_line['id'];
             $uuid  = $question_line['uuid'];
 
             $content = $target_data['title'];
@@ -1481,6 +1556,8 @@ EOS;
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -1495,20 +1572,30 @@ EOS;
       }
 
       // convert questions ID into uuid for ticket description
-      $formId        = $this->getForm()->getID();
-      $section       = new PluginFormcreatorSection();
-      $found_section = $section->find("plugin_formcreator_forms_id = '$formId'",
-            "`order` ASC");
+      $found_section = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => PluginFormcreatorSection::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->getForm()->getID()
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       $tab_section = [];
       foreach ($found_section as $section_item) {
          $tab_section[] = $section_item['id'];
       }
 
       if (!empty($tab_section)) {
-         $sectionList = "'" . implode(', ', $tab_section) . "'";
-         $question = new PluginFormcreatorQuestion();
-         $rows = $question->find("`plugin_formcreator_sections_id` IN ($sectionList)", "`order` ASC");
-         foreach ($rows as $id => $question_line) {
+         $rows = $DB->request([
+            'SELECT' => ['id', 'uuid'],
+            'FROM'   => PluginFormcreatorQuestion::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_sections_id' => $tab_section
+            ],
+            'ORDER' => 'order ASC'
+         ]);
+         foreach ($rows as $question_line) {
+            $id    = $question_line['id'];
             $uuid  = $question_line['uuid'];
 
             $content = $target_data['name'];
@@ -1526,8 +1613,13 @@ EOS;
       // get data from ticket relations
       $target_data['_ticket_relations'] = [];
       $target_ticketLink = new PluginFormcreatorItem_TargetTicket();
-      $targetTicketId = $target_data['id'];
-      $all_ticketLinks = $target_ticketLink->find("`plugin_formcreator_targettickets_id` = '$targetTicketId'");
+      $all_ticketLinks = $DB->request([
+         'SELECT'  => ['id'],
+         'FROM'    => $target_ticketLink::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_targettickets_id' => $target_data['id']
+         ],
+      ]);
       foreach ($all_ticketLinks as $ticketLink) {
          $target_ticketLink->getFromDB($ticketLink['id']);
          $target_data['_ticket_relations'][] = $target_ticketLink->export();

@@ -127,15 +127,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return _n('Form answer', 'Form answers', $nb, 'formcreator');
    }
 
-   /**
-    * Define search options for forms
-    *
-    * @return Array Array of fields to show in search engine and options for each fields
-    */
-   public function getSearchOptionsNew() {
-      return $this->rawSearchOptions();
-   }
-
    public function rawSearchOptions() {
       $tab = [];
 
@@ -380,8 +371,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $_SESSION['formcreator']['form_search_answers'] = $form->getID();
 
       // prepare params for search
-      $item          = new PluginFormcreatorFormAnswer();
-      $searchOptions      = $item->getSearchOptionsNew();
+      $item            = new PluginFormcreatorFormAnswer();
+      $searchOptions   = $item->rawSearchOptions();
       $filteredOptions = [];
       foreach ($searchOptions as $value) {
          if (is_numeric($value['id']) && $value['id'] <= 7) {
@@ -425,6 +416,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             FROM `$table_form_validator`
             WHERE `itemtype` = 'Group' AND `plugin_formcreator_forms_id` = '$formId'
             )";
+            // TODO remove if and the above raw query when 9.3/bf compat will no be needed anymore
+            if (version_compare(GLPI_VERSION, "9.4", '>=')) {
+               $condition = [
+                  'glpi_groups.id' => new QuerySubQuery([
+                     'SELECT' => ['items_id'],
+                     'FROM'   => $table_form_validator,
+                     'WHERE'  => [
+                        'itemtype'                    => 'Group',
+                        'plugin_formcreator_forms_id' => $formId
+                     ]
+                  ])
+               ];
+            }
             $groupList = Group_User::getUserGroups($userId, $condition);
             $canValidate = (count($groupList) > 0);
          } else {
@@ -695,6 +699,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return boolean
     */
    public function saveAnswers(PluginFormcreatorForm $form, $data, $fields) {
+      global $DB;
+
       $formanswers_id = isset($data['id'])
                         ? intval($data['id'])
                         : -1;
@@ -779,7 +785,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
                $docItem = new Document_Item();
                $docItem->add([
-                  'documents_id' => $docID,
+                  'documents_id' => $documentId,
                   'itemtype'     => __CLASS__,
                   'items_id'     => $this->getID(),
                ]);
@@ -832,7 +838,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             // when several rows matches
             // Both are processed the same way
             $itemTicket = new Item_Ticket();
-            $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `items_id` = '$formAnswerId'");
+            $rows = $DB->request([
+               'SELECT' => ['id'],
+               'FROM'   => $itemTicket::getTable(),
+               'WHERE'  => [
+                  'itemtype' => 'PluginFormcreatorFormAnswer',
+                  'items_id' => $formAnswerId,
+               ]
+            ]);
             if (count($rows) != 1) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
@@ -874,8 +887,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                }
             } else {
                $ticket = new Ticket();
-               reset($rows);
-               $itemTicket->getFromDB(key($rows));
+               $result = $rows->next();
+               $itemTicket->getFromDB($result['id']);
                $ticket->getFromDB($itemTicket->getField('tickets_id'));
                $ticketId = $ticket->getID();
                if ($is_newFormAnswer) {
@@ -1039,14 +1052,18 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Generates all targets for the answers
     */
    public function generateTarget() {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
 
       $success = true;
 
       // Get all targets
-      $target_class  = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = ' . $this->fields['plugin_formcreator_forms_id']);
-
+      $found_targets = $DB->request([
+         'SELECT' => ['itemtype', 'items_id'],
+         'FROM'   => PluginFormcreatorTarget::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $this->fields['plugin_formcreator_forms_id']
+         ]
+      ]);
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
       // Generate targets
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
@@ -1075,8 +1092,15 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return array
     */
    public function getAnswers($formAnswerId) {
-      $answer = new PluginFormcreatorAnswer();
-      $answers = $answer->find("`plugin_formcreator_formanswers_id` = '$formAnswerId'");
+      global $DB;
+
+      $answers = $DB->request([
+         'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
+         'FROM'   => PluginFormcreatorAnswer::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_formanswers_id' => $formAnswerId
+         ]
+      ]);
       $answers_values = [];
       foreach ($answers as $found_answer) {
          $answers_values['formcreator_field_' . $found_answer['plugin_formcreator_questions_id']] = $found_answer['answer'];

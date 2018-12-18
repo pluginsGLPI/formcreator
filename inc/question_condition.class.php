@@ -158,8 +158,17 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
    }
 
    public function getConditionsFromQuestion($questionId) {
+      global $DB;
+
       $questionConditions = [];
-      $rows = $this->find("`plugin_formcreator_questions_id` = '$questionId'", "`order` ASC");
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => self::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_questions_id' => $questionId
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       foreach ($rows as $row) {
          $questionCondition = new static();
          $questionCondition->getFromDB($row['id']);
