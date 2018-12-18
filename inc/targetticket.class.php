@@ -1368,13 +1368,27 @@ EOS;
          $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
          PluginFormcreatorCommon::setNotification(false);
 
-         $ticketFollowup = new TicketFollowup();
-         $ticketFollowup->add([
-           'tickets_id'       => $ticketID,
-           'date'             => $_SESSION['glpi_currenttime'],
-           'users_id'         => $_SESSION['glpiID'],
-           'content'          => $message
-         ]);
+         $followUpInput = [
+           'date'     => $_SESSION['glpi_currenttime'],
+           'users_id' => Session::getLoginUserID(),
+           'content'  => $message,
+         ];
+         if (class_exists(ITILFollowup::class)) {
+            // GLPI 9.4+
+            $followUpInput += [
+               'items_id' => $ticketID,
+               'itemtype' => Ticket::class,
+            ];
+            $ticketFollowup = new ITILFollowup();
+            $ticketFollowup->add($followUpInput);
+         } else {
+            // GLPI < 9.4
+            $followUpInput += [
+               'tickets_id' => $ticketID,
+            ];
+            $ticketFollowup = new TicketFollowup();
+            $ticketFollowup->add($followUpInput);
+         }
 
          // Restore mail notification setting
          PluginFormcreatorCommon::setNotification($use_mailing);
