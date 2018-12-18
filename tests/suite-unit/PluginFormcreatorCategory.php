@@ -33,7 +33,37 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorCategory extends CommonTestCase {
-   public function testgetCategoryTree() {
+   public function providerGetTypeName() {
+      return [
+         [
+            0,
+            'Form categories'
+         ],
+         [
+            1,
+            'Form category'
+         ],
+         [
+            2,
+            'Form categories'
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetTypeName
+    *
+    * @param integer $nb
+    * @param string $expected
+    * @return void
+    */
+   public function testGetTypeName($nb, $expected) {
+      $instance = new $this->newTestedInstance();
+      $output = $instance->getTypeName($nb);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetCategoryTree() {
       $this->login('glpi', 'glpi');
       $_SESSION["glpicronuserrunning"] = true;
 
