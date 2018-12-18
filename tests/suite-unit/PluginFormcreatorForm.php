@@ -445,4 +445,61 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $form->getFromDBBySection($section);
       $this->boolean($output)->isEqualTo($expected);
    }
+
+   public function testSaveForm() {
+      $answer = "test answer to question";
+
+      // prepare a fake form with targets
+      $question = $this->getQuestion();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
+      $form = new \PluginFormcreatorForm();
+      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $this->getTargetTicket([
+         $formFk => $form->getID(),
+      ]);
+      $this->getTargetChange([
+         $formFk => $form->getID(),
+      ]);
+
+      // prepare input
+      $input = [
+         'formcreator_form' => $form->getID(),
+         'formcreator_field_'.$question->getID() => $answer
+      ];
+
+      // send for answer
+      $formAnswerId = $form->saveForm($input);
+      $this->boolean((bool)$formAnswerId)->isTrue();
+
+      // check existence of generated target
+      // - ticket
+      $item_ticket = new \Item_Ticket;
+      $this->boolean($item_ticket->getFromDBByCrit([
+         'itemtype' => 'PluginFormcreatorFormAnswer',
+         'items_id' => $formAnswerId,
+      ]))->isTrue();
+      $ticket = new \Ticket;
+      $this->boolean($ticket->getFromDB($item_ticket->fields['tickets_id']))->isTrue();
+      $this->string($ticket->fields['content'])->contains($answer);
+
+      // - change
+      $change_item = new \Change_Item;
+      $this->boolean($change_item->getFromDBByCrit([
+         'itemtype' => 'PluginFormcreatorFormAnswer',
+         'items_id' => $formAnswerId,
+      ]))->isTrue();
+      $change = new \Change;
+      $this->boolean($change->getFromDB($change_item->fields['changes_id']))->isTrue();
+      $this->string($change->fields['content'])->contains($answer);
+
+      // - issue
+      $issue = new \PluginFormcreatorIssue;
+      $this->boolean($issue->getFromDBByCrit([
+        'sub_itemtype' => PluginFormcreatorFormAnswer::class,
+        'original_id'  => $formAnswerId
+      ]))->isTrue();
+
+   }
 }
