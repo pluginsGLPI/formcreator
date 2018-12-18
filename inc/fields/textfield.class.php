@@ -125,7 +125,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       }
 
       if ($rangeMax > 0 && strlen($value) > $rangeMax) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
          return false;
       }
 
