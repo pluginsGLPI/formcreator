@@ -447,6 +447,8 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testSaveForm() {
+      $this->login('glpi', 'glpi');
+
       $answer = "test answer to question";
 
       // prepare a fake form with targets
