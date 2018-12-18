@@ -1147,6 +1147,7 @@ EOS;
          $richText
       );
 
+      $data['content'] = Toolbox::addslashes_deep($data['content']);
       $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
 
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
