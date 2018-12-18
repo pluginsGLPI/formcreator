@@ -497,8 +497,8 @@ class PluginFormcreatorForm extends CommonTestCase {
       // - issue
       $issue = new \PluginFormcreatorIssue;
       $this->boolean($issue->getFromDBByCrit([
-        'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-        'original_id'  => $formAnswerId
+        'sub_itemtype' => \Ticket::class,
+        'original_id'  => $ticket->getID()
       ]))->isTrue();
 
    }
