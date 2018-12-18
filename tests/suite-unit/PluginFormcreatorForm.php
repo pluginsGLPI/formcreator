@@ -447,7 +447,13 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testSaveForm() {
+      global $CFG_GLPI;
+
       $this->login('glpi', 'glpi');
+
+      // disable notifications as we may fail in some case (not the purpose of this test btw)
+      $use_notifications = $CFG_GLPI['use_notifications'];
+      $CFG_GLPI['use_notifications'] = 0;
 
       $answer = "test answer to question";
 
@@ -503,5 +509,6 @@ class PluginFormcreatorForm extends CommonTestCase {
         'original_id'  => $ticket->getID()
       ]))->isTrue();
 
+      $CFG_GLPI['use_notifications'] = $use_notifications;
    }
 }
