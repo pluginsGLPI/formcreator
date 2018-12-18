@@ -479,7 +479,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       // send for answer
       $formAnswerId = $form->saveForm($input);
-      $this->boolean((bool)$formAnswerId)->isTrue();
+      $this->integer($formAnswerId)->isGreaterThan(0);
 
       // check existence of generated target
       // - ticket
