@@ -51,7 +51,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    public $dohistory                   = true;
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-
       $tabNames = [];
       if (!$withtemplate) {
          if ($item->getType() == 'Entity') {
@@ -62,7 +61,6 @@ class PluginFormcreatorEntityconfig extends CommonDBTM {
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-
       if ($item->getType() == 'Entity') {
          $config = new self();
          $config->showFormForEntity($item);
