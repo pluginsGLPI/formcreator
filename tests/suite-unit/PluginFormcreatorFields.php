@@ -290,4 +290,38 @@ class PluginFormcreatorFields extends CommonTestCase {
       $isVisible = \PluginFormcreatorFields::isVisible($question->getID(), $realAnswers);
       $this->boolean((boolean) $isVisible)->isEqualTo($expectedVisibility);
    }
+
+   public function testGetFieldClassname() {
+      $output = \PluginFormcreatorFields::getFieldClassname('dummy');
+      $this->string($output)->isEqualTo('PluginFormcreatorDummyField');
+   }
+
+   public function testFieldTypeExists() {
+      $output = \PluginFormcreatorFields::fieldTypeExists('dummy');
+      $this->boolean($output)->isFalse();
+      $output = \PluginFormcreatorFields::fieldTypeExists('textarea');
+      $this->boolean($output)->isTrue();
+   }
+
+   public function testUpdateVisibility() {
+      $question1 = $this->getQuestion();
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $question1->fields['plugin_formcreator_sections_id'],
+      ]);
+
+      $form = new \PluginFormcreatorForm();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question1->fields['plugin_formcreator_sections_id']);
+      $form->getFromDBBySection($section);
+      $input = [
+         'formcreator_form' => $form->getID(),
+         $question1->getID() => '',
+         $question2->getID() => '',
+      ];
+      $output = \PluginFormcreatorFields::updateVisibility($input);
+      $this->array($output)->isIdenticalTo([
+         $question1->getID() => true,
+         $question2->getID() => true,
+      ]);
+   }
 }

@@ -39,4 +39,26 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
 
       self::login('glpi', 'glpi');
    }
+
+   public function testGetConditionsFromQuestion() {
+      // crete a question with some conditions
+      $question = $this->getQuestion();
+
+      $questionFk = \PluginFormcreatorQuestion::getForeignKeyField();
+      $questionCondition = $this->newTestedInstance();
+      $questionCondition->add([
+         $questionFk => $question->getID(),
+      ]);
+      $this->boolean($questionCondition->isNewItem())->isFalse();
+
+      $questionCondition = $this->newTestedInstance();
+      $questionCondition->add([
+         $questionFk => $question->getID(),
+      ]);
+      $this->boolean($questionCondition->isNewItem())->isFalse();
+
+      // Check that all conditions are retrieved
+      $output = $question->getConditionsFromQuestion();
+      $this->array($output)->hasSize(2);
+   }
 }
