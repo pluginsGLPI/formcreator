@@ -71,7 +71,11 @@ if (isset($_POST['update'])) {
 
    // Show target ticket form
 } else {
-   if (plugin_formcreator_replaceHelpdesk()) {
+      $formanswer->getFromDB(intval((int) $_GET['id']));
+      if (!$formanswer->checkEntity()) {
+         Html::displayRightError();
+      }
+      if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {
       if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
