@@ -47,7 +47,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-         return self::getTypeName(2);
+      return self::getTypeName(2);
    }
 
    /**
