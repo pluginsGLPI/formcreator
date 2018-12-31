@@ -355,7 +355,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $number = $dbUtils->countElementsInTableForMyEntities(
             static::getTable(),
             [
-               $formFk => $item->getID()
+               $formFk => $item->getID(),
+               'is_deleted' => 0,
             ]
          );
          return self::createTabEntry(self::getTypeName($number), $number);
@@ -383,7 +384,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $forcedisplay  = array_combine($sopt_keys, $sopt_keys);
 
       // do search
-      $params = Search::manageParams(__CLASS__, $params);
+      $params = Search::manageParams(__CLASS__, $params, false);
       $data   = Search::prepareDatasForSearch(__CLASS__, $params, $forcedisplay);
       Search::constructSQL($data);
       Search::constructData($data);
