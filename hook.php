@@ -130,7 +130,9 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
       case PluginFormcreatorFormAnswer::class:
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
-            $condition = "`$table`.`".PluginFormcreatorFormAnswer::$items_id."` = ".
+            // Context is displaying the answers for a given form
+            $formFk = PluginFormcreatorForm::getForeignKeyField();
+            $condition = "`$table`.`$formFk` = ".
                          $_SESSION['formcreator']['form_search_answers'];
          } else {
             $condition = plugin_formcreator_getCondition($itemtype);

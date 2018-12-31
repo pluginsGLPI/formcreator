@@ -41,9 +41,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public $usenotepad = true;
    public $usenotepadrights = true;
 
-   static public $itemtype = "PluginFormcreatorForm";
-   static public $items_id = "plugin_formcreator_forms_id";
-
    const SOPTION_ANSWER = 900000;
 
    /**
@@ -354,10 +351,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if ($item instanceof PluginFormcreatorForm) {
          $dbUtils = new DbUtils();
+         $formFk = PluginFormcreatorForm::getForeignKeyField();
          $number = $dbUtils->countElementsInTableForMyEntities(
             static::getTable(),
             [
-               self::$items_id => $item->getID()
+               $formFk => $item->getID()
             ]
          );
          return self::createTabEntry(self::getTypeName($number), $number);
