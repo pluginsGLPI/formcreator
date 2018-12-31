@@ -58,7 +58,7 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
       $this->boolean($questionCondition->isNewItem())->isFalse();
 
       // Check that all conditions are retrieved
-      $output = $question->getConditionsFromQuestion();
+      $output = $questionCondition->getConditionsFromQuestion($question->getID());
       $this->array($output)->hasSize(2);
    }
 }
