@@ -69,35 +69,4 @@ class PluginFormcreatorAnswer extends CommonTestCase {
       $output = \PluginFormcreatorAnswer::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
    }
-
-   public function providerPrepareInputForAdd() {
-      return [
-         [
-
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForAdd
-    */
-   public function testPrepareInputForAdd() {
-
-   }
-
-   public function providerPrepareInputForUpdate() {
-      return [
-         [
-
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForUpdate
-    */
-   public function testPrepareInputForUpdate() {
-
-   }
-
 }

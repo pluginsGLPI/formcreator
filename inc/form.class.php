@@ -2330,4 +2330,27 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
       return $this->getFromDB($section->getField(self::getForeignKeyField()));
    }
+
+      /**
+    * Actions done before purge of an item
+    * This method is not called by GLPI like post_puregeItem
+    * It is called via a callback declared for pre_purge hook
+    * It must set $this->input to false on failure to satisfy the need of the kook
+    *
+    * @return boolean
+    */
+   public function pre_purgeItem() {
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      $success = $formAnswer->deleteByCriteria([
+         PluginFormcreatorForm::getForeignKeyField() => $this->getID(),
+      ]);
+
+      if (!$success) {
+         // Failed to delete linked items
+         $item->input = false;
+         return false;
+      }
+
+      return true;
+   }
 }

@@ -114,6 +114,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return false;
    }
 
+   public static function canPurge() {
+      if (Session::haveRight('entity', UPDATE)) {
+         return true;
+      }
+
+      return false;
+   }
+
    /**
     * Returns the type name with consideration of plural
     *
@@ -1251,5 +1259,41 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Notify the requester
          NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
       }
+   }
+
+   /**
+    * Actions done before purge of an item
+    * This method is not called by GLPI like post_puregeItem
+    * It is called via a callback declared for pre_purge hook
+    * It must set $this->input to false on failure to satisfy the need of the kook
+    *
+    * @return boolean
+    */
+   public function pre_purgeItem() {
+      // Remove the relations with the tickets
+      $itemTicket = new Item_Ticket();
+      $success = $itemTicket->deleteByCriteria([
+         'itemtype' => PluginFormcreatorFormAnswer::class,
+         'items_id' => $this->getID(),
+      ]);
+      if (!$success) {
+         // Failed to delete linked items
+         $this->input = false;
+         return false;
+      }
+
+      // Remove the relations with the changes
+      $changeItem = new Change_Item();
+      $success = $changeItem->deleteByCriteria([
+         'itemtype' => PluginFormcreatorFormAnswer::class,
+         'items_id' => $this->getID(),
+      ]);
+      if (!$success) {
+         // Failed to delete linked items
+         $this->input = false;
+         return false;
+      }
+
+      return true;
    }
 }

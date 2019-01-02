@@ -511,4 +511,24 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $CFG_GLPI['use_notifications'] = $use_notifications;
    }
+
+   public function testPre_purgeItem() {
+      $form = $this->getForm();
+
+      // prepare input
+      $input = [
+         'formcreator_form' => $form->getID(),
+      ];
+
+      // send for answer
+      $formAnswerId = $form->saveForm($input);
+      $this->integer($formAnswerId)->isGreaterThan(0);
+
+      $output = $form->pre_PurgeItem();
+      $this->boolean($output)->isTrue();
+
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->getFromDB($formAnswerId);
+      $this->boolean($formAnswer->isNewItem())->isTrue();
+   }
 }

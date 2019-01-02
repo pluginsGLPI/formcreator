@@ -132,7 +132,11 @@ function plugin_init_formcreator() {
       'Ticket' => 'plugin_formcreator_hook_restore_ticket'
    ];
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+      'Ticket' => 'plugin_formcreator_hook_purge_ticket',
+      PluginFormcreatorForm::class
+         => 'plugin_formcreator_hook_purge_pluginformcreatorform',
+      PluginFormcreatorFormAnswer::class
+         => 'plugin_formcreator_hook_purge_pluginformcreatorformanswer'
    ];
 
    $plugin = new Plugin();

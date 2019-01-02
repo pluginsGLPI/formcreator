@@ -407,6 +407,12 @@ function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
    }
 }
 
+/**
+ * Delete the issue linked to a ticket
+ * Called by GLPI when a ticket is about to be purged
+ *
+ * @param CommonDBTM $item
+ */
 function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
    if ($item instanceof Ticket) {
       $id = $item->getID();
@@ -438,4 +444,28 @@ function plugin_formcreator_dynamicReport($params) {
    }
 
    return false;
+}
+
+/**
+ * Delete all form answers for a given form
+ * Called by GLPI when a form is about to be purged
+ *
+ * @param CommonDBTM $item
+ */
+function plugin_formcreator_hook_purge_pluginformcreatorform(CommonDBTM $item) {
+   if ($item instanceof PluginFormcreatorForm) {
+      $item->pre_purgeItem();
+   }
+}
+
+/**
+ * Delete all relations between a form answer and a target ticket or target change
+ * Called by GLPI when a Form answer is about to be purged
+ *
+ * @param CommonDBTM $item
+ */
+function plugin_formcreator_hook_purge_pluginformcreatorformanswer(CommonDBTM $item) {
+   if ($item instanceof PluginFormcreatorFormAnswer) {
+      $item->pre_purgeItem();
+   }
 }

@@ -112,6 +112,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          'plugin_formcreator_formanswers_id',
          'integer'
       );
+      $migration->dropField($table, 'is_deleted');
       $migration->migrationOneTable($table);
       $migration->dropKey($table, 'plugin_formcreator_forms_answers_id');
       $migration->addKey($table, ['plugin_formcreator_formanswers_id'], 'plugin_formcreator_formanswers_id');
