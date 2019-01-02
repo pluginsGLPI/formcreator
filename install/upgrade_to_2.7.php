@@ -53,6 +53,13 @@ class PluginFormcreatorUpgradeTo2_7 {
          ]
       );
       $DB->update(
+         'glpi_changes_items', [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ], [
+            'itemtype' => 'PluginFormcreatorForm_Answer'
+         ]
+      );
+      $DB->update(
          'glpi_notifications', [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ], [
