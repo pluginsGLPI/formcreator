@@ -33,7 +33,7 @@
 
 global $CFG_GLPI;
 // Version of the plugin
-define('PLUGIN_FORMCREATOR_VERSION', '2.7.0-beta.2');
+define('PLUGIN_FORMCREATOR_VERSION', '2.7.0-beta.3');
 // Schema version of this version
 define('PLUGIN_FORMCREATOR_SCHEMA_VERSION', '2.7');
 // is or is not an official release of the plugin
@@ -42,7 +42,7 @@ define('PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE', true);
 // Minimal GLPI version, inclusive
 define ('PLUGIN_FORMCREATOR_GLPI_MIN_VERSION', '9.3.0');
 // Maximum GLPI version, exclusive
-define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.4');
+define ('PLUGIN_FORMCREATOR_GLPI_MAX_VERSION', '9.5');
 
 define('FORMCREATOR_ROOTDOC', $CFG_GLPI['root_doc'] . '/plugins/formcreator');
 
