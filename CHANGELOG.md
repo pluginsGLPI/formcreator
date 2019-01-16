@@ -1,3 +1,13 @@
+<a name="2.7.0-beta.3"></a>
+# [2.7.0-beta.3](https://github.com/pluginsglpi/formcreator/compare/v2.7.0-beta.2...v2.7.0-beta.3) (2019-01-16)
+
+
+### Bug Fixes
+
+* compatibility with GLPI 9.4 ([9b9922c](https://github.com/pluginsglpi/formcreator/commit/9b9922c))
+
+
+
 <a name="2.7.0-beta.2"></a>
 # [2.7.0-beta.2](https://github.com/pluginsglpi/formcreator/compare/v2.7.0-beta.1...v2.7.0-beta.2) (2019-01-16)
 
