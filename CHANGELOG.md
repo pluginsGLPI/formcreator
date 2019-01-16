@@ -1,3 +1,27 @@
+<a name="2.7.0-beta.2"></a>
+# [2.7.0-beta.2](https://github.com/pluginsglpi/formcreator/compare/v2.7.0-beta.1...v2.7.0-beta.2) (2019-01-16)
+
+
+### Bug Fixes
+
+* **descriptionfield:** show / hide did not work ([04f1695](https://github.com/pluginsglpi/formcreator/commit/04f1695))
+* **form:** access rights checking ([e05e20b](https://github.com/pluginsglpi/formcreator/commit/e05e20b))
+* **formanswer:** empty list of answers ([2478b2c](https://github.com/pluginsglpi/formcreator/commit/2478b2c))
+* **formanswer:** missing right check ([bdac689](https://github.com/pluginsglpi/formcreator/commit/bdac689))
+* **install:** create tables before filling them ([#1234](https://github.com/pluginsglpi/formcreator/issues/1234)) ([c08e299](https://github.com/pluginsglpi/formcreator/commit/c08e299))
+* **install:** update relation ([09c0101](https://github.com/pluginsglpi/formcreator/commit/09c0101))
+* **issue:** fix filtered searches of issues ([9bda871](https://github.com/pluginsglpi/formcreator/commit/9bda871))
+* **targetTicket:** generation of ticket ([8355480](https://github.com/pluginsglpi/formcreator/commit/8355480))
+* **textfield:** abuse escaping ([167c43f](https://github.com/pluginsglpi/formcreator/commit/167c43f))
+* **urgencyfield:** default value ([1849e61](https://github.com/pluginsglpi/formcreator/commit/1849e61))
+
+
+### Features
+
+* **targetticket:** compatibility with GLPI 9.4 ([6afe5fe](https://github.com/pluginsglpi/formcreator/commit/6afe5fe))
+
+
+
 <a name="2.7.0-beta.1"></a>
 # [2.7.0-beta.1](https://github.com/pluginsglpi/formcreator/compare/v2.6.4...v2.7.0-beta.1) (2018-12-05)
 
