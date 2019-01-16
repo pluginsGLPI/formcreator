@@ -79,7 +79,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function getDocumentsForTarget() {
@@ -119,13 +119,13 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       // Check the field is in the range
       $rangeMin = $parameters['range']->fields['range_min'];
       $rangeMax = $parameters['range']->fields['range_max'];
-      if (strlen($rangeMin) > 0 && strlen($value) < $rangeMin) {
+      if ($rangeMin > 0 && strlen($value) < $rangeMin) {
          Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->fields['name'], false, ERROR);
          return false;
       }
 
-      if (strlen($rangeMax) > 0 && strlen($value) > $rangeMax) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
+      if ($rangeMax > 0 && strlen($value) > $rangeMax) {
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
          return false;
       }
 

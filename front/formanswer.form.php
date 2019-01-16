@@ -71,6 +71,10 @@ if (isset($_POST['update'])) {
 
    // Show target ticket form
 } else {
+   $formanswer->getFromDB(intval((int) $_GET['id']));
+   if (!$formanswer->checkEntity()) {
+      Html::displayRightError();
+   }
    if (plugin_formcreator_replaceHelpdesk()) {
       PluginFormcreatorWizard::header(__('Service catalog', 'formcreator'));
    } else {

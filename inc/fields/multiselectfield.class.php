@@ -117,13 +117,13 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       // Check the field matches the format regex
       $rangeMin = $parameters['range']->fields['range_min'];
       $rangeMax = $parameters['range']->fields['range_max'];
-      if (strlen($rangeMin) > 0 && count($value) < $rangeMin) {
+      if ($rangeMin > 0 && count($value) < $rangeMin) {
          $message = sprintf(__('The following question needs of at least %d answers', 'formcreator'), $rangeMin);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;
       }
 
-      if (strlen($rangeMax) > 0 && count($value) > $rangeMax) {
+      if ($rangeMax > 0 && count($value) > $rangeMax) {
          $message = sprintf(__('The following question does not accept more than %d answers', 'formcreator'), $rangeMax);
          Session::addMessageAfterRedirect($message . ' ' . $this->getLabel(), false, ERROR);
          return false;

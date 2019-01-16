@@ -53,6 +53,13 @@ class PluginFormcreatorUpgradeTo2_7 {
          ]
       );
       $DB->update(
+         'glpi_changes_items', [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ], [
+            'itemtype' => 'PluginFormcreatorForm_Answer'
+         ]
+      );
+      $DB->update(
          'glpi_notifications', [
             'itemtype' => 'PluginFormcreatorFormAnswer',
          ], [
@@ -116,6 +123,17 @@ class PluginFormcreatorUpgradeTo2_7 {
       // Migrate regex question parameters
       $table = 'glpi_plugin_formcreator_questions';
       if ($DB->fieldExists($table, 'regex')) {
+         $DB->query(
+            "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionregexes` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `plugin_formcreator_questions_id`   int(11)       NOT NULL,
+            `regex`                             text          DEFAULT NULL,
+            `fieldname`                         varchar(255)  DEFAULT NULL,
+            `uuid`                              varchar(255)  DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+         );
          $request = [
          'FROM' => $table,
          'WHERE' => ['fieldtype' => ['float', 'integer', 'text', 'textarea']]
@@ -134,6 +152,18 @@ class PluginFormcreatorUpgradeTo2_7 {
       // Migrate range question parameters
       $table = 'glpi_plugin_formcreator_questions';
       if ($DB->fieldExists($table, 'range_min')) {
+         $DB->query(
+            "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questionranges` (
+               `id` int(11) NOT NULL AUTO_INCREMENT,
+               `plugin_formcreator_questions_id`   int(11)       NOT NULL,
+               `range_min`                         varchar(255)  DEFAULT NULL,
+               `range_max`                         varchar(255)  DEFAULT NULL,
+               `fieldname`                         varchar(255)  DEFAULT NULL,
+               `uuid`                              varchar(255)  DEFAULT NULL,
+               PRIMARY KEY (`id`),
+               INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+         );
          $request = [
          'FROM' => $table,
          'WHERE' => ['fieldtype' => ['float', 'integer', 'checkboxes', 'multiselect', 'text']]

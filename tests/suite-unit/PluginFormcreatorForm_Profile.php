@@ -21,8 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
+ *
  * @copyright Copyright © 2011 - 2018 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -30,35 +29,60 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-class PluginFormcreatorQuestion_Condition extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
 
-      self::login('glpi', 'glpi');
+class PluginFormcreatorForm_Profile extends CommonTestCase {
+   public function providerGetTypeName() {
+      return [
+         [
+            0,
+            'Targets'
+         ],
+         [
+            1,
+            'Target'
+         ],
+         [
+            2,
+            'Targets'
+         ],
+      ];
    }
 
-   public function testGetConditionsFromQuestion() {
-      // crete a question with some conditions
-      $question = $this->getQuestion();
+   /**
+    * @dataProvider providerGetTypeName
+    *
+    * @param integer $nb
+    * @param string $expected
+    * @return void
+    */
+   public function testGetTypeName($nb, $expected) {
+      $instance = new $this->newTestedInstance();
+      $output = $instance->getTypeName($nb);
+      $this->string($output)->isEqualTo($expected);
+   }
 
-      $questionFk = \PluginFormcreatorQuestion::getForeignKeyField();
-      $questionCondition = $this->newTestedInstance();
-      $questionCondition->add([
-         $questionFk => $question->getID(),
+   public function testGetTabNameForItem() {
+      $instance = $this->newTestedInstance();
+      $item = new \Computer();
+      $output = $instance->getTabNameForItem($item);
+
+      $this->string($output)->isEqualTo('Targets');
+   }
+
+   public function testPrepareInputForAdd() {
+      $instance = $this->newTestedInstance();
+      $output = $instance->prepareInputForAdd([
+         'uuid' => '0000',
       ]);
-      $this->boolean($questionCondition->isNewItem())->isFalse();
 
-      $questionCondition = $this->newTestedInstance();
-      $questionCondition->add([
-         $questionFk => $question->getID(),
-      ]);
-      $this->boolean($questionCondition->isNewItem())->isFalse();
+      $this->array($output)->HasKey('uuid');
+      $this->string($output['uuid'])->isEqualTo('0000');
 
-      // Check that all conditions are retrieved
-      $output = $questionCondition->getConditionsFromQuestion($question->getID());
-      $this->array($output)->hasSize(2);
+      $output = $instance->prepareInputForAdd([]);
+
+      $this->array($output)->HasKey('uuid');
+      $this->string($output['uuid']);
    }
 }

@@ -106,6 +106,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    public function testUrgency() {
+      global $DB;
+
       $form = new \PluginFormcreatorForm();
       $formId = $form->add([
          'entities_id'           => $_SESSION['glpiactive_entity'],
@@ -124,6 +126,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
                [
                   'name'                  => 'custom urgency',
                   'fieldtype'             => 'urgency',
+                  'default_values'        => '3',
                ],
             ],
          ],
@@ -198,9 +201,6 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          if (!empty($targetData['urgency_question'])) {
             $questionName = $targetData['urgency_question'];
             $question = new \PluginFormcreatorQuestion();
-            $table_section = \PluginFormcreatorSection::getTable();
-            $table_form = \PluginFormcreatorForm::getTable();
-            $table_question = \PluginFormcreatorQuestion::getTable();
             $question->getFromDBByRequest([
                'LEFT JOIN' => [
                   \PluginFormcreatorSection::getTable() => [
@@ -265,10 +265,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       foreach ($urgencyQuestions as $question) {
          $targetTicket = $question['targetTicket'];
          $targetName = $targetTicket->getField('name');
-         $itemTicket = new \Item_Ticket();
          $tickets = [];
-         $rows = $itemTicket->find("`itemtype` = 'PluginFormcreatorFormAnswer'
-            AND `items_id` = '" . $formAnswer->getID() . "'");
+         $rows = $DB->request([
+            'SELECT' => ['tickets_id'],
+            'FROM'   => \Item_Ticket::getTable(),
+            'WHERE'  => [
+               'itemtype' => 'PluginFormcreatorFormAnswer',
+               'items_id' => $formAnswer->getID()
+            ]
+         ]);
          foreach ($rows as $row) {
             $tickets[] = $row['tickets_id'];
          }

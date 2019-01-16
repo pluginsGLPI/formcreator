@@ -60,18 +60,25 @@ class PluginFormcreatorTarget extends CommonDBTM
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      global $DB;
+
       switch ($item->getType()) {
          case "PluginFormcreatorForm":
-            $env       = new self;
-            $found_env = $env->find('plugin_formcreator_forms_id = '.$item->getID());
-            $nb        = count($found_env);
+            $found_env = $DB->request([
+               'COUNT'  => 'cpt',
+               'FROM'   => self::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_forms_id' => $item->getID(),
+               ]
+            ])->next();
+            $nb = $found_env['cpt'];
             return self::createTabEntry(self::getTypeName($nb), $nb);
       }
       return '';
    }
 
    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
 
       echo '<table class="tab_cadre_fixe">';
 
@@ -79,9 +86,13 @@ class PluginFormcreatorTarget extends CommonDBTM
       echo '<th colspan="3">'._n('Destinations', 'Destinations', 2, 'formcreator').'</th>';
       echo '</tr>';
 
-      $target_class    = new PluginFormcreatorTarget();
-      $found_targets = $target_class->find('plugin_formcreator_forms_id = '.$item->getID());
-      $token           = Session::getNewCSRFToken();
+      $found_targets = $DB->request([
+         'FROM'    => PluginFormcreatorTarget::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_forms_id' => $item->getID()
+         ],
+      ]);
+      $token = Session::getNewCSRFToken();
       $i = 0;
       foreach ($found_targets as $target) {
          $i++;
@@ -288,6 +299,8 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -311,7 +324,13 @@ class PluginFormcreatorTarget extends CommonDBTM
       // get target actors
       $target['_data']['_actors'] = [];
       $foreignKey = $target_item->getForeignKeyField();
-      $all_target_actors = $form_target_actor->find("`$foreignKey` = '$targetId'");
+      $all_target_actors = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'    => $form_target_actor::getTable(),
+         'WHERE'   => [
+            $foreignKey => $targetId
+         ]
+      ]);
       foreach ($all_target_actors as $target_actor) {
          if ($form_target_actor->getFromDB($target_actor['id'])) {
             $target['_data']['_actors'][] = $form_target_actor->export($remove_uuid);
@@ -360,9 +379,16 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @param PluginFormcreatorForm $form
     */
    public function getTargetsForForm(PluginFormcreatorForm $form) {
+      global $DB;
+
       $targets = [];
-      $formId = $form->getID();
-      $foundTargets = $this->find("plugin_formcreator_forms_id = '$formId'");
+      $foundTargets = $DB->request([
+         'SELECT' => ['itemtype', 'items_id'],
+         'FROM'    => self::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_forms_id' => $form->getID()
+         ]
+      ]);
       foreach ($foundTargets as $row) {
          $target = getItemForItemtype($row['itemtype']);
          $target->getFromDB($row['items_id']);

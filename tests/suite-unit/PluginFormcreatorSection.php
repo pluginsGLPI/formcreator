@@ -71,6 +71,8 @@ class PluginFormcreatorSection extends CommonTestCase {
     * @cover PluginFormcreatorSection::clone
     */
    public function testDuplicate() {
+      global $DB;
+
       // instanciate classes
       $form           = new \PluginFormcreatorForm;
       $section   = new \PluginFormcreatorSection;
@@ -97,16 +99,27 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer($newSection_id)->isGreaterThan(0);
 
       //get cloned section
-      $new_section   = new \PluginFormcreatorSection;
-      $question = new \PluginFormcreatorQuestion;
+      $new_section = new \PluginFormcreatorSection;
       $new_section->getFromDB($newSection_id);
 
       // check uuid
       $this->string($new_section->getField('uuid'))->isNotEqualTo($section->getField('uuid'));
 
       // check questions
-      $all_questions = $question->find("plugin_formcreator_sections_id = ".$section->getID());
-      $all_new_questions = $question->find("plugin_formcreator_sections_id = ".$new_section->getID());
+      $all_questions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'   => \PluginFormcreatorQuestion::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_sections_id' => $section->getID()
+         ]
+      ]);
+      $all_new_questions = $DB->request([
+         'SELECT' => ['uuid'],
+         'FROM'   => \PluginFormcreatorQuestion::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_sections_id' => $new_section->getID()
+         ]
+      ]);
       $this->integer(count($all_new_questions))->isEqualTo(count($all_questions));
 
       // check that all question uuid are new

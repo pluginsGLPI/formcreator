@@ -256,15 +256,21 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @return mixed the provide _item key replaced if needed
     */
    public function getTicketsForDisplay($options) {
+      global $DB;
+
       $item = $options['_item'];
       $formanswerId = $options['id'];
-      $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer'
-                                  AND `items_id` = $formanswerId", "`tickets_id` ASC");
-
+      $rows = $DB->request([
+         'FROM'  => Item_Ticket::getTable(),
+         'WHERE' => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'items_id' => $formanswerId
+         ],
+         'ORDER' => 'tickets_id ASC'
+      ]);
       if (count($rows) == 1) {
          // one ticket, replace item
-         $ticket = array_shift($rows);
+         $ticket = $rows->next();
          $item = new Ticket;
          $item->getFromDB($ticket['tickets_id']);
       } else if (count($rows) > 1) {
@@ -273,15 +279,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       }
 
       return $item;
-   }
-
-   /**
-    * Define search options for forms
-    *
-    * @return Array Array of fields to show in search engine and options for each fields
-    */
-   public function getSearchOptionsNew() {
-      return $this->rawSearchOptions();
    }
 
    public function rawSearchOptions() {
@@ -579,22 +576,31 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getIncomingCriteria() {
+      $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process',
-                              'value'      => 'notold']],
+                              'value'      => 'notold'],
+                             ['field'      => 8,
+                             'searchtype'  => 'equals',
+                             'value'       => $currentUser]],
               'reset'    => 'reset'];
    }
 
    static function getWaitingCriteria() {
+      $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process',
-                              'value'      => Ticket::WAITING]],
+                              'value'      => Ticket::WAITING],
+                              ['field'      => 8,
+                              'searchtype'  => 'equals',
+                              'value'       => $currentUser]],
               'reset'    => 'reset'];
    }
 
    static function getValidateCriteria() {
+      $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
                               'value'      => 'process',
@@ -603,7 +609,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                              ['field' => 9,
                               'searchtype' => 'equals',
                               'value'      => 'process',
-                              'value'      => $_SESSION['glpiID'],
+                              'value'      => $currentUser,
                               'link'       => 'AND'],
                              ['field' => 4,
                               'searchtype' => 'equals',
@@ -613,15 +619,19 @@ class PluginFormcreatorIssue extends CommonDBTM {
                              ['field' => 11,
                               'searchtype' => 'equals',
                               'value'      => 'process',
-                              'value'      => $_SESSION['glpiID'],
+                              'value'      => $currentUser,
                               'link'       => 'AND']],
               'reset'    => 'reset'];
    }
 
    static function getSolvedCriteria() {
+      $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'old']],
+                              'value'      => 'old'],
+                              ['field'      => 8,
+                              'searchtype'  => 'equals',
+                              'value'       => $currentUser]],
               'reset'    => 'reset'];
    }
 

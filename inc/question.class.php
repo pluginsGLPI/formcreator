@@ -85,20 +85,32 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return String                   Name to be displayed
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      global $DB;
+
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
             $number      = 0;
-            $section     = new PluginFormcreatorSection();
-            $found     = $section->find('plugin_formcreator_forms_id = ' . $item->getID());
+            $found       = $DB->request([
+               'SELECT' => ['id'],
+               'FROM'   => PluginFormcreatorSection::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_forms_id' => $item->getID()
+               ]
+            ]);
             $tab_section = [];
             foreach ($found as $section_item) {
                $tab_section[] = $section_item['id'];
             }
 
             if (!empty($tab_section)) {
-               $object  = new self;
-               $found = $object->find('plugin_formcreator_sections_id IN (' . implode(', ', $tab_section) . ')');
-               $number  = count($found);
+               $count = $DB->request([
+                  'COUNT' => 'cpt',
+                  'FROM'  => self::getTable(),
+                  'WHERE' => [
+                     'plugin_formcreator_sections_id' => $tab_section
+                  ]
+               ])->next();
+               $number = $count['cpt'];
             }
             return self::createTabEntry(self::getTypeName($number), $number);
       }
@@ -125,13 +137,18 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      global $CFG_GLPI;
+      global $CFG_GLPI, $DB;
       // TODO: move the content of this method into a new showForForm() method
       echo '<table class="tab_cadre_fixe">';
 
       // Get sections
-      $section          = new PluginFormcreatorSection();
-      $found_sections = $section->find('plugin_formcreator_forms_id = ' . (int) $item->getId(), '`order`');
+      $found_sections = $DB->request([
+         'FROM'    => PluginFormcreatorSection::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_forms_id' => (int) $item->getId()
+         ],
+         'ORDER' => 'order'
+      ]);
       $section_number   = count($found_sections);
       $token            = Session::getNewCSRFToken();
       foreach ($found_sections as $section) {
@@ -176,8 +193,13 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          echo '</tr>';
 
          // Get questions
-         $question          = new PluginFormcreatorQuestion();
-         $found_questions = $question->find('plugin_formcreator_sections_id = ' . (int) $section['id'], '`order`');
+         $found_questions = $DB->request([
+            'FROM'  => PluginFormcreatorQuestion::getTable(),
+            'WHERE' => [
+               'plugin_formcreator_sections_id' => (int) $section['id']
+            ],
+            'ORDER' => 'order'
+         ]);
          $question_number   = count($found_questions);
          $i = 0;
          foreach ($found_questions as $question) {
@@ -264,8 +286,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
    /**
     * Validate form fields before add or update a question
-    * @param  Array $input Datas used to add the item
-    * @return Array        The modified $input array
+    * @param  array $input Datas used to add the item
+    * @return array        The modified $input array
     */
    private function checkBeforeSave($input) {
       // Control fields values :
@@ -365,8 +387,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return array the modified $input array
     */
    public function prepareInputForAdd($input) {
-      global $DB;
-
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
          $input = $this->checkBeforeSave($input);
@@ -382,8 +402,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       // Get next order
-      $sectionId = $input['plugin_formcreator_sections_id'];
-      $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$sectionId'", 'order');
+      $maxOrder = PluginFormcreatorCommon::getMax($this, [
+         "plugin_formcreator_sections_id" => $input['plugin_formcreator_sections_id']
+      ], 'order');
       if ($maxOrder === null) {
          $input['order'] = 1;
       } else {
@@ -434,7 +455,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             $DB->query($query);
 
             // Get the order for the new section
-            $maxOrder = PluginFormcreatorCommon::getMax($this, "`plugin_formcreator_sections_id` = '$newId'", 'order');
+            $maxOrder = PluginFormcreatorCommon::getMax($this, [
+               "plugin_formcreator_sections_id" => $newId
+            ], 'order');
             if ($maxOrder === null) {
                $input['order'] = 1;
             } else {
@@ -735,8 +758,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</td>';
 
       echo '<td>';
-      $dbUtil = new DbUtils();
-      $table = $dbUtil->getTableForItemtype('PluginFormcreatorSection');
       $sections = [];
       foreach ((new PluginFormcreatorSection())->getSectionsFromForm($form_id) as $section) {
          $sections[$section->getID()] = $section->getField('name');
@@ -1287,6 +1308,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return integer|boolean ID of  the new question, false otherwise
     */
    public function duplicate() {
+      global $DB;
+
       $oldQuestionId       = $this->getID();
       $newQuestion         = new static();
       $question_condition  = new PluginFormcreatorQuestion_Condition();
@@ -1307,7 +1330,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $this
       );
       $parameters = $this->field->getParameters();
-      foreach ($parameters as $fieldName => $parameter) {
+      foreach ($parameters as $parameter) {
          $row = $parameter->fields;
          $row[PluginFormcreatorQuestion::getForeignKeyField()] = $newQuestion->getID();
          unset($row['id']);
@@ -1315,7 +1338,12 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       // Form questions conditions
-      $rows = $question_condition->find("`plugin_formcreator_questions_id` IN  ('$oldQuestionId')");
+      $rows = $DB->request([
+         'FROM'    => $question_condition::getTable(),
+         'WHERE'   => [
+            'plugin_formcreator_questions_id' => $oldQuestionId
+         ]
+      ]);
       foreach ($rows as $row) {
          unset($row['id'],
                $row['uuid']);
@@ -1416,6 +1444,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
+      global $DB;
+
       if (!$this->getID()) {
          return false;
       }
@@ -1429,7 +1459,13 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       // get question conditions
       $question['_conditions'] = [];
-      $all_conditions = $form_question_condition->find("plugin_formcreator_questions_id = ".$this->getID());
+      $all_conditions = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_question_condition::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_questions_id' => $this->getID()
+         ]
+      ]);
       foreach ($all_conditions as $condition) {
          if ($form_question_condition->getFromDB($condition['id'])) {
             $question['_conditions'][] = $form_question_condition->export($remove_uuid);
@@ -1495,7 +1531,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    public function getQuestionsFromForm($formId, $crit = []) {
       global $DB;
 
-      $dbUtil = new DbUtils();
       $table_question = PluginFormcreatorQuestion::getTable();
       $table_section  = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
@@ -1542,8 +1577,17 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return PluginFormcreatorQuestion[]
     */
    public function getQuestionsFromSection($sectionId) {
+      global $DB;
+
       $questions = [];
-      $rows = $this->find("`plugin_formcreator_sections_id` = '$sectionId'", "`order` ASC");
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => self::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_sections_id' => $sectionId
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
       foreach ($rows as $row) {
             $question = new self();
             $question->getFromDB($row['id']);

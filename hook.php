@@ -130,7 +130,9 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
       case PluginFormcreatorFormAnswer::class:
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
-            $condition = "`$table`.`".PluginFormcreatorFormAnswer::$items_id."` = ".
+            // Context is displaying the answers for a given form
+            $formFk = PluginFormcreatorForm::getForeignKeyField();
+            $condition = "`$table`.`$formFk` = ".
                          $_SESSION['formcreator']['form_search_answers'];
          } else {
             $condition = plugin_formcreator_getCondition($itemtype);
@@ -334,13 +336,21 @@ function plugin_formcreator_hook_update_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
+   global $DB;
+
    if ($item instanceof Ticket) {
       $id = $item->getID();
 
       // mark formanswers as deleted
-      $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `tickets_id` = '$id'");
-      foreach ($rows as $row) {
+      $iterator = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype'   => 'PluginFormcreatorFormAnswer',
+            'tickets_id' => $id,
+         ]
+      ]);
+      foreach ($iterator as $row) {
          $form_answer = new PluginFormcreatorFormAnswer();
          $form_answer->update([
             'id'           => $row['id'],
@@ -358,13 +368,21 @@ function plugin_formcreator_hook_delete_ticket(CommonDBTM $item) {
 }
 
 function plugin_formcreator_hook_restore_ticket(CommonDBTM $item) {
+   global $DB;
+
    if ($item instanceof Ticket) {
       $id = $item->getID();
 
       // Restore deletes form_answers
-      $item_ticket = new Item_Ticket();
-      $rows = $item_ticket->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `tickets_id` = '$id'");
-      foreach ($rows as $row) {
+      $iterator = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => Item_Ticket::getTable(),
+         'WHERE'  => [
+            'itemtype'   => 'PluginFormcreatorFormAnswer',
+            'tickets_id' => $id,
+         ]
+      ]);
+      foreach ($iterator as $row) {
          $form_answer = new PluginFormcreatorFormAnswer();
          $form_answer->update([
             'id'           => $row['id'],

@@ -56,12 +56,14 @@ if (isset($_REQUEST['id'])
       }
 
       if ($form->fields['access_rights'] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
-         $form_profile = new PluginFormcreatorForm_Profile();
-         $formId = $form->getID();
-         $activeProfileId = $_SESSION['glpiactiveprofile']['id'];
-         $rows = $form_profile->find("profiles_id = '$activeProfileId'
-                                      AND plugin_formcreator_forms_id = '$formId'", "", "1");
-         if (count($rows) == 0) {
+         $iterator = $DB->request(PluginFormcreatorForm_Profile::getTable(), [
+            'WHERE' => [
+               'profiles_id'                 => $_SESSION['glpiactiveprofile']['id'],
+               'plugin_formcreator_forms_id' => $form->getID()
+            ],
+            'LIMIT' => 1
+         ]);
+         if (count($iterator) == 0) {
             Html::displayRightError();
             exit();
          }

@@ -242,57 +242,20 @@ class PluginFormcreatorInstall {
    }
 
    protected function createDefaultDisplayPreferences() {
-      global $DB;
       $this->migration->displayMessage("create default display preferences");
-
-      // Create standard display preferences
-      $displayprefs = new DisplayPreference();
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
-      if (count($found_dprefs) == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                   (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorFormAnswer', 2, 2, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 3, 3, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 4, 4, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 5, 5, 0),
-                   (NULL, 'PluginFormcreatorFormAnswer', 6, 6, 0)";
-         $DB->query($query) or die ($DB->error());
-      }
-
-      $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorForm'");
-      if (count($found_dprefs) == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                   (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorForm', 30, 1, 0),
-                   (NULL, 'PluginFormcreatorForm', 3, 2, 0),
-                   (NULL, 'PluginFormcreatorForm', 10, 3, 0),
-                   (NULL, 'PluginFormcreatorForm', 7, 4, 0),
-                   (NULL, 'PluginFormcreatorForm', 8, 5, 0),
-                   (NULL, 'PluginFormcreatorForm', 9, 6, 0);";
-         $DB->query($query) or die ($DB->error());
-      }
-
-      $displayprefs = new DisplayPreference;
-      $found_dprefs = $displayprefs->find("`itemtype` = 'PluginFormcreatorIssue'");
-      if (count($found_dprefs) == 0) {
-         $query = "INSERT IGNORE INTO `glpi_displaypreferences`
-                   (`id`, `itemtype`, `num`, `rank`, `users_id`) VALUES
-                   (NULL, 'PluginFormcreatorIssue', 1, 1, 0),
-                   (NULL, 'PluginFormcreatorIssue', 2, 2, 0),
-                   (NULL, 'PluginFormcreatorIssue', 4, 3, 0),
-                   (NULL, 'PluginFormcreatorIssue', 5, 4, 0),
-                   (NULL, 'PluginFormcreatorIssue', 6, 5, 0),
-                   (NULL, 'PluginFormcreatorIssue', 7, 6, 0),
-                   (NULL, 'PluginFormcreatorIssue', 8, 7, 0)";
-         $DB->query($query) or die ($DB->error());
-      }
+      $this->migration->updateDisplayPrefs([
+         'PluginFormcreatorFormAnswer' => [2, 3, 4, 5, 6],
+         'PluginFormcreatorForm'       => [30, 3, 10, 7, 8, 9],
+         'PluginFormcreatorIssue'      => [1, 2, 4, 5, 6, 7, 8],
+      ]);
    }
 
    /**
     * Declares the notifications that the plugin handles
     */
    protected function createNotifications() {
+      global $DB;
+
       $this->migration->displayMessage("create notifications");
 
       $notifications = [
@@ -337,10 +300,17 @@ class PluginFormcreatorInstall {
 
       foreach ($notifications as $event => $data) {
          // Check if notification already exists
-         $exists = $notification->find("itemtype = 'PluginFormcreatorFormAnswer' AND event = '$event'");
+         $exists = $DB->request([
+            'COUNT'  => 'cpt',
+            'FROM'   => $notification::getTable(),
+            'WHERE'  => [
+               'itemtype' => 'PluginFormcreatorFormAnswer',
+               'event'    => $event,
+            ]
+         ])->next();
 
          // If it doesn't exists, create it
-         if (count($exists) == 0) {
+         if ($exists['cpt'] == 0) {
             $template_id = $template->add([
                'name'     => Toolbox::addslashes_deep($data['name']),
                'comment'  => '',
@@ -386,6 +356,8 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteNotifications() {
+      global $DB;
+
       // Delete translations
       $translation = new NotificationTemplateTranslation();
       $translation->deleteByCriteria([
@@ -425,13 +397,18 @@ class PluginFormcreatorInstall {
       // Delete notifications and their templates
       $notification = new Notification();
       $notification_notificationTemplate = new Notification_NotificationTemplate();
-      $rows = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $notification::getTable(),
+         'WHERE'  => [
+            'itemtype' => 'PluginFormcreatorFormAnswer'
+         ]
+      ]);
       foreach ($rows as $row) {
          $notification_notificationTemplate->deleteByCriteria(['notifications_id' => $row['id']]);
          $notification->delete($row);
       }
 
-      $notification = new Notification();
       $notification->deleteByCriteria(['itemtype' => PluginFormcreatorFormAnswer::class]);
    }
 

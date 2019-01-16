@@ -172,6 +172,8 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testCreateValidationNotification() {
+      global $DB;
+
       \Config::setConfigurationValues(
          'core',
          ['use_notifications' => 1, 'notifications_mailing' => 1]
@@ -192,7 +194,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'validation_required'   => \PluginFormcreatorForm_Validator::VALIDATION_USER,
          '_validator_users'      => [$_SESSION['glpiID']],
       ]);
-      $section =$this->getSection([
+      $this->getSection([
          $form::getForeignKeyField() => $form->getID(),
          'name' => 'section',
       ]);
@@ -206,9 +208,15 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       // 1 notification to the validator
       // 1 notification to the requester
-      $notification = new \QueuedNotification();
-      $foundNotifications = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer' AND `items_id` = '$formAnswerId'");
-      $this->integer(count($foundNotifications))->isEqualTo(2);
+      $foundNotifications = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => \QueuedNotification::getTable(),
+         'WHERE' => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'items_id' => $formAnswerId,
+         ]
+      ])->next();
+      $this->integer((int) $foundNotifications['cpt'])->isEqualTo(2);
    }
 
    /**
@@ -272,8 +280,8 @@ class PluginFormcreatorForm extends CommonTestCase {
          'content'      => '##FULLFORM##'
       ]);
       $form_target->getFromDB($targets_id);
-      $targettickets_id = $form_target->fields['items_id'];
-      $form_profiles_id = $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
+      $form_target->fields['items_id'];
+      $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
                                                    'profiles_id' => 1]);
       $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
                                'link'     => \Ticket_Ticket::LINK_TO,
@@ -415,7 +423,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
    public function providerGetFromSection() {
       $section = $this->getSection();
-      $formId = $section->getField(\PluginFormcreatorForm::getForeignKeyField());
+      $section->getField(\PluginFormcreatorForm::getForeignKeyField());
       $dataset = [
          [
             'section'  => $section,
@@ -436,5 +444,71 @@ class PluginFormcreatorForm extends CommonTestCase {
       $form = new \PluginFormcreatorForm();
       $output = $form->getFromDBBySection($section);
       $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function testSaveForm() {
+      global $CFG_GLPI;
+
+      $this->login('glpi', 'glpi');
+
+      // disable notifications as we may fail in some case (not the purpose of this test btw)
+      $use_notifications = $CFG_GLPI['use_notifications'];
+      $CFG_GLPI['use_notifications'] = 0;
+
+      $answer = "test answer to question";
+
+      // prepare a fake form with targets
+      $question = $this->getQuestion();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
+      $form = new \PluginFormcreatorForm();
+      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $this->getTargetTicket([
+         $formFk => $form->getID(),
+      ]);
+      $this->getTargetChange([
+         $formFk => $form->getID(),
+      ]);
+
+      // prepare input
+      $input = [
+         'formcreator_form' => $form->getID(),
+         'formcreator_field_'.$question->getID() => $answer
+      ];
+
+      // send for answer
+      $formAnswerId = $form->saveForm($input);
+      $this->integer($formAnswerId)->isGreaterThan(0);
+
+      // check existence of generated target
+      // - ticket
+      $item_ticket = new \Item_Ticket;
+      $this->boolean($item_ticket->getFromDBByCrit([
+         'itemtype' => 'PluginFormcreatorFormAnswer',
+         'items_id' => $formAnswerId,
+      ]))->isTrue();
+      $ticket = new \Ticket;
+      $this->boolean($ticket->getFromDB($item_ticket->fields['tickets_id']))->isTrue();
+      $this->string($ticket->fields['content'])->contains($answer);
+
+      // - change
+      $change_item = new \Change_Item;
+      $this->boolean($change_item->getFromDBByCrit([
+         'itemtype' => 'PluginFormcreatorFormAnswer',
+         'items_id' => $formAnswerId,
+      ]))->isTrue();
+      $change = new \Change;
+      $this->boolean($change->getFromDB($change_item->fields['changes_id']))->isTrue();
+      $this->string($change->fields['content'])->contains($answer);
+
+      // - issue
+      $issue = new \PluginFormcreatorIssue;
+      $this->boolean($issue->getFromDBByCrit([
+        'sub_itemtype' => \Ticket::class,
+        'original_id'  => $ticket->getID()
+      ]))->isTrue();
+
+      $CFG_GLPI['use_notifications'] = $use_notifications;
    }
 }

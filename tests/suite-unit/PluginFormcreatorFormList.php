@@ -21,8 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
+ *
  * @copyright Copyright © 2011 - 2018 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -30,35 +29,37 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-
 namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
-class PluginFormcreatorQuestion_Condition extends CommonTestCase {
-   public function beforeTestMethod($method) {
-      parent::beforeTestMethod($method);
 
-      self::login('glpi', 'glpi');
+class PluginFormcreatorFormList extends CommonTestCase {
+   public function providerGetTypeName() {
+      return [
+         [
+            0,
+            'Forms'
+         ],
+         [
+            1,
+            'Form'
+         ],
+         [
+            2,
+            'Forms'
+         ],
+      ];
    }
 
-   public function testGetConditionsFromQuestion() {
-      // crete a question with some conditions
-      $question = $this->getQuestion();
-
-      $questionFk = \PluginFormcreatorQuestion::getForeignKeyField();
-      $questionCondition = $this->newTestedInstance();
-      $questionCondition->add([
-         $questionFk => $question->getID(),
-      ]);
-      $this->boolean($questionCondition->isNewItem())->isFalse();
-
-      $questionCondition = $this->newTestedInstance();
-      $questionCondition->add([
-         $questionFk => $question->getID(),
-      ]);
-      $this->boolean($questionCondition->isNewItem())->isFalse();
-
-      // Check that all conditions are retrieved
-      $output = $questionCondition->getConditionsFromQuestion($question->getID());
-      $this->array($output)->hasSize(2);
+   /**
+    * @dataProvider providerGetTypeName
+    *
+    * @param integer $nb
+    * @param string $expected
+    * @return void
+    */
+   public function testGetTypeName($nb, $expected) {
+      $instance = new $this->newTestedInstance();
+      $output = $instance->getTypeName($nb);
+      $this->string($output)->isEqualTo($expected);
    }
 }

@@ -72,13 +72,23 @@ class Config extends CommonTestCase
       $this->integer(count($tables))->isEqualTo(0, "not deleted tables \n" . json_encode($tables, JSON_PRETTY_PRINT));
 
       // Check the notifications of the plugin no longer exist
-      $notification = new \Notification();
-      $rows = $notification->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
-      $this->integer(count($rows))->isEqualTo(0);
+      $rows = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => \Notification::getTable(),
+         'WHERE' => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ]
+      ])->next();
+      $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
-      $template = new \NotificationTemplate();
-      $rows = $template->find("`itemtype` = 'PluginFormcreatorFormAnswer'");
-      $this->integer(count($rows))->isEqualTo(0);
+      $rows = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => \NotificationTemplate::getTable(),
+         'WHERE' => [
+            'itemtype' => 'PluginFormcreatorFormAnswer',
+         ]
+      ])->next();
+      $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation

@@ -80,9 +80,15 @@ if (isset($_POST["update"])) {
    );
 
    $itemtype = "PluginFormcreatorTargetTicket";
-   $target   = new PluginFormcreatorTarget;
-   $found    = $target->find("itemtype = '$itemtype' AND items_id = " . (int) $_REQUEST['id']);
-   $first    = array_shift($found);
+   $iterator = $DB->request([
+      'SELECT' => ['plugin_formcreator_forms_id'],
+      'FROM'   => PluginFormcreatorTarget::getTable(),
+      'WHERE'  => [
+         'itemtype' => $itemtype,
+         'items_id' => (int) $_REQUEST['id'],
+      ]
+   ]);
+   $first = $iterator->next();
    $form     = new PluginFormcreatorForm;
    $form->getFromDB($first['plugin_formcreator_forms_id']);
 

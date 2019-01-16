@@ -126,13 +126,13 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       if (!$parameters['range']->isNewItem()) {
          $rangeMin = $parameters['range']->fields['range_min'];
          $rangeMax = $parameters['range']->fields['range_max'];
-         if (strlen($rangeMin) > 0 && $this->value < $rangeMin) {
+         if ($rangeMin > 0 && $this->value < $rangeMin) {
             $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $rangeMin);
             Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
             return false;
          }
 
-         if (strlen($rangeMax) > 0 && $this->value > $rangeMax) {
+         if ($rangeMax > 0 && $this->value > $rangeMax) {
             $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $rangeMax);
             Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
             return false;

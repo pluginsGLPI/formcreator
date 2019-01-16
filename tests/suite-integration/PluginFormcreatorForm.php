@@ -83,9 +83,8 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $form_target->getFromDB($targets_id);
-      $targettickets_id = $form_target->fields['items_id'];
 
-      $form_profiles_id = $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
+      $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
                                                    'profiles_id' => 1]);
 
       $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
@@ -108,6 +107,8 @@ class PluginFormcreatorForm extends CommonTestCase {
     *
     */
    public function testDuplicateForm() {
+      global $DB;
+
       $formData = [
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => 'a form',
@@ -228,30 +229,76 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $newFormId)->isNotEqualTo($sourceFormId);
 
       // Check sections were copied
-      $section = new \PluginFormcreatorSection();
-      $sourceRows = $section->find("`plugin_formcreator_forms_id` = '$sourceFormId'");
-      $newRows = $section->find("`plugin_formcreator_forms_id` = '$newFormId'");
-      $this->integer(count($newRows))->isEqualTo(count($sourceRows));
+      $sourceRows = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => \PluginFormcreatorSection::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_forms_id' => $sourceFormId,
+         ]
+      ])->next();
+      $newRows = $DB->request([
+         'COUNT' => 'cpt',
+         'FROM'  => \PluginFormcreatorSection::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_forms_id' => $newFormId,
+         ]
+      ])->next();
+      $this->integer((int)$newRows['cpt'])->isEqualTo((int)$sourceRows['cpt']);
 
       // Check questions were copied
-      $table_section = \PluginFormcreatorSection::getTable();
-      $question = new \PluginFormcreatorQuestion();
-      $sourceRows = $question->find("`plugin_formcreator_sections_id` IN (
-            SELECT `id` FROM `$table_section` WHERE `$table_section`.`plugin_formcreator_forms_id` = '$sourceFormId'
-      )");
-      $newRows = $question->find("`plugin_formcreator_sections_id` IN (
-            SELECT `id` FROM `$table_section` WHERE `$table_section`.`plugin_formcreator_forms_id` = '$newFormId'
-      )");
-      $this->integer(count($newRows))->isEqualTo(count($sourceRows));
+      $question_table = \PluginFormcreatorQuestion::getTable();
+      $section_table  = \PluginFormcreatorSection::getTable();
+      $sourceRows = $DB->request([
+         'COUNT'      => 'cpt',
+         'FROM'       => $question_table,
+         'INNER JOIN' => [
+            $section_table => [
+               'FKEY' => [
+                  "$section_table.id",
+                  "$question_table.plugin_formcreator_sections_id"
+               ]
+            ]
+         ],
+         'WHERE'      => [
+            'plugin_formcreator_forms_id'  => $sourceFormId,
+         ]
+      ])->next();
+      $newRows = $DB->request([
+         'COUNT'      => 'cpt',
+         'FROM'       => $question_table,
+         'INNER JOIN' => [
+            $section_table => [
+               'FKEY' => [
+                  "$section_table.id",
+                  "$question_table.plugin_formcreator_sections_id"
+               ]
+            ]
+         ],
+         'WHERE'      => [
+            'plugin_formcreator_forms_id'  => $newFormId,
+         ]
+      ])->next();
+      $this->integer((int)$newRows['cpt'])->isEqualTo((int)$sourceRows['cpt']);
 
       // check target were created
-      $target = new \PluginFormcreatorTarget();
-      $sourceRows = $target->find("`plugin_formcreator_forms_id` = '$sourceFormId'");
-      $newRows = $target->find("`plugin_formcreator_forms_id` = '$sourceFormId'");
+      $sourceRows = $DB->request([
+         'SELECT' => ['itemtype', 'items_id'],
+         'FROM'  => \PluginFormcreatorTarget::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_forms_id' => $sourceFormId,
+         ]
+      ]);
+      $newRows = $DB->request([
+         'SELECT' => ['itemtype', 'items_id'],
+         'FROM'  => \PluginFormcreatorTarget::getTable(),
+         'WHERE' => [
+            'plugin_formcreator_forms_id' => $newFormId,
+         ]
+      ]);
       $this->integer(count($newRows))->isEqualTo(count($sourceRows));
 
       // check target tickets were created
-      foreach ($newRows as $targetId => $newTarget) {
+      foreach ($newRows as $newTarget) {
          if ($newTarget['itemtype'] == 'PluginFormcreatorTargetTicket') {
             $targetTicket = new \PluginFormcreatorTArgetTicket();
             $targetTicket->getFromDB($newTarget['items_id']);
