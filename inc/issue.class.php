@@ -526,29 +526,50 @@ class PluginFormcreatorIssue extends CommonDBTM {
       switch ("$table.$field") {
          case "glpi_plugin_formcreator_issues.name":
             $name = $data[$num][0]['name'];
-            return "<a href='".FORMCREATOR_ROOTDOC."/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype']."'>$name</a>";
-            break;
+            $subItemtype = $data['raw']['sub_itemtype'];
+            switch ($subItemtype) {
+               case Ticket::class:
+                  $ticket = new Ticket();
+                  $ticket->getFromDB($id);
+                  $content = $ticket->fields['content'];
+                  break;
+
+               // TODO : need some code refactor to properly provide qtip
+               // case PluginFormcreatorFormAnswer::class:
+               //       $formAnswer = new PluginFormcreatorFormAnswer();
+               //       $formAnswer->getFromDB($id);
+               //       $content = $formAnswer->getFullForm();
+               //       // TODO : need to replace tags before creating the qtip
+               //       break;
+               default:
+                  $content = '';
+            }
+            $link = FORMCREATOR_ROOTDOC . "/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype'];
+            $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
+               'applyto' => $itemtype.$data[$itemtype . '_' . $option_id][0]['id'],
+               'display' => false,
+            ]);
+            return '<a id="' . $itemtype.$data[$itemtype . '_' . $option_id][0]['id'] . '" href="' . $link . '">'
+               . sprintf(__('%1$s %2$s'), $name, $tooltip)
+               . '</a>';
 
          case "glpi_plugin_formcreator_issues.id":
             return $data['raw']['id'];
-            break;
 
          case "glpi_plugin_formcreator_issues.status":
             switch ($data['raw']['sub_itemtype']) {
                case Ticket::class:
                   $status = Ticket::getStatus($data['raw']["ITEM_$num"]);
                   return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
-                  break;
 
                case PluginFormcreatorFormAnswer::class:
                   return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
                      ." ".__($data['raw']["ITEM_$num"], 'formcreator');
-                  break;
             }
             break;
       }
 
-      return "";
+      return '';
    }
 
 

@@ -965,8 +965,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * Update the answers
     *
-    * @param [type] $input
-    * @return void
+    * @param array $input
+    * @return boolean
     */
    public function updateAnswers($input) {
       $form = new PluginFormcreatorForm();
@@ -985,7 +985,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
-      $this->saveAnswers($form, $input, $fields);
+      return $this->saveAnswers($form, $input, $fields);
    }
 
    /**
@@ -1018,7 +1018,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
-
       return $this->saveAnswers($form, $input, $fields);
    }
 
@@ -1052,7 +1051,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
-
       return $this->saveAnswers($form, $input, $fields);
    }
 

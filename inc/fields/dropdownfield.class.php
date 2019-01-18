@@ -372,12 +372,15 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
-      if (!is_string($input[$key])) {
-         return false;
+      if (!isset($input[$key])) {
+         $input[$key] = '0';
+      } else {
+         if (!is_string($input[$key])) {
+            return false;
+         }
       }
-
-       $this->value = $input[$key];
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
    public function isAnonymousFormCompatible() {

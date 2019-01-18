@@ -1038,7 +1038,6 @@ EOS;
       return $content;
    }
 
-
    protected function showLocationSettings($rand) {
       global $DB;
 

@@ -71,12 +71,16 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
-      if (!is_string($input[$key])) {
-         return false;
+      if (!isset($input[$key])) {
+         $input[$key] = '3';
+      } else {
+         if (!is_string($input[$key])) {
+            return false;
+         }
       }
 
-       $this->value = $input[$key];
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
    public static function getPrefs() {
