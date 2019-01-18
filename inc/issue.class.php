@@ -508,6 +508,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function giveItem($itemtype, $option_id, $data, $num) {
+      $ticket = new Ticket();
       $searchopt = &Search::getOptions($itemtype);
       $table = $searchopt[$option_id]["table"];
       $field = $searchopt[$option_id]["field"];
@@ -521,7 +522,16 @@ class PluginFormcreatorIssue extends CommonDBTM {
       switch ("$table.$field") {
          case "glpi_plugin_formcreator_issues.name":
             $name = $data[$num][0]['name'];
-            return "<a href='".FORMCREATOR_ROOTDOC."/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype']."'>$name</a>";
+            $ticket->getFromDB($data[$num][0]['id']);
+            $content = $ticket->getField('content');
+            $desc = $data[$num][0]['desc'];
+            return "<a id='Ticket".$data[$num][0]['id']."' href='".FORMCREATOR_ROOTDOC."/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype']."'>$name</a><div style='display:none' id='TicketContent".$data[$num][0]['id']."'>".nl2br($content)."</div><script type='text/javascript'>
+            //<![CDATA[
+            $('#Ticket".$data[$num][0]['id']."').qtip({
+                     position: { viewport: $(window) },
+                     content: {text: $('#TicketContent".$data[$num][0]['id']."').html()}, style: { classes: 'qtip-shadow qtip-bootstrap'}});
+            //]]>
+            </script>";
             break;
 
          case "glpi_plugin_formcreator_issues.id":
