@@ -225,7 +225,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                    WHERE s.id = {$section['id']}
                    AND ((q.fieldtype = 'glpiselect'
                      AND q.values IN ('User', 'Group', 'Supplier'))
-                     OR (q.fieldtype = 'actor'))";
+                     OR (q.fieldtype IN ('actor', 'email')))";
          $result2 = $DB->query($query2);
          $section_questions_user       = [];
          $section_questions_group      = [];
@@ -246,6 +246,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                }
             } else if ($question['fieldtype'] == 'actor') {
                $section_questions_actors[$question['id']] = $question['name'];
+            } else if ($question['fieldtype'] == 'email') {
+               $section_questions_user[$question['id']] = $question['name'];
             }
          }
          $questions_user_list[$section['name']]     = $section_questions_user;
