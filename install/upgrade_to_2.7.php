@@ -105,6 +105,8 @@ class PluginFormcreatorUpgradeTo2_7 {
       }
       $table = 'glpi_plugin_formcreator_formanswers';
       $migration->renameTable('glpi_plugin_formcreator_forms_answers', $table);
+      $migration->migrationOneTable($table);
+      $migration->dropField($table, 'is_deleted');
       $table = 'glpi_plugin_formcreator_answers';
       $migration->changeField(
          $table,

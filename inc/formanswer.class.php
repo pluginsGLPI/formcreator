@@ -114,6 +114,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       return false;
    }
 
+   public static function canPurge() {
+      return true;
+   }
+
+   public function canPurgeItem() {
+      $form = new PluginFormcreatorForm();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form->getFromDB($this->fields[$formFk]);
+      return $form->canPurgeItem();
+   }
+
    /**
     * Returns the type name with consideration of plural
     *
