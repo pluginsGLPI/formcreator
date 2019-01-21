@@ -69,7 +69,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `request_date` datetime NOT NULL,
   `status` enum('waiting','refused','accepted') NOT NULL DEFAULT 'waiting',
   `comment` text,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
   INDEX `entities_id_is_recursive` (`entities_id`, `is_recursive`),
