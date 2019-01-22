@@ -1914,7 +1914,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
          $importLinker = new PluginFormcreatorImportLinker();
          foreach ($forms_toimport['forms'] as $form) {
-            //self::import($form);
             self::import($importLinker, $form);
          }
          if (!$importLinker->importPostponed()) {
@@ -2020,6 +2019,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $form = []) {
       global $DB;
+
+      set_time_limit(30);
 
       $form_obj = new self;
       $entity   = new Entity;
