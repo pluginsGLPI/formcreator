@@ -56,7 +56,7 @@ function plugin_version_formcreator() {
       return false;
    }
    $requirements = [
-      'name'           => _n('Form', 'Forms', 2, 'formcreator'),
+      'name'           => 'Form Creator',
       'version'        => PLUGIN_FORMCREATOR_VERSION,
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'homepage'       => 'https://github.com/pluginsGLPI/formcreator',
