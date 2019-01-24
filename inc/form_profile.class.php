@@ -123,7 +123,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
                ]
             ],
             'WHERE' => [
-               $formProfile . ".$formFk" => $item->getID(),
+               "$formProfile.$formFk" => $item->getID(),
             ],
          ]);
          foreach ($result as $row) {
