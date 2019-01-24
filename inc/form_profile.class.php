@@ -106,19 +106,31 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       if ($item->fields["access_rights"] == PluginFormcreatorForm::ACCESS_RESTRICTED) {
          echo '<tr><th colspan="2">'.self::getTypeName(2).'</th></tr>';
 
-         $table         = getTableForItemType(__CLASS__);
-         $table_profile = getTableForItemType('Profile');
-         $query = "SELECT p.`id`, p.`name`, IF(f.`profiles_id` IS NOT NULL, 1, 0) AS `profile`
-                   FROM $table_profile p
-                   LEFT JOIN $table f
-                     ON p.`id` = f.`profiles_id`
-                     AND f.`plugin_formcreator_forms_id` = ".$item->fields['id'];
-         $result = $DB->query($query);
-         while (list($id, $name, $profile) = $DB->fetch_array($result)) {
-            $checked = $profile ? ' checked' : '';
+         $formProfileTable = getTableForItemType(__CLASS__);
+         $profileTable     = getTableForItemType(Profile::class);
+         $formFk = PluginFormcreatorForm::getForeignKeyField();
+         $result = $DB->request([
+            'SELECT' => [
+               $profileTable     => ['id', 'name'],
+               $formProfileTable => ['profiles_id'],
+            ],
+            'LEFT JOIN' => [
+               $formProfileTable => [
+                  'FKEY' => [
+                     $profileTable     => 'id',
+                     $formProfileTable => 'profiles_id'
+                  ]
+               ]
+            ],
+            'WHERE' => [
+               $formProfile . ".$formFk" => $item->getID(),
+            ],
+         ]);
+         foreach ($result as $row) {
+            $checked = $row['profile'] !== null ? ' checked' : '';
             echo '<tr><td colspan="2"><label>';
-            echo '<input type="checkbox" name="profiles_id[]" value="'.$id.'" '.$checked.'> ';
-            echo $name;
+            echo '<input type="checkbox" name="profiles_id[]" value="'.$row['id'].'" '.$checked.'> ';
+            echo $row['name'];
             echo '</label></td></tr>';
          }
       }
