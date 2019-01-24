@@ -1247,9 +1247,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function post_purgeItem() {
       global $DB;
 
-      $table = getTableForItemType('PluginFormcreatorAnswer');
-      $query = "DELETE FROM `$table` WHERE `plugin_formcreator_formanswers_id` = {$this->getID()};";
-      $DB->query($query);
+      $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+      $DB->delete(
+         self::getTable(), [
+         $formAnswerFk,
+      ]);
 
       // If the form was waiting for validation
       if ($this->fields['status'] == 'waiting') {
