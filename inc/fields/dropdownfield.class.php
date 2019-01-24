@@ -292,37 +292,48 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return "tab_fields_fields['dropdown'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
+   /**
+    * get groups of the current user
+    *
+    * @param integer $userID
+    * @return array
+    */
    private function getMyGroups($userID) {
       global $DB;
 
       // from Item_Ticket::dropdownMyDevices()
       $DbUtil = new DbUtils();
-      $group_where = "";
-      $query       = "SELECT `glpi_groups_users`.`groups_id`, `glpi_groups`.`name`
-                        FROM `glpi_groups_users`
-                        LEFT JOIN `glpi_groups`
-                        ON (`glpi_groups`.`id` = `glpi_groups_users`.`groups_id`)
-                        WHERE `glpi_groups_users`.`users_id` = '$userID' " .
-                              $DbUtil->getEntitiesRestrictRequest(
-                                 "AND",
-                                 "glpi_groups",
-                                 "",
-                                 $_SESSION['glpiactive_entity'],
-                                 $_SESSION['glpiactive_entity_recursive']);
-      $result  = $DB->query($query);
-
-      $first   = true;
-      $devices = [];
-      if ($DB->numrows($result) === 0) {
+      $groupUserTable = Group_User::getTable();
+      $groupTable = Group::getTable();
+      $groupFk = Group::getForeignKeField();
+      $request = $DB->request([
+         'SELECT' => [
+            $groupUserTable => [$groupFk],
+            $groupTable => ['name'],
+         ],
+         'FROM' => $groupUserTable,
+         'LEFT JOIN' => [
+            $groupTable => [
+               'FKEY' => [
+                  $groupTable => 'id',
+                  $groupUser => $groupFk,
+               ],
+            ],
+         ],
+         'WHERE' => [
+            $groupUser . '.id' => $userID,
+         ] + $dbUtil->getEntitiesRestrictCriteria(
+            $groupTable,
+            '',
+            $_SESSION['glpiactive_entity'],
+            $_SESSION['glpiactive_entity_recursive']
+         )
+      ]);
+      if ($result->count() === 0) {
          return [];
       }
-      while ($data = $DB->fetch_assoc($result)) {
-         if ($first) {
-            $first = false;
-         } else {
-            $group_where .= " OR ";
-         }
-         $a_groups                     = getAncestorsOf("glpi_groups", $data["groups_id"]);
+      foreach($result as $data) {
+         $a_groups                     = $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
          $a_groups[$data["groups_id"]] = $data["groups_id"];
       }
       return $a_groups;
