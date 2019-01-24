@@ -476,8 +476,29 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                      ON g.`id` = gu.`groups_id`
                      AND gu.`users_id` IN (" . implode(',', $groups_users) . ")
                    ORDER BY g.`completename`";
-         $result = $DB->query($query);
-         while ($group = $DB->fetch_assoc($result)) {
+         $groupTable = Group::getTable();
+         $groupUserTable = Group_User::getTable();
+         $result = $DB->request([
+            'SELECT DISTINCT' => [
+               $groupTable => ['id', 'completename'],
+               'FROM' => $groupTable,
+               'INNER JOIN' => [
+                  $groupUserTable => [
+                     'FKEY' => [
+                        $groupTable => 'id',
+                        $groupUserTable => Group::getForeignKeyField()
+                     ],
+                  ]
+               ],
+               'WHERE' => [
+                  $groupUserTable . '.users_id' => $groups_users,
+               ],
+               'ORDER' => [
+                  $groupTable . '.completename'
+               ],
+            ],
+         ]);
+         foreach ($result as $group) {
             echo '<option value="' . $group['id'] . '"';
             if (in_array($group['id'], $validators)) {
                echo ' selected="selected"';
