@@ -1542,7 +1542,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $table_section  = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $request = [
+      $result = $DB->request([
          'SELECT' => "$table_question.*",
          'FROM' => $table_question,
          'LEFT JOIN' => [
@@ -1554,20 +1554,16 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             ],
          ],
          'WHERE' => [
-            $formFk => $formId,
+            'AND' => [$formFk => $formId] + $crit,
          ],
          'ORDER' => [
             "$table_section.order",
             "$table_question.order",
          ]
-      ];
-      if (count($crit) > 0) {
-         $request['WHERE']['AND'] = $crit;
-      }
+      ]);
 
-      $result = $DB->request($request);
       $questions = [];
-      while ($row = $result->next()) {
+      foreach($result as $row) {
          $question = new self();
          $question->getFromDB($row['id']);
          $questions[$row['id']] = $question;
@@ -1602,5 +1598,47 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       return $questions;
+   }
+
+   public static function dropdown($formId, $crit, $name, $value) {
+      global $DB;
+
+      $table_question = PluginFormcreatorQuestion::getTable();
+      $table_section  = PluginFormcreatorSection::getTable();
+      $sectionFk      = PluginFormcreatorSection::getForeignKeyField();
+      $formFk         = PluginFormcreatorForm::getForeignKeyField();
+      $result = $DB->request([
+         'SELECT' => [
+            "$table_question.id AS qid",
+            "$table_question.name AS qname",
+            "$table_section.name AS sname",
+         ],
+         'FROM' => $table_question,
+         'LEFT JOIN' => [
+            $table_section => [
+               'FKEY' => [
+                  $table_question => $sectionFk,
+                  $table_section => 'id',
+               ],
+            ],
+         ],
+         'WHERE' => [
+            'AND' => [$formFk => $formId] + $crit,
+         ],
+         'ORDER' => [
+            "$table_section.order",
+            "$table_question.order",
+         ]
+      ]);
+
+      $items = [];
+      foreach ($result as $question) {
+         if (!isset($items[$question['sname']])) {
+            $items[$question['sname']] = [];
+         }
+         $items[$question['sname']][$question['qid']] = $question['qname'];
+      }
+
+      Dropdown::showFromArray($name, $items, $opt);
    }
 }
