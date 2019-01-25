@@ -54,6 +54,8 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    protected $attachedDocuments = [];
 
+   protected $form = null;
+
    abstract public function export($remove_uuid = false);
 
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
@@ -176,12 +178,15 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    }
 
    /**
-    *
+    * get the associated form
     */
    public function getForm() {
+      if ($this->form !== null) {
+         return $this->form;
+      }
+
       $targetItemId = $this->getID();
       $targetItemtype = static::getType();
-
       $target = new PluginFormcreatorTarget();
       $request = [
          'AND' => [
@@ -191,15 +196,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       ];
       if (!$target->getFromDBByCrit($request)) {
          return null;
-      } else {
-         $form = new PluginFormcreatorForm();
-         if (!$form->getFromDB($target->getField('plugin_formcreator_forms_id'))) {
-            return null;
-         }
-         return $form;
+      }
+      $form = new PluginFormcreatorForm();
+      if (!$form->getFromDB($target->getField('plugin_formcreator_forms_id'))) {
+         return null;
       }
 
-      return null;
+      $this->form = $form;
+      return $this->form;
    }
 
    /**
@@ -607,51 +611,37 @@ EOS;
       echo '</div>';
 
       echo '<div id="entity_user_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'User'";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_user', $users_questions, [
-         'value' => $this->fields['destination_entity_value'],
-      ]);
+      PluginFormcreatorQuestion::dropdown(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => User::class,
+         ],
+         '_destination_entity_value_user',
+         [
+            'value' => $this->fields['destination_entity_value']
+         ]
+      );
       echo '</div>';
 
       echo '<div id="entity_entity_value" style="display: none">';
-      // select all entity questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'glpiselect'
-                AND q.values = 'Entity'";
-      $result2 = $DB->query($query2);
-      $entities_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $entities_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_destination_entity_value_entity', $entities_questions, [
-         'value' => $this->fields['destination_entity_value'],
-      ]);
+      PluginFormcreatorQuestion::dropdown(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['glpiselect'],
+            'values' => Entity::class,
+         ],
+         '_destination_entity_value_entity',
+         [
+            'value' => $this->fields['destination_entity_value']
+         ]
+      );
       echo '</div>';
       echo '</td>';
       echo '</tr>';
    }
 
-   protected function showTemplateSettins($rand) {
+   protected function showTemplateSettings($rand) {
       echo '<td width="15%">' . _n('Ticket template', 'Ticket templates', 1) . '</td>';
       echo '<td width="25%">';
       Dropdown::show('TicketTemplate', [
@@ -661,7 +651,7 @@ EOS;
       echo '</td>';
    }
 
-   protected  function showDueDateSettings($rand) {
+   protected  function showDueDateSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       echo '<td width="15%">' . __('Time to resolve') . '</td>';
@@ -676,30 +666,15 @@ EOS;
          ]
       );
 
-      // for each section ...
-      $questions_list = [Dropdown::EMPTY_VALUE];
-      $query = "SELECT s.id, s.name
-                FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = " . $this->getID() . "
-                ORDER BY s.order";
-      $result = $DB->query($query);
-      while ($section = $DB->fetch_array($result)) {
-         // select all date and datetime questions
-         $query2 = "SELECT q.id, q.name
-         FROM glpi_plugin_formcreator_questions q
-         INNER JOIN glpi_plugin_formcreator_sections s
-         ON s.id = q.plugin_formcreator_sections_id
-         WHERE s.id = {$section['id']}
-         AND q.fieldtype IN ('date', 'datetime')";
-         $result2 = $DB->query($query2);
-         $section_questions = [];
-         while ($question = $DB->fetch_array($result2)) {
-            $section_questions[$question['id']] = $question['name'];
-         }
-         if (count($section_questions) > 0) {
-            $questions_list[$section['name']] = $section_questions;
-         }
+      $questions = (new PluginFormcreatorQuestion)->getQuestionsFromForm(
+         $this->getForm()->getID(),
+         [
+            "$questionTable.fieldtype" => ['date', 'datetime'],
+         ]
+      );
+      $questions_list = [];
+      foreach ($questions as $question) {
+         $questions_list[$question->getID()] = $question->fields['name'];
       }
       // List questions
       if ($this->fields['due_date_rule'] != 'answer'
@@ -708,9 +683,16 @@ EOS;
       } else {
          echo '<div id="due_date_questions">';
       }
-      Dropdown::showFromArray('due_date_question', $questions_list, [
-         'value' => $this->fields['due_date_question']
-      ]);
+      PluginFormcreatorQuestion::dropdown(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['date', 'datetime'],
+         ],
+         'due_date_question',
+         [
+            'value' => $this->fields['due_date_question']
+         ]
+      );
       echo '</div>';
 
       if ($this->fields['due_date_rule'] != 'ticket'
@@ -736,7 +718,7 @@ EOS;
       echo '</td>';
    }
 
-   protected function showCategorySettings($rand) {
+   protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       echo '<tr class="line0">';
@@ -778,26 +760,16 @@ EOS;
       echo '</td>';
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT `q`.`id`, `q`.`name`, `q`.`values`
-                FROM `glpi_plugin_formcreator_questions` `q`
-                INNER JOIN `glpi_plugin_formcreator_sections` `s`
-                  ON `s`.`id` = `q`.`plugin_formcreator_sections_id`
-                INNER JOIN `glpi_plugin_formcreator_targets` `t`
-                  ON `s`.`plugin_formcreator_forms_id` = `t`.`plugin_formcreator_forms_id`
-                WHERE `t`.`items_id` = ".$this->getID()."
-                AND `q`.`fieldtype` = 'dropdown'";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
-         if (isset($decodedValues['itemtype']) && $decodedValues['itemtype'] === 'ITILCategory') {
-            $users_questions[$question['id']] = $question['name'];
-         }
-      }
-      Dropdown::showFromArray('_category_question', $users_questions, [
-         'value' => $this->fields['category_question'],
-      ]);
+      PluginFormcreatorQuestion::dropdown(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['dropdown'],
+         ],
+         '_category_question',
+         [
+            $this->fields['category_question']
+         ]
+      );
       echo '</div>';
       echo '<div id="category_specific_value" style="display: none">';
       ITILCategory::dropdown([
@@ -810,7 +782,7 @@ EOS;
       echo '</tr>';
    }
 
-   protected function showUrgencySettings($rand) {
+   protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       echo '<tr class="line0">';
@@ -856,29 +828,22 @@ EOS;
       ]);
       echo '</div>';
       echo '<div id="urgency_question_value" style="display: none">';
-      // select all user questions (GLPI Object)
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                AND q.fieldtype = 'urgency'";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_urgency_question', $users_questions, [
-         'value' => $this->fields['urgency_question'],
-      ]);
+      PluginFormcreatorQuestion::dropdown(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => ['urgency'],
+         ],
+         '_urgency_question',
+         [
+            'value' => $this->fields['urgency_question']
+         ]
+      );
       echo '</div>';
       echo '</td>';
       echo '</tr>';
    }
 
-   protected function showPluginTagsSettings($rand) {
+   protected function showPluginTagsSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       $plugin = new Plugin();
@@ -932,23 +897,17 @@ EOS;
 
          // Tag questions
          echo '<div id="tag_question_value" style="display: none">';
-         $query2 = "SELECT q.id, q.name, q.values
-                   FROM glpi_plugin_formcreator_questions q
-                   INNER JOIN glpi_plugin_formcreator_sections s
-                     ON s.id = q.plugin_formcreator_sections_id
-                   INNER JOIN glpi_plugin_formcreator_targets t
-                     ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                   WHERE t.items_id = ".$this->getID()."
-                   AND q.fieldtype = 'tag'";
-         $result2 = $DB->query($query2);
-         $entities_questions = [];
-         while ($question = $DB->fetch_array($result2)) {
-            $entities_questions[$question['id']] = $question['name'];
-         }
-         Dropdown::showFromArray('_tag_questions', $entities_questions, [
-            'values'   => explode(',', $this->fields['tag_questions']),
-            'multiple' => true,
-         ]);
+         PluginFormcreatorQuestion::dropdown(
+            $this->getForm()->getID(),
+            [
+               'fieldtype' => ['tag'],
+            ],
+            '_tag_questions',
+            [
+               'values' => explode(',', $this->fields['tag_questions']),
+               'multiple' => true,
+            ]
+         );
          echo '</div>';
 
          // Specific tags
@@ -1038,7 +997,7 @@ EOS;
       return $content;
    }
 
-   protected function showLocationSettings($rand) {
+   protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
       echo '<tr class="line0">';
