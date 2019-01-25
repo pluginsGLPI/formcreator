@@ -140,28 +140,28 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $this->showDestinationEntitySetings($rand);
 
       echo '<tr class="line1">';
-      $this->showTemplateSettins($rand);
-      $this->showDueDateSettings($rand);
+      $this->showTemplateSettings($rand);
+      $this->showDueDateSettings($form, $rand);
       echo '</tr>';
 
       // -------------------------------------------------------------------------------------------
       //  category of the target
       // -------------------------------------------------------------------------------------------
-      $this->showCategorySettings($rand);
+      $this->showCategorySettings($form, $rand);
 
       // -------------------------------------------------------------------------------------------
       // Urgency selection
       // -------------------------------------------------------------------------------------------
-      $this->showUrgencySettings($rand);
+      $this->showUrgencySettings($form, $rand);
 
       // -------------------------------------------------------------------------------------------
       // Location selection
       // -------------------------------------------------------------------------------------------
-      $this->showLocationSettings($rand);
+      $this->showLocationSettings($form, $rand);
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
-      $this->showPluginTagsSettings($rand);
+      $this->showPluginTagsSettings($form, $rand);
 
       // -------------------------------------------------------------------------------------------
       //  Composite tickets
