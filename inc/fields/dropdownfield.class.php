@@ -62,6 +62,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
             $dparams_cond_crit = [];
             switch ($itemtype) {
+               case Entity::class:
+                  unset($dparams['entity']);
+
                case User::class:
                   $dparams['right'] = 'all';
                   break;
