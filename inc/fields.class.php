@@ -183,8 +183,6 @@ class PluginFormcreatorFields
          }
 
          // TODO: find the best behavior if the question does not exists
-         $conditionQuestion = new PluginFormcreatorQuestion();
-         $conditionQuestion->getFromDB($condition['field']);
          $conditionField = $fields[$condition['field']];
 
          switch ($condition['operator']) {

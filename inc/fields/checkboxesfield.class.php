@@ -60,7 +60,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                      'name'          => htmlentities($fieldName, ENT_QUOTES) . '[]',
                      'value'         => htmlentities($value, ENT_QUOTES),
                      'zero_on_empty' => false,
-                     'checked' => in_array($value, $this->value)
+                     'checked'       => in_array($value, $this->value)
                   ]);
                   echo '<label for="' . $domId . '_' . $i . '">';
                   echo '&nbsp;' . $value;
@@ -124,7 +124,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          }
       }
 
-      $this->value = $input[$key];
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 
@@ -208,7 +208,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 
       foreach ($this->value as $input) {
          if (in_array($input, $values)) {
-            $value[] = Toolbox::addslashes_deep($input);
+            $value[] = $input;
          }
       }
 
