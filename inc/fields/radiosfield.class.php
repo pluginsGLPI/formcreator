@@ -59,7 +59,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   echo '<input type="radio" class="form-control"
                         name="' . $fieldName . '"
                         id="' . $domId . '_' . $i . '"
-                        value="' . addslashes($value) . '"' . $checked . ' /> ';
+                        value="' . $value . '"' . $checked . ' /> ';
                   echo '<label for="' . $domId . '_' . $i . '">';
                   echo $value;
                   echo '</label>';
@@ -117,7 +117,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          return true;
       }
 
-       $this->value = $input[$key];
+       $this->value = Toolbox::stripslashes_deep($input[$key]);
        return true;
    }
 
@@ -149,7 +149,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
          return '';
       }
 
-      return $this->value;
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function deserializeValue($value) {
@@ -167,7 +167,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      return Toolbox::addslashes_deep($this->value);
+      return $this->value;
    }
 
    public function getDocumentsForTarget() {

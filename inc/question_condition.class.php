@@ -157,6 +157,12 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       return $condition;
    }
 
+   /**
+    * get show / hide conditions for a question
+    *
+    * @param int $questionId
+    * @return array
+    */
    public function getConditionsFromQuestion($questionId) {
       global $DB;
 

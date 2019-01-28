@@ -551,7 +551,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $last_section = '';
       $questionsCount = $questions->count();
       $fields = [];
-      while ($question_line = $questions->next()) {
+      foreach ($questions as $question_line) {
          $question = new PluginFormcreatorQuestion();
          $question->getFromDB($question_line['id']);
          $fields[$question_line['id']] = PluginFormcreatorFields::getFieldInstance(
@@ -560,27 +560,28 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$question_line['id']]->deserializeValue($question_line['answer']);
       }
-      $questions->rewind();
-      while ($question_line = $questions->current()) {
+      foreach ($questions as $question_line) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             echo '<h2>'.$question_line['section_name'].'</h2>';
             $last_section = $question_line['section_name'];
          }
 
-         if ($canEdit
-            || ($question_line['fieldtype'] != "description"
-                && $question_line['fieldtype'] != "hidden")
-         ) {
-            // if (PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
-            // }
+         if ($canEdit) {
             $fields[$question_line['id']]->show($canEdit);
+         } else {
+            if (($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
+               if (PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
+                  $fields[$question_line['id']]->show($canEdit);
+               }
+            }
          }
-         $questions->next();
       }
-      echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'form\']"));
-      })');
+      if ($canEdit) {
+         echo Html::scriptBlock('$(function() {
+            formcreatorShowFields($("form[name=\'form\']"));
+         })');
+      }
 
       //add requester info
       echo '<div class="form-group">';
