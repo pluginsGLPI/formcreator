@@ -1598,7 +1598,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       return $questions;
    }
 
-   public static function dropdown($formId, $crit, $name, $value) {
+   public static function dropdownForForm($formId, $crit, $name, $value) {
       global $DB;
 
       $table_question = PluginFormcreatorQuestion::getTable();
