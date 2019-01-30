@@ -1141,7 +1141,7 @@ JAVASCRIPT;
       if (isset($input['name'])) {
          $target = new PluginFormcreatorTarget();
          $target->getFromDBByCrit([
-            'itemtype' => self::class,
+            'itemtype' => static ::class,
             'items_id' => $this->getID()
          ]);
          if (!$target->isNewItem()) {
