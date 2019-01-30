@@ -621,7 +621,7 @@ EOS;
       echo '</div>';
 
       echo '<div id="entity_user_value" style="display: none">';
-      PluginFormcreatorQuestion::dropdown(
+      PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
@@ -635,7 +635,7 @@ EOS;
       echo '</div>';
 
       echo '<div id="entity_entity_value" style="display: none">';
-      PluginFormcreatorQuestion::dropdown(
+      PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
@@ -693,7 +693,7 @@ EOS;
       } else {
          echo '<div id="due_date_questions">';
       }
-      PluginFormcreatorQuestion::dropdown(
+      PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['date', 'datetime'],
@@ -770,7 +770,7 @@ EOS;
       echo '</td>';
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
-      PluginFormcreatorQuestion::dropdown(
+      PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['dropdown'],
@@ -838,7 +838,7 @@ EOS;
       ]);
       echo '</div>';
       echo '<div id="urgency_question_value" style="display: none">';
-      PluginFormcreatorQuestion::dropdown(
+      PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['urgency'],
@@ -907,7 +907,7 @@ EOS;
 
          // Tag questions
          echo '<div id="tag_question_value" style="display: none">';
-         PluginFormcreatorQuestion::dropdown(
+         PluginFormcreatorQuestion::dropdownForForm(
             $this->getForm()->getID(),
             [
                'fieldtype' => ['tag'],
