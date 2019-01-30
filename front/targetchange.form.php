@@ -44,12 +44,6 @@ $targetchange = new PluginFormcreatorTargetChange();
 
 // Edit an existing target change
 if (isset($_POST["update"])) {
-   $DB->update(PluginFormcreatorTarget::getTable(), [
-      'name'     => $_POST['name']
-   ], [
-      'items_id' => (int) $_POST['id'],
-      'itemtype' => 'PluginFormcreatorTargetChange'
-   ]);
    $targetchange->update($_POST);
    Html::back();
 
