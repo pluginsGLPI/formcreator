@@ -1142,7 +1142,9 @@ EOS;
          $formanswer,
          false
       );
+      $data['name'] = Toolbox::addslashes_deep($data['name']);
       $data['name'] = $this->parseTags($data['name'], $formanswer);
+
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],
          $formanswer,
