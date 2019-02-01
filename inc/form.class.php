@@ -1045,7 +1045,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       if (!isset($input['requesttype'])) {
          $requestType = new RequestType();
-         $requestType->getFromDBByCrit(['name' => ['LIKE' => 'Formcreator']]);
+         $requestType->getFromDBByCrit(['name' => ['LIKE', 'Formcreator']]);
          $input['requesttype'] = $requestType->getID();
       }
 
