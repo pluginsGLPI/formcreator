@@ -76,6 +76,14 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return "`is_request` = '1' OR `is_incident` = '1'";
    }
 
+   static function getEnumAssociateRule() {
+      return [
+         'none'      => __('none', 'formcreator'),
+         'specific'  => __('Specific asset', 'formcreator'),
+         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+      ];
+   }
+
    /**
     * Show the Form for the adminsitrator to edit in the config page
     *
@@ -141,6 +149,11 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $this->showTemplateSettings($rand);
       $this->showDueDateSettings($form, $rand);
       echo '</tr>';
+
+      // -------------------------------------------------------------------------------------------
+      //  associated elements of the target
+      // -------------------------------------------------------------------------------------------
+      $this->showAssociateSettings($rand);
 
       // -------------------------------------------------------------------------------------------
       //  category of the target
@@ -958,6 +971,10 @@ EOS;
          $input = $this->saveLinkedItem($input);
       }
 
+      if (isset($input['items_id'])) {
+         $input = $this->saveAssociatedItems($input);
+      }
+
       return parent::prepareInputForUpdate($input);
    }
 
@@ -1180,6 +1197,7 @@ EOS;
       $data = $this->setTargetUrgency($data, $formanswer);
       $data = $this->setTargetCategory($data, $formanswer);
       $data = $this->setTargetLocation($data, $formanswer);
+      $data = $this->setTargetAssociatedItem($data, $formanswer);
 
       // There is always at least one requester
       $data = $this->requesters + $data;
@@ -1364,6 +1382,130 @@ EOS;
       return $data;
    }
 
+   protected function showAssociateSettings($rand) {
+      global $DB, $CFG_GLPI;
+
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Associated elements') . '</td>';
+      echo '<td width="45%">';
+      Dropdown::showFromArray('associate_rule', static::getEnumAssociateRule(), [
+         'value'                 => $this->fields['associate_rule'],
+         'on_change'             => 'change_associate()',
+         'rand'                  => $rand
+      ]);
+      $script = <<<JAVASCRIPT
+         function change_associate() {
+            $('#associate_specific_title').hide();
+            $('#associate_specific_value').hide();
+            $('#associate_question_title').hide();
+            $('#associate_question_value').hide();
+
+            switch($('#dropdown_associate_rule$rand').val()) {
+               case 'answer' :
+                  $('#associate_question_title').show();
+                  $('#associate_question_value').show();
+                  break;
+               case 'specific':
+                  $('#associate_specific_title').show();
+                  $('#associate_specific_value').show();
+                  break;
+            }
+         }
+         change_associate();
+JAVASCRIPT;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="associate_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="associate_specific_title" style="display: none">' . __('Item ', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="associate_specific_value" style="display: none">';
+      $options = json_decode($this->fields['associate_question'], true);
+      if (!is_array($options)) {
+         $options = [];
+      }
+      $options['_canupdate'] = true;
+      $targetTicketFk = self::getForeignKeyField();
+      $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
+      $targetTicketId = $this->getID();
+      $exclude = implode("', '", [PluginFormcreatorTargetTicket::class, Ticket::class]);
+      $rows = $itemTargetTicket->find("`$targetTicketFk` = '$targetTicketId'
+         AND `itemtype` NOT IN ('$exclude')");
+      foreach ($rows as $row) {
+         $options['items_id'][$row['itemtype']][$row['id']] = $row['id'];
+      }
+      Item_Ticket::itemAddForm(new Ticket(), $options);
+      echo '</div>';
+      echo '<div id="associate_question_value" style="display: none">';
+      // select all user questions (GLPI Object)
+      $ticketTypes = implode("' ,'", $CFG_GLPI["ticket_types"]);
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                  AND q.fieldtype = 'glpiselect'
+                  AND q.values IN ('$ticketTypes')";
+      $result2 = $DB->query($query2);
+      $users_questions = [];
+      while ($question = $DB->fetch_array($result2)) {
+         $users_questions[$question['id']] = $question['name'];
+      }
+      Dropdown::showFromArray('_associate_question', $users_questions, [
+         'value' => $this->fields['associate_question'],
+      ]);
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+   }
+
+   protected function setTargetAssociatedItem($data, $formanswer) {
+      switch ($this->fields['associate_rule']) {
+         case 'answer':
+            // find the itemtype of the associated item
+            $associateQuestion = $this->fields['associate_question'];
+            $question = new PluginFormcreatorQuestion();
+            $question->getFromDB($associateQuestion);
+            $itemtype = $question->fields['values'];
+
+            // find the id of the associated item
+            $answer  = new PluginFormcreatorAnswer();
+            $formAnswerId = $formanswer->fields['id'];
+            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
+                  AND `plugin_formcreator_questions_id` = '$associateQuestion'");
+            $associate = array_shift($found);
+            $itemId = $associate['answer'];
+
+            // associate the item if it exists
+            if (!class_exists($itemtype)) {
+               return $data;
+            }
+            $item = new $itemtype();
+            if ($item->getFromDB($itemId)) {
+               $data['items_id'] = [$itemtype => [$itemId => $itemId]];
+            }
+            break;
+
+         case 'specific':
+            $targetTicketFk = self::getForeignKeyField();
+            $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
+            $targetTicketId = $this->getID();
+            $exclude = implode("', '", [PluginFormcreatorTargetTicket::class, Ticket::class]);
+            $rows = $itemTargetTicket->find("`$targetTicketFk` = '$targetTicketId'
+               AND `itemtype` NOT IN ('$exclude')");
+            foreach ($rows as $row) {
+               $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
+            }
+            break;
+      }
+
+      return $data;
+   }
+
    private static function getDeleteImage($id) {
       global $CFG_GLPI;
 
@@ -1531,5 +1673,36 @@ EOS;
       $target_data['title'] = $target_data['name'];
       unset($target_data['name']);
       return $target_data;
+   }
+
+   private function saveAssociatedItems($input) {
+      switch ($input['associate_rule']) {
+         case 'answer':
+            $input['associate_question'] = $input['_associate_question'];
+            break;
+
+         case 'specific':
+            $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
+            $itemTargetTicket->deleteByCriteria([
+               'NOT' => ['itemtype' => [
+                  PluginFormcreatorTargetTicket::class,
+                  Ticket::class,
+               ]]
+            ]);
+            $targetTicketFk = self::getForeignKeyField();
+            foreach ($input['items_id'] as $itemtype => $items) {
+               foreach ($items as $id) {
+                  $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
+                  $itemTargetTicket->add([
+                     'itemtype' => $itemtype,
+                     'items_id' => $id,
+                     $targetTicketFk => $this->getID(),
+                  ]);
+               }
+            }
+            break;
+      }
+      unset($input['items_id']);
+      return $input;
    }
 }

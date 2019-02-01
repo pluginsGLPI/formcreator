@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -50,5 +49,29 @@ class PluginFormcreatorUpgradeTo2_8 {
          'actor_type',
          "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
       );
+
+      // add item association rule
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $enum_associate_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumAssociateRule()))."'";
+      if (!$DB->fieldExists($table, 'associate_rule', false)) {
+         $migration->addField(
+            $table,
+            'associate_rule',
+            "ENUM($enum_associate_rule) NOT NULL DEFAULT 'none'",
+            ['after' => 'category_question']
+         );
+      } else {
+         $current_enum_associate_rule = PluginFormcreatorCommon::getEnumValues($table, 'associate_rule');
+         if (count($current_enum_associate_rule) != count($enum_associate_rule)) {
+            $migration->changeField(
+               $table,
+               'location_rule',
+               'location_rule',
+               "ENUM($enum_associate_rule) NOT NULL DEFAULT 'none'",
+               ['after' => 'category_question']
+            );
+         }
+      }
+      $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
    }
 }
