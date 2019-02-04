@@ -166,7 +166,11 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       }
 
       if (isset($input['default_values'])) {
-         $this->value = (int) $input['default_values'];
+         if ($input['default_values'] != '') {
+            $this->value = (int) $input['default_values'];
+         } else {
+            $this->value = '';
+         }
       }
       $input['values'] = '';
 
