@@ -165,7 +165,11 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       }
 
       if (isset($input['default_values'])) {
-         $this->value = (float) str_replace(',', '.', $input['default_values']);
+         if ($input['default_values'] != '') {
+            $this->value = (float) str_replace(',', '.', $input['default_values']);
+         } else {
+            $this->value = '';
+         }
       }
       $input['values'] = '';
 
