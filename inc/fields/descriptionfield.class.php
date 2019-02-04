@@ -80,7 +80,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
                ERROR);
             return [];
          }
-         $input['description'] = addslashes($input['description']);
       }
       $this->value = '';
 

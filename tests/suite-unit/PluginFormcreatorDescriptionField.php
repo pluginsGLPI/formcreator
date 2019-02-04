@@ -67,7 +67,7 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
             ],
             'expected' => [
                'name' => "test d'apostrophe",
-               'description' => \Toolbox::addslashes_deep("test d'apostrophe"),
+               'description' => "test d'apostrophe",
             ],
             'message' => 'A description field should have a description:',
          ],
