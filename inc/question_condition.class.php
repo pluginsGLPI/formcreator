@@ -104,6 +104,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $condition = []) {
+      global $DB;
+
       $item = new static();
 
       if ($showField
@@ -112,6 +114,11 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
                                                 $condition['show_field'])) {
          $importLinker->postponeImport($condition['uuid'], $item->getType(), $condition, $questions_id);
          return false;
+      }
+
+      // escape text fields
+      foreach (['show_value'] as $key) {
+         $condition[$key] = $DB->escape($condition[$key]);
       }
 
       $condition['show_field'] = $showField;

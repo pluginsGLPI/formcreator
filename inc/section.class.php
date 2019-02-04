@@ -339,10 +339,17 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $forms_id = 0, $section = []) {
+      global $DB;
+
       $item = new self;
 
       $section['plugin_formcreator_forms_id'] = $forms_id;
       $section['_skip_checks']                = true;
+
+      // escape text fields
+      foreach (['name'] as $key) {
+         $section[$key] = $DB->escape($section[$key]);
+      }
 
       if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
          // add id key

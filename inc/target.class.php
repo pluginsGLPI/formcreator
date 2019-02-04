@@ -267,11 +267,18 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return integer the target's id
     */
    public static function import($forms_id = 0, $target = []) {
+      global $DB;
+
       $item = new self;
 
       $target['plugin_formcreator_forms_id'] = $forms_id;
       $target['_skip_checks']                = true;
       $target['_skip_create_actors']         = true;
+
+      // escape text fields
+      foreach (['name'] as $key) {
+         $target[$key] = $DB->escape($target[$key]);
+      }
 
       if ($targets_id = plugin_formcreator_getFromDBByField($item, 'uuid', $target['uuid'])) {
          // add id key
