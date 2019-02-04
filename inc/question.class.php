@@ -1394,10 +1394,17 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $sections_id = 0, $question = []) {
+      global $DB;
+
       $item = new self;
 
       $question['plugin_formcreator_sections_id'] = $sections_id;
       $question['_skip_checks']                   = true;
+
+      // escape text fields
+      foreach (['name', 'description'] as $key) {
+         $question[$key] = $DB->escape($question[$key]);
+      }
 
       if ($questions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $question['uuid'])) {
          // add id key

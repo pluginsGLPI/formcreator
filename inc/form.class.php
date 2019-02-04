@@ -2041,15 +2041,18 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $form['plugin_formcreator_categories_id'] = 0;
       }
 
+      // escape text fields
+      foreach (['name', 'description', 'content'] as $key) {
+         $form[$key] = $DB->escape($form[$key]);
+      }
+
       // retrieve form by its uuid
       if ($forms_id = plugin_formcreator_getFromDBByField($form_obj,
                                                           'uuid',
                                                           $form['uuid'])) {
          // add id key
          $form['id'] = $forms_id;
-         foreach (['name', 'description', 'content'] as $key) {
-            $form[$key] = $DB->escape($form[$key]);
-         }
+
          // update existing form
          $form_obj->update($form);
       } else {
