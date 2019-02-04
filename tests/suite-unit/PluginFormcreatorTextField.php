@@ -210,4 +210,52 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value' => '',
+            'expected' => '',
+         ],
+         [
+            'value' => "quote ' test",
+            'expected' => "quote \' test",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorTextField([]);
+      $instance->prepareQuestionInputForSave([
+         'default_values' => $value,
+      ]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      return [
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => 'foo',
+            'expected'  => 'foo' ,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorTextField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo($expected);
+   }
 }
