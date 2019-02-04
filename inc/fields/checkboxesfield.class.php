@@ -96,7 +96,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          return '';
       }
 
-      return implode("\r\n", $this->value);
+      return implode("\r\n", Toolbox::addslashes_deep($this->value));
    }
 
    public function deserializeValue($value) {

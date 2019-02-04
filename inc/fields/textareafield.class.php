@@ -77,7 +77,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          return '';
       }
 
-      return $this->value;
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function deserializeValue($value) {
@@ -143,4 +143,3 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return true;
    }
 }
-
