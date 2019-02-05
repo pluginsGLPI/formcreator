@@ -2093,6 +2093,20 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
 
+      // import form's targets
+      if ($forms_id
+          && isset($form['_targets'])) {
+         // delete old targets
+         $FormTarget = new PluginFormcreatorTarget();
+         $FormTarget->deleteByCriteria([
+            'plugin_formcreator_forms_id' => $forms_id,
+         ]);
+
+         foreach ($form['_targets'] as $target) {
+            PluginFormcreatorTarget::import($forms_id, $target);
+         }
+      }
+
       return $forms_id;
    }
 

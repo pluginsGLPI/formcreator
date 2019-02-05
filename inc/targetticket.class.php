@@ -1542,7 +1542,7 @@ EOS;
             $content = $target_data['title'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['name'] = $content;
+            $target_data['title'] = $content;
 
             $content = $target_data['content'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
