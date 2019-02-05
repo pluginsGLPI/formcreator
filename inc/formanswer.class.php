@@ -665,7 +665,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function prepareInputForAdd($input) {
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
-      $input['name'] = $form->getName();
+      $input['name'] = Toolbox::addslashes_deep($form->getName());
 
       return $input;
    }
