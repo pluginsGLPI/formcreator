@@ -1551,6 +1551,11 @@ EOS;
          }
       }
 
+      // escape text fields
+      foreach (['title'] as $key) {
+         $target_data[$key] = $DB->escape($target_data[$key]);
+      }
+
       // update target ticket
       $item->update($target_data);
 
