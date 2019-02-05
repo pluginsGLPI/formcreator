@@ -119,10 +119,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    public function canPurgeItem() {
-      $form = new PluginFormcreatorForm();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form->getFromDB($this->fields[$formFk]);
-      return $form->canPurgeItem();
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
