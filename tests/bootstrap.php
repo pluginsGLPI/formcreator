@@ -64,7 +64,7 @@ define('GLPI_CACHE_DIR', __DIR__ . '/cache');
 // in atoum
 $key = array_search('--debug', $_SERVER['argv']);
 // if ($key) {
-//    unset($_SERVER['argv'][$key]);
+   //unset($_SERVER['argv'][$key]);
 // }
 
 include (GLPI_ROOT . "/inc/includes.php");

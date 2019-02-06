@@ -76,53 +76,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       ];
    }
 
-   /**
-    * Import a question's condition into the db
-    * @see PluginFormcreatorQuestion::import
-    *
-    * @param integer  $questions_id  id of the parent question
-    * @param array    $condition the condition data (match the condition table)
-    * @param boolean  $storeOnly
-    *
-    * @return integer the condition's id
-    */
-   /*
-   public static function import($questions_id = 0, $condition = [], $storeOnly = true) {
-      static $conditionsToImport = [];
-
-      if ($storeOnly) {
-         $condition['plugin_formcreator_questions_id'] = $questions_id;
-
-         $item = new static();
-         if ($conditions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $condition['uuid'])) {
-            // add id key
-            $condition['id'] = $conditions_id;
-
-            // prepare update condition
-            $conditionsToImport[] = $condition;
-         } else {
-            // prepare create condition
-            $conditionsToImport[] = $condition;
-         }
-      } else {
-         // Assumes all questions needed for the stored conditions exist
-         foreach ($conditionsToImport as $condition) {
-            $item = new static();
-            $question = new PluginFormcreatorQuestion();
-            $condition['show_field'] = plugin_formcreator_getFromDBByField($question, 'uuid', $condition['show_field']);
-            $condition['show_value'] = Toolbox::addslashes_deep($condition['show_value']);
-            if (isset($condition['id'])) {
-               $item->update($condition);
-            } else {
-               $item->add($condition);
-            }
-         }
-         $conditionsToImport = [];
-      }
-   }
-   */
-
-   public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $condition = []) {
+   public static function import(PluginFormcreatorLinker $linker, $questions_id = 0, $condition = []) {
       global $DB;
 
       $item = new static();
@@ -131,7 +85,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
           = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
                                                 'uuid',
                                                 $condition['show_field'])) {
-         $importLinker->postponeImport($condition['uuid'], $item->getType(), $condition, $questions_id);
+         $linker->postpone($condition['uuid'], $item->getType(), $condition, $questions_id);
          return false;
       }
 
@@ -153,7 +107,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
          // prepare create condition
          $item->add($condition);
       }
-      $importLinker->addImportedObject($condition['uuid'], $item);
+      $linker->addObject($condition['uuid'], $item);
       return $conditions_id;
    }
 
@@ -171,14 +125,16 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       $question = new PluginFormcreatorQuestion();
       $question->getFromDB($this->fields['show_field']);
       $condition = $this->fields;
-      $condition['show_field'] = $question->getField('uuid');
+      $condition['show_field'] = $question->fields['uuid'];
 
-      unset($condition['id'],
-            $condition['plugin_formcreator_questions_id']);
+      unset($condition['plugin_formcreator_questions_id']);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $condition['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($condition[$idToRemove]);
 
       return $condition;
    }

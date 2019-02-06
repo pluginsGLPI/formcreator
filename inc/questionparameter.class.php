@@ -87,20 +87,23 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       }
 
       $parameter = $this->fields;
-      unset($parameter['id'],
-            $parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
+      unset($parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $parameter['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($parameter[$idToRemove]);
 
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $fieldName = '', $parameter = []) {
+   public static function import(PluginFormcreatorLinker $linker, $parameter = [], $questions_id = 0) {
       global $DB;
 
       $parameter['plugin_formcreator_questions_id'] = $questions_id;
+      $fieldName = $parameter['fieldname'];
 
       // get a built instance of the parameter
       $question = new PluginFormcreatorquestion();
@@ -116,7 +119,7 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
          'fieldname' => $fieldName,
       ]);
       if (!$item->convertUuids($parameter)) {
-         $importLinker->postponeImport($parameter['uuid'], $item->getType(), $parameter, $questions_id);
+         $linker->postpone($parameter['uuid'], $item->getType(), $parameter, $questions_id);
          return false;
       }
 
@@ -130,7 +133,7 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       } else {
          $item->add($parameter);
       }
-      $importLinker->addImportedObject($item->fields['uuid'], $item);
+      $linker->addObject($item->fields['uuid'], $item);
    }
 
    /**

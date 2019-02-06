@@ -29,11 +29,14 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExportableInterface
+class PluginFormcreatorForm extends CommonDBTM implements
+PluginFormcreatorExportableInterface
 {
    static $rightname = 'entity';
 
@@ -1417,7 +1420,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                if (!$field->isAnonymousFormCompatible()) {
                   $incompatibleQuestion = true;
                   $message = __('The question %s is not compatible with public forms', 'formcreator');
-                  Session::addMessageAfterRedirect(sprintf($message, $question->fields['name']), false, ERROR);
+                  Session::addMessageAfterRedirect(sprintf($message, $field->getLabel()), false, ERROR);
                }
             }
             if ($incompatibleQuestion) {
@@ -1580,313 +1583,15 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return Boolean true if success, false otherwise.
     */
    public function duplicate() {
-      global $DB;
+      $linker              = new PluginFormcreatorLinker();
 
-      $target_ticket_actor = new PluginFormcreatorTargetTicket_Actor();
-      $target_change_actor = new PluginFormcreatorTargetChange_Actor();
-      $form_section        = new PluginFormcreatorSection();
-      $section_question    = new PluginFormcreatorQuestion();
-      $question_condition  = new PluginFormcreatorQuestion_Condition();
-      $form_validator      = new PluginFormcreatorForm_Validator();
-      $form_profile        = new PluginFormcreatorForm_Profile();
-      $tab_questions       = [];
-
-      // Form data
-      $form_datas              = $this->fields;
-      $form_datas['name']     .= ' [' . __('Duplicate', 'formcreator') . ']';
-      $form_datas['is_active'] = 0;
-
-      unset($form_datas['id'], $form_datas['uuid']);
-
-      $old_form_id = $this->getID();
-      $form_datas = Toolbox::addslashes_deep($form_datas);
-      $new_form_id = $this->add($form_datas);
+      $export = $this->export(true);
+      $export['uuid'] = plugin_formcreator_getUuid();
+      $new_form_id =  static::import($linker, $export);
       if ($new_form_id === false) {
          return false;
       }
-
-      // Form profiles
-      $rows = $DB->request([
-         'FROM'    => $form_profile::getTable(),
-         'WHERE'   => [
-            'plugin_formcreator_forms_id' => $old_form_id
-         ]
-      ]);
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$form_profile->add($row)) {
-            return false;
-         }
-      }
-
-      // Form validators
-      $rows = $DB->request([
-         'FROM'    => $form_validator::getTable(),
-         'WHERE'   => [
-            'plugin_formcreator_forms_id' => $old_form_id
-         ]
-      ]);
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_forms_id'] = $new_form_id;
-         if (!$form_validator->add($row)) {
-            return false;
-         }
-      }
-
-      // Form sections
-      $sectionRows = $DB->request([
-         'FROM'  => $form_section::getTable(),
-         'WHERE' => [
-            'plugin_formcreator_forms_id' => $old_form_id
-         ],
-         'ORDER' => 'order ASC'
-      ]);
-      foreach ($sectionRows as $sectionRow) {
-         $sections_id = $sectionRow['id'];
-         unset($sectionRow['id'],
-               $sectionRow['uuid']);
-         $sectionRow['plugin_formcreator_forms_id'] = $new_form_id;
-         $sectionRow = Toolbox::addslashes_deep($sectionRow);
-         if (!$new_sections_id = $form_section->add($sectionRow)) {
-            return false;
-         }
-
-         // Form questions
-         $questionRows = $DB->request([
-            'FROM'  => $section_question::getTable(),
-            'WHERE' => [
-               'plugin_formcreator_sections_id' => $sections_id
-            ],
-            'ORDER' => 'order ASC'
-         ]);
-         foreach ($questionRows as $questionRow) {
-            $questions_id = $questionRow['id'];
-            unset($questionRow['id'],
-                  $questionRow['uuid']);
-            $questionRow['plugin_formcreator_sections_id'] = $new_sections_id;
-            $questionRow = Toolbox::addslashes_deep($questionRow);
-            $questionRow['_skip_checks'] = true;
-            if (!$new_questions_id = $section_question->add($questionRow)) {
-               return false;
-            }
-
-            // Map old question ID to new question ID
-            $tab_questions[$questions_id] = $new_questions_id;
-         }
-      }
-
-      // TODO: duplicates code in Question::duplicate()
-      // Form questions parameters
-      foreach ($tab_questions as $questions_id => $new_questions_id) {
-         $oldQuestion = new PluginFormcreatorQuestion();
-         $oldQuestion->getFromDB($questions_id);
-         $field = PluginFormcreatorFields::getFieldInstance(
-            $oldQuestion->fields['fieldtype'],
-            $oldQuestion
-         );
-         $parameters = $field->getParameters();
-         foreach ($parameters as $parameter) {
-            $newQuestion = new PluginFormcreatorQuestion();
-            $newQuestion->getFromDB($new_questions_id);
-            $parameter = $parameter->duplicate($newQuestion, $tab_questions);
-            $parameter->add($parameter->fields);
-         }
-      }
-
-      // Form questions conditions
-      if (count($tab_questions)) {
-         $qc_rows = $DB->request([
-            'FROM'  => $question_condition::getTable(),
-            'WHERE' => [
-               'plugin_formcreator_questions_id' => $tab_questions
-            ]
-         ]);
-         foreach ($qc_rows as $row) {
-            unset($row['id'],
-                  $row['uuid']);
-            $row['show_field'] = $tab_questions[$row['show_field']];
-            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-            $row['show_value'] = Toolbox::addslashes_deep($row['show_value']);
-            if (!$question_condition->add($row)) {
-               return false;
-            }
-         }
-      }
-
-      // Form targets
-      $oldForm = new self();
-      $oldForm->getFromDB($old_form_id);
-      $all_targets = $oldForm->getTargetsFromForm();
-      foreach ($all_targets as $targetType => $targets) {
-         foreach ($targets as $target) {
-            switch ($targetType) {
-               case PluginFormcreatorTargetTicket::class:
-                  // Get the original target ticket
-                  $target_ticket = $target;
-
-                  // Update the target ticket created while cloning the target
-                  $update_target_ticket = $target_ticket->fields;
-                  unset($update_target_ticket['id'], $update_target_ticket['uuid']);
-                  $update_target_ticket['plugin_formcreator_forms_id'] = $new_form_id;
-                  foreach ($tab_questions as $id => $value) {
-                     $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
-                     $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
-                     $update_target_ticket['content'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['content']);
-                     $update_target_ticket['content'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['content']);
-                  }
-
-                  // update time to resolve rule
-                  if ($update_target_ticket['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
-                      || $update_target_ticket['due_date_rule'] == 'calcul') {
-                     $update_target_ticket['due_date_question'] = $tab_questions[$update_target_ticket['due_date_question']];
-                  }
-
-                  // update urgency rule
-                  if ($update_target_ticket['urgency_rule'] == 'answer') {
-                     $update_target_ticket['urgency_question'] = $tab_questions[$update_target_ticket['urgency_question']];
-                  }
-
-                  // update destination entity
-                  if ($update_target_ticket['destination_entity'] == 'user'
-                      || $update_target_ticket['destination_entity'] == 'entity') {
-                     $update_target_ticket['destination_entity_value'] = $tab_questions[$update_target_ticket['destination_entity_value']];
-                  }
-
-                  //update category
-                  if ($update_target_ticket['category_rule'] == 'answer') {
-                     $update_target_ticket['category_question'] = $tab_questions[$update_target_ticket['category_question']];
-                  }
-
-                  //update location
-                  if ($update_target_ticket['location_rule'] == 'answer') {
-                     $update_target_ticket['location_question'] = $tab_questions[$update_target_ticket['location_question']];
-                  }
-
-                  $new_target_ticket = new PluginFormcreatorTargetTicket();
-                  $update_target_ticket['title'] = Toolbox::addslashes_deep($update_target_ticket['name']);
-                  $update_target_ticket['content'] = Toolbox::addslashes_deep($update_target_ticket['content']);
-                  if (!$new_target_ticket->add($update_target_ticket)) {
-                     return false;
-                  }
-                  $new_target_item_id = $new_target_ticket->getID();
-                  break;
-
-               case PluginFormcreatorTargetChange::class:
-                  // Get the original target change
-                  $target_change = $target;
-
-                  // Update the target change created while cloning the target
-                  $update_target_change = $target_change->fields;
-                  unset($update_target_change['id'], $update_target_change['uuid']);
-                  $update_target_change['plugin_formcreator_forms_id'] = $new_form_id;
-                  foreach ($tab_questions as $id => $value) {
-                     $changeFields = [
-                        'name',
-                        'content',
-                        'impactcontent',
-                        'controlistcontent',
-                        'rolloutplancontent',
-                        'backoutplancontent',
-                        'checklistcontent'
-                     ];
-                     foreach ($changeFields as $changeField) {
-                        $update_target_change[$changeField] = str_replace(
-                           '##question_' . $id . '##',
-                           '##question_' . $value . '##',
-                           $update_target_change[$changeField]
-                        );
-                        $update_target_change[$changeField] = str_replace(
-                           '##answer_' . $id . '##',
-                           '##answer_' . $value . '##',
-                           $update_target_change[$changeField]
-                        );
-                     }
-                  }
-
-                  // update time to resolve rule
-                  if ($update_target_change['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
-                      || $update_target_change['due_date_rule'] == 'calcul') {
-                     $update_target_change['due_date_question'] = $tab_questions[$update_target_change['due_date_question']];
-                  }
-
-                  // update urgency rule
-                  if ($update_target_change['urgency_rule'] == 'answer') {
-                     $update_target_change['urgency_question'] = $tab_questions[$update_target_change['urgency_question']];
-                  }
-
-                  // update destination entity
-                  if ($update_target_change['destination_entity'] == 'user'
-                      || $update_target_change['destination_entity'] == 'entity') {
-                     $update_target_change['destination_entity_value'] = $tab_questions[$update_target_change['destination_entity_value']];
-                  }
-
-                  //update category
-                  if ($update_target_change['category_rule'] == 'answer') {
-                     $update_target_change['category_question'] = $tab_questions[$update_target_change['category_question']];
-                  }
-
-                  $new_target_change = new PluginFormcreatorTargetChange();
-                  $update_target_change = Toolbox::addslashes_deep($update_target_change);
-                  if (!$new_target_change->add($update_target_change)) {
-                     return false;
-                  }
-                  $new_target_item_id = $new_target_change->getID();
-                  break;
-            }
-
-            switch ($targetType) {
-               case PluginFormcreatorTargetTicket::class:
-                  // Drop default actors
-                  $target_ticket_actor->deleteByCriteria([
-                     'plugin_formcreator_targettickets_id' => $new_target_item_id
-                  ]);
-
-                  // Form target tickets actors
-                  $tta_rows = $DB->request([
-                     'FROM'  => $target_ticket_actor::getTable(),
-                     'WHERE' => [
-                        'plugin_formcreator_targettickets_id' => $target->getID()
-                     ]
-                  ]);
-                  foreach ($tta_rows as $tta_row) {
-                     unset($tta_row['id'],
-                           $tta_row['uuid']);
-                     $tta_row['plugin_formcreator_targettickets_id'] = $new_target_item_id;
-                     if (!$target_ticket_actor->add($tta_row)) {
-                        return false;
-                     }
-                  }
-                  break;
-
-               case PluginFormcreatorTargetChange::class:
-                  // Drop default actors
-                  $target_change_actor->deleteByCriteria([
-                     'plugin_formcreator_targetchanges_id' => $new_target_item_id
-                  ]);
-
-                  // Form target change actors
-                  $tca_rows = $DB->request([
-                     'FROM'  => $target_change_actor::getTable(),
-                     'WHERE' => [
-                        'plugin_formcreator_targetchanges_id' => $target->getID()
-                     ]
-                  ]);
-                  foreach ($tca_rows as $tca_row) {
-                     unset($tca_row['id'],
-                           $tca_row['uuid']);
-                     $tca_row['plugin_formcreator_targetchanges_id'] = $new_target_item_id;
-                     if (!$target_change_actor->add($tca_row)) {
-                        return false;
-                     }
-                  }
-                  break;
-            }
-         }
-      }
+      $linker->linkPostponed();
 
       return $new_form_id;
    }
@@ -2018,12 +1723,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       return $nb;
    }
 
-   /**
-    * Export in an array all the data of the current instanciated form
-    * @param boolean $remove_uuid remove the uuid key
-    *
-    * @return array the array with all data (with sub tables)
-    */
    function export($remove_uuid = false) {
       global $DB;
 
@@ -2031,28 +1730,44 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          return false;
       }
 
+      $formFk        = PluginFormcreatorForm::getForeignKeyField();
       $form           = $this->fields;
       $form_section   = new PluginFormcreatorSection;
       $form_validator = new PluginFormcreatorForm_Validator;
       $form_profile   = new PluginFormcreatorForm_Profile;
 
-      // replace dropdown ids
-      if ($form['plugin_formcreator_categories_id'] > 0) {
-         $form['_plugin_formcreator_category']
-            = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
-                                        $form['plugin_formcreator_categories_id']);
-      }
+      // replace entity id
       if ($form['entities_id'] > 0) {
          $form['_entity']
             = Dropdown::getDropdownName(Entity::getTable(),
                                         $form['entities_id']);
       }
 
+      // replace form category id
+      if ($form['plugin_formcreator_categories_id'] > 0) {
+         $form['_plugin_formcreator_category']
+            = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
+                                        $form['plugin_formcreator_categories_id']);
+      }
+
       // remove non needed keys
-      unset($form['id'],
-            $form['plugin_formcreator_categories_id'],
+      unset($form['plugin_formcreator_categories_id'],
             $form['entities_id'],
             $form['usage_count']);
+
+      // restrictions
+      $form['_profiles'] = [];
+      $all_profiles = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => $form_profile::getTable(),
+         'WHERE'  => [
+            $formFk => $this->getID()
+         ]
+      ]);
+      foreach ($all_profiles as $profile) {
+         $form_profile->getFromDB($profile['id']);
+         $form['_profiles'][] = $form_profile->export($remove_uuid);
+      }
 
       // get sections
       $form['_sections'] = [];
@@ -2060,7 +1775,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          'SELECT' => ['id'],
          'FROM'   => $form_section::getTable(),
          'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
+            $formFk => $this->getID()
          ]
       ]);
       foreach ($all_sections as $section) {
@@ -2091,23 +1806,26 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
 
-      // get profiles
-      $form['_profiles'] = [];
-      $all_profiles = $DB->request([
+      // get validators
+      $form['_validators'] = [];
+      $all_validators = $DB->request([
          'SELECT' => ['id'],
-         'FROM'   => $form_profile::getTable(),
+         'FROM'   => $form_validator::getTable(),
          'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
+            $formFk => $this->getID()
          ]
       ]);
-      foreach ($all_profiles as $profile) {
-         $form_profile->getFromDB($profile['id']);
-         $form['_profiles'][] = $form_profile->export($remove_uuid);
+      foreach ($all_validators as $validator) {
+         $form_validator->getFromDB($validator['id']);
+         $form['_validators'][] = $form_validator->export($remove_uuid);
       }
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $form['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($form[$idToRemove]);
 
       return $form;
    }
@@ -2252,133 +1970,49 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             continue;
          }
 
-         $importLinker = new PluginFormcreatorImportLinker();
          foreach ($forms_toimport['forms'] as $form) {
-            self::import($importLinker, $form);
-         }
-         if (!$importLinker->importPostponed()) {
-            Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
-                                                         $filename));
-         } else {
-            Session::addMessageAfterRedirect(sprintf(__("Failed to import forms from %s", "formcreator"),
-                                                        $filename));
-         }
-      }
-   }
-
-   /**
-    * Import a form into the db
-    * @see PluginFormcreatorForm::importJson
-    *
-    * @param  array   $form the form data (match the form table)
-    * @return integer the form's id
-    */
-   /*
-   public static function import($form = []) {
-      $form_obj = new self;
-      $entity   = new Entity;
-      $form_cat = new PluginFormcreatorCategory;
-
-      // retrieve foreign keys
-      if (!isset($form['_entity'])
-          || !$form['entities_id']
-                  = plugin_formcreator_getFromDBByField($entity,
-                                                        'completename',
-                                                        $form['_entity'])) {
-         $form['entities_id'] = $_SESSION['glpiactive_entity'];
-      }
-      if (!isset($form['_plugin_formcreator_categories_id'])
-          || !$form['_plugin_formcreator_categories_id']
-            = plugin_formcreator_getFromDBByField($form_cat,
-                                                  'completename',
-                                                  $form['_plugin_formcreator_category'])) {
-         $form['plugin_formcreator_categories_id'] = 0;
-      }
-
-      // retrieve form by its uuid
-      if ($forms_id = plugin_formcreator_getFromDBByField($form_obj,
-                                                          'uuid',
-                                                          $form['uuid'])) {
-         // add id key
-         $form['id'] = $forms_id;
-
-         // update existing form
-         $form_obj->update($form);
-      } else {
-         // create new form
-         $forms_id = $form_obj->add($form);
-      }
-
-      // import restrictions
-      if ($forms_id) {
-         // Delete all previous restrictions
-         $FormProfile = new PluginFormcreatorForm_Profile();
-         $FormProfile->deleteByCriteria([
-            'plugin_formcreator_forms_id' => $forms_id,
-         ]);
-
-         // Import updates
-         if (isset($form['_profiles'])) {
-            foreach ($form['_profiles'] as $formProfile) {
-               PluginFormcreatorForm_Profile::import($forms_id, $formProfile);
+            set_time_limit(30);
+            $linker = new PluginFormcreatorLinker();
+            try {
+               self::import($linker, $form);
+            } catch (ImportFailureException $e) {
+               // Import failed, give up
+               continue;
+            }
+            if (!$linker->linkPostponed()) {
+               Session::addMessageAfterRedirect(sprintf(__("Failed to import %s", "formcreator"),
+                                                           $$form['name']));
             }
          }
+         Session::addMessageAfterRedirect(sprintf(__("Forms successfully imported from %s", "formcreator"),
+                                                      $filename));
       }
-
-      // import form's sections
-      if ($forms_id
-          && isset($form['_sections'])) {
-         foreach ($form['_sections'] as $section) {
-            PluginFormcreatorSection::import($forms_id, $section);
-         }
-      }
-      // Save all question conditions stored in memory
-      PluginFormcreatorQuestion_Condition::import(0, [], false);
-
-      // import form's validators
-      if ($forms_id
-          && isset($form['_validators'])) {
-         foreach ($form['_validators'] as $validator) {
-            PluginFormcreatorForm_Validator::import($forms_id, $validator);
-         }
-      }
-
-      // import form's targets
-      if ($forms_id
-          && isset($form['_targets'])) {
-         foreach ($form['_targets'] as $target) {
-            PluginFormcreatorTarget::import($forms_id, $target);
-         }
-      }
-      // import form's ticket relations
-      PluginFormcreatorItem_TargetTicket::import(0, [], false);
-
-      return $forms_id;
    }
-   */
 
-   public static function import(PluginFormcreatorImportLinker $importLinker, $form = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      set_time_limit(30);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
 
-      $form_obj = new self;
+      $item = new self();
+      // Find an existing form to update, only if an UUID is available
+      if (isset($input['uuid'])) {
+         $forms_id = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
 
-      $forms_id = plugin_formcreator_getFromDBByField(
-         $form_obj,
-         'uuid',
-         $form['uuid']
-      );
-
-      // retrieve foreign keys
+      // Set entity of the form
       $entity = new Entity();
       $entityFk = Entity::getForeignKeyField();
       $entityId = $_SESSION['glpiactive_entity'];
-      if (isset($form['_entity'])) {
+      if (isset($input['_entity'])) {
          plugin_formcreator_getFromDBByField(
             $entity,
             'completename',
-            $form['_entity']
+            $input['_entity']
          );
          // Check rights on the destination entity of the form
          if (!$entity->isNewItem() && $entity->canUpdateItem()) {
@@ -2387,103 +2021,160 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             if ($forms_id !== false) {
                // The form is in an entity where we don't have UPDATE right
                Session::addMessageAfterRedirect(
-                  sprintf(__('The form %1$s already exists and is in an unmodifiable entity.', 'formcreator'), $form['name']),
+                  sprintf(__('The form %1$s already exists and is in an unmodifiable entity.', 'formcreator'), $input['name']),
                   false,
                   WARNING
                );
-               return false;
-            } else {
-                // The form is in an entity which does not exists yet
-                Session::addMessageAfterRedirect(
-                  sprintf(__('The entity %1$s is required for the form %2$s.', 'formcreator'), $form['_entity'], $form['name']),
-                  false,
-                  WARNING
-               );
-               return false;
+               throw new ImportFailureException();
             }
          }
       }
-      $form[$entityFk] = $entityId;
+      $input[$entityFk] = $entityId;
 
+      // Import form category
       $formCategory = new PluginFormcreatorCategory();
       $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
       $formCategoryId = 0;
-      if (isset($form['_plugin_formcreator_category'])) {
+      if (isset($input['_plugin_formcreator_category'])) {
          $formCategoryId = $formCategory->import([
-            'completename' => $form['_plugin_formcreator_category'],
+            'completename' => $input['_plugin_formcreator_category'],
          ]);
       }
-      $form[$formCategoryFk] = $formCategoryId;
+      $input[$formCategoryFk] = $formCategoryId;
 
-      // escape text fields
+      // Escape text fields
       foreach (['name', 'description', 'content'] as $key) {
-         $form[$key] = $DB->escape($form[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      // retrieve form by its uuid
-      if (!$form_obj->isNewItem()) {
-         // add id key
-         $form['id'] = $forms_id;
-
-         // update existing form
-         $form_obj->update($form);
+      // Add or update the form
+      if (!$item->isNewItem()) {
+         $input['id'] = $forms_id;
+         $originalId = $input['id'];
+         $item->update($input);
       } else {
-         // create new form
-         $forms_id = $form_obj->add($form);
+         $originalId = $input['id'];
+         unset($input['id']);
+         $forms_id = $item->add($input);
+      }
+      if ($forms_id === false) {
+         throw new ImportFailureException();
       }
 
-      // import restrictions
-      if ($forms_id) {
-         // Delete all previous restrictions
-         $FormProfile = new PluginFormcreatorForm_Profile();
-         $FormProfile->deleteByCriteria([
-            'plugin_formcreator_forms_id' => $forms_id,
-         ]);
+      // add the form to the linker
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
+      }
+      $linker->addObject($originalId, $item);
 
-         // Import updates
-         if (isset($form['_profiles'])) {
-            foreach ($form['_profiles'] as $formProfile) {
-               PluginFormcreatorForm_Profile::import($forms_id, $formProfile);
+      // import form_profiles
+      if (isset($input['_profiles'])) {
+         $importedItems = [];
+         foreach ($input['_profiles'] as $formProfile) {
+            $importedItem = PluginFormcreatorForm_Profile::import(
+               $linker,
+               $formProfile,
+               $forms_id
+            );
+            if ($importedItem === false) {
+               // Falied to import a form_profile
+               return false;
             }
+            $importedItems[] = $importedItem;
+         }
+         // Delete all other restrictions
+         if (count($importedItems) > 0) {
+            $FormProfile = new PluginFormcreatorForm_Profile();
+            $FormProfile->deleteByCriteria([
+               $formFk => $forms_id,
+               ['NOT' => ['id' => $importedItems]]
+            ]);
          }
       }
 
       // import form's sections
-      if ($forms_id
-          && isset($form['_sections'])) {
+      if (isset($input['_sections'])) {
          // sort questions by order
-         usort($form['_sections'], function ($a, $b) {
+         usort($input['_sections'], function ($a, $b) {
             if ($a['order'] == $b['order']) {
                return 0;
             }
             return ($a['order'] < $b['order']) ? -1 : 1;
          });
 
-         $importLinker->addImportedObject($form['uuid'], $form_obj);
-         foreach ($form['_sections'] as $section) {
-            PluginFormcreatorSection::import($importLinker, $forms_id, $section);
+         // Import each section
+         $importedItems = [];
+         foreach ($input['_sections'] as $section) {
+            $importedItem = PluginFormcreatorSection::import(
+               $linker,
+               $section,
+               $forms_id
+            );
+            if ($importedItem === false) {
+               // Falied to import a section
+               return false;
+            }
+            $importedItems[] = $importedItem;
          }
+         // Delete all other restrictions
+         $FormProfile = new PluginFormcreatorSection();
+         $FormProfile->deleteByCriteria([
+            $formFk => $forms_id,
+            ['NOT' => ['id' => $importedItems]]
+         ]);
       }
 
       // import form's targets
-      if ($forms_id
-          && isset($form['_targets'])) {
-         // delete old targets
+      if (isset($input['_targets'])) {
          foreach ((new self())->getTargetTypes() as $targetType) {
-            $target = new $targetType();
-            $target->deleteByCriteria([
-               'plugin_formcreator_forms_id' => $forms_id,
-            ]);
-            foreach ($form['_targets'][$targetType] as $targetData) {
-               $targetType::import($importLinker, $forms_id, $targetData);
+            // import targets
+            $importedItems = [];
+            if (isset($input['_targets'][$targetType])) {
+               foreach ($input['_targets'][$targetType] as $targetData) {
+                  $importedItem = $targetType::import(
+                     $linker,
+                     $targetData,
+                     $forms_id
+                  );
+                  if ($importedItem === false) {
+                     // Falied to import a section
+                     return false;
+                  }
+                  $importedItems[] = $importedItem;
+               }
+            }
+            // delete other targets of the itemtype $targetType
+            if (count($importedItems)) {
+               $target = new $targetType();
+               $target->deleteByCriteria([
+                  $formFk => $forms_id,
+                  ['NOT' => ['id' => $importedItems]]
+               ]);
             }
          }
       }
 
-      if ($forms_id
-          && isset($form['_validators'])) {
-         foreach ($form['_validators'] as $validator) {
-            PluginFormcreatorForm_Validator::import($forms_id, $validator);
+      // Import validators
+      if (isset($input['_validators'])) {
+         $importedItems = [];
+         foreach($input['_validators'] as $validator) {
+            $importedItem = PluginFormcreatorForm_Validator::import(
+               $linker,
+               $validator,
+               $forms_id
+            );
+            if ($importedItem === false) {
+               // Failed to import a section
+               return false;
+            }
+            $importedItems[] = $importedItem;
+         }
+         if (count($importedItems)) {
+            $form_validator = new PluginFormcreatorForm_Validator;
+            $form_validator->deleteByCriteria([
+               $formFk => $forms_id,
+               ['NOT' => ['id' => $importedItems]]
+            ]);
          }
       }
 

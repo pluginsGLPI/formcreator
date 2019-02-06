@@ -125,12 +125,14 @@ extends PluginFormcreatorQuestionParameter
 
       $parameter = $this->fields;
       $this->convertIds($parameter);
-      unset($parameter['id'],
-            $parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
+      unset($parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $parameter['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($question[$idToRemove]);
 
       return $parameter;
    }

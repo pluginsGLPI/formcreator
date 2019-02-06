@@ -28,44 +28,11 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
-class PluginFormcreatorUpgradeTo2_8 {
 
-   protected $migration;
+namespace GlpiPlugin\Formcreator\Exception;
 
-   /**
-    * @param Migration $migration
-    */
-   public function upgrade(Migration $migration) {
-      global $DB;
-
-      $this->migration = $migration;
-
-      // Rename the plugin
-      $plugin = new Plugin();
-      $plugin->getFromDBbyDir('formcreator');
-      $success = $plugin->update([
-         'id' => $plugin->getID(),
-         'name' => 'Form Creator',
-      ]);
-
-      $migration->changeField(
-         'glpi_plugin_formcreator_targetchanges_actors',
-         'actor_type',
-         'actor_type',
-         "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
-      );
-
-      // add item association rule
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question']);
-      $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
-
-      // Rename the plugin
-      $plugin = new Plugin();
-      $plugin->getFromDBbyDir('formcreator');
-      $success = $plugin->update([
-         'id' => $plugin->getID(),
-         'name' => 'Form Creator',
-      ]);
-   }
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
 }
+
+class ImportFailureException extends \Exception {}

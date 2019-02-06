@@ -29,47 +29,77 @@
  * ---------------------------------------------------------------------
  */
 
-class PluginFormcreatorImportLinker
+class PluginFormcreatorLinker
 {
    private $imported = [];
 
    private $postponed = [];
 
    /**
+    * Store an object added in the DB
     *
-    * @param string $uuid
-    * @param CommonDBTM $object
+    * @param string|integer $originalId
+    * @param PluginFormcreatorExportableInterface $object
+    * @return void
     */
-   public function addImportedObject($uuid, CommonDBTM $object) {
+   public function addObject($originalId, PluginFormcreatorExportableInterface $object) {
       if (!isset($this->imported[$object->getType()])) {
          $this->imported[$object->getType()] = [];
       }
-      $this->imported[$object->getType()][$uuid] = $object;
+      $this->imported[$object->getType()][$originalId] = $object;
    }
 
    /**
+    * Get a previously imported object
     *
-    * @param string $uuid
+    * @param integer $originalId
     * @param string $itemtype
-    * @param array $object
+    * @return PluginFormcreatorExportableInterface
     */
-   public function postponeImport($uuid, $itemtype, array $object, $relationId) {
+   public function getObject($originalId, $itemtype) {
+      if (!isset($this->imported[$itemtype][$originalId])) {
+         return false;
+      }
+      return $this->imported[$itemtype][$originalId];
+   }
+
+   public function getObjectsByType($itemtype) {
+      if (!isset($this->imported[$itemtype])) {
+         return false;
+      }
+      return $this->imported[$itemtype];
+   }
+
+   /**
+    * Store input data of an object to add it later
+    *
+    * @param string|integer $originalId
+    * @param string $itemtype
+    * @param array $input
+    * @return void
+    */
+   public function postpone($originalId, $itemtype, array $input, $relationId) {
       if (!isset($this->postponed[$itemtype])) {
          $this->postponed[$itemtype] = [];
       }
-      $this->postponed[$itemtype][$uuid] = ['object' => $object, 'relationId' => $relationId];
+      $this->postponed[$itemtype][$originalId] = ['input' => $input, 'relationId' => $relationId];
    }
 
-   public function importPostponed() {
+   /**
+    * Add in DB all postponed objects
+    *
+    * @return boolean true on success, false otherwise
+    */
+   public function linkPostponed() {
       do {
          $postponedCount = 0;
          $postponedAgainCount = 0;
          foreach ($this->postponed as $itemtype => $postponedItemtypeList) {
             $postponedCount += count($postponedItemtypeList);
             $newList = $postponedItemtypeList;
-            foreach ($postponedItemtypeList as $uuid => $postponedItem) {
-               if ($itemtype::import($this, $postponedItem['relationId'], $postponedItem['object']) === false) {
-                  $newList[$uuid] = $postponedItem;
+            foreach ($postponedItemtypeList as $originalId => $postponedItem) {
+               if ($itemtype::import($this, $postponedItem['relationId'], $postponedItem['input']) === false) {
+                  $newList[$originalId] = $postponedItem;
                   $postponedAgainCount++;
                }
             }
@@ -80,5 +110,7 @@ class PluginFormcreatorImportLinker
             return false;
          }
       } while ($postponedCount > 0);
+
+      return true;
    }
 }

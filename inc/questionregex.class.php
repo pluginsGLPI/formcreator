@@ -97,17 +97,19 @@ extends PluginFormcreatorQuestionParameter
 
       $parameter = $this->fields;
       $this->convertIds($parameter);
-      unset($parameter['id'],
-            $parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
+      unset($parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $parameter['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($parameter[$idToRemove]);
 
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorImportLinker $importLinker, $question_id = 0, $fieldName = '', $parameter = []) {
+   public static function import(PluginFormcreatorLinker $linker, $parameter = [], $question_id = 0) {
       global $DB;
 
       // escape text fields
@@ -115,6 +117,6 @@ extends PluginFormcreatorQuestionParameter
          $parameter[$key] = $DB->escape($parameter[$key]);
       }
 
-      parent::import($importLinker, $question_id, $fieldName, $parameter);
+      parent::import($linker, $parameter, $question_id);
    }
 }

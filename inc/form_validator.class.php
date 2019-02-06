@@ -36,7 +36,9 @@ if (!defined('GLPI_ROOT')) {
 /**
  * @since 0.90-1.5
  */
-class PluginFormcreatorForm_Validator extends CommonDBRelation {
+class PluginFormcreatorForm_Validator extends CommonDBRelation implements
+PluginFormcreatorExportableInterface
+{
 
       // From CommonDBRelation
    static public $itemtype_1          = 'PluginFormcreatorForm';
@@ -59,19 +61,18 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       return $input;
    }
 
-   /**
-    * Import a form's validator into the db
-    * @see PluginFormcreatorForm::importJson
-    *
-    * @param  integer $forms_id  id of the parent form
-    * @param  array   $validator the validator data (match the validator table)
-    * @return integer the validator's id
-    */
-   public static function import($forms_id = 0, $validator = []) {
-      $item = new self;
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
+      $formFk = PluginFormcreatotrForm::getForeigkKeyField();
+      $input[$formFk] = $forms_id;
 
-      $validator['plugin_formcreator_forms_id'] = $forms_id;
-
+      $item = new self();
+      if (isset($input['uuid'])) {
+         $validators_id = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
       // Find the validator
       if (!in_array($validator['itemtype'], [User::class, Group::class])) {
          return false;
@@ -87,16 +88,23 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       }
       $validator['items_id'] = $linkedItem->getID();
 
-      if ($validators_id = plugin_formcreator_getFromDBByField($item, 'uuid', $validator['uuid'])) {
-         // add id key
-         $validator['id'] = $validators_id;
-
-         // update section
-         $item->update($validator);
+      // Add or update the form validator
+      if (!$item->isNewItem()) {
+         $input['id'] = $validators_id;
+         $item->update($input);
       } else {
-         //create section
-         $validators_id = $item->add($validator);
+         $validators_id = $item->add($input);
       }
+      if ($validators_id === false) {
+         throw new ImportFailureException();
+      }
+
+      // add the item to the linker
+      $originalId = $input['id'];
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
+      }
+      $linker->addObject($originalId, $item);
 
       return $validators_id;
    }
@@ -115,8 +123,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       $validator = $this->fields;
 
       // remove key and fk
-      unset($validator['id'],
-            $validator['plugin_formcreator_forms_id']);
+      unset($validator['plugin_formcreator_forms_id']);
 
       if (is_subclass_of($validator['itemtype'], 'CommonDBTM')) {
          $validator_obj = new $validator['itemtype'];
@@ -131,9 +138,12 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       }
       unset($validator['items_id']);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $validator['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($validator[$idToRemove]);
 
       return $validator;
    }
