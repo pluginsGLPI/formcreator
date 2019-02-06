@@ -58,5 +58,13 @@ class PluginFormcreatorUpgradeTo2_8 {
          }
       }
       $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
+
+      // Rename the plugin
+      $plugin = new Plugin();
+      $plugin->getFromDBbyDir('formcreator');
+      $success = $plugin->update([
+         'id' => $plugin->getID(),
+         'name' => 'Form Creator',
+      ]);
    }
 }
