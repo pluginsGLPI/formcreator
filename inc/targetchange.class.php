@@ -204,7 +204,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $target_data[$key] = $DB->escape($target_data[$key]);
       }
 
-      // update target ticket
+      // update target change
       $item->update($target_data);
 
       if ($targetitems_id
