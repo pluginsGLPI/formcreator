@@ -199,6 +199,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
+      // escape text fields
+      foreach (['title', 'content'] as $key) {
+         $target_data[$key] = $DB->escape($target_data[$key]);
+      }
+
       // update target ticket
       $item->update($target_data);
 

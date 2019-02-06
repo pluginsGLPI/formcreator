@@ -1548,7 +1548,7 @@ EOS;
       }
 
       // escape text fields
-      foreach (['title'] as $key) {
+      foreach (['title', 'content'] as $key) {
          $target_data[$key] = $DB->escape($target_data[$key]);
       }
 
