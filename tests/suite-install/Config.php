@@ -145,4 +145,10 @@ class Config extends CommonTestCase {
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
    }
+
+   public function testPluginName() {
+      $plugin = new \Plugin();
+      $plugin->getFromDBbyDir(TEST_PLUGIN_NAME);
+      $this->string($plugin->fields['name'])->isEqualTo('Form Creator');
+   }
 }
