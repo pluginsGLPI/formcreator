@@ -152,8 +152,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
-    * @param  array   $target_data the targetticket data (match the targetticket table)
-    * @return integer the targetticket's id
+    * @param  array   $target_data the targetchange data (match the targetticket table)
+    * @return integer the targetchange's id
     */
    public static function import($targetitems_id = 0, $target_data = []) {
       global $DB;
@@ -164,10 +164,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $target_data['id'] = $targetitems_id;
 
       // convert question uuid into id
-      $targetTicket = new PluginFormcreatorTargetTicket();
-      $targetTicket->getFromDB($targetitems_id);
+      $targetChange = new PluginFormcreatorTargetChange();
+      $targetChange->getFromDB($targetitems_id);
       $section = new PluginFormcreatorSection();
-      $foundSections = $section->getSectionsFromForm($targetTicket->getForm()->getID());
+      $foundSections = $section->getSectionsFromForm($targetChange->getForm()->getID());
       $tab_section = [];
       foreach ($foundSections as $section) {
          $tab_section[] = $section->getID();
@@ -210,7 +210,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       if ($targetitems_id
             && isset($target_data['_actors'])) {
          foreach ($target_data['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+            PluginFormcreatorTargetChange_Actor::import($targetitems_id, $actor);
          }
       }
 
