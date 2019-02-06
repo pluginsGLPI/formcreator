@@ -1304,6 +1304,12 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          unset($row['id'],
                $row['uuid']);
          $row['plugin_formcreator_forms_id'] = $new_form_id;
+
+         // escape text fields
+         foreach (['name'] as $key)  {
+            $row[$key] = $DB->escape($row[$key]);
+         }
+
          if (!$form_profile->add($row)) {
             return false;
          }
