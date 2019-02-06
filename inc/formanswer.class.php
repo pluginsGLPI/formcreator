@@ -1142,7 +1142,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $question_no = 0;
       $output      = '';
-      $eol = '\n';
+      $eol = "\r\n";
 
       if ($richText) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
@@ -1210,7 +1210,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             if ($richText) {
                $output .= '<h2>' . $question_line['section_name'] . '</h2>';
             } else {
-               $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
+               $output .= $eol . $question_line['section_name'] . $eol;
                $output .= '---------------------------------' . $eol;
             }
             $last_section = $question_line['section_name'];

@@ -307,7 +307,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $sectionName = $section->fields['name'];
       $questionTag = '##question_' . $question->getID() . '##';
       $answerTag = '##answer_' . $question->getID() . '##';
-      $eolSimple = '\n';
+      $eolSimple = "\r\n";
       // 2 expected values
       // 0 : Rich text mode disabled
       // 1 : Rich text mode enabled
