@@ -1171,7 +1171,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * Validates answers of a form and saves them in database
     *
     * @param array $input fields from the HTML form
-    * @return integer|boolean ID of the form_answer if sucess, false otherwise
+    * @return integer|boolean ID of the formanswer if success, false otherwise
     */
    public function saveForm($input) {
       $valid = true;
