@@ -358,7 +358,7 @@ abstract class CommonTestCase extends CommonDBTestCase
 
    protected function _checkTargetTicket($targetticket = []) {
       $keys = [
-         'title',
+         'name',
          'plugin_formcreator_forms_id',
          'content',
          'due_date_rule',
@@ -386,7 +386,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       $this->array($targetticket)->notHasKeys([
          'id',
          'tickettemplates_id',
-      ])->hasKeys($keys)
+      ])->hasKeys($keys, json_encode(array_diff(array_keys($targetticket), $keys)))
          ->size->isEqualTo(count($keys));
 
       foreach ($targetticket['_actors'] as $actor) {

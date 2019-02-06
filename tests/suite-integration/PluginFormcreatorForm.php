@@ -84,7 +84,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
                               'link'     => \Ticket_Ticket::LINK_TO,
                               'itemtype' => $targetTicket->getType(),
-                              'items_id' => $targets_id
+                              'items_id' => $targetTicket_id
       ]);
    }
 
@@ -215,11 +215,11 @@ class PluginFormcreatorForm extends CommonTestCase {
          $targetsData
       );
 
+      $form->getFromDB($form->getID());
       $sourceFormId = $form->getID();
-      $this->integer($form->duplicate());
+      $this->integer($newFormId = $form->duplicate());
 
       // Check the ID of the form changed
-      $newFormId = $form->getID();
       $this->integer((int) $newFormId)->isNotEqualTo($sourceFormId);
 
       // Check sections were copied

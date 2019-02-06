@@ -33,7 +33,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorForm_Profile extends CommonDBRelation
+class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFormcreatorExportableInterface
 {
    static public $itemtype_1 = 'PluginFormcreatorForm';
    static public $items_id_1 = 'plugin_formcreator_forms_id';
@@ -153,20 +153,46 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
     * @param  array   $form_profile the validator data (match the validator table)
     * @return integer|false the form_Profile ID or false on error
     */
-   public static function import($forms_id = 0, $form_profile = []) {
-      $item    = new self;
-      $profile = new Profile;
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form_profile[$formFk] = $forms_id;
-
-      if ($form_profiles_id = plugin_formcreator_getFromDBByField($profile, 'name', $form_profile['_profile'])) {
-         $form_profile[Profile::getForeignKeyField()] = $form_profiles_id;
-         $item->add($form_profile);
-
-         return $item->getID();
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+      $item = new self();
+      // Find an existing form_profile to update, only if an UUID is available
+      if (isset($input['uuid'])) {
+         $formProfileId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
       }
 
-      return false;
+      // Set the profile of the form_profile
+      $profile = new Profile;
+      $formFk  = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $containerId;
+      if (!plugin_formcreator_getFromDBByField($profile, 'name', $input['_profile'])) {
+         // Profile not found, lets ignore this import
+         return true;
+      }
+      $input[Profile::getForeignKeyField()] = $profile->getID();
+
+      // Add or update the form_profile
+      if (!$item->isNewItem()) {
+         $input['id'] = $formProfileId;
+         $item->update($input);
+      } else {
+         $formProfileId = $item->add($input);
+      }
+      if ($formProfileId === false) {
+         throw new ImportFailureException();
+      }
+
+      // add the form to the linker
+      $originalId = $input['id'];
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
+      }
+      $linker->addObject($originalId, $form_obj);
+
+      return $formProfileId;
    }
 
    /**
@@ -189,13 +215,15 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       }
 
       // remove fk
-      unset($form_profile['id'],
-            $form_profile['profiles_id'],
+      unset($form_profile['profiles_id'],
             $form_profile['plugin_formcreator_forms_id']);
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $form_profile['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($form_profile[$idToRemove]);
 
       return $form_profile;
    }

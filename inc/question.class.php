@@ -72,7 +72,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       return _n('Question', 'Questions', $nb, 'formcreator');
    }
 
-
    function addMessageOnAddAction() {}
    function addMessageOnUpdateAction() {}
    function addMessageOnDeleteAction() {}
@@ -975,100 +974,70 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       return $newQuestion_id;
    }
 
-   /**
-    * Import a section's question into the db
-    * @see PluginFormcreatorSection::import
-    *
-    * @param  integer $sections_id  id of the parent section
-    * @param  array   $question the question data (match the question table)
-    * @return integer the question's id
-    */
-   /*
-   public static function import($sections_id = 0, $question = []) {
-      $item = new self;
-
-      $question['plugin_formcreator_sections_id'] = $sections_id;
-      $question['_skip_checks']                   = true;
-
-      if ($questions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $question['uuid'])) {
-         // add id key
-         $question['id'] = $questions_id;
-
-         // update question
-         $item->update($question);
-      } else {
-         //create question
-         $questions_id = $item->add($question);
-      }
-
-      if ($questions_id
-          && isset($question['_conditions'])) {
-         foreach ($question['_conditions'] as $condition) {
-            PluginFormcreatorQuestion_Condition::import($questions_id, $condition);
-         }
-      }
-
-      return $questions_id;
-   }
-   */
-
-   public static function import(PluginFormcreatorImportLinker $importLinker, $sections_id = 0, $question = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $item = new self;
+      $input['plugin_formcreator_sections_id'] = $containerId;
+      $input['_skip_checks']                   = true;
 
-      $question['plugin_formcreator_sections_id'] = $sections_id;
-      $question['_skip_checks']                   = true;
+      $item = new self;
+      // Find an existing question to update, only if an UUID is available
+      if (isset($input['uuid'])) {
+         $questions_id = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
 
       // escape text fields
-      foreach (['name', 'description', 'values'] as $key) {
-         $question[$key] = $DB->escape($question[$key]);
+      foreach (['name', 'description'] as $key) {
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      if ($questions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $question['uuid'])) {
-         // add id key
-         $question['id'] = $questions_id;
+      if (!$item->isNewItem()) {
+         $input['id'] = $questions_id;
+         $originalId = $input['id'];
          $item->field = PluginFormcreatorFields::getFieldInstance(
-            $question['fieldtype'],
+            $input['fieldtype'],
             $item
          );
-         // update question
-         $item->update($question);
+         $item->update($input);
       } else {
-         //create question
-
-         $questions_id = $item->add($question);
+         $originalId = $input['id'];
+         unset($input['id']);
+         $questions_id = $item->add($input);
       }
 
-      if ($questions_id
-          && isset($question['_conditions'])) {
-         $importLinker->addImportedObject($question['uuid'], $item);
+      // add the question to the linker
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
+      }
+      $linker->addObject($originalId, $item);
 
-         foreach ($question['_conditions'] as $condition) {
-            PluginFormcreatorQuestion_Condition::import($importLinker, $questions_id, $condition);
+      if ($questions_id
+          && isset($input['_conditions'])) {
+         $linker->addObject($originalId, $item);
+
+         foreach ($input['_conditions'] as $condition) {
+            PluginFormcreatorQuestion_Condition::import($linker, $condition, $questions_id);
          }
          $questionInstance = new self();
-         $questionInstance->fields = $question;
+         $questionInstance->fields = $input;
          $questionInstance->fields['id'] = $questions_id;
          $field = PluginFormcreatorFields::getFieldInstance(
-            $question['fieldtype'],
+            $input['fieldtype'],
             $questionInstance
          );
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            $parameter::import($importLinker, $questions_id, $fieldName, $question['_parameters'][$question['fieldtype']][$fieldName]);
+            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $questions_id);
          }
       }
 
       return $questions_id;
    }
 
-   /**
-    * Export in an array all the data of the current instanciated question
-    * @param boolean $remove_uuid remove the uuid key
-    *
-    * @return array the array with all data (with sub tables)
-    */
    public function export($remove_uuid = false) {
       global $DB;
 
@@ -1076,39 +1045,34 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          return false;
       }
 
-      $form_question_condition = new PluginFormcreatorQuestion_Condition;
-      $question                = $this->fields;
+      $question = $this->fields;
 
       // remove key and fk
-      unset($question['id'],
-            $question['plugin_formcreator_sections_id']);
+      unset($question['plugin_formcreator_sections_id']);
 
       // get question conditions
       $question['_conditions'] = [];
-      $all_conditions = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_question_condition::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_questions_id' => $this->getID()
-         ]
-      ]);
-      foreach ($all_conditions as $condition) {
-         if ($form_question_condition->getFromDB($condition['id'])) {
-            $question['_conditions'][] = $form_question_condition->export($remove_uuid);
+      $condition = new PluginFormcreatorQuestion_Condition();
+      foreach ($condition->getConditionsFromQuestion($this->getID()) as $conditionId => $condition) {
+         if ($condition->getFromDB($conditionId)) {
+            $question['_conditions'][] = $condition->export($remove_uuid);
          }
       }
 
       // get question parameters
       $question['_parameters'] = [];
-      $this->field = PluginFormcreatorFields::getFieldInstance($this->getField('fieldtype'), $this);
+      $this->field = PluginFormcreatorFields::getFieldInstance($this->fields['fieldtype'], $this);
       $parameters = $this->field->getParameters();
       foreach ($parameters as $fieldname => $parameter) {
-         $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export();
+         $question['_parameters'][$this->fields['fieldtype']][$fieldname] = $parameter->export($remove_uuid);
       }
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $question['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($question[$idToRemove]);
 
       return $question;
    }

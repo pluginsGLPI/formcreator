@@ -84,63 +84,54 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM implements Plugi
       return $input;
    }
 
-   /**
-    * Import a form's target ticket's actor into the db
-    * @see PluginFormcreatorTargetTicket::import
-    * @see PluginFormcreatorTargetChange::import
-    *
-    * @param  integer $targets_id  id of the parent targetticket
-    * @param  array   $actor the actor data (match the actor table)
-    * @return integer the actor's id
-    */
-   public static function import($targets_id = 0, $actor = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       $item = new static;
 
       $foreignKeyField = $item->getTargetItem()->getForeignKeyField();
-      $actor[$foreignKeyField] = $targets_id;
+      $input[$foreignKeyField] = $containerId;
 
       // retrieve FK
-      if (isset($actor['_question'])) {
+      if (isset($input['_question'])) {
          $question = new PluginFormcreatorQuestion;
 
          if ($questions_id = plugin_formcreator_getFromDBByField($question, 'uuid', $actor['_question'])) {
-            $actor['actor_value'] = $questions_id;
+            $input['actor_value'] = $questions_id;
          } else {
             return false;
          }
 
-      } else if (isset($actor['_user'])) {
+      } else if (isset($input['_user'])) {
          $user = new User;
-         if ($users_id = plugin_formcreator_getFromDBByField($user, 'name', $actor['_user'])) {
-            $actor['actor_value'] = $users_id;
+         if ($users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user'])) {
+            $input['actor_value'] = $users_id;
          } else {
             return false;
          }
-      } else if (isset($actor['_group'])) {
+      } else if (isset($input['_group'])) {
          $group = new Group;
-         if ($groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $actor['_group'])) {
-            $actor['actor_value'] = $groups_id;
+         if ($groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group'])) {
+            $input['actor_value'] = $groups_id;
          } else {
             return false;
          }
-      } else if (isset($actor['_supplier'])) {
+      } else if (isset($input['_supplier'])) {
          $supplier = new Supplier;
-         if ($suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $actor['_supplier'])) {
-            $actor['actor_value'] = $suppliers_id;
+         if ($suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier'])) {
+            $input['actor_value'] = $suppliers_id;
          } else {
             return false;
          }
       }
 
-      if ($actors_id = plugin_formcreator_getFromDBByField($item, 'uuid', $actor['uuid'])) {
+      if ($actors_id = plugin_formcreator_getFromDBByField($item, 'uuid', $input['uuid'])) {
          // add id key
-         $actor['id'] = $actors_id;
+         $input['id'] = $actors_id;
 
          // update actor
-         $item->update($actor);
+         $item->update($input);
       } else {
          //create actor
-         $actors_id = $item->add($actor);
+         $actors_id = $item->add($input);
       }
 
       return $actors_id;

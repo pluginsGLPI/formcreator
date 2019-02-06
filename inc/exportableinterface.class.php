@@ -31,5 +31,22 @@
 
 interface PluginFormcreatorExportableInterface
 {
+   /**
+    * Export in an array all the data of the current instanciated form
+    * @param boolean $remove_uuid remove the uuid key
+    *
+    * @return array the array with all data (with sub tables)
+    */
    public function export($remove_uuid = false);
+
+   /**
+    * Import an itemtype into the db
+    * @see PluginFormcreatorForm::importJson
+    *
+    * @param  PluginFormcreatorLinker $linker
+    * @param  integer $containerId  id of the parent itemtype, 0 if not
+    * @param  array   $input the target data (match the target table)
+    * @return integer|false the id of the imported item or false on error
+    */
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0);
 }

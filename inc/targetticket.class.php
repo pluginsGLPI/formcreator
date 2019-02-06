@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -449,7 +451,7 @@ SCRIPT;
     * @param CommonDBTM $item
     * @return boolean
     */
-   public function pre_purgeItem() {
+    public function pre_purgeItem() {
       if (!parent::pre_purgeItem()) {
          $this->input = false;
          return false;
@@ -885,80 +887,90 @@ SCRIPT;
       return $data;
    }
 
-   /**
-    * Import a form's targetticket into the db
-    *
-    * @param  integer $targetitems_id  current id
-    * @param  array   $target_data the targetticket data (match the targetticket table)
-    * @return integer the targetticket's id
-    */
-   public static function import($targetitems_id = 0, $target_data = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $item = new self;
-
-      $target_data['_skip_checks'] = true;
-      $target_data['id'] = $targetitems_id;
-
-      // convert question uuid into id
-      $targetTicket = new PluginFormcreatorTargetTicket();
-      $targetTicket->getFromDB($targetitems_id);
-
-      $section = new PluginFormcreatorSection();
-      $foundSections = $section->getSectionsFromForm($targetTicket->getForm()->getID());
-      $tab_section = [];
-      foreach ($foundSections as $section) {
-         $tab_section[] = $section->getID();
+      // Find an existing target to update, only if an UUID is available
+      if (isset($input['uuid'])) {
+         $targetTicketId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      } else {
+         $targetTicketId = $input['id'];
       }
 
-      if (!empty($tab_section)) {
-         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
-         $rows = $DB->request([
-            'SELECT' => ['id', 'uuid'],
-            'FROM'   => PluginFormcreatorQuestion::getTable(),
-            'WHERE'  => [
-               $sectionFk => $tab_section
-            ],
-            'ORDER'  => 'order ASC'
-         ]);
-         foreach ($rows as $question_line) {
-            $id    = $question_line['id'];
-            $uuid  = $question_line['uuid'];
+      $input['_skip_checks'] = true;
+      $input[$formFk] = $containerId;
 
-            $content = $target_data['title'];
-            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
-            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['title'] = $content;
+      // Assume that all questions are already imported
+      // convert question uuid into id
+      $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
 
-            $content = $target_data['content'];
-            $content = str_replace("##question_$uuid##", "##question_$id##", $content);
-            $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['content'] = $content;
+      $questionIdentifier = 'id';
+      if (isset($input['uuid'])) {
+         $questionIdentifier = 'uuid';
+      }
+      $taggableFields = $item->getTaggableFields();
+      foreach ($questions as $question) {
+         $id         = $question->getID();
+         $originalId = $question->fields[$questionIdentifier];
+         foreach ($taggableFields as $field) {
+            $content = $input[$field];
+            $content = str_replace("##question_$originalId##", "##question_$id##", $content);
+            $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+            $input[$field] = $content;
          }
       }
 
       // escape text fields
-      foreach (['title', 'content'] as $key) {
-         $target_data[$key] = $DB->escape($target_data[$key]);
+      foreach ($taggableFields as $key) {
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      // update target ticket
-      $item->update($target_data);
+      // Add or update 
+      if (!$item->isNewItem()) {
+         $input['id'] = $targetTicketId;
+         $originalId = $input['id'];
+         $item->update($input);
+      } else {
+         $originalId = $input['id'];
+         unset($input['id']);
+         $targetTicketId = $item->add($input);
+      }
+      if ($targetTicketId === false) {
+         throw new ImportFailureException();
+      }
 
-      if ($targetitems_id) {
-         if (isset($target_data['_actors'])) {
-            foreach ($target_data['_actors'] as $actor) {
-               PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
-            }
-         }
-         if (isset($target_data['_ticket_relations'])) {
-            foreach ($target_data['_ticket_relations'] as $ticketLink) {
-               PluginFormcreatorItem_TargetTicket::import($targetitems_id, $ticketLink);
-            }
+      // add the target to the linker
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
+      }
+      $linker->addObject($originalId, $item);
+
+      if (isset($input['_actors'])) {
+         foreach ($input['_actors'] as $actor) {
+            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $targetTicketId);
          }
       }
 
-      return $targetitems_id;
+      if (isset($input['_ticket_relations'])) {
+         foreach ($input['_ticket_relations'] as $ticketLink) {
+            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $targetTicketId);
+         }
+      }
+
+      return $targetTicketId;
+   }
+
+   protected function getTaggableFields() {
+      return [
+         'name',
+         'content',
+      ];
    }
 
    /**
@@ -972,52 +984,13 @@ SCRIPT;
          return false;
       }
 
-      $target_data = $this->fields;
+      $target_data = $this->convertTags($this->fields);
 
       // replace dropdown ids
       if ($target_data['tickettemplates_id'] > 0) {
          $target_data['_tickettemplate']
             = Dropdown::getDropdownName('glpi_tickettemplates',
                                         $target_data['tickettemplates_id']);
-      }
-
-      // convert questions ID into uuid for ticket description
-      $found_section = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => PluginFormcreatorSection::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getForm()->getID()
-         ],
-         'ORDER'  => 'order ASC'
-      ]);
-      $tab_section = [];
-      foreach ($found_section as $section_item) {
-         $tab_section[] = $section_item['id'];
-      }
-
-      if (!empty($tab_section)) {
-         $rows = $DB->request([
-            'SELECT' => ['id', 'uuid'],
-            'FROM'   => PluginFormcreatorQuestion::getTable(),
-            'WHERE'  => [
-               'plugin_formcreator_sections_id' => $tab_section
-            ],
-            'ORDER' => 'order ASC'
-         ]);
-         foreach ($rows as $question_line) {
-            $id    = $question_line['id'];
-            $uuid  = $question_line['uuid'];
-
-            $content = $target_data['name'];
-            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
-            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
-            $target_data['name'] = $content;
-
-            $content = $target_data['content'];
-            $content = str_replace("##question_$id##", "##question_$uuid##", $content);
-            $content = str_replace("##answer_$id##", "##answer_$uuid##", $content);
-            $target_data['content'] = $content;
-         }
       }
 
       // get target actors
@@ -1054,11 +1027,15 @@ SCRIPT;
       }
 
       // remove key and fk
-      unset($target_data['id'],
-            $target_data['tickettemplates_id']);
+      unset($target_data['tickettemplates_id']);
 
-      $target_data['title'] = $target_data['name'];
-      unset($target_data['name']);
+      // remove ID or UUID
+      $idToRemove = 'id';
+      if ($remove_uuid) {
+         $idToRemove = 'uuid';
+      }
+      unset($target_data[$idToRemove]);
+
       return $target_data;
    }
 

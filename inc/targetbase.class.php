@@ -33,21 +33,30 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginFormcreatorExportableInterface
+abstract class PluginFormcreatorTargetBase extends CommonDBTM implements
+PluginFormcreatorExportableInterface,
+PluginFormcreatorTargetInterface
 {
 
+   /** @var array $requesters requester actors of the target */
    protected $requesters;
 
+   /** @var array $observers watcher actors of the target */
    protected $observers;
 
+   /** @var array $assigned assigned actors of the target */
    protected $assigned;
 
+   /** @var array $assignedSuppliers assigned suppliers actors of the target */
    protected $assignedSuppliers;
 
+   /** @var array $requesterGroups requester groups of the target */
    protected $requesterGroups;
 
+   /** @var array $observerGroups watcher groups of the target */
    protected $observerGroups;
 
+   /** @var array $assignedGroups assigned groups of the target */
    protected $assignedGroups;
 
    protected $attachedDocuments = [];
@@ -100,9 +109,29 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
     */
    abstract protected function getTargetItemtypeName();
 
+   /**
+    * get an instance of the itemtype storing the actors if the target
+    *
+    * @return PluginFormcreatorTarget_Actor
+    */
    abstract public function getItem_Actor();
 
+   /**
+    * Get the query criterias to query the ITIL categories
+    * for the target
+    *
+    * @return array
+    */
    abstract protected function getCategoryFilter();
+
+   /**
+    * get fields containing tags for target generation
+    * the tags are replaced when target is  generated
+    * with label of questions and answers to questions
+    *
+    * @return array field names used as templates
+    */
+   abstract protected function getTaggableFields();
 
    const DUE_DATE_RULE_NONE = 1;
    const DUE_DATE_RULE_ANSWER = 2;
@@ -957,16 +986,16 @@ EOS;
                $('#tag_specific_value').hide();
 
                switch($('#dropdown_tag_type$rand').val()) {
-                  case $tagTypeQuestions :
+                  case '$tagTypeQuestions' :
                      $('#tag_question_title').show();
                      $('#tag_question_value').show();
                      break;
-                  case $tagTypeSpecifics :
+                  case '$tagTypeSpecifics' :
                      $('#tag_specific_title').show();
                      $('#tag_specific_value').show();
                      break;
-                  case $tagTypeQuestionAndSpecific :
-                  case $tagTypeQuestinOrSpecific :
+                  case '$tagTypeQuestionAndSpecific' :
+                  case '$tagTypeQuestinOrSpecific' :
                      $('#tag_question_title').show();
                      $('#tag_specific_title').show();
                      $('#tag_question_value').show();
@@ -1335,7 +1364,7 @@ SCRIPT;
       Html::closeForm();
 
       // => List of saved observers
-      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER] as $id => $values) {
+      foreach ($actors['observer'] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
@@ -1731,6 +1760,7 @@ SCRIPT;
          return false;
       }
 
+
       // Set default content
       if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
          $input['content'] = '##FULLFORM##';
@@ -1869,7 +1899,7 @@ SCRIPT;
       $result = $question->getQuestionsFromFormBySection($this->fields[$formFk]);
       $i = 0;
       foreach ($result as $sectionName => $questions) {
-         foreach ($questions as $questionId => $questionName) {
+         foreach($questions as $questionId => $questionName) {
             $i++;
             echo '<tr class="line' . ($i % 2) . '">';
             echo '<td colspan="2">' . $questionName . '</td>';
@@ -1942,5 +1972,40 @@ SCRIPT;
             ]);
          }
       }
+   }
+
+   /**
+    * Converts tags in template fields from an identifier to an other.
+    * Used for export into JSON
+    *
+    * @return array all fields of the object wih converted tempalte fields
+    */
+   protected function convertTags($input) {
+      $question = new PluginFormcreatorQuestion();
+      $questions = $question->getQuestionsFromForm($this->getForm()->getID());
+
+      $taggableFields = $this->getTaggableFields();
+
+      // Prepare array of search / replace
+      $ids = [];
+      $uuids = [];
+      foreach ($questions as $question) {
+         $id      = $question->fields['id'];
+         $uuid    = $question->fields['uuid'];
+         $ids[]   = "##question_$id##";
+         $uuids[] = "##question_$uuid##";
+         $ids[]   = "##answer_$id##";
+         $uuids[] = "##answer_$uuid##";
+      }
+
+      // Replace for each field with tags
+      foreach ($taggableFields as $field) {
+         $content = $this->fields[$field];
+         $content = str_replace($ids, $uuids, $content);
+         $content = str_replace($ids, $uuids, $content);
+         $input[$field] = $content;
+      }
+
+      return $input;
    }
 }
