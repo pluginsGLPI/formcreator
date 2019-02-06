@@ -99,6 +99,8 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
    }
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $fieldName = '', $parameter = []) {
+      global $DB;
+
       $parameter['plugin_formcreator_questions_id'] = $questions_id;
 
       // get a built instance of the parameter
@@ -119,6 +121,10 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
          return false;
       }
 
+      // escape text fields
+      foreach (['fieldname'] as $key) {
+         $parameter[$key] = $DB->escape($parameter[$key]);
+      }
       if ($found) {
          $parameter['id'] = $item->getID();
          $item->update($parameter);

@@ -112,4 +112,15 @@ extends PluginFormcreatorQuestionParameter
 
       return $parameter;
    }
+
+   public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $fieldName = '', $parameter = []) {
+      global $DB;
+
+      // escape text fields
+      foreach (['range_min', 'range_max'] as $key) {
+         $parameter[$key] = $DB->escape($parameter[$key]);
+      }
+
+      parent::import($importLinker, $question_id, $fieldname, $parameter);
+   }
 }
