@@ -166,4 +166,10 @@ class Config extends CommonTestCase {
          ->hasSize(1);
       $this->string($config['schema_version'])->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    }
+
+   public function testPluginName() {
+      $plugin = new \Plugin();
+      $plugin->getFromDBbyDir(TEST_PLUGIN_NAME);
+      $this->string($plugin->fields['name'])->isEqualTo('Form Creator');
+   }
 }
