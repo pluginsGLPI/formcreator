@@ -1132,6 +1132,8 @@ JAVASCRIPT;
    }
 
    public function prepareInputForUpdate($input) {
+      global $DB;
+
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -1147,7 +1149,7 @@ JAVASCRIPT;
          if (!$target->isNewItem()) {
             $target->update([
                'id' => $target->getID(),
-               'name' => $input['name'],
+               'name' => $DB->escape($input['name']),
             ]);
          }
       }
