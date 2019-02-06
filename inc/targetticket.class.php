@@ -1513,25 +1513,21 @@ EOS;
       // convert question uuid into id
       $targetTicket = new PluginFormcreatorTargetTicket();
       $targetTicket->getFromDB($targetitems_id);
-      $found_section = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => PluginFormcreatorSection::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $targetTicket->getForm()->getID()
-         ],
-         'ORDER'  => 'order ASC'
-      ]);
+
+      $section = new PluginFormcreatorSection();
+      $foundSections = $section->getSectionsFromForm($targetTicket->getForm()->getID());
       $tab_section = [];
-      foreach ($found_section as $section_item) {
-         $tab_section[] = $section_item['id'];
+      foreach ($foundSections as $section) {
+         $tab_section[] = $section->getID();
       }
 
       if (!empty($tab_section)) {
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $rows = $DB->request([
             'SELECT' => ['id', 'uuid'],
             'FROM'   => PluginFormcreatorQuestion::getTable(),
             'WHERE'  => [
-               'plugin_formcreator_sections_id' => $tab_section
+               $sectionFk => $tab_section
             ],
             'ORDER'  => 'order ASC'
          ]);
