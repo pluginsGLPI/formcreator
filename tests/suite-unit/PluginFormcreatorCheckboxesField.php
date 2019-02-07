@@ -216,6 +216,81 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $this->boolean($isValid)->isEqualTo($expectedValidity);
    }
 
+   public function providerSerializeValue() {
+      return [
+         [
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => ['foo'],
+            'expected'  => 'foo',
+         ],
+         [
+            'value'     => ["test d'apostrophe"],
+            'expected'  => "test d\'apostrophe",
+         ],
+         [
+            'value'     => ['foo', 'bar'],
+            'expected'  => "foo\r\nbar",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorCheckboxesField(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      $user = new \User();
+      $user->getFromDBbyName('glpi');
+      $glpiId = $user->getID();
+      $user->getFromDBbyName('normal');
+      $normalId = $user->getID();
+      return [
+         [
+            'value'     => null,
+            'expected'  => [],
+         ],
+         [
+            'value'     => '',
+            'expected'  => [],
+         ],
+         [
+            'value'     => "foo",
+            'expected'  => ['foo'],
+         ],
+         [
+            'value'     => "test d'apostrophe",
+            'expected'  => ["test d'apostrophe"],
+         ],
+         [
+            'value'     => "foo\r\nbar",
+            'expected'  => ['foo', 'bar'],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorCheckboxesField(['values' => "foo\r\nbar\r\ntest d'apostrophe"]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo(implode(', ', $expected));
+   }
+
    public function testPrepareQuestionInputForSave() {
       $fields = [
          'fieldtype'       => 'checkboxes',
