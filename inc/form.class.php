@@ -685,27 +685,29 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       $order         = "$table_form.name ASC";
 
-      $where_form    = "$table_form.`is_active` = 1 AND $table_form.`is_deleted` = 0 ";
-      $where_form    .= getEntitiesRestrictRequest("AND", $table_form, "", "", true, false);
-      $where_form    .= " AND $table_form.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
-
+      $dbUtils = new DBUtils();
+      $where_form = [
+         'AND' => [
+            "$table_form.is_active" => '1',
+            "$table_form.is_deleted" => '0',
+            "$table_form.language" => [$_SESSION['glpilanguage'], '0', null],
+         ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false),
+      ];
       if ($helpdeskHome) {
-         $where_form    .= "AND $table_form.`helpdesk_home` = '1'";
+         $where_form['AND']["$table_form.helpdesk_home"] = '1';
       }
 
+      $selectedCategories = [];
       if ($rootCategory != 0) {
          $selectedCategories = getSonsOf($table_cat, $rootCategory);
-         $selectedCategories = implode(', ', array_keys($selectedCategories));
-         $where_form .= " AND $table_form.`plugin_formcreator_categories_id` IN ($selectedCategories)";
-      } else {
-         $selectedCategories = '';
+         $where_form['AND']["$table_form.plugin_formcreator_categories_id"] = [$selectedCategories];
       }
 
       // Find forms accessible by the current user
       if (!empty($keywords)) {
          // Determine the optimal search mode
          $searchMode = "BOOLEAN MODE";
-         $formCount = (new DBUtils())->countElementsInTable($table_form);
+         $formCount = $dbUtils->countElementsInTable($table_form);
          if ($formCount > 20) {
             $searchMode = "NATURAL LANGUAGE MODE";
          } else {
@@ -716,70 +718,129 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                AGAINST('$keywords' IN $searchMode)";
          $lowWeightedMatch = " MATCH($table_question.`name`, $table_question.`description`)
                AGAINST('$keywords' IN $searchMode)";
-         $where_form .= " AND ($highWeightedMatch OR $lowWeightedMatch)";
+         $where_form['AND'][] = [
+            'OR' => [
+               new QueryExpression("$highWeightedMatch"),
+               new QueryExpression("$lowWeightedMatch"),
+            ]
+         ];
       }
-      $query_forms = "SELECT
-         $table_form.id,
-         $table_form.name,
-         $table_form.description,
-         $table_form.usage_count,
-         $table_form.is_default
-      FROM $table_form
-      LEFT JOIN $table_cat ON ($table_cat.id = $table_form.`plugin_formcreator_categories_id`)
-      LEFT JOIN $table_target ON ($table_target.`plugin_formcreator_forms_id` = $table_form.`id`)
-      LEFT JOIN $table_section ON ($table_section.`plugin_formcreator_forms_id` = $table_form.`id`)
-      LEFT JOIN $table_question ON ($table_question.`plugin_formcreator_sections_id` = $table_section.`id`)
-      WHERE $where_form
-      AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $table_form.`id` IN (
-         SELECT plugin_formcreator_forms_id
-         FROM $table_fp
-         WHERE `profiles_id` = ".$_SESSION['glpiactiveprofile']['id']."))
-      GROUP BY `$table_target`.`plugin_formcreator_forms_id`,
-               $table_form.id,
-               $table_form.name,
-               $table_form.description,
-               $table_form.usage_count,
-               $table_form.is_default
-      ORDER BY $order";
-      $result_forms = $DB->query($query_forms);
+      $where_form['AND'][] = [
+         'OR' => [
+            'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
+            "$table_form.id" => new QuerySubQuery([
+               'SELECT' => 'plugin_formcreator_forms_id',
+               'FROM' => $table_fp,
+               'WHERE' => [
+                  'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+               ]
+            ])
+         ]
+      ];
+
+      $result_forms = $DB->request([
+         'SELECT' => [
+            $table_form => ['id', 'name', 'description', 'usage_count', 'is_default'],
+         ],
+         'FROM' => $table_form,
+         'LEFT JOIN' => [
+            $table_cat => [
+               'FKEY' => [
+                  $table_cat => 'id',
+                  $table_form => PluginFormcreatorCategory::getForeignKeyField(),
+               ]
+            ],
+            $table_target => [
+               'FKEY' => [
+                  $table_target => PluginFormcreatorForm::getForeignKeyField(),
+                  $table_form => 'id',
+               ]
+            ],
+            $table_section => [
+               'FKEY' => [
+                  $table_section => PluginFormcreatorForm::getForeignKeyField(),
+                  $table_form => 'id',
+               ]
+            ],
+            $table_question => [
+               'FKEY' => [
+                  $table_question => PluginFormcreatorSection::getForeignKeyField(),
+                  $table_section => 'id'
+               ]
+            ]
+         ],
+         'WHERE' => $where_form,
+         'GROUPBY' => [
+            "$table_target.plugin_formcreator_forms_id",
+            "$table_form.id",
+            "$table_form.name",
+            "$table_form.description",
+            "$table_form.usage_count",
+            "$table_form.is_default"
+         ],
+         'ORDER' => [
+            $order
+         ],
+      ]);
 
       $formList = [];
-      if ($DB->numrows($result_forms) > 0) {
-         while ($form = $DB->fetch_array($result_forms)) {
+      if ($result_forms->count() > 0) {
+         // while ($form = $DB->fetch_array($result_forms)) {
+         foreach ($result_forms as $form) {
             $formList[] = [
-                  'id'           => $form['id'],
-                  'name'         => $form['name'],
-                  'description'  => $form['description'],
-                  'type'         => 'form',
-                  'usage_count'  => $form['usage_count'],
-                  'is_default'   => $form['is_default'] ? "true" : "false"
+               'id'           => $form['id'],
+               'name'         => $form['name'],
+               'description'  => $form['description'],
+               'type'         => 'form',
+               'usage_count'  => $form['usage_count'],
+               'is_default'   => $form['is_default'] ? "true" : "false"
             ];
          }
       }
 
       // Find FAQ entries
-      $query_faqs = KnowbaseItem::getListRequest([
+      $query_faqs = new QueryExpression('(' . KnowbaseItem::getListRequest([
             'faq'      => '1',
             'contains' => $keywords
-      ]);
-      if ($selectedCategories != '') {
-         $query_faqs = "SELECT `faqs`.* FROM ($query_faqs)  AS `faqs`
-         WHERE `faqs`.`knowbaseitemcategories_id` IN (SELECT `knowbaseitemcategories_id` FROM `$table_cat` WHERE `id` IN ($selectedCategories) AND `knowbaseitemcategories_id` <> '0')";
+      ]) . ') AS `faqs`');
+      $query_faqs = [
+         'FROM' => $query_faqs,
+      ];
+      if (count($selectedCategories) > 0) {
+         $query_faqs['WHERE'] = [
+            'knowbaseitemcategories_id' => new QuerySubQuery([
+               'SELECT' => 'knowbaseitemcategories_id',
+               'FROM' => $table_cat,
+               'WHERE' => [
+                  'id' => $selectedCategories,
+                  'knowbaseitemcategories_id' => ['<>, 0'],
+               ],
+            ]),
+         ];
       } else {
-         $query_faqs = "SELECT `faqs`.* FROM ($query_faqs)  AS `faqs`
-         INNER JOIN `$table_cat` ON (`faqs`.`knowbaseitemcategories_id` = `$table_cat`.`knowbaseitemcategories_id`)
-         WHERE `faqs`.`knowbaseitemcategories_id` <> '0'";
+         $query_faqs['INNER JOIN'] = [
+            $table_cat => [
+               'FKEY' => [
+                  'faqs' => 'knowbaseitemcategories_id',
+                  $table_cat => 'knowbaseitemcategories_id'
+               ]
+            ]
+         ];
+         $query_faqs['WHERE'] = [
+            'faqs.knowbaseitemcategories_id' => ['<>', 0],
+         ];
       }
-      $result_faqs = $DB->query($query_faqs);
-      if ($DB->numrows($result_faqs) > 0) {
-         while ($faq = $DB->fetch_array($result_faqs)) {
+      $result_faqs = $DB->request($query_faqs);
+      Toolbox::logSqlDebug($result_faqs->getSQL());
+      if ($result_faqs->count() > 0) {
+         foreach($result_faqs as $faq) {
             $formList[] = [
-                  'id'           => $faq['id'],
-                  'name'         => $faq['name'],
-                  'description'  => '',
-                  'type'         => 'faq',
-                  'usage_count'  => $faq['view'],
-                  'is_default'   => false
+               'id'           => $faq['id'],
+               'name'         => $faq['name'],
+               'description'  => '',
+               'type'         => 'faq',
+               'usage_count'  => $faq['view'],
+               'is_default'   => false
             ];
          }
       }
@@ -788,30 +849,55 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $defaultForms = true;
          // No form nor FAQ have been selected
          // Fallback to default forms
-         $where_form       = "$table_form.`is_active` = 1 AND $table_form.`is_deleted` = 0 ";
-         $where_form       .= getEntitiesRestrictRequest("AND", $table_form, "", "", true, false);
-         $where_form       .= " AND $table_form.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')";
-         $where_form       .= " AND `is_default` <> '0'";
-         $query_forms = "SELECT $table_form.id, $table_form.name, $table_form.description, $table_form.usage_count
-         FROM $table_form
-         LEFT JOIN $table_cat ON ($table_cat.id = $table_form.`plugin_formcreator_categories_id`)
-         WHERE $where_form
-         AND (`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $table_form.`id` IN (
-         SELECT plugin_formcreator_forms_id
-         FROM $table_fp
-         WHERE profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
-         ORDER BY $order";
-         $result_forms = $DB->query($query_forms);
+         $where_form = [
+            'AND' => [
+               "$table_form.is_active" => '1',
+               "$table_form.is_deleted" => '0',
+               "$table_form.language" => [$_SESSION['glpilanguage'], '0', null],
+            ] + $dbUtils->getEntitiesRestrictCriteria($table_form, '', '', true, false),
+         ];
+         $where_form['AND'][] = [
+            'OR' => [
+               'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
+               "$table_form.id" => new QuerySubQuery([
+                  'SELECT' => 'plugin_formcreator_forms_id',
+                  'FROM' => $table_fp,
+                  'WHERE' => [
+                     'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                  ]
+               ])
+            ]
+         ];
 
-         if ($DB->numrows($result_forms) > 0) {
-            while ($form = $DB->fetch_array($result_forms)) {
+         $query_forms = [
+            'SELECT' => [
+               $table_form => ['id', 'name', 'description', 'usage_count'],
+            ],
+            'FROM' => $table_form,
+            'LEFT JOIN' => [
+               $table_cat => [
+                  'FKEY' => [
+                     $table_cat => 'id',
+                     $table_form => PluginFormcreatorCategory::getForeignKeyField(),
+                  ]
+               ],
+            ],
+            'WHERE' => $where_form,
+            'ORDER' => [
+               $order
+            ],
+         ];
+         $result_forms = $DB->request($query_forms);
+
+         if ($result_forms->count() > 0) {
+            foreach ($result_forms as $form) {
                $formList[] = [
-                     'id'           => $form['id'],
-                     'name'         => $form['name'],
-                     'description'  => $form['description'],
-                     'type'         => 'form',
-                     'usage_count'  => $form['usage_count'],
-                     'is_default'   => true
+                  'id'           => $form['id'],
+                  'name'         => $form['name'],
+                  'description'  => $form['description'],
+                  'type'         => 'form',
+                  'usage_count'  => $form['usage_count'],
+                  'is_default'   => true
                ];
             }
          }
