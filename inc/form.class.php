@@ -705,15 +705,11 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       if (!empty($keywords)) {
          // Determine the optimal search mode
          $searchMode = "BOOLEAN MODE";
-         $query = "SHOW TABLE STATUS WHERE `Name` = '$table_form'";
-         $result = $DB->query($query);
-         if ($result) {
-            $row = $DB->fetch_assoc($result);
-            if ($row['Rows'] > 20) {
-               $searchMode = "NATURAL LANGUAGE MODE";
-            } else {
-               $keywords = PluginFormcreatorCommon::prepareBooleanKeywords($keywords);
-            }
+         $formCount = (new DBUtils())->countElementsInTable($table_form);
+         if ($formCount > 20) {
+            $searchMode = "NATURAL LANGUAGE MODE";
+         } else {
+            $keywords = PluginFormcreatorCommon::prepareBooleanKeywords($keywords);
          }
          $keywords = $DB->escape($keywords);
          $highWeightedMatch = " MATCH($table_form.`name`, $table_form.`description`)
