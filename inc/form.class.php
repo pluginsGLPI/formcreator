@@ -928,12 +928,40 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                       AND f.is_deleted = 0
                       ORDER BY fa.`status` ASC, fa.`request_date` DESC
                       LIMIT 0, 5";
-      $result = $DB->query($query);
-      if ($DB->numrows($result) == 0) {
+
+      $formAnswerTable = PluginFormAnswer::getTable();
+      $formTable = self::getTable();
+      $formFk = self::getForeignKeyField();
+      $request = [
+         'SELECT' => [
+            $formTable => ['name'],
+            $formAnswerTable => ['id', 'status', 'request_date'],
+         ],
+         'FROM' => $formTable,
+         'INNER JOIN' => [
+            $formAnswerTable => [
+               'FKEY' => [
+                  $formTable => 'id',
+                  $formAnswerTable => self::getForeignKeyField(),
+               ]
+            ]
+         ],
+         'WHERE' => [
+            "$formAnswerTable.requester_id" => $userId,
+            "$formTable.is_deleted" => 0,
+         ],
+         'ORDER' => [
+            "$formAnswerTable.status ASC",
+            "$formAnswerTable.request_date DESC",
+         ],
+         'LIMIT' => 5,
+      ];
+      $result = $DB->request($request);
+      if ($result->count() == 0) {
          echo '<div class="line1" align="center">'.__('No form posted yet', 'formcreator').'</div>';
          echo "<ul>";
       } else {
-         while ($form = $DB->fetch_assoc($result)) {
+         foreach ($result as $form) {
                echo '<li class="plugin_formcreator_answer">';
                echo ' <a class="plugin_formcreator_'.$form['status'].'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
@@ -958,24 +986,54 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          foreach ($groupList as $group) {
             $groupIdList[] = $group['id'];
          }
-         $groupIdListString = $groupIdList + ['NULL', '0', ''];
-         $groupIdListString = "'" . implode("', '", $groupIdList) . "'";
-         $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
-                FROM glpi_plugin_formcreator_forms f
-                INNER JOIN glpi_plugin_formcreator_forms_validators fv ON fv.`plugin_formcreator_forms_id`=f.`id`
-                INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                WHERE (f.`validation_required` = 1 AND fv.`items_id` = '$userId' AND fv.`itemtype` = 'User' AND `fa`.`users_id_validator` = '$userId'
-                   OR f.`validation_required` = 2 AND fv.`items_id` IN ($groupIdListString) AND fv.`itemtype` = 'Group' AND `fa`.`groups_id_validator` IN ($groupIdListString)
-                )
-                AND f.is_deleted = 0
-                ORDER BY fa.`status` ASC, fa.`request_date` DESC
-                LIMIT 0, 5";
-         $result = $DB->query($query);
-         if ($DB->numrows($result) == 0) {
+         $validatorTable = PluginFormcreatorForm_Validator::getTable();
+         $result = $DB->request([
+            'SELECT' => [
+               $formTable => ['name'],
+               $formAnswerTable => ['id', 'status', 'request_date'],
+            ],
+            'FROM' => $formTable,
+            'INNER JOIN' => [
+               $formAnswerTable => [
+                  'FKEY' => [
+                     $formTable => 'id',
+                     $formAnswerTable => self::getForeignKeyField(),
+                  ]
+               ],
+               $validatorTable => [
+                  'FKEY' => [
+                     $validatorTable => $formFk,
+                     $formTable => 'id'
+                  ]
+               ]
+            ],
+            'WHERE' => [
+               'OR' => [
+                  [
+                     'AND' => [
+                        "$formTable.validation_required" => 1,
+                        "$validatorTable.itemtype" => User::class,
+                        "$validatorTable.items_id" => $userId,
+                        "$formAnswerTable.users_id_validator" => $userId
+                     ]
+                  ],
+                  [
+                     'AND' => [
+                        "$formTable.validation_required" => 2,
+                        "$validatorTable.itemtype" => Group::class,
+                        "$validatorTable.items_id" => $groupIdList + ['NULL', '0', ''],
+                        "$formAnswerTable.groups_id_validator" => $groupIdList + ['NULL', '0', ''],
+                     ]
+                  ]
+               ]
+            ],
+            'LIMIT' => 5,
+         ]);
+         if ($result->count() == 0) {
             echo '<div class="line1" align="center">'.__('No form waiting for validation', 'formcreator').'</div>';
          } else {
             echo "<ul>";
-            while ($form = $DB->fetch_assoc($result)) {
+            foreach ($result as $form) {
                echo '<li class="plugin_formcreator_answer">';
                echo ' <a class="plugin_formcreator_'.$form['status'].'" href="formanswer.form.php?id='.$form['id'].'">'.$form['name'].'</a>';
                echo '<span class="plugin_formcreator_date">'.Html::convDateTime($form['request_date']).'</span>';
