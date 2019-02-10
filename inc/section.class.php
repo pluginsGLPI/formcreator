@@ -138,15 +138,19 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
    public function post_purgeItem() {
       global $DB;
 
-      $table = self::getTable();
-      $query = "UPDATE `$table` SET
-                  `order` = `order` - 1
-                WHERE `order` > {$this->fields['order']}
-                AND plugin_formcreator_forms_id = {$this->fields['plugin_formcreator_forms_id']}";
-      $DB->query($query);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $DB->update(
+         self::getTable(),
+         new QueryExpression("`order` = `order` - 1"),
+         [
+            'order' => ['>', $this->fields['order']],
+            $formFk => $this->fields[$formFk]
+         ]
+      );
 
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $question = new PluginFormcreatorQuestion();
-      $question->deleteByCriteria(['plugin_formcreator_sections_id' => $this->getID()], 1);
+      $question->deleteByCriteria([$sectionFk => $this->getID()], 1);
    }
 
    /**
