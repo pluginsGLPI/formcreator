@@ -427,22 +427,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Select all users with ticket validation right and the groups
-      // $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
-      //           FROM `glpi_users` u
-      //           INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-      //           INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-      //           INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
-      //           LEFT JOIN `glpi_groups_users` gu ON u.`id` = gu.`users_id`
-      //           LEFT JOIN `glpi_groups` g ON g.`id` = gu.`groups_id`
-      //           WHERE pr.`name` = 'ticketvalidation'
-      //           AND (
-      //             pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
-      //             OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
-      //           AND $subentities
-      //           AND u.`is_active` = '1'
-      //           GROUP BY u.`id`
-      //           ORDER BY u.`name`";
-      // $result = $DB->query($query);
       $userTable = User::getTable();
       $userFk = User::getForeignKeyField();
       $groupTable = Group::getTable();
@@ -1863,7 +1847,16 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                    `entities_id` = " . $entity . "
                 WHERE `id` = " . $this->fields['id'];
       $DB->query($query);
-      return true;
+      $result = $DB->update(
+         self::getTable(),
+         [
+            Entity::getForeignKeyField() => $entity
+         ],
+         [
+            'id' => $this->getID()
+         ]
+      );
+      return $result;
    }
 
    /**
@@ -1939,28 +1932,45 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public static function countAvailableForm() {
       global $DB;
 
-      $form_table = getTableForItemType('PluginFormcreatorForm');
-      $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
-      $nb         = 0;
+      $formTable        = PluginFormcreatorForm::getTable();
+      $formFk           = PluginFormcreatorForm::getForeignKeyField();
+      $formProfileTable = PluginFormcreatorForm_Profile::getTable();
+      $nb               = 0;
 
-      if ($DB->tableExists($form_table)
+      if ($DB->tableExists($formTable)
           && $DB->tableExists($table_fp)
           && isset($_SESSION['glpiactiveprofile']['id'])) {
-         $where      = getEntitiesRestrictRequest( "", $form_table, "", "", true, false);
-         $query      = "SELECT COUNT($form_table.id)
-                        FROM $form_table
-                        WHERE $form_table.`is_active` = 1
-                        AND $form_table.`is_deleted` = 0
-                        AND ($form_table.`language` = '{$_SESSION['glpilanguage']}'
-                             OR $form_table.`language` IN ('0', '', NULL))
-                        AND $where
-                        AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                           SELECT plugin_formcreator_forms_id
-                           FROM $table_fp
-                           WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id']."))";
-         if ($result = $DB->query($query)) {
-            list($nb) = $DB->fetch_array($result);
-         }
+         $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCrit(
+            $formTable, '', '', true, false
+         );
+         $result = $DB->request([
+            'SELECT' => ['COUNT' => ["$formTable.id"]],
+            'FROM' => $formTable,
+            'WHERE' => [
+               "$formTable.is_active" => '1',
+               "$formTable.is_deleted" => '0',
+               $entitiesRestrict,
+               [
+                  'OR' => [
+                     "$formTable.language" => ['0', '', null],
+                     "$formTable.language" => $_SESSION['glpilanguage']
+                  ]
+               ],
+               [
+                  'OR' => [
+                     "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                     "$formTable.'id'" => new QuerySubQuery([
+                        'SELECT' => $formFk,
+                        'FROM' => $formProfileTable,
+                        'WHERE' => [
+                           'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                        ]
+                     ]),
+                  ],
+               ],
+            ],
+         ]);
+         list($nb) = $result->next();
       }
 
       return $nb;
@@ -2443,57 +2453,92 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       global $DB, $CFG_GLPI;
 
       // Define tables
-      $cat_table  = getTableForItemType('PluginFormcreatorCategory');
-      $form_table = getTableForItemType('PluginFormcreatorForm');
-      $table_fp   = getTableForItemType('PluginFormcreatorForm_Profile');
-      $where      = getEntitiesRestrictRequest("", $form_table, "", "", true, false);
+      $cat_table        = PluginFormcreatorCategory::getTable();
+      $categoryFk       = PluginFormcreatorCategory::getForeignKeyField();
+      $form_table       = PluginFormcreatorForm::getTable();
+      $formFk           = PluginFormcreatorForm::getForeignKeyField();
+      $table_fp         = PluginFormcreatorForm_Profile::getTable();
+      $formProfileFk    = PluginFormcreatorFormProfile::getForeignKeyField();
+      $entitiesestrict  = (new DBUtils())->getEntitiesRestrictCrit($form_table, '', '', true, false);
       $language   = $_SESSION['glpilanguage'];
 
-      // Show form whithout table
-      $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
-                      FROM $form_table
-                      WHERE $form_table.`plugin_formcreator_categories_id` = 0
-                      AND $form_table.`is_active` = 1
-                      AND $form_table.`is_deleted` = 0
-                      AND $form_table.`helpdesk_home` = 1
-                      AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
-                      AND $where
-                      AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                         SELECT plugin_formcreator_forms_id
-                         FROM $table_fp
-                         WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
-                      ORDER BY $form_table.name ASC";
-      $result_forms = $DB->query($query_forms);
+      // Show form whithout category
+      $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
+      $result_forms = $DB->request([
+         'SELECT' => [
+            $form_table => ['id', 'name', 'description']
+         ],
+         'FROM' => $form_table,
+         'WHERE' => [
+            "$form_table.$formCategoryFk" => 0,
+            "$form_table.is_active" => 1,
+            "$form_table.is_deleted" => 0,
+            "$form_table.hesldesk_home" => 1,
+            "$form_table.language" => [0, '', null, $language],
+            [
+               'OR' => [
+                  'acess_rights' => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                  "$form_table.id" => new QuerySubQuery([
+                     'SELECT' => $formProfileFk,
+                     'FROM' => $table_fp,
+                     'WHERE' => [
+                        'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                     ],
+                  ]),
+               ]
+            ]
+         ] + $entitiesRestrict,
+         'ORDER' => "$form_table.name ASC",
+      ]);
 
       // Show categories which have at least one form user can access
-      $query  = "SELECT $cat_table.`name`, $cat_table.`id`
-                 FROM $cat_table
-                 WHERE 0 < (
-                 SELECT COUNT($form_table.id)
-                 FROM $form_table
-                 WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
-                 AND $form_table.`is_active` = 1
-                 AND $form_table.`is_deleted` = 0
-                 AND $form_table.`helpdesk_home` = 1
-                 AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
-                 AND $where
-                 AND ($form_table.`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-                    SELECT plugin_formcreator_forms_id
-                    FROM $table_fp
-                    WHERE profiles_id = " . $_SESSION['glpiactiveprofile']['id'] . "))
-                 )
-                 ORDER BY $cat_table.`name` ASC";
-      $result = $DB->query($query);
-      if ($DB->numrows($result) > 0 || $DB->numrows($result_forms) > 0) {
+      $result = $DB->request([
+         'SELECT' => [
+            $cat_table => [
+               'name', 'id'
+            ]
+         ],
+         'FROM' => $cat_table,
+         'INNER JOIN' => [
+            $form_table => [
+               'FKEY' => [
+                  $cat_table => 'id',
+                  $form_table => $categoryFk
+               ]
+            ]
+         ],
+         'WHERE' => [
+            "$form_table.is_active" => 1,
+            "$form_table.is_deleted" => 0,
+            "$form_table.helpdesk_home" => 1,
+            "$form_table.language" => [$language, 0, null, ''],
+            [
+               'OR' => [
+                  "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                  "$form_table.'id'" => new QuerySubQuery([
+                     'SELECT' => $formFk,
+                     'FROM' => $table_fp,
+                     'WHERE' => [
+                        'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                     ]
+                  ]),
+               ],
+            ],
+         ] + $entitiesRestrict,
+         'GROUPBY' => [
+            "$cat_table.id"
+         ]
+      ]);
+      if ($result->count() > 0 || $result_forms->count() > 0) {
          echo '<table class="tab_cadrehov homepage_forms_container" id="homepage_forms_container">';
          echo '<tr class="noHover">';
          echo '<th><a href="../plugins/formcreator/front/formlist.php">' . _n('Form', 'Forms', 2, 'formcreator') . '</a></th>';
          echo '</tr>';
 
-         if ($DB->numrows($result_forms) > 0) {
+         if ($result_forms->count() > 0) {
             echo '<tr class="noHover"><th>' . __('Forms without category', 'formcreator') . '</th></tr>';
             $i = 0;
-            while ($form = $DB->fetch_array($result_forms)) {
+            foreach ($result_forms as $form) {
                $i++;
                echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
                echo '<td>';
@@ -2512,28 +2557,42 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             }
          }
 
-         if ($DB->numrows($result) > 0) {
+         if ($result->count() > 0) {
             // For each categories, show the list of forms the user can fill
             $i = 0;
-            while ($category = $DB->fetch_array($result)) {
+            foreach ($result as $category) {
                $categoryId = $category['id'];
                echo '<tr class="noHover"><th>' . $category['name'] . '</th></tr>';
-               $query_forms = "SELECT $form_table.id, $form_table.name, $form_table.description
-               FROM $form_table
-               WHERE $form_table.`plugin_formcreator_categories_id` = '$categoryId'
-               AND $form_table.`is_active` = 1
-               AND $form_table.`is_deleted` = 0
-               AND $form_table.`helpdesk_home` = 1
-               AND ($form_table.`language` = '$language' OR $form_table.`language` IN (0, '', NULL))
-               AND $where
-               AND (`access_rights` != " . PluginFormcreatorForm::ACCESS_RESTRICTED . " OR $form_table.`id` IN (
-               SELECT plugin_formcreator_forms_id
-               FROM $table_fp
-               WHERE profiles_id = " . (int) $_SESSION['glpiactiveprofile']['id'] . "))
-               ORDER BY $form_table.name ASC";
-               $result_forms = $DB->query($query_forms);
+               $result_forms = $DB->request([
+                  'SELECT' => [
+                     $form_table => ['id', 'name', 'description'],
+                  ],
+                  'FROM' => $form_table,
+                  'WHERE' => [
+                     $categoryFk => [$categoryId],
+                     "$form_table.is_active" => 1,
+                     "$form_table.is_deleted" => 0,
+                     "$form_table.helpdesk_home" => 1,
+                     "$form_table.language" => [$language, 0, null, ''],
+                     [
+                        'OR' => [
+                           "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                           "$form_table.'id'" => new QuerySubQuery([
+                              'SELECT' => $formFk,
+                              'FROM' => $table_fp,
+                              'WHERE' => [
+                                 'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                              ]
+                           ]),
+                        ],
+                     ],
+                  ] + $entitiesRestrict,
+                  'ORDER' => [
+                     "$form_table.name ASC",
+                  ]
+               ]);
                $i = 0;
-               while ($form = $DB->fetch_array($result_forms)) {
+               foreach ($result_forms as $form) {
                   $i++;
                   echo '<tr class="line' . ($i % 2) . ' tab_bg_' . ($i % 2 +1) . '">';
                   echo '<td>';
