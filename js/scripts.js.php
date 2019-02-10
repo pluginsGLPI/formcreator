@@ -191,14 +191,8 @@ $(function() {
 });
 
 function fcInitMultiSelect() {
-   $("#validator_users").pqSelect({
-       multiplePlaceholder: '----',
-       checkbox: true //adds checkbox to options
-   });
-   $("#validator_groups").pqSelect({
-       multiplePlaceholder: '----',
-       checkbox: true //adds checkbox to options
-   });
+   $("#validator_users").select2();
+   $("#validator_groups").select2();
 }
 
 function showHomepageFormList() {
