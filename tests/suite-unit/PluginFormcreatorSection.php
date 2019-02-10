@@ -132,4 +132,62 @@ class PluginFormcreatorSection extends CommonTestCase {
       }
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
    }
+
+   public function testMoveUp() {
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form = $this->getForm();
+      $section = $this->getSection(
+         [
+            $formFk => $form->getID(),
+         ]
+      );
+      $sectionToMove = $this->getSection(
+         [
+            $formFk => $form->getID(),
+         ]
+      );
+
+      // Move up the section
+      $expectedOrder = $sectionToMove->fields['order'] - 1;
+      $sectionToMove->moveUp();
+
+      // Check the order of the section
+      $this->integer((int) $sectionToMove->fields['order'])
+         ->isEqualTo($expectedOrder);
+
+      // check the order of the other section
+      $expectedOrder = $section->fields['order'] + 1;
+      $section->getFromDB($section->getID());
+      $this->integer((int) $section->fields['order'])
+         ->isEqualTo($expectedOrder);
+   }
+
+   public function testMoveDown() {
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $form = $this->getForm();
+      $sectionToMove = $this->getSection(
+         [
+            $formFk => $form->getID(),
+         ]
+      );
+      $section = $this->getSection(
+         [
+            $formFk => $form->getID(),
+         ]
+      );
+
+      // Move down the section
+      $expectedOrder = $sectionToMove->fields['order'] + 1;
+      $sectionToMove->moveDown();
+
+      // Check the order of the section
+      $this->integer((int) $sectionToMove->fields['order'])
+         ->isEqualTo($expectedOrder);
+
+      // check the order of the other section
+      $expectedOrder = $section->fields['order'] - 1;
+      $section->getFromDB($section->getID());
+      $this->integer((int) $section->fields['order'])
+         ->isEqualTo($expectedOrder);
+   }
 }

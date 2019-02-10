@@ -269,4 +269,62 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->array($output)->hasKey('uuid');
       $this->array($output)->size->isEqualTo(count($expected));
    }
+
+   public function testMoveUp() {
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $section = $this->getSection();
+      $question = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+      $questionToMove = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+
+      // Move up the question
+      $expectedOrder = $questionToMove->fields['order'] - 1;
+      $questionToMove->moveUp();
+
+      // Check the order of the question
+      $this->integer((int) $questionToMove->fields['order'])
+         ->isEqualTo($expectedOrder);
+
+      // check the order of the other question
+      $expectedOrder = $question->fields['order'] + 1;
+      $question->getFromDB($question->getID());
+      $this->integer((int) $question->fields['order'])
+         ->isEqualTo($expectedOrder);
+   }
+
+   public function testMoveDown() {
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $section = $this->getSection();
+      $questionToMove = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+      $question = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+
+      // Move down the question
+      $expectedOrder = $questionToMove->fields['order'] + 1;
+      $questionToMove->moveDown();
+
+      // Check the order of the question
+      $this->integer((int) $questionToMove->fields['order'])
+         ->isEqualTo($expectedOrder);
+
+      // check the order of the other question
+      $expectedOrder = $question->fields['order'] - 1;
+      $question->getFromDB($question->getID());
+      $this->integer((int) $question->fields['order'])
+         ->isEqualTo($expectedOrder);
+   }
 }
