@@ -197,8 +197,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      global $CFG_GLPI;
-
       $value = [];
       $values = $this->getAvailableValues();
 
