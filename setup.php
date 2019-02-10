@@ -81,7 +81,15 @@ function plugin_version_formcreator() {
  * @return boolean
  */
 function plugin_formcreator_check_prerequisites() {
-   return true;
+   $prerequisitesSuccess = true;
+
+   if (version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MIN_VERSION, 'lt')
+       || PLUGIN_FORMCREATOR_IS_OFFICIAL_RELEASE && version_compare(GLPI_VERSION, PLUGIN_FORMCREATOR_GLPI_MAX_VERSION, 'ge')) {
+      echo "This plugin requires GLPI >= " . PLUGIN_FORMCREATOR_GLPI_MIN_VERSION . " and GLPI < " . PLUGIN_FORMCREATOR_GLPI_MAX_VERSION . "<br>";
+      $prerequisitesSuccess = false;
+   }
+
+   return $prerequisitesSuccess;
 }
 
 /**
@@ -199,9 +207,6 @@ function plugin_init_formcreator() {
              || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
              || isset($_SESSION['glpiactiveprofile']) &&
                 $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-            $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
 
             // Add specific JavaScript
             $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
