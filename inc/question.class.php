@@ -438,19 +438,20 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $input['uuid'] = plugin_formcreator_getUuid();
       }
 
-      if (isset($input['plugin_formcreator_sections_id'])) {
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      if (isset($input[$sectionFk])) {
          // If change section, reorder questions
-         if ($input['plugin_formcreator_sections_id'] != $this->fields['plugin_formcreator_sections_id']) {
-            $oldId = $this->fields['plugin_formcreator_sections_id'];
-            $newId = $input['plugin_formcreator_sections_id'];
+         if ($input[$sectionFk] != $this->fields[$sectionFk]) {
+            $oldId = $this->fields[$sectionFk];
+            $newId = $input[$sectionFk];
             $order = $this->fields['order'];
             // Reorder other questions from the old section
-            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
             $DB->update(
                self::getTable(),
                new QueryExpression("`order` = `order` - 1"),
                [
-                  $sectionFk => $oldId
+                  'order' => ['>', $order],
+                  $sectionFk => $oldId,
                ]
             );
 
@@ -484,7 +485,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    }
 
    /**
-    * Moves the question up in the ordered list of questions in the section
+    * Move the question up in the ordered list of questions in the section
     */
    public function moveUp() {
       $order      = $this->fields['order'];
