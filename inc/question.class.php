@@ -445,16 +445,18 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             $newId = $input['plugin_formcreator_sections_id'];
             $order = $this->fields['order'];
             // Reorder other questions from the old section
-            $table = self::getTable();
-            $query = "UPDATE `$table` SET
-                `order` = `order` - 1
-                WHERE `order` > '$order'
-                AND plugin_formcreator_sections_id = '$oldId'";
-            $DB->query($query);
+            $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+            $DB->update(
+               self::getTable(),
+               new QueryExpression("`order` = `order` - 1"),
+               [
+                  $sectionFk => $oldId
+               ]
+            );
 
             // Get the order for the new section
             $maxOrder = PluginFormcreatorCommon::getMax($this, [
-               "plugin_formcreator_sections_id" => $newId
+               $sectionFk => $newId
             ], 'order');
             if ($maxOrder === null) {
                $input['order'] = 1;
@@ -677,25 +679,41 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       // Update order of questions
       $order = $this->fields['order'];
-      $query = "UPDATE `$table` SET
-                `order` = `order` - 1
-                WHERE `order` > '$order'
-                AND plugin_formcreator_sections_id = {$this->fields['plugin_formcreator_sections_id']}";
-      $DB->query($query);
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $DB->update(
+         $table,
+         new QueryExpression("`order` = `order` - 1"),
+        [
+           'order' => ['>', $order],
+           $sectionFk => $this->fields[$sectionFk]
+        ]
+      );
 
       // Always show questions with conditional display on the question being deleted
       $questionId = $this->fields['id'];
-      $query = "UPDATE `$table` SET `show_rule`='always'
-            WHERE `id` IN (
-                  SELECT `plugin_formcreator_questions_id` FROM `$question_condition_table`
-                  WHERE `show_field` = '$questionId'
-            )";
-      $DB->query($query);
+      $DB->update(
+         $table,
+         [
+            'show_rule' => 'always'
+         ],
+         [
+            'id' => new QuerySubquery([
+               'SELECT' => self::getForeignKeyField(),
+               'FROM' => $question_condition_table,
+               'WHERE' => ['show_field' => $questionId]
+            ])
+         ]
+      );
 
-      $query = "DELETE FROM `$question_condition_table`
-            WHERE `plugin_formcreator_questions_id` = '$questionId'
-            OR `show_field` = '$questionId'";
-      $DB->query($query);
+      $DB->delete(
+         $question_condition_table,
+         [
+            'OR' => [
+               self::getForeignKeyField() => $questionId,
+               'show_field' => $questionId
+            ]
+         ]
+      );
    }
 
    public function showForm($ID, $options = []) {
