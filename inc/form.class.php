@@ -425,30 +425,101 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       } else {
          $entites = $this->getEntityID();
       }
-      $subentities = getEntitiesRestrictRequest("", 'pu', "", $entites, true, true);
 
       // Select all users with ticket validation right and the groups
-      $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
-                FROM `glpi_users` u
-                INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
-                INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
-                INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
-                LEFT JOIN `glpi_groups_users` gu ON u.`id` = gu.`users_id`
-                LEFT JOIN `glpi_groups` g ON g.`id` = gu.`groups_id`
-                WHERE pr.`name` = 'ticketvalidation'
-                AND (
-                  pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
-                  OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
-                AND $subentities
-                AND u.`is_active` = '1'
-                GROUP BY u.`id`
-                ORDER BY u.`name`";
-      $result = $DB->query($query);
+      // $query = "SELECT DISTINCT u.`id`, u.`name`, u.`realname`, u.`firstname`, g.`id` AS groups_id, g.`completename` AS groups_name
+      //           FROM `glpi_users` u
+      //           INNER JOIN `glpi_profiles_users` pu ON u.`id` = pu.`users_id`
+      //           INNER JOIN `glpi_profiles` p ON p.`id` = pu.`profiles_id`
+      //           INNER JOIN `glpi_profilerights` pr ON p.`id` = pr.`profiles_id`
+      //           LEFT JOIN `glpi_groups_users` gu ON u.`id` = gu.`users_id`
+      //           LEFT JOIN `glpi_groups` g ON g.`id` = gu.`groups_id`
+      //           WHERE pr.`name` = 'ticketvalidation'
+      //           AND (
+      //             pr.`rights` & " . TicketValidation::VALIDATEREQUEST . " = " . TicketValidation::VALIDATEREQUEST . "
+      //             OR pr.`rights` & " . TicketValidation::VALIDATEINCIDENT . " = " . TicketValidation::VALIDATEINCIDENT . ")
+      //           AND $subentities
+      //           AND u.`is_active` = '1'
+      //           GROUP BY u.`id`
+      //           ORDER BY u.`name`";
+      // $result = $DB->query($query);
+      $userTable = User::getTable();
+      $userFk = User::getForeignKeyField();
+      $groupTable = Group::getTable();
+      $groupFk = Group::getForeignKeyField();
+      $profileUserTable = Profile_User::getTable();
+      $profileTable = Profile::getTable();
+      $profileFk = Profile::getForeignKeyField();
+      $profileRightTable = ProfileRight::getTable();
+      $profileRightFk = ProfileRight::getForeignKeyField();
+      $groupUserTable = Group_User::getTable();
+      $subentities = (new DbUtils())->getEntitiesRestrictCriteria(
+         $profileUserTable,
+         '',
+         $entites,
+         true,
+         true
+      );
+      $result = $DB->request([
+         'SELECT DISTINCT' => [
+            $userTable => ['id', 'name', 'realname', 'firstname'],
+            $groupTable => ['id as groups_id', 'completename as groups_name']
+         ],
+         'FROM' => $userTable,
+         'INNER JOIN' => [
+            $profileUserTable => [
+               'FKEY' => [
+                  $profileUserTable => $userFk,
+                  $userTable => 'id'
+               ]
+            ],
+            $profileTable => [
+               'FKEY' => [
+                  $profileTable =>  'id',
+                  $profileUserTable => $profileFk,
+               ]
+            ],
+            $profileRightTable =>[
+               'FKEY' => [
+                  $profileTable => 'id',
+                  $profileRightTable => $profileFk,
+               ]
+            ],
+         ],
+         'LEFT JOIN' => [
+            $groupUserTable => [
+               'FKEY' => [
+                  $groupUserTable => $userFk,
+                  $userTable => 'id',
+               ],
+            ],
+            $groupTable => [
+               'FKEY' => [
+                  $groupTable => 'id',
+                  $groupUserTable => $groupFk,
+               ]
+            ]
+               ],
+         'WHERE' => [
+            "$profileRightTable.name" => "ticketvalidation",
+            [
+               'OR' => [
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST],
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT],
+               ],
+            ],
+            "$userTable.is_active" => '1',
+         ] + $subentities,
+         'GROUP' => [
+            "$userTable.id",
+            "$userTable.name",
+         ]
+      ]);
       $groups_users = [];
 
       echo '<div id="validators_users" style="width: 100%">';
       echo '<select name="_validator_users[]" size="4" style="width: 100%" multiple id="validator_users">';
-      while ($user = $DB->fetch_assoc($result)) {
+      foreach ($result as $user) {
          $groups_users[] = $user['id'];
          if (!empty($user['realname']) && !empty($user['firstname'])) {
             $displayName = $user['realname'] . ' ' .$user['firstname'];
@@ -468,32 +539,26 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       echo '<div id="validators_groups" style="width: 100%">';
       echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
       if (!empty($groups_users)) {
-         $query = "SELECT DISTINCT g.`id`, g.`completename`
-                   FROM `glpi_groups` g
-                   INNER JOIN `glpi_groups_users` gu
-                     ON g.`id` = gu.`groups_id`
-                     AND gu.`users_id` IN (" . implode(',', $groups_users) . ")
-                   ORDER BY g.`completename`";
          $groupTable = Group::getTable();
          $groupUserTable = Group_User::getTable();
          $result = $DB->request([
             'SELECT DISTINCT' => [
                $groupTable => ['id', 'completename'],
-               'FROM' => $groupTable,
-               'INNER JOIN' => [
-                  $groupUserTable => [
-                     'FKEY' => [
-                        $groupTable => 'id',
-                        $groupUserTable => Group::getForeignKeyField()
-                     ],
-                  ]
-               ],
-               'WHERE' => [
-                  $groupUserTable . '.users_id' => $groups_users,
-               ],
-               'ORDER' => [
-                  $groupTable . '.completename'
-               ],
+            ],
+            'FROM' => $groupTable,
+            'INNER JOIN' => [
+               $groupUserTable => [
+                  'FKEY' => [
+                     $groupTable => 'id',
+                     $groupUserTable => Group::getForeignKeyField()
+                  ],
+               ]
+            ],
+            'WHERE' => [
+               "$groupUserTable.users_id" => $groups_users,
+            ],
+            'ORDER' => [
+               "$groupTable.completename"
             ],
          ]);
          foreach ($result as $group) {
@@ -1142,23 +1207,52 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
          // Groups
          if ($this->fields['validation_required'] == 2) {
-            $query = "SELECT g.`id`, g.`completename`
-                      FROM `glpi_groups` g
-                      LEFT JOIN `$table_form_validator` fv ON fv.`items_id` = g.`id` AND fv.itemtype = 'Group'
-                      WHERE fv.`plugin_formcreator_forms_id` = " . $this->getID();
-            $result = $DB->query($query);
-            while ($validator = $DB->fetch_assoc($result)) {
+            $groupTable = Group::getTable();
+            $formFk = self::getForeignKeyField();
+            $result = $DB->request([
+               'SELECT' => [
+                  $groupTable => ['id', 'completename']
+               ],
+               'FROM' => $groupTable,
+               'LEFT JOIN' => [
+                  $table_form_validator => [
+                     'FKEY' => [
+                        $table_form_validator => 'items_id',
+                        $groupTable => 'id'
+                     ]
+                  ],
+               ],
+               'WHERE' => [
+                  "$table_form_validator.itemtype" => Group::class,
+                  "$table_form_validator.$formFk" => $this->getID(),
+               ],
+            ]);
+            foreach ($result as $validator) {
                $validators[$validator['id']] = $validator['completename'];
             }
 
+          } else {
             // Users
-         } else {
-            $query = "SELECT u.`id`, u.`name`, u.`realname`, u.`firstname`
-                      FROM `glpi_users` u
-                      LEFT JOIN `$table_form_validator` fv ON fv.`items_id` = u.`id` AND fv.itemtype = 'User'
-                      WHERE fv.`plugin_formcreator_forms_id` = " . $this->getID();
-            $result = $DB->query($query);
-            while ($validator = $DB->fetch_assoc($result)) {
+            $userTable = User::getTable();
+            $result = $DB->request([
+               'SELECT' => [
+                  $userTable => ['id', 'name', 'realname', 'firstname']
+               ],
+               'FROM' => $userTable,
+               'LEFT JOIN' => [
+                  $table_form_validator => [
+                     'FKEY' => [
+                        $table_form_validator => 'items_id',
+                        $userTable => 'id'
+                     ]
+                  ],
+               ],
+               'WHERE' => [
+                  "$table_form_validator.itemtype" => User::class,
+                  "$table_form_validator.$formFk" => $this->getID(),
+               ],
+            ]);
+            foreach ($result as $validator) {
                $validators[$validator['id']] = formatUserName($validator['id'], $validator['name'], $validator['realname'], $validator['firstname']);
             }
          }
