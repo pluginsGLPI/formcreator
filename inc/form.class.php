@@ -1938,9 +1938,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $nb               = 0;
 
       if ($DB->tableExists($formTable)
-          && $DB->tableExists($table_fp)
+          && $DB->tableExists($formProfileTable)
           && isset($_SESSION['glpiactiveprofile']['id'])) {
-         $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCrit(
+         $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCriteria(
             $formTable, '', '', true, false
          );
          $result = $DB->request([
