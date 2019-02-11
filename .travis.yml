@@ -4,6 +4,7 @@ env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - CS=7.2
+    - APIDOCS_PHP=7.1
     - DBNAME=glpitest
     - OLDDBNAME=glpiupgradetest
     - AFTER_SUCCESS_BRANCH=9.4/bugfixes
