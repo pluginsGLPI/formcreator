@@ -1656,6 +1656,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $items[$question['sname']][$question['qid']] = $question['qname'];
       }
 
-      Dropdown::showFromArray($name, $items, $opt);
+      Dropdown::showFromArray($name, $items, []);
    }
 }
