@@ -7,7 +7,7 @@
 #
 
 # find if we are in a valid branch to build docs
-GENERATE_DOCS=false
+GENERATE_DOCS=true
 if echo "$TRAVIS_BRANCH" | grep -q -P '^(master|develop|support/)'; then
     GENERATE_DOCS=true
 fi

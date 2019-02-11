@@ -22,7 +22,7 @@ else
 fi
 
 # find if we are in a valid branch to build docs
-GENERATE_DOCS=false
+GENERATE_DOCS=true
 if echo "$TRAVIS_BRANCH" | grep -q -P '^(master|develop|support/|release/)'; then
     GENERATE_DOCS=true
 fi
@@ -55,7 +55,7 @@ if [ "$GENERATE_DOCS" = true ] && [ "$TRAVIS_PULL_REQUEST" = false ]; then
         git add development/coverage/"$TRAVIS_BRANCH"/*
         echo "creating a branch for the new documents"
         git checkout -b localCi
-        git commit -m "changes to be merged"
+        git commit -m "$TRAVIS_COMMIT_MESSAGE"
         git checkout -f -b gh-pages origin-pages/gh-pages
         git rm -r development/coverage/"$TRAVIS_BRANCH"/*
         git checkout localCi development/coverage/"$TRAVIS_BRANCH"/

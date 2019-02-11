@@ -35,7 +35,7 @@ use mageekguy\atoum\reports\coverage;
 use mageekguy\atoum\writers\std;
 
 $branch = getenv('TRAVIS_BRANCH');
-if ($branch === false || $branch !== false && preg_match('%^(master|develop|support/|release/)%', $branch)) {
+if ($branch === false || $branch !== false && preg_match('%^(master|develop|support/|release/|feature/)%', $branch)) {
    $script->addDefaultReport();
    $coverage = new coverage\html();
    $coverage->addWriter(new std\out());
