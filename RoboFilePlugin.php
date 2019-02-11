@@ -34,7 +34,12 @@
 class RoboFilePlugin extends \Robo\Tasks
 {
 
-   protected $csignore = ['/vendor/', '/node_modules/', '/lib/'];
+   protected $csignore = [
+      '/vendor/',
+      '/node_modules/',
+      '/lib/',
+      '/development/'
+   ];
    protected $csfiles  = ['./'];
 
    /**
