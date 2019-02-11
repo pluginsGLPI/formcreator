@@ -31,7 +31,7 @@ before_script:
 
 script:
   - COVERAGE="-ncc"
-  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBChild CommonDBConnexity"; fi
+  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBChild CommonDBConnexity CommonDBRelation"; fi
   - if [ -e ../../scripts/cliinstall.php ] ; then php ../../scripts/cliinstall.php --db=$OLDDBNAME --user=root --tests ; fi
   - if [ -e ../../bin/console ] ; then php ../../bin/console glpi:database:install --db-name=$OLDDBNAME --db-user=root --config-dir=../../tests --no-interaction --force; fi
   - mysql -u root $OLDDBNAME < tests/plugin_formcreator_empty_2.5.0.sql
