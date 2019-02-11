@@ -98,4 +98,10 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isFalse();
    }
+
+   public function testIsPrerequisites() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
+   }
 }

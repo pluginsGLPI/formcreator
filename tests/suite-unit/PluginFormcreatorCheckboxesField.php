@@ -515,4 +515,10 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $output = $instance->notEquals($compare);
       $this->boolean($output)->isEqualTo(!$expected);
    }
+
+   public function testIsPrerequisites() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
+   }
 }

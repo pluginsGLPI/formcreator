@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2018 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,29 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
- namespace tests\units;
+namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
-class PluginFormcreatorIpField extends CommonTestCase {
-
-   public function testGetName() {
-      $instance = new \PluginFormcreatorIpField([]);
-      $output = $instance->getName();
-      $this->string($output)->isEqualTo('IP address');
-   }
-
-   public function testIsValid() {
-      $instance = new \PluginFormcreatorIpField([]);
-      $output = $instance->isValid('');
-      $this->boolean($output)->isTrue();
-   }
-
-   public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorIpField([]);
-      $output = $instance->isAnonymousFormCompatible();
-      $this->boolean($output)->isTrue();
-   }
-
+class PluginFormcreatorFileField extends CommonTestCase {
    public function testIsPrerequisites() {
       $instance = $this->newTestedInstance([]);
       $output = $instance->isPrerequisites();
