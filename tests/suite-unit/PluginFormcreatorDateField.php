@@ -150,8 +150,14 @@ class PluginFormcreatorDateField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDateField([]);
+      $instance = $this->newTestedInstance([]);
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
+   }
+
+   public function testIsPrerequisites() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
    }
 }

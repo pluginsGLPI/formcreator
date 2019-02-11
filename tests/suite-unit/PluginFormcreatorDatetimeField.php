@@ -214,4 +214,10 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
+
+   public function testIsPrerequisites() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
+   }
 }
