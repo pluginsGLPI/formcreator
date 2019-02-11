@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    55%
-                                            <small>of 119</small>
+                    61%
+                                            <small>of 118</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -60,7 +60,7 @@ layout: coverage
             <td><a href="#isPrerequisites">PluginFormcreatorCheckboxesField::isPrerequisites()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -95,7 +95,7 @@ layout: coverage
             <td><a href="#getValueForDesign">PluginFormcreatorCheckboxesField::getValueForDesign()</a></td>
                                         <td style="text-align: center">3</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-warning">67%</span>
 </td>
                                             </tr>
             <tr>
@@ -135,9 +135,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#getValueForTargetText">PluginFormcreatorCheckboxesField::getValueForTargetText()</a></td>
-                                        <td style="text-align: center">12</td>
+                                        <td style="text-align: center">11</td>
                 <td style="text-align: center">    
-    <span class="label label-success">92%</span>
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -172,14 +172,14 @@ layout: coverage
             <td><a href="#equals">PluginFormcreatorCheckboxesField::equals()</a></td>
                                         <td style="text-align: center">3</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-warning">67%</span>
 </td>
                                             </tr>
             <tr>
             <td><a href="#notEquals">PluginFormcreatorCheckboxesField::notEquals()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -499,13 +499,13 @@ layout: coverage
                     <th id="L36" class="number ">36</th>
 
                     <td class="" id="isPrerequisites">
-                        <pre>   public function isPrerequisites() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public function isPrerequisites() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L37" class="number uncovered">37</th>
+                    <th id="L37" class="number covered">37</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
@@ -1033,13 +1033,13 @@ layout: coverage
                     <th id="L109" class="number ">109</th>
 
                     <td class="" id="getValueForDesign">
-                        <pre>   public function getValueForDesign() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public function getValueForDesign() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L110" class="number uncovered">110</th>
+                    <th id="L110" class="number covered">110</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      if ($this-&gt;value === null) {</pre>
                     </td>
                 </tr>
@@ -1067,9 +1067,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L114" class="number uncovered">114</th>
+                    <th id="L114" class="number covered">114</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      return implode(&quot;\r\n&quot;, $this-&gt;value);</pre>
                     </td>
                 </tr>
@@ -1691,40 +1691,25 @@ layout: coverage
                     <th id="L199" class="number ">199</th>
 
                     <td class="" id="getValueForTargetText">
-                        <pre>   public function getValueForTargetText($richText) {<span class="label label-success">92%</span><div class="btn-group"></div></pre>
+                        <pre>   public function getValueForTargetText($richText) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L200" class="number covered">200</th>
 
                     <td class="covered" >
-                        <pre>      global $CFG_GLPI;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L201" class="number ">201</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L202" class="number covered">202</th>
-
-                    <td class="covered" >
                         <pre>      $value = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L203" class="number covered">203</th>
+                    <th id="L201" class="number covered">201</th>
 
                     <td class="covered" >
                         <pre>      $values = $this-&gt;getAvailableValues();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L204" class="number ">204</th>
+                    <th id="L202" class="number ">202</th>
 
                     <td class="" >
                         <pre>
@@ -1732,21 +1717,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L205" class="number covered">205</th>
+                    <th id="L203" class="number covered">203</th>
 
                     <td class="covered" >
                         <pre>      if (count($this-&gt;value) === 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L206" class="number covered">206</th>
+                    <th id="L204" class="number covered">204</th>
 
                     <td class="covered" >
                         <pre>         return &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number ">207</th>
+                    <th id="L205" class="number ">205</th>
 
                     <td class="" >
                         <pre>      }
@@ -1754,7 +1739,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L208" class="number ">208</th>
+                    <th id="L206" class="number ">206</th>
 
                     <td class="" >
                         <pre>
@@ -1762,28 +1747,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L209" class="number covered">209</th>
+                    <th id="L207" class="number covered">207</th>
 
                     <td class="covered" >
                         <pre>      foreach ($this-&gt;value as $input) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L210" class="number covered">210</th>
+                    <th id="L208" class="number covered">208</th>
 
                     <td class="covered" >
                         <pre>         if (in_array($input, $values)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L211" class="number covered">211</th>
+                    <th id="L209" class="number covered">209</th>
 
                     <td class="covered" >
                         <pre>            $value[] = $input;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L212" class="number ">212</th>
+                    <th id="L210" class="number ">210</th>
 
                     <td class="" >
                         <pre>         }
@@ -1791,7 +1776,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L213" class="number ">213</th>
+                    <th id="L211" class="number ">211</th>
 
                     <td class="" >
                         <pre>      }
@@ -1799,7 +1784,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L214" class="number ">214</th>
+                    <th id="L212" class="number ">212</th>
 
                     <td class="" >
                         <pre>
@@ -1807,21 +1792,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L215" class="number covered">215</th>
+                    <th id="L213" class="number covered">213</th>
 
                     <td class="covered" >
                         <pre>      if ($richText) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L216" class="number uncovered">216</th>
+                    <th id="L214" class="number covered">214</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>         $value = &#039;&lt;br /&gt;&#039; . implode(&#039;&lt;br /&gt;&#039;, $value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L217" class="number ">217</th>
+                    <th id="L215" class="number ">215</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -1829,14 +1814,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L218" class="number covered">218</th>
+                    <th id="L216" class="number covered">216</th>
 
                     <td class="covered" >
                         <pre>         $value = implode(&#039;, &#039;, $value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L219" class="number ">219</th>
+                    <th id="L217" class="number ">217</th>
 
                     <td class="" >
                         <pre>      }
@@ -1844,21 +1829,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L220" class="number covered">220</th>
+                    <th id="L218" class="number covered">218</th>
 
                     <td class="covered" >
                         <pre>      return $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L221" class="number unreach">221</th>
+                    <th id="L219" class="number unreach">219</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L222" class="number ">222</th>
+                    <th id="L220" class="number ">220</th>
 
                     <td class="" >
                         <pre>
@@ -1866,28 +1851,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getDocumentsForTarget">
-                    <th id="L223" class="number ">223</th>
+                    <th id="L221" class="number ">221</th>
 
                     <td class="" id="getDocumentsForTarget">
                         <pre>   public function getDocumentsForTarget() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L224" class="number uncovered">224</th>
+                    <th id="L222" class="number uncovered">222</th>
 
                     <td class="uncovered" >
                         <pre>      return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L225" class="number unreach">225</th>
+                    <th id="L223" class="number unreach">223</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L226" class="number ">226</th>
+                    <th id="L224" class="number ">224</th>
 
                     <td class="" >
                         <pre>
@@ -1895,14 +1880,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getPrefs">
-                    <th id="L227" class="number ">227</th>
+                    <th id="L225" class="number ">225</th>
 
                     <td class="" id="getPrefs">
                         <pre>   public static function getPrefs() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L228" class="number ">228</th>
+                    <th id="L226" class="number ">226</th>
 
                     <td class="" >
                         <pre>      return [
@@ -1910,14 +1895,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L229" class="number uncovered">229</th>
+                    <th id="L227" class="number uncovered">227</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;required&#039;       =&gt; 1,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L230" class="number ">230</th>
+                    <th id="L228" class="number ">228</th>
 
                     <td class="" >
                         <pre>         &#039;default_values&#039; =&gt; 1,
@@ -1925,7 +1910,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L231" class="number ">231</th>
+                    <th id="L229" class="number ">229</th>
 
                     <td class="" >
                         <pre>         &#039;values&#039;         =&gt; 1,
@@ -1933,7 +1918,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L232" class="number ">232</th>
+                    <th id="L230" class="number ">230</th>
 
                     <td class="" >
                         <pre>         &#039;range&#039;          =&gt; 1,
@@ -1941,7 +1926,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L233" class="number ">233</th>
+                    <th id="L231" class="number ">231</th>
 
                     <td class="" >
                         <pre>         &#039;show_empty&#039;     =&gt; 0,
@@ -1949,7 +1934,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L234" class="number ">234</th>
+                    <th id="L232" class="number ">232</th>
 
                     <td class="" >
                         <pre>         &#039;regex&#039;          =&gt; 0,
@@ -1957,7 +1942,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L235" class="number ">235</th>
+                    <th id="L233" class="number ">233</th>
 
                     <td class="" >
                         <pre>         &#039;show_type&#039;      =&gt; 1,
@@ -1965,7 +1950,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L236" class="number ">236</th>
+                    <th id="L234" class="number ">234</th>
 
                     <td class="" >
                         <pre>         &#039;dropdown_value&#039; =&gt; 0,
@@ -1973,7 +1958,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L237" class="number ">237</th>
+                    <th id="L235" class="number ">235</th>
 
                     <td class="" >
                         <pre>         &#039;glpi_objects&#039;   =&gt; 0,
@@ -1981,7 +1966,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L238" class="number ">238</th>
+                    <th id="L236" class="number ">236</th>
 
                     <td class="" >
                         <pre>         &#039;ldap_values&#039;    =&gt; 0,
@@ -1989,7 +1974,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L239" class="number ">239</th>
+                    <th id="L237" class="number ">237</th>
 
                     <td class="" >
                         <pre>      ];
@@ -1997,14 +1982,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L240" class="number unreach">240</th>
+                    <th id="L238" class="number unreach">238</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L241" class="number ">241</th>
+                    <th id="L239" class="number ">239</th>
 
                     <td class="" >
                         <pre>
@@ -2012,35 +1997,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getJSFields">
-                    <th id="L242" class="number ">242</th>
+                    <th id="L240" class="number ">240</th>
 
                     <td class="" id="getJSFields">
                         <pre>   public static function getJSFields() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L243" class="number uncovered">243</th>
+                    <th id="L241" class="number uncovered">241</th>
 
                     <td class="uncovered" >
                         <pre>      $prefs = self::getPrefs();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L244" class="number uncovered">244</th>
+                    <th id="L242" class="number uncovered">242</th>
 
                     <td class="uncovered" >
                         <pre>      return &quot;tab_fields_fields[&#039;checkboxes&#039;] = &#039;showFields(&quot; . implode(&#039;, &#039;, $prefs) . &quot;);&#039;;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L245" class="number unreach">245</th>
+                    <th id="L243" class="number unreach">243</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L246" class="number ">246</th>
+                    <th id="L244" class="number ">244</th>
 
                     <td class="" >
                         <pre>
@@ -2048,14 +2033,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getEmptyParameters">
-                    <th id="L247" class="number ">247</th>
+                    <th id="L245" class="number ">245</th>
 
                     <td class="" id="getEmptyParameters">
                         <pre>   public function getEmptyParameters() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L248" class="number ">248</th>
+                    <th id="L246" class="number ">246</th>
 
                     <td class="" >
                         <pre>      return [
@@ -2063,21 +2048,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L249" class="number covered">249</th>
+                    <th id="L247" class="number covered">247</th>
 
                     <td class="covered" >
                         <pre>         &#039;range&#039; =&gt; new PluginFormcreatorQuestionRange(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L250" class="number covered">250</th>
+                    <th id="L248" class="number covered">248</th>
 
                     <td class="covered" >
                         <pre>            $this,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L251" class="number ">251</th>
+                    <th id="L249" class="number ">249</th>
 
                     <td class="" >
                         <pre>            [
@@ -2085,21 +2070,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L252" class="number covered">252</th>
+                    <th id="L250" class="number covered">250</th>
 
                     <td class="covered" >
                         <pre>               &#039;fieldName&#039; =&gt; &#039;range&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L253" class="number covered">253</th>
+                    <th id="L251" class="number covered">251</th>
 
                     <td class="covered" >
                         <pre>               &#039;label&#039;     =&gt; __(&#039;Range&#039;, &#039;formcreator&#039;),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L254" class="number ">254</th>
+                    <th id="L252" class="number ">252</th>
 
                     <td class="" >
                         <pre>               &#039;fieldType&#039; =&gt; [&#039;text&#039;],
@@ -2107,7 +2092,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L255" class="number ">255</th>
+                    <th id="L253" class="number ">253</th>
 
                     <td class="" >
                         <pre>            ]
@@ -2115,7 +2100,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L256" class="number ">256</th>
+                    <th id="L254" class="number ">254</th>
 
                     <td class="" >
                         <pre>         ),
@@ -2123,7 +2108,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L257" class="number ">257</th>
+                    <th id="L255" class="number ">255</th>
 
                     <td class="" >
                         <pre>      ];
@@ -2131,14 +2116,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L258" class="number unreach">258</th>
+                    <th id="L256" class="number unreach">256</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L259" class="number ">259</th>
+                    <th id="L257" class="number ">257</th>
 
                     <td class="" >
                         <pre>
@@ -2146,21 +2131,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="equals">
-                    <th id="L260" class="number ">260</th>
+                    <th id="L258" class="number ">258</th>
 
                     <td class="" id="equals">
-                        <pre>   public function equals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public function equals($value) {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L261" class="number uncovered">261</th>
+                    <th id="L259" class="number covered">259</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      if (!is_array($this-&gt;value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L262" class="number ">262</th>
+                    <th id="L260" class="number ">260</th>
 
                     <td class="" >
                         <pre>         // No checkbox enabled
@@ -2168,14 +2153,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L263" class="number uncovered">263</th>
+                    <th id="L261" class="number uncovered">261</th>
 
                     <td class="uncovered" >
                         <pre>         return ($value === &#039;&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L264" class="number ">264</th>
+                    <th id="L262" class="number ">262</th>
 
                     <td class="" >
                         <pre>      }
@@ -2183,21 +2168,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L265" class="number uncovered">265</th>
+                    <th id="L263" class="number covered">263</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      return in_array($value, $this-&gt;value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L266" class="number unreach">266</th>
+                    <th id="L264" class="number unreach">264</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L267" class="number ">267</th>
+                    <th id="L265" class="number ">265</th>
 
                     <td class="" >
                         <pre>
@@ -2205,28 +2190,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="notEquals">
-                    <th id="L268" class="number ">268</th>
+                    <th id="L266" class="number ">266</th>
 
                     <td class="" id="notEquals">
-                        <pre>   public function notEquals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public function notEquals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L269" class="number uncovered">269</th>
+                    <th id="L267" class="number covered">267</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      return !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L270" class="number unreach">270</th>
+                    <th id="L268" class="number unreach">268</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L271" class="number ">271</th>
+                    <th id="L269" class="number ">269</th>
 
                     <td class="" >
                         <pre>
@@ -2234,28 +2219,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="greaterThan">
-                    <th id="L272" class="number ">272</th>
+                    <th id="L270" class="number ">270</th>
 
                     <td class="" id="greaterThan">
                         <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L273" class="number uncovered">273</th>
+                    <th id="L271" class="number uncovered">271</th>
 
                     <td class="uncovered" >
                         <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L274" class="number unreach">274</th>
+                    <th id="L272" class="number unreach">272</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L275" class="number ">275</th>
+                    <th id="L273" class="number ">273</th>
 
                     <td class="" >
                         <pre>
@@ -2263,28 +2248,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="lessThan">
-                    <th id="L276" class="number ">276</th>
+                    <th id="L274" class="number ">274</th>
 
                     <td class="" id="lessThan">
                         <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L277" class="number uncovered">277</th>
+                    <th id="L275" class="number uncovered">275</th>
 
                     <td class="uncovered" >
                         <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L278" class="number unreach">278</th>
+                    <th id="L276" class="number unreach">276</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L279" class="number ">279</th>
+                    <th id="L277" class="number ">277</th>
 
                     <td class="" >
                         <pre>
@@ -2292,28 +2277,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="isAnonymousFormCompatible">
-                    <th id="L280" class="number ">280</th>
+                    <th id="L278" class="number ">278</th>
 
                     <td class="" id="isAnonymousFormCompatible">
                         <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L281" class="number covered">281</th>
+                    <th id="L279" class="number covered">279</th>
 
                     <td class="covered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L282" class="number unreach">282</th>
+                    <th id="L280" class="number unreach">280</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L283" class="number ">283</th>
+                    <th id="L281" class="number ">281</th>
 
                     <td class="" >
                         <pre>}
