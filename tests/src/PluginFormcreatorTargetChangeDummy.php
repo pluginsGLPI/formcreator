@@ -39,8 +39,8 @@ class PluginFormcreatorTargetChangeDummy extends \PluginFormcreatorTargetChange
       return \PluginFormcreatorTargetChange::getTable();
    }
 
-   public function publicGetTargetEntity(\PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
-      return $this->getTargetEntity($formanswer, $requesters_id);
+   public function publicSetTargetEntity($data, \PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
+      return $this->setTargetEntity($data, $formanswer, $requesters_id);
    }
 
    public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false) {

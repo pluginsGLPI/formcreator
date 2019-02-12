@@ -39,18 +39,17 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       switch ($method) {
-         case 'testGetTargetEntity':
+         case 'testSetTargetEntity':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
    }
 
    /**
-    * @engine inline
     *
     * @return void
     */
-   public function  testGetTargetEntity() {
+   public function  testSetTargetEntity() {
       $form = $this->getForm();
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $targetChange = $this->getTargetChange([
@@ -81,8 +80,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $formAnswer->getFromDB($formAnswer->getID());
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
-      $this->integer((int) $output)->isEqualTo($entityId);
+      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's entity
       $targetChange->update([
@@ -98,8 +97,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       \Session::changeActiveEntities($entityId);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
-      $this->integer((int) $output)->isEqualTo(0);
+      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
       // Test requester's first entity (alphanumeric order)
       $targetChange->update([
@@ -134,8 +133,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
-      $this->integer((int) $output)->isEqualTo($entityId);
+      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test requester's last entity (alphanumeric order)
       $targetChange->update([
@@ -151,8 +150,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $this->boolean($this->login($user->fields['name'], 'passwd'))->isTrue();
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
-      $this->integer((int) $output)->isEqualTo(0);
+      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $this->integer((int) $output['entities_id'])->isEqualTo(0);
 
       // Test specific entity
       $this->boolean($this->login('glpi', 'glpi'))->isTrue();
@@ -172,8 +171,8 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
-      $this->integer((int) $output)->isEqualTo($entityId);
+      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
 
       // Test form's entity
       $entityId = $entity->import([
@@ -196,7 +195,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'entities_id' => 0,
       ]);
       $requesterId = \Session::getLoginUserID();
-      $output = $instance->publicGetTargetEntity($formAnswer, $requesterId);
-      $this->integer((int) $output)->isEqualTo($entityId);
+      $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
+      $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
    }
 }

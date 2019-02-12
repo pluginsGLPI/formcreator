@@ -1022,10 +1022,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
-      // Computation of the entity
-      $data['entities_id'] = $this->getTargetEntity($formanswer, $requesters_id);
-
+      $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
+      $data = $this->setTargetCategory($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;
       $data = $this->requesterGroups + $this->observerGroups + $this->assignedGroups + $data;
