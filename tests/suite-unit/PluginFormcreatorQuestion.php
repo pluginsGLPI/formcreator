@@ -22,7 +22,7 @@
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -268,5 +268,63 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->array($output)->containsValues($expected);
       $this->array($output)->hasKey('uuid');
       $this->array($output)->size->isEqualTo(count($expected));
+   }
+
+   public function testMoveUp() {
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $section = $this->getSection();
+      $question = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+      $questionToMove = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+
+      // Move up the question
+      $expectedOrder = $questionToMove->fields['order'] - 1;
+      $questionToMove->moveUp();
+
+      // Check the order of the question
+      $this->integer((int) $questionToMove->fields['order'])
+         ->isEqualTo($expectedOrder);
+
+      // check the order of the other question
+      $expectedOrder = $question->fields['order'] + 1;
+      $question->getFromDB($question->getID());
+      $this->integer((int) $question->fields['order'])
+         ->isEqualTo($expectedOrder);
+   }
+
+   public function testMoveDown() {
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $section = $this->getSection();
+      $questionToMove = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+      $question = $this->getQuestion(
+         [
+            $sectionFk => $section->getID(),
+         ]
+      );
+
+      // Move down the question
+      $expectedOrder = $questionToMove->fields['order'] + 1;
+      $questionToMove->moveDown();
+
+      // Check the order of the question
+      $this->integer((int) $questionToMove->fields['order'])
+         ->isEqualTo($expectedOrder);
+
+      // check the order of the other question
+      $expectedOrder = $question->fields['order'] - 1;
+      $question->getFromDB($question->getID());
+      $this->integer((int) $question->fields['order'])
+         ->isEqualTo($expectedOrder);
    }
 }

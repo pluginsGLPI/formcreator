@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -71,7 +71,7 @@ function getTimer(object) {
 var link = '';
 link += '<li id="menu7">';
 link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
-link += "<?php echo _n('Form', 'Forms', 2, 'formcreator'); ?>";
+link += "<?php echo Toolbox::addslashes_deep(_n('Form', 'Forms', 2, 'formcreator')); ?>";
 link += '</a>';
 link += '</li>';
 
@@ -307,7 +307,7 @@ function showTiles(tiles, defaultForms) {
    tiles = sortFormAndFaqItems(tiles, sortByName);
    html = '';
    if (defaultForms) {
-      html += '<p><?php echo __('No form found. Please choose a form below instead', 'formcreator')?></p>'
+      html += '<p><?php echo Toolbox::addslashes_deep(__('No form found. Please choose a form below instead', 'formcreator'))?></p>'
    }
    html += buildTiles(tiles);
 
@@ -327,7 +327,7 @@ function updateWizardFormsView(categoryId) {
       }
    ).fail(
       function () {
-         html = '<p><?php echo __('An error occured while querying forms', 'formcreator')?></p>'
+         html = '<p><?php echo Toolbox::addslashes_deep(__('An error occured while querying forms', 'formcreator'))?></p>'
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
@@ -365,7 +365,7 @@ function buildTiles(list) {
 
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
-      + "<?php echo __('No form yet in this category', 'formcreator') ?>"
+      + "<?php echo Toolbox::addslashes_deep(__('No form yet in this category', 'formcreator')) ?>"
       + '</p>';
    } else {
       var items = [];
@@ -463,7 +463,7 @@ function moveQuestion(token, question_id, action) {
 }
 
 function deleteQuestion(items_id, token, question_id) {
-   if(confirm("<?php echo __('Are you sure you want to delete this question?', 'formcreator'); ?> ")) {
+   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
       jQuery.ajax({
         url: urlFrontQuestion,
         type: "POST",
@@ -524,7 +524,7 @@ function duplicateSection(items_id, token, section_id) {
 }
 
 function deleteSection(items_id, token, section_id) {
-   if(confirm("<?php echo __('Are you sure you want to delete this section?', 'formcreator'); ?> ")) {
+   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
       jQuery.ajax({
         url: urlFrontSection,
         type: "POST",
@@ -561,7 +561,7 @@ function addTarget(items_id, token) {
 }
 
 function deleteTarget(items_id, token, target_id) {
-   if(confirm("<?php echo __('Are you sure you want to delete this destination:', 'formcreator'); ?> ")) {
+   if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
       jQuery.ajax({
         url: rootDoc + '/plugins/formcreator/front/target.form.php',
         type: "POST",

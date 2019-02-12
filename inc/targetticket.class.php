@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -225,7 +225,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                    WHERE s.id = {$section['id']}
                    AND ((q.fieldtype = 'glpiselect'
                      AND q.values IN ('User', 'Group', 'Supplier'))
-                     OR (q.fieldtype = 'actor'))";
+                     OR (q.fieldtype IN ('actor', 'email')))";
          $result2 = $DB->query($query2);
          $section_questions_user       = [];
          $section_questions_group      = [];
@@ -246,6 +246,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
                }
             } else if ($question['fieldtype'] == 'actor') {
                $section_questions_actors[$question['id']] = $question['name'];
+            } else if ($question['fieldtype'] == 'email') {
+               $section_questions_user[$question['id']] = $question['name'];
             }
          }
          $questions_user_list[$section['name']]     = $section_questions_user;
@@ -1140,7 +1142,9 @@ EOS;
          $formanswer,
          false
       );
+      $data['name'] = Toolbox::addslashes_deep($data['name']);
       $data['name'] = $this->parseTags($data['name'], $formanswer);
+
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],
          $formanswer,
@@ -1509,25 +1513,21 @@ EOS;
       // convert question uuid into id
       $targetTicket = new PluginFormcreatorTargetTicket();
       $targetTicket->getFromDB($targetitems_id);
-      $found_section = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => PluginFormcreatorSection::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $targetTicket->getForm()->getID()
-         ],
-         'ORDER'  => 'order ASC'
-      ]);
+
+      $section = new PluginFormcreatorSection();
+      $foundSections = $section->getSectionsFromForm($targetTicket->getForm()->getID());
       $tab_section = [];
-      foreach ($found_section as $section_item) {
-         $tab_section[] = $section_item['id'];
+      foreach ($foundSections as $section) {
+         $tab_section[] = $section->getID();
       }
 
       if (!empty($tab_section)) {
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $rows = $DB->request([
             'SELECT' => ['id', 'uuid'],
             'FROM'   => PluginFormcreatorQuestion::getTable(),
             'WHERE'  => [
-               'plugin_formcreator_sections_id' => $tab_section
+               $sectionFk => $tab_section
             ],
             'ORDER'  => 'order ASC'
          ]);
@@ -1538,13 +1538,18 @@ EOS;
             $content = $target_data['title'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
-            $target_data['name'] = $content;
+            $target_data['title'] = $content;
 
             $content = $target_data['content'];
             $content = str_replace("##question_$uuid##", "##question_$id##", $content);
             $content = str_replace("##answer_$uuid##", "##answer_$id##", $content);
             $target_data['content'] = $content;
          }
+      }
+
+      // escape text fields
+      foreach (['title', 'content'] as $key) {
+         $target_data[$key] = $DB->escape($target_data[$key]);
       }
 
       // update target ticket

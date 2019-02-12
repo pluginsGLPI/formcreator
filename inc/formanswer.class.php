@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -112,6 +112,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       return false;
+   }
+
+   public static function canPurge() {
+      return true;
+   }
+
+   public function canPurgeItem() {
+      return Session::haveRight('entity', UPDATE);
    }
 
    /**
@@ -551,7 +559,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $last_section = '';
       $questionsCount = $questions->count();
       $fields = [];
-      while ($question_line = $questions->next()) {
+      foreach ($questions as $question_line) {
          $question = new PluginFormcreatorQuestion();
          $question->getFromDB($question_line['id']);
          $fields[$question_line['id']] = PluginFormcreatorFields::getFieldInstance(
@@ -560,27 +568,28 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$question_line['id']]->deserializeValue($question_line['answer']);
       }
-      $questions->rewind();
-      while ($question_line = $questions->current()) {
+      foreach ($questions as $question_line) {
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             echo '<h2>'.$question_line['section_name'].'</h2>';
             $last_section = $question_line['section_name'];
          }
 
-         if ($canEdit
-            || ($question_line['fieldtype'] != "description"
-                && $question_line['fieldtype'] != "hidden")
-         ) {
-            // if (PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
-            // }
+         if ($canEdit) {
             $fields[$question_line['id']]->show($canEdit);
+         } else {
+            if (($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
+               if (PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
+                  $fields[$question_line['id']]->show($canEdit);
+               }
+            }
          }
-         $questions->next();
       }
-      echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'form\']"));
-      })');
+      if ($canEdit) {
+         echo Html::scriptBlock('$(function() {
+            formcreatorShowFields($("form[name=\'form\']"));
+         })');
+      }
 
       //add requester info
       echo '<div class="form-group">';
@@ -656,7 +665,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function prepareInputForAdd($input) {
       $form = new PluginFormcreatorForm();
       $form->getFromDB($input['plugin_formcreator_forms_id']);
-      $input['name'] = $form->getName();
+      $input['name'] = Toolbox::addslashes_deep($form->getName());
 
       return $input;
    }
@@ -1133,7 +1142,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $question_no = 0;
       $output      = '';
-      $eol = '\n';
+      $eol = "\r\n";
 
       if ($richText) {
          $output .= '<h1>' . __('Form data', 'formcreator') . '</h1>';
@@ -1199,9 +1208,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Get and display current section if needed
          if ($last_section != $question_line['section_name']) {
             if ($richText) {
-               $output .= '<h2>' . Toolbox::addslashes_deep($question_line['section_name']) . '</h2>';
+               $output .= '<h2>' . $question_line['section_name'] . '</h2>';
             } else {
-               $output .= $eol . Toolbox::addslashes_deep($question_line['section_name']) . $eol;
+               $output .= $eol . $question_line['section_name'] . $eol;
                $output .= '---------------------------------' . $eol;
             }
             $last_section = $question_line['section_name'];

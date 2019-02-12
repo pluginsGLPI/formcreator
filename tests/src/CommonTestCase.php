@@ -184,13 +184,13 @@ abstract class CommonTestCase extends CommonDBTestCase
       return $section;
    }
 
-   protected function getQuestion($input = []) {
+   protected function getQuestion($input = [], $sectionInput = [], $formInput = []) {
       if (!isset($input['name'])) {
          $input['name'] = 'question';
       }
       $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
       if (!isset($input[$sectionFk])) {
-         $sectionId = $this->getSection()->getID();
+         $sectionId = $this->getSection($sectionInput, $formInput)->getID();
          $input[$sectionFk] = $sectionId;
       }
       $defaultInput = [

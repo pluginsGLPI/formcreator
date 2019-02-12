@@ -5,12 +5,12 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/formcreator/master/icon.png</logo>
    <description>
       <short>
-         <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.</fr>
-         <en>Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.</en>
+         <fr>Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.</fr>
+         <en>Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.</en>
       </short>
       <long>
          <fr>
-Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets GLPI.
+Formcreator est un plugin permettant la création de formulaires personnalisés simples d'accès aux utilisateurs aboutissant à la création d'un ou plusieurs tickets ou changements.
 
 Fonctionnalités
 ---------------
@@ -30,7 +30,7 @@ Fonctionnalités
 13. Prévisualisation du formulaire créé directement dans la configuration.
          </fr>
          <en>
-Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.
+Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more tickets or changes.
 
 Features
 --------
@@ -246,6 +246,11 @@ Features
       </version>
       <version>
          <num>2.7.0-beta.3</num>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.4</compatibility>
+      </version>
+      <version>
+         <num>2.7.0</num>
          <compatibility>9.3</compatibility>
          <compatibility>9.4</compatibility>
       </version>

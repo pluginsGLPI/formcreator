@@ -22,7 +22,7 @@
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -216,6 +216,81 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $this->boolean($isValid)->isEqualTo($expectedValidity);
    }
 
+   public function providerSerializeValue() {
+      return [
+         [
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => ['foo'],
+            'expected'  => 'foo',
+         ],
+         [
+            'value'     => ["test d'apostrophe"],
+            'expected'  => "test d\'apostrophe",
+         ],
+         [
+            'value'     => ['foo', 'bar'],
+            'expected'  => "foo\r\nbar",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorCheckboxesField(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      $user = new \User();
+      $user->getFromDBbyName('glpi');
+      $glpiId = $user->getID();
+      $user->getFromDBbyName('normal');
+      $normalId = $user->getID();
+      return [
+         [
+            'value'     => null,
+            'expected'  => [],
+         ],
+         [
+            'value'     => '',
+            'expected'  => [],
+         ],
+         [
+            'value'     => "foo",
+            'expected'  => ['foo'],
+         ],
+         [
+            'value'     => "test d'apostrophe",
+            'expected'  => ["test d'apostrophe"],
+         ],
+         [
+            'value'     => "foo\r\nbar",
+            'expected'  => ['foo', 'bar'],
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorCheckboxesField(['values' => "foo\r\nbar\r\ntest d'apostrophe"]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo(implode(', ', $expected));
+   }
+
    public function testPrepareQuestionInputForSave() {
       $fields = [
          'fieldtype'       => 'checkboxes',
@@ -274,5 +349,176 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $instance = new \PluginFormcreatorCheckboxesField([]);
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerGetValueForTargetText() {
+      return [
+         [
+            'fields' => [
+               'values' => ""
+            ],
+            'value' => "a",
+            'expected' => '<br />'
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a",
+            'expected' => '<br />a'
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a\r\nc",
+            'expected' => '<br />a<br />c'
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerGetValueForTargetText
+    */
+   public function testGetValueForTargetText($fields, $value, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->getValueForTargetText(true);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerGetValueForDesign() {
+      return [
+         [
+            'fields' => [
+               'values' => ""
+            ],
+            'value' => "",
+            'expected' => ''
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a",
+            'expected' => 'a'
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a\r\nc",
+            'expected' => "a\r\nc"
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerGetValueForDesign
+    */
+   public function testGetValueForDesign($fields, $value, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->getValueForDesign(true);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerParseAnswerValues() {
+      return [
+         [
+            'input' => ['a', 'c'],
+            'expected' => "a\r\nc",
+         ],
+         [
+            'input' => ['a', "test d\'apostrophe"],
+            'expected' => "a\r\ntest d\'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerParseAnswerValues
+    */
+   public function testParseAnswerValues($input, $expected) {
+      $instance = $this->newTestedInstance([
+         'id' => 1
+      ]);
+      $instance->parseAnswerValues([
+         'formcreator_field_1' => $input
+      ]);
+
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public  function providerEquals() {
+      return [
+         [
+            'fields' => [
+               'values' => ""
+            ],
+            'value' => "",
+            'compare' => '',
+            'expected' => false
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a\r\nc",
+            'compare' => 'b',
+            'expected' => false
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a\r\nc",
+            'compare' => 'a',
+            'expected' => true
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a\r\nc",
+            'compare' => 'c',
+            'expected' => true
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerEquals
+    */
+   public function testEquals($fields, $value, $compare, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->equals($compare);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return $this->providerEquals();
+   }
+
+   /**
+    * @dataprovider providerNotEquals
+    */
+   public function testNotEquals($fields, $value, $compare, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->notEquals($compare);
+      $this->boolean($output)->isEqualTo(!$expected);
+   }
+
+   public function testIsPrerequisites() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
    }
 }

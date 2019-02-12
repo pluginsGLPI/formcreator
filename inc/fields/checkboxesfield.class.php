@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -60,7 +60,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
                      'name'          => htmlentities($fieldName, ENT_QUOTES) . '[]',
                      'value'         => htmlentities($value, ENT_QUOTES),
                      'zero_on_empty' => false,
-                     'checked' => in_array($value, $this->value)
+                     'checked'       => in_array($value, $this->value)
                   ]);
                   echo '<label for="' . $domId . '_' . $i . '">';
                   echo '&nbsp;' . $value;
@@ -96,7 +96,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          return '';
       }
 
-      return implode("\r\n", $this->value);
+      return implode("\r\n", Toolbox::addslashes_deep($this->value));
    }
 
    public function deserializeValue($value) {
@@ -124,7 +124,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          }
       }
 
-      $this->value = $input[$key];
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 
@@ -197,8 +197,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      global $CFG_GLPI;
-
       $value = [];
       $values = $this->getAvailableValues();
 
@@ -208,7 +206,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
 
       foreach ($this->value as $input) {
          if (in_array($input, $values)) {
-            $value[] = Toolbox::addslashes_deep($input);
+            $value[] = $input;
          }
       }
 

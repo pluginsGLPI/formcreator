@@ -22,7 +22,7 @@
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -99,6 +99,8 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
    }
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $fieldName = '', $parameter = []) {
+      global $DB;
+
       $parameter['plugin_formcreator_questions_id'] = $questions_id;
 
       // get a built instance of the parameter
@@ -119,6 +121,10 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
          return false;
       }
 
+      // escape text fields
+      foreach (['fieldname'] as $key) {
+         $parameter[$key] = $DB->escape($parameter[$key]);
+      }
       if ($found) {
          $parameter['id'] = $item->getID();
          $item->update($parameter);

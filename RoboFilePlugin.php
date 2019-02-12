@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -34,7 +34,12 @@
 class RoboFilePlugin extends \Robo\Tasks
 {
 
-   protected $csignore = ['/vendor/', '/node_modules/', '/lib/'];
+   protected $csignore = [
+      '/vendor/',
+      '/node_modules/',
+      '/lib/',
+      '/development/'
+   ];
    protected $csfiles  = ['./'];
 
    /**

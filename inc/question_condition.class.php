@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -104,6 +104,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $condition = []) {
+      global $DB;
+
       $item = new static();
 
       if ($showField
@@ -112,6 +114,11 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
                                                 $condition['show_field'])) {
          $importLinker->postponeImport($condition['uuid'], $item->getType(), $condition, $questions_id);
          return false;
+      }
+
+      // escape text fields
+      foreach (['show_value'] as $key) {
+         $condition[$key] = $DB->escape($condition[$key]);
       }
 
       $condition['show_field'] = $showField;
@@ -157,6 +164,12 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       return $condition;
    }
 
+   /**
+    * get show / hide conditions for a question
+    *
+    * @param int $questionId
+    * @return array
+    */
    public function getConditionsFromQuestion($questionId) {
       global $DB;
 

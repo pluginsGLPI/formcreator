@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -61,7 +61,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
          return '';
       }
 
-      return $this->value;
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function deserializeValue($value) {
@@ -188,8 +188,9 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
          return false;
       }
 
-       $this->value = str_replace('\r\n', "\r\n", $input[$key]);
-       return true;
+      $this->value = str_replace('\r\n', "\r\n", $input[$key]);
+      $this->value = Toolbox::stripslashes_deep($this->value);
+      return true;
    }
 
    public function getEmptyParameters() {
@@ -218,7 +219,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function equals($value) {
-      return $this->value == $value;
+      return Toolbox::stripslashes_deep($this->value) == $value;
    }
 
    public function notEquals($value) {
@@ -226,7 +227,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function greaterThan($value) {
-      return $this->value > $value;
+      return Toolbox::stripslashes_deep($this->value) > $value;
    }
 
    public function lessThan($value) {

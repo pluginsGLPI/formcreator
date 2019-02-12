@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -99,7 +99,12 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
          return true;
       }
 
-      return $this->isValidValue($this->value);
+      if (!$this->isValidValue($this->value)) {
+         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+         return false;
+      }
+
+      return true;
    }
 
    private function isValidValue($value) {

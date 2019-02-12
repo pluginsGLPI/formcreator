@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -75,7 +75,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          return '';
       }
 
-      return implode("\r\n", $this->value);
+      return implode("\r\n", Toolbox::addslashes_deep($this->value));
    }
 
    public function deserializeValue($value) {
@@ -178,7 +178,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
 
       foreach ($tab_values as $input) {
          if (in_array($input, $values)) {
-            $value[] = Toolbox::addslashes_deep($input);
+            $value[] = $input;
          }
       }
       if ($richText) {
@@ -222,7 +222,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          }
       }
 
-      $this->value = $input[$key];
+      $this->value = Toolbox::stripslashes_deep($input[$key]);
       return true;
    }
 

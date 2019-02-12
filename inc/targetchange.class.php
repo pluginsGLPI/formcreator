@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -152,8 +152,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
-    * @param  array   $target_data the targetticket data (match the targetticket table)
-    * @return integer the targetticket's id
+    * @param  array   $target_data the targetchange data (match the targetticket table)
+    * @return integer the targetchange's id
     */
    public static function import($targetitems_id = 0, $target_data = []) {
       global $DB;
@@ -164,27 +164,22 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $target_data['id'] = $targetitems_id;
 
       // convert question uuid into id
-      $targetTicket = new PluginFormcreatorTargetTicket();
-      $targetTicket->getFromDB($targetitems_id);
-      $found_section = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => PluginFormcreatorSection::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $targetTicket->getForm()->getID()
-         ],
-         'ORDER'  => 'order ASC'
-      ]);
+      $targetChange = new PluginFormcreatorTargetChange();
+      $targetChange->getFromDB($targetitems_id);
+      $section = new PluginFormcreatorSection();
+      $foundSections = $section->getSectionsFromForm($targetChange->getForm()->getID());
       $tab_section = [];
-      foreach ($found_section as $section_item) {
-         $tab_section[] = $section_item['id'];
+      foreach ($foundSections as $section) {
+         $tab_section[] = $section->getID();
       }
 
       if (!empty($tab_section)) {
+         $sectionFk = PluginFormcreatorSection::getForeignKeyField();
          $rows = $DB->request([
             'SELECT' => ['id', 'uuid'],
             'FROM'   => PluginFormcreatorQuestion::getTable(),
             'WHERE'  => [
-               'plugin_formcreator_sections_id' => $tab_section
+               $sectionFk => $tab_section
             ],
             'ORDER'  => 'order ASC'
          ]);
@@ -204,13 +199,18 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
-      // update target ticket
+      // escape text fields
+      foreach (['title', 'content'] as $key) {
+         $target_data[$key] = $DB->escape($target_data[$key]);
+      }
+
+      // update target change
       $item->update($target_data);
 
       if ($targetitems_id
             && isset($target_data['_actors'])) {
          foreach ($target_data['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($targetitems_id, $actor);
+            PluginFormcreatorTargetChange_Actor::import($targetitems_id, $actor);
          }
       }
 

@@ -22,7 +22,7 @@
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -49,5 +49,11 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
       $instance = new \PluginFormcreatorHiddenField([]);
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
+   }
+
+   public function testIsPrerequisites() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->isPrerequisites();
+      $this->boolean($output)->isEqualTo(true);
    }
 }

@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -1394,10 +1394,17 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $sections_id = 0, $question = []) {
+      global $DB;
+
       $item = new self;
 
       $question['plugin_formcreator_sections_id'] = $sections_id;
       $question['_skip_checks']                   = true;
+
+      // escape text fields
+      foreach (['name', 'description'] as $key) {
+         $question[$key] = $DB->escape($question[$key]);
+      }
 
       if ($questions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $question['uuid'])) {
          // add id key

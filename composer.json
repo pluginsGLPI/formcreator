@@ -12,17 +12,18 @@
       "apcu-autoloader": true
   },
   "require": {
-        "php": ">= 5.6.0",
-        "ext-xml": "*",
-        "docopt/docopt": "^1.0"
+      "php": ">= 5.6.0",
+      "ext-xml": "*",
+      "docopt/docopt": "^1.0"
     },
     "require-dev": {
-        "ext-bz2": "*",
-        "pear/archive_tar": "^1.4",
-        "atoum/atoum": "^3.3",
-        "atoum/stubs": "^2.5",
-        "glpi-project/tools": "^0.1.0",
-        "glpi-project/coding-standard": "0.7.1"
+      "ext-bz2": "*",
+      "pear/archive_tar": "^1.4",
+      "atoum/atoum": "^3.3",
+      "atoum/stubs": "^2.5",
+      "glpi-project/tools": "^0.1.0",
+      "glpi-project/coding-standard": "0.7.1",
+      "atoum/reports-extension": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {

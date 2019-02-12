@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -211,7 +211,7 @@ class PluginFormcreatorWizard {
       if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
          echo '?noAUTO=1';
       }
-      echo '" class="fa fa-sign-out" title="'.__s('Logout').'">';
+      echo '" class="fa fa-sign-out-alt" title="'.__s('Logout').'">';
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 

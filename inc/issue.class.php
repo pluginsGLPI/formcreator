@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -512,9 +512,14 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $table = $searchopt[$option_id]["table"];
       $field = $searchopt[$option_id]["field"];
 
-      if (isset($data['raw']['ITEM_0_display_id'])) {
+      if (version_compare(GLPI_VERSION, '9.4') < 0) {
+         $rawColumn = 'ITEM_0_display_id';
+      } else {
+         $rawColumn = 'ITEM_PluginFormcreatorIssue_1_display_id';
+      }
+      if (isset($data['raw'][$rawColumn])) {
          $matches = null;
-         preg_match('/[tf]+_([0-9]*)/', $data['raw']['ITEM_0_display_id'], $matches);
+         preg_match('/[tf]+_([0-9]*)/', $data['raw'][$rawColumn], $matches);
          $id = $matches[1];
       }
 

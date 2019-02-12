@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -44,12 +44,6 @@ $targetchange = new PluginFormcreatorTargetChange();
 
 // Edit an existing target change
 if (isset($_POST["update"])) {
-   $DB->update(PluginFormcreatorTarget::getTable(), [
-      'name'     => $_POST['name']
-   ], [
-      'items_id' => (int) $_POST['id'],
-      'itemtype' => 'PluginFormcreatorTargetChange'
-   ]);
    $targetchange->update($_POST);
    Html::back();
 

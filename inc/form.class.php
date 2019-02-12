@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -1052,7 +1052,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       if (!isset($input['requesttype'])) {
          $requestType = new RequestType();
-         $requestType->getFromDBByCrit(['name' => ['LIKE' => 'Formcreator']]);
+         $requestType->getFromDBByCrit(['name' => ['LIKE', 'Formcreator']]);
          $input['requesttype'] = $requestType->getID();
       }
 
@@ -1171,7 +1171,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * Validates answers of a form and saves them in database
     *
     * @param array $input fields from the HTML form
-    * @return integer|boolean ID of the form_answer if sucess, false otherwise
+    * @return integer|boolean ID of the formanswer if success, false otherwise
     */
    public function saveForm($input) {
       $valid = true;
@@ -1416,6 +1416,11 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          unset($target_values['id'],
                $target_values['uuid']);
          $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+
+         // escape text fields
+         foreach (['name'] as $key) {
+            $target_values[$key] = $DB->escape($target_values[$key]);
+         }
 
          if (!$target->add($target_values)) {
             return false;
@@ -1914,7 +1919,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
          $importLinker = new PluginFormcreatorImportLinker();
          foreach ($forms_toimport['forms'] as $form) {
-            //self::import($form);
             self::import($importLinker, $form);
          }
          if (!$importLinker->importPostponed()) {
@@ -2021,6 +2025,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public static function import(PluginFormcreatorImportLinker $importLinker, $form = []) {
       global $DB;
 
+      set_time_limit(30);
+
       $form_obj = new self;
       $entity   = new Entity;
       $form_cat = new PluginFormcreatorCategory;
@@ -2041,15 +2047,18 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $form['plugin_formcreator_categories_id'] = 0;
       }
 
+      // escape text fields
+      foreach (['name', 'description', 'content'] as $key) {
+         $form[$key] = $DB->escape($form[$key]);
+      }
+
       // retrieve form by its uuid
       if ($forms_id = plugin_formcreator_getFromDBByField($form_obj,
                                                           'uuid',
                                                           $form['uuid'])) {
          // add id key
          $form['id'] = $forms_id;
-         foreach (['name', 'description', 'content'] as $key) {
-            $form[$key] = $DB->escape($form[$key]);
-         }
+
          // update existing form
          $form_obj->update($form);
       } else {
@@ -2087,6 +2096,20 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $importLinker->addImportedObject($form['uuid'], $form_obj);
          foreach ($form['_sections'] as $section) {
             PluginFormcreatorSection::import($importLinker, $forms_id, $section);
+         }
+      }
+
+      // import form's targets
+      if ($forms_id
+          && isset($form['_targets'])) {
+         // delete old targets
+         $FormTarget = new PluginFormcreatorTarget();
+         $FormTarget->deleteByCriteria([
+            'plugin_formcreator_forms_id' => $forms_id,
+         ]);
+
+         foreach ($form['_targets'] as $target) {
+            PluginFormcreatorTarget::import($forms_id, $target);
          }
       }
 

@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -77,7 +77,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
          return '';
       }
 
-      return $this->value;
+      return Toolbox::addslashes_deep($this->value);
    }
 
    public function deserializeValue($value) {
@@ -143,4 +143,3 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return true;
    }
 }
-

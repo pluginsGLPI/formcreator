@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "af76c4947f8c9078a9376794cf914f00",
+    "content-hash": "7ac7b7997969a8f741e3b29cd7a58415",
     "packages": [
         {
             "name": "docopt/docopt",
@@ -136,6 +136,60 @@
                 "unit testing"
             ],
             "time": "2018-03-15T22:46:39+00:00"
+        },
+        {
+            "name": "atoum/reports-extension",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/atoum/reports-extension.git",
+                "reference": "3bbaf96c240086cb5944b2cb90f11d1b41f82c54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/atoum/reports-extension/zipball/3bbaf96c240086cb5944b2cb90f11d1b41f82c54",
+                "reference": "3bbaf96c240086cb5944b2cb90f11d1b41f82c54",
+                "shasum": ""
+            },
+            "require": {
+                "atoum/atoum": "^2.9 || ^3.0",
+                "php": "^5.4.0 || ^7.0.0",
+                "symfony/filesystem": "^2.6 | ^3.0 | ^4.0",
+                "twig/twig": "^1.18 | ^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mageekguy\\atoum\\reports\\": "classes"
+                },
+                "files": [
+                    "configuration.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "jubianchi",
+                    "email": "contact@jubianchi.fr"
+                }
+            ],
+            "description": "atoum Reports extension",
+            "homepage": "http://www.atoum.org",
+            "keywords": [
+                "TDD",
+                "atoum",
+                "atoum-extension",
+                "reports",
+                "test",
+                "unit testing"
+            ],
+            "time": "2018-02-08T08:02:15+00:00"
         },
         {
             "name": "atoum/stubs",
@@ -1854,6 +1908,72 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2018-08-10T07:34:36+00:00"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.35.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
+                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "require-dev": {
+                "psr/container": "^1.0",
+                "symfony/debug": "^2.7",
+                "symfony/phpunit-bridge": "^3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.35-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                },
+                "psr-4": {
+                    "Twig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Twig Team",
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "https://twig.symfony.com",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2018-07-13T07:12:17+00:00"
         }
     ],
     "aliases": [],

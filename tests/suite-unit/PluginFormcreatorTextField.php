@@ -22,7 +22,7 @@
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -209,5 +209,53 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $instance = new \PluginFormcreatorTextField([]);
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
+   }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value' => '',
+            'expected' => '',
+         ],
+         [
+            'value' => "quote ' test",
+            'expected' => "quote \' test",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorTextField([]);
+      $instance->prepareQuestionInputForSave([
+         'default_values' => $value,
+      ]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      return [
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => 'foo',
+            'expected'  => 'foo' ,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorTextField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo($expected);
    }
 }

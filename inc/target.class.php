@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -267,16 +267,22 @@ class PluginFormcreatorTarget extends CommonDBTM
     * @return integer the target's id
     */
    public static function import($forms_id = 0, $target = []) {
+      global $DB;
+
       $item = new self;
 
       $target['plugin_formcreator_forms_id'] = $forms_id;
       $target['_skip_checks']                = true;
       $target['_skip_create_actors']         = true;
 
+      // escape text fields
+      foreach (['name', 'title'] as $key) {
+         $target[$key] = $DB->escape($target[$key]);
+      }
+
       if ($targets_id = plugin_formcreator_getFromDBByField($item, 'uuid', $target['uuid'])) {
          // add id key
          $target['id'] = $targets_id;
-
          // update target
          $item->update($target);
       } else {

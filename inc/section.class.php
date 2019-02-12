@@ -23,7 +23,7 @@
  * ---------------------------------------------------------------------
  * @author    Thierry Bugier
  * @author    Jérémy Moreau
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -339,10 +339,17 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
    */
 
    public static function import(PluginFormcreatorImportLinker $importLinker, $forms_id = 0, $section = []) {
+      global $DB;
+
       $item = new self;
 
       $section['plugin_formcreator_forms_id'] = $forms_id;
       $section['_skip_checks']                = true;
+
+      // escape text fields
+      foreach (['name'] as $key) {
+         $section[$key] = $DB->escape($section[$key]);
+      }
 
       if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
          // add id key

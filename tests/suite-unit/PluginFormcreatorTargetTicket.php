@@ -22,7 +22,7 @@
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *
- * @copyright Copyright © 2011 - 2018 Teclib'
+ * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
  * @link      https://pluginsglpi.github.io/formcreator/
@@ -307,7 +307,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $sectionName = $section->fields['name'];
       $questionTag = '##question_' . $question->getID() . '##';
       $answerTag = '##answer_' . $question->getID() . '##';
-      $eolSimple = '\n';
+      $eolSimple = "\r\n";
       // 2 expected values
       // 0 : Rich text mode disabled
       // 1 : Rich text mode enabled
