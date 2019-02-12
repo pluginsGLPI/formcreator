@@ -1,3 +1,33 @@
+<a name="2.7.0"></a>
+# [2.7.0](https://github.com/pluginsglpi/formcreator/compare/v2.7.0-beta.2...v2.7.0) (2019-02-12)
+
+
+### Bug Fixes
+
+* **formanswer:** avoid loop of purge permission check ([93a7f84](https://github.com/pluginsglpi/formcreator/commit/93a7f84))
+* compatibility with GLPI 9.4 ([1225c02](https://github.com/pluginsglpi/formcreator/commit/1225c02))
+* **filefield:** add error message if file must have an upload ([c800495](https://github.com/pluginsglpi/formcreator/commit/c800495))
+* **form:** escape single quote when duplicating a form ([9d735d8](https://github.com/pluginsglpi/formcreator/commit/9d735d8))
+* **form_profile:** more resilient export / import ([0303120](https://github.com/pluginsglpi/formcreator/commit/0303120))
+* **formanswer:** abusive scaping on section name ([0a74aba](https://github.com/pluginsglpi/formcreator/commit/0a74aba))
+* **formanswer:** generation of full form template ([8b99bd1](https://github.com/pluginsglpi/formcreator/commit/8b99bd1))
+* **formaswer:** remove is_deleted column ([8f4111f](https://github.com/pluginsglpi/formcreator/commit/8f4111f))
+* **glpiselectfield:** missing entries in entity select ([746326c](https://github.com/pluginsglpi/formcreator/commit/746326c))
+* **issue:** compatibility with search engine of GLPI 9.4 ([65a48fe](https://github.com/pluginsglpi/formcreator/commit/65a48fe))
+* **target:** escape single quotes ([9f641e3](https://github.com/pluginsglpi/formcreator/commit/9f641e3))
+* **targetbase:** rename of a target was ignored ([4f0c7c8](https://github.com/pluginsglpi/formcreator/commit/4f0c7c8))
+* **targetchange:** copy pasted import code ([7f64792](https://github.com/pluginsglpi/formcreator/commit/7f64792))
+* **targetticket:** email field as source of actors ([002778d](https://github.com/pluginsglpi/formcreator/commit/002778d))
+* **targetticket:** single quote not escaped ([dac1f25](https://github.com/pluginsglpi/formcreator/commit/dac1f25))
+* **targetticket,targetchange:** escape single quotes ([5d5f22b](https://github.com/pluginsglpi/formcreator/commit/5d5f22b))
+* **wizard:** invisible logout icon ([4ab1299](https://github.com/pluginsglpi/formcreator/commit/4ab1299))
+* default value of integer and float fields ([3d90e6b](https://github.com/pluginsglpi/formcreator/commit/3d90e6b))
+* improve quote escaping ([b8497fa](https://github.com/pluginsglpi/formcreator/commit/b8497fa))
+* quote issue in javascript code ([a91cc11](https://github.com/pluginsglpi/formcreator/commit/a91cc11))
+* resolve several other quote escaping problems ([7e306f5](https://github.com/pluginsglpi/formcreator/commit/7e306f5))
+
+
+
 <a name="2.7.0-beta.3"></a>
 # [2.7.0-beta.3](https://github.com/pluginsglpi/formcreator/compare/v2.7.0-beta.2...v2.7.0-beta.3) (2019-01-16)
 
