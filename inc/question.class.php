@@ -749,39 +749,47 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<input type="text" name="name" id="name" style="width:90%;" autofocus value="'.$this->fields['name'].'" class="required"';
       echo '</td>';
 
+      // Field type
+      // Section
       echo '<td width="20%">';
-      echo '<label for="dropdown_fieldtype'.$rand.'" id="label_fieldtype">';
-      echo _n('Type', 'Types', 1);
-      echo '<span style="color:red;">*</span>';
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td width="30%">';
-      $fieldtypes = PluginFormcreatorFields::getNames();
-      Dropdown::showFromArray('fieldtype', $fieldtypes, [
-         'value'       => $this->fields['fieldtype'],
-         'on_change'   => 'plugin_formcreator_changeQuestionType();',
-         'rand'        => $rand,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="line1">';
-      echo '<td>';
       echo '<label for="dropdown_plugin_formcreator_sections_id'.$rand.'" id="label_name">';
       echo  _n('Section', 'Sections', 1, 'formcreator');
       echo '<span style="color:red;">*</span>';
       echo '</label>';
       echo '</td>';
 
-      echo '<td>';
+      echo '<td width="30%">';
       $sections = [];
       foreach ((new PluginFormcreatorSection())->getSectionsFromForm($form_id) as $section) {
          $sections[$section->getID()] = $section->getField('name');
       }
+      $currentSectionId = ($this->fields['plugin_formcreator_sections_id'])
+                        ? $this->fields['plugin_formcreator_sections_id']
+                        : intval($_REQUEST['section_id']);
       Dropdown::showFromArray('plugin_formcreator_sections_id', $sections, [
-         'value' => ($this->fields['plugin_formcreator_sections_id']) ?:intval($_REQUEST['section_id']),
+         'value' => $currentSectionId,
          'rand'  => $rand,
+      ]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line1">';
+
+      // Field type
+      echo '<td>';
+      echo '<label for="dropdown_fieldtype'.$rand.'" id="label_fieldtype">';
+      echo _n('Type', 'Types', 1);
+      echo '<span style="color:red;">*</span>';
+      echo '</label>';
+
+      echo '</td>';
+
+      echo '<td>';
+      $fieldtypes = PluginFormcreatorFields::getNames();
+      Dropdown::showFromArray('fieldtype', $fieldtypes, [
+         'value'       => $this->fields['fieldtype'],
+         'on_change'   => 'plugin_formcreator_changeQuestionType();',
+         'rand'        => $rand,
       ]);
       echo '</td>';
 
