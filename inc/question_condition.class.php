@@ -273,9 +273,9 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
               .'value="'. $show_value . '" size="8">';
       $html.= '</div>';
       $html.= '<div class="div_show_condition_add">';
-      $html.= '<img src="../../../pics/plus.png" onclick="addEmptyCondition(this)"/>&nbsp;</div>';
+      $html.= '<img src="../../../pics/plus.png" onclick="plugin_formcreator_addEmptyCondition(this)"/>&nbsp;</div>';
       $html.= '<div class="div_show_condition_remove">';
-      $html.= '<img src="../../../pics/moins.png" onclick="removeNextCondition(this)"/></div>';
+      $html.= '<img src="../../../pics/moins.png" onclick="plugin_formcreator_removeNextCondition(this)"/></div>';
       $html.= '</div>';
       $html.= '</td>';
       $html.= '</tr>';

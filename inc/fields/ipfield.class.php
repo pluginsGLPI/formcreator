@@ -35,6 +35,22 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $label = '';
+      $field = '';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions = $common['additions'];
+
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => false,
+      ];
+   }
+
    public function show($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();

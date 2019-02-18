@@ -30,20 +30,36 @@
  */
 
 include ('../../../inc/includes.php');
-
 Session::checkRight('entity', UPDATE);
 
-if (!isset($_REQUEST['dropdown_itemtype'])
-    || $_REQUEST['dropdown_itemtype'] == '0'
-    || !class_exists($_REQUEST['dropdown_itemtype']))
-{
-   Dropdown::showFromArray('dropdown_default_value', [], ['display_emptychoice'   => true]);
-} else {
-   Dropdown::show($_REQUEST['dropdown_itemtype'], [
-      'name' => 'dropdown_default_value',
-      'rand' => mt_rand(),
-   ]);
-   $showTicketCategorySpecific = ($_REQUEST['dropdown_itemtype'] == ITILCategory::class)
-                               ? 'true'
-                               : 'false';
+if (!isset($_REQUEST['questionId'])) {
+   http_response_code(400);
+   exit();
 }
+if (!isset($_REQUEST['questionType'])) {
+   http_response_code(400);
+   exit();
+}
+
+$question = new PluginFormcreatorQuestion();
+$question->getEmpty();
+if (!$question->isNewID((int) $_REQUEST['questionId']) && !$question->getFromDB((int) $_REQUEST['questionId'])) {
+   http_response_code(400);
+   exit();
+}
+
+$question->fields['fieldtype'] = $_REQUEST['questionType'];
+$field = PluginFormcreatorFields::getFieldInstance(
+   $question->fields['fieldtype'],
+   $question
+);
+$json = [
+   'label' => '',
+   'field' => '',
+   'additions' => '',
+   'may_be_empty' => false,
+];
+if ($field !== null) {
+   $json = $field->getDesignSpecializationField();
+}
+echo json_encode($json);

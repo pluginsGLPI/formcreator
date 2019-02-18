@@ -35,6 +35,121 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '<label for="dropdown_dropdown_values'.$rand.'" id="label_dropdown_values">';
+      $label .= _n('Dropdown', 'Dropdowns', 1);
+      $label .= '</label>';
+
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      if ($decodedValues === null) {
+         $itemtype = $this->fields['values'];
+      } else {
+         $itemtype = $decodedValues['itemtype'];
+      }
+      $optgroup = Dropdown::getStandardDropdownItemTypes();
+      array_unshift($optgroup, '---');
+      $field = '<div id="dropdown_values_field">';
+      $field .= Dropdown::showFromArray('dropdown_values', $optgroup, [
+         'value'     => $itemtype,
+         'rand'      => $rand,
+         'on_change' => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
+         'display'   => false,
+      ]);
+
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td id="dropdown_default_value_field">';
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      // Ticket category specific
+      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_ticket">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_show_ticket_categories'.$rand.'" id="label_show_ticket_categories">';
+      $additions .= __('Show ticket categories', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $ticketCategoriesOptions = [
+         'request'  => __('Request categories', 'formcreator'),
+         'incident' => __('Incident categories', 'formcreator'),
+         'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categoqries', 'formcreator'),
+         'change'   => __('Change'),
+         'all'      => __('All'),
+      ];
+      $additions .= dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
+         'rand'  => $rand,
+         'value' => isset($decodedValues['show_ticket_categories'])
+                    ? $decodedValues['show_ticket_categories']
+                    : 'both',
+         'display' => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
+      $additions .= __('Limit ticket categories depth', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= dropdown::showNumber(
+         'show_ticket_categories_depth', [
+         'rand'  => $rand,
+         'value' => isset($decodedValues['show_ticket_categories_depth'])
+                     ? $decodedValues['show_ticket_categories_depth']
+                     : 0,
+         'min' => 1,
+         'max' => 16,
+         'toadd' => [0 => __('No limit', 'formcreator')],
+         'display' => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '</tr>';
+      $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_ticket">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_root_ticket_categories'.$rand.'" id="label_root_ticket_categories">';
+      $additions .= __('ticket categories root', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $rootValue = isset($decodedValue['show_ticket_categories_root'])
+                     ? $decodedValue['show_ticket_categories_root']
+                     : Dropdown::EMPTY_VALUE;
+      $additions .= Dropdown::show(ITILCategory::class, [
+         'name'  => 'show_ticket_categories_root',
+         'value' => $rootValue,
+         'rand'  => $rand,
+         'display' => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</tr>';
+      $additions .= Html::scriptBlock("plugin_formcreator_changeDropdownItemtype($rand);");
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => true,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
       global $DB, $CFG_GLPI;
 
