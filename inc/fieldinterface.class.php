@@ -51,6 +51,13 @@ interface PluginFormcreatorFieldInterface
    public function isPrerequisites();
 
    /**
+    * get HTML for specific properties of the field type at design time
+    *
+    * @return array
+    */
+   public function getDesignSpecializationField();
+
+   /**
     * Is the field valid for the given value?
     * @return boolean True if the field has a valid value, false otherwise
     */

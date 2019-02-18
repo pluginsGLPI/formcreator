@@ -31,7 +31,7 @@
 
 include ('../../../inc/includes.php');
 
-Session::checkRight("entity", UPDATE);
+Session::checkRight('entity', UPDATE);
 
 $authldap = new AuthLdap();
 $authldap->getFromDB($_POST['value']);

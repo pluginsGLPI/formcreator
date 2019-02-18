@@ -1470,7 +1470,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     *
     * @param integer $questionId
     */
-   public  function getByQuestionId($questionId) {
+   public function getByQuestionId($questionId) {
       $table_sections = PluginFormcreatorSection::getTable();
       $table_questions = PluginFormcreatorQuestion::getTable();
       $this->getFromDBByRequest([
