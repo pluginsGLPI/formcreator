@@ -96,7 +96,7 @@ class PluginFormcreatorWizard {
       echo '<ul class="plugin_formcreator_services">';
       echo '<li class="' . ($activeMenuItem == self::MENU_CATALOG ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
       echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/wizard.php' . '">';
-      echo '<span class="fa fa-paper-plane-o fc_list_icon" title="'.__('Seek assistance', 'formcreator').'"></span>';
+      echo '<span class="fa fa-paper-plane fc_list_icon" title="'.__('Seek assistance', 'formcreator').'"></span>';
       echo '<span class="label">'.__('Seek assistance', 'formcreator').'</span>';
       echo '</a></li>';
 
@@ -115,7 +115,7 @@ class PluginFormcreatorWizard {
          if ($found_available_res['cpt'] > 0) {
             echo '<li class="' . ($activeMenuItem == self::MENU_RESERVATIONS ? 'plugin_formcreator_selectedMenuItem' : '') . '">';
             echo '<a href="' . $CFG_GLPI["root_doc"].'/plugins/formcreator/front/reservationitem.php' . '">';
-            echo '<span class="fa fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
+            echo '<span class="fa fa-calendar-check fa-calendar-check-o fc_list_icon" title="'.__('Book an asset', 'formcreator').'"></span>';
             echo '<span class="label">'.__('Book an asset', 'formcreator').'</span>';
             echo '</a></li>';
          }
