@@ -35,7 +35,76 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       return true;
    }
 
-   public static function getName() {
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '<label for="dropdown_glpi_objects'.$rand.'" id="label_dropdown_values">';
+      $label .= _n('GLPI object', 'GLPI objects', 1, 'formcreator');
+      $label .= '</label>';
+
+      $optgroup = [
+         __("Assets") => [
+            Computer::class         => Computer::getTypeName(2),
+            Monitor::class          => Monitor::getTypeName(2),
+            Software::class         => Software::getTypeName(2),
+            Networkequipment::class => Networkequipment::getTypeName(2),
+            Peripheral::class       => Peripheral::getTypeName(2),
+            Printer::class          => Printer::getTypeName(2),
+            Cartridgeitem::class    => Cartridgeitem::getTypeName(2),
+            Consumableitem::class   => Consumableitem::getTypeName(2),
+            Phone::class            => Phone::getTypeName(2),
+            Line::class             => Line::getTypeName(2)],
+         __("Assistance") => [
+            Ticket::class           => Ticket::getTypeName(2),
+            Problem::class          => Problem::getTypeName(2),
+            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)],
+         __("Management") => [
+            Budget::class           => Budget::getTypeName(2),
+            Supplier::class         => Supplier::getTypeName(2),
+            Contact::class          => Contact::getTypeName(2),
+            Contract::class         => Contract::getTypeName(2),
+            Document::class         => Document::getTypeName(2),
+            Project::class          => Project::getTypeName(2)],
+         __("Tools") => [
+            Reminder::class         => __("Notes"),
+            RSSFeed::class          => __("RSS feed")],
+         __("Administration") => [
+            User::class             => User::getTypeName(2),
+            Group::class            => Group::getTypeName(2),
+            Entity::class           => Entity::getTypeName(2),
+            Profile::class          => Profile::getTypeName(2)],
+      ];
+      array_unshift($optgroup, '---');
+      $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
+         'value'     => $this->fields['values'],
+         'rand'      => $rand,
+         'on_change' => 'plugin_formcreator_changeGlpiObjectItemType();',
+         'display'   => false,
+      ]);
+
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td id="dropdown_default_value_field">';
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => true,
+         'may_be_required' => true,
+      ];
+   }
+
+      public static function getName() {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 

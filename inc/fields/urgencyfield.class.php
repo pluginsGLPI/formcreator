@@ -35,6 +35,45 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= Ticket::dropdownUrgency([
+         'name'     => 'default_values',
+         'value'    => $this->fields['default_values'],
+         'comments' => false,
+         'rand'     => $rand,
+         'display'  => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = PluginFormcreatorField::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
       if ($canEdit) {
          $id           = $this->fields['id'];

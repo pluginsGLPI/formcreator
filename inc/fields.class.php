@@ -351,7 +351,8 @@ class PluginFormcreatorFields
     * @return boolean
     */
    public static function fieldTypeExists($type) {
-      return is_a(self::getFieldClassname($type), PluginFormcreatorFieldInterface::class, true);
+      $className = self::getFieldClassname($type);
+      return is_subclass_of($className, PluginFormcreatorField::class, true);
    }
 
    /**
