@@ -31,7 +31,43 @@
 
 class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
 {
-   public function displayField($canEdit = true) {
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default values');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '<textarea name="default_values" id="default_values" rows="4" cols="40"'
+         .'style="width: 90%">'
+         .Html::entities_deep($this->getValueForDesign())
+         .'</textarea>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '</tr>';
+
+      $common = $common = PluginFormcreatorField::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
+      public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
       $id           = $this->fields['id'];

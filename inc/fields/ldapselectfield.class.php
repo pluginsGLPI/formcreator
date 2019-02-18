@@ -31,6 +31,71 @@
 
 class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 {
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '<label for="dropdown_ldap_auth'.$rand.'">';
+      $label .= _n('LDAP directory', 'LDAP directories', 1);
+      $label .= '</label>';
+
+      $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
+      if ($ldap_values === null) {
+         $ldap_values = [];
+      }
+      $field = Dropdown::show('AuthLDAP', [
+         'name'      => 'ldap_auth',
+         'rand'      => $rand,
+         'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
+         'on_change' => 'plugin_formcreator_changeLDAP(this)',
+         'display'   => false,
+      ]);
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="ldap_filter">';
+      $additions .= __('Filter', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '<input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"'
+           .'value="'.(isset($ldap_values['ldap_filter']) ? $ldap_values['ldap_filter'] : '').'" />';
+      $additions .= '</td>';
+
+      $additions .= '<td>';
+      $additions .= '<label for="ldap_attribute">';
+      $additions .= __('Attribute', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+
+      $additions .= '<td>';
+      $additions .= Dropdown::show('RuleRightParameter', [
+         'name'  => 'ldap_attribute',
+         'rand'  => $rand,
+         'value' => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
+         'display' => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '</tr>';
+      $additions .= '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td colspan="2">&nbsp;</td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => true,
+         'may_be_required' => true,
+      ];
+   }
+
    public function getAvailableValues() {
       if (empty($this->fields['values'])) {
          return [];

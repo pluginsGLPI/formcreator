@@ -35,6 +35,22 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $label = '';
+      $field = '';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions = $common['additions'];
+
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => false,
+      ];
+   }
+
    public function show($canEdit = true) {
       echo '<div class="description_field form-group" id="form-group-field-' . $this->fields['id'] . '">';
       echo nl2br(html_entity_decode($this->fields['description']));

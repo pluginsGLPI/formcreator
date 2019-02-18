@@ -151,7 +151,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $token            = Session::getNewCSRFToken();
       foreach ($found_sections as $section) {
          echo '<tr class="section_row" id="section_row_' . $section['id'] . '">';
-         echo '<th onclick="editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')">';
+         echo '<th onclick="plugin_formcreator_editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')">';
          echo "<a href='#'>";
          echo $section['name'];
          echo '</a>';
@@ -162,7 +162,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          echo "<span class='form_control pointer'>";
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
                   title="' . __('Delete', 'formcreator') . '"
-                  onclick="deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"> ';
+                  onclick="plugin_formcreator_deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
@@ -203,7 +203,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          foreach ($found_questions as $question) {
             $i++;
             echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
-            echo '<td onclick="editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
+            echo '<td onclick="plugin_formcreator_editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
             echo "<a href='#'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-' . $question['fieldtype'] . '-field.png" title="" /> ';
             echo $question['name'];
@@ -221,7 +221,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
                      title="' . __('Delete', 'formcreator') . '"
-                     onclick="deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
+                     onclick="plugin_formcreator_deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
             echo "</span>";
 
             echo "<span class='form_control pointer'>";
@@ -261,7 +261,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
          echo '<tr class="line' . (($i + 1) % 2) . '">';
          echo '<td colspan="6" id="add_question_td_' . $section['id'] . '" class="add_question_tds">';
-         echo '<a href="javascript:addQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ');">
+         echo '<a href="javascript:plugin_formcreator_addQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ');">
                    <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+"/>
                    '.__('Add a question', 'formcreator').'
                </a>';
@@ -271,7 +271,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       echo '<tr class="line1 section_row">';
       echo '<th id="add_section_th">';
-      echo '<a href="javascript:addSection(' . $item->getId() . ', \'' . $token . '\');">
+      echo '<a href="javascript:plugin_formcreator_addSection(' . $item->getId() . ', \'' . $token . '\');">
                 <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+">
                 '.__('Add a section', 'formcreator').'
             </a>';
@@ -722,9 +722,13 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       $rootDoc = $CFG_GLPI['root_doc'];
 
-      $form_id = (int) $_REQUEST['form_id'];
+      // Find the form of the question
+      $section = new PluginFormcreatorSection();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $section->getFromDB($this->fields[$sectionFk]);
       $form = new PluginFormcreatorForm();
-      $form->getFromDB($form_id);
+      $form->getFromDBBySection($section);
+      $form_id = $form->getID();
 
       $rand = mt_rand();
       $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
@@ -738,6 +742,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</tr>';
 
       echo '<tr class="line0">';
+
+      // name
       echo '<td width="20%">';
       echo '<label for="name" id="label_name">';
       echo  __('Title');
@@ -749,7 +755,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<input type="text" name="name" id="name" style="width:90%;" autofocus value="'.$this->fields['name'].'" class="required"';
       echo '</td>';
 
-      // Field type
       // Section
       echo '<td width="20%">';
       echo '<label for="dropdown_plugin_formcreator_sections_id'.$rand.'" id="label_name">';
@@ -781,355 +786,82 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo _n('Type', 'Types', 1);
       echo '<span style="color:red;">*</span>';
       echo '</label>';
-
       echo '</td>';
 
       echo '<td>';
       $fieldtypes = PluginFormcreatorFields::getNames();
       Dropdown::showFromArray('fieldtype', $fieldtypes, [
          'value'       => $this->fields['fieldtype'],
-         'on_change'   => 'plugin_formcreator_changeQuestionType();',
+         'on_change'   => "plugin_formcreator_changeQuestionType($rand)",
          'rand'        => $rand,
       ]);
       echo '</td>';
 
-      echo '<td>';
-      echo '<label for="dropdown_dropdown_values'.$rand.'" id="label_dropdown_values">';
-      echo _n('Dropdown', 'Dropdowns', 1);
-      echo '</label>';
-      echo '<label for="dropdown_glpi_objects<?php'.$rand.'" id="label_glpi_objects">';
-      echo _n('GLPI object', 'GLPI objects', 1, 'formcreator');
-      echo '</label>';
-      echo '<label for="dropdown_ldap_auth<?php'.$rand.'" id="label_glpi_ldap">';
-      echo _n('LDAP directory', 'LDAP directories', 1);
-      echo '</label>';
+      echo '<td id="plugin_formcreator_subtype_label">';
       echo '</td>';
 
-      echo '<td>';
-      echo '<div id="dropdown_values_field">';
-      $optgroup = Dropdown::getStandardDropdownItemTypes();
-      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-      array_unshift($optgroup, '---');
-      Dropdown::showFromArray('dropdown_values', $optgroup, [
-         'value'     => $decodedValues['itemtype'],
-         'rand'      => $rand,
-         'on_change' => 'plugin_formcreator_change_dropdown("' . $rand . '"); changeQuestionType();',
-      ]);
-      echo '</div>';
-      echo '<div id="glpi_objects_field">';
-      $optgroup = [
-         __("Assets") => [
-            Computer::class         => Computer::getTypeName(2),
-            Monitor::class          => Monitor::getTypeName(2),
-            Software::class         => Software::getTypeName(2),
-            Networkequipment::class => Networkequipment::getTypeName(2),
-            Peripheral::class       => Peripheral::getTypeName(2),
-            Printer::class          => Printer::getTypeName(2),
-            Cartridgeitem::class    => Cartridgeitem::getTypeName(2),
-            Consumableitem::class   => Consumableitem::getTypeName(2),
-            Phone::class            => Phone::getTypeName(2),
-            Line::class             => Line::getTypeName(2)],
-         __("Assistance") => [
-            Ticket::class           => Ticket::getTypeName(2),
-            Problem::class          => Problem::getTypeName(2),
-            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)],
-         __("Management") => [
-            Budget::class           => Budget::getTypeName(2),
-            Supplier::class         => Supplier::getTypeName(2),
-            Contact::class          => Contact::getTypeName(2),
-            Contract::class         => Contract::getTypeName(2),
-            Document::class         => Document::getTypeName(2)],
-         __("Tools") => [
-            Reminder::class         => __("Notes"),
-            RSSFeed::class          => __("RSS feed")],
-         __("Administration") => [
-            User::class             => User::getTypeName(2),
-            Group::class            => Group::getTypeName(2),
-            Entity::class           => Entity::getTypeName(2),
-            Profile::class          => Profile::getTypeName(2)],
-      ];
-      array_unshift($optgroup, '---');
-      Dropdown::showFromArray('glpi_objects', $optgroup, [
-         'value'     => $this->fields['values'],
-         'rand'      => $rand,
-         'on_change' => 'plugin_formcreator_change_glpi_objects("' . $rand . '");',
-      ]);
-      echo '</div>';
-      echo '<div id="glpi_ldap_field">';
-      $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
-      if ($ldap_values === null) {
-         $ldap_values = [];
-      }
-      Dropdown::show('AuthLDAP', [
-         'name'      => 'ldap_auth',
-         'rand'      => $rand,
-         'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
-         'on_change' => 'change_LDAP(this)',
-      ]);
-      echo '</div>';
+      echo '<td id="plugin_formcreator_subtype_value">';
       echo '</td>';
       echo '</tr>';
 
-      // DOM selectors of all possible parameters
-      $allParameterSelectors = [];
-
-      // generate JS to show / hide parameters depending on field type
-      $showHideForFieldTypeJs = "
-      function plugin_formcreator_changeQuestionType() {
-         var value = document.getElementById('dropdown_fieldtype$rand').value
-         plugin_formcreator_hideAllParameters()" . "\n";
-
-      // build JS code to show parameters for the current question type
-      // also colelcts all selectors of the parameters to hide all parameters
-      $showHideForFieldTypeJs.= "switch(value) {" . "\n";
-      $evenRow = 0;
-      foreach (PluginFormcreatorFields::getClasses() as $fieldType => $classname) {
-         $evenRow++;
-         $showHideForFieldTypeJs.= "case '$fieldType':" . "\n";
-         $field = new $classname([]);
-         $evenColumnGroup = 0;
-         foreach ($field->getEmptyParameters() as $parameter) {
-            $evenColumnGroup++;
-            if ($parameter->getParameterFormSize() > 0) {
-               // The parameter needs a 4 columns to show its form
-               // Force a hew table row prior showing the parameter form
-               if (($evenColumnGroup % 2) === 0) {
-                  $evenColumnGroup++;
-               }
-            }
-            if (($evenColumnGroup % 2) === 1) {
-               echo '<tr class="line' . $evenRow % 2 . '">';
-            }
-            $jsSelector = $parameter->getJsShowHideSelector();
-            // Output the table row for the parameter
-            echo $parameter->getParameterForm($form, $this);
-
-            // If the parameter form needs 4 columns, count it twice
-            if ($parameter->getParameterFormSize() > 0) {
-               $evenColumnGroup++;
-            }
-
-            // generate JS code to show the parameter depending on the selected field type
-            $showHideForFieldTypeJs.= "$('$jsSelector').show()" . "\n";
-            $showHideForFieldTypeJs.= "$('$jsSelector + td').show()" . "\n";
-
-            // save the selector to build JS code to hide all parameters
-            $allParameterSelectors[] = $jsSelector;
-            if (($evenColumnGroup % 2) === 0) {
-               echo '</tr>';
-            }
-         }
-         if ($evenColumnGroup > 0 && ($evenColumnGroup % 2) === 1) {
-            // If the question has an odd quantity of parameters
-            // the last row is incomplete
-            // Fill it with an empty dumy cell
-            // show or hide it with the last parameter
-            echo '<td colspan="2"></td>';
-            $showHideForFieldTypeJs.= "$('$jsSelector + td + td').show()" . "\n";
-            $allParameterSelectors[] = "$jsSelector + td + td";
-            echo '</tr>';
-         }
-         $showHideForFieldTypeJs.= "break" . "\n";
-      }
-      $showHideForFieldTypeJs.= "}
-         changeQuestionType()
-      }
-
-      function plugin_formcreator_hideAllParameters() {
-         showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)" . "\n";
-
-      foreach ($allParameterSelectors as $jsSelector) {
-         $showHideForFieldTypeJs.= "$('$jsSelector').hide()" . "\n";
-         $showHideForFieldTypeJs.= "$('$jsSelector + td').hide()" . "\n";
-      }
-      $showHideForFieldTypeJs.= "}" . "\n";
-
-      echo '<tr class="line0" id="required_tr">';
+      echo '<tr>';
+      // required
       echo '<td>';
       echo '<label for="dropdown_required'.$rand.'" id="label_required">';
       echo __('Required', 'formcreator');
       echo '</label>';
       echo '</td>';
 
-      echo '<td>';
+      echo '<td id="plugin_formcreator_required">';
       dropdown::showYesNo('required', $this->fields['required'], -1, [
          'rand'  => $rand,
       ]);
       echo '</td>';
 
+      // show empty
       echo '<td>';
       echo '<label for="dropdown_show_empty'.$rand.'" id="label_show_empty">';
       echo __('Show empty', 'formcreator');
       echo '</label>';
       echo '</td>';
 
-      echo '<td>';
-      echo '<div id="show_empty">';
+      echo '<td id="plugin_formcreator_show_empty">';
       dropdown::showYesNo('show_empty', $this->fields['show_empty'], -1, [
          'rand'  => $rand,
       ]);
-      echo '</div>';
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1" id="cat_restrict_tr">';
-      echo '<td>';
-      echo '<label for="dropdown_show_ticket_categories'.$rand.'" id="label_show_ticket_categories">';
-      echo __('Show ticket categories', 'formcreator');
-      echo '</label>';
-      echo '</td>';
-      echo '<td>';
-      $ticketCategoriesOptions = [
-         'request'  => __('Request categories', 'formcreator'),
-         'incident' => __('Incident categories', 'formcreator'),
-         'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
-         'change'   => __('Change'),
-         'all'      => __('All'),
-      ];
-      dropdown::showFromArray('show_ticket_categories', $ticketCategoriesOptions, [
-         'rand'  => $rand,
-         'value' => isset($decodedValues['show_ticket_categories'])
-                    ? $decodedValues['show_ticket_categories']
-                    : 'both'
-      ]);
-      echo '</td>';
-      echo '<td>';
-      echo '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
-      echo __('Limit ticket categories depth', 'formcreator');
-      echo '</label>';
-      echo '</td>';
-      echo '<td>';
-      dropdown::showNumber('show_ticket_categories_depth', [
-                           'rand'  => $rand,
-                           'value' => isset($decodedValues['show_ticket_categories_depth'])
-                                      ? $decodedValues['show_ticket_categories_depth']
-                                      : 0,
-                           'min' => 1,
-                           'max' => 16,
-                           'toadd' => [0 => __('No limit', 'formcreator')],
-      ]);
-      echo '</td>';
+      // DOM selectors of all possible parameters
+      $allParameterSelectors = [];
+
+      // Empty row for question-specific settings
+      // To be replaced bydynamically
+      echo '<tr class="plugin_formcreator_question_specific">';
+      echo '<td></td><td></td><td></td><td></td>';
       echo '</tr>';
 
-      echo '<tr class="line1" id="cat_root_tr">';
-      echo '<td>';
-      echo '<label for="dropdown_root_ticket_categories'.$rand.'" id="label_root_ticket_categories">';
-      echo __('ticket categories root', 'formcreator');
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
+      echo __('Show field', 'formcreator');
       echo '</label>';
-      echo '</td>';
-      echo '<td>';
-      $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $rootValue = isset($decodedValue['show_ticket_categories_root'])
-                     ? $decodedValue['show_ticket_categories_root']
-                     : Dropdown::EMPTY_VALUE;
-      Dropdown::show(ITILCategory::class, [
-         'name'  => 'show_ticket_categories_root',
-         'value' => $rootValue,
-         'rand'  => $rand,
-      ]);
-      echo '</td>';
-      echo '<td>';
-      echo '</td>';
-      echo '<td>';
-      echo '</td>';
+      echo '</th>';
       echo '</tr>';
 
-      echo '<tr class="line1" id="values_tr">';
-      echo '<td>';
-      echo '<label for="dropdown_default_values'.$rand.'" id="label_default_values">';
-      echo __('Default values');
-      echo '<small>('.__('One per line for lists', 'formcreator').')</small>';
-      echo '</label>';
-      echo '<label for="dropdown_dropdown_default_value'.$rand.'" id="label_dropdown_default_value">';
-      echo __('Default value');
-      echo '</label>';
-      echo '</td>';
-      echo '<td>';
-      $defaultValues = '';
-      if (!$this->isNewItem()) {
-         $fieldObject = PluginFormcreatorFields::getFieldInstance(
-            $this->fields['fieldtype'],
-            $this
-         );
-         $fieldObject->deserializeValue($this->fields['default_values']);
-         $defaultValues = $fieldObject->getValueForDesign();
+      $questionCondition = new PluginFormcreatorQuestion_Condition();
+      $questionConditions = $questionCondition->getConditionsFromQuestion($ID);
+      reset($questionConditions);
+      $questionCondition = array_shift($questionConditions);
+      if ($questionCondition !== null) {
+         echo $questionCondition->getConditionHtml($form_id, 0, true);
       }
-      echo '<textarea name="default_values" id="default_values" rows="4" cols="40"'
-         .'style="width: 90%">'
-         .$defaultValues
-         .'</textarea>';
-      echo '<div id="dropdown_default_value_field">';
-      if (!empty($this->fields['values'])) {
-         if ($this->fields['fieldtype'] == 'glpiselect' && class_exists($this->fields['values'])) {
-            Dropdown::show($this->fields['values'], [
-               'name'  => 'dropdown_default_value',
-               'value' => $this->fields['default_values'],
-               'rand'  => $rand,
-            ]);
-         }
-         if ($this->fields['fieldtype'] == 'dropdown') {
-            $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-            if (class_exists($decodedValue['itemtype'])) {
-               Dropdown::show($decodedValue['itemtype'], [
-                  'name'  => 'dropdown_default_value',
-                  'value' => $this->fields['default_values'],
-                  'rand'  => $rand,
-               ]);
-            }
-         }
+      foreach ($questionConditions as $questionCondition) {
+         echo $questionCondition->getConditionHtml($form_id);
       }
-      echo '</div>';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<label for="values" id="label_values">';
-      echo __('Values', 'formcreator');
-      echo '<small>('.__('One per line', 'formcreator').')</small>';
-      echo '</label>';
-      echo '</td>';
-      echo '<td>';
-      echo '<textarea name="values" id="values" rows="4" cols="40"'
-           .'style="width: 90%">'.$this->fields['values'].'</textarea>';
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="line1" id="ldap_tr">';
-      echo '<td>';
-      echo '<label for="ldap_filter">';
-      echo __('Filter', 'formcreator');
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"'
-           .'value="'.(isset($ldap_values['ldap_filter']) ? $ldap_values['ldap_filter'] : '').'" />';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<label for="ldap_attribute">';
-      echo __('Attribute', 'formcreator');
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td>';
-      $rand2 = mt_rand();
-      Dropdown::show('RuleRightParameter', [
-         'name'  => 'ldap_attribute',
-         'rand'  => $rand2,
-         'value' => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="line0" id="ldap_tr2">';
-      echo '<td>';
-      echo '</td>';
-      echo '<td>';
-      echo '</td>';
-      echo '<td colspan="2">&nbsp;</td>';
-      echo '</tr>';
 
       echo '<tr class="line1" id="description_tr">';
+      // Description of the question
       echo '<td>';
       echo '<label for="description" id="label_description">';
       echo __('Description');
@@ -1143,13 +875,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr>';
-      echo '<th colspan="4">';
-      echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
-      echo __('Show field', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
 
       echo '<tr">';
       echo '<td colspan="4">';
@@ -1159,26 +884,18 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          'shown'        => __('Displayed unless', 'formcreator'),
       ], [
          'value'        => $this->fields['show_rule'],
-         'on_change'    => 'toggleCondition(this);',
+         'on_change'    => 'plugin_formcreator_toggleCondition(this);',
          'rand'         => $rand,
       ]);
-
       echo '</td>';
       echo '</tr>';
-      $questionCondition = new PluginFormcreatorQuestion_Condition();
-      $questionConditions = $questionCondition->getConditionsFromQuestion($ID);
-      reset($questionConditions);
-      $questionCondition = array_shift($questionConditions);
-      if ($questionCondition !== null) {
-            echo $questionCondition->getConditionHtml($form_id, 0, true);
-      }
-      foreach ($questionConditions as $questionCondition) {
-         echo $questionCondition->getConditionHtml($form_id);
-      }
+
       echo '<tr class="line1">';
       echo '<td colspan="4" class="center">';
       echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
       echo '<input type="hidden" name="id" value="'.$ID.'" />';
+      // plugin_formcreator_forms_id should be removed
+      // the form can be retrieved from plugin_formcreatior_sections_id
       echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($form_id).'" />';
       if (0 == $ID) {
          echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
@@ -1189,141 +906,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</tr>';
       $rootDoc = $CFG_GLPI['root_doc'];
       $allTabFields = PluginFormcreatorFields::printAllTabFieldsForJS();
-
-      echo Html::scriptBlock("$showHideForFieldTypeJs
-
-      function changeQuestionType() {
-         var value = document.getElementById('dropdown_fieldtype$rand').value;
-
-         if(value != '') {
-            var tab_fields_fields = [];
-            $allTabFields
-
-            eval(tab_fields_fields[value]);
-         } else {
-            showFields(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-         }
-      }
-      plugin_formcreator_changeQuestionType();
-      function showFields(required, default_values, values, range, show_empty, regex, show_type, dropdown_value, glpi_object, ldap_values) {
-         if(required) {
-            document.getElementById('dropdown_required$rand').style.display   = 'inline';
-            document.getElementById('label_required').style.display                          = 'inline';
-         } else {
-            document.getElementById('dropdown_required$rand').style.display   = 'none';
-            document.getElementById('label_required').style.display                          = 'none';
-         }
-         if(default_values) {
-            document.getElementById('default_values').style.display                          = 'inline';
-            document.getElementById('label_default_values').style.display                    = 'inline';
-         } else {
-            document.getElementById('default_values').style.display                          = 'none';
-            document.getElementById('label_default_values').style.display                    = 'none';
-         }
-         if(show_type) {
-            document.getElementById('dropdown_show_rule$rand').style.display  = 'inline';
-            document.getElementById('label_show_type').style.display                         = 'inline';
-         } else {
-            document.getElementById('dropdown_show_rule$rand').style.display  = 'none';
-            document.getElementById('label_show_type').style.display                         = 'none';
-         }
-         if(values) {
-            document.getElementById('values').style.display                                  = 'inline';
-            document.getElementById('label_values').style.display                            = 'inline';
-         } else {
-            document.getElementById('values').style.display                                  = 'none';
-            document.getElementById('label_values').style.display                            = 'none';
-         }
-         if(dropdown_value) {
-            document.getElementById('dropdown_values_field').style.display = 'inline';
-            document.getElementById('label_dropdown_values').style.display                   = 'inline';
-            dd = document.getElementById('dropdown_dropdown_values$rand');
-            ddvalue = dd.options[dd.selectedIndex].value;
-            if(ddvalue == 'ITILCategory') {
-               document.getElementById('cat_restrict_tr').style.display                      = 'table-row';
-               document.getElementById('cat_root_tr').style.display                          = 'table-row';
-            } else {
-               document.getElementById('cat_restrict_tr').style.display                      = 'none';
-               document.getElementById('cat_root_tr').style.display                          = 'none';
-            }
-         } else {
-            document.getElementById('dropdown_values_field').style.display = 'none';
-            document.getElementById('label_dropdown_values').style.display                   = 'none';
-            document.getElementById('cat_restrict_tr').style.display                         = 'none';
-            document.getElementById('cat_root_tr').style.display                             = 'none';
-         }
-         if(glpi_object) {
-            document.getElementById('glpi_objects_field').style.display = 'inline';
-            document.getElementById('label_glpi_objects').style.display                      = 'inline';
-         } else {
-            document.getElementById('glpi_objects_field').style.display = 'none';
-            document.getElementById('label_glpi_objects').style.display                      = 'none';
-         }
-         if (dropdown_value || glpi_object) {
-            document.getElementById('dropdown_default_value_field').style.display            = 'inline';
-            document.getElementById('label_dropdown_default_value').style.display            = 'inline';
-         } else {
-            document.getElementById('dropdown_default_value_field').style.display            = 'none';
-            document.getElementById('label_dropdown_default_value').style.display            = 'none';
-         }
-         if(show_empty) {
-            document.getElementById('show_empty').style.display = 'inline';
-            document.getElementById('label_show_empty').style.display                        = 'inline';
-         } else {
-            document.getElementById('show_empty').style.display = 'none';
-            document.getElementById('label_show_empty').style.display                        = 'none';
-         }
-         if(values || default_values || dropdown_value || glpi_object) {
-            document.getElementById('values_tr').style.display                               = 'table-row';
-         } else {
-            document.getElementById('values_tr').style.display                               = 'none';
-         }
-         if(required || show_empty) {
-            document.getElementById('required_tr').style.display                             = 'table-row';
-         } else {
-            document.getElementById('required_tr').style.display                             = 'none';
-         }
-         if(ldap_values) {
-            document.getElementById('glpi_ldap_field').style.display                         = 'inline';
-            document.getElementById('label_glpi_ldap').style.display                         = 'inline';
-            document.getElementById('ldap_tr').style.display                                 = 'table-row';
-         } else {
-            document.getElementById('glpi_ldap_field').style.display                         = 'none';
-            document.getElementById('label_glpi_ldap').style.display                         = 'none';
-            document.getElementById('ldap_tr').style.display                                 = 'none';
-         }
-      }
-
-      function addEmptyCondition(target) {
-         $.ajax({
-            url: '$rootDoc/plugins/formcreator/ajax/question_condition.php',
-            data: {
-               plugin_formcreator_questions_id: $ID,
-               plugin_formcreator_forms_id: $form_id,
-               _empty: ''
-            }
-         }).done(function (data) {
-            $(target).parents('tr').after(data);
-            $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
-         });
-      }
-
-      function change_LDAP(ldap) {
-         var ldap_directory = ldap.value;
-
-         jQuery.ajax({
-           url: '$rootDoc/plugins/formcreator/ajax/ldap_filter.php',
-           type: 'POST',
-           data: {
-               value: ldap_directory,
-               _glpi_csrf_token: '" . Session::getNewCSRFToken() . "'
-            },
-         }).done(function(response){
-            document.getElementById('ldap_filter').value = response;
-         });
-      }
-      ");
       echo '</table>';
+
+      echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       Html::closeForm();
    }
 
