@@ -35,6 +35,39 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default value');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td id="dropdown_default_value_field">';
+      $value = Html::entities_deep($this->getValueForDesign());
+      $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
+         .'style="width: 90%" value="'.$value.'">';
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
       $id           = $this->fields['id'];
       $rand         = mt_rand();

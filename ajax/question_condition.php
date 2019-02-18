@@ -38,8 +38,11 @@ if (!isset($_REQUEST['plugin_formcreator_questions_id'])) {
 
 if (isset($_REQUEST['_empty'])) {
    // get an empty condition HTML table row
-   $formId = (int) $_REQUEST['plugin_formcreator_forms_id'];
    $questionId = (int) $_REQUEST['plugin_formcreator_questions_id'];
    $questionCondition = new PluginFormcreatorQuestion_Condition();
-   echo $questionCondition->getConditionHtml($formId, $questionId);
+   $section = new PluginFormcreatorSection();
+   $section->getFromDB((int) $_REQUEST['plugin_formcreator_sections_id']);
+   $form = new PluginFormcreatorForm();
+   $form->getFromDBBySection($section);
+   echo $questionCondition->getConditionHtml($form->getID(), $questionId);
 }

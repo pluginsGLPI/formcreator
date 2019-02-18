@@ -52,6 +52,16 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       $this->fields  = $fields;
    }
 
+   public function getDesignSpecializationField() {
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $this->getParametersHtmlForDesign(),
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function prepareQuestionInputForSave($input) {
       $this->value = $input['default_values'];
       return $input;
@@ -203,5 +213,57 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          }
       }
       return true;
+   }
+
+   /**
+    * get HTML of parameters for question design
+    *
+    * @return string
+    */
+   protected function getParametersHtmlForDesign() {
+      $parameters = $this->getParameters();
+      if (count($parameters) == 0) {
+         return '';
+      }
+
+      $question = new PluginFormcreatorQuestion();
+      $question->getFromDB($this->fields['id']);
+      $form = new PluginFormcreatorForm();
+      $form->getByQuestionId($question->getID());
+
+      /** @var integer $column 0 for 2 first columns, 1 for 2 right ones */
+      $column = 0;
+      $rowSize = 2;
+      $additions = '';
+      foreach($parameters as $fieldname => $parameter) {
+         if ($column == 0) {
+            $additions .= '<tr class="plugin_formcreator_question_specific">';
+         }
+         $parameterSize = 1 + $parameter->getParameterFormSize();
+         if ($column + $parameterSize > $rowSize) {
+            // The parameter needs more room than available in the current row
+            if ($column < $rowSize)  {
+               // fill the remaining of the row
+               $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
+               // Close current row and open an new one
+               $additions .= '</tr><tr class="plugin_formcreator_question_specific">';
+               $column = 0;
+            }
+         }
+         $additions .= $parameter->getParameterForm($form, $question);
+         $column += $parameterSize;
+      if ($column == $rowSize) {
+            // Finish the row
+            $additions .= '</tr>';
+            $column = 0;
+         }
+      }
+      if ($column < $rowSize)  {
+         // fill the remaining of the row
+         $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
+         // Close current row and open an new one
+         $additions .= "</tr>";
+      }
+      return $additions;
    }
 }
