@@ -800,7 +800,73 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<td id="plugin_formcreator_subtype_label">';
       echo '</td>';
 
+<<<<<<< HEAD
+      echo '<td>';
+      echo '<div id="dropdown_values_field">';
+      $optgroup = Dropdown::getStandardDropdownItemTypes();
+      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      array_unshift($optgroup, '---');
+      Dropdown::showFromArray('dropdown_values', $optgroup, [
+         'value'     => $decodedValues['itemtype'],
+         'rand'      => $rand,
+         'on_change' => 'plugin_formcreator_change_dropdown("' . $rand . '"); changeQuestionType();',
+      ]);
+      echo '</div>';
+      echo '<div id="glpi_objects_field">';
+      $optgroup = [
+         __("Assets") => [
+            Computer::class         => Computer::getTypeName(2),
+            Monitor::class          => Monitor::getTypeName(2),
+            Software::class         => Software::getTypeName(2),
+            Networkequipment::class => Networkequipment::getTypeName(2),
+            Peripheral::class       => Peripheral::getTypeName(2),
+            Printer::class          => Printer::getTypeName(2),
+            Cartridgeitem::class    => Cartridgeitem::getTypeName(2),
+            Consumableitem::class   => Consumableitem::getTypeName(2),
+            Phone::class            => Phone::getTypeName(2),
+            Line::class             => Line::getTypeName(2)],
+         __("Assistance") => [
+            Ticket::class           => Ticket::getTypeName(2),
+            Problem::class          => Problem::getTypeName(2),
+            TicketRecurrent::class  => TicketRecurrent::getTypeName(2)],
+         __("Management") => [
+            Budget::class           => Budget::getTypeName(2),
+            Supplier::class         => Supplier::getTypeName(2),
+            Contact::class          => Contact::getTypeName(2),
+            Contract::class         => Contract::getTypeName(2),
+            Document::class         => Document::getTypeName(2),
+            Project::class          => Project::getTypeName(2)],
+         __("Tools") => [
+            Reminder::class         => __("Notes"),
+            RSSFeed::class          => __("RSS feed")],
+         __("Administration") => [
+            User::class             => User::getTypeName(2),
+            Group::class            => Group::getTypeName(2),
+            Entity::class           => Entity::getTypeName(2),
+            Profile::class          => Profile::getTypeName(2)],
+      ];
+      array_unshift($optgroup, '---');
+      Dropdown::showFromArray('glpi_objects', $optgroup, [
+         'value'     => $this->fields['values'],
+         'rand'      => $rand,
+         'on_change' => 'plugin_formcreator_change_glpi_objects("' . $rand . '");',
+      ]);
+      echo '</div>';
+      echo '<div id="glpi_ldap_field">';
+      $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
+      if ($ldap_values === null) {
+         $ldap_values = [];
+      }
+      Dropdown::show('AuthLDAP', [
+         'name'      => 'ldap_auth',
+         'rand'      => $rand,
+         'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
+         'on_change' => 'change_LDAP(this)',
+      ]);
+      echo '</div>';
+=======
       echo '<td id="plugin_formcreator_subtype_value">';
+>>>>>>> 11d3ad6... refactor(question): question designer
       echo '</td>';
       echo '</tr>';
 

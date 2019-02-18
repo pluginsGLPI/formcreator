@@ -410,20 +410,18 @@ function buildTiles(list) {
 var urlQuestion      = rootDoc + "/plugins/formcreator/ajax/question.php";
 var urlFrontQuestion = rootDoc + "/plugins/formcreator/front/question.form.php";
 
-function addQuestion(items_id, token, section) {
+function plugin_formcreator_addQuestion(items_id, token, section) {
    modalWindow.load(urlQuestion, {
       section_id: section,
-      form_id: items_id,
       _glpi_csrf_token: token
    })
    .dialog("open");
 }
 
-function editQuestion(items_id, token, question, section) {
+function plugin_formcreator_editQuestion(items_id, token, question, section) {
    modalWindow.load(urlQuestion, {
       question_id: question,
       section_id: section,
-      form_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
 }
@@ -454,7 +452,7 @@ function moveQuestion(token, question_id, action) {
    }).done(reloadTab);
 }
 
-function deleteQuestion(items_id, token, question_id) {
+function plugin_formcreator_deleteQuestion(items_id, token, question_id) {
    if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this question?', 'formcreator')); ?> ")) {
       jQuery.ajax({
         url: urlFrontQuestion,
@@ -487,14 +485,14 @@ function duplicateQuestion(items_id, token, question_id) {
 var urlSection      = rootDoc + "/plugins/formcreator/ajax/section.php";
 var urlFrontSection = rootDoc + "/plugins/formcreator/front/section.form.php";
 
-function addSection(items_id, token) {
+function plugin_formcreator_addSection(items_id, token) {
    modalWindow.load(urlSection, {
       form_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
 }
 
-function editSection(items_id, token ,section) {
+function plugin_formcreator_editSection(items_id, token ,section) {
    modalWindow.load(urlSection, {
       section_id: section,
       form_id: items_id,
@@ -515,7 +513,7 @@ function duplicateSection(items_id, token, section_id) {
    }).done(reloadTab);
 }
 
-function deleteSection(items_id, token, section_id) {
+function plugin_formcreator_deleteSection(items_id, token, section_id) {
    if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this section?', 'formcreator')); ?> ")) {
       jQuery.ajax({
         url: urlFrontSection,
@@ -712,62 +710,66 @@ function formcreatorChangeActorAssigned(value) {
 
 // === FIELDS EDITION ===
 
-function removeNextCondition(target) {
+function plugin_formcreator_addEmptyCondition(target) {
+   var questionId = $('form[name="form_question"] input[name="id"]').val();
+   var sectionId = $('form[name="form_question"] [name="plugin_formcreator_sections_id"]').val();
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/question_condition.php',
+      data: {
+         plugin_formcreator_questions_id: questionId,
+         plugin_formcreator_sections_id: sectionId,
+         _empty: ''
+      }
+   }).done(function (data) {
+      $(target).parents('tr').after(data);
+      $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
+   });
+}
+
+function plugin_formcreator_removeNextCondition(target) {
    $(target).parents('tr').remove();
    $('.plugin_formcreator_logicRow .div_show_condition_logic').first().hide();
 }
 
-function plugin_formcreator_change_dropdown(rand) {
-   dropdown_type = $('#dropdown_dropdown_values' + rand).val();
+function plugin_formcreator_changeDropdownItemtype(rand) {
+   dropdown_type = $('[name="form_question"] [name="dropdown_values"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: dropdown_type,
-         rand: rand
       },
    }).done(function(response) {
+      showTicketCategorySpecific = false;
+      if (dropdown_type == 'ITILCategory') {
+         showTicketCategorySpecific = true;
+      }
       $('#dropdown_default_value_field').html(response);
+      $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
    });
 }
 
-function plugin_formcreator_change_glpi_objects(rand) {
-   glpi_object = $('#dropdown_glpi_objects' + rand).val();
+function plugin_formcreator_changeGlpiObjectItemType() {
+   glpi_object = $('[name="form_question"] [name="glpi_objects"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: glpi_object,
-         rand: rand
       },
    }).done(function(response) {
       $('#dropdown_default_value_field').html(response);
    });
 }
 
-function plugin_formcreator_getDropdown(rand, fromField) {
-   glpi_object = $('#dropdown_glpi_objects' + rand).val();
-
-   $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
-      type: 'GET',
-      data: {
-         dropdown_itemtype: glpi_object,
-         rand: rand
-      },
-   }).done(function(response) {
-      $('#dropdown_default_value_field').html(response);
-   });
-}
-
-function toggleCondition(field) {
+function plugin_formcreator_toggleCondition(field) {
    if (field.value == 'always') {
       $('.plugin_formcreator_logicRow').hide();
    } else {
       if ($('.plugin_formcreator_logicRow').length < 1) {
-         addEmptyCondition(field);
+         plugin_formcreator_addEmptyCondition(field);
       }
       $('.plugin_formcreator_logicRow').show();
    }
@@ -777,7 +779,7 @@ function toggleLogic(field) {
    if (field.value == '0') {
       $('#'+field.id).parents('tr').next().remove();
    } else {
-      addEmptyCondition(field);
+      plugin_formcreator_addEmptyCondition(field);
    }
 }
 
@@ -955,5 +957,60 @@ function pluginFormcreatorInitializeUrgency(fieldName, rand) {
    var field = $('select[name="' + fieldName + '"]');
    field.on("change", function(e) {
       formcreatorShowFields($(field[0].form));
+   });
+}
+
+function plugin_formcreator_changeQuestionType(rand) {
+   var questionId = $('form[name="form_question"] input[name="id"]').val();
+   var questionType = $ ('form[name="form_question"] [name="fieldtype"]').val();
+
+   $.ajax({
+      url: rootDoc + '/plugins/formcreator/ajax/question_design.php',
+      type: 'GET',
+      data: {
+         questionId: questionId,
+         questionType: questionType,
+      },
+   }).done(function(response) {
+      try {
+         response = $.parseJSON(response);
+      } catch (e) {
+         console.log('Plugin Formcreator: Failed to get subtype fields');
+         return;
+      }
+
+      $('#label_required').toggle(response.may_be_required);
+      $('#plugin_formcreator_required > *').toggle(response.may_be_required);
+
+      $('#label_show_empty').toggle(response.may_be_empty);
+      $('#plugin_formcreator_show_empty > *').toggle(response.may_be_empty);
+
+      $('#plugin_formcreator_subtype_label').html(response.label);
+      $('#plugin_formcreator_subtype_value').html(response.field);
+
+      plugin_formcreator_updateQuestionSpecific(response.additions);
+   });
+}
+
+function plugin_formcreator_updateQuestionSpecific(html) {
+   $('.plugin_formcreator_question_specific:gt(0)').remove();
+   if (html == '') {
+      $('.plugin_formcreator_question_specific').hide();
+      return;
+   }
+   $('.plugin_formcreator_question_specific').replaceWith(html);
+}
+
+function plugin_formcreator_changeLDAP(ldap) {
+   var ldap_directory = ldap.value;
+
+   jQuery.ajax({
+   url: rootDoc + '/plugins/formcreator/ajax/ldap_filter.php',
+   type: 'POST',
+   data: {
+         value: ldap_directory,
+      },
+   }).done(function(response) {
+      document.getElementById('ldap_filter').value = response;
    });
 }
