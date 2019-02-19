@@ -403,6 +403,8 @@ abstract class CommonTestCase extends CommonDBTestCase
          'tag_specifics',
          'category_rule',
          'category_question',
+         'associate_rule',
+         'associate_question',
          '_actors',
          '_ticket_relations',
       ];
@@ -410,7 +412,7 @@ abstract class CommonTestCase extends CommonDBTestCase
          'id',
          'tickettemplates_id',
       ])->hasKeys($keys)
-      ->size->isEqualTo(count($keys));
+         ->size->isEqualTo(count($keys));
    }
 
    protected function _checkActor($actor = []) {
