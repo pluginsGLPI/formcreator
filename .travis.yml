@@ -10,7 +10,7 @@ env:
     - AFTER_SUCCESS_BRANCH=9.4/bugfixes
   matrix:
     - GLPI_BRANCH=9.4/bugfixes
-    - GLPI_BRANCH=master
+    # - GLPI_BRANCH=master
 
 php:
   - 5.6
