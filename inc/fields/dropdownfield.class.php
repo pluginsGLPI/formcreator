@@ -473,7 +473,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $DbUtil = new DbUtils();
       $groupUserTable = Group_User::getTable();
       $groupTable = Group::getTable();
-      $groupFk = Group::getForeignKeField();
+      $groupFk = Group::getForeignKeyField();
       $request = $DB->request([
          'SELECT' => [
             $groupUserTable => [$groupFk],
