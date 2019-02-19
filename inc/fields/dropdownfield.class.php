@@ -450,7 +450,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             ],
          ],
          'WHERE' => [
-            $groupUser . '.id' => $userID,
+            $groupUserTable . '.id' => $userID,
          ] + $dbUtil->getEntitiesRestrictCriteria(
             $groupTable,
             '',
