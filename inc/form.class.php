@@ -882,7 +882,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $result_faqs = $DB->request($query_faqs);
       Toolbox::logSqlDebug($result_faqs->getSQL());
       if ($result_faqs->count() > 0) {
-         foreach($result_faqs as $faq) {
+         foreach ($result_faqs as $faq) {
             $formList[] = [
                'id'           => $faq['id'],
                'name'         => $faq['name'],
@@ -1216,7 +1216,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                $validators[$validator['id']] = $validator['completename'];
             }
 
-          } else {
+         } else {
             // Users
             $userTable = User::getTable();
             $result = $DB->request([

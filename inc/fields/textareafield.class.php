@@ -67,7 +67,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       ];
    }
 
-      public function displayField($canEdit = true) {
+   public function displayField($canEdit = true) {
       global $CFG_GLPI;
 
       $id           = $this->fields['id'];
