@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
                     16%
-                                            <small>of 1344</small>
+                                            <small>of 1345</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -212,9 +212,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#prepareInputForUpdate">PluginFormcreatorForm::prepareInputForUpdate()</a></td>
-                                        <td style="text-align: center">21</td>
+                                        <td style="text-align: center">17</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">24%</span>
+    <span class="label label-danger">29%</span>
 </td>
                                             </tr>
             <tr>
@@ -233,9 +233,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#saveForm">PluginFormcreatorForm::saveForm()</a></td>
-                                        <td style="text-align: center">26</td>
+                                        <td style="text-align: center">21</td>
                 <td style="text-align: center">    
-    <span class="label label-success">73%</span>
+    <span class="label label-warning">67%</span>
 </td>
                                             </tr>
             <tr>
@@ -369,6 +369,13 @@ layout: coverage
                                         <td style="text-align: center">3</td>
                 <td style="text-align: center">    
     <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getFields">PluginFormcreatorForm::getFields()</a></td>
+                                        <td style="text-align: center">10</td>
+                <td style="text-align: center">    
+    <span class="label label-success">90%</span>
 </td>
                                             </tr>
         </tbody>
@@ -1056,7 +1063,7 @@ layout: coverage
     <span class="label label-default">N/A</span>
 
                         <div class="btn-group">
-                                <a href="./PluginFormcreatorForm.html#saveForm" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+                                <a href="./PluginFormcreatorForm.html#saveForm" class="btn btn-sm btn-warning" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
         
         
             </div>
@@ -1582,6 +1589,33 @@ layout: coverage
 
             <script>
                 var g = graph('PluginFormcreatorForm', 'getFromDBBySection');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getFields">
+                <div class="panel-heading">
+                    PluginFormcreatorForm::getFields()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./PluginFormcreatorForm.html#getFields" class="btn btn-sm btn-success" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('PluginFormcreatorForm', 'getFields');
 
                 
                 g.addEnd().roundNodes();

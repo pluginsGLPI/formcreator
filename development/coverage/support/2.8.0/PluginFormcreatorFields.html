@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    48%
-                                            <small>of 153</small>
+                    47%
+                                            <small>of 148</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -93,7 +93,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#updateVisibility">PluginFormcreatorFields::updateVisibility()</a></td>
-                                        <td style="text-align: center">14</td>
+                                        <td style="text-align: center">9</td>
                 <td style="text-align: center">    
     <span class="label label-success">100%</span>
 </td>
@@ -2496,26 +2496,47 @@ layout: coverage
                     <th id="L314" class="number covered">314</th>
 
                     <td class="covered" >
-                        <pre>      $fields = [];</pre>
+                        <pre>      $form = new PluginFormcreatorForm();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L315" class="number ">315</th>
+                    <th id="L315" class="number covered">315</th>
 
-                    <td class="" >
-                        <pre>      // Prepare form fields for validation
-</pre>
+                    <td class="covered" >
+                        <pre>      $form-&gt;getFromDB((int) $input[&#039;formcreator_form&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L316" class="number covered">316</th>
 
                     <td class="covered" >
-                        <pre>      $question = new PluginFormcreatorQuestion();</pre>
+                        <pre>      $fields = $form-&gt;getFields();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L317" class="number ">317</th>
+                    <th id="L317" class="number covered">317</th>
+
+                    <td class="covered" >
+                        <pre>      foreach ($fields as $id =&gt; $question) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L318" class="number covered">318</th>
+
+                    <td class="covered" >
+                        <pre>         $fields[$id]-&gt;parseAnswerValues($input);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L319" class="number ">319</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L320" class="number ">320</th>
 
                     <td class="" >
                         <pre>
@@ -2523,59 +2544,39 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L318" class="number covered">318</th>
-
-                    <td class="covered" >
-                        <pre>      $formId = $input[&#039;formcreator_form&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L319" class="number covered">319</th>
-
-                    <td class="covered" >
-                        <pre>      $found_questions = $question-&gt;getQuestionsFromForm($formId);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L320" class="number covered">320</th>
-
-                    <td class="covered" >
-                        <pre>      foreach ($found_questions as $id =&gt; $question) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L321" class="number covered">321</th>
 
                     <td class="covered" >
-                        <pre>         $key = &#039;formcreator_field_&#039; . $id;</pre>
+                        <pre>      $questionToShow = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L322" class="number covered">322</th>
 
                     <td class="covered" >
-                        <pre>         $fields[$id] = PluginFormcreatorFields::getFieldInstance(</pre>
+                        <pre>      foreach ($fields as $id =&gt; $value) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L323" class="number covered">323</th>
 
                     <td class="covered" >
-                        <pre>            $question-&gt;fields[&#039;fieldtype&#039;],</pre>
+                        <pre>         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L324" class="number covered">324</th>
+                    <th id="L324" class="number ">324</th>
 
-                    <td class="covered" >
-                        <pre>            $question</pre>
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L325" class="number ">325</th>
 
                     <td class="" >
-                        <pre>         );
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -2583,15 +2584,14 @@ layout: coverage
                     <th id="L326" class="number covered">326</th>
 
                     <td class="covered" >
-                        <pre>         $fields[$id]-&gt;parseAnswerValues($input);</pre>
+                        <pre>      return $questionToShow;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L327" class="number ">327</th>
+                    <th id="L327" class="number unreach">327</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2603,66 +2603,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L329" class="number covered">329</th>
-
-                    <td class="covered" >
-                        <pre>      $questionToShow = [];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L330" class="number covered">330</th>
-
-                    <td class="covered" >
-                        <pre>      foreach ($fields as $id =&gt; $value) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L331" class="number covered">331</th>
-
-                    <td class="covered" >
-                        <pre>         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L332" class="number ">332</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L333" class="number ">333</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L334" class="number covered">334</th>
-
-                    <td class="covered" >
-                        <pre>      return $questionToShow;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L335" class="number unreach">335</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L336" class="number ">336</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L337" class="number ">337</th>
+                    <th id="L329" class="number ">329</th>
 
                     <td class="" >
                         <pre>   /**
@@ -2670,7 +2611,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L338" class="number ">338</th>
+                    <th id="L330" class="number ">330</th>
 
                     <td class="" >
                         <pre>    * gets the classname for a field given its type
@@ -2678,7 +2619,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L339" class="number ">339</th>
+                    <th id="L331" class="number ">331</th>
 
                     <td class="" >
                         <pre>    *
@@ -2686,7 +2627,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L340" class="number ">340</th>
+                    <th id="L332" class="number ">332</th>
 
                     <td class="" >
                         <pre>    * @param string $type type of field to test for existence
@@ -2694,7 +2635,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L341" class="number ">341</th>
+                    <th id="L333" class="number ">333</th>
 
                     <td class="" >
                         <pre>    * @return string
@@ -2702,7 +2643,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L342" class="number ">342</th>
+                    <th id="L334" class="number ">334</th>
 
                     <td class="" >
                         <pre>    */
@@ -2710,28 +2651,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getFieldClassname">
-                    <th id="L343" class="number ">343</th>
+                    <th id="L335" class="number ">335</th>
 
                     <td class="" id="getFieldClassname">
                         <pre>   public static function getFieldClassname($type) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L344" class="number covered">344</th>
+                    <th id="L336" class="number covered">336</th>
 
                     <td class="covered" >
                         <pre>      return &#039;PluginFormcreator&#039; . ucfirst($type) . &#039;Field&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L345" class="number unreach">345</th>
+                    <th id="L337" class="number unreach">337</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L346" class="number ">346</th>
+                    <th id="L338" class="number ">338</th>
 
                     <td class="" >
                         <pre>
@@ -2739,7 +2680,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L347" class="number ">347</th>
+                    <th id="L339" class="number ">339</th>
 
                     <td class="" >
                         <pre>   /**
@@ -2747,7 +2688,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L348" class="number ">348</th>
+                    <th id="L340" class="number ">340</th>
 
                     <td class="" >
                         <pre>    * checks if a field type exists
@@ -2755,7 +2696,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L349" class="number ">349</th>
+                    <th id="L341" class="number ">341</th>
 
                     <td class="" >
                         <pre>    *
@@ -2763,7 +2704,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L350" class="number ">350</th>
+                    <th id="L342" class="number ">342</th>
 
                     <td class="" >
                         <pre>    * @param string $type type of field to test for existence
@@ -2771,7 +2712,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L351" class="number ">351</th>
+                    <th id="L343" class="number ">343</th>
 
                     <td class="" >
                         <pre>    * @return boolean
@@ -2779,7 +2720,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L352" class="number ">352</th>
+                    <th id="L344" class="number ">344</th>
 
                     <td class="" >
                         <pre>    */
@@ -2787,35 +2728,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="fieldTypeExists">
-                    <th id="L353" class="number ">353</th>
+                    <th id="L345" class="number ">345</th>
 
                     <td class="" id="fieldTypeExists">
                         <pre>   public static function fieldTypeExists($type) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L354" class="number covered">354</th>
+                    <th id="L346" class="number covered">346</th>
 
                     <td class="covered" >
                         <pre>      $className = self::getFieldClassname($type);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L355" class="number covered">355</th>
+                    <th id="L347" class="number covered">347</th>
 
                     <td class="covered" >
                         <pre>      return is_subclass_of($className, PluginFormcreatorField::class, true);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L356" class="number unreach">356</th>
+                    <th id="L348" class="number unreach">348</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L357" class="number ">357</th>
+                    <th id="L349" class="number ">349</th>
 
                     <td class="" >
                         <pre>
@@ -2823,7 +2764,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L358" class="number ">358</th>
+                    <th id="L350" class="number ">350</th>
 
                     <td class="" >
                         <pre>   /**
@@ -2831,7 +2772,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L359" class="number ">359</th>
+                    <th id="L351" class="number ">351</th>
 
                     <td class="" >
                         <pre>    * gets an instance of a field given its type
@@ -2839,7 +2780,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L360" class="number ">360</th>
+                    <th id="L352" class="number ">352</th>
 
                     <td class="" >
                         <pre>    *
@@ -2847,7 +2788,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L361" class="number ">361</th>
+                    <th id="L353" class="number ">353</th>
 
                     <td class="" >
                         <pre>    * @param string $type type of field to get
@@ -2855,7 +2796,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L362" class="number ">362</th>
+                    <th id="L354" class="number ">354</th>
 
                     <td class="" >
                         <pre>    * @param PluginFormcreatorQuestion $question question representing the field
@@ -2863,7 +2804,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L363" class="number ">363</th>
+                    <th id="L355" class="number ">355</th>
 
                     <td class="" >
                         <pre>    * @param array $data additional data
@@ -2871,7 +2812,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L364" class="number ">364</th>
+                    <th id="L356" class="number ">356</th>
 
                     <td class="" >
                         <pre>    * @return null|PluginFormcreatorFieldInterface
@@ -2879,7 +2820,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L365" class="number ">365</th>
+                    <th id="L357" class="number ">357</th>
 
                     <td class="" >
                         <pre>    */
@@ -2887,35 +2828,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getFieldInstance">
-                    <th id="L366" class="number ">366</th>
+                    <th id="L358" class="number ">358</th>
 
                     <td class="" id="getFieldInstance">
                         <pre>   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = null) {<span class="label label-success">75%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L367" class="number covered">367</th>
+                    <th id="L359" class="number covered">359</th>
 
                     <td class="covered" >
                         <pre>      $className = self::getFieldClassname($type);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L368" class="number covered">368</th>
+                    <th id="L360" class="number covered">360</th>
 
                     <td class="covered" >
                         <pre>      if (!self::fieldTypeExists($type)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L369" class="number uncovered">369</th>
+                    <th id="L361" class="number uncovered">361</th>
 
                     <td class="uncovered" >
                         <pre>         return null;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L370" class="number ">370</th>
+                    <th id="L362" class="number ">362</th>
 
                     <td class="" >
                         <pre>      }
@@ -2923,21 +2864,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L371" class="number covered">371</th>
+                    <th id="L363" class="number covered">363</th>
 
                     <td class="covered" >
                         <pre>      return new $className($question-&gt;fields, $data);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L372" class="number unreach">372</th>
+                    <th id="L364" class="number unreach">364</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L373" class="number ">373</th>
+                    <th id="L365" class="number ">365</th>
 
                     <td class="" >
                         <pre>}
