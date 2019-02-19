@@ -875,7 +875,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</td>';
       echo '</tr>';
 
-
       echo '<tr">';
       echo '<td colspan="4">';
       Dropdown::showFromArray('show_rule', [
