@@ -311,18 +311,10 @@ class PluginFormcreatorFields
     * @return array
     */
    public static function updateVisibility($input) {
-      $fields = [];
-      // Prepare form fields for validation
-      $question = new PluginFormcreatorQuestion();
-
-      $formId = $input['formcreator_form'];
-      $found_questions = $question->getQuestionsFromForm($formId);
-      foreach ($found_questions as $id => $question) {
-         $key = 'formcreator_field_' . $id;
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB((int) $input['formcreator_form']);
+      $fields = $form->getFields();
+      foreach ($fields as $id => $question) {
          $fields[$id]->parseAnswerValues($input);
       }
 
