@@ -1403,7 +1403,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
    }
 
-
    /**
     * Validates answers of a form and saves them in database
     *
@@ -1412,25 +1411,17 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     */
    public function saveForm($input) {
       $valid = true;
-      $fields = [];
       $fieldValidities = [];
 
-      // Prepare form fields for validation
-      $question = new PluginFormcreatorQuestion();
-
-      $found_questions = $question->getQuestionsFromForm($this->getID());
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $fields = $this->getFields();
+      foreach ($fields as $id => $question) {
          $fieldValidities[$id] = $fields[$id]->parseAnswerValues($input);
       }
       // any invalid field will invalidate the answers
       $valid = !in_array(false, $fieldValidities, true);
 
       if ($valid) {
-         foreach ($found_questions as $id => $question) {
+         foreach ($fields as $id => $question) {
             if (!$fields[$id]->isPrerequisites()) {
                continue;
             }
@@ -2664,5 +2655,23 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          return false;
       }
       return $this->getFromDB($section->getField(self::getForeignKeyField()));
+   }
+
+   public function getFields() {
+      $fields = [];
+      if ($this->isNewItem()) {
+         return $fields;
+      }
+
+      $question = new PluginFormcreatorQuestion();
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+      }
+
+      return $fields;
    }
 }
