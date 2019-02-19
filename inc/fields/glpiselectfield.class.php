@@ -103,7 +103,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       ];
    }
 
-      public static function getName() {
+   public static function getName() {
       return _n('GLPI object', 'GLPI objects', 1, 'formcreator');
    }
 

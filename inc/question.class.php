@@ -271,15 +271,15 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       echo '<tr class="line1 section_row">';
       echo '<th id="add_section_th">';
-      echo '<a href="javascript:plugin_formcreator_addSection(' . $item->getId() . ', \'' . $token . '\');">
-                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+">
-                '.__('Add a section', 'formcreator').'
-            </a>';
+      echo '<a href="javascript:plugin_formcreator_addSection(' . $item->getId() . ', \'' . $token . '\');">'
+            . '<img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+">'
+            .__('Add a section', 'formcreator')
+            . '</a>';
       echo '</th>';
       echo '<th></th>';
       echo '</tr>';
 
-      echo "</table>";
+      echo '</table>';
    }
 
    /**
@@ -1173,7 +1173,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       ]);
 
       $questions = [];
-      foreach($result as $row) {
+      foreach ($result as $row) {
          $question = new self();
          $question->getFromDB($row['id']);
          $questions[$row['id']] = $question;
