@@ -235,14 +235,14 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       $column = 0;
       $rowSize = 2;
       $additions = '';
-      foreach($parameters as $fieldname => $parameter) {
+      foreach ($parameters as $fieldname => $parameter) {
          if ($column == 0) {
             $additions .= '<tr class="plugin_formcreator_question_specific">';
          }
          $parameterSize = 1 + $parameter->getParameterFormSize();
          if ($column + $parameterSize > $rowSize) {
             // The parameter needs more room than available in the current row
-            if ($column < $rowSize)  {
+            if ($column < $rowSize) {
                // fill the remaining of the row
                $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
                // Close current row and open an new one
@@ -252,13 +252,13 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
          }
          $additions .= $parameter->getParameterForm($form, $question);
          $column += $parameterSize;
-      if ($column == $rowSize) {
+         if ($column == $rowSize) {
             // Finish the row
             $additions .= '</tr>';
             $column = 0;
          }
       }
-      if ($column < $rowSize)  {
+      if ($column < $rowSize) {
          // fill the remaining of the row
          $additions .= str_repeat('<td></td><td></td>', $rowSize - $column);
          // Close current row and open an new one

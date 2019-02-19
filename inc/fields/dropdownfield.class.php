@@ -102,15 +102,16 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= dropdown::showNumber(
          'show_ticket_categories_depth', [
-         'rand'  => $rand,
-         'value' => isset($decodedValues['show_ticket_categories_depth'])
-                     ? $decodedValues['show_ticket_categories_depth']
-                     : 0,
-         'min' => 1,
-         'max' => 16,
-         'toadd' => [0 => __('No limit', 'formcreator')],
-         'display' => false,
-      ]);
+            'rand'  => $rand,
+            'value' => isset($decodedValues['show_ticket_categories_depth'])
+                        ? $decodedValues['show_ticket_categories_depth']
+                        : 0,
+            'min' => 1,
+            'max' => 16,
+            'toadd' => [0 => __('No limit', 'formcreator')],
+            'display' => false,
+         ]
+      );
       $additions .= '</td>';
       $additions .= '</tr>';
       $additions .= '<tr class="plugin_formcreator_question_specific plugin_formcreator_dropdown_ticket">';
@@ -445,7 +446,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       if ($result->count() === 0) {
          return [];
       }
-      foreach($result as $data) {
+      foreach ($result as $data) {
          $a_groups                     = $dbUtil->getAncestorsOf("glpi_groups", $data["groups_id"]);
          $a_groups[$data["groups_id"]] = $data["groups_id"];
       }
