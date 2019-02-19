@@ -470,11 +470,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       global $DB;
 
       // from Item_Ticket::dropdownMyDevices()
-      $DbUtil = new DbUtils();
+      $dbUtil = new DbUtils();
       $groupUserTable = Group_User::getTable();
       $groupTable = Group::getTable();
       $groupFk = Group::getForeignKeyField();
-      $request = $DB->request([
+      $result = $DB->request([
          'SELECT' => [
             $groupUserTable => [$groupFk],
             $groupTable => ['name'],
