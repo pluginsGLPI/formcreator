@@ -555,14 +555,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $questions = $DB->request($request);
       $last_section = '';
       $questionsCount = $questions->count();
-      $fields = [];
+      $fields = $form->getFields();
       foreach ($questions as $question_line) {
          $question = new PluginFormcreatorQuestion();
          $question->getFromDB($question_line['id']);
-         $fields[$question_line['id']] = PluginFormcreatorFields::getFieldInstance(
-            $question_line['fieldtype'],
-            $question
-         );
          $fields[$question_line['id']]->deserializeValue($question_line['answer']);
       }
       foreach ($questions as $question_line) {
@@ -969,16 +965,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form->getFromDB((int) $_POST['formcreator_form']);
       $input['status'] = 'waiting';
 
-      // Prepare form fields for validation
-
-      $fields = [];
-      $question = new PluginFormcreatorQuestion();
-      $found_questions = $question->getQuestionsFromForm($form->getID());
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $fields = $form->getFields();
+      foreach ($fields as $id => $question) {
          $fields[$id]->parseAnswerValues($input);
       }
       return $this->saveAnswers($form, $input, $fields);
@@ -1004,14 +992,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $fields = [];
-      $question = new PluginFormcreatorQuestion();
-      $found_questions = $question->getQuestionsFromForm($form->getID());
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $fields = $form->getFields();
+      foreach ($fields as $id => $question) {
          $fields[$id]->parseAnswerValues($input);
       }
       return $this->saveAnswers($form, $input, $fields);
@@ -1037,14 +1019,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return false;
       }
 
-      $fields = [];
-      $question = new PluginFormcreatorQuestion();
-      $found_questions = $question->getQuestionsFromForm($form->getID());
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $fields = $form->getFields();
+      foreach ($fields as $id => $question) {
          $fields[$id]->parseAnswerValues($input);
       }
       return $this->saveAnswers($form, $input, $fields);
@@ -1148,16 +1124,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       // retrieve answers
       $answers_values = $this->getAnswers($this->getID());
-      $fields = [];
-      // Prepare form fields for validation
-      $question = new PluginFormcreatorQuestion();
-
-      $found_questions = $question->getQuestionsFromForm($this->fields['plugin_formcreator_forms_id']);
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $fields = $form->getFields();
+      foreach ($fields as $id => $question) {
          $fields[$id]->parseAnswerValues($answers_values);
       }
 
