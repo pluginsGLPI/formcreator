@@ -279,7 +279,22 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         echo $this->value;
+         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if ($decodedValues === null) {
+            $itemtype = $this->fields['values'];
+         } else {
+            $itemtype = $decodedValues['itemtype'];
+         }
+         $item = new $itemtype();
+         $value = '';
+         if ($item->getFromDB($this->value)) {
+            $column = 'name';
+            if ($item instanceof CommonTreeDropdown) {
+               $column = 'completename';
+            }
+            $value = $item->fields[$column];
+         }
+         echo $value;
       }
    }
 
