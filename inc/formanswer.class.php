@@ -1250,8 +1250,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
       $DB->delete(
          self::getTable(), [
-         $formAnswerFk,
-      ]);
+            $formAnswerFk,
+         ]
+      );
 
       // If the form was waiting for validation
       if ($this->fields['status'] == 'waiting') {
