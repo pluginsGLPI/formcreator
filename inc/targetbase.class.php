@@ -1560,19 +1560,17 @@ EOS;
       $answers_values = $formanswer->getAnswers($formanswer->getID());
 
       // Retrieve questions
+      $form = new PluginFormcreatorForm();
       $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form->getFromDB($formanswer->fields[$formFk]);
       $questions = (new PluginFormcreatorQuestion())
          ->getQuestionsFromForm($formanswer->getField($formFk));
 
-      $fields = [];
+      $fields = $form->getFields();
 
       // Prepare all fields of the form
       foreach ($questions as $questionId => $question) {
          $answer = $answers_values['formcreator_field_' . $questionId];
-         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
-            $question->getField('fieldtype'),
-            $question
-         );
          $fields[$questionId]->deserializeValue($answer);
       }
 

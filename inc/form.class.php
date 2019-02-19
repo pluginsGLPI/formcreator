@@ -1322,15 +1322,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          if (isset($input['access_rights'])
             && $input['access_rights'] == self::ACCESS_PUBLIC
          ) {
-            // check that accessibility to eh form is compatible with its questions
-            $question = new PluginFormcreatorQuestion();
-            $questions = $question->getQuestionsFromForm($this->getID());
+            // check that accessibility to the form is compatible with its questions
+            $fields = $this->getFields();
             $incompatibleQuestion = false;
-            foreach ($questions as $question) {
-               $field = PluginFormcreatorFields::getFieldInstance(
-                  $question->fields['fieldtype'],
-                  $question
-               );
+            foreach ($fields as $field) {
                if (!$field->isAnonymousFormCompatible()) {
                   $incompatibleQuestion = true;
                   $message = __('The question %s is not compatible with public forms', 'formcreator');
@@ -1404,7 +1399,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
    }
 
-
    /**
     * Validates answers of a form and saves them in database
     *
@@ -1413,25 +1407,17 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     */
    public function saveForm($input) {
       $valid = true;
-      $fields = [];
       $fieldValidities = [];
 
-      // Prepare form fields for validation
-      $question = new PluginFormcreatorQuestion();
-
-      $found_questions = $question->getQuestionsFromForm($this->getID());
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
-            $question->fields['fieldtype'],
-            $question
-         );
+      $fields = $this->getFields();
+      foreach ($fields as $id => $question) {
          $fieldValidities[$id] = $fields[$id]->parseAnswerValues($input);
       }
       // any invalid field will invalidate the answers
       $valid = !in_array(false, $fieldValidities, true);
 
       if ($valid) {
-         foreach ($found_questions as $id => $question) {
+         foreach ($fields as $id => $question) {
             if (!$fields[$id]->isPrerequisites()) {
                continue;
             }
@@ -2703,5 +2689,23 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          return false;
       }
       return $this->getFromDB($section->getField(self::getForeignKeyField()));
+   }
+
+   public function getFields() {
+      $fields = [];
+      if ($this->isNewItem()) {
+         return $fields;
+      }
+
+      $question = new PluginFormcreatorQuestion();
+      $found_questions = $question->getQuestionsFromForm($this->getID());
+      foreach ($found_questions as $id => $question) {
+         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+            $question->fields['fieldtype'],
+            $question
+         );
+      }
+
+      return $fields;
    }
 }

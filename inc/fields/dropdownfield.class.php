@@ -318,7 +318,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $item = new $itemtype();
          $value = '';
          if ($item->getFromDB($this->value)) {
-            $value = $item->getField('name');
+            $column = 'name';
+            if ($item instanceof CommonTreeDropdown) {
+               $column = 'completename';
+            }
+            $value = $item->fields[$column];
          }
 
          echo $value;
