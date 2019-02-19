@@ -253,7 +253,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                   ]
                ],
                'WHERE' => [
-                  "$profileUser.users_id" => $requesters_id
+                  "$profileUserTable.users_id" => $requesters_id
                ],
                'ORDER' => [
                   "$profileUserTable.is_dynamic DSC",
