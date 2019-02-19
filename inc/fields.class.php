@@ -314,7 +314,7 @@ class PluginFormcreatorFields
       $form = new PluginFormcreatorForm();
       $form->getFromDB((int) $input['formcreator_form']);
       $fields = $form->getFields();
-      foreach($fields as $id => $question) {
+      foreach ($fields as $id => $question) {
          $fields[$id]->parseAnswerValues($input);
       }
 
