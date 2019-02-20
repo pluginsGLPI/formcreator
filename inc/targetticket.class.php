@@ -701,7 +701,7 @@ EOS;
          false
       );
       $data['name'] = Toolbox::addslashes_deep($data['name']);
-      $data['name'] = $this->parseTags($data['name'], $formanswer);
+      $data['name'] = $formanswer->parseTags($data['name']);
 
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],
@@ -710,7 +710,7 @@ EOS;
       );
 
       $data['content'] = Toolbox::addslashes_deep($data['content']);
-      $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
+      $data['content'] = $formanswer->parseTags($data['content'], $richText);
 
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
