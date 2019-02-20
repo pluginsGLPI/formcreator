@@ -547,7 +547,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             true
          );
 
-         $data[$changeField] = $this->parseTags($data[$changeField], $formanswer);
+         $data[$changeField] = $formanswer->parseTags($data[$changeField]);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
