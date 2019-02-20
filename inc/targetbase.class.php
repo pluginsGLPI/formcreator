@@ -1533,61 +1533,6 @@ EOS;
       echo '</table>';
    }
 
-   /**
-    * Parse target content to replace TAGS like ##FULLFORM## by the values
-    *
-    * @param  string $content                            String to be parsed
-    * @param  PluginFormcreatorFormAnswer $formanswer   Formanswer object where answers are stored
-    * @param  boolean $richText                          Disable rich text mode for field rendering
-    * @return string                                     Parsed string with tags replaced by form values
-    */
-   protected function parseTags($content, PluginFormcreatorFormAnswer $formanswer, $richText = false) {
-      global $DB;
-
-      // retrieve answers
-      $answers_values = $formanswer->getAnswers($formanswer->getID());
-
-      // Retrieve questions
-      $form = new PluginFormcreatorForm();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form->getFromDB($formanswer->fields[$formFk]);
-      $questions = (new PluginFormcreatorQuestion())
-         ->getQuestionsFromForm($formanswer->getField($formFk));
-
-      $fields = $form->getFields();
-
-      // Prepare all fields of the form
-      foreach ($questions as $questionId => $question) {
-         $answer = $answers_values['formcreator_field_' . $questionId];
-         $fields[$questionId]->deserializeValue($answer);
-      }
-
-      foreach ($questions as $questionId => $question) {
-         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {
-            $name = '';
-            $value = '';
-         } else {
-            $name  = $question->getField('name');
-            $value = $fields[$questionId]->getValueForTargetText($richText);
-         }
-
-         $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
-         $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
-         foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
-            $this->addAttachedDocument($documentId);
-         }
-         if ($question->getField('fieldtype') === 'file') {
-            if (strpos($content, '##answer_' . $questionId . '##') !== false) {
-               if (!is_array($value)) {
-                  $value = [$value];
-               }
-            }
-         }
-      }
-
-      return $content;
-   }
-
    protected function showLocationSettings(PluginFormcreatorForm $form, $rand) {
       global $DB;
 
