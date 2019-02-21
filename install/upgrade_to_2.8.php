@@ -66,5 +66,40 @@ class PluginFormcreatorUpgradeTo2_8 {
          'id' => $plugin->getID(),
          'name' => 'Form Creator',
       ]);
+
+      // Remove enum for formanswer
+      $table = 'glpi_plugin_formcreator_formanswers';
+      $count = (new DBUtils())->countElementsInTable(
+         $table,
+         [
+            'status' => ['waiting', 'accepted', 'refused']
+         ]
+      );
+      if ($count > 0) {
+         $migration->addField(
+            $table,
+            'new_status',
+            'integer', [
+               'after' => 'request_date', 'default_value' => '1'
+            ]
+         );
+         $migration->migrationOneTable($table);
+         $DB->update(
+            $table,
+            ['new_status' => 101], // @see PluginFormcreator::STATUS_WAITING
+            ['status' => 'waiting']
+         );
+         $DB->update(
+            $table,
+            ['new_status' => 102], // @see PluginFormcreator::STATUS_REFUSED
+            ['status' => 'refused']
+         );
+         $DB->update(
+            $table,
+            ['new_status' => 103], // @see PluginFormcreator::STATUS_ACCEPTED
+            ['status' => 'accepted']
+         );
+         $migration->changeField($table, 'new_status', 'status', 'integer', ['after' => 'request_date', 'default_value' => '1']);
+      }
    }
 }
