@@ -64,7 +64,7 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $form_condition->add(['plugin_formcreator_questions_id' => $questions_id_1,
                             'show_field'                      => $questions_id_2,
-                            'show_condition'                  => '==',
+                            'show_condition'                  => \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
                             'show_value'                      => 'test']);
 
       $form_validator->add(['plugin_formcreator_forms_id' => $forms_id,
@@ -180,9 +180,9 @@ class PluginFormcreatorForm extends CommonTestCase {
                   'default_values'        => '',
                   'show_rule'             => \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
                   'show_field'            => ['text question'],
-                  'show_condition'        => ['=='],
+                  'show_condition'        => [\PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ],
                   'show_value'            => ['azerty'],
-                  'show_logic'            => ['AND'],
+                  'show_logic'            => [\PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND],
                   '_parameters'     => [
                      'text' => [
                         'range' => [
