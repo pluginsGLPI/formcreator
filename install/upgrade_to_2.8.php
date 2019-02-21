@@ -99,6 +99,35 @@ class PluginFormcreatorUpgradeTo2_8 {
          ]
       );
 
+      // Remove show_logic enum for question conditions
+      $this->enumToInt(
+         'glpi_plugin_formcreator_questions_conditions',
+         'show_logic',
+         [
+            'AND'  => 1,
+            'OR'  => 2,
+         ],
+         [
+            'default_value' => '1'
+         ]
+      );
+
+      // Remove show_condition  enum for question conditions
+      $this->enumToInt(
+         'glpi_plugin_formcreator_questions_conditions',
+         'show_condition',
+         [
+            '=='  => 1,
+            '!='  => 2,
+            '<'   => 3,
+            '>'   => 4,
+            '<='  => 5,
+            '>='  => 6,
+         ],
+         [
+            'default_value' => '1'
+         ]
+      );
    }
 
    /**
