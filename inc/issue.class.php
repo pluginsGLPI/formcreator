@@ -476,8 +476,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                             'value'   => $values[$field]]);
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
-            $ticket_opts['waiting'] = __('Not validated');
-            $ticket_opts['refused'] = __('Refused');
+            $ticket_opts[PluginFormcreatorFormAnswer::STATUS_WAITING] = __('Not validated', 'formcreator');
+            $ticket_opts[PluginFormcreatorFormAnswer::STATUS_REFUSED] = __('Refused', 'formcreator');
             return Dropdown::showFromArray($name, $ticket_opts, ['display' => false,
                                                                  'value'   => $values[$field]]);
             break;
@@ -553,7 +553,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return [Ticket::INCOMING, 'waiting', 'accepted', 'refused'];
+      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
    }
 
    static function getProcessStatusArray() {
@@ -566,7 +566,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getAllStatusArray($withmetaforsearch = false) {
       $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
-      $form_status = ['waiting', 'accepted', 'refused'];
+      $form_status = [PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
       $form_status = array_combine($form_status, $form_status);
       $all_status = $ticket_status + $form_status;
       return $all_status;

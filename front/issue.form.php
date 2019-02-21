@@ -48,7 +48,7 @@ $_SESSION['glpilayout'] = "lefttab";
 $issue = new PluginFormcreatorIssue();
 if (isset($_POST['save_formanswer'])) {
    $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-   $_POST['status']                      = 'waiting';
+   $_POST['status']                      = PluginFormcreatorFormAnswer::STATUS_WAITING;
    $issue->saveAnswers($_POST);
    Html::back();
 } else {

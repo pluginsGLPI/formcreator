@@ -29,12 +29,16 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_8 {
+
+   protected $migration;
+
    /**
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
       global $DB;
 
+      $this->migration = $migration;
       // add item association rule
       $table = 'glpi_plugin_formcreator_targettickets';
       $enum_associate_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumAssociateRule()))."'";
@@ -66,5 +70,54 @@ class PluginFormcreatorUpgradeTo2_8 {
          'id' => $plugin->getID(),
          'name' => 'Form Creator',
       ]);
+
+      // Remove enum for formanswer
+      $this->enumToInt(
+         'glpi_plugin_formcreator_formanswers',
+         'status',
+         [
+            'waiting'  => 101,
+            'refused'  => 102,
+            'accepted' => 103
+         ],
+         [
+            'default_value' => '1'
+         ]
+      );
+   }
+
+   /**
+    * convert an enum column into an int
+    *
+    * @param string $table
+    * @param string $field
+    * @param array $map map of enum value => equivalent integer
+    * @param array $options options to give to Migration::addField and Migration::changeField
+    * @return void
+    */
+   protected function enumToInt($table, $field, array $map, $options = []) {
+      global $DB;
+      $isEnum = PluginFormcreatorCommon::getEnumValues($table, $field);
+      if (count($isEnum) > 0) {
+         $this->migration->addField(
+            $table,
+            "new_$field",
+            'integer',
+            ['after' => $field] + $options
+         );
+         $this->migration->migrationOneTable($table);
+         foreach ($map as $enumValue => $integerValue) {
+            $DB->update(
+               $table,
+               ["new_$field" => $integerValue],
+               [$field => $enumValue]
+            );
+         }
+         $this->migration->changeField(
+            $table,
+            "new_$field",
+            $field, 'integer'
+         );
+      }
    }
 }

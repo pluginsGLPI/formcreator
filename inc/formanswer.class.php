@@ -41,6 +41,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    const SOPTION_ANSWER = 900000;
 
+   // Values choosen to not conflict with status of ticket constants
+   // @see PluginFormcreatorIssue::getNewStatusArray
+   const STATUS_WAITING = 101;
+   const STATUS_REFUSED = 102;
+   const STATUS_ACCEPTED = 103;
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -305,9 +311,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       switch ($field) {
          case 'status' :
             $elements = [
-               'waiting'   => __('waiting', 'formcreator'),
-               'accepted'  => __('accepted', 'formcreator'),
-               'refused'   => __('refused', 'formcreator'),
+               self::STATUS_WAITING  => __('waiting', 'formcreator'),
+               self::STATUS_REFUSED  => __('refused', 'formcreator'),
+               self::STATUS_ACCEPTED => __('accepted', 'formcreator'),
             ];
             $output = Dropdown::showFromArray($name, $elements, ['display' => false, 'value' => $values[$field]]);
             return $output;
@@ -458,7 +464,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $formId = $this->fields['plugin_formcreator_forms_id'];
       $form->getFromDB($formId);
 
-      $canEdit = $this->fields['status'] == 'refused'
+      $canEdit = $this->fields['status'] == self::STATUS_REFUSED
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
       $canValidate = $this->canValidate($form, $this);
 
@@ -476,11 +482,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
       echo '</div>';
 
-      if ($this->fields['status'] == 'refused') {
+      if ($this->fields['status'] == self::STATUS_REFUSED) {
          echo '<div class="refused_header">';
          echo '<div>' . nl2br($this->fields['comment']) . '</div>';
          echo '</div>';
-      } else if ($this->fields['status'] == 'accepted') {
+      } else if ($this->fields['status'] == self::STATUS_ACCEPTED) {
          echo '<div class="accepted_header">';
          echo '<div>';
          if (!empty($this->fields['comment'])) {
@@ -584,7 +590,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       echo '</div>';
 
       // Display submit button
-      if (($this->fields['status'] == 'refused') && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
+      if (($this->fields['status'] == self::STATUS_REFUSED) && ($_SESSION['glpiID'] == $this->fields['requester_id'])) {
          echo '<div class="form-group line'.(($questionsCount + 1) % 2).'">';
          echo '<div class="center">';
          echo '<input type="submit" name="save_formanswer" class="submit_button" value="'.__('Save').'" />';
@@ -592,7 +598,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
 
          // Display validation form
-      } else if (($this->fields['status'] == 'waiting') && $canValidate) {
+      } else if (($this->fields['status'] == self::STATUS_WAITING) && $canValidate) {
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
             || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             echo '<div class="form-group required line1">';
@@ -712,7 +718,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          ]);
 
          // Update questions answers
-         if ($status == 'waiting') {
+         if ($status == self::STATUS_WAITING) {
             foreach ($questions as $questionId => $question) {
                $answer = new PluginFormcreatorAnswer();
                $answer->getFromDBByCrit([
@@ -733,9 +739,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Does the form need to be validated?
          if ($form->fields['validation_required']) {
-            $status = 'waiting';
+            $status = self::STATUS_WAITING;
          } else {
-            $status = 'accepted';
+            $status = self::STATUS_ACCEPTED;
          }
 
          if ($form->getField('validation_required') == 1) {
@@ -788,19 +794,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $is_newFormAnswer = true;
       }
 
-      if ($form->fields['validation_required'] || ($status == 'accepted')) {
+      if ($form->fields['validation_required'] || ($status == self::STATUS_ACCEPTED)) {
          switch ($status) {
-            case 'waiting' :
+            case self::STATUS_WAITING :
                // Notify the requester
                NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
                // Notify the validator
                NotificationEvent::raiseEvent('plugin_formcreator_need_validation', $this);
                break;
-            case 'refused' :
+            case self::STATUS_REFUSED :
                // Notify the requester
                NotificationEvent::raiseEvent('plugin_formcreator_refused', $this);
                break;
-            case 'accepted' :
+            case self::STATUS_ACCEPTED :
                // Notify the requester
                if ($form->fields['validation_required']) {
                   NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
@@ -815,7 +821,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   // It the form is not being validated, nothing gives the power to anyone to validate the answers
                   $this->update([
                      'id'     => $this->getID(),
-                     'status' => 'waiting',
+                     'status' => self::STATUS_WAITING,
                   ]);
                   return false;
                }
@@ -825,7 +831,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Update issues table
          $issue = new PluginFormcreatorIssue();
          $formAnswerId = $this->getID();
-         if ($status != 'refused') {
+         if ($status != self::STATUS_REFUSED) {
 
             // If cannot get itemTicket from DB it happens either
             // when no item exist
@@ -957,7 +963,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    public function updateAnswers($input) {
       $form = new PluginFormcreatorForm();
       $form->getFromDB((int) $_POST['formcreator_form']);
-      $input['status'] = 'waiting';
+      $input['status'] = self::STATUS_WAITING;
 
       $fields = $form->getFields();
       foreach ($fields as $id => $question) {
@@ -974,7 +980,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return boolean
     */
    public function refuseAnswers($input) {
-      $input['status']          = 'refused';
+      $input['status']          = self::STATUS_REFUSED;
       $input['save_formanswer'] = true;
 
       $form   = new PluginFormcreatorForm();
@@ -1002,7 +1008,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return boolean
     */
    public function acceptAnswers($input) {
-      $input['status']                      = 'accepted';
+      $input['status']                      = self::STATUS_ACCEPTED;
       $input['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
@@ -1219,7 +1225,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       );
 
       // If the form was waiting for validation
-      if ($this->fields['status'] == 'waiting') {
+      if ($this->fields['status'] == self::STATUS_WAITING) {
          // Notify the requester
          NotificationEvent::raiseEvent('plugin_formcreator_deleted', $this);
       }
