@@ -151,5 +151,99 @@ class PluginFormcreatorUpgradeTo2_8 {
             ]
          );
       }
+
+      // Remove show_logic  enum for question conditions
+      $table = 'glpi_plugin_formcreator_questions_conditions';
+      $count = (new DBUtils())->countElementsInTable(
+         $table,
+         [
+            'show_logic' => ['AND', 'OR']
+         ]
+      );
+      if ($count > 0) {
+         $migration->addField(
+            $table,
+            'new_show_logic',
+            'integer', [
+               'after' => 'show_value'
+            ]
+         );
+         $migration->migrationOneTable($table);
+         $DB->update(
+            $table,
+            ['new_show_logic' => 1], // @see PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND
+            ['show_logic' => 'AND']
+         );
+         $DB->update(
+            $table,
+            ['new_show_logic' => 2], // @see PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR
+            ['show_logic' => 'OR']
+         );
+         $migration->changeField(
+            $table,
+            'new_show_logic',
+            'show_logic',
+            'integer', [
+               'after' => 'show_value'
+            ]
+         );
+      }
+
+      // Remove show_condition  enum for question conditions
+      $table = 'glpi_plugin_formcreator_questions_conditions';
+      $count = (new DBUtils())->countElementsInTable(
+         $table,
+         [
+            'show_condition' => ['==', '!=', '<', '>', '<=', '>=']
+         ]
+      );
+      if ($count > 0) {
+         $migration->addField(
+            $table,
+            'new_show_condition',
+            'integer', [
+               'after' => 'show_field'
+            ]
+         );
+         $migration->migrationOneTable($table);
+         $DB->update(
+            $table,
+            ['new_show_condition' => 1], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ
+            ['show_condition' => '==']
+         );
+         $DB->update(
+            $table,
+            ['new_show_condition' => 2], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_NE
+            ['show_condition' => '!=']
+         );
+         $DB->update(
+            $table,
+            ['new_show_condition' => 3], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LT
+            ['show_condition' => '<']
+         );
+         $DB->update(
+            $table,
+            ['new_show_condition' => 4], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GT
+            ['show_condition' => '>']
+         );
+         $DB->update(
+            $table,
+            ['new_show_condition' => 5], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LE
+            ['show_condition' => '<=']
+         );
+         $DB->update(
+            $table,
+            ['new_show_condition' => 6], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GE
+            ['show_condition' => '>=']
+         );
+         $migration->changeField(
+            $table,
+            'new_show_condition',
+            'show_condition',
+            'integer', [
+               'after' => 'show_field'
+            ]
+         );
+      }
    }
 }

@@ -546,7 +546,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $migration->migrationOneTable('glpi_plugin_formcreator_questions_conditions');
       }
 
-      $enum_logic = "'".implode("', '", array_keys(PluginFormcreatorQuestion_Condition::getEnumShowLogic()))."'";
+      $enum_logic = "'".implode("', '", PluginFormcreatorQuestion_Condition::getEnumShowLogic())."'";
       $current_enum_show_logic = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_questions_conditions', 'show_logic');
       if (count($current_enum_show_logic) != count(PluginFormcreatorQuestion_Condition::getEnumShowLogic())) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_questions_conditions`

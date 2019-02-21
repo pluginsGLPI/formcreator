@@ -256,7 +256,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $form_condition->add([
          'plugin_formcreator_questions_id' => $questions_id_1,
          'show_field'                      => $questions_id_2,
-         'show_condition'                  => '==',
+         'show_condition'                  =>PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
          'show_value'                      => 'test'
       ]);
       $form_validator->add([

@@ -38,6 +38,16 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
    static public $itemtype = PluginFormcreatorQuestion::class;
    static public $items_id = 'plugin_formcreator_questions_id';
 
+   const SHOW_LOGIC_AND = 1;
+   const SHOW_LOGIC_OR = 2;
+
+   const SHOW_CONDITION_EQ = 1;
+   const SHOW_CONDITION_NE = 2;
+   const SHOW_CONDITION_LT = 3;
+   const SHOW_CONDITION_GT = 4;
+   const SHOW_CONDITION_LE = 5;
+   const SHOW_CONDITION_GE = 6;
+
    public function prepareInputForAdd($input) {
       // generate a unique id
       if (!isset($input['uuid'])
@@ -50,8 +60,19 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
 
    public static function getEnumShowLogic() {
       return [
-         'AND'    => 'AND',
-         'OR'     => 'OR',
+         self::SHOW_LOGIC_AND => 'AND',
+         self::SHOW_LOGIC_OR  => 'OR',
+      ];
+   }
+
+   public function getEnumShowCondition() {
+      return [
+         self::SHOW_CONDITION_EQ => '=',
+         self::SHOW_CONDITION_NE => '≠',
+         self::SHOW_CONDITION_LT => '<',
+         self::SHOW_CONDITION_GT => '>',
+         self::SHOW_CONDITION_LE => '≤',
+         self::SHOW_CONDITION_GE => '≥',
       ];
    }
 
@@ -204,7 +225,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
 
       if ($this->isNewItem()) {
          $show_field       = '';
-         $show_condition   = '==';
+         $show_condition   = PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ;
          $show_value       = '';
          $show_logic       = '';
       } else {
@@ -255,18 +276,21 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       $html.= '</div>';
 
       $html.= '<div class="div_show_condition_operator">';
-      $html.= Dropdown::showFromArray('show_condition[]', [
-         '=='           => '=',
-         '!='           => '&ne;',
-         '<'            => '&lt;',
-         '>'            => '&gt;',
-         '<='           => '&le;',
-         '>='           => '&ge;',
-      ], [
-         'display'      => false,
-         'value'        => $show_condition,
-         'rand'         => $rand,
-      ]);
+      $showConditions = array_map(
+         function ($item) {
+            return htmlentities($item);
+         },
+         PluginFormcreatorQuestion_Condition::getEnumShowCondition()
+      );
+
+      $html.= Dropdown::showFromArray(
+         'show_condition[]',
+         $showConditions, [
+            'display'      => false,
+            'value'        => $show_condition,
+            'rand'         => $rand,
+         ]
+      );
       $html.= '</div>';
       $html.= '<div class="div_show_condition_value">';
       $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'
