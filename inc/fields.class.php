@@ -141,7 +141,7 @@ class PluginFormcreatorFields
       $conditions = [];
 
       // If the field is always shown
-      if ($question->getField('show_rule') == 'always') {
+      if ($question->getField('show_rule') == PluginFormcreatorQuestion::SHOW_RULE_ALWAYS) {
          unset($evalQuestion[$id]);
          return true;
       }
@@ -294,7 +294,7 @@ class PluginFormcreatorFields
 
       unset($evalQuestion[$id]);
 
-      if ($question->fields['show_rule'] == 'hidden') {
+      if ($question->fields['show_rule'] == PluginFormcreatorQuestion::SHOW_RULE_HIDDEN) {
          // If the field is hidden by default, show it if condition is true
          return $return;
       } else {
