@@ -178,7 +178,7 @@ class PluginFormcreatorForm extends CommonTestCase {
                   'name'                  => 'other text question',
                   'fieldtype'             => 'text',
                   'default_values'        => '',
-                  'show_rule'             => 'hidden',
+                  'show_rule'             => PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
                   'show_field'            => ['text question'],
                   'show_condition'        => ['=='],
                   'show_value'            => ['azerty'],

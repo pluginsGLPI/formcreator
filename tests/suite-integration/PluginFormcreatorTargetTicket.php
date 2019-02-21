@@ -149,7 +149,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
             $question->updateParameters($questionData);
             $questionData['id'] = $question->getID();
-            if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
+            if (isset($questionData['show_rule']) && $questionData['show_rule'] != PluginFormcreatorQuestion::SHOW_RULE_ALWAYS) {
                $showFieldName = $questionData['show_field'];
                $showfield = new \PluginFormcreatorQuestion();
                $showfield->getFromDBByCrit([

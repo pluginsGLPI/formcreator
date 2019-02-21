@@ -65,7 +65,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => $user->getID(),
                'values'          => \User::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [
                   'date' => [
@@ -88,7 +88,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => '',
                'values'          => \User::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [
                   'date' => [
@@ -111,7 +111,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => $user->getID(),
                'values'          => \User::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [
                   'date' => [
@@ -134,7 +134,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => '',
                'values'          => \User::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [
                   'date' => [
@@ -158,7 +158,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => $computer->getID(),
                'values'          => \Computer::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [
                   'date' => [
@@ -181,7 +181,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => '',
                'values'          => \Computer::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
                '_parameters'     => [
                   'date' => [
@@ -204,7 +204,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => $computer->getID(),
                'values'          => \Computer::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [
                   'date' => [
@@ -227,7 +227,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'default_values'  => '',
                'values'          => \Computer::class,
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
                '_parameters'     => [
                   'date' => [

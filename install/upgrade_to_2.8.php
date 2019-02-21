@@ -99,7 +99,57 @@ class PluginFormcreatorUpgradeTo2_8 {
             ['new_status' => 103], // @see PluginFormcreator::STATUS_ACCEPTED
             ['status' => 'accepted']
          );
-         $migration->changeField($table, 'new_status', 'status', 'integer', ['after' => 'request_date', 'default_value' => '1']);
+         $migration->changeField(
+            $table,
+            'new_status',
+            'status', 'integer', [
+               'after' => 'request_date',
+               'default_value' => '1'
+            ]
+         );
+      }
+
+      // Remove enum for question
+      $table = 'glpi_plugin_formcreator_questions';
+      $count = (new DBUtils())->countElementsInTable(
+         $table,
+         [
+            'show_rule' => ['always', 'hidden', 'shown']
+         ]
+      );
+      if ($count > 0) {
+         $migration->addField(
+            $table,
+            'new_show_rule',
+            'integer', [
+               'after' => 'order', 'default_value' => '1'
+            ]
+         );
+         $migration->migrationOneTable($table);
+         $DB->update(
+            $table,
+            ['new_show_rule' => 1], // @see PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
+            ['show_rule' => 'always']
+         );
+         $DB->update(
+            $table,
+            ['new_show_rule' => 2], // @see PluginFormcreatorQuestion::SHOW_RULE_HIDDEN
+            ['show_rule' => 'hidden']
+         );
+         $DB->update(
+            $table,
+            ['new_stanew_show_ruletus' => 3], // @see PluginFormcreatorQuestion::SHOW_RULE_SHOWN
+            ['show_rule' => 'shown']
+         );
+         $migration->changeField(
+            $table,
+            'new_show_rule',
+            'show_rule',
+            'integer', [
+               'after' => 'order',
+               'default_value' => '1'
+            ]
+         );
       }
    }
 }

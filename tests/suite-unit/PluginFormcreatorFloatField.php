@@ -43,7 +43,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -67,7 +67,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '2',
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -91,7 +91,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "2",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                '_parameters'     => [
                   'float' => [
@@ -114,7 +114,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "5",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -138,7 +138,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "3.141592",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
