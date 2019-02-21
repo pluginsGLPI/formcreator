@@ -91,7 +91,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    }
 
    /**
-    * @cover PluginFormcreatorQuestion::clone
+    * @cover\PluginFormcreatorQuestion::clone
     */
    public function testDuplicate() {
       $question = $this->getQuestion();
@@ -131,7 +131,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -154,7 +154,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -180,7 +180,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -207,7 +207,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => 'always',
+               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [

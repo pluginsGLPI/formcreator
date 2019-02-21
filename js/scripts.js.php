@@ -765,7 +765,7 @@ function plugin_formcreator_changeGlpiObjectItemType() {
 }
 
 function plugin_formcreator_toggleCondition(field) {
-   if (field.value == 'always') {
+   if (field.value == '1') {
       $('.plugin_formcreator_logicRow').hide();
    } else {
       if ($('.plugin_formcreator_logicRow').length < 1) {
