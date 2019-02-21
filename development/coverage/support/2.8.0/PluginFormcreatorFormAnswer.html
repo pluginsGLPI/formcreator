@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    34%
-                                            <small>of 601</small>
+                    33%
+                                            <small>of 626</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -241,6 +241,13 @@ layout: coverage
             <tr>
             <td><a href="#post_purgeItem">PluginFormcreatorFormAnswer::post_purgeItem()</a></td>
                                         <td style="text-align: center">8</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#parseTags">PluginFormcreatorFormAnswer::parseTags()</a></td>
+                                        <td style="text-align: center">25</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -9478,6 +9485,387 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L1235" class="number ">1235</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1236" class="number ">1236</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1237" class="number ">1237</th>
+
+                    <td class="" >
+                        <pre>    * Parse target content to replace TAGS like ##FULLFORM## by the values
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1238" class="number ">1238</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1239" class="number ">1239</th>
+
+                    <td class="" >
+                        <pre>    * @param  string $content                            String to be parsed
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1240" class="number ">1240</th>
+
+                    <td class="" >
+                        <pre>    * @param  boolean $richText                          Disable rich text mode for field rendering
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1241" class="number ">1241</th>
+
+                    <td class="" >
+                        <pre>    * @return string                                     Parsed string with tags replaced by form values
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1242" class="number ">1242</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="parseTags">
+                    <th id="L1243" class="number ">1243</th>
+
+                    <td class="" id="parseTags">
+                        <pre>   public function parseTags($content, $richText = false) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1244" class="number ">1244</th>
+
+                    <td class="" >
+                        <pre>      // retrieve answers
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1245" class="number uncovered">1245</th>
+
+                    <td class="uncovered" >
+                        <pre>      $answers_values = $this-&gt;getAnswers($this-&gt;getID());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1246" class="number ">1246</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1247" class="number ">1247</th>
+
+                    <td class="" >
+                        <pre>      // Retrieve questions
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1248" class="number uncovered">1248</th>
+
+                    <td class="uncovered" >
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1249" class="number uncovered">1249</th>
+
+                    <td class="uncovered" >
+                        <pre>      $questions = (new PluginFormcreatorQuestion())</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1250" class="number uncovered">1250</th>
+
+                    <td class="uncovered" >
+                        <pre>         -&gt;getQuestionsFromForm($this-&gt;fields[$formFk]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1251" class="number ">1251</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1252" class="number ">1252</th>
+
+                    <td class="" >
+                        <pre>      // Prepare all fields of the form
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1253" class="number uncovered">1253</th>
+
+                    <td class="uncovered" >
+                        <pre>      $form = new PluginFormcreatorForm();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1254" class="number uncovered">1254</th>
+
+                    <td class="uncovered" >
+                        <pre>      $form-&gt;getFromDB($this-&gt;fields[$formFk]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1255" class="number uncovered">1255</th>
+
+                    <td class="uncovered" >
+                        <pre>      $fields = $form-&gt;getFields();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1256" class="number uncovered">1256</th>
+
+                    <td class="uncovered" >
+                        <pre>      foreach ($questions as $questionId =&gt; $question) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1257" class="number uncovered">1257</th>
+
+                    <td class="uncovered" >
+                        <pre>         $answer = $answers_values[&#039;formcreator_field_&#039; . $questionId];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1258" class="number uncovered">1258</th>
+
+                    <td class="uncovered" >
+                        <pre>         $fields[$questionId]-&gt;deserializeValue($answer);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1259" class="number ">1259</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1260" class="number ">1260</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1261" class="number uncovered">1261</th>
+
+                    <td class="uncovered" >
+                        <pre>      foreach ($questions as $questionId =&gt; $question) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1262" class="number uncovered">1262</th>
+
+                    <td class="uncovered" >
+                        <pre>         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1263" class="number uncovered">1263</th>
+
+                    <td class="uncovered" >
+                        <pre>            $name = &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1264" class="number uncovered">1264</th>
+
+                    <td class="uncovered" >
+                        <pre>            $value = &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1265" class="number ">1265</th>
+
+                    <td class="" >
+                        <pre>         } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1266" class="number uncovered">1266</th>
+
+                    <td class="uncovered" >
+                        <pre>            $name  = $question-&gt;fields[&#039;name&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1267" class="number uncovered">1267</th>
+
+                    <td class="uncovered" >
+                        <pre>            $value = $fields[$questionId]-&gt;getValueForTargetText($richText);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1268" class="number ">1268</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1269" class="number ">1269</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1270" class="number uncovered">1270</th>
+
+                    <td class="uncovered" >
+                        <pre>         $content = str_replace(&#039;##question_&#039; . $questionId . &#039;##&#039;, Toolbox::addslashes_deep($name), $content);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1271" class="number uncovered">1271</th>
+
+                    <td class="uncovered" >
+                        <pre>         $content = str_replace(&#039;##answer_&#039; . $questionId . &#039;##&#039;, Toolbox::addslashes_deep($value), $content);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1272" class="number uncovered">1272</th>
+
+                    <td class="uncovered" >
+                        <pre>         foreach ($fields[$questionId]-&gt;getDocumentsForTarget() as $documentId) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1273" class="number uncovered">1273</th>
+
+                    <td class="uncovered" >
+                        <pre>            $this-&gt;addAttachedDocument($documentId);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1274" class="number ">1274</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1275" class="number uncovered">1275</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($question-&gt;fields[&#039;fieldtype&#039;] === &#039;file&#039;) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1276" class="number uncovered">1276</th>
+
+                    <td class="uncovered" >
+                        <pre>            if (strpos($content, &#039;##answer_&#039; . $questionId . &#039;##&#039;) !== false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1277" class="number uncovered">1277</th>
+
+                    <td class="uncovered" >
+                        <pre>               if (!is_array($value)) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1278" class="number uncovered">1278</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $value = [$value];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1279" class="number ">1279</th>
+
+                    <td class="" >
+                        <pre>               }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1280" class="number ">1280</th>
+
+                    <td class="" >
+                        <pre>            }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1281" class="number ">1281</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1282" class="number ">1282</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1283" class="number ">1283</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1284" class="number uncovered">1284</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $content;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1285" class="number unreach">1285</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1286" class="number ">1286</th>
 
                     <td class="" >
                         <pre>}
