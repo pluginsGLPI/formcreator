@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `range_max` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
-  `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always',
+  `show_rule` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_sections_id` (`plugin_formcreator_sections_id`),

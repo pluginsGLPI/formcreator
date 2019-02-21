@@ -51,7 +51,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'default_values'  => json_encode([]),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       => 'always'
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
             ],
             'data'            => null,
             'expectedValue'   => [''],
@@ -65,7 +65,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'default_values'  => json_encode([]),
                'values'          => 'glpi',
                'order'           => '1',
-               'show_rule'       => 'always'
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
             ],
             'data'            => null,
             'expectedValue'   => [''],
@@ -79,7 +79,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'default_values'  => json_encode(['email@something.com']),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       => 'always'
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
             ],
             'data'            => null,
             'expectedValue'   => ['email@something.com'],
@@ -93,7 +93,7 @@ class PluginFormcreatorActorField extends CommonTestCase {
                'default_values'  => json_encode([$userId, 'email@something.com']),
                'values'          => '',
                'order'           => '1',
-               'show_rule'       => 'always'
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
             ],
             'data'            => null,
             'expectedValue'   => ['glpi', 'email@something.com'],

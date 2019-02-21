@@ -78,12 +78,27 @@ class PluginFormcreatorUpgradeTo2_8 {
          [
             'waiting'  => 101,
             'refused'  => 102,
-            'accepted' => 103
+            'accepted' => 103,
          ],
          [
             'default_value' => '1'
          ]
       );
+
+      // Remove enum for question
+      $this->enumToInt(
+         'glpi_plugin_formcreator_questions',
+         'show_rule',
+         [
+            'always'  => 1,
+            'hidden'  => 2,
+            'shown' => 3,
+         ],
+         [
+            'default_value' => '1'
+         ]
+      );
+
    }
 
    /**
