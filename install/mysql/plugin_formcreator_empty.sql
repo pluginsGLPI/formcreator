@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `users_id_validator` int(11) DEFAULT NULL,
   `groups_id_validator` int(11) DEFAULT NULL,
   `request_date` datetime NOT NULL,
-  `status` enum('waiting','refused','accepted') NOT NULL DEFAULT 'waiting',
+  `status` int(11) DEFAULT '101',
   `comment` text,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),

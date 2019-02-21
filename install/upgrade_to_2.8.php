@@ -29,11 +29,16 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_8 {
+
+   protected $migration;
+
    /**
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
       global $DB;
+
+      $this->migration = $migration;
 
       // Rename the plugin
       $plugin = new Plugin();
