@@ -184,7 +184,7 @@ class PluginFormcreatorFields
          $conditionField = $fields[$condition['field']];
 
          switch ($condition['operator']) {
-            case '!=' :
+            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_NE :
                if (!$conditionField->isPrerequisites()) {
                   return true;
                }
@@ -195,7 +195,7 @@ class PluginFormcreatorFields
                }
                break;
 
-            case '==' :
+            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ :
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
@@ -206,7 +206,7 @@ class PluginFormcreatorFields
                }
                break;
 
-            case '>':
+            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GT:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
@@ -217,7 +217,7 @@ class PluginFormcreatorFields
                }
                break;
 
-            case '<':
+            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LT:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
@@ -228,7 +228,7 @@ class PluginFormcreatorFields
                }
                break;
 
-            case '>=':
+            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GE:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
@@ -240,7 +240,7 @@ class PluginFormcreatorFields
                }
                break;
 
-            case '<=':
+            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LE:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
@@ -255,7 +255,7 @@ class PluginFormcreatorFields
 
          // Combine all condition with respect of operator precedence
          // AND has precedence over OR and XOR
-         if ($currentLogic != 'AND' && $nextLogic == 'AND') {
+         if ($currentLogic != PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND && $nextLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND) {
             // next condition has a higher precedence operator
             // Save the current computed return and operator to use later
             $lowPrecedenceReturnPart = $return;
@@ -263,11 +263,11 @@ class PluginFormcreatorFields
             $return = $value;
          } else {
             switch ($currentLogic) {
-               case 'AND' :
+               case PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND :
                   $return = ($return and $value);
                   break;
 
-               case 'OR'  :
+               case PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR  :
                   $return = ($return or $value);
                   break;
 
@@ -276,8 +276,8 @@ class PluginFormcreatorFields
             }
          }
 
-         if ($currentLogic == 'AND' && $nextLogic != 'AND') {
-            if ($lowPrecedenceLogic == 'OR') {
+         if ($currentLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND && $nextLogic != PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND) {
+            if ($lowPrecedenceLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR) {
                $return = ($return or $lowPrecedenceReturnPart);
             } else {
                $return = ($return xor $lowPrecedenceReturnPart);
@@ -286,7 +286,7 @@ class PluginFormcreatorFields
       }
 
       // Ensure the low precedence part is used if last condition has logic == AND
-      if ($lowPrecedenceLogic == 'OR') {
+      if ($lowPrecedenceLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR) {
          $return = ($return or $lowPrecedenceReturnPart);
       } else {
          $return = ($return xor $lowPrecedenceReturnPart);
