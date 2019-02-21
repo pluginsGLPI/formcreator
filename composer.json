@@ -1,5 +1,5 @@
 {
-   "name": "Formcreator",
+   "name": "glpi-plugin/formcreator",
    "description": "Formcreator is a plugin that allow creation of custom, easy to access forms for users when they want to create one or more GLPI tickets.",
    "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
