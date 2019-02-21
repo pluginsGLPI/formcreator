@@ -40,6 +40,10 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private $field = null;
 
+   const SHOW_RULE_ALWAYS = 1;
+   const SHOW_RULE_HIDDEN = 2;
+   const SHOW_RULE_SHOWN = 3;
+
    /**
     * Check if current user have the right to create and modify requests
     *
@@ -576,7 +580,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          if (is_array($input['show_field']) && is_array($input['show_condition'])
                && is_array($input['show_value']) && is_array($input['show_logic'])) {
             // All arrays of condition exists
-            if ($input['show_rule'] != 'always') {
+            if ($input['show_rule'] != self::SHOW_RULE_ALWAYS) {
                if ((count($input['show_field']) == count($input['show_condition'])
                      && count($input['show_value']) == count($input['show_logic'])
                      && count($input['show_field']) == count($input['show_value']))) {
@@ -695,7 +699,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $DB->update(
          $table,
          [
-            'show_rule' => 'always'
+            'show_rule' => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
          ],
          [
             'id' => new QuerySubquery([
@@ -878,9 +882,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<tr">';
       echo '<td colspan="4">';
       Dropdown::showFromArray('show_rule', [
-         'always'       => __('Always displayed', 'formcreator'),
-         'hidden'       => __('Hidden unless', 'formcreator'),
-         'shown'        => __('Displayed unless', 'formcreator'),
+         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
+         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
+         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
       ], [
          'value'        => $this->fields['show_rule'],
          'on_change'    => 'plugin_formcreator_toggleCondition(this);',

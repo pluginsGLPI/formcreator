@@ -201,7 +201,7 @@ abstract class CommonTestCase extends CommonDBTestCase
          'default_values'                 => '',
          'desription'                     => '',
          'order'                          => '1',
-         'show_rule'                      => 'always',
+         'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
          '_parameters'     => [
             'text' => [
                'range' => [
@@ -477,7 +477,7 @@ abstract class CommonTestCase extends CommonDBTestCase
             $question->updateParameters($questionData);
             $questions[] = $question;
             $questionData['id'] = $question->getID();
-            if (isset($questionData['show_rule']) && $questionData['show_rule'] != 'always') {
+            if (isset($questionData['show_rule']) && $questionData['show_rule'] != \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS) {
                $showFields = [];
                foreach ($questionData['show_field'] as $showFieldName) {
                   $showfield = new \PluginFormcreatorQuestion();

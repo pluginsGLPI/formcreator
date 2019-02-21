@@ -43,7 +43,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'date' => [
                      'range' => [
@@ -65,7 +65,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
                'default_values'  => '2018-08-16 08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'date' => [
                      'range' => [
@@ -87,7 +87,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'date' => [
                      'range' => [
@@ -109,7 +109,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
                'default_values'  => '2018-08-16 08:12:34',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'date' => [
                      'range' => [

@@ -36,7 +36,7 @@ class PluginFormcreatorFields extends CommonTestCase {
    public function answersProvider() {
       return [
          'no condition' => [
-            'always',
+           \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
             [
                'show_logic' => [],
                'show_field'   => [],
@@ -47,7 +47,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'simple condition' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
                   'OR',
@@ -68,7 +68,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'failed condition' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
                   'OR',
@@ -89,7 +89,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             false,
          ],
          'multiple condition OR' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
                   'OR',
@@ -115,7 +115,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'failed multiple condition OR' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
                   'OR',
@@ -141,7 +141,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'multiple condition AND' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                   'show_logic' => [
                         'OR',
@@ -167,7 +167,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'failed multiple condition AND' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
                   'OR',
@@ -193,7 +193,7 @@ class PluginFormcreatorFields extends CommonTestCase {
             false,
          ],
          'operator priority' => [
-            'hidden',
+           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
                   'OR',
