@@ -855,11 +855,11 @@ EOS;
             $('#urgency_question_value').hide();
 
             switch($('#dropdown_urgency_rule$rand').val()) {
-               case '2' :
+               case '2': // PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER
                   $('#urgency_question_title').show();
                   $('#urgency_question_value').show();
                   break;
-               case '3':
+               case '3': // PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC
                   $('#urgency_specific_title').show();
                   $('#urgency_specific_value').show();
                   break;
