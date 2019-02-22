@@ -114,27 +114,44 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    const URGENCY_RULE_SPECIFIC = 2;
    const URGENCY_RULE_ANSWER = 3;
 
+   const DESTINATION_ENTITY_CURRENT = 1;
+   const DESTINATION_ENTITY_REQUESTER = 2;
+   const DESTINATION_ENTITY_REQUESTER_DYN_FIRST = 3;
+   const DESTINATION_ENTITY_REQUESTER_DYN_LAST = 4;
+   const DESTINATION_ENTITY_FORM = 5;
+   const DESTINATION_ENTITY_VALIDATOR = 6;
+   const DESTINATION_ENTITY_SPECIFIC = 7;
+   const DESTINATION_ENTITY_USER = 8;
+   const DESTINATION_ENTITY_ENTITY = 9;
+
+   const TAG_TYPE_NONE = 1;
+   const TAG_TYPE_QUESTIONS = 2;
+   const TAG_TYPE_SPECIFICS = 3;
+   const TAG_TYPE_QUESTIONS_AND_SPECIFIC = 4;
+   const TAG_TYPE_QUESTIONS_OR_SPECIFIC = 5;
+
+
    static function getEnumDestinationEntity() {
       return [
-         'current'   => __("Current active entity", 'formcreator'),
-         'requester' => __("Default requester user's entity", 'formcreator'),
-         'requester_dynamic_first' => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'requester_dynamic_last' => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
-         'form'      => __('The form entity', 'formcreator'),
-         'validator' => __('Default entity of the validator', 'formcreator'),
-         'specific'  => __('Specific entity', 'formcreator'),
-         'user'      => __('Default entity of a user type question answer', 'formcreator'),
-         'entity'    => __('From a GLPI object > Entity type question answer', 'formcreator'),
+         self::DESTINATION_ENTITY_CURRENT   => __("Current active entity", 'formcreator'),
+         self::DESTINATION_ENTITY_REQUESTER => __("Default requester user's entity", 'formcreator'),
+         self::DESTINATION_ENTITY_REQUESTER_DYN_FIRST => __("First dynamic requester user's entity (alphabetical)", 'formcreator'),
+         self::DESTINATION_ENTITY_REQUESTER_DYN_LAST => __("Last dynamic requester user's entity (alphabetical)", 'formcreator'),
+         self::DESTINATION_ENTITY_FORM      => __('The form entity', 'formcreator'),
+         self::DESTINATION_ENTITY_VALIDATOR => __('Default entity of the validator', 'formcreator'),
+         self::DESTINATION_ENTITY_SPECIFIC  => __('Specific entity', 'formcreator'),
+         self::DESTINATION_ENTITY_USER      => __('Default entity of a user type question answer', 'formcreator'),
+         self::DESTINATION_ENTITY_ENTITY    => __('From a GLPI object > Entity type question answer', 'formcreator'),
       ];
    }
 
    static function getEnumTagType() {
       return [
-         'none'                   => __("None"),
-         'questions'              => __('Tags from questions', 'formcreator'),
-         'specifics'              => __('Specific tags', 'formcreator'),
-         'questions_and_specific' => __('Tags from questions and specific tags', 'formcreator'),
-         'questions_or_specific'  => __('Tags from questions or specific tags', 'formcreator')
+         self::TAG_TYPE_NONE                   => __("None"),
+         self::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
+         self::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
+         self::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
+         self::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
       ];
    }
 
@@ -232,20 +249,20 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       $entityFk = Entity::getForeignKeyField();
       switch ($this->fields['destination_entity']) {
          // Requester's entity
-         case 'current' :
+         case self::DESTINATION_ENTITY_CURRENT :
             $entityId = $formanswer->fields[$entityFk];
             break;
 
-         case 'requester' :
+         case self::DESTINATION_ENTITY_REQUESTER :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
             $entityId = $userObj->fields[$entityFk];
             break;
 
          // Requester's first dynamic entity
-         case 'requester_dynamic_first' :
+         case self::DESTINATION_ENTITY_REQUESTER_DYN_FIRST :
             $order_entities = "glpi_profiles.name ASC";
-         case 'requester_dynamic_last' :
+         case self::DESTINATION_ENTITY_REQUESTER_DYN_LAST :
             if (!isset($order_entities)) {
                $order_entities = "glpi_profiles.name DESC";
             }
@@ -283,24 +300,24 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             break;
 
          // Specific entity
-         case 'specific' :
+         case self::DESTINATION_ENTITY_SPECIFIC :
             $entityId = $this->fields['destination_entity_value'];
             break;
 
          // The form entity
-         case 'form' :
+         case self::DESTINATION_ENTITY_FORM :
             $entityId = $formanswer->getForm()->fields[$entityFk];
             break;
 
          // The validator entity
-         case 'validator' :
+         case self::DESTINATION_ENTITY_VALIDATOR :
             $userObj = new User();
             $userObj->getFromDB($formanswer->fields['users_id_validator']);
             $entityId = $userObj->fields[$entityFk];
             break;
 
          // Default entity of a user from the answer of a user's type question
-         case 'user' :
+         case self::DESTINATION_ENTITY_USER :
             $user = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -319,7 +336,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             break;
 
          // Entity from the answer of an entity's type question
-         case 'entity' :
+         case self::DESTINATION_ENTITY_ENTITY :
             $entity = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),

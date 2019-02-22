@@ -29,11 +29,15 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_8 {
+
+   protected $migration;
    /**
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
       global $DB;
+
+      $this->migration = $migration;
 
       // add item association rule
       $table = 'glpi_plugin_formcreator_targettickets';
@@ -77,7 +81,6 @@ class PluginFormcreatorUpgradeTo2_8 {
             'accepted' => 103
          ],
          [
-            'after' => 'request_date',
             'default_value' => '1'
          ]
       );
@@ -91,7 +94,6 @@ class PluginFormcreatorUpgradeTo2_8 {
             'hidden' => 2,
             'shown'  => 3,
          ], [
-            'after' => 'order',
             'default_value' => '1',
          ]
       );
@@ -103,8 +105,6 @@ class PluginFormcreatorUpgradeTo2_8 {
          [
             'AND' => 1,
             'OR' => 2,
-         ], [
-            'after' => 'show_value',
          ]
       );
 
@@ -119,46 +119,76 @@ class PluginFormcreatorUpgradeTo2_8 {
             '>' => 4,
             '<=' => 5,
             '>=' => 6,
-         ], [
-            'after' => 'show_field',
          ]
       );
 
-      // Remove enum due_date_rule for target change
-      $this->enumToInt(
-         'glpi_plugin_formcreator_targetchanges',
-         'due_date_rule',
-         [
-            'answer' => 1,
-            'ticket' => 2,
-            'calcul' => 3,
-         ], [
-            'after' => 'checklistcontent',
-         ]
-      );
+      $tables = ['glpi_plugin_formcreator_targetchanges', 'glpi_plugin_formcreator_targettickets'];
+      foreach ($tables as $table) {
+         // Remove enum due_date_rule
+         $this->enumToInt(
+            $table,
+            'due_date_rule',
+            [
+               'answer' => 1,
+               'ticket' => 2,
+               'calcul' => 3,
+            ]
+         );
 
-      $this->enumToInt(
-         'glpi_plugin_formcreator_targetchanges',
-         'due_date_period',
-         [
-            'minute' => 1,
-            'hour'   => 2,
-            'day'    => 3,
-            'month'  => 4,
-         ],
-         ['after' => 'due_date_value']
-      );
+         // Remove enum due_date_period
+         $this->enumToInt(
+            $table,
+            'due_date_period',
+            [
+               'minute' => 1,
+               'hour'   => 2,
+               'day'    => 3,
+               'month'  => 4,
+            ]
+         );
 
-      $this->enumToInt(
-         'glpi_plugin_formcreator_targetchanges',
-         'urgency_rule',
-         [
-            'none'      => 1,
-            'specific'  => 2,
-            'answer'    => 3,
-         ],
-         ['after' => 'due_date_period']
-      );
+         // Remove enum for destination_entity
+         $this->enumToInt(
+            $table,
+            'destination_entity',
+            [
+               'current'                  => 1,
+               'requester'                => 2,
+               'requester_dynamic_first'  => 3,
+               'requester_dynamic_last'   => 4,
+               'form'                     => 5,
+               'validator'                => 6,
+               'specific'                 => 7,
+               'user'                     => 8,
+               'entity'                   => 9,
+            ]
+         );
+
+         // Remove enum for urgency_rule
+         $this->enumToInt(
+            $table,
+            'urgency_rule',
+            [
+               'none'      => 1,
+               'specific'  => 2,
+               'answer'    => 3,
+            ]
+         );
+
+         // Remove enum for urgency_rule
+         // 'none','questions','specifics','questions_and_specific','questions_or_specific'
+         $this->enumToInt(
+            $table,
+            'tag_type',
+            [
+               'none'      => 1,
+               'questions'  => 2,
+               'specifics'    => 3,
+               'questions_and_specific'    => 4,
+               'questions_or_specific'    => 5,
+            ]
+         );
+      }
    }
 
    /**
@@ -171,32 +201,28 @@ class PluginFormcreatorUpgradeTo2_8 {
     * @return void
     */
    protected function enumToInt($table, $field, array $map, $options = []) {
-      $count = (new DBUtils())->countElementsInTable(
-         $table,
-         [
-            $field => array_keys($map)
-         ]
-      );
-      if ($count > 0) {
-         $migration->addField(
+      global $DB;
+
+      $isEnum = PluginFormcreatorCommon::getEnumValues($table, $field);
+      if (count($isEnum) > 0) {
+         $this->migration->addField(
             $table,
             "new_$field",
             'integer',
-            $options
+            ['after' => $field] + $options
          );
-         $migration->migrationOneTable($table);
+         $this->migration->migrationOneTable($table);
          foreach ($map as $enumValue => $integerValue) {
             $DB->update(
                $table,
-               ["new_$field" => $integerValue], // @see PluginFormcreator::STATUS_WAITING
+               ["new_$field" => $integerValue],
                [$field => $enumValue]
             );
          }
-         $migration->changeField(
+         $this->migration->changeField(
             $table,
             "new_$field",
-            $field, 'integer',
-            $options
+            $field, 'integer'
          );
       }
    }

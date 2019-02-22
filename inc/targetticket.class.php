@@ -778,9 +778,9 @@ EOS;
          $tags   = [];
 
          // Add question tags
-         if (($this->fields['tag_type'] == 'questions'
-               || $this->fields['tag_type'] == 'questions_and_specific'
-               || $this->fields['tag_type'] == 'questions_or_specific')
+         if (($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS
+               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC)
             && (!empty($this->fields['tag_questions']))) {
 
             $query = "SELECT answer
@@ -797,9 +797,9 @@ EOS;
          }
 
          // Add specific tags
-         if ($this->fields['tag_type'] == 'specifics'
-             || $this->fields['tag_type'] == 'questions_and_specific'
-             || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
+         if ($this->fields['tag_type'] == self::TAG_TYPE_SPECIFICS
+             || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+             || ($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC && empty($tags))
              && (!empty($this->fields['tag_specifics']))) {
 
             $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));

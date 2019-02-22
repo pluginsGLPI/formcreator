@@ -421,13 +421,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          switch ($input['destination_entity']) {
-            case 'specific' :
+            case self::DESTINATION_ENTITY_SPECIFIC :
                $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
                break;
-            case 'user' :
+            case self::DESTINATION_ENTITY_USER :
                $input['destination_entity_value'] = $input['_destination_entity_value_user'];
                break;
-            case 'entity' :
+            case self::DESTINATION_ENTITY_ENTITY :
                $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
                break;
             default :
@@ -585,9 +585,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $tags   = [];
 
          // Add question tags
-         if (($this->fields['tag_type'] == 'questions'
-               || $this->fields['tag_type'] == 'questions_and_specific'
-               || $this->fields['tag_type'] == 'questions_or_specific')
+         if (($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS
+               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+               || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC)
                && (!empty($this->fields['tag_questions']))) {
 
                   $query = "SELECT answer
@@ -604,9 +604,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          // Add specific tags
-         if ($this->fields['tag_type'] == 'specifics'
-                     || $this->fields['tag_type'] == 'questions_and_specific'
-                     || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
+         if ($this->fields['tag_type'] == self::TAG_TYPE_SPECIFICS
+                     || $this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_AND_SPECIFIC
+                     || ($this->fields['tag_type'] == self::TAG_TYPE_QUESTIONS_OR_SPECIFIC && empty($tags))
                      && (!empty($this->fields['tag_specifics']))) {
 
             $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
