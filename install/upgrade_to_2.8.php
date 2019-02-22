@@ -144,6 +144,9 @@ class PluginFormcreatorUpgradeTo2_8 {
                'hour'   => 2,
                'day'    => 3,
                'month'  => 4,
+            ],
+            [
+               'null' => true,
             ]
          );
 
@@ -175,8 +178,18 @@ class PluginFormcreatorUpgradeTo2_8 {
             ]
          );
 
+         // Remove enum for category_rule
+         $this->enumToInt(
+            $table,
+            'category_rule',
+            [
+               'none'      => 1,
+               'specific'  => 2,
+               'answer'    => 3,
+            ]
+         );
+
          // Remove enum for urgency_rule
-         // 'none','questions','specifics','questions_and_specific','questions_or_specific'
          $this->enumToInt(
             $table,
             'tag_type',
@@ -189,6 +202,28 @@ class PluginFormcreatorUpgradeTo2_8 {
             ]
          );
       }
+
+      // Remove enum for location_rule
+      $this->enumToInt(
+         'glpi_plugin_formcreator_targettickets',
+         'location_rule',
+         [
+            'none'      => 1,
+            'specific'  => 2,
+            'answer'    => 3,
+         ]
+      );
+
+      // Remove enum for associate_rule
+      $this->enumToInt(
+         'glpi_plugin_formcreator_targettickets',
+         'associate_rule',
+         [
+            'none'      => 1,
+            'specific'  => 2,
+            'answer'    => 3,
+         ]
+      );
    }
 
    /**

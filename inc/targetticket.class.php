@@ -452,13 +452,13 @@ EOS;
          }
 
          switch ($input['destination_entity']) {
-            case 'specific' :
+            case self::DESTINATION_ENTITY_SPECIFIC :
                $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
                break;
-            case 'user' :
+            case self::DESTINATION_ENTITY_USER :
                $input['destination_entity_value'] = $input['_destination_entity_value_user'];
                break;
-            case 'entity' :
+            case self::DESTINATION_ENTITY_ENTITY :
                $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
                break;
             default :
@@ -467,10 +467,10 @@ EOS;
          }
 
          switch ($input['urgency_rule']) {
-            case 'answer':
+            case self::URGENCY_RULE_ANSWER:
                $input['urgency_question'] = $input['_urgency_question'];
                break;
-            case 'specific':
+            case self::URGENCY_RULE_SPECIFIC:
                $input['urgency_question'] = $input['_urgency_specific'];
                break;
             default:
@@ -478,10 +478,10 @@ EOS;
          }
 
          switch ($input['category_rule']) {
-            case 'answer':
+            case self::LOCATION_RULE_ANSWER:
                $input['category_question'] = $input['_category_question'];
                break;
-            case 'specific':
+            case self::CATEGORY_RULE_SPECIFIC:
                $input['category_question'] = $input['_category_specific'];
                break;
             default:
@@ -489,10 +489,10 @@ EOS;
          }
 
          switch ($input['location_rule']) {
-            case 'answer':
+            case self::LOCATION_RULE_ANSWER:
                $input['location_question'] = $input['_location_question'];
                break;
-            case 'specific':
+            case self::LOCATION_RULE_SPECIFIC:
                $input['location_question'] = $input['_location_specific'];
                break;
             default:
