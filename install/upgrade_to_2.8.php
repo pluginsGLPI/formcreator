@@ -68,181 +68,135 @@ class PluginFormcreatorUpgradeTo2_8 {
       ]);
 
       // Remove enum for formanswer
-      $table = 'glpi_plugin_formcreator_formanswers';
-      $count = (new DBUtils())->countElementsInTable(
-         $table,
+      $this->enumToInt(
+         'glpi_plugin_formcreator_formanswers',
+         'status',
          [
-            'status' => ['waiting', 'accepted', 'refused']
+            'waiting'  => 101,
+            'refused'  => 102,
+            'accepted' => 103
+         ],
+         [
+            'after' => 'request_date',
+            'default_value' => '1'
          ]
       );
-      if ($count > 0) {
-         $migration->addField(
-            $table,
-            'new_status',
-            'integer', [
-               'after' => 'request_date', 'default_value' => '1'
-            ]
-         );
-         $migration->migrationOneTable($table);
-         $DB->update(
-            $table,
-            ['new_status' => 101], // @see PluginFormcreator::STATUS_WAITING
-            ['status' => 'waiting']
-         );
-         $DB->update(
-            $table,
-            ['new_status' => 102], // @see PluginFormcreator::STATUS_REFUSED
-            ['status' => 'refused']
-         );
-         $DB->update(
-            $table,
-            ['new_status' => 103], // @see PluginFormcreator::STATUS_ACCEPTED
-            ['status' => 'accepted']
-         );
-         $migration->changeField(
-            $table,
-            'new_status',
-            'status', 'integer', [
-               'after' => 'request_date',
-               'default_value' => '1'
-            ]
-         );
-      }
 
       // Remove enum for question
-      $table = 'glpi_plugin_formcreator_questions';
-      $count = (new DBUtils())->countElementsInTable(
-         $table,
+      $this->enumToInt(
+         'glpi_plugin_formcreator_questions',
+         'show_rule',
          [
-            'show_rule' => ['always', 'hidden', 'shown']
+            'always' => 1,
+            'hidden' => 2,
+            'shown'  => 3,
+         ], [
+            'after' => 'order',
+            'default_value' => '1',
          ]
       );
-      if ($count > 0) {
-         $migration->addField(
-            $table,
-            'new_show_rule',
-            'integer', [
-               'after' => 'order', 'default_value' => '1'
-            ]
-         );
-         $migration->migrationOneTable($table);
-         $DB->update(
-            $table,
-            ['new_show_rule' => 1], // @see PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
-            ['show_rule' => 'always']
-         );
-         $DB->update(
-            $table,
-            ['new_show_rule' => 2], // @see PluginFormcreatorQuestion::SHOW_RULE_HIDDEN
-            ['show_rule' => 'hidden']
-         );
-         $DB->update(
-            $table,
-            ['new_stanew_show_ruletus' => 3], // @see PluginFormcreatorQuestion::SHOW_RULE_SHOWN
-            ['show_rule' => 'shown']
-         );
-         $migration->changeField(
-            $table,
-            'new_show_rule',
-            'show_rule',
-            'integer', [
-               'after' => 'order',
-               'default_value' => '1'
-            ]
-         );
-      }
 
       // Remove show_logic  enum for question conditions
-      $table = 'glpi_plugin_formcreator_questions_conditions';
-      $count = (new DBUtils())->countElementsInTable(
-         $table,
+      $this->enumToInt(
+         'glpi_plugin_formcreator_questions_conditions',
+         'show_logic',
          [
-            'show_logic' => ['AND', 'OR']
+            'AND' => 1,
+            'OR' => 2,
+         ], [
+            'after' => 'show_value',
          ]
       );
-      if ($count > 0) {
-         $migration->addField(
-            $table,
-            'new_show_logic',
-            'integer', [
-               'after' => 'show_value'
-            ]
-         );
-         $migration->migrationOneTable($table);
-         $DB->update(
-            $table,
-            ['new_show_logic' => 1], // @see PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND
-            ['show_logic' => 'AND']
-         );
-         $DB->update(
-            $table,
-            ['new_show_logic' => 2], // @see PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR
-            ['show_logic' => 'OR']
-         );
-         $migration->changeField(
-            $table,
-            'new_show_logic',
-            'show_logic',
-            'integer', [
-               'after' => 'show_value'
-            ]
-         );
-      }
 
       // Remove show_condition  enum for question conditions
-      $table = 'glpi_plugin_formcreator_questions_conditions';
+      $this->enumToInt(
+         'glpi_plugin_formcreator_questions_conditions',
+         'show_condition',
+         [
+            '==' => 1,
+            '!=' => 2,
+            '<' => 3,
+            '>' => 4,
+            '<=' => 5,
+            '>=' => 6,
+         ], [
+            'after' => 'show_field',
+         ]
+      );
+
+      // Remove enum due_date_rule for target change
+      $this->enumToInt(
+         'glpi_plugin_formcreator_targetchanges',
+         'due_date_rule',
+         [
+            'answer' => 1,
+            'ticket' => 2,
+            'calcul' => 3,
+         ], [
+            'after' => 'checklistcontent',
+         ]
+      );
+
+      $this->enumToInt(
+         'glpi_plugin_formcreator_targetchanges',
+         'due_date_period',
+         [
+            'minute' => 1,
+            'hour'   => 2,
+            'day'    => 3,
+            'month'  => 4,
+         ],
+         ['after' => 'due_date_value']
+      );
+
+      $this->enumToInt(
+         'glpi_plugin_formcreator_targetchanges',
+         'urgency_rule',
+         [
+            'none'      => 1,
+            'specific'  => 2,
+            'answer'    => 3,
+         ],
+         ['after' => 'due_date_period']
+      );
+   }
+
+   /**
+    * convert an enum column into an int
+    *
+    * @param string $table
+    * @param string $field
+    * @param array $map map of enum value => equivalent integer
+    * @param array $options options to give to Migration::addField and Migration::changeField
+    * @return void
+    */
+   protected function enumToInt($table, $field, array $map, $options = []) {
       $count = (new DBUtils())->countElementsInTable(
          $table,
          [
-            'show_condition' => ['==', '!=', '<', '>', '<=', '>=']
+            $field => array_keys($map)
          ]
       );
       if ($count > 0) {
          $migration->addField(
             $table,
-            'new_show_condition',
-            'integer', [
-               'after' => 'show_field'
-            ]
+            "new_$field",
+            'integer',
+            $options
          );
          $migration->migrationOneTable($table);
-         $DB->update(
-            $table,
-            ['new_show_condition' => 1], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ
-            ['show_condition' => '==']
-         );
-         $DB->update(
-            $table,
-            ['new_show_condition' => 2], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_NE
-            ['show_condition' => '!=']
-         );
-         $DB->update(
-            $table,
-            ['new_show_condition' => 3], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LT
-            ['show_condition' => '<']
-         );
-         $DB->update(
-            $table,
-            ['new_show_condition' => 4], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GT
-            ['show_condition' => '>']
-         );
-         $DB->update(
-            $table,
-            ['new_show_condition' => 5], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LE
-            ['show_condition' => '<=']
-         );
-         $DB->update(
-            $table,
-            ['new_show_condition' => 6], // @see PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GE
-            ['show_condition' => '>=']
-         );
+         foreach ($map as $enumValue => $integerValue) {
+            $DB->update(
+               $table,
+               ["new_$field" => $integerValue], // @see PluginFormcreator::STATUS_WAITING
+               [$field => $enumValue]
+            );
+         }
          $migration->changeField(
             $table,
-            'new_show_condition',
-            'show_condition',
-            'integer', [
-               'after' => 'show_field'
-            ]
+            "new_$field",
+            $field, 'integer',
+            $options
          );
       }
    }

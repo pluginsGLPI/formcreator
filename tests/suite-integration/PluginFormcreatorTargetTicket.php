@@ -178,7 +178,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'name'                  => 'target 2',
             'content'               => '##FULLFORM##',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
-            'urgency_rule'          => 'none',
+            'urgency_rule'          => PluginFormcreatorTargetBase::URGENCY_RULE_NONE,
             'urgency_question'      => '',
             'expected'              => '3'
          ]

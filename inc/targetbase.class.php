@@ -101,6 +101,19 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    abstract protected function getCategoryFilter();
 
+   const DUE_DATE_RULE_ANSWER = 1;
+   const DUE_DATE_RULE_TICKET = 2;
+   const DUE_DATE_RULE_CALC = 3;
+
+   const DUE_DATE_PERIOD_MINUTE = 1;
+   const DUE_DATE_PERIOD_HOUR = 2;
+   const DUE_DATE_PERIOD_DAY = 3;
+   const DUE_DATE_PERIOD_MONTH = 4;
+
+   const URGENCY_RULE_NONE = 1;
+   const URGENCY_RULE_SPECIFIC = 2;
+   const URGENCY_RULE_ANSWER = 3;
+
    static function getEnumDestinationEntity() {
       return [
          'current'   => __("Current active entity", 'formcreator'),
@@ -127,17 +140,17 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    static function getEnumDueDateRule() {
       return [
-         'answer' => __('equals to the answer to the question', 'formcreator'),
-         'ticket' => __('calculated from the ticket creation date', 'formcreator'),
-         'calcul' => __('calculated from the answer to the question', 'formcreator'),
+         PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
+         PluginFormcreatorTargetBase::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
+         PluginFormcreatorTargetBase::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
       ];
    }
 
    static function getEnumUrgencyRule() {
       return [
-         'none'      => __('Urgency from template or Medium', 'formcreator'),
-         'specific'  => __('Specific urgency', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+         PluginFormcreatorTargetBase::URGENCY_RULE_NONE     => __('Urgency from template or Medium', 'formcreator'),
+         PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC => __('Specific urgency', 'formcreator'),
+         PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER   => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
@@ -818,11 +831,11 @@ EOS;
             $('#urgency_question_value').hide();
 
             switch($('#dropdown_urgency_rule$rand').val()) {
-               case 'answer' :
+               case '2' :
                   $('#urgency_question_title').show();
                   $('#urgency_question_value').show();
                   break;
-               case 'specific':
+               case '3':
                   $('#urgency_specific_title').show();
                   $('#urgency_specific_value').show();
                   break;
@@ -1653,16 +1666,34 @@ JAVASCRIPT;
       } else {
          $date = null;
       }
-      $str    = "+" . $this->fields['due_date_value'] . " " . $this->fields['due_date_period'];
+      switch ($this->fields['due_date_period']) {
+         case self::DUE_DATE_PERIOD_MINUTE:
+            $period = "minute";
+            break;
+
+         case self::DUE_DATE_PERIOD_HOUR:
+            $period = "hour";
+            break;
+
+         case self::DUE_DATE_PERIOD_DAY:
+            $period = "day";
+            break;
+
+         case self::DUE_DATE_PERIOD_MONTH:
+            $period = "month";
+            break;
+
+      }
+      $str    = "+" . $this->fields['due_date_value'] . " $period";
 
       switch ($this->fields['due_date_rule']) {
-         case 'answer':
+         case self::DUE_DATE_RULE_ANSWER:
             $due_date = $date['answer'];
             break;
-         case 'ticket':
+         case self::DUE_DATE_RULE_TICKET:
             $due_date = date('Y-m-d H:i:s', strtotime($str));
             break;
-         case 'calcul':
+         case self::DUE_DATE_RULE_CALC:
             $due_date = date('Y-m-d H:i:s', strtotime($date['answer'] . " " . $str));
             break;
          default:

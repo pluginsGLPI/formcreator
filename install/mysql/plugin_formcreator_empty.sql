@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `rolloutplancontent` longtext,
   `backoutplancontent` longtext,
   `checklistcontent` longtext,
-  `due_date_rule` enum('answer','change','calcul') DEFAULT NULL,
+  `due_date_rule` int(11) DEFAULT NULL,
   `due_date_question` int(11) DEFAULT NULL,
   `due_date_value` tinyint(4) DEFAULT NULL,
   `due_date_period` enum('minute','hour','day','month') DEFAULT NULL,
