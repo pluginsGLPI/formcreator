@@ -217,46 +217,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $this->showActorsSettings();
 
-      // List of available tags
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
-      echo '<tr>';
-      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
-      echo '<th width="20%">' . __('Title') . '</th>';
-      echo '<th width="20%">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
-      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
-      echo '</tr>';
-
-      echo '<tr class="line0">';
-      echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center"><code>-</code></td>';
-      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
-      echo '<td align="center">-</td>';
-      echo '</tr>';
-
-      $table_questions = getTableForItemType('PluginFormcreatorQuestion');
-      $table_sections  = getTableForItemType('PluginFormcreatorSection');
-      $query = "SELECT q.`id`, q.`name` AS question, s.`name` AS section
-                FROM $table_questions q
-                LEFT JOIN $table_sections s
-                  ON q.`plugin_formcreator_sections_id` = s.`id`
-                WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
-                ORDER BY s.`order`, q.`order`";
-      $result = $DB->query($query);
-
-      $i = 0;
-      while ($question = $DB->fetch_array($result)) {
-         $i++;
-         echo '<tr class="line' . ($i % 2) . '">';
-         echo '<td colspan="2">' . $question['question'] . '</td>';
-         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
-         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
-         echo '<td align="center">' . $question['section'] . '</td>';
-         echo '</tr>';
-      }
-
-      echo '</table>';
+      $this->showTagsList();
       echo '</div>';
    }
 
