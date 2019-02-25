@@ -31,21 +31,7 @@ before_script:
   - "./tests/before_script.sh"
 
 script:
-  - COVERAGE="-ncc"
-  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBChild CommonDBConnexity CommonDBRelation"; fi
-  - if [ -e ../../scripts/cliinstall.php ] ; then php ../../scripts/cliinstall.php --db=$OLDDBNAME --user=root --tests ; fi
-  - if [ -e ../../bin/console ] ; then php ../../bin/console glpi:database:install --db-name=$OLDDBNAME --db-user=root --config-dir=../../tests --no-interaction --force; fi
-  - mysql -u root $OLDDBNAME < tests/plugin_formcreator_empty_2.5.0.sql
-  - mysql -u root $OLDDBNAME < tests/plugin_formcreator_config_2.5.0.sql
-  - php scripts/cliinstall.php --tests
-  - rm ../../tests/config_db.php
-  - if [ -e ../../scripts/cliinstall.php ] ; then php ../../scripts/cliinstall.php --db=$DBNAME --user=root --tests ; fi
-  - if [ -e ../../bin/console ] ; then php ../../bin/console glpi:database:install --db-name=$DBNAME --db-user=root --config-dir=../../tests --no-interaction --force; fi
-  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-install -ncc
-  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration $COVERAGE
-  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit $COVERAGE
-  - vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall -ncc
-  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/robo --no-interaction code:cs; fi
+  - "./tests/script.sh"
 
 after_success:
   # let's update the documentation and locales
