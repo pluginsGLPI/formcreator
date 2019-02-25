@@ -66,16 +66,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function getCategoryFilter() {
-      // TODO remove if and the next raw query when 9.3/bf compat will no be needed anymore
-      if (version_compare(GLPI_VERSION, "9.4", '>=')) {
-         return [
-            'OR' => [
-               'is_request'  => 1,
-               'is_incident' => 1
-            ]
-         ];
-      }
-      return "`is_request` = '1' OR `is_incident` = '1'";
+      return [
+         'OR' => [
+            'is_request'  => 1,
+            'is_incident' => 1
+         ]
+      ];
    }
 
    /**
@@ -130,9 +126,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
       echo '<textarea name="content" style="width:700px;" rows="15">' . $this->fields['content'] . '</textarea>';
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI["use_rich_text"]) {
-         Html::initEditorSystem('content');
-      }
+      Html::initEditorSystem('content');
       echo '</td>';
       echo '</tr>';
 
@@ -779,34 +773,23 @@ EOS;
       // dropdown of target tickets
       echo '<span id="plugin_formcreator_link_target">';
       $excludedTargetTicketsIds[] = $this->getID();
-      $condition = "`id` IN (
-         SELECT `items_id` FROM `glpi_plugin_formcreator_targets` AS `t1`
-         WHERE `plugin_formcreator_forms_id` = (
-            SELECT `plugin_formcreator_forms_id` FROM `glpi_plugin_formcreator_targets` AS `t2`
-            WHERE `t2`.`itemtype` = 'PluginFormcreatorTargetTicket' AND `t2`.`items_id` = '$targetTicketId'
-         )
-         AND `t1`.`itemtype` = 'PluginFormcreatorTargetTicket'
-      )";
-      // TODO remove if and the above raw query when 9.3/bf compat will no be needed anymore
-      if (version_compare(GLPI_VERSION, "9.4", '>=')) {
-         $condition = [
-            'id' => new QuerySubQuery([
-               'SELECT' => ['items_id'],
-               'FROM'   => 'glpi_plugin_formcreator_targets AS t1',
-               'WHERE'  => [
-                  't1.itemtype'                 => 'PluginFormcreatorTargetTicket',
-                  'plugin_formcreator_forms_id' => new QuerySubQuery([
-                     'SELECT' => ['plugin_formcreator_forms_id'],
-                     'FROM'   => 'glpi_plugin_formcreator_targets AS t2',
-                     'WHERE'  => [
-                        't2.itemtype' => 'PluginFormcreatorTargetTicket',
-                        't2.items_id' => $targetTicketId
-                     ]
-                  ]),
-               ]
-            ]),
-         ];
-      }
+      $condition = [
+         'id' => new QuerySubQuery([
+            'SELECT' => ['items_id'],
+            'FROM'   => 'glpi_plugin_formcreator_targets AS t1',
+            'WHERE'  => [
+               't1.itemtype'                 => 'PluginFormcreatorTargetTicket',
+               'plugin_formcreator_forms_id' => new QuerySubQuery([
+                  'SELECT' => ['plugin_formcreator_forms_id'],
+                  'FROM'   => 'glpi_plugin_formcreator_targets AS t2',
+                  'WHERE'  => [
+                     't2.itemtype' => 'PluginFormcreatorTargetTicket',
+                     't2.items_id' => $targetTicketId
+                  ]
+               ]),
+            ]
+         ]),
+      ];
       echo PluginFormcreatorTargetTicket::dropdown([
          'name'      => '_link_targettickets_id',
          'rand'      => $rand,
@@ -893,9 +876,7 @@ EOS;
             return [];
          }
 
-         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-            $input['content'] = Html::entity_decode_deep($input['content']);
-         }
+         $input['content'] = Html::entity_decode_deep($input['content']);
 
          switch ($input['destination_entity']) {
             case 'specific' :
@@ -1136,7 +1117,7 @@ EOS;
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
       //       and the computation from a admin-defined target ticket template
-      $richText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
+      $richText = true;
       $data['name'] = $this->prepareTemplate(
          $this->fields['name'],
          $formanswer,

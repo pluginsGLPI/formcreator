@@ -152,9 +152,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       if (!in_array($itemtype, [Ticket::class, PluginFormcreatorFormAnswer::class])) {
          html::displayRightError();
       }
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-         Html::requireJs('tinymce');
-      }
+      Html::requireJs('tinymce');
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
          $this->displaySimplified($options);
       } else {
@@ -512,11 +510,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $table = $searchopt[$option_id]["table"];
       $field = $searchopt[$option_id]["field"];
 
-      if (version_compare(GLPI_VERSION, '9.4') < 0) {
-         $rawColumn = 'ITEM_0_display_id';
-      } else {
-         $rawColumn = 'ITEM_PluginFormcreatorIssue_1_display_id';
-      }
+      $rawColumn = 'ITEM_PluginFormcreatorIssue_1_display_id';
       if (isset($data['raw'][$rawColumn])) {
          $matches = null;
          preg_match('/[tf]+_([0-9]*)/', $data['raw'][$rawColumn], $matches);

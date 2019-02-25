@@ -418,24 +418,16 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
              || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
             $table_form_validator = PluginFormcreatorForm_Validator::getTable();
-            $condition = "`glpi_groups`.`id` IN (
-            SELECT `items_id`
-            FROM `$table_form_validator`
-            WHERE `itemtype` = 'Group' AND `plugin_formcreator_forms_id` = '$formId'
-            )";
-            // TODO remove if and the above raw query when 9.3/bf compat will no be needed anymore
-            if (version_compare(GLPI_VERSION, "9.4", '>=')) {
-               $condition = [
-                  'glpi_groups.id' => new QuerySubQuery([
-                     'SELECT' => ['items_id'],
-                     'FROM'   => $table_form_validator,
-                     'WHERE'  => [
-                        'itemtype'                    => 'Group',
-                        'plugin_formcreator_forms_id' => $formId
-                     ]
-                  ])
-               ];
-            }
+            $condition = [
+               'glpi_groups.id' => new QuerySubQuery([
+                  'SELECT' => ['items_id'],
+                  'FROM'   => $table_form_validator,
+                  'WHERE'  => [
+                     'itemtype'                    => 'Group',
+                     'plugin_formcreator_forms_id' => $formId
+                  ]
+               ])
+            ];
             $groupList = Group_User::getUserGroups($userId, $condition);
             $canValidate = (count($groupList) > 0);
          } else {

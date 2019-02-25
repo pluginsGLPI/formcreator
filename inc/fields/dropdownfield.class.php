@@ -70,34 +70,27 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   break;
 
                case ITILCategory::class:
-                  $dparams['condition'] = '1';
                   if (isset ($_SESSION['glpiactiveprofile']['interface'])
                      && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-                     $dparams['condition'] .= " AND `is_helpdeskvisible` = '1'";
                      $dparams_cond_crit['is_helpdeskvisible'] = 1;
                   }
                   switch ($decodedValues['show_ticket_categories']) {
                      case 'request':
-                        $dparams['condition'] .= " AND `is_request` = '1'";
                         $dparams_cond_crit['is_request'] = 1;
                         break;
                      case 'incident':
-                        $dparams['condition'] .= " AND `is_incident` = '1'";
                         $dparams_cond_crit['is_incident'] = 1;
                         break;
                      case 'both':
-                        $dparams['condition'] .= " AND (`is_incident` = '1' OR `is_request` = '1')";
                         $dparams_cond_crit['OR'] = [
                            'is_incident' => 1,
                            'is_request'  => 1,
                         ];
                         break;
                      case 'change':
-                        $dparams['condition'] .= " AND `is_change` = '1'";
                         $dparams_cond_crit['is_change'] = 1;
                         break;
                      case 'all':
-                        $dparams['condition'] .= " AND (`is_change` = '1' OR `is_incident` = '1' OR  `is_request` = '1')";
                         $dparams_cond_crit['OR'] = [
                            'is_change'   => 1,
                            'is_incident' => 1,
@@ -107,7 +100,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   }
                   if (isset($decodedValues['show_ticket_categories_depth'])
                      && $decodedValues['show_ticket_categories_depth'] > 0) {
-                     $dparams['condition'] .= " AND `level` <= '" . $decodedValues['show_ticket_categories_depth'] . "'";
                      $dparams_cond_crit['level'] = ['<=', $decodedValues['show_ticket_categories_depth']];
                   }
                   if (isset($decodedValues['show_ticket_categories_root'])
@@ -117,7 +109,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                            $decodedValues['show_ticket_categories_root']
                         );
                         $sons = "'" . implode("', '", $sons) . "'";
-                     $dparams['condition'] .= " AND `id` IN ('" . $decodedValues['show_ticket_categories_root'] . "')";
                      $dparams_cond_crit['id'] = $decodedValues['show_ticket_categories_root'];
                   }
                   break;
@@ -136,7 +127,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                      if ($DB->fieldExists($itemtype::getTable(), $userFk)
                         && !$canViewAllHardware && $canViewMyHardware) {
                         $userId = $_SESSION['glpiID'];
-                        $dparams['condition'] = "`$userFk`='$userId'";
                         $dparams_cond_crit[$userFk] = $userId;
                      }
                      if ($DB->fieldExists($itemtype::getTable(), $groupFk)
@@ -147,16 +137,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                            ] + $dparams_cond_crit
                         ];
                         $groups = implode("', '", $groups);
-                        $dparams['condition'] .= " OR `$groupFk` IN ('$groups')";
                      }
                   }
             }
 
-            // TODO remove if and the above raw queries (in $dparams['condition'])
-            // when 9.3/bf compat will no be needed anymore
-            if (version_compare(GLPI_VERSION, "9.4", '>=')) {
-               $dparams['condition'] = $dparams_cond_crit;
-            }
+            $dparams['condition'] = $dparams_cond_crit;
 
             $itemtype::dropdown($dparams);
          }

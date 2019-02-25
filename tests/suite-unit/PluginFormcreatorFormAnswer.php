@@ -53,20 +53,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $instance->getFromDB($formAnswerId);
       $questionId = $question->getID();
 
-      if (version_compare(GLPI_VERSION, '9.4') < 0) {
-         $output = $instance->getFullForm(false);
-         // Test the encoding of new lines
-         $this->string($output)->contains(
-            "Form data\r\n" .
-            "=================\r\n"
-         );
-         $this->string($output)->contains("section '1'");
-         $this->string($output)->contains("##question_$questionId##");
-      }
-
       $output = $instance->getFullForm(true);
       $this->string($output)->contains("section '1'");
       $this->string($output)->contains("##question_$questionId##");
-
    }
 }
