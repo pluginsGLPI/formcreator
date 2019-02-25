@@ -731,52 +731,7 @@ EOS;
          return null;
       }
 
-      // Add tag if presents
-      $plugin = new Plugin();
-      if ($plugin->isActivated('tag')) {
-
-         $tagObj = new PluginTagTagItem();
-         $tags   = [];
-
-         // Add question tags
-         if (($this->fields['tag_type'] == 'questions'
-               || $this->fields['tag_type'] == 'questions_and_specific'
-               || $this->fields['tag_type'] == 'questions_or_specific')
-            && (!empty($this->fields['tag_questions']))) {
-
-            $query = "SELECT answer
-                      FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
-                      AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
-            $result = $DB->query($query);
-            while ($line = $DB->fetch_array($result)) {
-               $tab = json_decode($line['answer']);
-               if (is_array($tab)) {
-                  $tags = array_merge($tags, $tab);
-               }
-            }
-         }
-
-         // Add specific tags
-         if ($this->fields['tag_type'] == 'specifics'
-             || $this->fields['tag_type'] == 'questions_and_specific'
-             || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
-             && (!empty($this->fields['tag_specifics']))) {
-
-            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
-         }
-
-         $tags = array_unique($tags);
-
-         // Save tags in DB
-         foreach ($tags as $tag) {
-            $tagObj->add([
-               'plugin_tag_tags_id' => $tag,
-               'items_id'           => $ticketID,
-               'itemtype'           => Ticket::class,
-            ]);
-         }
-      }
+      $this->saveTags($formanswer, $ticketID);
 
       // Add link between Ticket and FormAnswer
       $itemlink = $this->getItem_Item();
