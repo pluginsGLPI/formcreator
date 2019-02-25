@@ -1829,4 +1829,65 @@ JAVASCRIPT;
 
       echo '</table>';
    }
+
+   /**
+    * Associate tags to the target item
+    *
+    * @param PluginFormcreatorFormanswer $formanswer the source formanswer
+    * @param integer $targetId ID of the generated target
+    * @return void
+    */
+   protected function saveTags(PluginFormcreatorFormanswer $formanswer, $targetId) {
+      global $DB;
+
+      // Add tag if presents
+      $plugin = new Plugin();
+      if ($plugin->isActivated('tag')) {
+         $tagObj = new PluginTagTagItem();
+         $tags   = [];
+
+         // Add question tags
+         if (($this->fields['tag_type'] == 'questions'
+               || $this->fields['tag_type'] == 'questions_and_specific'
+               || $this->fields['tag_type'] == 'questions_or_specific')
+               && (!empty($this->fields['tag_questions']))) {
+            $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+            $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+            $result = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM' => PluginFormcreatorAnswer::getTable(),
+               'WHERE' => [
+                  $formAnswerFk => [(int) $formanswer->fields['id']],
+                  $questionFk => $this->fields['tag_questions']
+               ],
+            ]);
+            foreach ($result as $line) {
+               $tab = json_decode($line['answer']);
+               if (is_array($tab)) {
+                  $tags = array_merge($tags, $tab);
+               }
+            }
+         }
+
+         // Add specific tags
+         if ($this->fields['tag_type'] == 'specifics'
+                     || $this->fields['tag_type'] == 'questions_and_specific'
+                     || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
+                     && (!empty($this->fields['tag_specifics']))) {
+
+            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+         }
+
+         $tags = array_unique($tags);
+
+         // Save tags in DB
+         foreach ($tags as $tag) {
+            $tagObj->add([
+               'plugin_tag_tags_id' => $tag,
+               'items_id'           => $targetId,
+               'itemtype'           => $this->getTargetItemtypeName(),
+            ]);
+         }
+      }
+   }
 }
