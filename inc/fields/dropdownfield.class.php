@@ -116,9 +116,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                            ItilCategory::getTable(),
                            $decodedValues['show_ticket_categories_root']
                         );
-                        $sons = "'" . implode("', '", $sons) . "'";
-                     $dparams['condition'] .= " AND `id` IN ('" . $decodedValues['show_ticket_categories_root'] . "')";
-                     $dparams_cond_crit['id'] = $decodedValues['show_ticket_categories_root'];
+                        //$sons = "'" . implode("', '", $sons) . "'";
+                     $dparams['condition'] .= " AND `id` IN ('" . implode("', '", $sons) . "')";
+                     $dparams_cond_crit['id'] = $sons;
                   }
                   break;
 
