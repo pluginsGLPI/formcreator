@@ -214,7 +214,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   }
                   if (isset($decodedValues['show_ticket_categories_depth'])
                      && $decodedValues['show_ticket_categories_depth'] > 0) {
-                     $dparams['condition'] .= " AND `level` <= '" . $decodedValues['show_ticket_categories_depth'] . "'";
                      $dparams_cond_crit['level'] = ['<=', $decodedValues['show_ticket_categories_depth']];
                   }
                   if (isset($decodedValues['show_ticket_categories_root'])
@@ -223,7 +222,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                            ItilCategory::getTable(),
                            $decodedValues['show_ticket_categories_root']
                         );
-                     $dparams['condition'] .= " AND `id` IN ('" . implode("', '", $sons) . "')";
                      $dparams_cond_crit['id'] = $sons;
                   }
                   break;
