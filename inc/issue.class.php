@@ -77,7 +77,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   NULL                           AS `id`,
                   CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
                   `fanswer`.`id`                 AS `original_id`,
-                  'PluginFormcreatorFormAnswer' AS `sub_itemtype`,
+                  'PluginFormcreatorFormAnswer'  AS `sub_itemtype`,
                   `f`.`name`                     AS `name`,
                   `fanswer`.`status`             AS `status`,
                   `fanswer`.`request_date`       AS `date_creation`,
@@ -87,7 +87,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   `fanswer`.`requester_id`       AS `requester_id`,
                   `fanswer`.`users_id_validator` AS `validator_id`,
                   `fanswer`.`comment`            AS `comment`
-               FROM `glpi_plugin_formcreator_forms_answers` AS `fanswer`
+               FROM `glpi_plugin_formcreator_formanswers` AS `fanswer`
                LEFT JOIN `glpi_plugin_formcreator_forms` AS `f`
                   ON`f`.`id` = `fanswer`.`plugin_formcreator_forms_id`
                LEFT JOIN `glpi_items_tickets` AS `itic`
