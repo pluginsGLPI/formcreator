@@ -75,7 +75,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $required = $this->fields['required'] ? ' required' : '';
-      $useRichText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
+      $useRichText = true;
       if ($canEdit) {
          if ($useRichText) {
             $value = nl2br($this->value);
