@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
                     1%
-                                            <small>of 313</small>
+                                            <small>of 275</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -142,7 +142,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#showForm">PluginFormcreatorTargetChange::showForm()</a></td>
-                                        <td style="text-align: center">113</td>
+                                        <td style="text-align: center">99</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -156,7 +156,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#save">PluginFormcreatorTargetChange::save()</a></td>
-                                        <td style="text-align: center">68</td>
+                                        <td style="text-align: center">44</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -1965,33 +1965,40 @@ layout: coverage
                     <th id="L239" class="number uncovered">239</th>
 
                     <td class="uncovered" >
-                        <pre>      $form-&gt;getFromDB($target[&#039;plugin_formcreator_forms_id&#039;]);</pre>
+                        <pre>      $formFk = PluginFormcreatorForm::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L240" class="number ">240</th>
+                    <th id="L240" class="number uncovered">240</th>
+
+                    <td class="uncovered" >
+                        <pre>      $form-&gt;getFromDB($target[$formFk]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L241" class="number ">241</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L241" class="number uncovered">241</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;div class=&quot;center&quot; style=&quot;width: 950px; margin: 0 auto;&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L242" class="number uncovered">242</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;div class=&quot;center&quot; style=&quot;width: 950px; margin: 0 auto;&quot;&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L243" class="number uncovered">243</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;form name=&quot;form_target&quot; method=&quot;post&quot; action=&quot;&#039; . $CFG_GLPI[&#039;root_doc&#039;] . &#039;/plugins/formcreator/front/targetchange.form.php&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L243" class="number ">243</th>
+                    <th id="L244" class="number ">244</th>
 
                     <td class="" >
                         <pre>
@@ -1999,7 +2006,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L244" class="number ">244</th>
+                    <th id="L245" class="number ">245</th>
 
                     <td class="" >
                         <pre>      // General information: name
@@ -2007,14 +2014,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L245" class="number uncovered">245</th>
+                    <th id="L246" class="number uncovered">246</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;table class=&quot;tab_cadre_fixe&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L246" class="number ">246</th>
+                    <th id="L247" class="number ">247</th>
 
                     <td class="" >
                         <pre>
@@ -2022,50 +2029,50 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L247" class="number uncovered">247</th>
+                    <th id="L248" class="number uncovered">248</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;tr&gt;&lt;th colspan=&quot;2&quot;&gt;&#039; . __(&#039;Edit a destination&#039;, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L248" class="number ">248</th>
+                    <th id="L249" class="number ">249</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L249" class="number uncovered">249</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L250" class="number uncovered">250</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td width=&quot;15%&quot;&gt;&lt;strong&gt;&#039; . __(&#039;Name&#039;) . &#039; &lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L251" class="number uncovered">251</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td width=&quot;85%&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;name&quot; style=&quot;width:704px;&quot; value=&quot;&#039; . $target[&#039;name&#039;] . &#039;&quot;/&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td width=&quot;15%&quot;&gt;&lt;strong&gt;&#039; . __(&#039;Name&#039;) . &#039; &lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L252" class="number uncovered">252</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;td width=&quot;85%&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;name&quot; style=&quot;width:704px;&quot; value=&quot;&#039; . $target[&#039;name&#039;] . &#039;&quot;/&gt;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L253" class="number uncovered">253</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L253" class="number ">253</th>
+                    <th id="L254" class="number ">254</th>
 
                     <td class="" >
                         <pre>
@@ -2073,14 +2080,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L254" class="number uncovered">254</th>
+                    <th id="L255" class="number uncovered">255</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;/table&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L255" class="number ">255</th>
+                    <th id="L256" class="number ">256</th>
 
                     <td class="" >
                         <pre>
@@ -2088,7 +2095,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L256" class="number ">256</th>
+                    <th id="L257" class="number ">257</th>
 
                     <td class="" >
                         <pre>      // change information: title, template...
@@ -2096,14 +2103,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L257" class="number uncovered">257</th>
+                    <th id="L258" class="number uncovered">258</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;table class=&quot;tab_cadre_fixe&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L258" class="number ">258</th>
+                    <th id="L259" class="number ">259</th>
 
                     <td class="" >
                         <pre>
@@ -2111,419 +2118,411 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L259" class="number uncovered">259</th>
+                    <th id="L260" class="number uncovered">260</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;tr&gt;&lt;th colspan=&quot;4&quot;&gt;&#039; . _n(&#039;Target change&#039;, &#039;Target changes&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L260" class="number ">260</th>
+                    <th id="L261" class="number ">261</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L261" class="number uncovered">261</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L262" class="number uncovered">262</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Change title&#039;, &#039;formcreator&#039;) . &#039; &lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L263" class="number uncovered">263</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;title&quot; style=&quot;width:704px;&quot; value=&quot;&#039; . $this-&gt;fields[&#039;name&#039;] . &#039;&quot;&gt;&lt;/textarea&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Change title&#039;, &#039;formcreator&#039;) . &#039; &lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L264" class="number uncovered">264</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;title&quot; style=&quot;width:704px;&quot; value=&quot;&#039; . $this-&gt;fields[&#039;name&#039;] . &#039;&quot;&gt;&lt;/textarea&gt;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L265" class="number uncovered">265</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L265" class="number ">265</th>
+                    <th id="L266" class="number ">266</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L266" class="number uncovered">266</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L267" class="number uncovered">267</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Description&#039;) . &#039; &lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L268" class="number uncovered">268</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Description&#039;) . &#039; &lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L269" class="number uncovered">269</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;textarea name=&quot;content&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;content&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L270" class="number uncovered">270</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;textarea name=&quot;content&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;content&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L271" class="number uncovered">271</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L272" class="number uncovered">272</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L272" class="number ">272</th>
+                    <th id="L273" class="number ">273</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L273" class="number uncovered">273</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L274" class="number uncovered">274</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Impacts&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L275" class="number uncovered">275</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Impacts&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L276" class="number uncovered">276</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;textarea name=&quot;impactcontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;impactcontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L277" class="number uncovered">277</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;textarea name=&quot;impactcontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;impactcontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L278" class="number uncovered">278</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L279" class="number uncovered">279</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L279" class="number ">279</th>
+                    <th id="L280" class="number ">280</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L280" class="number uncovered">280</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L281" class="number uncovered">281</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Control list&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L282" class="number uncovered">282</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Control list&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L283" class="number uncovered">283</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;textarea name=&quot;controlistcontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;controlistcontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L284" class="number uncovered">284</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;textarea name=&quot;controlistcontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;controlistcontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L285" class="number uncovered">285</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L286" class="number uncovered">286</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L286" class="number ">286</th>
+                    <th id="L287" class="number ">287</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L287" class="number uncovered">287</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L288" class="number uncovered">288</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Deployment plan&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L289" class="number uncovered">289</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Deployment plan&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L290" class="number uncovered">290</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;textarea name=&quot;rolloutplancontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;rolloutplancontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L291" class="number uncovered">291</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;textarea name=&quot;rolloutplancontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;rolloutplancontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L292" class="number uncovered">292</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L293" class="number uncovered">293</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L293" class="number ">293</th>
+                    <th id="L294" class="number ">294</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L294" class="number uncovered">294</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L295" class="number uncovered">295</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Backup plan&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L296" class="number uncovered">296</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Backup plan&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L297" class="number uncovered">297</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;textarea name=&quot;backoutplancontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;backoutplancontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L298" class="number uncovered">298</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;textarea name=&quot;backoutplancontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;backoutplancontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L299" class="number uncovered">299</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L300" class="number uncovered">300</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L300" class="number ">300</th>
+                    <th id="L301" class="number ">301</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L301" class="number uncovered">301</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L302" class="number uncovered">302</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Checklist&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L303" class="number uncovered">303</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td&gt;&lt;strong&gt;&#039; . __(&#039;Checklist&#039;) . &#039; &lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L304" class="number uncovered">304</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;textarea name=&quot;checklistcontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;checklistcontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;3&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L305" class="number uncovered">305</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;textarea name=&quot;checklistcontent&quot; style=&quot;width:700px;&quot; rows=&quot;15&quot;&gt;&#039; . $this-&gt;fields[&#039;checklistcontent&#039;] . &#039;&lt;/textarea&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L306" class="number uncovered">306</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L307" class="number uncovered">307</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L307" class="number ">307</th>
+                    <th id="L308" class="number ">308</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L308" class="number uncovered">308</th>
-
-                    <td class="uncovered" >
-                        <pre>      $rand = mt_rand();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L309" class="number uncovered">309</th>
 
                     <td class="uncovered" >
+                        <pre>      $rand = mt_rand();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L310" class="number uncovered">310</th>
+
+                    <td class="uncovered" >
                         <pre>      $this-&gt;showDestinationEntitySetings($rand);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L310" class="number ">310</th>
+                    <th id="L311" class="number ">311</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L311" class="number uncovered">311</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L312" class="number uncovered">312</th>
 
                     <td class="uncovered" >
-                        <pre>      $this-&gt;showDueDateSettings($form, $rand);</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L313" class="number uncovered">313</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;2&quot;&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      $this-&gt;showDueDateSettings($form, $rand);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L314" class="number uncovered">314</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;2&quot;&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L315" class="number ">315</th>
+                    <th id="L315" class="number uncovered">315</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L316" class="number ">316</th>
 
                     <td class="" >
-                        <pre>      // -------------------------------------------------------------------------------------------
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -2531,7 +2530,7 @@ layout: coverage
                     <th id="L317" class="number ">317</th>
 
                     <td class="" >
-                        <pre>      //  category of the target
+                        <pre>      // -------------------------------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
@@ -2539,30 +2538,30 @@ layout: coverage
                     <th id="L318" class="number ">318</th>
 
                     <td class="" >
+                        <pre>      //  category of the target
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L319" class="number ">319</th>
+
+                    <td class="" >
                         <pre>      // -------------------------------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L319" class="number uncovered">319</th>
+                    <th id="L320" class="number uncovered">320</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;showCategorySettings($form, $rand);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L320" class="number ">320</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L321" class="number ">321</th>
 
                     <td class="" >
-                        <pre>      // -------------------------------------------------------------------------------------------
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -2570,7 +2569,7 @@ layout: coverage
                     <th id="L322" class="number ">322</th>
 
                     <td class="" >
-                        <pre>      // Urgency selection
+                        <pre>      // -------------------------------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
@@ -2578,30 +2577,30 @@ layout: coverage
                     <th id="L323" class="number ">323</th>
 
                     <td class="" >
+                        <pre>      // Urgency selection
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L324" class="number ">324</th>
+
+                    <td class="" >
                         <pre>      // -------------------------------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L324" class="number uncovered">324</th>
+                    <th id="L325" class="number uncovered">325</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;showUrgencySettings($form, $rand);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L325" class="number ">325</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L326" class="number ">326</th>
 
                     <td class="" >
-                        <pre>      // -------------------------------------------------------------------------------------------
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -2609,7 +2608,7 @@ layout: coverage
                     <th id="L327" class="number ">327</th>
 
                     <td class="" >
-                        <pre>      //  Tags
+                        <pre>      // -------------------------------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
@@ -2617,19 +2616,27 @@ layout: coverage
                     <th id="L328" class="number ">328</th>
 
                     <td class="" >
+                        <pre>      //  Tags
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L329" class="number ">329</th>
+
+                    <td class="" >
                         <pre>      // -------------------------------------------------------------------------------------------
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L329" class="number uncovered">329</th>
+                    <th id="L330" class="number uncovered">330</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;showPluginTagsSettings($form, $rand);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L330" class="number ">330</th>
+                    <th id="L331" class="number ">331</th>
 
                     <td class="" >
                         <pre>
@@ -2637,14 +2644,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L331" class="number uncovered">331</th>
+                    <th id="L332" class="number uncovered">332</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;/table&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L332" class="number ">332</th>
+                    <th id="L333" class="number ">333</th>
 
                     <td class="" >
                         <pre>
@@ -2652,7 +2659,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L333" class="number ">333</th>
+                    <th id="L334" class="number ">334</th>
 
                     <td class="" >
                         <pre>      // Buttons
@@ -2660,78 +2667,78 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L334" class="number uncovered">334</th>
+                    <th id="L335" class="number uncovered">335</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;table class=&quot;tab_cadre_fixe&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L335" class="number ">335</th>
+                    <th id="L336" class="number ">336</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L336" class="number uncovered">336</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L337" class="number uncovered">337</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;5&quot; class=&quot;center&quot;&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line1&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L338" class="number uncovered">338</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;input type=&quot;reset&quot; name=&quot;reset&quot; class=&quot;submit_button&quot; value=&quot;&#039; . __(&#039;Cancel&#039;, &#039;formcreator&#039;) . &#039;&quot;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;5&quot; class=&quot;center&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L339" class="number uncovered">339</th>
 
                     <td class="uncovered" >
-                        <pre>               onclick=&quot;document.location = \&#039;form.form.php?id=&#039; . $target[&#039;plugin_formcreator_forms_id&#039;] . &#039;\&#039;&quot; /&gt; &amp;nbsp; &#039;;</pre>
+                        <pre>      echo &#039;&lt;input type=&quot;reset&quot; name=&quot;reset&quot; class=&quot;submit_button&quot; value=&quot;&#039; . __(&#039;Cancel&#039;, &#039;formcreator&#039;) . &#039;&quot;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L340" class="number uncovered">340</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;&#039; . $this-&gt;getID() . &#039;&quot; /&gt;&#039;;</pre>
+                        <pre>               onclick=&quot;document.location = \&#039;form.form.php?id=&#039; . $target[&#039;plugin_formcreator_forms_id&#039;] . &#039;\&#039;&quot; /&gt; &amp;nbsp; &#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L341" class="number uncovered">341</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;input type=&quot;submit&quot; name=&quot;update&quot; class=&quot;submit_button&quot; value=&quot;&#039; . __(&#039;Save&#039;) . &#039;&quot; /&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;&#039; . $this-&gt;getID() . &#039;&quot; /&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L342" class="number uncovered">342</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;input type=&quot;submit&quot; name=&quot;update&quot; class=&quot;submit_button&quot; value=&quot;&#039; . __(&#039;Save&#039;) . &#039;&quot; /&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L343" class="number uncovered">343</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L344" class="number uncovered">344</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L344" class="number ">344</th>
+                    <th id="L345" class="number ">345</th>
 
                     <td class="" >
                         <pre>
@@ -2739,14 +2746,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L345" class="number uncovered">345</th>
+                    <th id="L346" class="number uncovered">346</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;/table&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L346" class="number ">346</th>
+                    <th id="L347" class="number ">347</th>
 
                     <td class="" >
                         <pre>
@@ -2754,14 +2761,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L347" class="number uncovered">347</th>
+                    <th id="L348" class="number uncovered">348</th>
 
                     <td class="uncovered" >
                         <pre>      Html::closeForm();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L348" class="number ">348</th>
+                    <th id="L349" class="number ">349</th>
 
                     <td class="" >
                         <pre>
@@ -2769,14 +2776,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L349" class="number uncovered">349</th>
+                    <th id="L350" class="number uncovered">350</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;showActorsSettings();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L350" class="number ">350</th>
+                    <th id="L351" class="number ">351</th>
 
                     <td class="" >
                         <pre>
@@ -2784,7 +2791,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L351" class="number ">351</th>
+                    <th id="L352" class="number ">352</th>
 
                     <td class="" >
                         <pre>      // List of available tags
@@ -2792,303 +2799,150 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L352" class="number uncovered">352</th>
+                    <th id="L353" class="number uncovered">353</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;table class=&quot;tab_cadre_fixe&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L353" class="number ">353</th>
+                    <th id="L354" class="number ">354</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L354" class="number uncovered">354</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr&gt;&lt;th colspan=&quot;5&quot;&gt;&#039; . __(&#039;List of available tags&#039;) . &#039;&lt;/th&gt;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L355" class="number uncovered">355</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr&gt;&lt;th colspan=&quot;5&quot;&gt;&#039; . __(&#039;List of available tags&#039;) . &#039;&lt;/th&gt;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L356" class="number uncovered">356</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;th width=&quot;40%&quot; colspan=&quot;2&quot;&gt;&#039; . _n(&#039;Question&#039;, &#039;Questions&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L357" class="number uncovered">357</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;th width=&quot;20%&quot;&gt;&#039; . __(&#039;Title&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;th width=&quot;40%&quot; colspan=&quot;2&quot;&gt;&#039; . _n(&#039;Question&#039;, &#039;Questions&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L358" class="number uncovered">358</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;th width=&quot;20%&quot;&gt;&#039; . _n(&#039;Answer&#039;, &#039;Answers&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;th width=&quot;20%&quot;&gt;&#039; . __(&#039;Title&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L359" class="number uncovered">359</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;th width=&quot;20%&quot;&gt;&#039; . _n(&#039;Section&#039;, &#039;Sections&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;th width=&quot;20%&quot;&gt;&#039; . _n(&#039;Answer&#039;, &#039;Answers&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L360" class="number uncovered">360</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;th width=&quot;20%&quot;&gt;&#039; . _n(&#039;Section&#039;, &#039;Sections&#039;, 1, &#039;formcreator&#039;) . &#039;&lt;/th&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L361" class="number uncovered">361</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L361" class="number ">361</th>
+                    <th id="L362" class="number ">362</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L362" class="number uncovered">362</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L363" class="number uncovered">363</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td colspan=&quot;2&quot;&gt;&lt;strong&gt;&#039; . __(&#039;Full form&#039;, &#039;formcreator&#039;) . &#039;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;tr class=&quot;line0&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L364" class="number uncovered">364</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;-&lt;/code&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td colspan=&quot;2&quot;&gt;&lt;strong&gt;&#039; . __(&#039;Full form&#039;, &#039;formcreator&#039;) . &#039;&lt;/strong&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L365" class="number uncovered">365</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;&lt;strong&gt;##FULLFORM##&lt;/strong&gt;&lt;/code&gt;&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;-&lt;/code&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L366" class="number uncovered">366</th>
 
                     <td class="uncovered" >
-                        <pre>      echo &#039;&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;&#039;;</pre>
+                        <pre>      echo &#039;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;&lt;strong&gt;##FULLFORM##&lt;/strong&gt;&lt;/code&gt;&lt;/td&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L367" class="number uncovered">367</th>
 
                     <td class="uncovered" >
+                        <pre>      echo &#039;&lt;td align=&quot;center&quot;&gt;-&lt;/td&gt;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L368" class="number uncovered">368</th>
+
+                    <td class="uncovered" >
                         <pre>      echo &#039;&lt;/tr&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L368" class="number ">368</th>
+                    <th id="L369" class="number ">369</th>
 
                     <td class="" >
                         <pre>
 </pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L369" class="number uncovered">369</th>
-
-                    <td class="uncovered" >
-                        <pre>      $table_questions = getTableForItemType(&#039;PluginFormcreatorQuestion&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L370" class="number uncovered">370</th>
 
                     <td class="uncovered" >
-                        <pre>      $table_sections  = getTableForItemType(&#039;PluginFormcreatorSection&#039;);</pre>
+                        <pre>      $this-&gt;showTagsList();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L371" class="number ">371</th>
-
-                    <td class="" >
-                        <pre>      $query = &quot;SELECT q.`id`, q.`name` AS question, s.`name` AS section
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L372" class="number uncovered">372</th>
-
-                    <td class="uncovered" >
-                        <pre>                FROM $table_questions q</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L373" class="number uncovered">373</th>
-
-                    <td class="uncovered" >
-                        <pre>                LEFT JOIN $table_sections s</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L374" class="number ">374</th>
-
-                    <td class="" >
-                        <pre>                  ON q.`plugin_formcreator_sections_id` = s.`id`
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L375" class="number uncovered">375</th>
-
-                    <td class="uncovered" >
-                        <pre>                WHERE s.`plugin_formcreator_forms_id` = &quot; . $target[&#039;plugin_formcreator_forms_id&#039;] . &quot;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L376" class="number ">376</th>
-
-                    <td class="" >
-                        <pre>                ORDER BY s.`order`, q.`order`&quot;;
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L377" class="number uncovered">377</th>
-
-                    <td class="uncovered" >
-                        <pre>      $result = $DB-&gt;query($query);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L378" class="number ">378</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L379" class="number uncovered">379</th>
-
-                    <td class="uncovered" >
-                        <pre>      $i = 0;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L380" class="number uncovered">380</th>
-
-                    <td class="uncovered" >
-                        <pre>      while ($question = $DB-&gt;fetch_array($result)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L381" class="number uncovered">381</th>
-
-                    <td class="uncovered" >
-                        <pre>         $i++;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L382" class="number uncovered">382</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo &#039;&lt;tr class=&quot;line&#039; . ($i % 2) . &#039;&quot;&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L383" class="number uncovered">383</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo &#039;&lt;td colspan=&quot;2&quot;&gt;&#039; . $question[&#039;question&#039;] . &#039;&lt;/td&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L384" class="number uncovered">384</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo &#039;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;##question_&#039; . $question[&#039;id&#039;] . &#039;##&lt;/code&gt;&lt;/td&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L385" class="number uncovered">385</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo &#039;&lt;td align=&quot;center&quot;&gt;&lt;code&gt;##answer_&#039; . $question[&#039;id&#039;] . &#039;##&lt;/code&gt;&lt;/td&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L386" class="number uncovered">386</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo &#039;&lt;td align=&quot;center&quot;&gt;&#039; . $question[&#039;section&#039;] . &#039;&lt;/td&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L387" class="number uncovered">387</th>
-
-                    <td class="uncovered" >
-                        <pre>         echo &#039;&lt;/tr&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L388" class="number ">388</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L389" class="number ">389</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L390" class="number uncovered">390</th>
-
-                    <td class="uncovered" >
-                        <pre>      echo &#039;&lt;/table&gt;&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L391" class="number uncovered">391</th>
+                    <th id="L371" class="number uncovered">371</th>
 
                     <td class="uncovered" >
                         <pre>      echo &#039;&lt;/div&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L392" class="number uncovered">392</th>
+                    <th id="L372" class="number uncovered">372</th>
 
                     <td class="uncovered" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L393" class="number ">393</th>
+                    <th id="L373" class="number ">373</th>
 
                     <td class="" >
                         <pre>
@@ -3096,7 +2950,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L394" class="number ">394</th>
+                    <th id="L374" class="number ">374</th>
 
                     <td class="" >
                         <pre>   /**
@@ -3104,7 +2958,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L395" class="number ">395</th>
+                    <th id="L375" class="number ">375</th>
 
                     <td class="" >
                         <pre>    * Prepare input data for updating the target ticket
@@ -3112,7 +2966,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L396" class="number ">396</th>
+                    <th id="L376" class="number ">376</th>
 
                     <td class="" >
                         <pre>    *
@@ -3120,7 +2974,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L397" class="number ">397</th>
+                    <th id="L377" class="number ">377</th>
 
                     <td class="" >
                         <pre>    * @param array $input data used to add the item
@@ -3128,7 +2982,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L398" class="number ">398</th>
+                    <th id="L378" class="number ">378</th>
 
                     <td class="" >
                         <pre>    *
@@ -3136,7 +2990,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L399" class="number ">399</th>
+                    <th id="L379" class="number ">379</th>
 
                     <td class="" >
                         <pre>    * @return array the modified $input array
@@ -3144,7 +2998,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L400" class="number ">400</th>
+                    <th id="L380" class="number ">380</th>
 
                     <td class="" >
                         <pre>    */
@@ -3152,21 +3006,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="prepareInputForUpdate">
-                    <th id="L401" class="number ">401</th>
+                    <th id="L381" class="number ">381</th>
 
                     <td class="" id="prepareInputForUpdate">
                         <pre>   public function prepareInputForUpdate($input) {<span class="label label-danger">8%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L402" class="number covered">402</th>
+                    <th id="L382" class="number covered">382</th>
 
                     <td class="covered" >
                         <pre>      global $CFG_GLPI;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L403" class="number ">403</th>
+                    <th id="L383" class="number ">383</th>
 
                     <td class="" >
                         <pre>
@@ -3174,7 +3028,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L404" class="number ">404</th>
+                    <th id="L384" class="number ">384</th>
 
                     <td class="" >
                         <pre>      // Control fields values :
@@ -3182,21 +3036,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L405" class="number covered">405</th>
+                    <th id="L385" class="number covered">385</th>
 
                     <td class="covered" >
                         <pre>      if (!isset($input[&#039;_skip_checks&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L406" class="number covered">406</th>
+                    <th id="L386" class="number covered">386</th>
 
                     <td class="covered" >
                         <pre>            || !$input[&#039;_skip_checks&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L407" class="number ">407</th>
+                    <th id="L387" class="number ">387</th>
 
                     <td class="" >
                         <pre>         // - name is required
@@ -3204,28 +3058,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L408" class="number uncovered">408</th>
+                    <th id="L388" class="number uncovered">388</th>
 
                     <td class="uncovered" >
                         <pre>         if (empty($input[&#039;title&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L409" class="number uncovered">409</th>
+                    <th id="L389" class="number uncovered">389</th>
 
                     <td class="uncovered" >
                         <pre>            Session::addMessageAfterRedirect(__(&#039;The title cannot be empty!&#039;, &#039;formcreator&#039;), false, ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L410" class="number uncovered">410</th>
+                    <th id="L390" class="number uncovered">390</th>
 
                     <td class="uncovered" >
                         <pre>            return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L411" class="number ">411</th>
+                    <th id="L391" class="number ">391</th>
 
                     <td class="" >
                         <pre>         }
@@ -3233,7 +3087,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L412" class="number ">412</th>
+                    <th id="L392" class="number ">392</th>
 
                     <td class="" >
                         <pre>
@@ -3241,7 +3095,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L413" class="number ">413</th>
+                    <th id="L393" class="number ">393</th>
 
                     <td class="" >
                         <pre>         // - content is required
@@ -3249,28 +3103,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L414" class="number uncovered">414</th>
+                    <th id="L394" class="number uncovered">394</th>
 
                     <td class="uncovered" >
                         <pre>         if (empty($input[&#039;content&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L415" class="number uncovered">415</th>
+                    <th id="L395" class="number uncovered">395</th>
 
                     <td class="uncovered" >
                         <pre>            Session::addMessageAfterRedirect(__(&#039;The description cannot be empty!&#039;, &#039;formcreator&#039;), false, ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L416" class="number uncovered">416</th>
+                    <th id="L396" class="number uncovered">396</th>
 
                     <td class="uncovered" >
                         <pre>            return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L417" class="number ">417</th>
+                    <th id="L397" class="number ">397</th>
 
                     <td class="" >
                         <pre>         }
@@ -3278,7 +3132,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L418" class="number ">418</th>
+                    <th id="L398" class="number ">398</th>
 
                     <td class="" >
                         <pre>
@@ -3286,21 +3140,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L419" class="number uncovered">419</th>
+                    <th id="L399" class="number uncovered">399</th>
 
                     <td class="uncovered" >
                         <pre>         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) &gt;= 0 || $CFG_GLPI[&#039;use_rich_text&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L420" class="number uncovered">420</th>
+                    <th id="L400" class="number uncovered">400</th>
 
                     <td class="uncovered" >
                         <pre>            $input[&#039;content&#039;] = Html::entity_decode_deep($input[&#039;content&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L421" class="number ">421</th>
+                    <th id="L401" class="number ">401</th>
 
                     <td class="" >
                         <pre>         }
@@ -3308,7 +3162,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L422" class="number ">422</th>
+                    <th id="L402" class="number ">402</th>
 
                     <td class="" >
                         <pre>
@@ -3316,66 +3170,212 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L423" class="number uncovered">423</th>
+                    <th id="L403" class="number uncovered">403</th>
 
                     <td class="uncovered" >
                         <pre>         switch ($input[&#039;destination_entity&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L424" class="number uncovered">424</th>
+                    <th id="L404" class="number uncovered">404</th>
 
                     <td class="uncovered" >
                         <pre>            case &#039;specific&#039; :</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L425" class="number uncovered">425</th>
+                    <th id="L405" class="number uncovered">405</th>
 
                     <td class="uncovered" >
                         <pre>               $input[&#039;destination_entity_value&#039;] = $input[&#039;_destination_entity_value_specific&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L426" class="number uncovered">426</th>
+                    <th id="L406" class="number uncovered">406</th>
 
                     <td class="uncovered" >
                         <pre>               break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L427" class="number uncovered">427</th>
+                    <th id="L407" class="number uncovered">407</th>
 
                     <td class="uncovered" >
                         <pre>            case &#039;user&#039; :</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L428" class="number uncovered">428</th>
+                    <th id="L408" class="number uncovered">408</th>
 
                     <td class="uncovered" >
                         <pre>               $input[&#039;destination_entity_value&#039;] = $input[&#039;_destination_entity_value_user&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L429" class="number uncovered">429</th>
+                    <th id="L409" class="number uncovered">409</th>
 
                     <td class="uncovered" >
                         <pre>               break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L430" class="number uncovered">430</th>
+                    <th id="L410" class="number uncovered">410</th>
 
                     <td class="uncovered" >
                         <pre>            case &#039;entity&#039; :</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L431" class="number uncovered">431</th>
+                    <th id="L411" class="number uncovered">411</th>
 
                     <td class="uncovered" >
                         <pre>               $input[&#039;destination_entity_value&#039;] = $input[&#039;_destination_entity_value_entity&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L412" class="number uncovered">412</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L413" class="number ">413</th>
+
+                    <td class="" >
+                        <pre>            default :
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L414" class="number uncovered">414</th>
+
+                    <td class="uncovered" >
+                        <pre>               $input[&#039;destination_entity_value&#039;] = &#039;NULL&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L415" class="number uncovered">415</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L416" class="number ">416</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L417" class="number ">417</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L418" class="number uncovered">418</th>
+
+                    <td class="uncovered" >
+                        <pre>         switch ($input[&#039;urgency_rule&#039;]) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L419" class="number uncovered">419</th>
+
+                    <td class="uncovered" >
+                        <pre>            case &#039;answer&#039;:</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L420" class="number uncovered">420</th>
+
+                    <td class="uncovered" >
+                        <pre>               $input[&#039;urgency_question&#039;] = $input[&#039;_urgency_question&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L421" class="number uncovered">421</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L422" class="number uncovered">422</th>
+
+                    <td class="uncovered" >
+                        <pre>            case &#039;specific&#039;:</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L423" class="number uncovered">423</th>
+
+                    <td class="uncovered" >
+                        <pre>               $input[&#039;urgency_question&#039;] = $input[&#039;_urgency_specific&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L424" class="number uncovered">424</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L425" class="number ">425</th>
+
+                    <td class="" >
+                        <pre>            default:
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L426" class="number uncovered">426</th>
+
+                    <td class="uncovered" >
+                        <pre>               $input[&#039;urgency_question&#039;] = &#039;0&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L427" class="number ">427</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L428" class="number ">428</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L429" class="number uncovered">429</th>
+
+                    <td class="uncovered" >
+                        <pre>         switch ($input[&#039;category_rule&#039;]) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L430" class="number uncovered">430</th>
+
+                    <td class="uncovered" >
+                        <pre>            case &#039;answer&#039;:</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L431" class="number uncovered">431</th>
+
+                    <td class="uncovered" >
+                        <pre>               $input[&#039;category_question&#039;] = $input[&#039;_category_question&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -3386,18 +3386,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L433" class="number ">433</th>
+                    <th id="L433" class="number uncovered">433</th>
 
-                    <td class="" >
-                        <pre>            default :
-</pre>
+                    <td class="uncovered" >
+                        <pre>            case &#039;specific&#039;:</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L434" class="number uncovered">434</th>
 
                     <td class="uncovered" >
-                        <pre>               $input[&#039;destination_entity_value&#039;] = &#039;NULL&#039;;</pre>
+                        <pre>               $input[&#039;category_question&#039;] = $input[&#039;_category_specific&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -3411,164 +3410,19 @@ layout: coverage
                     <th id="L436" class="number ">436</th>
 
                     <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L437" class="number ">437</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L438" class="number uncovered">438</th>
-
-                    <td class="uncovered" >
-                        <pre>         switch ($input[&#039;urgency_rule&#039;]) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L439" class="number uncovered">439</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;answer&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L440" class="number uncovered">440</th>
-
-                    <td class="uncovered" >
-                        <pre>               $input[&#039;urgency_question&#039;] = $input[&#039;_urgency_question&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L441" class="number uncovered">441</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L442" class="number uncovered">442</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;specific&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L443" class="number uncovered">443</th>
-
-                    <td class="uncovered" >
-                        <pre>               $input[&#039;urgency_question&#039;] = $input[&#039;_urgency_specific&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L444" class="number uncovered">444</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L445" class="number ">445</th>
-
-                    <td class="" >
                         <pre>            default:
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L446" class="number uncovered">446</th>
-
-                    <td class="uncovered" >
-                        <pre>               $input[&#039;urgency_question&#039;] = &#039;0&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L447" class="number ">447</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L448" class="number ">448</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L449" class="number uncovered">449</th>
-
-                    <td class="uncovered" >
-                        <pre>         switch ($input[&#039;category_rule&#039;]) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L450" class="number uncovered">450</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;answer&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L451" class="number uncovered">451</th>
-
-                    <td class="uncovered" >
-                        <pre>               $input[&#039;category_question&#039;] = $input[&#039;_category_question&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L452" class="number uncovered">452</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L453" class="number uncovered">453</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;specific&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L454" class="number uncovered">454</th>
-
-                    <td class="uncovered" >
-                        <pre>               $input[&#039;category_question&#039;] = $input[&#039;_category_specific&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L455" class="number uncovered">455</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L456" class="number ">456</th>
-
-                    <td class="" >
-                        <pre>            default:
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L457" class="number uncovered">457</th>
+                    <th id="L437" class="number uncovered">437</th>
 
                     <td class="uncovered" >
                         <pre>               $input[&#039;category_question&#039;] = &#039;0&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L458" class="number ">458</th>
+                    <th id="L438" class="number ">438</th>
 
                     <td class="" >
                         <pre>         }
@@ -3576,7 +3430,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L459" class="number ">459</th>
+                    <th id="L439" class="number ">439</th>
 
                     <td class="" >
                         <pre>
@@ -3584,63 +3438,63 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L460" class="number uncovered">460</th>
+                    <th id="L440" class="number uncovered">440</th>
 
                     <td class="uncovered" >
                         <pre>         $plugin = new Plugin();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L461" class="number uncovered">461</th>
+                    <th id="L441" class="number uncovered">441</th>
 
                     <td class="uncovered" >
                         <pre>         if ($plugin-&gt;isInstalled(&#039;tag&#039;) &amp;&amp; $plugin-&gt;isActivated(&#039;tag&#039;)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L462" class="number uncovered">462</th>
+                    <th id="L442" class="number uncovered">442</th>
 
                     <td class="uncovered" >
                         <pre>            $input[&#039;tag_questions&#039;] = (!empty($input[&#039;_tag_questions&#039;]))</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L463" class="number uncovered">463</th>
+                    <th id="L443" class="number uncovered">443</th>
 
                     <td class="uncovered" >
                         <pre>                                       ? implode(&#039;,&#039;, $input[&#039;_tag_questions&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L464" class="number uncovered">464</th>
+                    <th id="L444" class="number uncovered">444</th>
 
                     <td class="uncovered" >
                         <pre>                                       : &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L465" class="number uncovered">465</th>
+                    <th id="L445" class="number uncovered">445</th>
 
                     <td class="uncovered" >
                         <pre>            $input[&#039;tag_specifics&#039;] = (!empty($input[&#039;_tag_specifics&#039;]))</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L466" class="number uncovered">466</th>
+                    <th id="L446" class="number uncovered">446</th>
 
                     <td class="uncovered" >
                         <pre>                                       ? implode(&#039;,&#039;, $input[&#039;_tag_specifics&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L467" class="number uncovered">467</th>
+                    <th id="L447" class="number uncovered">447</th>
 
                     <td class="uncovered" >
                         <pre>                                       : &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L468" class="number ">468</th>
+                    <th id="L448" class="number ">448</th>
 
                     <td class="" >
                         <pre>         }
@@ -3648,7 +3502,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L469" class="number ">469</th>
+                    <th id="L449" class="number ">449</th>
 
                     <td class="" >
                         <pre>      }
@@ -3656,7 +3510,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L470" class="number ">470</th>
+                    <th id="L450" class="number ">450</th>
 
                     <td class="" >
                         <pre>
@@ -3664,21 +3518,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L471" class="number covered">471</th>
+                    <th id="L451" class="number covered">451</th>
 
                     <td class="covered" >
                         <pre>      return parent::prepareInputForUpdate($input);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L472" class="number unreach">472</th>
+                    <th id="L452" class="number unreach">452</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L473" class="number ">473</th>
+                    <th id="L453" class="number ">453</th>
 
                     <td class="" >
                         <pre>
@@ -3686,7 +3540,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L474" class="number ">474</th>
+                    <th id="L454" class="number ">454</th>
 
                     <td class="" >
                         <pre>   /**
@@ -3694,7 +3548,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L475" class="number ">475</th>
+                    <th id="L455" class="number ">455</th>
 
                     <td class="" >
                         <pre>    * Save form data to the target
@@ -3702,7 +3556,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L476" class="number ">476</th>
+                    <th id="L456" class="number ">456</th>
 
                     <td class="" >
                         <pre>    *
@@ -3710,7 +3564,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L477" class="number ">477</th>
+                    <th id="L457" class="number ">457</th>
 
                     <td class="" >
                         <pre>    * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
@@ -3718,7 +3572,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L478" class="number ">478</th>
+                    <th id="L458" class="number ">458</th>
 
                     <td class="" >
                         <pre>    *
@@ -3726,7 +3580,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L479" class="number ">479</th>
+                    <th id="L459" class="number ">459</th>
 
                     <td class="" >
                         <pre>    * @return Change|false generated change
@@ -3734,7 +3588,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L480" class="number ">480</th>
+                    <th id="L460" class="number ">460</th>
 
                     <td class="" >
                         <pre>    */
@@ -3742,21 +3596,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="save">
-                    <th id="L481" class="number ">481</th>
+                    <th id="L461" class="number ">461</th>
 
                     <td class="" id="save">
                         <pre>   public function save(PluginFormcreatorFormAnswer $formanswer) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L482" class="number uncovered">482</th>
+                    <th id="L462" class="number uncovered">462</th>
 
                     <td class="uncovered" >
                         <pre>      global $DB;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L483" class="number ">483</th>
+                    <th id="L463" class="number ">463</th>
 
                     <td class="" >
                         <pre>
@@ -3764,7 +3618,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L484" class="number ">484</th>
+                    <th id="L464" class="number ">464</th>
 
                     <td class="" >
                         <pre>      // Prepare actors structures for creation of the ticket
@@ -3772,14 +3626,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L485" class="number uncovered">485</th>
+                    <th id="L465" class="number uncovered">465</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;requesters = [</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L486" class="number ">486</th>
+                    <th id="L466" class="number ">466</th>
 
                     <td class="" >
                         <pre>         &#039;_users_id_requester&#039;         =&gt; [],
@@ -3787,7 +3641,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L487" class="number ">487</th>
+                    <th id="L467" class="number ">467</th>
 
                     <td class="" >
                         <pre>         &#039;_users_id_requester_notif&#039;   =&gt; [
@@ -3795,7 +3649,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L488" class="number ">488</th>
+                    <th id="L468" class="number ">468</th>
 
                     <td class="" >
                         <pre>            &#039;use_notification&#039;      =&gt; [],
@@ -3803,7 +3657,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L489" class="number ">489</th>
+                    <th id="L469" class="number ">469</th>
 
                     <td class="" >
                         <pre>            &#039;alternative_email&#039;     =&gt; [],
@@ -3811,7 +3665,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L490" class="number ">490</th>
+                    <th id="L470" class="number ">470</th>
 
                     <td class="" >
                         <pre>         ],
@@ -3819,7 +3673,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L491" class="number ">491</th>
+                    <th id="L471" class="number ">471</th>
 
                     <td class="" >
                         <pre>      ];
@@ -3827,14 +3681,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L492" class="number uncovered">492</th>
+                    <th id="L472" class="number uncovered">472</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;observers = [</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L493" class="number ">493</th>
+                    <th id="L473" class="number ">473</th>
 
                     <td class="" >
                         <pre>         &#039;_users_id_observer&#039;          =&gt; [],
@@ -3842,7 +3696,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L494" class="number ">494</th>
+                    <th id="L474" class="number ">474</th>
 
                     <td class="" >
                         <pre>         &#039;_users_id_observer_notif&#039;    =&gt; [
@@ -3850,7 +3704,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L495" class="number ">495</th>
+                    <th id="L475" class="number ">475</th>
 
                     <td class="" >
                         <pre>            &#039;use_notification&#039;      =&gt; [],
@@ -3858,7 +3712,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L496" class="number ">496</th>
+                    <th id="L476" class="number ">476</th>
 
                     <td class="" >
                         <pre>            &#039;alternative_email&#039;     =&gt; [],
@@ -3866,7 +3720,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L497" class="number ">497</th>
+                    <th id="L477" class="number ">477</th>
 
                     <td class="" >
                         <pre>         ],
@@ -3874,7 +3728,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L498" class="number ">498</th>
+                    <th id="L478" class="number ">478</th>
 
                     <td class="" >
                         <pre>      ];
@@ -3882,14 +3736,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L499" class="number uncovered">499</th>
+                    <th id="L479" class="number uncovered">479</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;assigned = [</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L500" class="number ">500</th>
+                    <th id="L480" class="number ">480</th>
 
                     <td class="" >
                         <pre>         &#039;_users_id_assign&#039;       =&gt; [],
@@ -3897,7 +3751,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L501" class="number ">501</th>
+                    <th id="L481" class="number ">481</th>
 
                     <td class="" >
                         <pre>         &#039;_users_id_assign_notif&#039; =&gt; [
@@ -3905,7 +3759,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L502" class="number ">502</th>
+                    <th id="L482" class="number ">482</th>
 
                     <td class="" >
                         <pre>            &#039;use_notification&#039;      =&gt; [],
@@ -3913,7 +3767,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L503" class="number ">503</th>
+                    <th id="L483" class="number ">483</th>
 
                     <td class="" >
                         <pre>            &#039;alternative_email&#039;     =&gt; [],
@@ -3921,10 +3775,166 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L504" class="number ">504</th>
+                    <th id="L484" class="number ">484</th>
 
                     <td class="" >
                         <pre>         ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L485" class="number ">485</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L486" class="number ">486</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L487" class="number uncovered">487</th>
+
+                    <td class="uncovered" >
+                        <pre>      $this-&gt;assignedSuppliers = [</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L488" class="number ">488</th>
+
+                    <td class="" >
+                        <pre>         &#039;_suppliers_id_assign&#039;        =&gt; [],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L489" class="number ">489</th>
+
+                    <td class="" >
+                        <pre>         &#039;_suppliers_id_assign_notif&#039;  =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L490" class="number ">490</th>
+
+                    <td class="" >
+                        <pre>            &#039;use_notification&#039;      =&gt; [],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L491" class="number ">491</th>
+
+                    <td class="" >
+                        <pre>            &#039;alternative_email&#039;     =&gt; [],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L492" class="number ">492</th>
+
+                    <td class="" >
+                        <pre>         ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L493" class="number ">493</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L494" class="number ">494</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L495" class="number uncovered">495</th>
+
+                    <td class="uncovered" >
+                        <pre>      $this-&gt;requesterGroups = [</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L496" class="number ">496</th>
+
+                    <td class="" >
+                        <pre>         &#039;_groups_id_requester&#039;        =&gt; [],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L497" class="number ">497</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L498" class="number ">498</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L499" class="number uncovered">499</th>
+
+                    <td class="uncovered" >
+                        <pre>      $this-&gt;observerGroups = [</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L500" class="number ">500</th>
+
+                    <td class="" >
+                        <pre>         &#039;_groups_id_observer&#039;         =&gt; [],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L501" class="number ">501</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L502" class="number ">502</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L503" class="number uncovered">503</th>
+
+                    <td class="uncovered" >
+                        <pre>      $this-&gt;assignedGroups = [</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L504" class="number ">504</th>
+
+                    <td class="" >
+                        <pre>         &#039;_groups_id_assign&#039;           =&gt; [],
 </pre>
                     </td>
                 </tr>
@@ -3948,46 +3958,43 @@ layout: coverage
                     <th id="L507" class="number uncovered">507</th>
 
                     <td class="uncovered" >
-                        <pre>      $this-&gt;assignedSuppliers = [</pre>
+                        <pre>      $data   = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L508" class="number ">508</th>
+                    <th id="L508" class="number uncovered">508</th>
 
-                    <td class="" >
-                        <pre>         &#039;_suppliers_id_assign&#039;        =&gt; [],
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $change  = new Change();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L509" class="number ">509</th>
+                    <th id="L509" class="number uncovered">509</th>
 
-                    <td class="" >
-                        <pre>         &#039;_suppliers_id_assign_notif&#039;  =&gt; [
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $form    = $formanswer-&gt;getForm();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L510" class="number ">510</th>
 
                     <td class="" >
-                        <pre>            &#039;use_notification&#039;      =&gt; [],
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L511" class="number ">511</th>
+                    <th id="L511" class="number uncovered">511</th>
 
-                    <td class="" >
-                        <pre>            &#039;alternative_email&#039;     =&gt; [],
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;requesttypes_id&#039;] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L512" class="number ">512</th>
 
                     <td class="" >
-                        <pre>         ]
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -3995,7 +4002,7 @@ layout: coverage
                     <th id="L513" class="number ">513</th>
 
                     <td class="" >
-                        <pre>      ];
+                        <pre>      // Parse data
 </pre>
                     </td>
                 </tr>
@@ -4003,7 +4010,7 @@ layout: coverage
                     <th id="L514" class="number ">514</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      $changeFields = [
 </pre>
                     </td>
                 </tr>
@@ -4011,14 +4018,14 @@ layout: coverage
                     <th id="L515" class="number uncovered">515</th>
 
                     <td class="uncovered" >
-                        <pre>      $this-&gt;requesterGroups = [</pre>
+                        <pre>         &#039;name&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L516" class="number ">516</th>
 
                     <td class="" >
-                        <pre>         &#039;_groups_id_requester&#039;        =&gt; [],
+                        <pre>         &#039;content&#039;,
 </pre>
                     </td>
                 </tr>
@@ -4026,7 +4033,7 @@ layout: coverage
                     <th id="L517" class="number ">517</th>
 
                     <td class="" >
-                        <pre>      ];
+                        <pre>         &#039;impactcontent&#039;,
 </pre>
                     </td>
                 </tr>
@@ -4034,22 +4041,23 @@ layout: coverage
                     <th id="L518" class="number ">518</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         &#039;controlistcontent&#039;,
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L519" class="number uncovered">519</th>
+                    <th id="L519" class="number ">519</th>
 
-                    <td class="uncovered" >
-                        <pre>      $this-&gt;observerGroups = [</pre>
+                    <td class="" >
+                        <pre>         &#039;rolloutplancontent&#039;,
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L520" class="number ">520</th>
 
                     <td class="" >
-                        <pre>         &#039;_groups_id_observer&#039;         =&gt; [],
+                        <pre>         &#039;backoutplancontent&#039;,
 </pre>
                     </td>
                 </tr>
@@ -4057,7 +4065,7 @@ layout: coverage
                     <th id="L521" class="number ">521</th>
 
                     <td class="" >
-                        <pre>      ];
+                        <pre>         &#039;checklistcontent&#039;
 </pre>
                     </td>
                 </tr>
@@ -4065,7 +4073,7 @@ layout: coverage
                     <th id="L522" class="number ">522</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      ];
 </pre>
                     </td>
                 </tr>
@@ -4073,56 +4081,47 @@ layout: coverage
                     <th id="L523" class="number uncovered">523</th>
 
                     <td class="uncovered" >
-                        <pre>      $this-&gt;assignedGroups = [</pre>
+                        <pre>      foreach ($changeFields as $changeField) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L524" class="number ">524</th>
+                    <th id="L524" class="number uncovered">524</th>
 
-                    <td class="" >
-                        <pre>         &#039;_groups_id_assign&#039;           =&gt; [],
-</pre>
+                    <td class="uncovered" >
+                        <pre>         $data[$changeField] = $this-&gt;prepareTemplate(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L525" class="number ">525</th>
+                    <th id="L525" class="number uncovered">525</th>
 
-                    <td class="" >
-                        <pre>      ];
-</pre>
+                    <td class="uncovered" >
+                        <pre>            $this-&gt;fields[$changeField],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L526" class="number ">526</th>
+                    <th id="L526" class="number uncovered">526</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="uncovered" >
+                        <pre>            $formanswer,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L527" class="number uncovered">527</th>
 
                     <td class="uncovered" >
-                        <pre>      $data   = [];</pre>
+                        <pre>            true</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L528" class="number uncovered">528</th>
+                    <th id="L528" class="number ">528</th>
 
-                    <td class="uncovered" >
-                        <pre>      $change  = new Change();</pre>
+                    <td class="" >
+                        <pre>         );
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L529" class="number uncovered">529</th>
-
-                    <td class="uncovered" >
-                        <pre>      $form    = $formanswer-&gt;getForm();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L530" class="number ">530</th>
+                    <th id="L529" class="number ">529</th>
 
                     <td class="" >
                         <pre>
@@ -4130,10 +4129,18 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L531" class="number uncovered">531</th>
+                    <th id="L530" class="number uncovered">530</th>
 
                     <td class="uncovered" >
-                        <pre>      $data[&#039;requesttypes_id&#039;] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();</pre>
+                        <pre>         $data[$changeField] = $formanswer-&gt;parseTags($data[$changeField]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L531" class="number ">531</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -4145,129 +4152,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L533" class="number ">533</th>
+                    <th id="L533" class="number uncovered">533</th>
 
-                    <td class="" >
-                        <pre>      // Parse data
-</pre>
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;_users_id_recipient&#039;]   = $_SESSION[&#039;glpiID&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L534" class="number ">534</th>
-
-                    <td class="" >
-                        <pre>      $changeFields = [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L535" class="number uncovered">535</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;name&#039;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L536" class="number ">536</th>
-
-                    <td class="" >
-                        <pre>         &#039;content&#039;,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L537" class="number ">537</th>
-
-                    <td class="" >
-                        <pre>         &#039;impactcontent&#039;,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L538" class="number ">538</th>
-
-                    <td class="" >
-                        <pre>         &#039;controlistcontent&#039;,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L539" class="number ">539</th>
-
-                    <td class="" >
-                        <pre>         &#039;rolloutplancontent&#039;,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L540" class="number ">540</th>
-
-                    <td class="" >
-                        <pre>         &#039;backoutplancontent&#039;,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L541" class="number ">541</th>
-
-                    <td class="" >
-                        <pre>         &#039;checklistcontent&#039;
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L542" class="number ">542</th>
-
-                    <td class="" >
-                        <pre>      ];
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L543" class="number uncovered">543</th>
-
-                    <td class="uncovered" >
-                        <pre>      foreach ($changeFields as $changeField) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L544" class="number uncovered">544</th>
-
-                    <td class="uncovered" >
-                        <pre>         $data[$changeField] = $this-&gt;prepareTemplate(</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L545" class="number uncovered">545</th>
-
-                    <td class="uncovered" >
-                        <pre>            $this-&gt;fields[$changeField],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L546" class="number uncovered">546</th>
-
-                    <td class="uncovered" >
-                        <pre>            $formanswer,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L547" class="number uncovered">547</th>
-
-                    <td class="uncovered" >
-                        <pre>            true</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L548" class="number ">548</th>
-
-                    <td class="" >
-                        <pre>         );
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L549" class="number ">549</th>
 
                     <td class="" >
                         <pre>
@@ -4275,18 +4167,127 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L550" class="number uncovered">550</th>
+                    <th id="L535" class="number uncovered">535</th>
 
                     <td class="uncovered" >
-                        <pre>         $data[$changeField] = $formanswer-&gt;parseTags($data[$changeField]);</pre>
+                        <pre>      $this-&gt;prepareActors($form, $formanswer);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L551" class="number ">551</th>
+                    <th id="L536" class="number ">536</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L537" class="number uncovered">537</th>
+
+                    <td class="uncovered" >
+                        <pre>      if (count($this-&gt;requesters[&#039;_users_id_requester&#039;]) == 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L538" class="number uncovered">538</th>
+
+                    <td class="uncovered" >
+                        <pre>         $this-&gt;addActor(&#039;requester&#039;, $formanswer-&gt;fields[&#039;requester_id&#039;], true);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L539" class="number uncovered">539</th>
+
+                    <td class="uncovered" >
+                        <pre>         $requesters_id = $formanswer-&gt;fields[&#039;requester_id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L540" class="number uncovered">540</th>
+
+                    <td class="uncovered" >
+                        <pre>      } else if (count($this-&gt;requesters[&#039;_users_id_requester&#039;]) &gt;= 1) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L541" class="number uncovered">541</th>
+
+                    <td class="uncovered" >
+                        <pre>         if ($this-&gt;requesters[&#039;_users_id_requester&#039;][0] == 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L542" class="number uncovered">542</th>
+
+                    <td class="uncovered" >
+                        <pre>            $this-&gt;addActor(&#039;requester&#039;, $formanswer-&gt;fields[&#039;requester_id&#039;], true);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L543" class="number uncovered">543</th>
+
+                    <td class="uncovered" >
+                        <pre>            $requesters_id = $formanswer-&gt;fields[&#039;requester_id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L544" class="number ">544</th>
+
+                    <td class="" >
+                        <pre>         } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L545" class="number uncovered">545</th>
+
+                    <td class="uncovered" >
+                        <pre>            $requesters_id = $this-&gt;requesters[&#039;_users_id_requester&#039;][0];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L546" class="number ">546</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L547" class="number ">547</th>
 
                     <td class="" >
                         <pre>      }
 </pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L548" class="number ">548</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L549" class="number uncovered">549</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data = $this-&gt;setTargetEntity($data, $formanswer, $requesters_id);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L550" class="number uncovered">550</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data = $this-&gt;setTargetDueDate($data, $formanswer);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L551" class="number uncovered">551</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data = $this-&gt;setTargetCategory($data, $formanswer);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -4301,11 +4302,18 @@ layout: coverage
                     <th id="L553" class="number uncovered">553</th>
 
                     <td class="uncovered" >
-                        <pre>      $data[&#039;_users_id_recipient&#039;]   = $_SESSION[&#039;glpiID&#039;];</pre>
+                        <pre>      $data = $this-&gt;requesters + $this-&gt;observers + $this-&gt;assigned + $this-&gt;assignedSuppliers + $data;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L554" class="number ">554</th>
+                    <th id="L554" class="number uncovered">554</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data = $this-&gt;requesterGroups + $this-&gt;observerGroups + $this-&gt;assignedGroups + $data;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L555" class="number ">555</th>
 
                     <td class="" >
                         <pre>
@@ -4313,17 +4321,10 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L555" class="number uncovered">555</th>
-
-                    <td class="uncovered" >
-                        <pre>      $this-&gt;prepareActors($form, $formanswer);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L556" class="number ">556</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      // Create the target change
 </pre>
                     </td>
                 </tr>
@@ -4331,76 +4332,18 @@ layout: coverage
                     <th id="L557" class="number uncovered">557</th>
 
                     <td class="uncovered" >
-                        <pre>      if (count($this-&gt;requesters[&#039;_users_id_requester&#039;]) == 0) {</pre>
+                        <pre>      if (!$changeID = $change-&gt;add($data)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L558" class="number uncovered">558</th>
 
                     <td class="uncovered" >
-                        <pre>         $this-&gt;addActor(&#039;requester&#039;, $formanswer-&gt;fields[&#039;requester_id&#039;], true);</pre>
+                        <pre>         return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L559" class="number uncovered">559</th>
-
-                    <td class="uncovered" >
-                        <pre>         $requesters_id = $formanswer-&gt;fields[&#039;requester_id&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L560" class="number uncovered">560</th>
-
-                    <td class="uncovered" >
-                        <pre>      } else if (count($this-&gt;requesters[&#039;_users_id_requester&#039;]) &gt;= 1) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L561" class="number uncovered">561</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($this-&gt;requesters[&#039;_users_id_requester&#039;][0] == 0) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L562" class="number uncovered">562</th>
-
-                    <td class="uncovered" >
-                        <pre>            $this-&gt;addActor(&#039;requester&#039;, $formanswer-&gt;fields[&#039;requester_id&#039;], true);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L563" class="number uncovered">563</th>
-
-                    <td class="uncovered" >
-                        <pre>            $requesters_id = $formanswer-&gt;fields[&#039;requester_id&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L564" class="number ">564</th>
-
-                    <td class="" >
-                        <pre>         } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L565" class="number uncovered">565</th>
-
-                    <td class="uncovered" >
-                        <pre>            $requesters_id = $this-&gt;requesters[&#039;_users_id_requester&#039;][0];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L566" class="number ">566</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L567" class="number ">567</th>
+                    <th id="L559" class="number ">559</th>
 
                     <td class="" >
                         <pre>      }
@@ -4408,7 +4351,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L568" class="number ">568</th>
+                    <th id="L560" class="number ">560</th>
 
                     <td class="" >
                         <pre>
@@ -4416,24 +4359,84 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L569" class="number uncovered">569</th>
+                    <th id="L561" class="number uncovered">561</th>
 
                     <td class="uncovered" >
-                        <pre>      $data = $this-&gt;setTargetEntity($data, $formanswer, $requesters_id);</pre>
+                        <pre>      $this-&gt;saveTags($formanswer, $changeID);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L570" class="number uncovered">570</th>
+                    <th id="L562" class="number ">562</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L563" class="number ">563</th>
+
+                    <td class="" >
+                        <pre>      // Add link between Change and FormAnswer
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L564" class="number uncovered">564</th>
 
                     <td class="uncovered" >
-                        <pre>      $data = $this-&gt;setTargetDueDate($data, $formanswer);</pre>
+                        <pre>      $itemlink = $this-&gt;getItem_Item();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L565" class="number uncovered">565</th>
+
+                    <td class="uncovered" >
+                        <pre>      $itemlink-&gt;add([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L566" class="number uncovered">566</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;itemtype&#039;     =&gt; PluginFormcreatorFormAnswer::class,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L567" class="number uncovered">567</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;items_id&#039;     =&gt; $formanswer-&gt;fields[&#039;id&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L568" class="number uncovered">568</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;changes_id&#039;  =&gt; $changeID,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L569" class="number ">569</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L570" class="number ">570</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L571" class="number uncovered">571</th>
 
                     <td class="uncovered" >
-                        <pre>      $data = $this-&gt;setTargetCategory($data, $formanswer);</pre>
+                        <pre>      $this-&gt;attachDocument($formanswer-&gt;getID(), Change::class, $changeID);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -4448,495 +4451,18 @@ layout: coverage
                     <th id="L573" class="number uncovered">573</th>
 
                     <td class="uncovered" >
-                        <pre>      $data = $this-&gt;requesters + $this-&gt;observers + $this-&gt;assigned + $this-&gt;assignedSuppliers + $data;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L574" class="number uncovered">574</th>
-
-                    <td class="uncovered" >
-                        <pre>      $data = $this-&gt;requesterGroups + $this-&gt;observerGroups + $this-&gt;assignedGroups + $data;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L575" class="number ">575</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L576" class="number ">576</th>
-
-                    <td class="" >
-                        <pre>      // Create the target change
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L577" class="number uncovered">577</th>
-
-                    <td class="uncovered" >
-                        <pre>      if (!$changeID = $change-&gt;add($data)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L578" class="number uncovered">578</th>
-
-                    <td class="uncovered" >
-                        <pre>         return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L579" class="number ">579</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L580" class="number ">580</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L581" class="number ">581</th>
-
-                    <td class="" >
-                        <pre>      // Add tag if presents
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L582" class="number uncovered">582</th>
-
-                    <td class="uncovered" >
-                        <pre>      $plugin = new Plugin();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L583" class="number uncovered">583</th>
-
-                    <td class="uncovered" >
-                        <pre>      if ($plugin-&gt;isActivated(&#039;tag&#039;)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L584" class="number uncovered">584</th>
-
-                    <td class="uncovered" >
-                        <pre>         $tagObj = new PluginTagTagItem();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L585" class="number uncovered">585</th>
-
-                    <td class="uncovered" >
-                        <pre>         $tags   = [];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L586" class="number ">586</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L587" class="number ">587</th>
-
-                    <td class="" >
-                        <pre>         // Add question tags
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L588" class="number uncovered">588</th>
-
-                    <td class="uncovered" >
-                        <pre>         if (($this-&gt;fields[&#039;tag_type&#039;] == &#039;questions&#039;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L589" class="number uncovered">589</th>
-
-                    <td class="uncovered" >
-                        <pre>               || $this-&gt;fields[&#039;tag_type&#039;] == &#039;questions_and_specific&#039;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L590" class="number uncovered">590</th>
-
-                    <td class="uncovered" >
-                        <pre>               || $this-&gt;fields[&#039;tag_type&#039;] == &#039;questions_or_specific&#039;)</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L591" class="number uncovered">591</th>
-
-                    <td class="uncovered" >
-                        <pre>               &amp;&amp; (!empty($this-&gt;fields[&#039;tag_questions&#039;]))) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L592" class="number ">592</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L593" class="number ">593</th>
-
-                    <td class="" >
-                        <pre>                  $query = &quot;SELECT answer
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L594" class="number ">594</th>
-
-                    <td class="" >
-                        <pre>                      FROM `glpi_plugin_formcreator_answers`
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L595" class="number uncovered">595</th>
-
-                    <td class="uncovered" >
-                        <pre>                      WHERE `plugin_formcreator_formanswers_id` = &quot; . (int) $formanswer-&gt;fields[&#039;id&#039;] . &quot;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L596" class="number uncovered">596</th>
-
-                    <td class="uncovered" >
-                        <pre>                      AND `plugin_formcreator_questions_id` IN (&quot; . $this-&gt;fields[&#039;tag_questions&#039;] . &quot;)&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L597" class="number uncovered">597</th>
-
-                    <td class="uncovered" >
-                        <pre>                  $result = $DB-&gt;query($query);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L598" class="number uncovered">598</th>
-
-                    <td class="uncovered" >
-                        <pre>            while ($line = $DB-&gt;fetch_array($result)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L599" class="number uncovered">599</th>
-
-                    <td class="uncovered" >
-                        <pre>               $tab = json_decode($line[&#039;answer&#039;]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L600" class="number uncovered">600</th>
-
-                    <td class="uncovered" >
-                        <pre>               if (is_array($tab)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L601" class="number uncovered">601</th>
-
-                    <td class="uncovered" >
-                        <pre>                  $tags = array_merge($tags, $tab);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L602" class="number ">602</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L603" class="number ">603</th>
-
-                    <td class="" >
-                        <pre>            }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L604" class="number ">604</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L605" class="number ">605</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L606" class="number ">606</th>
-
-                    <td class="" >
-                        <pre>         // Add specific tags
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L607" class="number uncovered">607</th>
-
-                    <td class="uncovered" >
-                        <pre>         if ($this-&gt;fields[&#039;tag_type&#039;] == &#039;specifics&#039;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L608" class="number uncovered">608</th>
-
-                    <td class="uncovered" >
-                        <pre>                     || $this-&gt;fields[&#039;tag_type&#039;] == &#039;questions_and_specific&#039;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L609" class="number uncovered">609</th>
-
-                    <td class="uncovered" >
-                        <pre>                     || ($this-&gt;fields[&#039;tag_type&#039;] == &#039;questions_or_specific&#039; &amp;&amp; empty($tags))</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L610" class="number uncovered">610</th>
-
-                    <td class="uncovered" >
-                        <pre>                     &amp;&amp; (!empty($this-&gt;fields[&#039;tag_specifics&#039;]))) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L611" class="number ">611</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L612" class="number uncovered">612</th>
-
-                    <td class="uncovered" >
-                        <pre>            $tags = array_merge($tags, explode(&#039;,&#039;, $this-&gt;fields[&#039;tag_specifics&#039;]));</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L613" class="number ">613</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L614" class="number ">614</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L615" class="number uncovered">615</th>
-
-                    <td class="uncovered" >
-                        <pre>         $tags = array_unique($tags);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L616" class="number ">616</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L617" class="number ">617</th>
-
-                    <td class="" >
-                        <pre>         // Save tags in DB
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L618" class="number uncovered">618</th>
-
-                    <td class="uncovered" >
-                        <pre>         foreach ($tags as $tag) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L619" class="number uncovered">619</th>
-
-                    <td class="uncovered" >
-                        <pre>            $tagObj-&gt;add([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L620" class="number uncovered">620</th>
-
-                    <td class="uncovered" >
-                        <pre>               &#039;plugin_tag_tags_id&#039; =&gt; $tag,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L621" class="number uncovered">621</th>
-
-                    <td class="uncovered" >
-                        <pre>               &#039;items_id&#039;           =&gt; $changeID,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L622" class="number ">622</th>
-
-                    <td class="" >
-                        <pre>               &#039;itemtype&#039;           =&gt; Change::class,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L623" class="number ">623</th>
-
-                    <td class="" >
-                        <pre>            ]);
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L624" class="number ">624</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L625" class="number ">625</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L626" class="number ">626</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L627" class="number ">627</th>
-
-                    <td class="" >
-                        <pre>      // Add link between Change and FormAnswer
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L628" class="number uncovered">628</th>
-
-                    <td class="uncovered" >
-                        <pre>      $itemlink = $this-&gt;getItem_Item();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L629" class="number uncovered">629</th>
-
-                    <td class="uncovered" >
-                        <pre>      $itemlink-&gt;add([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L630" class="number uncovered">630</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;itemtype&#039;     =&gt; PluginFormcreatorFormAnswer::class,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L631" class="number uncovered">631</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;items_id&#039;     =&gt; $formanswer-&gt;fields[&#039;id&#039;],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L632" class="number uncovered">632</th>
-
-                    <td class="uncovered" >
-                        <pre>         &#039;changes_id&#039;  =&gt; $changeID,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L633" class="number ">633</th>
-
-                    <td class="" >
-                        <pre>      ]);
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L634" class="number ">634</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L635" class="number uncovered">635</th>
-
-                    <td class="uncovered" >
-                        <pre>      $this-&gt;attachDocument($formanswer-&gt;getID(), Change::class, $changeID);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L636" class="number ">636</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L637" class="number uncovered">637</th>
-
-                    <td class="uncovered" >
                         <pre>      return $change;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L638" class="number unreach">638</th>
+                    <th id="L574" class="number unreach">574</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L639" class="number ">639</th>
+                    <th id="L575" class="number ">575</th>
 
                     <td class="" >
                         <pre>}
