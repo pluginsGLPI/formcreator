@@ -213,9 +213,7 @@ function plugin_init_formcreator() {
          }
 
          if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/targetticket.form.php') !== false) {
-            if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-               Html::requireJs('tinymce');
-            }
+            Html::requireJs('tinymce');
          }
 
          if (strpos($_SERVER['REQUEST_URI'], 'helpdesk') !== false

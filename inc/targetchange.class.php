@@ -80,11 +80,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    }
 
    protected function getCategoryFilter() {
-      // TODO remove if and the next raw query when 9.3/bf compat will no be needed anymore
-      if (version_compare(GLPI_VERSION, "9.4", '>=')) {
-         return ['is_change' => 1];
-      }
-      return "`is_change` = '1'";
+      return ['is_change' => 1];
    }
 
    /**
@@ -396,9 +392,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             return [];
          }
 
-         if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-            $input['content'] = Html::entity_decode_deep($input['content']);
-         }
+         $input['content'] = Html::entity_decode_deep($input['content']);
 
          switch ($input['destination_entity']) {
             case 'specific' :
