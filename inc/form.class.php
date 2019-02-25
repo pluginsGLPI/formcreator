@@ -1828,10 +1828,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public function transfer($entity) {
       global $DB;
 
-      $query = "UPDATE `glpi_plugin_formcreator_forms` SET
-                   `entities_id` = " . $entity . "
-                WHERE `id` = " . $this->fields['id'];
-      $DB->query($query);
       $result = $DB->update(
          self::getTable(),
          [

@@ -236,7 +236,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       ])->next();
 
       $form = new PluginFormcreatorForm();
-      $form->getFromDB($target['plugin_formcreator_forms_id']);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $form->getFromDB($target[$formFk]);
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
@@ -366,28 +367,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<td align="center">-</td>';
       echo '</tr>';
 
-      $table_questions = getTableForItemType('PluginFormcreatorQuestion');
-      $table_sections  = getTableForItemType('PluginFormcreatorSection');
-      $query = "SELECT q.`id`, q.`name` AS question, s.`name` AS section
-                FROM $table_questions q
-                LEFT JOIN $table_sections s
-                  ON q.`plugin_formcreator_sections_id` = s.`id`
-                WHERE s.`plugin_formcreator_forms_id` = " . $target['plugin_formcreator_forms_id'] . "
-                ORDER BY s.`order`, q.`order`";
-      $result = $DB->query($query);
-
-      $i = 0;
-      while ($question = $DB->fetch_array($result)) {
-         $i++;
-         echo '<tr class="line' . ($i % 2) . '">';
-         echo '<td colspan="2">' . $question['question'] . '</td>';
-         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
-         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
-         echo '<td align="center">' . $question['section'] . '</td>';
-         echo '</tr>';
-      }
-
-      echo '</table>';
+      $this->showTagsList();
       echo '</div>';
    }
 
@@ -589,13 +569,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                || $this->fields['tag_type'] == 'questions_and_specific'
                || $this->fields['tag_type'] == 'questions_or_specific')
                && (!empty($this->fields['tag_questions']))) {
-
-                  $query = "SELECT answer
-                      FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanswers_id` = " . (int) $formanswer->fields['id'] . "
-                      AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
-                  $result = $DB->query($query);
-            while ($line = $DB->fetch_array($result)) {
+            $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
+            $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+            $result = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM' => PluginFormcreatorAnswer::getTable(),
+               'WHERE' => [
+                  $formAnswerFk => [(int) $formanswer->fields['id']],
+                  $questionFk => $this->fields['tag_questions']
+               ],
+            ]);
+            foreach ($result as $line) {
                $tab = json_decode($line['answer']);
                if (is_array($tab)) {
                   $tags = array_merge($tags, $tab);

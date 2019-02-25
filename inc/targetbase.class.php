@@ -966,43 +966,75 @@ EOS;
       $questions_supplier_list = [Dropdown::EMPTY_VALUE];
       $questions_actors_list   = [Dropdown::EMPTY_VALUE];
 
-      $query = "SELECT s.id, s.name
-                FROM glpi_plugin_formcreator_targets t
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                ORDER BY s.order";
-      $result = $DB->query($query);
-      // $result = $DB->request([
-      //    'SELECT' => [
-      //       $sectionTable => ['id']
-      //    ]
-      // ]);
-      while ($section = $DB->fetch_array($result)) {
+      $targetTable = PluginFormcreatorTarget::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $result = $DB->request([
+         'SELECT' => [
+            $sectionTable => ['id', 'name']
+         ],
+         'FROM' => $targetTable,
+         'INNER JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $sectionTable => $formFk,
+                  $targetTable => $formFk
+               ]
+            ],
+         ],
+         'WHERE' => ["$targetTable.items_id" => $this->getID()],
+         'ORDER' => "$sectionTable.order"
+      ]);
+
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      foreach ($result as $section) {
+         // TODO : this request may be merged with the one above
+         // with a INNER JOIN clause
          // select all user, group or supplier questions (GLPI Object)
-         $query2 = "SELECT q.id, q.name, q.fieldtype, q.values
-                    FROM glpi_plugin_formcreator_questions q
-                    INNER JOIN glpi_plugin_formcreator_sections s
-                      ON s.id = q.plugin_formcreator_sections_id
-                    WHERE s.id = {$section['id']}
-                    AND ((q.fieldtype = 'glpiselect'
-                      AND q.values IN ('User', 'Group', 'Supplier'))
-                      OR (q.fieldtype = 'actor'))";
-         $result2 = $DB->query($query2);
+         $result2 = $DB->request([
+            'SELECT' => [
+               $questionTable => ['id', 'name', 'fieldtype', 'values']
+            ],
+            'FROM' => $questionTable,
+            'INNER JOIN' => [
+               $sectionTable => [
+                  'FKEY' => [
+                     $sectionTable => 'id',
+                     $questionTable => $sectionFk
+                  ]
+               ]
+            ],
+            'WHERE' => [
+               "$section.id" => $section['id'],
+               [
+                  'AND' => [
+                     "$questionTable.fieldtype" => 'glpiselect',
+                     "$questionTable.values" => [User::class, Group::class, Supplier::class]
+                  ],
+                  [
+                     'OR' => [
+                        "$questionTable.fieldtype" => 'actor'
+                     ]
+                  ]
+               ]
+            ]
+         ]);
+
          $section_questions_user     = [];
          $section_questions_group    = [];
          $section_questions_supplier = [];
          $section_questions_actors   = [];
-         while ($question = $DB->fetch_array($result2)) {
+         foreach ($result2 as $question) {
             if ($question['fieldtype'] == 'glpiselect') {
                switch ($question['values']) {
-                  case 'User' :
+                  case User::class :
                      $section_questions_user[$question['id']] = $question['name'];
                      break;
-                  case 'Group' :
+                  case Group::class :
                      $section_questions_group[$question['id']] = $question['name'];
                      break;
-                  case 'Supplier' :
+                  case Supplier::class :
                      $section_questions_supplier[$question['id']] = $question['name'];
                      break;
                }
@@ -1021,11 +1053,14 @@ EOS;
       $itemActorTable = $itemActor::getTable();
       $fk = self::getForeignKeyField();
       $actors = ['requester' => [], 'observer' => [], 'assigned' => []];
-      $query = "SELECT id, actor_role, actor_type, actor_value, use_notification
-                FROM $itemActorTable
-                WHERE $fk = " . $this->getID();
-      $result = $DB->query($query);
-      while ($actor = $DB->fetch_array($result)) {
+      $result = $DB->request([
+         'SELECT' => ['id', 'actor_role', 'actor_type', 'actor_value', 'use_notification'],
+         'FROM' => $itemActorTable,
+         'WHERE' => [
+            self::getForeignKeyField() => [$this->getID()]
+         ]
+      ]);
+      foreach ($result as $actor) {
          $actors[$actor['actor_role']][$actor['id']] = [
             'actor_type'       => $actor['actor_type'],
             'actor_value'      => $actor['actor_value'],
@@ -1735,5 +1770,63 @@ JAVASCRIPT;
       }
 
       return $template;
+   }
+
+   public function showTagsList() {
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
+      echo '<tr>';
+      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . __('Title') . '</th>';
+      echo '<th width="20%">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
+      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
+      echo '</tr>';
+
+      echo '<tr class="line0">';
+      echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
+      echo '<td align="center"><code>-</code></td>';
+      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
+      echo '<td align="center">-</td>';
+      echo '</tr>';
+
+      // TODO Factorize with PluginFormceatorQuestion::dropdownForForm()
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable  = PluginFormcreatorSection::getTable();
+      $sectionFk = PluginFoirmcreatorSecton::getFoeignKeyField();
+      $result = $DB->request([
+         'SELECT' =>  [
+            $questionTable => ['id', 'name as question'],
+            $sectionTable => ['name as section']
+         ],
+         'FROM' => $questionTable,
+         'LEFT JOIN' => [
+            $sectionTable => [
+               'FKEY' => [
+                  $questionTable => $sectionFk,
+                  $sectionTable => 'id',
+               ],
+            ],
+         ],
+         'WHERE' => [
+            "$section.$formFk" => [$target[$formFk]],
+         ],
+         'ORDER' => [
+            "$sectionTable.order", "$questionTable.order"
+         ]
+      ]);
+
+      $i = 0;
+      foreach ($result as $question) {
+         $i++;
+         echo '<tr class="line' . ($i % 2) . '">';
+         echo '<td colspan="2">' . $question['question'] . '</td>';
+         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
+         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
+         echo '<td align="center">' . $question['section'] . '</td>';
+         echo '</tr>';
+      }
+
+      echo '</table>';
    }
 }
