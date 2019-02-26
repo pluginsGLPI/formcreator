@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
                     17%
-                                            <small>of 189</small>
+                                            <small>of 192</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -136,6 +136,13 @@ layout: coverage
             <tr>
             <td><a href="#getTargetsForForm">PluginFormcreatorTarget::getTargetsForForm()</a></td>
                                         <td style="text-align: center">11</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getFromDBByTargetItem">PluginFormcreatorTarget::getFromDBByTargetItem()</a></td>
+                                        <td style="text-align: center">3</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -3167,6 +3174,57 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L404" class="number ">404</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getFromDBByTargetItem">
+                    <th id="L405" class="number ">405</th>
+
+                    <td class="" id="getFromDBByTargetItem">
+                        <pre>   public function getFromDBByTargetItem(PluginFormcreatorTargetBase $target) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L406" class="number uncovered">406</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $this-&gt;getFromDBByCrit([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L407" class="number uncovered">407</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;itemtype&#039; =&gt; $target-&gt;getType(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L408" class="number uncovered">408</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;items_id&#039; =&gt; $target-&gt;getID()</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L409" class="number ">409</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L410" class="number unreach">410</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L411" class="number ">411</th>
 
                     <td class="" >
                         <pre>}

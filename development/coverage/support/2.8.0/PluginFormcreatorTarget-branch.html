@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
                     17%
-                                            <small>of 189</small>
+                                            <small>of 192</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -136,6 +136,13 @@ layout: coverage
             <tr>
             <td><a href="#getTargetsForForm">PluginFormcreatorTarget::getTargetsForForm()</a></td>
                                         <td style="text-align: center">11</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getFromDBByTargetItem">PluginFormcreatorTarget::getFromDBByTargetItem()</a></td>
+                                        <td style="text-align: center">3</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -460,6 +467,33 @@ layout: coverage
 
             <script>
                 var g = graph('PluginFormcreatorTarget', 'getTargetsForForm');
+
+                
+                g.addEnd().roundNodes();
+
+                
+                g.render();
+            </script>
+                    <div class="panel panel-default" id="getFromDBByTargetItem">
+                <div class="panel-heading">
+                    PluginFormcreatorTarget::getFromDBByTargetItem()
+                        
+    <span class="label label-default">N/A</span>
+
+                        <div class="btn-group">
+                                <a href="./PluginFormcreatorTarget.html#getFromDBByTargetItem" class="btn btn-sm btn-danger" title="Show lines coverage"><i class="fa fa-align-justify"></i></a>
+        
+        
+            </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="graph"><svg></svg></div>
+                </div>
+            </div>
+
+            <script>
+                var g = graph('PluginFormcreatorTarget', 'getFromDBByTargetItem');
 
                 
                 g.addEnd().roundNodes();
