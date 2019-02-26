@@ -41,9 +41,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    static function getEnumUrgencyRule() {
       return [
-         'none'      => __('Medium', 'formcreator'),
-         'specific'  => __('Specific urgency', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+         PluginFormcreatorTargetBase::URGENCY_RULE_NONE      => __('Medium', 'formcreator'),
+         PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
+         PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
@@ -542,6 +542,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
       $data = $this->setTargetDueDate($data, $formanswer);
+      $data = $this->setTargetUrgency($data, $formanswer);
       $data = $this->setTargetCategory($data, $formanswer);
 
       $data = $this->requesters + $this->observers + $this->assigned + $this->assignedSuppliers + $data;

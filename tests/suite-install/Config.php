@@ -108,16 +108,13 @@ class Config extends CommonTestCase {
       // Check the version saved in configuration
       $this->checkConfig();
 
-      // Enable debug mode for enrollment messages
-      \Config::setConfigurationValues($pluginname, ['debug_enrolment' => '1']);
+      // // Take a snapshot of the database before any test
+      // $this->mysql_dump($DB->dbuser, $DB->dbhost, $DB->dbpassword, $DB->dbdefault, './save.sql');
 
-      // Take a snapshot of the database before any test
-      $this->mysql_dump($DB->dbuser, $DB->dbhost, $DB->dbpassword, $DB->dbdefault, './save.sql');
-
-      $this->boolean(file_exists("./save.sql"))->isTrue();
-      $filestats = stat("./save.sql");
-      $length = $filestats[7];
-      $this->integer($length)->isGreaterThan(0);
+      // $this->boolean(file_exists("./save.sql"))->isTrue();
+      // $filestats = stat("./save.sql");
+      // $length = $filestats[7];
+      // $this->integer($length)->isGreaterThan(0);
    }
 
    public function testUpgradePlugin() {

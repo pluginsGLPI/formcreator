@@ -607,13 +607,13 @@ function formcreatorChangeDueDate(value) {
    $('#due_date_questions').hide();
    $('#due_date_time').hide();
    switch (value) {
-      case 'answer' :
+      case '1' :
          $('#due_date_questions').show();
          break;
-      case 'ticket' :
+      case '2' :
          $('#due_date_time').show();
          break;
-      case 'calcul' :
+      case '3' :
          $('#due_date_questions').show();
          $('#due_date_time').show();
          break;
