@@ -546,9 +546,9 @@ class PluginFormcreatorUpgradeTo2_5 {
          $migration->migrationOneTable('glpi_plugin_formcreator_questions_conditions');
       }
 
-      $enum_logic = "'".implode("', '", array_keys(PluginFormcreatorQuestion_Condition::getEnumShowLogic()))."'";
+      $enum_logic = "'".implode("', '", ['AND','OR'])."'";
       $current_enum_show_logic = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_questions_conditions', 'show_logic');
-      if (count($current_enum_show_logic) != count(PluginFormcreatorQuestion_Condition::getEnumShowLogic())) {
+      if (count($current_enum_show_logic) != count(['AND','OR'])) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_questions_conditions`
                   CHANGE COLUMN `show_logic` `show_logic`
                   ENUM($enum_logic)
@@ -1043,11 +1043,11 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       }
 
-      $enum_actor_type = "'".implode("', '", array_keys(PluginFormcreatorTargetChange_Actor::getEnumActorType()))."'";
-      $enum_actor_role = "'".implode("', '", array_keys(PluginFormcreatorTargetChange_Actor::getEnumRole()))."'";
+      $enum_actor_type = "'".implode("', '", ['creator','validator','person','question_person','group','question_group','supplier','question_supplier'])."'";
+      $enum_actor_role = "'".implode("', '", ['requester','observer','assigned'])."'";
 
       $current_enum_actor_type = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges_actors', 'actor_type');
-      if (count($current_enum_actor_type) != count(PluginFormcreatorTargetChange_Actor::getEnumActorType())) {
+      if (count($current_enum_actor_type) != count(['creator','validator','person','question_person','group','question_group','supplier','question_supplier'])) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges_actors`
                   CHANGE COLUMN `actor_type` `actor_type`
                   ENUM($enum_actor_type)
@@ -1056,7 +1056,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       $current_enum_role = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges_actors', 'actor_role');
-      if (count($current_enum_role) != count(PluginFormcreatorTargetChange_Actor::getEnumRole())) {
+      if (count($current_enum_role) != count(['requester','observer','assigned'])) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges_actors`
                   CHANGE COLUMN `actor_role` `actor_role`
                   ENUM($enum_actor_role)
@@ -1078,11 +1078,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       // Legacy upgrade of target ticket actors
       $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets_actors");
 
-      $enum_actor_type = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket_Actor::getEnumActorType()))."'";
-      $enum_actor_role = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket_Actor::getEnumRole()))."'";
+      $enum_actor_type = "'".implode("', '", ['creator','validator','person','question_person','group','question_group','supplier','question_supplier'])."'";
+      $enum_actor_role = "'".implode("', '", ['requester','observer','assigned'])."'";
 
       $current_enum_actor_type = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets_actors', 'actor_type');
-      if (count($current_enum_actor_type) != count(PluginFormcreatorTargetTicket_Actor::getEnumActorType())) {
+      if (count($current_enum_actor_type) != count(['creator','validator','person','question_person','group','question_group','supplier','question_supplier'])) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets_actors`
                   CHANGE COLUMN `actor_type` `actor_type`
                   ENUM($enum_actor_type)
@@ -1091,7 +1091,7 @@ class PluginFormcreatorUpgradeTo2_5 {
       }
 
       $current_enum_role = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets_actors', 'actor_role');
-      if (count($current_enum_role) != count(PluginFormcreatorTargetTicket_Actor::getEnumRole())) {
+      if (count($current_enum_role) != count(['requester','observer','assigned'])) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets_actors`
                   CHANGE COLUMN `actor_role` `actor_role`
                   ENUM($enum_actor_role)
@@ -1119,11 +1119,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       // Legacy upgrade of Target tickets
       $migration->displayMessage("Upgrade glpi_plugin_formcreator_targettickets");
 
-      $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDestinationEntity()))."'";
-      $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumTagType()))."'";
-      $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumDueDateRule()))."'";
-      $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumUrgencyRule()))."'";
-      $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumCategoryRule()))."'";
+      $enum_destination_entity = "'".implode("', '", ['current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity'])."'";
+      $enum_tag_type           = "'".implode("', '", ['none','questions','specifics','questions_and_specific','questions_or_specific'])."'";
+      $enum_due_date_rule      = "'".implode("', '", ['answer','change','calcul'])."'";
+      $enum_urgency_rule       = "'".implode("', '", ['none','specific','answer'])."'";
+      $enum_category_rule      = "'".implode("', '", ['none','answer'])."'";
 
       if (!$DB->fieldExists('glpi_plugin_formcreator_targettickets', 'due_date_rule', false)) {
          $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
@@ -1143,7 +1143,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'destination_entity');
-         if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetTicket::getEnumDestinationEntity())) {
+         if (count($current_enum_destination_entity) != count(['current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
                      CHANGE COLUMN `destination_entity` `destination_entity`
                      ENUM($enum_destination_entity)
@@ -1168,7 +1168,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'urgency_rule');
-         if (count($current_enum_urgency_rule) != count(PluginFormcreatorTargetTicket::getEnumUrgencyRule())) {
+         if (count($current_enum_urgency_rule) != count(['none','specific','answer'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
                      CHANGE COLUMN `urgency_rule` `urgency_rule`
                      ENUM($enum_urgency_rule)
@@ -1184,7 +1184,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targettickets', 'category_rule');
-         if (count($current_enum_category_rule) != count(PluginFormcreatorTargetTicket::getEnumCategoryRule())) {
+         if (count($current_enum_category_rule) != count(['none','answer'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targettickets`
                      CHANGE COLUMN `category_rule` `category_rule`
                      ENUM($enum_category_rule)
@@ -1209,11 +1209,11 @@ class PluginFormcreatorUpgradeTo2_5 {
       // Legacy upgrade of Target changes
       $migration->displayMessage("Upgrade glpi_plugin_formcreator_targetchanges");
 
-      $enum_destination_entity = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDestinationEntity()))."'";
-      $enum_tag_type           = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumTagType()))."'";
-      $enum_due_date_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumDueDateRule()))."'";
-      $enum_urgency_rule       = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumUrgencyRule()))."'";
-      $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetChange::getEnumCategoryRule()))."'";
+      $enum_destination_entity = "'".implode("', '", ['current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity'])."'";
+      $enum_tag_type           = "'".implode("', '", ['none','questions','specifics','questions_and_specific','questions_or_specific'])."'";
+      $enum_due_date_rule      = "'".implode("', '", ['answer','change','calcul'])."'";
+      $enum_urgency_rule       = "'".implode("', '", ['none','specific','answer'])."'";
+      $enum_category_rule      = "'".implode("', '", ['none','answer'])."'";
 
       if (!$DB->tableExists('glpi_plugin_formcreator_targetchanges')) {
          $query = "CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
@@ -1263,7 +1263,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_destination_entity = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'destination_entity');
-         if (count($current_enum_destination_entity) != count(PluginFormcreatorTargetChange::getEnumDestinationEntity())) {
+         if (count($current_enum_destination_entity) != count(['current','requester','requester_dynamic_first','requester_dynamic_last','form','validator','specific','user','entity'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                      CHANGE COLUMN `destination_entity` `destination_entity`
                      ENUM($enum_destination_entity)
@@ -1288,7 +1288,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_urgency_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'urgency_rule');
-         if (count($current_enum_urgency_rule) != count(PluginFormcreatorTargetChange::getEnumUrgencyRule())) {
+         if (count($current_enum_urgency_rule) != count(['none','specific','answer'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                      CHANGE COLUMN `urgency_rule` `urgency_rule`
                      ENUM($enum_urgency_rule)
@@ -1304,7 +1304,7 @@ class PluginFormcreatorUpgradeTo2_5 {
          $DB->query($query) or plugin_formcreator_upgrade_error($migration);
       } else {
          $current_enum_category_rule = PluginFormcreatorCommon::getEnumValues('glpi_plugin_formcreator_targetchanges', 'category_rule');
-         if (count($current_enum_category_rule) != count(PluginFormcreatorTargetChange::getEnumCategoryRule())) {
+         if (count($current_enum_category_rule) != count(['none','answer'])) {
             $query = "ALTER TABLE `glpi_plugin_formcreator_targetchanges`
                      CHANGE COLUMN `category_rule` `category_rule`
                      ENUM($enum_category_rule)
