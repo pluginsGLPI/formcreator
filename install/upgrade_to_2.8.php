@@ -128,6 +128,46 @@ class PluginFormcreatorUpgradeTo2_8 {
             'default_value' => '1'
          ]
       );
+
+      $tables = [
+         'glpi_plugin_formcreator_targetchanges',
+         'glpi_plugin_formcreator_targettickets'
+      ];
+      foreach ($tables as $table) {
+         $this->enumToInt(
+            $table,
+            'due_date_rule',
+            [
+               'answer'   => 1,
+               'ticket'   => 2,
+               'calc'     => 3,
+            ],
+            ['after' => 'due_date_value']
+         );
+
+         $this->enumToInt(
+            $table,
+            'due_date_period',
+            [
+               'minute' => 1,
+               'hour'   => 2,
+               'day'    => 3,
+               'month'  => 4,
+            ],
+            ['after' => 'due_date_value']
+         );
+
+         $this->enumToInt(
+            $table,
+            'urgency_rule',
+            [
+               'none'      => 1,
+               'specific'  => 2,
+               'answer'    => 3,
+            ],
+            ['after' => 'due_date_period']
+         );
+      }
    }
 
    /**

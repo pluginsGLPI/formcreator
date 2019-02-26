@@ -170,7 +170,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'name'                  => 'target 1',
             'content'               => '##FULLFORM##',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
-            'urgency_rule'          => 'answer',
+            'urgency_rule'          => \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER,
             'urgency_question'      => 'custom urgency',
             'expected'              => '5'
          ],
@@ -178,7 +178,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'name'                  => 'target 2',
             'content'               => '##FULLFORM##',
             'itemtype'              => 'PluginFormcreatorTargetTicket',
-            'urgency_rule'          => 'none',
+            'urgency_rule'          => \PluginFormcreatorTargetBase::URGENCY_RULE_NONE,
             'urgency_question'      => '',
             'expected'              => '3'
          ]
@@ -231,9 +231,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             ];
          } else {
             $urgencyQuestions[] = [
-                  'question'     => null,
-                  'targetTicket' => $targetTicket,
-                  'expected'     => $targetData['expected']
+               'question'     => null,
+               'targetTicket' => $targetTicket,
+               'expected'     => $targetData['expected']
             ];
          }
 
@@ -269,7 +269,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'SELECT' => ['tickets_id'],
             'FROM'   => \Item_Ticket::getTable(),
             'WHERE'  => [
-               'itemtype' => 'PluginFormcreatorFormAnswer',
+               'itemtype' => \PluginFormcreatorFormAnswer::class,
                'items_id' => $formAnswer->getID()
             ]
          ]);

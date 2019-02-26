@@ -1669,7 +1669,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                }
 
                // update time to resolve rule
-               if ($update_target_ticket['due_date_rule'] == 'answer'
+               if ($update_target_ticket['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
                    || $update_target_ticket['due_date_rule'] == 'calcul') {
                   $update_target_ticket['due_date_question'] = $tab_questions[$update_target_ticket['due_date_question']];
                }
@@ -1738,7 +1738,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                }
 
                // update time to resolve rule
-               if ($update_target_change['due_date_rule'] == 'answer'
+               if ($update_target_change['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
                    || $update_target_change['due_date_rule'] == 'calcul') {
                   $update_target_change['due_date_question'] = $tab_questions[$update_target_change['due_date_question']];
                }
