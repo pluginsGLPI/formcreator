@@ -410,10 +410,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          switch ($input['urgency_rule']) {
-            case 'answer':
+            case PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER:
                $input['urgency_question'] = $input['_urgency_question'];
                break;
-            case 'specific':
+            case PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC:
                $input['urgency_question'] = $input['_urgency_specific'];
                break;
             default:
