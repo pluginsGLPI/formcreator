@@ -8,7 +8,7 @@
 
 
 INSERT INTO `glpi_configs` (`id`, `context`, `name`, `value`) VALUES
-	(NULL, 'flyvemdm', 'schema_version', '2.5');
+	(NULL, 'formcreator', 'schema_version', '2.5');
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
