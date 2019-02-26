@@ -401,4 +401,11 @@ class PluginFormcreatorTarget extends CommonDBTM
 
       return $targets;
    }
+
+   public function getFromDBByTargetItem(PluginFormcreatorTargetBase $target) {
+      return $this->getFromDBByCrit([
+         'itemtype' => $target->getType(),
+         'items_id' => $target->getID()
+      ]);
+   }
 }

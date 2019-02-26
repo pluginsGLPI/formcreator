@@ -1006,7 +1006,7 @@ EOS;
                ]
             ],
             'WHERE' => [
-               "$section.id" => $section['id'],
+               "$sectionTable.id" => $section['id'],
                [
                   'AND' => [
                      "$questionTable.fieldtype" => 'glpiselect',
@@ -1773,6 +1773,11 @@ JAVASCRIPT;
    }
 
    public function showTagsList() {
+      global $DB;
+
+      $target = new PluginFormcreatorTarget();
+      $target->getFromDBByTargetItem($this);
+
       echo '<table class="tab_cadre_fixe">';
 
       echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
@@ -1793,7 +1798,8 @@ JAVASCRIPT;
       // TODO Factorize with PluginFormceatorQuestion::dropdownForForm()
       $questionTable = PluginFormcreatorQuestion::getTable();
       $sectionTable  = PluginFormcreatorSection::getTable();
-      $sectionFk = PluginFoirmcreatorSecton::getFoeignKeyField();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $result = $DB->request([
          'SELECT' =>  [
             $questionTable => ['id', 'name as question'],
@@ -1809,7 +1815,7 @@ JAVASCRIPT;
             ],
          ],
          'WHERE' => [
-            "$section.$formFk" => [$target[$formFk]],
+            "$sectionTable.$formFk" => [$target->fields[$formFk]],
          ],
          'ORDER' => [
             "$sectionTable.order", "$questionTable.order"
