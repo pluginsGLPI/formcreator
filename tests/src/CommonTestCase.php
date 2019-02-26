@@ -17,20 +17,20 @@ abstract class CommonTestCase extends CommonDBTestCase
    protected function resetState() {
       self::resetGLPILogs();
 
-      $DBvars = get_class_vars('DB');
-      $result = $this->drop_database(
-         $DBvars['dbuser'],
-         $DBvars['dbhost'],
-         $DBvars['dbdefault'],
-         $DBvars['dbpassword']
-      );
+      // $DBvars = get_class_vars('DB');
+      // $result = $this->drop_database(
+      //    $DBvars['dbuser'],
+      //    $DBvars['dbhost'],
+      //    $DBvars['dbdefault'],
+      //    $DBvars['dbpassword']
+      // );
 
-      $result = $this->load_mysql_file($DBvars['dbuser'],
-         $DBvars['dbhost'],
-         $DBvars['dbdefault'],
-         $DBvars['dbpassword'],
-         './save.sql'
-      );
+      // $result = $this->load_mysql_file($DBvars['dbuser'],
+      //    $DBvars['dbhost'],
+      //    $DBvars['dbdefault'],
+      //    $DBvars['dbpassword'],
+      //    './save.sql'
+      // );
    }
 
    protected function resetGLPILogs() {

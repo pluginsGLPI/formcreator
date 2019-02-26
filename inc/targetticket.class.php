@@ -409,10 +409,10 @@ EOS;
          }
 
          switch ($input['urgency_rule']) {
-            case 'answer':
+            case PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER:
                $input['urgency_question'] = $input['_urgency_question'];
                break;
-            case 'specific':
+            case PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC:
                $input['urgency_question'] = $input['_urgency_specific'];
                break;
             default:
@@ -764,34 +764,6 @@ EOS;
       }
 
       return $ticket;
-   }
-
-   protected function setTargetUrgency($data, $formanswer) {
-      global $DB;
-
-      switch ($this->fields['urgency_rule']) {
-         case 'answer':
-            $urgency = $DB->request([
-               'SELECT' => ['answer'],
-               'FROM'   => PluginFormcreatorAnswer::getTable(),
-               'WHERE'  => [
-                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
-                  'plugin_formcreator_questions_id'   => $this->fields['urgency_question']
-               ]
-            ])->next();
-            $urgency = $urgency['answer'];
-            break;
-         case 'specific':
-            $urgency = $this->fields['urgency_question'];
-            break;
-         default:
-            $urgency = null;
-      }
-      if (!is_null($urgency)) {
-         $data['urgency'] = $urgency;
-      }
-
-      return $data;
    }
 
    protected function setTargetLocation($data, $formanswer) {
