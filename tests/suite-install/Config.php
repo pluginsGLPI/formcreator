@@ -99,6 +99,10 @@ class Config extends CommonTestCase {
       $plugin->install($plugin->fields['id']);
       ob_end_clean();
 
+      // Assert the database matches the schema
+      $filename = GLPI_ROOT."/plugins/$pluginname/install/mysql/plugin_" . $pluginname . "_empty.sql";
+      $this->checkInstall($filename, 'glpi_plugin_' . $pluginname . '_', 'install');
+
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
       $this->boolean($plugin->isActivated($pluginname))->isTrue('Cannot enable the plugin');
@@ -107,13 +111,16 @@ class Config extends CommonTestCase {
       $this->checkConfig();
       $this->testPluginName();
 
-      // Take a snapshot of the database before any test
-      $this->mysql_dump($DB->dbuser, $DB->dbhost, $DB->dbpassword, $DB->dbdefault, './save.sql');
+      // Enable debug mode for enrollment messages
+      \Config::setConfigurationValues($pluginname, ['debug_enrolment' => '1']);
 
-      $this->boolean(file_exists("./save.sql"))->isTrue();
-      $filestats = stat("./save.sql");
-      $length = $filestats[7];
-      $this->integer($length)->isGreaterThan(0);
+      // // Take a snapshot of the database before any test
+      // $this->mysql_dump($DB->dbuser, $DB->dbhost, $DB->dbpassword, $DB->dbdefault, './save.sql');
+
+      // $this->boolean(file_exists("./save.sql"))->isTrue();
+      // $filestats = stat("./save.sql");
+      // $length = $filestats[7];
+      // $this->integer($length)->isGreaterThan(0);
    }
 
    public function testUpgradePlugin() {
