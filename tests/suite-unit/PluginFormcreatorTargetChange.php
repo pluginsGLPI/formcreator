@@ -68,7 +68,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'current',
+         'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_CURRENT,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
@@ -86,7 +86,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'requester',
+         'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_REQUESTER,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
@@ -103,7 +103,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'requester_dynamic_first',
+         'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_REQUESTER_DYN_FIRST,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
@@ -139,7 +139,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'requester_dynamic_last',
+         'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_REQUESTER_DYN_LAST,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
@@ -161,7 +161,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'specific',
+         'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_SPECIFIC,
          'destination_entity_value' => "$entityId",
       ]);
       $instance->getFromDB($targetChange->getID());
@@ -181,7 +181,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'form',
+         'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_FORM,
          'destination_entity_value' => '0',
       ]);
       $form->update([
