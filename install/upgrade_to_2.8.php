@@ -41,26 +41,7 @@ class PluginFormcreatorUpgradeTo2_8 {
       $this->migration = $migration;
       // add item association rule
       $table = 'glpi_plugin_formcreator_targettickets';
-      $enum_associate_rule = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumAssociateRule()))."'";
-      if (!$DB->fieldExists($table, 'associate_rule', false)) {
-         $migration->addField(
-            $table,
-            'associate_rule',
-            "ENUM($enum_associate_rule) NOT NULL DEFAULT 'none'",
-            ['after' => 'category_question']
-         );
-      } else {
-         $current_enum_associate_rule = PluginFormcreatorCommon::getEnumValues($table, 'associate_rule');
-         if (count($current_enum_associate_rule) != count($enum_associate_rule)) {
-            $migration->changeField(
-               $table,
-               'location_rule',
-               'location_rule',
-               "ENUM($enum_associate_rule) NOT NULL DEFAULT 'none'",
-               ['after' => 'category_question']
-            );
-         }
-      }
+      $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question']);
       $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
 
       // Rename the plugin
@@ -138,11 +119,14 @@ class PluginFormcreatorUpgradeTo2_8 {
             $table,
             'due_date_rule',
             [
-               'answer'   => 1,
-               'ticket'   => 2,
-               'calc'     => 3,
+               'none'     => 1,
+               'answer'   => 2,
+               'ticket'   => 3,
+               'calc'     => 4,
             ],
-            ['after' => 'due_date_value']
+            [
+               'default_value' => '1'
+            ]
          );
 
          $this->enumToInt(
@@ -154,7 +138,9 @@ class PluginFormcreatorUpgradeTo2_8 {
                'day'    => 3,
                'month'  => 4,
             ],
-            ['after' => 'due_date_value']
+            [
+               'default_value' => '1'
+            ]
          );
 
          $this->enumToInt(
@@ -165,7 +151,9 @@ class PluginFormcreatorUpgradeTo2_8 {
                'specific'  => 2,
                'answer'    => 3,
             ],
-            ['after' => 'due_date_period']
+            [
+               'default_value' => '1'
+            ]
          );
 
          // Remove enum for destination_entity
@@ -182,6 +170,9 @@ class PluginFormcreatorUpgradeTo2_8 {
                'specific'                 => 7,
                'user'                     => 8,
                'entity'                   => 9,
+            ],
+            [
+               'default_value' => '1'
             ]
          );
 
@@ -195,6 +186,9 @@ class PluginFormcreatorUpgradeTo2_8 {
                'specifics'              => 3,
                'questions_and_specific' => 4,
                'questions_or_specific'  => 5,
+            ],
+            [
+               'default_value' => '1'
             ]
          );
 
@@ -206,6 +200,9 @@ class PluginFormcreatorUpgradeTo2_8 {
                'none'      => 1,
                'specific'  => 2,
                'answer'    => 3,
+            ],
+            [
+               'default_value' => '1'
             ]
          );
       }
@@ -217,6 +214,9 @@ class PluginFormcreatorUpgradeTo2_8 {
             'none'      => 1,
             'specific'  => 2,
             'answer'    => 3,
+         ],
+         [
+            'default_value' => '1'
          ]
       );
    }
