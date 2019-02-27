@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `tag_specifics` varchar(255) NOT NULL,
   `category_rule` int(11) NOT NULL DEFAULT '1',
   `category_question` int(11) NOT NULL DEFAULT '0',
-  `associate_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `associate_rule` int(11) NOT NULL DEFAULT '1',
   `associate_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
