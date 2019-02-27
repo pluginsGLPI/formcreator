@@ -101,9 +101,10 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    abstract protected function getCategoryFilter();
 
-   const DUE_DATE_RULE_ANSWER = 1;
-   const DUE_DATE_RULE_TICKET = 2;
-   const DUE_DATE_RULE_CALC = 3;
+   const DUE_DATE_RULE_NONE = 1;
+   const DUE_DATE_RULE_ANSWER = 2;
+   const DUE_DATE_RULE_TICKET = 3;
+   const DUE_DATE_RULE_CALC = 4;
 
    const DUE_DATE_PERIOD_MINUTE = 1;
    const DUE_DATE_PERIOD_HOUR = 2;
