@@ -433,28 +433,28 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       ]);
       foreach ($rows as $actor) {
          // If actor type is validator and if the form doesn't have a validator, continue to other actors
-         if ($actor['actor_type'] == 'validator' && !$form->fields['validation_required']) {
+         if ($actor['actor_type'] == PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR && !$form->fields['validation_required']) {
             continue;
          }
 
          switch ($actor['actor_type']) {
-            case 'creator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
                $userIds = [$formanswer->fields['requester_id']];
                $notify  = $actor['use_notification'];
                break;
-            case 'validator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                $userIds = [$_SESSION['glpiID']];
                $notify  = $actor['use_notification'];
                break;
-            case 'person' :
-            case 'group' :
-            case 'supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
                $userIds = [$actor['actor_value']];
                $notify  = $actor['use_notification'];
                break;
-            case 'question_person' :
-            case 'question_group' :
-            case 'question_supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
@@ -472,7 +472,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                }
                $notify  = $actor['use_notification'];
                break;
-            case 'question_actors':
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
                $answer  = new PluginFormcreatorAnswer();
                $actorValue = $actor['actor_value'];
                $formanswerId = $formanswer->getID();
@@ -493,25 +493,25 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
          }
 
          switch ($actor['actor_type']) {
-            case 'creator' :
-            case 'validator' :
-            case 'person' :
-            case 'question_person' :
-            case 'question_actors':
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
                foreach ($userIds as $userIdOrEmail) {
                   $this->addActor($actor['actor_role'], $userIdOrEmail, $notify);
                }
                break;
-            case 'group' :
-            case 'question_group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                foreach ($userIds as $groupId) {
                   $this->addGroupActor($actor['actor_role'], $groupId);
                }
                break;
-            case 'supplier' :
-            case 'question_supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
                foreach ($userIds as $userId) {
-                  $this->addActor('supplier', $userId, $notify);
+                  $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_SUPPLIER, $userId, $notify);
                }
                break;
          }
@@ -542,19 +542,19 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       $actorType = null;
       $actorTypeNotif = null;
       switch ($role) {
-         case 'requester':
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
             $actorType = &$this->requesters['_users_id_requester'];
             $actorTypeNotif = &$this->requesters['_users_id_requester_notif'];
             break;
-         case 'observer':
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER:
             $actorType = &$this->observers['_users_id_observer'];
             $actorTypeNotif = &$this->observers['_users_id_observer_notif'];
             break;
-         case 'assigned' :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED :
             $actorType = &$this->assigned['_users_id_assign'];
             $actorTypeNotif = &$this->assigned['_users_id_assign_notif'];
             break;
-         case 'supplier' :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_SUPPLIER :
             $actorType = &$this->assignedSuppliers['_suppliers_id_assign'];
             $actorTypeNotif = &$this->assignedSuppliers['_suppliers_id_assign_notif'];
             break;
@@ -588,13 +588,13 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    protected function addGroupActor($role, $group) {
       $actorType = null;
       switch ($role) {
-         case 'requester':
+         case self::ACTOR_ROLE_REQUESTER:
             $actorType = &$this->requesterGroups['_groups_id_requester'];
             break;
-         case 'observer' :
+         case self::ACTOR_ROLE_OBSERVER :
             $actorType = &$this->observerGroups['_groups_id_observer'];
             break;
-         case 'assigned' :
+         case self::ACTOR_ROLE_ASSIGNED :
             $actorType = &$this->assignedGroups['_groups_id_assign'];
             break;
          default:
@@ -1587,46 +1587,46 @@ EOS;
       foreach ($actors['assigned'] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
-            case 'creator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
                echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
-            case 'validator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
                break;
-            case 'person' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
                $user = new User();
                $user->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
                break;
-            case 'question_person' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
-            case 'question_group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'question_actors' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER :
                $supplier = new Supplier();
                $supplier->getFromDB($values['actor_value']);
                echo $img_supplier . ' <b>' . __('Supplier') . ' </b> "' . $supplier->getName() . '"';
                break;
-            case 'question_supplier' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_supplier . ' <b>' . __('Supplier from the question', 'formcreator')

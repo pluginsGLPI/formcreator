@@ -37,29 +37,43 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM implements Plugi
 {
    abstract protected function getTargetItem();
 
+   const ACTOR_TYPE_CREATOR = 1;
+   const ACTOR_TYPE_VALIDATOR = 2;
+   const ACTOR_TYPE_PERSON = 3;
+   const ACTOR_TYPE_QUESTION_PERSON = 4;
+   const ACTOR_TYPE_GROUP = 5;
+   const ACTOR_TYPE_QUESTION_GROUP = 6;
+   const ACTOR_TYPE_SUPPLIER = 7;
+   const ACTOR_TYPE_QUESTION_SUPPLIER = 8;
+   const ACTOR_TYPE_QUESTION_ACTORS = 9;
+
+   const ACTOR_ROLE_REQUESTER = 1;
+   const ACTOR_ROLE_OBSERVER = 2;
+   const ACTOR_ROLE_ASSIGNED = 3;
+   const ACTOR_ROLE_SUPPLIER = 4;
+
    static function getEnumActorType() {
       return [
-         'creator'            => __("Form requester", 'formcreator'),
-         'validator'          => __("Form validator", 'formcreator'),
-         'person'             => __("Specific person", 'formcreator'),
-         'question_person'    => __("Person from the question", 'formcreator'),
-         'group'              => __('Specific group', 'formcreator'),
-         'question_group'     => __('Group from the question', 'formcreator'),
-         'supplier'           => __('Specific supplier', 'formcreator'),
-         'question_supplier'  => __('Supplier from the question', 'formcreator'),
-         'question_actors'    => __('Actors from the question', 'formcreator'),
+         self::ACTOR_TYPE_CREATOR            => __('Form requester', 'formcreator'),
+         self::ACTOR_TYPE_VALIDATOR          => __('Form validator', 'formcreator'),
+         self::ACTOR_TYPE_PERSON             => __('Specific person', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_PERSON    => __('Person from the question', 'formcreator'),
+         self::ACTOR_TYPE_GROUP              => __('Specific group', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_GROUP     => __('Group from the question', 'formcreator'),
+         self::ACTOR_TYPE_SUPPLIER           => __('Specific supplier', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_SUPPLIER  => __('Supplier from the question', 'formcreator'),
+         self::ACTOR_TYPE_QUESTION_ACTORS    => __('Actors from the question', 'formcreator'),
       ];
    }
 
    static function getEnumRole() {
       return [
-         'requester'          => __("Requester"),
-         'observer'           => __("Observer"),
-         'assigned'           => __("Assigned to"),
+         self::ACTOR_ROLE_REQUESTER => __('Requester'),
+         self::ACTOR_ROLE_OBSERVER  => __('Observer'),
+         self::ACTOR_ROLE_ASSIGNED  => __('Assigned to'),
+         // TODO : support ACTOR_ROLE_SUPPLIER
       ];
    }
-
-
    public function prepareInputForAdd($input) {
 
       // generate a unique id
@@ -151,31 +165,31 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM implements Plugi
 
       // export FK
       switch ($target_actor['actor_type']) {
-         case 'question_person':
-         case 'question_group':
-         case 'question_supplier':
-         case 'question_actors':
+         case self::ACTOR_TYPE_QUESTION_PERSON:
+         case self::ACTOR_TYPE_QUESTION_GROUP:
+         case self::ACTOR_TYPE_SUPPLIER:
+         case self::ACTOR_TYPE_QUESTION_ACTORS:
             $question = new PluginFormcreatorQuestion;
             if ($question->getFromDB($target_actor['actor_value'])) {
                $target_actor['_question'] = $question->fields['uuid'];
                unset($target_actor['actor_value']);
             }
             break;
-         case 'person':
+         case self::ACTOR_TYPE_PERSON:
             $user = new User;
             if ($user->getFromDB($target_actor['actor_value'])) {
                $target_actor['_user'] = $user->fields['name'];
                unset($target_actor['actor_value']);
             }
             break;
-         case 'group':
+         case self::ACTOR_TYPE_GROUP:
             $group = new Group;
             if ($group->getFromDB($target_actor['actor_value'])) {
                $target_actor['_group'] = $group->fields['completename'];
                unset($target_actor['actor_value']);
             }
             break;
-         case 'supplier':
+         case self::ACTOR_TYPE_SUPPLIER:
             $supplier = new Supplier;
             if ($supplier->getFromDB($target_actor['actor_value'])) {
                $target_actor['_supplier'] = $supplier->fields['name'];

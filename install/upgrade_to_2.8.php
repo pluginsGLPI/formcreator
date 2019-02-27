@@ -235,6 +235,44 @@ class PluginFormcreatorUpgradeTo2_8 {
             'default_value' => '1'
          ]
       );
+
+      $tables = [
+         'glpi_plugin_formcreator_targetchanges_actors',
+         'glpi_plugin_formcreator_targettickets_actors'
+      ];
+      foreach ($tables as $table) {
+         $this->enumToInt(
+            $table,
+            'actor_role',
+            [
+               'requester' => 1,
+               'observer'  => 2,
+               'assigned'  => 3,
+            ],
+            [
+               'default_value' => '1'
+            ]
+         );
+
+         $this->enumToInt(
+            $table,
+            'actor_type',
+            [
+               'creator'           => 1,
+               'validator'         => 2,
+               'person'            => 3,
+               'question_person'   => 4,
+               'group'             => 5,
+               'question_group'    => 6,
+               'supplier'          => 7,
+               'question_supplier' => 8,
+               'question_actors'   => 9,
+            ],
+            [
+               'default_value' => '1'
+            ]
+         );
+      }
    }
 
    /**

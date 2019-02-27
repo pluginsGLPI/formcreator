@@ -609,28 +609,28 @@ EOS;
       $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
 
       if (isset($predefined_fields['_users_id_requester'])) {
-         $this->addActor('requester', $predefined_fields['_users_id_requester'], true);
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_users_id_requester'], true);
          unset($predefined_fields['_users_id_requester']);
       }
       if (isset($predefined_fields['_users_id_observer'])) {
-         $this->addActor('observer', $predefined_fields['_users_id_observer'], true);
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_users_id_observer'], true);
          unset($predefined_fields['_users_id_observer']);
       }
       if (isset($predefined_fields['_users_id_assign'])) {
-         $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_users_id_assign'], true);
          unset($predefined_fields['_users_id_assign']);
       }
 
       if (isset($predefined_fields['_groups_id_requester'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_requester']);
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $predefined_fields['_groups_id_requester']);
          unset($predefined_fields['_groups_id_requester']);
       }
       if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER, $predefined_fields['_groups_id_observer']);
          unset($predefined_fields['_groups_id_observer']);
       }
       if (isset($predefined_fields['_groups_id_assign'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_assign']);
+         $this->addGroupActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED, $predefined_fields['_groups_id_assign']);
          unset($predefined_fields['_groups_id_assign']);
       }
 
@@ -663,11 +663,11 @@ EOS;
       $this->prepareActors($form, $formanswer);
 
       if (count($this->requesters['_users_id_requester']) == 0) {
-         $this->addActor('requester', $formanswer->fields['requester_id'], true);
+         $this->addActor(self::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
       } else if (count($this->requesters['_users_id_requester']) >= 1) {
          if ($this->requesters['_users_id_requester'][0] == 0) {
-            $this->addActor('requester', $formanswer->fields['requester_id'], true);
+            $this->addActor(self::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
             $requesters_id = $formanswer->fields['requester_id'];
          } else {
             $requesters_id = $this->requesters['_users_id_requester'][0];
