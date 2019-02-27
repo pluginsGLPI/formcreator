@@ -813,7 +813,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             Supplier::class         => Supplier::getTypeName(2),
             Contact::class          => Contact::getTypeName(2),
             Contract::class         => Contract::getTypeName(2),
-            Document::class         => Document::getTypeName(2)],
+            Document::class         => Document::getTypeName(2),
+            Project::class          => Project::getTypeName(2)],
          __("Tools") => [
             Reminder::class         => __("Notes"),
             RSSFeed::class          => __("RSS feed")],
