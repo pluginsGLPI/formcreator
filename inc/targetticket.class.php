@@ -35,6 +35,10 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
+   const ASSOCIATE_RULE_NONE = 1;
+   const ASSOCIATE_RULE_SPECIFIC = 2;
+   const ASSOCIATE_RULE_ANSWER = 3;
+
    public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
    }
@@ -74,18 +78,17 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
    static function getEnumAssociateRule() {
       return [
-         'none'      => __('none', 'formcreator'),
-         'specific'  => __('Specific asset', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+         self::ASSOCIATE_RULE_NONE      => __('none', 'formcreator'),
+         self::ASSOCIATE_RULE_SPECIFIC  => __('Specific asset', 'formcreator'),
+         self::ASSOCIATE_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
    /**
     * Show the Form for the adminsitrator to edit in the config page
     *
-    * @param  Array  $options Optional options
-    *
-    * @return NULL         Nothing, just display the form
+    * @param  array  $options Optional options
+    * @return void
     */
    public function showForm($options = []) {
       global $CFG_GLPI, $DB;
@@ -813,11 +816,11 @@ EOS;
             $('#associate_question_value').hide();
 
             switch($('#dropdown_associate_rule$rand').val()) {
-               case 'answer' :
+               case self::ASSOCIATE_RULE_ANSWER :
                   $('#associate_question_title').show();
                   $('#associate_question_value').show();
                   break;
-               case 'specific':
+               case self::ASSOCIATE_RULE_SPECIFIC:
                   $('#associate_specific_title').show();
                   $('#associate_specific_value').show();
                   break;
@@ -877,7 +880,7 @@ JAVASCRIPT;
 
    protected function setTargetAssociatedItem($data, $formanswer) {
       switch ($this->fields['associate_rule']) {
-         case 'answer':
+         case self::ASSOCIATE_RULE_ANSWER:
             // find the itemtype of the associated item
             $associateQuestion = $this->fields['associate_question'];
             $question = new PluginFormcreatorQuestion();
@@ -902,7 +905,7 @@ JAVASCRIPT;
             }
             break;
 
-         case 'specific':
+         case self::ASSOCIATE_RULE_SPECIFIC:
             $targetTicketFk = self::getForeignKeyField();
             $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
             $targetTicketId = $this->getID();
@@ -1080,11 +1083,11 @@ JAVASCRIPT;
 
    private function saveAssociatedItems($input) {
       switch ($input['associate_rule']) {
-         case 'answer':
+         case self::ASSOCIATE_RULE_ANSWER:
             $input['associate_question'] = $input['_associate_question'];
             break;
 
-         case 'specific':
+         case self::ASSOCIATE_RULE_SPECIFIC:
             $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
             $itemTargetTicket->deleteByCriteria([
                'NOT' => ['itemtype' => [
