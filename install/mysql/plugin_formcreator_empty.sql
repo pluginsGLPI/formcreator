@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `tag_type` int(11) NOT NULL DEFAULT '1',
   `tag_questions` varchar(255) NOT NULL,
   `tag_specifics` varchar(255) NOT NULL,
-  `category_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `category_rule` int(11) NOT NULL DEFAULT '1',
   `category_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `due_date_period` int(11) DEFAULT NULL,
   `urgency_rule` int(11) DEFAULT '1',
   `urgency_question` int(11) NOT NULL DEFAULT '0',
-  `location_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `location_rule` int(11) NOT NULL DEFAULT '1',
   `location_question` int(11) NOT NULL DEFAULT '0',
   `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
   `destination_entity` int(11) NOT NULL DEFAULT '1',
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `tag_type` int(11) NOT NULL DEFAULT '1',
   `tag_questions` varchar(255) NOT NULL,
   `tag_specifics` varchar(255) NOT NULL,
-  `category_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `category_rule` int(11) NOT NULL DEFAULT '1',
   `category_question` int(11) NOT NULL DEFAULT '0',
   `associate_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
   `associate_question` int(11) NOT NULL DEFAULT '0',
