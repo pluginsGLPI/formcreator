@@ -67,8 +67,8 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $new_question->getFromDBByCrit([
           'AND' => [
               'name'                           => 'test clone question 1',
-              'NOT'                            => ['uuid' => $question->getField('uuid')],  // operator <> available in GLPI 9.3+ only
-              'plugin_formcreator_sections_id' => $question->getField('plugin_formcreator_sections_id')
+              'NOT'                            => ['uuid' => $question->fields['uuid']],  // operator <> available in GLPI 9.3+ only
+              'plugin_formcreator_sections_id' => $question->fields['plugin_formcreator_sections_id']
           ]
       ]);
       $this->boolean($new_question->isNewItem())->isFalse();
