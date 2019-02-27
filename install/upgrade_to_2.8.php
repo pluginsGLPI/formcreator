@@ -167,6 +167,36 @@ class PluginFormcreatorUpgradeTo2_8 {
             ],
             ['after' => 'due_date_period']
          );
+
+         // Remove enum for destination_entity
+         $this->enumToInt(
+            $table,
+            'destination_entity',
+            [
+               'current'                  => 1,
+               'requester'                => 2,
+               'requester_dynamic_first'  => 3,
+               'requester_dynamic_last'   => 4,
+               'form'                     => 5,
+               'validator'                => 6,
+               'specific'                 => 7,
+               'user'                     => 8,
+               'entity'                   => 9,
+            ]
+         );
+
+         // Remove enum for urgency_rule
+         $this->enumToInt(
+            $table,
+            'tag_type',
+            [
+               'none'                   => 1,
+               'questions'              => 2,
+               'specifics'              => 3,
+               'questions_and_specific' => 4,
+               'questions_or_specific'  => 5,
+            ]
+         );
       }
    }
 

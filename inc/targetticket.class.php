@@ -394,13 +394,13 @@ EOS;
          $input['content'] = Html::entity_decode_deep($input['content']);
 
          switch ($input['destination_entity']) {
-            case 'specific' :
+            case self::DESTINATION_ENTITY_SPECIFIC :
                $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
                break;
-            case 'user' :
+            case self::DESTINATION_ENTITY_USER :
                $input['destination_entity_value'] = $input['_destination_entity_value_user'];
                break;
-            case 'entity' :
+            case self::DESTINATION_ENTITY_ENTITY :
                $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
                break;
             default :
