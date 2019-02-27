@@ -130,6 +130,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    const TAG_TYPE_QUESTIONS_AND_SPECIFIC = 4;
    const TAG_TYPE_QUESTIONS_OR_SPECIFIC = 5;
 
+   const CATEGORY_RULE_NONE = 1;
+   const CATEGORY_RULE_SPECIFIC = 2;
+   const CATEGORY_RULE_ANSWER = 3;
+
+   const LOCATION_RULE_NONE = 1;
+   const LOCATION_RULE_SPECIFIC = 2;
+   const LOCATION_RULE_ANSWER = 3;
+
    static function getEnumDestinationEntity() {
       return [
          self::DESTINATION_ENTITY_CURRENT   => __('Current active entity', 'formcreator'),
@@ -172,17 +180,17 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    static function getEnumCategoryRule() {
       return [
-         'none'      => __('Category from template or none', 'formcreator'),
-         'specific'  => __('Specific category', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+         self::CATEGORY_RULE_NONE      => __('Category from template or none', 'formcreator'),
+         self::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
+         self::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
    static function getEnumLocationRule() {
       return [
-         'none'      => __('Location from template or none', 'formcreator'),
-         'specific'  => __('Specific location', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+         self::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
+         self::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
+         self::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
@@ -356,7 +364,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
       global $DB;
 
       switch ($this->fields['category_rule']) {
-         case 'answer':
+         case self::CATEGORY_RULE_ANSWER:
             $category = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -367,7 +375,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             ])->next();
             $category = $category['answer'];
             break;
-         case 'specific':
+         case self::CATEGORY_RULE_SPECIFIC:
             $category = $this->fields['category_question'];
             break;
          default:
@@ -825,11 +833,11 @@ EOS;
             $('#category_question_value').hide();
 
             switch($('#dropdown_category_rule$rand').val()) {
-               case 'answer' :
+               case '3' :
                   $('#category_question_title').show();
                   $('#category_question_value').show();
                   break;
-               case 'specific' :
+               case '2' :
                   $('#category_specific_title').show();
                   $('#category_specific_value').show();
                   break;
@@ -1655,11 +1663,11 @@ EOS;
             $('#location_question_value').hide();
 
             switch($('#dropdown_location_rule$rand').val()) {
-               case 'answer' :
+               case self::LOCATION_RULE_ANSWER :
                   $('#location_question_title').show();
                   $('#location_question_value').show();
                   break;
-               case 'specific':
+               case self::LOCATION_RULE_SPECIFIC:
                   $('#location_specific_title').show();
                   $('#location_specific_value').show();
                   break;

@@ -420,10 +420,10 @@ EOS;
          }
 
          switch ($input['category_rule']) {
-            case 'answer':
+            case self::CATEGORY_RULE_ANSWER:
                $input['category_question'] = $input['_category_question'];
                break;
-            case 'specific':
+            case self::CATEGORY_RULE_SPECIFIC:
                $input['category_question'] = $input['_category_specific'];
                break;
             default:
@@ -431,10 +431,10 @@ EOS;
          }
 
          switch ($input['location_rule']) {
-            case 'answer':
+            case self::LOCATION_RULE_ANSWER:
                $input['location_question'] = $input['_location_question'];
                break;
-            case 'specific':
+            case self::LOCATION_RULE_SPECIFIC:
                $input['location_question'] = $input['_location_specific'];
                break;
             default:
@@ -770,7 +770,7 @@ EOS;
       global $DB;
 
       switch ($this->fields['location_rule']) {
-         case 'answer':
+         case self::LOCATION_RULE_ANSWER:
             $location = $DB->request([
                'SELECT' => ['answer'],
                'FROM'   => PluginFormcreatorAnswer::getTable(),
@@ -781,7 +781,7 @@ EOS;
             ])->next();
             $location = $location['answer'];
             break;
-         case 'specific':
+         case self::LOCATION_RULE_SPECIFIC:
             $location = $this->fields['location_question'];
             break;
          default:

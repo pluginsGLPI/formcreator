@@ -421,10 +421,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          switch ($input['category_rule']) {
-            case 'answer':
+            case self::CATEGORY_RULE_ANSWER:
                $input['category_question'] = $input['_category_question'];
                break;
-            case 'specific':
+            case self::CATEGORY_RULE_SPECIFIC:
                $input['category_question'] = $input['_category_specific'];
                break;
             default:
