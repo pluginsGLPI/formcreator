@@ -467,7 +467,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                if ($answer->isNewItem()) {
                   continue 2;
                } else {
-                  $userIds = [$answer->getField('answer')];
+                  $userIds = [$answer->fields['answer']];
                }
                $notify  = $actor['use_notification'];
                break;
