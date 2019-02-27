@@ -197,7 +197,28 @@ class PluginFormcreatorUpgradeTo2_8 {
                'questions_or_specific'  => 5,
             ]
          );
+
+         // Remove enum for category_rule
+         $this->enumToInt(
+            $table,
+            'category_rule',
+            [
+               'none'      => 1,
+               'specific'  => 2,
+               'answer'    => 3,
+            ]
+         );
       }
+
+      $this->enumToInt(
+         'glpi_plugin_formcreator_targettickets',
+         'location_rule',
+         [
+            'none'      => 1,
+            'specific'  => 2,
+            'answer'    => 3,
+         ]
+      );
    }
 
    /**
