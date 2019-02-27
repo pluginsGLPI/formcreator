@@ -147,7 +147,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'current',
+         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_CURRENT,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -165,7 +165,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'requester',
+         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -182,7 +182,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'requester_dynamic_first',
+         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_FIRST,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -218,7 +218,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'requester_dynamic_last',
+         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_LAST,
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -240,7 +240,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'specific',
+         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_SPECIFIC,
          'destination_entity_value' => "$entityId",
       ]);
       $instance->getFromDB($targetTicket->getID());
@@ -260,7 +260,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
-         'destination_entity' => 'form',
+         'destination_entity' => \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_FORM,
          'destination_entity_value' => '0',
       ]);
       $form->update([
