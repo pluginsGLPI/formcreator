@@ -43,15 +43,11 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       $additions .= __('Default values');
       $additions .= '</label>';
       $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '<textarea name="default_values" id="default_values" rows="4" cols="40"'
-         .'style="width: 90%">'
+      $additions .= '<td width="80%" colspan="3">';
+      $additions .= '<textarea name="default_values" id="default_values" rows="4" cols="40">'
          .Html::entities_deep($this->getValueForDesign())
          .'</textarea>';
-      $additions .= '</td>';
-      $additions .= '<td>';
-      $additions .= '</td>';
-      $additions .= '<td>';
+      $additions .= Html::initEditorSystem('default_values', '', false);
       $additions .= '</td>';
       $additions .= '</tr>';
 

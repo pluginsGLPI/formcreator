@@ -45,7 +45,6 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';
       $additions .= __('Default values');
-      $additions .= '<small>('.__('One per line', 'formcreator').')</small>';
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
