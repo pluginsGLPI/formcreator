@@ -2440,8 +2440,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $form_table       = PluginFormcreatorForm::getTable();
       $formFk           = PluginFormcreatorForm::getForeignKeyField();
       $table_fp         = PluginFormcreatorForm_Profile::getTable();
-      $formProfileFk    = PluginFormcreatorFormProfile::getForeignKeyField();
-      $entitiesestrict  = (new DBUtils())->getEntitiesRestrictCrit($form_table, '', '', true, false);
+      $formProfileFk    = PluginFormcreatorForm_Profile::getForeignKeyField();
+      $entitiesRestrict  = (new DBUtils())->getEntitiesRestrictCriteria($form_table, '', '', true, false);
       $language   = $_SESSION['glpilanguage'];
 
       // Show form whithout category
