@@ -66,5 +66,8 @@ class PluginFormcreatorUpgradeTo2_8 {
          'id' => $plugin->getID(),
          'name' => 'Form Creator',
       ]);
+
+      // Add ticket type
+      $migration->addField($table, 'ticket_type', 'integer', ['after' => 'tickettemplates_id']);
    }
 }

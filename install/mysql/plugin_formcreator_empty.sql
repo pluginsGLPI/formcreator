@@ -193,6 +193,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `tickettemplates_id` int(11) DEFAULT NULL,
+  `ticket_type` int(11) DEFAULT NULL,
   `content` longtext,
   `due_date_rule` enum('answer','ticket','calcul') DEFAULT NULL,
   `due_date_question` int(11) DEFAULT NULL,

@@ -386,6 +386,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       $keys = [
          'title',
          'content',
+         'ticket_type',
          'due_date_rule',
          'due_date_question',
          'due_date_value',

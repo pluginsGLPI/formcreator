@@ -35,6 +35,13 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 {
+   public static function getEnumTicketType() {
+      return [
+         Ticket::INCIDENT_TYPE  => __('Incident', 'formcreator'),
+         Ticket::DEMAND_TYPE   => __('Request', 'formcreator'),
+      ];
+   }
+
    public static function getTypeName($nb = 1) {
       return _n('Target ticket', 'Target tickets', $nb, 'formcreator');
    }
@@ -140,8 +147,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $this->showDestinationEntitySetings($rand);
 
       echo '<tr class="line1">';
-      $this->showTemplateSettings($rand);
+      $this->showTypeSettings($rand);
       $this->showDueDateSettings($form, $rand);
+      echo '</tr>';
+
+      echo '<tr class="line0">';
+      $this->showTemplateSettings($rand);
+      echo '<td></td><td></td>';
       echo '</tr>';
 
       // -------------------------------------------------------------------------------------------
@@ -213,6 +225,26 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       $this->showTagsList();
       echo '</div>';
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @param integer $rand random value for generated HTML
+    * @return void
+    */
+   protected function showTypeSettings($rand) {
+      echo '<td width="15%">' . __('Ticket type', 'formcreator') . '</td>';
+      echo '<td width="25%">';
+      Dropdown::showFromArray(
+         'ticket_type',
+         self::getEnumTicketType(),
+         [
+            'name'  => 'ticket_type',
+            'value' => $this->fields['ticket_type']
+         ]
+      );
+      echo '</td>';
    }
 
    /**
@@ -542,6 +574,43 @@ EOS;
    }
 
    /**
+    * prepare data from a ticket template
+    *
+    * @return array
+    */
+   private function getDataFromTemplate() {
+      // Get predefined Fields
+      $ttp                  = new TicketTemplatePredefinedField();
+      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
+      if (isset($predefined_fields['_users_id_requester'])) {
+         $this->addActor('requester', $predefined_fields['_users_id_requester'], true);
+         unset($predefined_fields['_users_id_requester']);
+      }
+      if (isset($predefined_fields['_users_id_observer'])) {
+         $this->addActor('observer', $predefined_fields['_users_id_observer'], true);
+         unset($predefined_fields['_users_id_observer']);
+      }
+      if (isset($predefined_fields['_users_id_assign'])) {
+         $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
+         unset($predefined_fields['_users_id_assign']);
+      }
+      if (isset($predefined_fields['_groups_id_requester'])) {
+         $this->addGroupActor('assigned', $predefined_fields['_groups_id_requester']);
+         unset($predefined_fields['_groups_id_requester']);
+      }
+      if (isset($predefined_fields['_groups_id_observer'])) {
+         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
+         unset($predefined_fields['_groups_id_observer']);
+      }
+      if (isset($predefined_fields['_groups_id_assign'])) {
+         $this->addGroupActor('assigned', $predefined_fields['_groups_id_assign']);
+         unset($predefined_fields['_groups_id_assign']);
+      }
+
+      return $predefined_fields;
+   }
+
+   /**
     * Save form data to the target
     *
     * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
@@ -600,38 +669,7 @@ EOS;
       $answer  = new PluginFormcreatorAnswer();
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
-
-      // Get predefined Fields
-      $ttp                  = new TicketTemplatePredefinedField();
-      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
-
-      if (isset($predefined_fields['_users_id_requester'])) {
-         $this->addActor('requester', $predefined_fields['_users_id_requester'], true);
-         unset($predefined_fields['_users_id_requester']);
-      }
-      if (isset($predefined_fields['_users_id_observer'])) {
-         $this->addActor('observer', $predefined_fields['_users_id_observer'], true);
-         unset($predefined_fields['_users_id_observer']);
-      }
-      if (isset($predefined_fields['_users_id_assign'])) {
-         $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
-         unset($predefined_fields['_users_id_assign']);
-      }
-
-      if (isset($predefined_fields['_groups_id_requester'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_requester']);
-         unset($predefined_fields['_groups_id_requester']);
-      }
-      if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
-         unset($predefined_fields['_groups_id_observer']);
-      }
-      if (isset($predefined_fields['_groups_id_assign'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_assign']);
-         unset($predefined_fields['_groups_id_assign']);
-      }
-
-      $data = array_merge($data, $predefined_fields);
+      $data = array_merge($data, $this->getDataFromTemplate());
 
       // Parse data
       // TODO: generate instances of all answers of the form and use them for the fullform computation
@@ -656,6 +694,7 @@ EOS;
 
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
+      $data['type'] = $this->fields['ticket_type'];
 
       $this->prepareActors($form, $formanswer);
 
