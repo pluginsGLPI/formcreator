@@ -90,6 +90,7 @@ if (isset($_REQUEST['id'])
 
    // If user was not authenticated, remove temporary user
    if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
+      session_write_close();
       unset($_SESSION['glpiname']);
    }
 
