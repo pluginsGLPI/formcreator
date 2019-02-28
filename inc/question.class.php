@@ -1182,7 +1182,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       ]);
 
       $questions = [];
-      foreach($result as $row) {
+      foreach ($result as $row) {
          $question = new self();
          $question->getFromDB($row['id']);
          $questions[$row['id']] = $question;
