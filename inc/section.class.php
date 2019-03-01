@@ -33,10 +33,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreatorExportableInterface
+class PluginFormcreatorSection extends PluginFormcreatorCommonOrdered implements PluginFormcreatorExportableInterface
 {
-   static public $itemtype = "PluginFormcreatorForm";
-   static public $items_id = "plugin_formcreator_forms_id";
+   static public $containerItemtype = PluginFormcreatorForm::class;
 
    /**
     * Check if current user have the right to create and modify requests
@@ -90,15 +89,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       }
 
       // Get next order
-      $formId = $input['plugin_formcreator_forms_id'];
-      $maxOrder = PluginFormcreatorCommon::getMax($this, [
-         "plugin_formcreator_forms_id" => $formId
-      ], 'order');
-      if ($maxOrder === null) {
-         $input['order'] = 1;
-      } else {
-         $input['order'] = $maxOrder + 1;
-      }
+      $input['order'] = $this->getNextOrder($input['plugin_formcreator_forms_id']);
 
       return $input;
    }

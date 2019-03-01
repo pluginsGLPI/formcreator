@@ -33,9 +33,10 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreatorExportableInterface {
-   static public $itemtype = PluginFormcreatorSection::class;
-   static public $items_id = 'plugin_formcreator_sections_id';
+class PluginFormcreatorQuestion extends PluginFormcreatorCommonOrdered implements
+   PluginFormcreatorExportableInterface
+{
+   static public $containerItemtype = PluginFormcreatorSection::class;
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private $field = null;
@@ -404,14 +405,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
 
       // Get next order
-      $maxOrder = PluginFormcreatorCommon::getMax($this, [
-         "plugin_formcreator_sections_id" => $input['plugin_formcreator_sections_id']
-      ], 'order');
-      if ($maxOrder === null) {
-         $input['order'] = 1;
-      } else {
-         $input['order'] = $maxOrder + 1;
-      }
+      $input['order'] = $this->getNextOrder($input['plugin_formcreator_sections_id']);
 
       return $input;
    }
@@ -445,30 +439,10 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       if (isset($input[$sectionFk])) {
          // If change section, reorder questions
-         if ($input[$sectionFk] != $this->fields[$sectionFk]) {
-            $oldId = $this->fields[$sectionFk];
-            $newId = $input[$sectionFk];
-            $order = $this->fields['order'];
-            // Reorder other questions from the old section
-            $DB->update(
-               self::getTable(),
-               new QueryExpression("`order` = `order` - 1"),
-               [
-                  'order' => ['>', $order],
-                  $sectionFk => $oldId,
-               ]
-            );
-
-            // Get the order for the new section
-            $maxOrder = PluginFormcreatorCommon::getMax($this, [
-               $sectionFk => $newId
-            ], 'order');
-            if ($maxOrder === null) {
-               $input['order'] = 1;
-            } else {
-               $input['order'] = $maxOrder + 1;
-            }
-         }
+         $input['order'] = $this->changeContainer(
+            $this->fields[static::$containerItemtype],
+            $input[static::$containerItemtype]
+         );
       }
 
       return $input;

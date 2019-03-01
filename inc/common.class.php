@@ -117,30 +117,6 @@ class PluginFormcreatorCommon {
    }
 
    /**
-    * Get the maximum value of a column for a given itemtype
-    * @param CommonDBTM $item
-    * @param array $condition
-    * @param string $fieldName
-    * @return NULL|integer
-    */
-   public static function getMax(CommonDBTM $item, array $condition, $fieldName) {
-      global $DB;
-
-      $line = $DB->request([
-         'SELECT' => [$fieldName],
-         'FROM'   => $item::getTable(),
-         'WHERE'  => $condition,
-         'ORDER'  => "$fieldName DESC",
-         'LIMIT'  => 1
-      ])->next();
-
-      if ($line === false) {
-         return null;
-      }
-      return (int) $line[$fieldName];
-   }
-
-   /**
     * Prepare keywords for a fulltext search in boolean mode
     * takes into account strings in double quotes
     *

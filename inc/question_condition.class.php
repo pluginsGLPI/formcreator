@@ -33,10 +33,10 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion_Condition extends CommonDBChild implements PluginFormcreatorExportableInterface
+class PluginFormcreatorQuestion_Condition extends PluginFormcreatorCommonOrdered implements
+   PluginFormcreatorExportableInterface
 {
-   static public $itemtype = PluginFormcreatorQuestion::class;
-   static public $items_id = 'plugin_formcreator_questions_id';
+   static public $containerItemtype = PluginFormcreatorQuestion::class;
 
    const SHOW_LOGIC_AND = 1;
    const SHOW_LOGIC_OR = 2;
@@ -54,6 +54,9 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
             || empty($input['uuid'])) {
          $input['uuid'] = plugin_formcreator_getUuid();
       }
+
+      // Get next order
+      $input['order'] = $this->getNextOrder($input['plugin_formcreator_questions_id']);
 
       return $input;
    }
