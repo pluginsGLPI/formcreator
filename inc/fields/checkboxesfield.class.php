@@ -120,7 +120,7 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
          $input[$key] = [];
       } else {
          if (!is_array($input[$key])) {
-            return false;
+            $input[$key] = [$input[$key]];
          }
       }
 
