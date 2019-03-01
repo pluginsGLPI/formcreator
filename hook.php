@@ -224,7 +224,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
                   foreach ($item->getClosedStatusArray() as $status) {
                      unset($tocheck[$status]);
                   }
-                  unset($tocheck[PluginFormcreator::STATUS_REFUSED]);
+                  unset($tocheck[PluginFormcreatorFormAnswer::STATUS_REFUSED]);
 
                   $tocheck = array_keys($tocheck);
                   break;
