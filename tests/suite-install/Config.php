@@ -108,6 +108,7 @@ class Config extends CommonTestCase {
 
       // Check the version saved in configuration
       $this->checkConfig();
+      $this->testPluginName();
 
       // Enable debug mode for enrollment messages
       \Config::setConfigurationValues($pluginname, ['debug_enrolment' => '1']);
@@ -128,6 +129,7 @@ class Config extends CommonTestCase {
 
       // Check the version saved in configuration
       $this->checkConfig();
+      $this->testPluginName();
 
       $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
       while ($fresh_table = $fresh_tables->next()) {
@@ -151,6 +153,13 @@ class Config extends CommonTestCase {
          $update_diff = array_diff($updated_idx, $fresh_idx);
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
+   }
+
+
+   public function testPluginName() {
+      $plugin = new \Plugin();
+      $plugin->getFromDBbyDir(TEST_PLUGIN_NAME);
+      $this->string($plugin->fields['name'])->isEqualTo('Form Creator');
    }
 
    public function checkConfig() {
