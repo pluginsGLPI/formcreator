@@ -36,6 +36,14 @@ class PluginFormcreatorUpgradeTo2_8 {
    public function upgrade(Migration $migration) {
       global $DB;
 
+      // Rename the plugin
+      $plugin = new Plugin();
+      $plugin->getFromDBbyDir('formcreator');
+      $success = $plugin->update([
+         'id' => $plugin->getID(),
+         'name' => 'Form Creator',
+      ]);
+
       $migration->changeField(
          'glpi_plugin_formcreator_targetchanges_actors',
          'actor_type',
