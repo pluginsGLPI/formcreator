@@ -73,12 +73,6 @@ class PluginFormcreatorCommon {
       $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
    }
 
-   public static function getGlpiVersion() {
-      return defined('GLPI_PREVER')
-             ? GLPI_PREVER
-             : GLPI_VERSION;
-   }
-
    /**
     * Get Link Name
     *

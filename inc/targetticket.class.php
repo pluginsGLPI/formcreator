@@ -745,22 +745,13 @@ EOS;
            'content'                         => $message,
            '_do_not_compute_takeintoaccount' => true
          ];
-         if (class_exists(ITILFollowup::class)) {
-            // GLPI 9.4+
-            $followUpInput += [
-               'items_id' => $ticketID,
-               'itemtype' => Ticket::class,
-            ];
-            $ticketFollowup = new ITILFollowup();
-            $ticketFollowup->add($followUpInput);
-         } else {
-            // GLPI < 9.4
-            $followUpInput += [
-               'tickets_id' => $ticketID,
-            ];
-            $ticketFollowup = new TicketFollowup();
-            $ticketFollowup->add($followUpInput);
-         }
+         // GLPI 9.4+
+         $followUpInput += [
+            'items_id' => $ticketID,
+            'itemtype' => Ticket::class,
+         ];
+         $ticketFollowup = new ITILFollowup();
+         $ticketFollowup->add($followUpInput);
 
          // Restore mail notification setting
          PluginFormcreatorCommon::setNotification($use_mailing);
