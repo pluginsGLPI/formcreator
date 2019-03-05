@@ -364,7 +364,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             static::getTable(),
             [
                $formFk => $item->getID(),
-               'is_deleted' => 0,
             ]
          );
          return self::createTabEntry(self::getTypeName($number), $number);
