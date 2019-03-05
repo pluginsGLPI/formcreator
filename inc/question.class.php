@@ -1320,6 +1320,12 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             $row['uuid']);
 
       $row['_skip_checks'] = true;
+
+      // escape text fields
+      foreach (['name', 'description'] as $key) {
+         $row[$key] = $DB->escape($row[$key]);
+      }
+
       $newQuestion_id = $newQuestion->add($row);
       if ($newQuestion_id === false) {
          return false;

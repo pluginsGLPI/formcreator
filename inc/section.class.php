@@ -169,6 +169,12 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
+
+      // escape text fields
+      foreach (['name'] as $key) {
+         $row[$key] = $DB->escape($row[$key]);
+      }
+
       $newSection_id = $newSection->add($row);
       if ($newSection_id === false) {
          return false;
