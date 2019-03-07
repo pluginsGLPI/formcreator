@@ -1922,37 +1922,28 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       if ($DB->tableExists($formTable)
           && $DB->tableExists($formProfileTable)
           && isset($_SESSION['glpiactiveprofile']['id'])) {
-         $entitiesRestrict = (new DBUtils())->getEntitiesRestrictCriteria(
-            $formTable, '', '', true, false
-         );
-         $result = $DB->request([
-            'SELECT' => ['COUNT' => ["$formTable.id"]],
-            'FROM' => $formTable,
-            'WHERE' => [
-               "$formTable.is_active" => '1',
-               "$formTable.is_deleted" => '0',
-               $entitiesRestrict,
-               [
-                  'OR' => [
-                     "$formTable.language" => ['0', '', null],
-                     "$formTable.language" => $_SESSION['glpilanguage']
-                  ]
-               ],
-               [
-                  'OR' => [
-                     "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                     "$formTable.'id'" => new QuerySubQuery([
-                        'SELECT' => $formFk,
-                        'FROM' => $formProfileTable,
-                        'WHERE' => [
-                           'profiles_id' => $_SESSION['glpiactiveprofile']['id']
-                        ]
-                     ]),
+         $nb = (new DBUtils())->countElementsInTableForMyEntities(
+            $formTable,
+            [
+               'WHERE' => [
+                  "$formTable.is_active" => '1',
+                  "$formTable.is_deleted" => '0',
+                  "$formTable.language" => [$_SESSION['glpilanguage'], '0', '', null],
+                  [
+                     'OR' => [
+                        "$formTable.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                        "$formTable.id" => new QuerySubQuery([
+                           'SELECT' => $formFk,
+                           'FROM' => $formProfileTable,
+                           'WHERE' => [
+                              'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+                           ]
+                        ]),
+                     ],
                   ],
                ],
-            ],
-         ]);
-         list($nb) = $result->next();
+            ]
+         );
       }
 
       return $nb;
