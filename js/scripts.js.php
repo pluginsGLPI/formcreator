@@ -543,22 +543,22 @@ function moveSection(token, section_id, action) {
 
 
 // === TARGETS ===
-function addTarget(items_id, token) {
+function plugin_formcreator_addTarget(items_id, token) {
    modalWindow.load(rootDoc + '/plugins/formcreator/ajax/target.php', {
       form_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
 }
 
-function deleteTarget(items_id, token, target_id) {
+function plugin_formcreator_deleteTarget(itemtype, target_id, token) {
    if(confirm("<?php echo Toolbox::addslashes_deep(__('Are you sure you want to delete this destination:', 'formcreator')); ?> ")) {
       jQuery.ajax({
-        url: rootDoc + '/plugins/formcreator/front/target.form.php',
+        url: rootDoc + '/plugins/formcreator/front/form.form.php',
         type: "POST",
         data: {
             delete_target: 1,
-            id: target_id,
-            plugin_formcreator_forms_id: items_id,
+            itemtype: itemtype,
+            items_id: target_id,
             _glpi_csrf_token: token
          }
       }).done(function () {

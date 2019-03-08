@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
@@ -306,10 +306,6 @@ msgid "Target"
 msgid_plural "Targets"
 msgstr[0] "Cible"
 msgstr[1] "Cibles"
-
-#: inc/form_profile.class.php:78
-msgid "Access type"
-msgstr "Accès"
 
 #: inc/form_profile.class.php:93
 msgid "Link to the form"

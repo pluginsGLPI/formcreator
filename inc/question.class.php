@@ -1219,25 +1219,31 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       return $questions;
    }
 
-   public static function dropdownForForm($formId, $crit, $name, $value) {
+   /**
+    * get questions of a form grouped by section name and filtered by criteria
+    *
+    * @param integer $formId
+    * @param array $crit additional slection criterias criterias
+    * @return array 1st level is the section name, 2nd level is id and name of the question
+    */
+   public function getQuestionsFromFormBySection($formId, $crit = []) {
       global $DB;
 
-      $table_question = PluginFormcreatorQuestion::getTable();
-      $table_section  = PluginFormcreatorSection::getTable();
-      $sectionFk      = PluginFormcreatorSection::getForeignKeyField();
-      $formFk         = PluginFormcreatorForm::getForeignKeyField();
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable  = PluginFormcreatorSection::getTable();
+      $sectionFk     = PluginFormcreatorSection::getForeignKeyField();
+      $formFk        = PluginFormcreatorForm::getForeignKeyField();
       $result = $DB->request([
          'SELECT' => [
-            "$table_question.id AS qid",
-            "$table_question.name AS qname",
-            "$table_section.name AS sname",
+            $questionTable => ['id as qid', 'name as qname'],
+            $sectionTable => ['name as sname'],
          ],
-         'FROM' => $table_question,
+         'FROM' => $questionTable,
          'LEFT JOIN' => [
-            $table_section => [
+            $sectionTable => [
                'FKEY' => [
-                  $table_question => $sectionFk,
-                  $table_section => 'id',
+                  $questionTable => $sectionFk,
+                  $sectionTable => 'id',
                ],
             ],
          ],
@@ -1245,8 +1251,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             'AND' => [$formFk => $formId] + $crit,
          ],
          'ORDER' => [
-            "$table_section.order",
-            "$table_question.order",
+            "$sectionTable.order",
+            "$questionTable.order",
          ]
       ]);
 
@@ -1258,6 +1264,12 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $items[$question['sname']][$question['qid']] = $question['qname'];
       }
 
+      return $items;
+   }
+
+   public static function dropdownForForm($formId, $crit, $name, $value) {
+      $question = new self();
+      $items = $question->getQuestionsFromFormBySection($formId, $crit);
       Dropdown::showFromArray($name, $items, []);
    }
 }

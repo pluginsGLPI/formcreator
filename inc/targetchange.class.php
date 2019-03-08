@@ -143,7 +143,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    /**
     * Import a form's target change into the db
-    * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
     * @param  array   $target_data the targetchange data (match the targetticket table)
@@ -223,32 +222,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $rand = mt_rand();
 
-      $target = $DB->request([
-         'FROM'    => PluginFormcreatorTarget::getTable(),
-         'WHERE'   => [
-            'itemtype' => __CLASS__,
-            'items_id' => (int) $this->getID()
-         ]
-      ])->next();
-
-      $form = new PluginFormcreatorForm();
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
-      $form->getFromDB($target[$formFk]);
+      $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
-
-      // General information: name
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
-
-      echo '<tr class="line1">';
-      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '"/></td>';
-      echo '</tr>';
-
-      echo '</table>';
+      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
 
       // change information: title, template...
       echo '<table class="tab_cadre_fixe">';
@@ -257,7 +234,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Change title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"></textarea></td>';
+      echo '<td colspan="3"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '"></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
@@ -333,7 +310,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<tr class="line1">';
       echo '<td colspan="5" class="center">';
       echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
+               onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
       echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
       echo '</td>';
@@ -346,22 +323,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $this->showActorsSettings();
 
       // List of available tags
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="5">' . __('List of available tags') . '</th></tr>';
-      echo '<tr>';
-      echo '<th width="40%" colspan="2">' . _n('Question', 'Questions', 1, 'formcreator') . '</th>';
-      echo '<th width="20%">' . __('Title') . '</th>';
-      echo '<th width="20%">' . _n('Answer', 'Answers', 1, 'formcreator') . '</th>';
-      echo '<th width="20%">' . _n('Section', 'Sections', 1, 'formcreator') . '</th>';
-      echo '</tr>';
-
-      echo '<tr class="line0">';
-      echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center"><code>-</code></td>';
-      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
-      echo '<td align="center">-</td>';
-      echo '</tr>';
 
       $this->showTagsList();
       echo '</div>';
@@ -387,8 +348,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       if (!isset($input['_skip_checks'])
             || !$input['_skip_checks']) {
          // - name is required
-         if (empty($input['title'])) {
-            Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
+         if (empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
 
@@ -449,6 +410,23 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       }
 
       return parent::prepareInputForUpdate($input);
+   }
+
+   /**
+    * Hook for pre_purge of the item.
+    * GLPI does not provides pre_purgeItem, this is emulated with
+    * the hook pre_purge_item
+    *
+    * @param CommonDBTM $item
+    * @return boolean
+    */
+    public function pre_purgeItem() {
+      if (!parent::pre_purgeItem()) {
+         $this->input = false;
+         return false;
+      }
+
+      return true;
    }
 
    /**

@@ -142,6 +142,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
+  `plugin_formcreator_forms_id` int(11) NOT NULL,
   `content` longtext,
   `impactcontent` longtext,
   `controlistcontent` longtext,
@@ -162,6 +163,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `tag_specifics` varchar(255) NOT NULL,
   `category_rule` int(11) NOT NULL DEFAULT '1',
   `category_question` int(11) NOT NULL DEFAULT '0',
+  `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -177,21 +179,10 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges_actors` (
   INDEX `plugin_formcreator_targetchanges_id` (`plugin_formcreator_targetchanges_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_forms_id` int(11) NOT NULL,
-  `itemtype` varchar(100) NOT NULL DEFAULT 'PluginFormcreatorTargetTicket',
-  `items_id` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `uuid` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`),
-  INDEX `itemtype_items_id` (`itemtype`, `items_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
+  `plugin_formcreator_forms_id` int(11) NOT NULL,
   `tickettemplates_id` int(11) DEFAULT NULL,
   `content` longtext,
   `due_date_rule` int(11) DEFAULT '1',
@@ -212,6 +203,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `category_question` int(11) NOT NULL DEFAULT '0',
   `associate_rule` int(11) NOT NULL DEFAULT '1',
   `associate_question` int(11) NOT NULL DEFAULT '0',
+  `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
