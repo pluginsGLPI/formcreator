@@ -54,6 +54,9 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
    protected $form = null;
 
+   /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
+   protected $skipCreateActors = false;
+
    abstract public function export($remove_uuid = false);
 
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
@@ -1134,7 +1137,11 @@ SCRIPT;
       $itemActor = $this->getItem_Actor();
       $itemActorTable = $itemActor::getTable();
       $fk = self::getForeignKeyField();
-      $actors = ['requester' => [], 'observer' => [], 'assigned' => []];
+      $actors = [
+         PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER => [],
+         PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER => [],
+         PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED => [],
+      ];
       $result = $DB->request([
          'SELECT' => ['id', 'actor_role', 'actor_type', 'actor_value', 'use_notification'],
          'FROM' => $itemActorTable,
@@ -1195,7 +1202,7 @@ SCRIPT;
 
       // => Add requester form
       echo '<form name="form_target" id="form_add_requester" method="post" style="display:none" action="'
-           . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
+           . static::getFormURL() . '">';
 
       $dropdownItems = ['' => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
       unset($dropdownItems['supplier']);
@@ -1287,7 +1294,7 @@ SCRIPT;
       Html::closeForm();
 
       // => List of saved requesters
-      foreach ($actors['requester'] as $id => $values) {
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
@@ -1337,7 +1344,7 @@ SCRIPT;
 
       // => Add observer form
       echo '<form name="form_target" id="form_add_watcher" method="post" style="display:none" action="'
-           . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
+           . static::getFormURL() . '">';
 
       $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
       unset($dropdownItems['supplier']);
@@ -1426,7 +1433,7 @@ SCRIPT;
       Html::closeForm();
 
       // => List of saved observers
-      foreach ($actors['observer'] as $id => $values) {
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
@@ -1476,7 +1483,7 @@ SCRIPT;
 
       // => Add assigned to form
       echo '<form name="form_target" id="form_add_assigned" method="post" style="display:none" action="'
-            . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetchange.form.php">';
+            . static::getFormURL() . '">';
 
       $dropdownItems = [''  => Dropdown::EMPTY_VALUE] + $itemActor::getEnumActorType();
       Dropdown::showFromArray(
@@ -1589,7 +1596,7 @@ SCRIPT;
       Html::closeForm();
 
       // => List of saved assigned to
-      foreach ($actors['assigned'] as $id => $values) {
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
@@ -1811,6 +1818,17 @@ SCRIPT;
       return $data;
    }
 
+   public function prepareInputForAdd($input) {
+      if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
+         $this->skipCreateActors = true;
+      }
+      // generate a unique id
+      if (!isset($input['uuid'])
+          || empty($input['uuid'])) {
+         $input['uuid'] = plugin_formcreator_getUuid();
+      }
+   }
+
    public function prepareInputForUpdate($input) {
       global $DB;
 
@@ -1840,6 +1858,26 @@ SCRIPT;
       }
 
       return $input;
+   }
+
+   public function post_addItem() {
+      if (!$this->skipCreateActors) {
+         $target_actor = $this->getItem_Actor();
+         $myFk = self::getForeignKeyField();
+         $target_actor->add([
+            $myFk                => $this->getID(),
+            'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+            'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
+            'use_notification'   => '1',
+         ]);
+         $target_actor = $this->getItem_Actor();
+         $target_actor->add([
+            $myFk                 => $this->getID(),
+            'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+            'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
+            'use_notification'    => '1',
+         ]);
+      }
    }
 
    protected static function getDeleteImage($id) {
