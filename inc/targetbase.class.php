@@ -819,14 +819,15 @@ EOS;
       echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
       echo '<td width="25%">';
       Dropdown::showFromArray(
-            'category_rule',
-            static::getEnumCategoryRule(),
-            [
-               'value'     => $this->fields['category_rule'],
-               'on_change' => 'change_category()',
-               'rand'      => $rand,
-            ]);
-      $script = <<<EOS
+         'category_rule',
+         static::getEnumCategoryRule(),
+         [
+            'value'     => $this->fields['category_rule'],
+            'on_change' => 'change_category()',
+            'rand'      => $rand,
+         ]
+      );
+      $script = <<<SCRIPT
          function change_category() {
             $('#category_specific_title').hide();
             $('#category_specific_value').hide();
@@ -845,7 +846,7 @@ EOS;
             }
          }
          change_category();
-EOS;
+SCRIPT;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
@@ -953,7 +954,11 @@ EOS;
             ]
          );
 
-         $script = <<<EOS
+         $tagTypeQuestions = self::TAG_TYPE_QUESTIONS;
+         $tagTypeSpecifics = self::TAG_TYPE_SPECIFICS;
+         $tagTypeQuestionAndSpecific = self::TAG_TYPE_QUESTIONS_AND_SPECIFIC;
+         $tagTypeQuestinOrSpecific = self::TAG_TYPE_QUESTIONS_OR_SPECIFIC;
+         $script = <<<SCRIPT
             function change_tag_type() {
                $('#tag_question_title').hide();
                $('#tag_specific_title').hide();
@@ -961,16 +966,16 @@ EOS;
                $('#tag_specific_value').hide();
 
                switch($('#dropdown_tag_type$rand').val()) {
-                  case 'questions' :
+                  case $tagTypeQuestions :
                      $('#tag_question_title').show();
                      $('#tag_question_value').show();
                      break;
-                  case 'specifics' :
+                  case $tagTypeSpecifics :
                      $('#tag_specific_title').show();
                      $('#tag_specific_value').show();
                      break;
-                  case 'questions_and_specific' :
-                  case 'questions_or_specific' :
+                  case $tagTypeQuestionAndSpecific :
+                  case $tagTypeQuestinOrSpecific :
                      $('#tag_question_title').show();
                      $('#tag_specific_title').show();
                      $('#tag_question_value').show();
@@ -979,7 +984,7 @@ EOS;
                }
             }
             change_tag_type();
-EOS;
+SCRIPT;
 
          echo Html::scriptBlock($script);
          echo '</td>';
@@ -1285,35 +1290,35 @@ EOS;
       foreach ($actors['requester'] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
-            case 'creator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
                echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
-            case 'validator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
                break;
-            case 'person' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
                $user = new User();
                $user->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
                break;
-            case 'question_person' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
-            case 'question_group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'question_actors':
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS:
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
@@ -1424,35 +1429,35 @@ EOS;
       foreach ($actors['observer'] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
-            case 'creator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
                echo $img_user . ' <b>' . __('Form requester', 'formcreator') . '</b>';
                break;
-            case 'validator' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR :
                echo $img_user . ' <b>' . __('Form validator', 'formcreator') . '</b>';
                break;
-            case 'person' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON :
                $user = new User();
                $user->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('User') . ' </b> "' . $user->getName() . '"';
                break;
-            case 'question_person' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Person from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP :
                $group = new Group();
                $group->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Group') . ' </b> "' . $group->getName() . '"';
                break;
-            case 'question_group' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_group . ' <b>' . __('Group from the question', 'formcreator')
                . '</b> "' . $question->getName() . '"';
                break;
-            case 'question_actors' :
+            case PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS :
                $question = new PluginFormcreatorQuestion();
                $question->getFromDB($values['actor_value']);
                echo $img_user . ' <b>' . __('Actors from the question', 'formcreator')
@@ -1656,7 +1661,9 @@ EOS;
          'on_change'             => 'change_location()',
          'rand'                  => $rand
       ]);
-      $script = <<<JAVASCRIPT
+      $locationRuleAnswer = self::CATEGORY_RULE_ANSWER;
+      $locationRuleSpecific = self::CATEGORY_RULE_SPECIFIC;
+      $script = <<<SCRIPT
          function change_location() {
             $('#location_specific_title').hide();
             $('#location_specific_value').hide();
@@ -1664,18 +1671,18 @@ EOS;
             $('#location_question_value').hide();
 
             switch($('#dropdown_location_rule$rand').val()) {
-               case self::LOCATION_RULE_ANSWER :
+               case $locationRuleAnswer :
                   $('#location_question_title').show();
                   $('#location_question_value').show();
                   break;
-               case self::LOCATION_RULE_SPECIFIC:
+               case $locationRuleSpecific :
                   $('#location_specific_title').show();
                   $('#location_specific_value').show();
                   break;
             }
          }
          change_location();
-JAVASCRIPT;
+SCRIPT;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
