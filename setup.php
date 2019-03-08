@@ -126,19 +126,23 @@ function plugin_init_formcreator() {
 
    // hook to update issues when an operation occurs on a ticket
    $PLUGIN_HOOKS['item_add']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_add_ticket'
+      Ticket::class => 'plugin_formcreator_hook_add_ticket'
    ];
    $PLUGIN_HOOKS['item_update']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_update_ticket'
+      Ticket::class => 'plugin_formcreator_hook_update_ticket'
    ];
    $PLUGIN_HOOKS['item_delete']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_delete_ticket'
+      Ticket::class => 'plugin_formcreator_hook_delete_ticket'
    ];
    $PLUGIN_HOOKS['item_restore']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_restore_ticket'
+      Ticket::class => 'plugin_formcreator_hook_restore_ticket'
    ];
    $PLUGIN_HOOKS['item_purge']['formcreator'] = [
-      'Ticket' => 'plugin_formcreator_hook_purge_ticket'
+      Ticket::class => 'plugin_formcreator_hook_purge_ticket'
+   ];
+   $PLUGIN_HOOKS['pre_item_purge']['formcreator'] = [
+      PluginFormcreatorTargetTicket::class => 'plugin_formcreator_hook_pre_purge_targetTicket',
+      PluginFormcreatorTargetChange::class => 'plugin_formcreator_hook_pre_purge_targetChange'
    ];
 
    $plugin = new Plugin();

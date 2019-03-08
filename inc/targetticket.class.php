@@ -90,36 +90,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @param  array  $options Optional options
     * @return void
     */
-   public function showForm($options = []) {
+   public function showForm($ID, $options = []) {
       global $CFG_GLPI, $DB;
 
       $rand = mt_rand();
 
-      $target = $DB->request([
-         'FROM'    => PluginFormcreatorTarget::getTable(),
-         'WHERE'   => [
-            'itemtype' => __CLASS__,
-            'items_id' => (int) $this->getID()
-         ]
-      ])->next();
-
-      $form = new PluginFormcreatorForm();
-      $form->getFromDB($target['plugin_formcreator_forms_id']);
+      $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
-      echo '<form name="form_target" method="post" action="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/front/targetticket.form.php">';
-
-      // General information: name
-      echo '<table class="tab_cadre_fixe">';
-
-      echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
-
-      echo '<tr class="line1">';
-      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $target['name'] . '" /></td>';
-      echo '</tr>';
-
-      echo '</table>';
+      echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
 
       // Ticket information: title, template...
       echo '<table class="tab_cadre_fixe">';
@@ -128,7 +107,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="title" style="width:704px;" value="' . $this->fields['name'] . '"/></td>';
+      echo '<td colspan="3"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '"/></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
@@ -203,7 +182,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<tr class="line1">';
       echo '<td colspan="5" class="center">';
       echo '<input type="reset" name="reset" class="submit_button" value="' . __('Cancel', 'formcreator') . '"
-               onclick="document.location = \'form.form.php?id=' . $target['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
+               onclick="document.location = \'form.form.php?id=' . $this->fields['plugin_formcreator_forms_id'] . '\'" /> &nbsp; ';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
       echo '<input type="submit" name="update" class="submit_button" value="' . __('Save') . '" />';
       echo '</td>';
@@ -371,7 +350,7 @@ SCRIPT;
     * @param array $input datas used to add the item
     *
     * @return array the modified $input array
-   */
+    */
    public function prepareInputForUpdate($input) {
       global $CFG_GLPI;
 
@@ -379,8 +358,8 @@ SCRIPT;
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
          // - name is required
-         if (empty($input['title'])) {
-            Session::addMessageAfterRedirect(__('The title cannot be empty!', 'formcreator'), false, ERROR);
+         if (empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
 
@@ -463,6 +442,31 @@ SCRIPT;
    }
 
    /**
+    * Hook for pre_purge of the item.
+    * GLPI does not provides pre_purgeItem, this is emulated with
+    * the hook pre_purge_item
+    *
+    * @param CommonDBTM $item
+    * @return boolean
+    */
+    public function pre_purgeItem() {
+      if (!parent::pre_purgeItem()) {
+         $this->input = false;
+         return false;
+      }
+
+      // delete targets linked to this instance
+      $myFk = static::getForeignKeyField();
+      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
+      if (!$item_targetTicket->deleteByCriteria([$myFk  => $this->getID()])) {
+         $this->input = false;
+         return false;
+      }
+
+      return true;
+   }
+
+   /**
     * Save links to other items for composite tickets
     * @param array $input form data
     *
@@ -518,26 +522,6 @@ SCRIPT;
       }
 
       return $input;
-   }
-
-   public function pre_deleteItem() {
-      // delete actors related to this instance
-      $targetTicketActor = new PluginFormcreatorTargetTicket_Actor();
-      $success = $targetTicketActor->deleteByCriteria([
-         'plugin_formcreator_targettickets_id' => $this->getID(),
-      ]);
-
-      // delete targets linked to this instance
-      $item_targetTicket = new PluginFormcreatorItem_TargetTicket();
-      $success |= $item_targetTicket->deleteByCriteria([
-         'plugin_formcreator_targettickets_id'  => $this->getID(),
-      ]);
-      $success |= $item_targetTicket->deleteByCriteria([
-         'itemtype'  => $this->getID(),
-         'items_id'  => $this->getID(),
-      ]);
-
-      return $success;
    }
 
    /**
@@ -792,40 +776,40 @@ SCRIPT;
       echo '<td width="45%">';
       Dropdown::showFromArray('associate_rule', static::getEnumAssociateRule(), [
          'value'                 => $this->fields['associate_rule'],
-         'on_change'             => 'change_associate()',
+         'on_change'             => 'plugin_formcreator_change_associate()',
          'rand'                  => $rand
       ]);
       $ruleAnswer = self::ASSOCIATE_RULE_ANSWER;
       $ruleSpecific = self::ASSOCIATE_RULE_SPECIFIC;
       $script = <<<SCRIPT
-         function change_associate() {
-            $('#associate_specific_title').hide();
-            $('#associate_specific_value').hide();
-            $('#associate_question_title').hide();
-            $('#associate_question_value').hide();
+         function plugin_formcreator_change_associate() {
+            $('#plugin_formcreator_associate_specific_title').hide();
+            $('#plugin_formcreator_associate_specific_value').hide();
+            $('#plugin_formcreator_associate_question_title').hide();
+            $('#plugin_formcreator_associate_question_value').hide();
 
             switch($('#dropdown_associate_rule$rand').val()) {
-               case $ruleAnswer:
-                  $('#associate_question_title').show();
-                  $('#associate_question_value').show();
+               case '$ruleAnswer':
+                  $('#plugin_formcreator_associate_question_title').show();
+                  $('#plugin_formcreator_associate_question_value').show();
                   break;
-               case $ruleSpecific:
-                  $('#associate_specific_title').show();
-                  $('#associate_specific_value').show();
+               case '$ruleSpecific':
+                  $('#plugin_formcreator_associate_specific_title').show();
+                  $('#plugin_formcreator_associate_specific_value').show();
                   break;
             }
          }
-         change_associate();
+         plugin_formcreator_change_associate();
 SCRIPT;
       echo Html::scriptBlock($script);
       echo '</td>';
       echo '<td width="15%">';
-      echo '<span id="associate_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
-      echo '<span id="associate_specific_title" style="display: none">' . __('Item ', 'formcreator') . '</span>';
+      echo '<span id="plugin_formcreator_associate_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="plugin_formcreator_associate_specific_title" style="display: none">' . __('Item ', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
 
-      echo '<div id="associate_specific_value" style="display: none">';
+      echo '<div id="plugin_formcreator_associate_specific_value" style="display: none">';
       $options = json_decode($this->fields['associate_question'], true);
       if (!is_array($options)) {
          $options = [];
@@ -842,26 +826,17 @@ SCRIPT;
       }
       Item_Ticket::itemAddForm(new Ticket(), $options);
       echo '</div>';
-      echo '<div id="associate_question_value" style="display: none">';
+      echo '<div id="plugin_formcreator_associate_question_value" style="display: none">';
       // select all user questions (GLPI Object)
-      $ticketTypes = implode("' ,'", $CFG_GLPI["ticket_types"]);
-      $query2 = "SELECT q.id, q.name, q.values
-                FROM glpi_plugin_formcreator_questions q
-                INNER JOIN glpi_plugin_formcreator_sections s
-                  ON s.id = q.plugin_formcreator_sections_id
-                INNER JOIN glpi_plugin_formcreator_targets t
-                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
-                WHERE t.items_id = ".$this->getID()."
-                  AND q.fieldtype = 'glpiselect'
-                  AND q.values IN ('$ticketTypes')";
-      $result2 = $DB->query($query2);
-      $users_questions = [];
-      while ($question = $DB->fetch_array($result2)) {
-         $users_questions[$question['id']] = $question['name'];
-      }
-      Dropdown::showFromArray('_associate_question', $users_questions, [
-         'value' => $this->fields['associate_question'],
-      ]);
+      PluginFormcreatorQuestion::dropdownForForm(
+         $this->getForm()->getID(),
+         [
+            'fieldtype' => 'glpiselect',
+            'values' => $CFG_GLPI['ticket_types']
+         ],
+         '_associate_question',
+         $this->fields['associate_question']
+      );
       echo '</div>';
       echo '</td>';
       echo '</tr>';
@@ -912,7 +887,6 @@ SCRIPT;
 
    /**
     * Import a form's targetticket into the db
-    * @see PluginFormcreatorTarget::import
     *
     * @param  integer $targetitems_id  current id
     * @param  array   $target_data the targetticket data (match the targetticket table)

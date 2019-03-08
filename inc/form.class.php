@@ -583,6 +583,62 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $this->showFormButtons($options);
    }
 
+   public function showTargets($ID, $options = []) {
+      global $CFG_GLPI, $DB;
+
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr>';
+      echo '<th colspan="3">'._n('Destinations', 'Destinations', 2, 'formcreator').'</th>';
+      echo '</tr>';
+
+      $allTargets = $this->getTargetsFromForm();
+      $token = Session::getNewCSRFToken();
+      $i = 0;
+      foreach ($allTargets as $targetType => $targets) {
+         foreach ($targets as $targetId => $target) {
+            $i++;
+            echo '<tr class="line'.($i % 2).'">';
+            $targetItemUrl = Toolbox::getItemTypeFormURL($targetType) . '?id=' . $targetId;
+            echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
+
+            echo $target->fields['name'];
+            echo '</td>';
+
+            echo '<td align="center" width="32">';
+            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/edit.png"
+                     alt="*" title="'.__('Edit').'" ';
+            echo 'onclick="document.location=\'' . $targetItemUrl . '\'" align="absmiddle" style="cursor: pointer" /> ';
+            echo '</td>';
+
+            echo '<td align="center" width="32">';
+            echo '<img src="'.$CFG_GLPI['root_doc'].'/plugins/formcreator/pics/delete.png"
+                     alt="*" title="'.__('Delete', 'formcreator').'"
+                     onclick="plugin_formcreator_deleteTarget(\''. $target->getType() . '\', '.$targetId.', \''.$token.'\')" align="absmiddle" style="cursor: pointer" /> ';
+            echo '</td>';
+
+            echo '</tr>';
+         }
+      }
+
+      // Display add target link...
+      echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_row">';
+      echo '<td colspan="3">';
+      echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
+                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
+                '.__('Add a destination', 'formcreator').'
+            </a>';
+      echo '</td>';
+      echo '</tr>';
+
+      // OR display add target form
+      echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_form" style="display: none;">';
+      echo '<td colspan="3" id="add_target_form_td"></td>';
+      echo '</tr>';
+
+      echo "</table>";
+   }
+
    /**
     * Return the name of the tab for item including forms like the config page
     *
@@ -601,10 +657,27 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
             return self::createTabEntry(self::getTypeName($number), $number);
             break;
          case PluginFormcreatorForm::class:
-            return __('Preview');
+            $nb = 0;
+            foreach ($this->getTargetTypes() as $targetType) {
+               $nb += (new DbUtils())->countElementsInTable(
+                  $targetType::getTable(),
+                  [
+                     'WHERE' => [
+                        'plugin_formcreator_forms_id' => $item->getID(),
+                     ]
+                  ]
+               );
+            }
+            return [
+               1 => self::createTabEntry(
+                  _n('Target', 'Targets', Session::getPluralNumber(), 'formcreator'),
+                  $nb
+               ),
+               2 => __('Preview'),
+            ];
             break;
          case 'Central':
-            return _n('Form', 'Forms', 2, 'formcreator');
+            return _n('Form', 'Forms', Session::getPluralNumber(), 'formcreator');
             break;
       }
       return '';
@@ -630,9 +703,17 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       switch ($uri) {
          case "form.form.php":
-            echo '<div style="text-align: left">';
-            $item->displayUserForm($item);
-            echo '</div>';
+            switch ($tabnum) {
+               case 1:
+                  $item->showTargets($item->getID());
+                  break;
+
+               case 2:
+                  echo '<div style="text-align: left">';
+                  $item->displayUserForm($item);
+                  echo '</div>';
+                  break;
+            }
             break;
          case 'central.php':
             $form = new static();
@@ -647,7 +728,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginFormcreatorQuestion::class, $ong, $options);
       $this->addStandardTab(PluginFormcreatorForm_Profile::class, $ong, $options);
-      $this->addStandardTab(PluginFormcreatorTarget::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
       $this->addStandardTab(Log::class, $ong, $options);
@@ -1350,14 +1430,17 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
     * @return void
     */
    public function post_purgeItem() {
-      $target = new PluginFormcreatorTarget();
-      $target->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
-
-      $section = new PluginFormcreatorSection();
-      $section->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
-
-      $form_validator = new PluginFormcreatorForm_Validator();
-      $form_validator->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
+      $associated = [
+         PluginFormcreatorTargetTicket::class,
+         PluginFormcreatorTargetChange::class,
+         PluginFormcreatorSection::class,
+         PluginFormcreatorForm_Validator::class,
+         PluginFormcreatorForm_Profile::class,
+      ];
+      foreach ($associated as $itemtype) {
+         $item = new $itemtype();
+         $item->deleteByCriteria(['plugin_formcreator_forms_id' => $this->getID()]);
+      }
    }
 
    /**
@@ -1491,9 +1574,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    public function duplicate() {
       global $DB;
 
-      $target              = new PluginFormcreatorTarget();
-      $target_ticket       = new PluginFormcreatorTargetTicket();
-      $target_change       = new PluginFormcreatorTargetChange();
       $target_ticket_actor = new PluginFormcreatorTargetTicket_Actor();
       $target_change_actor = new PluginFormcreatorTargetChange_Actor();
       $form_section        = new PluginFormcreatorSection();
@@ -1630,191 +1710,167 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form targets
-      $t_rows = $DB->request([
-         'FROM'  => $target::getTable(),
-         'WHERE' => [
-            'plugin_formcreator_forms_id' => $old_form_id
-         ]
-      ]);
-      foreach ($t_rows as $target_values) {
-         unset($target_values['id'],
-               $target_values['uuid']);
-         $target_values['plugin_formcreator_forms_id'] = $new_form_id;
+      $all_targets = $this->getTargetsFromForm();
+      foreach ($all_targets as $targetType => $targets) {
+         foreach ($targets as $target) {
+            switch ($targetType) {
+               case PluginFormcreatorTargetTicket::class:
+                  // Get the original target ticket
+                  $target_ticket = $target;
 
-         // escape text fields
-         foreach (['name'] as $key) {
-            $target_values[$key] = $DB->escape($target_values[$key]);
-         }
-
-         if (!$target->add($target_values)) {
-            return false;
-         }
-
-         $new_target_item_id = $target->getField('items_id');
-         switch ($target_values['itemtype']) {
-            case PluginFormcreatorTargetTicket::class:
-               // Get the original target ticket
-               if (!$target_ticket->getFromDB($target_values['items_id'])) {
-                  return false;
-               }
-
-               // Update the target ticket created while cloning the target
-               $update_target_ticket = $target_ticket->fields;
-               $update_target_ticket['id'] = $new_target_item_id;
-               unset($update_target_ticket['uuid']);
-               foreach ($tab_questions as $id => $value) {
-                  $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
-                  $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
-                  $update_target_ticket['content'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['content']);
-                  $update_target_ticket['content'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['content']);
-               }
-
-               // update time to resolve rule
-               if ($update_target_ticket['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
-                   || $update_target_ticket['due_date_rule'] == 'calcul') {
-                  $update_target_ticket['due_date_question'] = $tab_questions[$update_target_ticket['due_date_question']];
-               }
-
-               // update urgency rule
-               if ($update_target_ticket['urgency_rule'] == 'answer') {
-                  $update_target_ticket['urgency_question'] = $tab_questions[$update_target_ticket['urgency_question']];
-               }
-
-               // update destination entity
-               if ($update_target_ticket['destination_entity'] == 'user'
-                   || $update_target_ticket['destination_entity'] == 'entity') {
-                  $update_target_ticket['destination_entity_value'] = $tab_questions[$update_target_ticket['destination_entity_value']];
-               }
-
-               //update category
-               if ($update_target_ticket['category_rule'] == 'answer') {
-                  $update_target_ticket['category_question'] = $tab_questions[$update_target_ticket['category_question']];
-               }
-
-               //update location
-               if ($update_target_ticket['location_rule'] == 'answer') {
-                  $update_target_ticket['location_question'] = $tab_questions[$update_target_ticket['location_question']];
-               }
-
-               $new_target_ticket = new PluginFormcreatorTargetTicket();
-               $update_target_ticket['title'] = Toolbox::addslashes_deep($update_target_ticket['name']);
-               $update_target_ticket['content'] = Toolbox::addslashes_deep($update_target_ticket['content']);
-               if (!$new_target_ticket->update($update_target_ticket)) {
-                  return false;
-               }
-               break;
-
-            case PluginFormcreatorTargetChange::class:
-               // Get the original target change
-               if (!$target_change->getFromDB($target_values['items_id'])) {
-                  return false;
-               }
-
-               // Update the target change created while cloning the target
-               $update_target_change = $target_change->fields;
-               $update_target_change['id'] = $new_target_item_id;
-               unset($update_target_change['uuid']);
-               foreach ($tab_questions as $id => $value) {
-                  $changeFields = [
-                     'name',
-                     'content',
-                     'impactcontent',
-                     'controlistcontent',
-                     'rolloutplancontent',
-                     'backoutplancontent',
-                     'checklistcontent'
-                  ];
-                  foreach ($changeFields as $changeField) {
-                     $update_target_change[$changeField] = str_replace(
-                        '##question_' . $id . '##',
-                        '##question_' . $value . '##',
-                        $update_target_change[$changeField]
-                     );
-                     $update_target_change[$changeField] = str_replace(
-                        '##answer_' . $id . '##',
-                        '##answer_' . $value . '##',
-                        $update_target_change[$changeField]
-                     );
+                  // Update the target ticket created while cloning the target
+                  $update_target_ticket = $target_ticket->fields;
+                  unset($update_target_ticket['id'], $update_target_ticket['uuid']);
+                  foreach ($tab_questions as $id => $value) {
+                     $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
+                     $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
+                     $update_target_ticket['content'] = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['content']);
+                     $update_target_ticket['content'] = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['content']);
                   }
-               }
 
-               // update time to resolve rule
-               if ($update_target_change['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
-                   || $update_target_change['due_date_rule'] == 'calcul') {
-                  $update_target_change['due_date_question'] = $tab_questions[$update_target_change['due_date_question']];
-               }
+                  // update time to resolve rule
+                  if ($update_target_ticket['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
+                      || $update_target_ticket['due_date_rule'] == 'calcul') {
+                     $update_target_ticket['due_date_question'] = $tab_questions[$update_target_ticket['due_date_question']];
+                  }
 
-               // update urgency rule
-               if ($update_target_change['urgency_rule'] == 'answer') {
-                  $update_target_change['urgency_question'] = $tab_questions[$update_target_change['urgency_question']];
-               }
+                  // update urgency rule
+                  if ($update_target_ticket['urgency_rule'] == 'answer') {
+                     $update_target_ticket['urgency_question'] = $tab_questions[$update_target_ticket['urgency_question']];
+                  }
 
-               // update destination entity
-               if ($update_target_change['destination_entity'] == 'user'
-                   || $update_target_change['destination_entity'] == 'entity') {
-                  $update_target_change['destination_entity_value'] = $tab_questions[$update_target_change['destination_entity_value']];
-               }
+                  // update destination entity
+                  if ($update_target_ticket['destination_entity'] == 'user'
+                      || $update_target_ticket['destination_entity'] == 'entity') {
+                     $update_target_ticket['destination_entity_value'] = $tab_questions[$update_target_ticket['destination_entity_value']];
+                  }
 
-               //update category
-               if ($update_target_change['category_rule'] == 'answer') {
-                  $update_target_change['category_question'] = $tab_questions[$update_target_change['category_question']];
-               }
+                  //update category
+                  if ($update_target_ticket['category_rule'] == 'answer') {
+                     $update_target_ticket['category_question'] = $tab_questions[$update_target_ticket['category_question']];
+                  }
 
-               $new_target_change = new PluginFormcreatorTargetChange();
-               $update_target_change['title'] = Toolbox::addslashes_deep($update_target_change['name']);
-               $update_target_change['content'] = Toolbox::addslashes_deep($update_target_change['content']);
-               if (!$new_target_change->update($update_target_change)) {
-                  return false;
-               }
-               break;
-         }
+                  //update location
+                  if ($update_target_ticket['location_rule'] == 'answer') {
+                     $update_target_ticket['location_question'] = $tab_questions[$update_target_ticket['location_question']];
+                  }
 
-         switch ($target_values['itemtype']) {
-            case PluginFormcreatorTargetTicket::class:
-               // Drop default actors
-               $target_ticket_actor->deleteByCriteria([
-                  'plugin_formcreator_targettickets_id' => $new_target_item_id
-               ]);
-
-               // Form target tickets actors
-               $tta_rows = $DB->request([
-                  'FROM'  => $target_ticket_actor::getTable(),
-                  'WHERE' => [
-                     'plugin_formcreator_targettickets_id' => $target_values['items_id']
-                  ]
-               ]);
-               foreach ($tta_rows as $tta_row) {
-                  unset($tta_row['id'],
-                        $tta_row['uuid']);
-                  $tta_row['plugin_formcreator_targettickets_id'] = $new_target_item_id;
-                  if (!$target_ticket_actor->add($tta_row)) {
+                  $new_target_ticket = new PluginFormcreatorTargetTicket();
+                  $update_target_ticket['title'] = Toolbox::addslashes_deep($update_target_ticket['name']);
+                  $update_target_ticket['content'] = Toolbox::addslashes_deep($update_target_ticket['content']);
+                  if (!$new_target_ticket->add($update_target_ticket)) {
                      return false;
                   }
-               }
-               break;
+                  break;
 
-            case PluginFormcreatorTargetChange::class:
-               // Drop default actors
-               $target_change_actor->deleteByCriteria([
-                  'plugin_formcreator_targetchanges_id' => $new_target_item_id
-               ]);
+               case PluginFormcreatorTargetChange::class:
+                  // Get the original target change
+                  $target_change = $target;
 
-               // Form target change actors
-               $tca_rows = $DB->request([
-                  'FROM'  => $target_change_actor::getTable(),
-                  'WHERE' => [
-                     'plugin_formcreator_targetchanges_id' => $target_values['items_id']
-                  ]
-               ]);
-               foreach ($tca_rows as $tca_row) {
-                  unset($tca_row['id'],
-                        $tca_row['uuid']);
-                  $tca_row['plugin_formcreator_targetchanges_id'] = $new_target_item_id;
-                  if (!$target_change_actor->add($tca_row)) {
+                  // Update the target change created while cloning the target
+                  $update_target_change = $target_change->fields;
+                  unset($update_target_change['id'], $update_target_change['uuid']);
+                  foreach ($tab_questions as $id => $value) {
+                     $changeFields = [
+                        'name',
+                        'content',
+                        'impactcontent',
+                        'controlistcontent',
+                        'rolloutplancontent',
+                        'backoutplancontent',
+                        'checklistcontent'
+                     ];
+                     foreach ($changeFields as $changeField) {
+                        $update_target_change[$changeField] = str_replace(
+                           '##question_' . $id . '##',
+                           '##question_' . $value . '##',
+                           $update_target_change[$changeField]
+                        );
+                        $update_target_change[$changeField] = str_replace(
+                           '##answer_' . $id . '##',
+                           '##answer_' . $value . '##',
+                           $update_target_change[$changeField]
+                        );
+                     }
+                  }
+
+                  // update time to resolve rule
+                  if ($update_target_change['due_date_rule'] == PluginFormcreatorTargetBase::DUE_DATE_RULE_ANSWER
+                      || $update_target_change['due_date_rule'] == 'calcul') {
+                     $update_target_change['due_date_question'] = $tab_questions[$update_target_change['due_date_question']];
+                  }
+
+                  // update urgency rule
+                  if ($update_target_change['urgency_rule'] == 'answer') {
+                     $update_target_change['urgency_question'] = $tab_questions[$update_target_change['urgency_question']];
+                  }
+
+                  // update destination entity
+                  if ($update_target_change['destination_entity'] == 'user'
+                      || $update_target_change['destination_entity'] == 'entity') {
+                     $update_target_change['destination_entity_value'] = $tab_questions[$update_target_change['destination_entity_value']];
+                  }
+
+                  //update category
+                  if ($update_target_change['category_rule'] == 'answer') {
+                     $update_target_change['category_question'] = $tab_questions[$update_target_change['category_question']];
+                  }
+
+                  $new_target_change = new PluginFormcreatorTargetChange();
+                  $update_target_change = Toolbox::addslashes_deep($update_target_change);
+                  if (!$new_target_change->add($update_target_change)) {
                      return false;
                   }
-               }
-               break;
+                  break;
+            }
+
+            switch ($targetType) {
+               case PluginFormcreatorTargetTicket::class:
+                  // Drop default actors
+                  $target_ticket_actor->deleteByCriteria([
+                     'plugin_formcreator_targettickets_id' => $new_target_item_id
+                  ]);
+
+                  // Form target tickets actors
+                  $tta_rows = $DB->request([
+                     'FROM'  => $target_ticket_actor::getTable(),
+                     'WHERE' => [
+                        'plugin_formcreator_targettickets_id' => $target_values['items_id']
+                     ]
+                  ]);
+                  foreach ($tta_rows as $tta_row) {
+                     unset($tta_row['id'],
+                           $tta_row['uuid']);
+                     $tta_row['plugin_formcreator_targettickets_id'] = $new_target_item_id;
+                     if (!$target_ticket_actor->add($tta_row)) {
+                        return false;
+                     }
+                  }
+                  break;
+
+               case PluginFormcreatorTargetChange::class:
+                  // Drop default actors
+                  $target_change_actor->deleteByCriteria([
+                     'plugin_formcreator_targetchanges_id' => $new_target_item_id
+                  ]);
+
+                  // Form target change actors
+                  $tca_rows = $DB->request([
+                     'FROM'  => $target_change_actor::getTable(),
+                     'WHERE' => [
+                        'plugin_formcreator_targetchanges_id' => $target_values['items_id']
+                     ]
+                  ]);
+                  foreach ($tca_rows as $tca_row) {
+                     unset($tca_row['id'],
+                           $tca_row['uuid']);
+                     $tca_row['plugin_formcreator_targetchanges_id'] = $new_target_item_id;
+                     if (!$target_change_actor->add($tca_row)) {
+                        return false;
+                     }
+                  }
+                  break;
+            }
          }
       }
 
@@ -1917,7 +1973,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $formTable        = PluginFormcreatorForm::getTable();
       $formFk           = PluginFormcreatorForm::getForeignKeyField();
       $formProfileTable = PluginFormcreatorForm_Profile::getTable();
-      $nb               = 0;
 
       if ($DB->tableExists($formTable)
           && $DB->tableExists($formProfileTable)
@@ -1964,7 +2019,6 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       $form           = $this->fields;
       $form_section   = new PluginFormcreatorSection;
-      $form_target    = new PluginFormcreatorTarget;
       $form_validator = new PluginFormcreatorForm_Validator;
       $form_profile   = new PluginFormcreatorForm_Profile;
 
@@ -2016,16 +2070,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       // get targets
       $form['_targets'] = [];
-      $all_target = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => $form_target::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
-         ]
-      ]);
-      foreach ($all_target as $target) {
-         $form_target->getFromDB($target['id']);
-         $form['_targets'][] = $form_target->export($remove_uuid);
+      $all_targets = $this->getTargetsFromForm();
+      foreach ($all_targets as $target) {
+         $form['_targets'][$target->getType()] = $target->export($remove_uuid);
       }
 
       // get profiles
@@ -2371,13 +2418,14 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       if ($forms_id
           && isset($form['_targets'])) {
          // delete old targets
-         $FormTarget = new PluginFormcreatorTarget();
-         $FormTarget->deleteByCriteria([
-            'plugin_formcreator_forms_id' => $forms_id,
-         ]);
-
-         foreach ($form['_targets'] as $target) {
-            PluginFormcreatorTarget::import($forms_id, $target);
+         foreach ((new self())->getTargetTypes() as $targetType) {
+            $target = new $targetType();
+            $target->deleteByCriteria([
+               'plugin_formcreator_forms_id' => $forms_id,
+            ]);
+            foreach ($form['_targets'][$targetType] as $targetData) {
+               $targetType::import($importLinker, $forms_id, $targetData);
+            }
          }
       }
 
@@ -2694,5 +2742,130 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       return $fields;
+   }
+
+   protected function getTargetTypes() {
+      return [
+         PluginFormcreatorTargetTicket::class,
+         PluginFormcreatorTargetChange::class
+      ];
+   }
+
+   /**
+    * get all targets associated to the form
+    *
+    * @param integer $formId
+    * @return array
+    */
+   public function getTargetsFromForm() {
+      global $DB;
+
+      $targets = [];
+      if ($this->isNewItem()) {
+         return $targets;
+      }
+
+      foreach ($this->getTargetTypes() as $targetType) {
+         $request = [
+            'SELECT' => 'id',
+            'FROM' => $targetType::getTable(),
+            'WHERE' => [
+               self::getForeignKeyField() => $this->getID(),
+            ]
+         ];
+         foreach ($DB->request($request) as $row) {
+            $target = new $targetType();
+            $target->getFromDB($row['id']);
+            $targets[$targetType][$row['id']] = $target;
+         }
+      }
+
+      return $targets;
+   }
+
+   public  function showAddTargetForm() {
+      echo '<form name="form_target" method="post" action="'.static::getFormURL().'">';
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th colspan="4">'.__('Add a destination', 'formcreator').'</th></tr>';
+
+      echo '<tr class="line1">';
+      echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
+      echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="30%">';
+      $targetTypes = [];
+      foreach ($this->getTargetTypes() as $targetType) {
+         $targetTypes[$targetType] = $targetType::getTypeName(1);
+      }
+      Dropdown::showFromArray(
+         'itemtype',
+         $targetTypes,
+         [
+            'display_emptychoice' => true
+         ]
+      );
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line0">';
+      echo '<td colspan="4" class="center">';
+      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.(int) $_REQUEST['form_id'].'" />';
+      echo '<input type="submit" name="add_target" class="submit_button" value="'.__('Add').'" />';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</table>';
+      Html::closeForm();
+   }
+
+   /**
+    * Add a target item to the form
+    *
+    * @param string $input
+    * @return integer|false ID of the new item or false on error
+    */
+   public function addTarget($input) {
+      $itemtype = $input['itemtype'];
+      if (!in_array($itemtype, $this->getTargetTypes())) {
+         Session::addMessageAfterRedirect(
+            __('Unsuported target type.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      // Check the form exists
+      $form = new self();
+      if (!$form->getFromDB($input[self::getForeignKeyField()])) {
+         // The linked form does not exists
+         Session::addMessageAfterRedirect(
+            __('The form does not exists.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      // Create the target
+      $item = new $itemtype();
+      unset($input['itemtype']);
+      return $item->add($input);
+   }
+
+   public function deleteTarget($input) {
+      $itemtype = $input['itemtype'];
+      if (!in_array($itemtype, $this->getTargetTypes())) {
+         Session::addMessageAfterRedirect(
+            __('Unsuported target type.', 'formcreator'),
+            false,
+            ERROR
+         );
+         return false;
+      }
+
+      $item = new $itemtype();
+      $item->delete(['id' => $input['items_id']]);
    }
 }

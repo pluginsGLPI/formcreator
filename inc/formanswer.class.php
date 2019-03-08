@@ -1033,26 +1033,24 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $success = true;
 
       // Get all targets
-      $found_targets = $DB->request([
-         'SELECT' => ['itemtype', 'items_id'],
-         'FROM'   => PluginFormcreatorTarget::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->fields['plugin_formcreator_forms_id']
-         ]
-      ]);
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $all_targets = $form->getTargetsFromForm();
+
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
+
       // Generate targets
       $generatedTargets = new PluginFormcreatorComposite(new PluginFormcreatorItem_TargetTicket(), new Ticket_Ticket());
-      foreach ($found_targets as $target) {
-         $targetObject = new $target['itemtype'];
-         $targetObject->getFromDB($target['items_id']);
-         $generatedTarget = $targetObject->save($this);
-         if ($generatedTarget === false) {
-            $success = false;
-            break;
+      foreach ($all_targets as $targetType => $targets) {
+         foreach ($targets as $targetObject) {
+            $generatedTarget = $targetObject->save($this);
+            if ($generatedTarget === false) {
+               $success = false;
+               break;
+            }
+            // Map [itemtype of the target] [item ID of the target] = ID of the generated target
+            $generatedTargets->addTarget($targetObject, $generatedTarget);
          }
-         // Map [itemtype of the target] [item ID of the target] = ID of the generated target
-         $generatedTargets->addTarget($targetObject, $generatedTarget);
       }
       $generatedTargets->buildCompositeRelations();
 

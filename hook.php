@@ -417,6 +417,14 @@ function plugin_formcreator_hook_purge_ticket(CommonDBTM $item) {
    }
 }
 
+function plugin_formcreator_hook_pre_purge_targetTicket(CommonDBTM $item) {
+   $item->pre_purgeItem();
+}
+
+function plugin_formcreator_hook_pre_purge_targetChange(CommonDBTM $item) {
+   $item->pre_purgeItem();
+}
+
 function plugin_formcreator_dynamicReport($params) {
    switch ($params['item_type']) {
       case PluginFormcreatorFormAnswer::class;

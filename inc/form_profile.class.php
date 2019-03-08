@@ -41,7 +41,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
    static public $items_id_2 = 'profiles_id';
 
    static function getTypeName($nb = 0) {
-      return _n('Target', 'Targets', $nb, 'formcreator');
+      return _n('Access type', 'Access types', $nb, 'formcreator');
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -73,7 +73,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation
       echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class    ='tab_cadre_fixe'>";
 
-      echo '<tr><th colspan="2">'.__('Access type', 'formcreator').'</th>';
+      echo '<tr><th colspan="2">'._n('Access type', 'Access types', 1, 'formcreator').'</th>';
       echo '</tr>';
       echo '<td>';
       Dropdown::showFromArray(

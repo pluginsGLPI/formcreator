@@ -39,36 +39,45 @@ if (!$plugin->isActivated("formcreator")) {
 
 $form = new PluginFormcreatorForm();
 
-if (isset($_POST["add"])) {
+if (isset($_POST['add'])) {
    // Add a new Form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $newID = $form->add($_POST);
+   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
-   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
-
-} else if (isset($_POST["update"])) {
+} else if (isset($_POST['update'])) {
    // Edit an existing form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->update($_POST);
    Html::back();
 
-} else if (isset($_POST["delete"])) {
+} else if (isset($_POST['delete'])) {
    // Delete a form (is_deleted = true)
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->delete($_POST);
    $form->redirectToList();
 
-} else if (isset($_POST["restore"])) {
+} else if (isset($_POST['restore'])) {
    // Restore a deleteted form (is_deleted = false)
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->restore($_POST);
    $form->redirectToList();
 
-} else if (isset($_POST["purge"])) {
+} else if (isset($_POST['purge'])) {
    // Delete defenitively a form from DB and all its datas
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->delete($_POST, 1);
    $form->redirectToList();
+
+} else if (isset($_POST['add_target'])) {
+   Session::checkRight('entity', UPDATE);
+   $form->addTarget($_POST);
+   Html::back();
+
+} else if (isset($_POST['delete_target'])) {
+   Session::checkRight('entity', UPDATE);
+   $form->deleteTarget($_POST);
+   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
 } else if (isset($_POST['filetype_create'])) {
    $documentType = new DocumentType();
@@ -86,9 +95,9 @@ if (isset($_POST["add"])) {
    }
    Html::back();
 
-} else if (isset($_GET["import_form"])) {
+} else if (isset($_GET['import_form'])) {
    // Import form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    Html::header(
       PluginFormcreatorForm::getTypeName(2),
       $_SERVER['PHP_SELF'],
@@ -102,9 +111,9 @@ if (isset($_POST["add"])) {
    $form->showImportForm();
    Html::footer();
 
-} else if (isset($_POST["import_send"])) {
+} else if (isset($_POST['import_send'])) {
    // Import form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->importJson($_REQUEST);
    Html::back();
 
@@ -142,7 +151,7 @@ if (isset($_POST["add"])) {
 
 } else {
    // Show forms form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
 
    Html::header(
       PluginFormcreatorForm::getTypeName(2),

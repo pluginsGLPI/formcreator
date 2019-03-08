@@ -45,14 +45,14 @@ class PluginFormcreatorUpgradeTo2_9 {
          'glpi_plugin_formcreator_targettickets',
          'glpi_plugin_formcreator_targetchanges'
       ];
-      $formFk = 'pluygin_formcreator_forms_id';
+      $formFk = 'plugin_formcreator_forms_id';
       foreach ($tables as $table) {
          $migration->addField($table, $formFk, 'integer', ['after' => 'name']);
          $migration->addField($table, 'uuid', 'string');
          $migration->migrationOneTable($table);
       }
       $request = [
-         'FROM' => 'glpi_plugin_formcreator_targettickets'
+         'FROM' => 'glpi_plugin_formcreator_targets'
       ];
       foreach ($DB->request($request) as $target) {
          switch ($target['itemtype']) {

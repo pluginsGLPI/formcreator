@@ -439,7 +439,6 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorQuestion_Condition',
          'PluginFormcreatorQuestion',
          'PluginFormcreatorSection',
-         'PluginFormcreatorTarget',
          'PluginFormcreatorTargetChange_Actor',
          'PluginFormcreatorTargetChange',
          'PluginFormcreatorTargetTicket_Actor',
