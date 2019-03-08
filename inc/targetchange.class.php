@@ -367,6 +367,12 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '</div>';
    }
 
+   public function prepareInputForAdd($input) {
+      $input = parent::prepareInputForAdd($input);
+
+      return $input;
+   }
+
    /**
     * Prepare input data for updating the target ticket
     *

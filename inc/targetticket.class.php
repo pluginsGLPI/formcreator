@@ -360,11 +360,7 @@ SCRIPT;
    }
 
    public function prepareInputForAdd($input) {
-      // generate a unique id
-      if (!isset($input['uuid'])
-          || empty($input['uuid'])) {
-         $input['uuid'] = plugin_formcreator_getUuid();
-      }
+      $input = parent::prepareInputForAdd($input);
 
       return $input;
    }

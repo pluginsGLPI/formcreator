@@ -172,15 +172,15 @@ class PluginFormcreatorTarget extends CommonDBTM
                   $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
                   $targetTicket_actor->add([
                      'plugin_formcreator_targettickets_id'  => $id_targetticket,
-                     'actor_role'                           => 'requester',
-                     'actor_type'                           => 'creator',
+                     'actor_role'                           => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+                     'actor_type'                           => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
                      'use_notification'                     => '1'
                   ]);
                   $targetTicket_actor = new PluginFormcreatorTargetTicket_Actor();
                   $targetTicket_actor->add([
                      'plugin_formcreator_targettickets_id'  => $id_targetticket,
-                     'actor_role'                           => 'observer',
-                     'actor_type'                           => 'validator',
+                     'actor_role'                           => PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+                     'actor_type'                           => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
                      'use_notification'                     => '1'
                   ]);
                }
