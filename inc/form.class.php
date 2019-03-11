@@ -1734,12 +1734,12 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       // replace dropdown ids
       if ($form['plugin_formcreator_categories_id'] > 0) {
          $form['_plugin_formcreator_category']
-            = Dropdown::getDropdownName('glpi_plugin_formcreator_categories',
+            = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
                                         $form['plugin_formcreator_categories_id']);
       }
       if ($form['entities_id'] > 0) {
          $form['_entity']
-            = Dropdown::getDropdownName('glpi_entities',
+            = Dropdown::getDropdownName(Entity::getTable(),
                                         $form['entities_id']);
       }
 
@@ -2028,24 +2028,49 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       set_time_limit(30);
 
       $form_obj = new self;
-      $entity   = new Entity;
-      $form_cat = new PluginFormcreatorCategory;
+
+      $forms_id = plugin_formcreator_getFromDBByField(
+         $form_obj,
+         'uuid',
+         $form['uuid']
+      );
 
       // retrieve foreign keys
-      if (!isset($form['_entity'])
-          || !$form['entities_id']
-             = plugin_formcreator_getFromDBByField($entity,
-                                                   'completename',
-                                                   $form['_entity'])) {
-         $form['entities_id'] = $_SESSION['glpiactive_entity'];
+      $entity = new Entity();
+      $entityFk = Entity::getForeignKeyField();
+      $entityId = $_SESSION['glpiactive_entity'];
+      if (isset($form['_entity'])) {
+         plugin_formcreator_getFromDBByField(
+            $entity,
+            'completename',
+            $form['_entity']
+         );
+         // Check rights on the destination entity of the form
+         if (!$entity->isNewItem() && $entity->canUpdateItem()) {
+            $entityId = $entity->getID();
+         } else {
+            if ($forms_id !== false) {
+               // The form is in an entity where we don't have UPDATE right
+               Session::addMessageAfterRedirect(
+                  sprintf(__('The form %1$s already exists and is in an unmodifiable entity.', 'formcreator'), $form['name']),
+                  false,
+                  WARNING
+               );
+               return false;
+            }
+         }
       }
-      if (!isset($form['_plugin_formcreator_categories_id'])
-          || !$form['_plugin_formcreator_categories_id']
-             = plugin_formcreator_getFromDBByField($form_cat,
-                                                   'completename',
-                                                   $form['_plugin_formcreator_category'])) {
-         $form['plugin_formcreator_categories_id'] = 0;
+      $form[$entityFk] = $entityId;
+
+      $formCategory = new PluginFormcreatorCategory();
+      $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
+      $formCategoryId = 0;
+      if (isset($form['_plugin_formcreator_category'])) {
+         $formCategoryId = $formCategory->import([
+            'completename' => $form['_plugin_formcreator_category'],
+         ]);
       }
+      $form[$formCategoryFk] = $formCategoryId;
 
       // escape text fields
       foreach (['name', 'description', 'content'] as $key) {
@@ -2053,9 +2078,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // retrieve form by its uuid
-      if ($forms_id = plugin_formcreator_getFromDBByField($form_obj,
-                                                          'uuid',
-                                                          $form['uuid'])) {
+      if (!$form_obj->isNewItem()) {
          // add id key
          $form['id'] = $forms_id;
 

@@ -364,7 +364,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             static::getTable(),
             [
                $formFk => $item->getID(),
-               'is_deleted' => 0,
             ]
          );
          return self::createTabEntry(self::getTypeName($number), $number);
@@ -965,8 +964,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * Update the answers
     *
-    * @param [type] $input
-    * @return void
+    * @param array $input
+    * @return boolean
     */
    public function updateAnswers($input) {
       $form = new PluginFormcreatorForm();
@@ -985,7 +984,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
-      $this->saveAnswers($form, $input, $fields);
+      return $this->saveAnswers($form, $input, $fields);
    }
 
    /**
@@ -1018,7 +1017,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
-
       return $this->saveAnswers($form, $input, $fields);
    }
 
@@ -1052,7 +1050,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          );
          $fields[$id]->parseAnswerValues($input);
       }
-
       return $this->saveAnswers($form, $input, $fields);
    }
 

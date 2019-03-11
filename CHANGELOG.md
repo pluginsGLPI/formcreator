@@ -1,3 +1,35 @@
+<a name="2.8.0"></a>
+# [2.8.0](https://github.com/pluginsglpi/formcreator/compare/v2.7.0...v2.8.0) (2019-03-06)
+
+
+### Bug Fixes
+
+* **checkboxesfield:** handle case when one option is selcted ([5cee1a5](https://github.com/pluginsglpi/formcreator/commit/5cee1a5))
+* **dropdownfield:** bad entity restriction ([e9c27dd](https://github.com/pluginsglpi/formcreator/commit/e9c27dd))
+* **dropdownfield:** bad subtree handling for ITIL category ([a62e764](https://github.com/pluginsglpi/formcreator/commit/a62e764))
+* **form:** fix anonymous file upload ([a13ec8b](https://github.com/pluginsglpi/formcreator/commit/a13ec8b))
+* **form:** import of entity and category ([2e3beea](https://github.com/pluginsglpi/formcreator/commit/2e3beea))
+* **formanswer:** use of non-eistent field for count ([fb30d55](https://github.com/pluginsglpi/formcreator/commit/fb30d55))
+* **glpiobject,dropdown:** formanswer must display name, not the ID ([db24ae9](https://github.com/pluginsglpi/formcreator/commit/db24ae9))
+* **install:** remvoe rename of the plugin from upgtrade to 2.7 ([6e03e21](https://github.com/pluginsglpi/formcreator/commit/6e03e21))
+* **install:** rename of the plugin in 2.8, not 2.7 ([e176d3c](https://github.com/pluginsglpi/formcreator/commit/e176d3c))
+* **issue:** rebuild of issues table ([eec8012](https://github.com/pluginsglpi/formcreator/commit/eec8012))
+* **question,section:** escaping bug on duplication ([971339f](https://github.com/pluginsglpi/formcreator/commit/971339f))
+* **questionrange,questionregex:** bad var names ([978a116](https://github.com/pluginsglpi/formcreator/commit/978a116))
+* **section:** escape questions to duplciate ([9786afa](https://github.com/pluginsglpi/formcreator/commit/9786afa))
+* **targetchange:** add users from question of type actors ([fcb357b](https://github.com/pluginsglpi/formcreator/commit/fcb357b))
+* **targetchange:** category not assigned ([7f840df](https://github.com/pluginsglpi/formcreator/commit/7f840df))
+* **wizard:** compatibility accross versions od font awesome ([2462ca4](https://github.com/pluginsglpi/formcreator/commit/2462ca4))
+* rename the plugin ([2f5c27f](https://github.com/pluginsglpi/formcreator/commit/2f5c27f)), closes [#1264](https://github.com/pluginsglpi/formcreator/issues/1264)
+
+
+### Features
+
+* **glpiselect:** add Project in the supported list ([eae0a3b](https://github.com/pluginsglpi/formcreator/commit/eae0a3b))
+* **issue:** add qtip for ticket types ([4edcd06](https://github.com/pluginsglpi/formcreator/commit/4edcd06))
+
+
+
 <a name="2.7.0"></a>
 # [2.7.0](https://github.com/pluginsglpi/formcreator/compare/v2.7.0-beta.2...v2.7.0) (2019-02-12)
 

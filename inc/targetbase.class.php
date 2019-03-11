@@ -203,26 +203,28 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
    }
 
    /**
-    * Undocumented function
+    * Set the entity of the target
     *
+    * @param array $data input data of the target
     * @param PluginFormcreatorFormAnswer $formanswer
     * @param integer $requesters_id ID of the requester of the answers
     * @return integer ID of the entity where the target must be generated
     */
-   protected function getTargetEntity(PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
+   protected function setTargetEntity($data, PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
       global $DB;
 
       $entityId = 0;
+      $entityFk = Entity::getForeignKeyField();
       switch ($this->fields['destination_entity']) {
          // Requester's entity
          case 'current' :
-            $entityId = $formanswer->fields[Entity::getForeignKeyField()];
+            $entityId = $formanswer->fields[$entityFk];
             break;
 
          case 'requester' :
             $userObj = new User();
             $userObj->getFromDB($requesters_id);
-            $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            $entityId = $userObj->fields[$entityFk];
             break;
 
          // Requester's first dynamic entity
@@ -244,7 +246,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
                $data_entities[] = $entity;
             }
             $first_entity = array_shift($data_entities);
-            $entityId = $first_entity[Entity::getForeignKeyField()];
+            $entityId = $first_entity[$entityFk];
             break;
 
          // Specific entity
@@ -254,14 +256,14 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
 
          // The form entity
          case 'form' :
-            $entityId = $formanswer->getForm()->fields[Entity::getForeignKeyField()];
+            $entityId = $formanswer->getForm()->fields[$entityFk];
             break;
 
          // The validator entity
          case 'validator' :
             $userObj = new User();
             $userObj->getFromDB($formanswer->fields['users_id_validator']);
-            $entityId = $userObj->fields[Entity::getForeignKeyField()];
+            $entityId = $userObj->fields[$entityFk];
             break;
 
          // Default entity of a user from the answer of a user's type question
@@ -279,7 +281,7 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             if ($user_id > 0) {
                $userObj = new User();
                $userObj->getFromDB($user_id);
-               $entityId = $userObj->fields[Entity::getForeignKeyField()];
+               $entityId = $userObj->fields[$entityFk];
             }
             break;
 
@@ -297,7 +299,36 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
             break;
       }
 
-      return $entityId;
+      $data[$entityFk] = $entityId;
+      return $data;
+   }
+
+   protected function setTargetCategory($data, $formanswer) {
+      global $DB;
+
+      switch ($this->fields['category_rule']) {
+         case 'answer':
+            $category = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $this->fields['category_question']
+               ]
+            ])->next();
+            $category = $category['answer'];
+            break;
+         case 'specific':
+            $category = $this->fields['category_question'];
+            break;
+         default:
+            $category = null;
+      }
+      if ($category !== null) {
+         $data['itilcategories_id'] = $category;
+      }
+
+      return $data;
    }
 
    /**
@@ -1006,7 +1037,6 @@ EOS;
 
       return $content;
    }
-
 
    protected function showLocationSettings($rand) {
       global $DB;

@@ -43,15 +43,11 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       if ($canEdit) {
          $required = $this->isRequired() ? ' required' : '';
 
-         echo '<input type="hidden" class="form-control"
-                  name="formcreator_field_' . $this->fields['id'] . '" value="" />' . PHP_EOL;
-
          echo Html::file([
             'name'    => 'formcreator_field_' . $this->fields['id'],
             'display' => false,
             'multiple' => 'multiple',
          ]);
-
       } else {
          $doc = new Document();
          $answer = $this->value;

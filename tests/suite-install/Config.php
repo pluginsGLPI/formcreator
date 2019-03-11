@@ -106,6 +106,10 @@ class Config extends CommonTestCase {
       $plugin->activate($plugin->fields['id']);
       $this->boolean($plugin->isActivated($pluginname))->isTrue('Cannot enable the plugin');
 
+      // Check the version saved in configuration
+      $this->checkConfig();
+      $this->testPluginName();
+
       // Enable debug mode for enrollment messages
       \Config::setConfigurationValues($pluginname, ['debug_enrolment' => '1']);
 
@@ -122,6 +126,10 @@ class Config extends CommonTestCase {
       global $DB;
 
       $pluginName = TEST_PLUGIN_NAME;
+
+      // Check the version saved in configuration
+      $this->checkConfig();
+      $this->testPluginName();
 
       $fresh_tables = $DB->listTables("glpi_plugin_${pluginName}_%");
       while ($fresh_table = $fresh_tables->next()) {
@@ -145,5 +153,21 @@ class Config extends CommonTestCase {
          $update_diff = array_diff($updated_idx, $fresh_idx);
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
+   }
+
+
+   public function testPluginName() {
+      $plugin = new \Plugin();
+      $plugin->getFromDBbyDir(TEST_PLUGIN_NAME);
+      $this->string($plugin->fields['name'])->isEqualTo('Form Creator');
+   }
+
+   public function checkConfig() {
+      // Check the version saved in configuration
+      $config = \Config::getConfigurationValues($pluginname);
+      $this->array($config)
+         ->hasKeys(['schema_version'])
+         ->size(1);
+      $this->string($config['schema_version'])->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    }
 }

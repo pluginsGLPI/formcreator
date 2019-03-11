@@ -169,6 +169,12 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $row = $this->fields;
       unset($row['id'],
             $row['uuid']);
+
+      // escape text fields
+      foreach (['name'] as $key) {
+         $row[$key] = $DB->escape($row[$key]);
+      }
+
       $newSection_id = $newSection->add($row);
       if ($newSection_id === false) {
          return false;
@@ -187,6 +193,12 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
                $row['uuid']);
          $row['plugin_formcreator_sections_id'] = $newSection_id;
          $row['_skip_checks'] = true;
+
+         // escape text fields
+         foreach (['name', 'description'] as $key) {
+            $row[$key] = $DB->escape($row[$key]);
+         }
+
          if (!$new_questions_id = $section_question->add($row)) {
             return false;
          }

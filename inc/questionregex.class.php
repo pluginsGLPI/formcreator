@@ -108,7 +108,7 @@ extends PluginFormcreatorQuestionParameter
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorImportLinker $importLinker, $questions_id = 0, $fieldName = '', $parameter = []) {
+   public static function import(PluginFormcreatorImportLinker $importLinker, $question_id = 0, $fieldName = '', $parameter = []) {
       global $DB;
 
       // escape text fields
@@ -116,6 +116,6 @@ extends PluginFormcreatorQuestionParameter
          $parameter[$key] = $DB->escape($parameter[$key]);
       }
 
-      parent::import($importLinker, $question_id, $fieldname, $parameter);
+      parent::import($importLinker, $question_id, $fieldName, $parameter);
    }
 }

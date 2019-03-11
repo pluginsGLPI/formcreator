@@ -21,8 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
+ *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -30,20 +29,26 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+class PluginFormcreatorUpgradeTo2_8 {
+   /**
+    * @param Migration $migration
+    */
+   public function upgrade(Migration $migration) {
+      global $DB;
 
-namespace GlpiPlugin\Formcreator\Tests;
+      // Rename the plugin
+      $plugin = new Plugin();
+      $plugin->getFromDBbyDir('formcreator');
+      $success = $plugin->update([
+         'id' => $plugin->getID(),
+         'name' => 'Form Creator',
+      ]);
 
-class PluginFormcreatorTargetChangeDummy extends \PluginFormcreatorTargetChange
-{
-   public static function getTable($classname = null) {
-      return \PluginFormcreatorTargetChange::getTable();
-   }
-
-   public function publicSetTargetEntity($data, \PluginFormcreatorFormAnswer $formanswer, $requesters_id) {
-      return $this->setTargetEntity($data, $formanswer, $requesters_id);
-   }
-
-   public function publicPrepareTemplate($template, \PluginFormcreatorFormAnswer $formAnswer, $disableRichText = false) {
-      return $this->prepareTemplate($template, $formAnswer, $disableRichText);
+      $migration->changeField(
+         'glpi_plugin_formcreator_targetchanges_actors',
+         'actor_type',
+         'actor_type',
+         "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
+      );
    }
 }

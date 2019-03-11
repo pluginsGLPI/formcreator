@@ -254,6 +254,11 @@ Features
          <compatibility>9.3</compatibility>
          <compatibility>9.4</compatibility>
       </version>
+      <version>
+         <num>2.8.0</num>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.4</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>ca_ES</lang>
@@ -268,6 +273,7 @@ Features
       <lang>es_ES</lang>
       <lang>es_MX</lang>
       <lang>fr_FR</lang>
+      <lang>fr_CA</lang>
       <lang>hu_HU</lang>
       <lang>it_IT</lang>
       <lang>lv_LV</lang>
@@ -275,6 +281,7 @@ Features
       <lang>nl_BE</lang>
       <lang>nl_NL</lang>
       <lang>pl_PL</lang>
+      <lang>pt_PT</lang>
       <lang>pt_BR</lang>
       <lang>ro_RO</lang>
       <lang>ru_RU</lang>

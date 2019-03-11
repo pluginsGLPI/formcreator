@@ -57,7 +57,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             $dparams = ['name'     => $fieldName,
                         'value'    => $this->value,
                         'comments' => false,
-                        'entity'   => $_SESSION['glpiactive_entity'],
+                        'entity'   => $_SESSION['glpiactiveentities'],
                         'rand'     => $rand];
 
             $dparams_cond_crit = [];
@@ -116,9 +116,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                            ItilCategory::getTable(),
                            $decodedValues['show_ticket_categories_root']
                         );
-                        $sons = "'" . implode("', '", $sons) . "'";
-                     $dparams['condition'] .= " AND `id` IN ('" . $decodedValues['show_ticket_categories_root'] . "')";
-                     $dparams_cond_crit['id'] = $decodedValues['show_ticket_categories_root'];
+                        //$sons = "'" . implode("', '", $sons) . "'";
+                     $dparams['condition'] .= " AND `id` IN ('" . implode("', '", $sons) . "')";
+                     $dparams_cond_crit['id'] = $sons;
                   }
                   break;
 
@@ -165,7 +165,19 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         echo $this->value;
+         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if ($decodedValues === null) {
+            $itemtype = $this->fields['values'];
+         } else {
+            $itemtype = $decodedValues['itemtype'];
+         }
+         $item = new $itemtype();
+         $value = '';
+         if ($item->getFromDB($this->value)) {
+            $value = $item->getField('name');
+         }
+
+         echo $value;
       }
    }
 
@@ -372,12 +384,15 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function parseAnswerValues($input) {
       $key = 'formcreator_field_' . $this->fields['id'];
-      if (!is_string($input[$key])) {
-         return false;
+      if (!isset($input[$key])) {
+         $input[$key] = '0';
+      } else {
+         if (!is_string($input[$key])) {
+            return false;
+         }
       }
-
-       $this->value = $input[$key];
-       return true;
+      $this->value = $input[$key];
+      return true;
    }
 
    public function isAnonymousFormCompatible() {
