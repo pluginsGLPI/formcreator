@@ -232,11 +232,8 @@ abstract class CommonTestCase extends CommonDBTestCase
          $input[$formFk] = $this->getForm();
       }
 
-      $input['itemtype'] = \PluginFormcreatorTargetTicket::class;
-      $target = new \PluginFormcreatorTarget();
-      $target->add($input);
       $targetTicket = new \PluginFormcreatorTargetTicket();
-      $targetTicket->getFromDB($target->fields['items_id']);
+      $targetTicket->add($input);
 
       return $targetTicket;
    }
@@ -247,15 +244,12 @@ abstract class CommonTestCase extends CommonDBTestCase
       }
 
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      if (!isset($inoput[$formFk])) {
-         $inoput[$formFk] = $this->getForm();
+      if (!isset($input[$formFk])) {
+         $input[$formFk] = $this->getForm();
       }
 
-      $input['itemtype'] = \PluginFormcreatorTargetChange::class;
-      $target = new \PluginFormcreatorTarget();
-      $target->add($input);
       $targetChange = new \PluginFormcreatorTargetChange();
-      $targetChange->getFromDB($target->fields['items_id']);
+      $targetChange->add($input);
 
       return $targetChange;
    }
@@ -362,30 +356,10 @@ abstract class CommonTestCase extends CommonDBTestCase
       ]);
    }
 
-   protected function _checkTarget($target = []) {
-      $this->array($target)->notHasKeys([
-         'id',
-         'plugin_formcreator_forms_id',
-         'items_id',
-      ])->hasKeys([
-         'itemtype',
-         '_data',
-         'uuid',
-      ]);
-      $this->array($target['_data'])->hasKeys(['_actors']);
-
-      if ($target['itemtype'] === \PluginFormcreatorTargetTicket::class) {
-         $this->_checkTargetTicket($target['_data']);
-      }
-
-      foreach ($target["_data"]['_actors'] as $actor) {
-         $this->_checkActor($actor);
-      }
-   }
-
    protected function _checkTargetTicket($targetticket = []) {
       $keys = [
          'title',
+         'plugin_formcreator_forms_id',
          'content',
          'due_date_rule',
          'due_date_question',
@@ -407,19 +381,65 @@ abstract class CommonTestCase extends CommonDBTestCase
          'associate_question',
          '_actors',
          '_ticket_relations',
+         'uuid',
       ];
       $this->array($targetticket)->notHasKeys([
          'id',
          'tickettemplates_id',
       ])->hasKeys($keys)
          ->size->isEqualTo(count($keys));
+
+      foreach ($targetticket['_actors'] as $actor) {
+         $this->_checkActor($actor);
+      }
+   }
+
+   protected function _checkTargetChange($targetchange = []) {
+      $keys = [
+         'title',
+         'plugin_formcreator_forms_id',
+         'content',
+         'impactcontent',
+         'controllistcontent',
+         'rolloutplancontent',
+         'backoutplancontent',
+         'checklistcontent',
+         'due_date_rule',
+         'due_date_question',
+         'due_date_value',
+         'due_date_period',
+         'urgency_rule',
+         'urgency_question',
+         'validation_followup',
+         'destination_entity',
+         'destination_entity_value',
+         'tag_type',
+         'tag_questions',
+         'tag_specifics',
+         'category_rule',
+         'category_question',
+         '_actors',
+         'uuid',
+      ];
+      $this->array($targetchange)->notHasKeys([
+         'id',
+      ])->hasKeys($keys)
+         ->size->isEqualTo(count($keys));
+
+      foreach ($targetchange['_actors'] as $actor) {
+         $this->_checkActor($actor);
+      }
    }
 
    protected function _checkActor($actor = []) {
       $this->array($actor)->notHasKeys([
          'id',
          'plugin_formcreator_targettickets_id',
+         'plugin_formcreator_targettchanges_id',
       ])->hasKeys([
+         'actor_role',
+         'actor_type',
+         'actor_value',
          'use_notification',
          'uuid',
       ]);
@@ -498,7 +518,8 @@ abstract class CommonTestCase extends CommonDBTestCase
       }
       $targets = [];
       foreach ($targetsData as $targetData) {
-         $target = new \PluginFormcreatorTarget();
+         $target = new $targetData['itemtype'];
+         unset($targetData['itemtype']);
          $targetData['plugin_formcreator_forms_id'] = $formId;
          $target->add($targetData);
          $this->boolean($target->isNewItem())->isFalse();

@@ -173,6 +173,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testCreateValidationNotification() {
       global $DB;
 
+      // Enable notifications in GLPI
       \Config::setConfigurationValues(
          'core',
          ['use_notifications' => 1, 'notifications_mailing' => 1]
@@ -194,7 +195,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          '_validator_users'      => [$_SESSION['glpiID']],
       ]);
       $this->getSection([
-         $form::getForeignKeyField() => $form->getID(),
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'name' => 'section',
       ]);
 
@@ -203,7 +204,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'formcreator_form'         => $form->getID(),
          'formcreator_validator'    => $_SESSION['glpiID'],
       ], []);
-      $this->integer($formAnswerId)->isGreaterThan(0);
+      $this->boolean($formAnswer->isNewId($formAnswerId))->isFalse();
 
       // 1 notification to the validator
       // 1 notification to the requester
@@ -211,7 +212,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'COUNT' => 'cpt',
          'FROM'  => \QueuedNotification::getTable(),
          'WHERE' => [
-            'itemtype' => 'PluginFormcreatorFormAnswer',
+            'itemtype' => \PluginFormcreatorFormAnswer::class,
             'items_id' => $formAnswerId,
          ]
       ])->next();
@@ -228,7 +229,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       $form_question       = new \PluginFormcreatorQuestion;
       $form_condition      = new \PluginFormcreatorQuestion_Condition;
       $form_validator      = new \PluginFormcreatorForm_Validator;
-      $form_target         = new \PluginFormcreatorTarget;
       $form_profile        = new \PluginFormcreatorForm_Profile;
       $targetTicket        = new \PluginFormcreatorTargetTicket();
       $item_targetTicket   = new \PluginFormcreatorItem_TargetTicket();
@@ -269,23 +269,17 @@ class PluginFormcreatorForm extends CommonTestCase {
          'itemtype'                    => 'User',
          'items_id'                    => 3
       ]);
-      $targets_id = $form_target->add([
-         'plugin_formcreator_forms_id' => $forms_id,
-         'itemtype'                    => \PluginFormcreatorTargetTicket::class,
-         'name'                        => "test export target"
-      ]);
       $targetTicket_id = $targetTicket->add([
-         'name'         => $form_target->getField('name'),
+         'name'         => $this->getUniqueString(),
+         'plugin_formcreator_forms_id' => $forms_id,
          'content'      => '##FULLFORM##'
       ]);
-      $form_target->getFromDB($targets_id);
-      $form_target->fields['items_id'];
       $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
                                                    'profiles_id' => 1]);
       $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
                                'link'     => \Ticket_Ticket::LINK_TO,
-                               'itemtype' => $form_target->getField('itemtype'),
-                               'items_id' => $targets_id
+                               'itemtype' => $targetTicket->getType(),
+                               'items_id' => $targetTicket_id
       ]);
 
       $form->getFromDB($form->getID());
@@ -293,19 +287,29 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $this->_checkForm($export);
 
-      foreach ($export["_sections"] as $section) {
+      foreach ($export['_sections'] as $section) {
          $this->_checkSection($section);
       }
 
-      foreach ($export["_validators"] as $validator) {
+      foreach ($export['_validators'] as $validator) {
          $this->_checkValidator($validator);
       }
 
-      foreach ($export["_targets"] as $target) {
-         $this->_checkTarget($target);
+      foreach ($export['_targets'] as $targetType => $targets) {
+         foreach ($targets as $target) {
+            switch ($targetType) {
+               case \PluginFormcreatorTargetTicket::class:
+                  $this->_checkTargetTicket($target);
+                  break;
+
+               case \PluginFormcreatorTargetChange::class:
+                  $this->_checkTargetChange($target);
+                  break;
+            }
+         }
       }
 
-      foreach ($export["_profiles"] as $form_profile) {
+      foreach ($export['_profiles'] as $form_profile) {
          $this->_checkFormProfile($form_profile);
       }
    }
@@ -454,7 +458,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $use_notifications = $CFG_GLPI['use_notifications'];
       $CFG_GLPI['use_notifications'] = 0;
 
-      $answer = "test answer to question";
+      $answer = 'test answer to question';
 
       // prepare a fake form with targets
       $question = $this->getQuestion();
@@ -476,15 +480,16 @@ class PluginFormcreatorForm extends CommonTestCase {
          'formcreator_field_'.$question->getID() => $answer
       ];
 
-      // send for answer
+      // send form answer
       $formAnswerId = $form->saveForm($input);
-      $this->integer($formAnswerId)->isGreaterThan(0);
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $this->boolean($formAnswer->isNewId($formAnswerId))->isFalse();
 
       // check existence of generated target
       // - ticket
       $item_ticket = new \Item_Ticket;
       $this->boolean($item_ticket->getFromDBByCrit([
-         'itemtype' => 'PluginFormcreatorFormAnswer',
+         'itemtype' => \PluginFormcreatorFormAnswer::class,
          'items_id' => $formAnswerId,
       ]))->isTrue();
       $ticket = new \Ticket;
@@ -494,7 +499,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       // - change
       $change_item = new \Change_Item;
       $this->boolean($change_item->getFromDBByCrit([
-         'itemtype' => 'PluginFormcreatorFormAnswer',
+         'itemtype' => \PluginFormcreatorFormAnswer::class,
          'items_id' => $formAnswerId,
       ]))->isTrue();
       $change = new \Change;

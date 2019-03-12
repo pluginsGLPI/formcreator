@@ -1020,6 +1020,24 @@ SCRIPT;
          }
       }
 
+      // get target actors
+      $target_data['_actors'] = [];
+      $foreignKey = self::getForeignKeyField();
+      $all_target_actors = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'    => PluginFormcreatorTargetTicket_Actor::getTable(),
+         'WHERE'   => [
+            $foreignKey => $this->getID()
+         ]
+      ]);
+
+      $form_target_actor = $this->getItem_Actor();
+      foreach ($all_target_actors as $target_actor) {
+         if ($form_target_actor->getFromDB($target_actor['id'])) {
+            $target_data['_actors'][] = $form_target_actor->export($remove_uuid);
+         }
+      }
+
       // get data from ticket relations
       $target_data['_ticket_relations'] = [];
       $target_ticketLink = new PluginFormcreatorItem_TargetTicket();

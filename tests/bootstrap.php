@@ -33,7 +33,7 @@ if (!defined('STDERR')) {
 // in atoum
 $key = array_search('--debug', $_SERVER['argv']);
 if ($key) {
-   unset($_SERVER['argv'][$key]);
+   //unset($_SERVER['argv'][$key]);
 }
 
 include (GLPI_ROOT . "/inc/includes.php");

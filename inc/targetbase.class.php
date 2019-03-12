@@ -1719,6 +1719,24 @@ SCRIPT;
       if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {
          $this->skipCreateActors = true;
       }
+
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input[$formFk])) {
+         Session::addMEssageAfterRedirect(__('A target must be associated to a form.', 'formcreator'));
+         return false;
+      }
+      $form = new PluginFormcreatorForm();
+      if (!$form->getFromDB((int) $input[$formFk])) {
+         Session::addMEssageAfterRedirect(__('A target must be associated to an existing form.', 'formcreator'));
+         return false;
+      }
+
+
+      // Set default content
+      if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
+         $input['content'] = '##FULLFORM##';
+      }
+
       // generate a unique id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
@@ -1772,10 +1790,10 @@ SCRIPT;
          $target_actor = $this->getItem_Actor();
          $myFk = self::getForeignKeyField();
          $target_actor->add([
-            $myFk                => $this->getID(),
+            $myFk                 => $this->getID(),
             'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
             'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
-            'use_notification'   => '1',
+            'use_notification'    => '1',
          ]);
          $target_actor = $this->getItem_Actor();
          $target_actor->add([

@@ -71,28 +71,18 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       ]);
       $this->boolean($form->isNewItem())->isFalse();
 
-      $target_1 = new \PluginFormcreatorTarget();
-      $target_1->add([
+      $targetTicket_1 = new \PluginFormcreatorTargetTicket();
+      $targetTicket_1->add([
          'name'      => 'target 1',
          $formFk     => $form->getID(),
-         'itemtype'  => \PluginFormcreatorTargetTicket::class,
       ]);
-      $this->boolean($target_1->isNewItem())->isFalse();
-
-      $target_2 = new \PluginFormcreatorTarget();
-      $target_2->add([
-         'name'      => 'target 2',
-         $formFk     => $form->getID(),
-         'itemtype'  => \PluginFormcreatorTargetTicket::class,
-      ]);
-      $this->boolean($target_2->isNewItem())->isFalse();
-
-      $targetTicket_1 = new \PluginFormcreatorTargetTicket();
-      $targetTicket_1->getFromDB($target_1->getField('items_id'));
       $this->boolean($targetTicket_1->isNewItem())->isFalse();
 
       $targetTicket_2 = new \PluginFormcreatorTargetTicket();
-      $targetTicket_2->getFromDB($target_2->getField('items_id'));
+      $targetTicket_2->add([
+         'name'      => 'target 2',
+         $formFk     => $form->getID(),
+      ]);
       $this->boolean($targetTicket_2->isNewItem())->isFalse();
 
       $targetTicketFk = \PluginFormcreatorTargetTicket::getForeignKeyField();
@@ -115,7 +105,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->boolean($item_targetticket_2->isNewItem())->isFalse();
 
       // delete the target ticket
-      $target_1->delete(['id' => $target_1->getID()]);
+      $targetTicket_1->delete(['id' => $targetTicket_1->getID()]);
 
       // Check the linked ticket or target ticket are deleted
       $this->boolean($item_targetticket_1->getFromDB($item_targetticket_1->getID()))->isFalse();

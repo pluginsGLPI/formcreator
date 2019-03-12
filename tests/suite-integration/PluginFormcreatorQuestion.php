@@ -50,6 +50,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                                         'fieldtype'                      => 'text',
                                         'plugin_formcreator_sections_id' => $section->getID(),
                                         'default_values' => '',
+                                        'description' => '',
                                         '_parameters' => [
                                            'text' => [
                                            'regex' => ['regex' => ''],

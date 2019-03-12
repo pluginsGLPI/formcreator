@@ -736,26 +736,23 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // Create new form answer object
 
          // Does the form need to be validated?
+         $status = self::STATUS_ACCEPTED;
          if ($form->fields['validation_required']) {
             $status = self::STATUS_WAITING;
-         } else {
-            $status = self::STATUS_ACCEPTED;
          }
 
+         $usersIdValidator = 0;
          if ($form->getField('validation_required') == 1) {
             $usersIdValidator = isset($data['formcreator_validator'])
                                 ? $data['formcreator_validator']
                                 : 0;
-         } else {
-            $usersIdValidator = 0;
          }
 
+         $groupIdValidator = 0;
          if ($form->getField('validation_required') == 2) {
             $groupIdValidator = isset($data['formcreator_validator'])
                                 ? $data['formcreator_validator']
                                 : 0;
-         } else {
-            $groupIdValidator = 0;
          }
          $id = $this->add([
             'entities_id'                 => isset($_SESSION['glpiactive_entity'])
@@ -840,11 +837,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'SELECT' => ['id'],
                'FROM'   => $itemTicket::getTable(),
                'WHERE'  => [
-                  'itemtype' => 'PluginFormcreatorFormAnswer',
+                  'itemtype' => PluginFormcreatorFormAnswer::class,
                   'items_id' => $formAnswerId,
                ]
             ]);
-            if (count($rows) != 1) {
+            if ($rows->count() != 1) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
                   $issue->add([
