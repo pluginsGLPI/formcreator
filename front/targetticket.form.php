@@ -81,8 +81,10 @@ if (isset($_POST["update"])) {
    $targetticket->getFromDB((int) $_REQUEST['id']);
    $form = $targetticket->getForm();
 
-   $_SESSION['glpilisttitle'][$itemtype] = sprintf(__('%1$s = %2$s'),
-                                                   $form->getTypeName(1), $form->getName());
+   $_SESSION['glpilisttitle'][$itemtype] = sprintf(
+      __('%1$s = %2$s'),
+      $form->getTypeName(1), $form->getName()
+   );
    $_SESSION['glpilisturl'][$itemtype]   = $form->getFormURL()."?id=".$form->getID();
 
    $targetticket->display($_REQUEST);

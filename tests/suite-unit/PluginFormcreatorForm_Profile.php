@@ -36,15 +36,15 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
       return [
          [
             0,
-            'Targets'
+            'Access types'
          ],
          [
             1,
-            'Target'
+            'Access type'
          ],
          [
             2,
-            'Targets'
+            'Access types'
          ],
       ];
    }
@@ -57,7 +57,7 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
     * @return void
     */
    public function testGetTypeName($nb, $expected) {
-      $instance = new $this->newTestedInstance();
+      $instance = $this->newTestedInstance();
       $output = $instance->getTypeName($nb);
       $this->string($output)->isEqualTo($expected);
    }
@@ -67,7 +67,7 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
       $item = new \Computer();
       $output = $instance->getTabNameForItem($item);
 
-      $this->string($output)->isEqualTo('Targets');
+      $this->string($output)->isEqualTo('Access types');
    }
 
    public function testPrepareInputForAdd() {

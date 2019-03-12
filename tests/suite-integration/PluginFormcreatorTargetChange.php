@@ -40,7 +40,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $this->login('glpi', 'glpi');
    }
 
-   public function testTargetTicketActors() {
+   public function testTargetChangeActors() {
       $form = new \PluginFormcreatorForm();
       $form->add([
          'entities_id'           => $_SESSION['glpiactive_entity'],
@@ -52,24 +52,12 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       ]);
       $this->boolean($form->isNewItem())->isFalse();
 
-      $target = new \PluginFormcreatorTarget();
-      $target->add([
+      $targetChange = new \PluginFormcreatorTargetChange();
+      $targetChange->add([
          'name'                        => 'a target',
-         'itemtype'                    => \PluginFormcreatorTargetChange::class,
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
-      $this->boolean($target->isNewItem())->isFalse();
-      $this->integer((int) $target->getField('plugin_formcreator_forms_id'))
-         ->isEqualTo((int) $form->getID());
-      $this->string($target->getField('itemtype'))
-         ->isEqualTo(\PluginFormcreatorTargetChange::class);
-
-      $targetChange = $target->getField('items_id');
-      $targetChange = new \PluginFormcreatorTargetChange();
-      $targetChange->getFromDB($target->getField('items_id'));
       $this->boolean($targetChange->isNewItem())->isFalse();
-      $this->string($targetChange->getField('name'))
-         ->isEqualTo($target->getField('name'));
 
       $requesterActor = new \PluginFormcreatorTargetChange_Actor();
       $observerActor = new \PluginFormcreatorTargetChange_Actor();
@@ -78,21 +66,23 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $requesterActor->getFromDBByCrit([
          'AND' => [
             'plugin_formcreator_targetchanges_id' => $targetChangeId,
-            'actor_role' => 'requester',
-            'actor_type' => 'creator'
+            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
          ]
       ]);
       $observerActor->getFromDBByCrit([
-            'AND' => [
-               'plugin_formcreator_targetchanges_id' => $targetChangeId,
-               'actor_role' => 'observer',
-               'actor_type' => 'validator'
+         'AND' => [
+            'plugin_formcreator_targetchanges_id' => $targetChangeId,
+            'actor_role' => \PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+            'actor_type' => \PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR
             ]
       ]);
 
       $this->boolean($requesterActor->isNewItem())->isFalse();
       $this->boolean($observerActor->isNewItem())->isFalse();
-      $this->integer((int) $requesterActor->getField('use_notification'))->isEqualTo(1);
-      $this->integer((int) $observerActor->getField('use_notification'))->isEqualTo(1);
+      $this->integer((int) $requesterActor->getField('use_notification'))
+         ->isEqualTo(1);
+      $this->integer((int) $observerActor->getField('use_notification'))
+         ->isEqualTo(1);
    }
 }

@@ -1710,7 +1710,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       }
 
       // Form targets
-      $all_targets = $this->getTargetsFromForm();
+      $oldForm = new self();
+      $oldForm->getFromDB($old_form_id);
+      $all_targets = $oldForm->getTargetsFromForm();
       foreach ($all_targets as $targetType => $targets) {
          foreach ($targets as $target) {
             switch ($targetType) {
@@ -1721,6 +1723,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   // Update the target ticket created while cloning the target
                   $update_target_ticket = $target_ticket->fields;
                   unset($update_target_ticket['id'], $update_target_ticket['uuid']);
+                  $update_target_ticket['plugin_formcreator_forms_id'] = $new_form_id;
                   foreach ($tab_questions as $id => $value) {
                      $update_target_ticket['name']    = str_replace('##question_' . $id . '##', '##question_' . $value . '##', $update_target_ticket['name']);
                      $update_target_ticket['name']    = str_replace('##answer_' . $id . '##', '##answer_' . $value . '##', $update_target_ticket['name']);
@@ -1761,6 +1764,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   if (!$new_target_ticket->add($update_target_ticket)) {
                      return false;
                   }
+                  $new_target_item_id = $new_target_ticket->getID();
                   break;
 
                case PluginFormcreatorTargetChange::class:
@@ -1770,6 +1774,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   // Update the target change created while cloning the target
                   $update_target_change = $target_change->fields;
                   unset($update_target_change['id'], $update_target_change['uuid']);
+                  $update_target_change['plugin_formcreator_forms_id'] = $new_form_id;
                   foreach ($tab_questions as $id => $value) {
                      $changeFields = [
                         'name',
@@ -1821,6 +1826,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   if (!$new_target_change->add($update_target_change)) {
                      return false;
                   }
+                  $new_target_item_id = $new_target_change->getID();
                   break;
             }
 
@@ -1835,7 +1841,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   $tta_rows = $DB->request([
                      'FROM'  => $target_ticket_actor::getTable(),
                      'WHERE' => [
-                        'plugin_formcreator_targettickets_id' => $target_values['items_id']
+                        'plugin_formcreator_targettickets_id' => $target->getID()
                      ]
                   ]);
                   foreach ($tta_rows as $tta_row) {
@@ -1858,7 +1864,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   $tca_rows = $DB->request([
                      'FROM'  => $target_change_actor::getTable(),
                      'WHERE' => [
-                        'plugin_formcreator_targetchanges_id' => $target_values['items_id']
+                        'plugin_formcreator_targetchanges_id' => $target->getID()
                      ]
                   ]);
                   foreach ($tca_rows as $tca_row) {
@@ -1874,7 +1880,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
 
-      return true;
+      return $new_form_id;
    }
 
    /**
@@ -2071,8 +2077,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       // get targets
       $form['_targets'] = [];
       $all_targets = $this->getTargetsFromForm();
-      foreach ($all_targets as $target) {
-         $form['_targets'][$target->getType()] = $target->export($remove_uuid);
+      foreach ($all_targets as $targetType => $targets) {
+         foreach ($targets as $target) {
+            $form['_targets'][$target->getType()][] = $target->export($remove_uuid);
+         }
       }
 
       // get profiles
@@ -2744,7 +2752,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       return $fields;
    }
 
-   protected function getTargetTypes() {
+   public function getTargetTypes() {
       return [
          PluginFormcreatorTargetTicket::class,
          PluginFormcreatorTargetChange::class
@@ -2762,7 +2770,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       $targets = [];
       if ($this->isNewItem()) {
-         return $targets;
+         return [];
       }
 
       foreach ($this->getTargetTypes() as $targetType) {

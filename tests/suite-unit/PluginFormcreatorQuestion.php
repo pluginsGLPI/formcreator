@@ -44,7 +44,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $form_question  = new \PluginFormcreatorQuestion;
       $form_condition = new \PluginFormcreatorQuestion_Condition;
       $form_validator = new \PluginFormcreatorForm_Validator;
-      $form_target    = new \PluginFormcreatorTarget;
       $form_profile   = new \PluginFormcreatorForm_Profile;
 
       // create objects

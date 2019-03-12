@@ -332,7 +332,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    /**
-    *
+    * @engine  inline
     */
    public function testGetEmptyParameters() {
       $instance = $this->newTestedInstance([]);
