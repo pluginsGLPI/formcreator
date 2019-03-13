@@ -32,9 +32,9 @@ if (!defined('STDERR')) {
 // the error handler in Toolbox may output to stdout a message and break process communication
 // in atoum
 $key = array_search('--debug', $_SERVER['argv']);
-if ($key) {
-   //unset($_SERVER['argv'][$key]);
-}
+// if ($key) {
+//    unset($_SERVER['argv'][$key]);
+// }
 
 include (GLPI_ROOT . "/inc/includes.php");
 

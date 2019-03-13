@@ -1731,7 +1731,6 @@ SCRIPT;
          return false;
       }
 
-
       // Set default content
       if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
          $input['content'] = '##FULLFORM##';
@@ -1870,7 +1869,7 @@ SCRIPT;
       $result = $question->getQuestionsFromFormBySection($this->fields[$formFk]);
       $i = 0;
       foreach ($result as $sectionName => $questions) {
-         foreach($questions as $questionId => $questionName) {
+         foreach ($questions as $questionId => $questionName) {
             $i++;
             echo '<tr class="line' . ($i % 2) . '">';
             echo '<td colspan="2">' . $questionName . '</td>';
