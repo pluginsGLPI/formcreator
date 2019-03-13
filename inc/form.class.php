@@ -2136,6 +2136,13 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          }
       }
 
+      if ($forms_id
+          && isset($form['_validators'])) {
+         foreach ($form['_validators'] as $validator) {
+            PluginFormcreatorForm_Validator::import($forms_id, $validator);
+         }
+      }
+
       return $forms_id;
    }
 
