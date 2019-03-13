@@ -206,14 +206,18 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
       $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-      if (!isset($decodedValues['itemtype'])) {
-         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($this->fields['values']), $this->value);
-      } else {
-         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($decodedValues['itemtype']), $this->value);
+      $itemtype = $this->fields['values'];
+      if (isset($decodedValues['itemtype'])) {
+         $itemtype = $decodedValues['itemtype'];
       }
-
+      if ($itemtype == User::class) {
+         $value = (new DBUtils())->getUserName($this->value);
+      } else {
+         $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($itemtype), $this->value);
+      }
       return Toolbox::addslashes_deep($value);
    }
+
 
    public function getDocumentsForTarget() {
       return [];
