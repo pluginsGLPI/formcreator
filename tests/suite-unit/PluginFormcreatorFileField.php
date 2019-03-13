@@ -39,4 +39,23 @@ class PluginFormcreatorFileField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testDeserializeValue() {
+      $instance = $this->newTestedInstance([]);
+      $instance->deserializeValue('invalid Json');
+      $this->string($instance->getValueForTargetText(true))
+         ->isEqualTo('No attached document');
+
+      $instance->deserializeValue('[]');
+      $this->string($instance->getValueForTargetText(true))
+         ->isEqualTo('No attached document');
+
+      $instance->deserializeValue('[1]');
+      $this->string($instance->getValueForTargetText(true))
+         ->isEqualTo('Attached document');
+
+      $instance->deserializeValue('[1,2]');
+      $this->string($instance->getValueForTargetText(true))
+         ->isEqualTo('Attached document');
+   }
 }
