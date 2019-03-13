@@ -74,6 +74,21 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
 
       $validator['plugin_formcreator_forms_id'] = $forms_id;
 
+      // Find the validator
+      if (!in_array($validator['itemtype'], [User::class, Group::class])) {
+         return false;
+      }
+      $linkedItemtype = $validator['itemtype'];
+      $linkedItem = new $linkedItemtype();
+      $crit = [
+         'name' => $validator['_item'],
+      ];
+      if (!$linkedItem->getFromDBByName($crit)) {
+         // validator not found. Let's ignore it
+         return false;
+      }
+      $validator['items_id'] = $linkedItem->getID();
+
       if ($validators_id = plugin_formcreator_getFromDBByField($item, 'uuid', $validator['uuid'])) {
          // add id key
          $validator['id'] = $validators_id;
