@@ -249,12 +249,12 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       return $dataset;
    }
 
-   public function ptroviderIsValid() {
+   public function providerIsValid() {
       return $this->providerGetAnswer();
    }
 
    /**
-    * @dataProvider ptroviderIsValid
+    * @dataProvider providerIsValid
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $instance = $this->newTestedInstance($fields, $data);
@@ -274,5 +274,46 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       $instance = $this->newTestedInstance([]);
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testGetValueForTargetText() {
+      $computer = new \Computer();
+      $computer->add([
+         'name' => 'computer foo',
+         'entities_id' => 0,
+      ]);
+
+      // Create a question glpi Object / computer
+      $question = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'values'    => \Computer::class,
+      ]);
+      $instance = $this->newTestedInstance($question->fields);
+      $instance->deserializeValue($computer->getID());
+
+      // test for the target text
+      $output = $instance->getValueForTargetText(true);
+      $this->string($output)->isEqualTo('computer foo');
+
+      // Create a user with first and last name
+      $user = new \User();
+      $user->add([
+         'name'       => 'foobar' . $this->getUniqueString(),
+         'firstname'  => 'foo',
+         'realname'   => 'bar',
+      ]);
+      $this->boolean($user->isNewItem())->isFalse();
+
+      // Create a question glpi Object / User
+      $question = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'values'    => \User::class,
+      ]);
+      $instance = $this->newTestedInstance($question->fields);
+      $instance->deserializeValue($user->getID());
+
+      // test the text for target
+      $output = $instance->getValueForTargetText(true);
+      $this->string($output)->isEqualTo('bar foo');
    }
 }
