@@ -438,7 +438,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @param CommonDBTM $item
     * @return boolean
     */
-    public function pre_purgeItem() {
+   public function pre_purgeItem() {
       if (!parent::pre_purgeItem()) {
          $this->input = false;
          return false;
