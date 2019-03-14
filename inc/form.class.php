@@ -394,7 +394,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
 
       echo '<tr class="tab_bg_2">';
       echo '<td>' . __('Need to be validate?', 'formcreator') . '</td>';
-      echo '<td colspan="3" class="validators_bloc">';
+      echo '<td class="validators_bloc">';
 
       Dropdown::showFromArray('validation_required', [
          0 => Dropdown::EMPTY_VALUE,
@@ -402,8 +402,10 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          2 => _n('Group', 'Groups', 1),
       ], [
          'value'     =>  $this->fields["validation_required"],
-         'on_change' => 'changeValidators(this.value)'
+         'on_change' => 'plugin_formcreator_changeValidators(this.value)'
       ]);
+      echo '</td>';
+      echo '<td colspan="2">';
 
       // Validators users
       $rows = $DB->request([
@@ -437,25 +439,61 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $profileRightTable = ProfileRight::getTable();
       $profileRightFk = ProfileRight::getForeignKeyField();
       $groupUserTable = Group_User::getTable();
-      $subentities = (new DbUtils())->getEntitiesRestrictCriteria(
-         $profileUserTable,
-         '',
-         $entites,
-         true,
-         true
-      );
-      $result = $DB->request([
-         'SELECT DISTINCT' => [
-            $userTable => ['id', 'name', 'realname', 'firstname'],
-            $groupTable => ['id as groups_id', 'completename as groups_name']
-         ],
-         'FROM' => $userTable,
+      $subQuery = [
+         'SELECT' => "$profileUserTable.$userFk",
+         'FROM' => $profileUserTable,
          'INNER JOIN' => [
+            $profileTable => [
+               'FKEY' => [
+                  $profileTable =>  'id',
+                  $profileUserTable => $profileFk,
+               ]
+            ],
+            $profileRightTable =>[
+               'FKEY' => [
+                  $profileTable => 'id',
+                  $profileRightTable => $profileFk,
+               ]
+            ],
+         ],
+         'WHERE' => [
+            "$profileRightTable.name" => "ticketvalidation",
+            [
+               'OR' => [
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEREQUEST],
+                  "$profileRightTable.rights" => ['&', TicketValidation::VALIDATEINCIDENT],
+               ],
+            ],
+            "$userTable.is_active" => '1',
+         ],
+      ];
+      $usersCondition = [
+         "$userTable.id" => new QuerySubquery($subQuery)
+      ];
+
+      echo '<div id="validators_users">';
+      Dropdown::show(
+         User::class, [
+         'condition' => $usersCondition
+      ]);
+      echo '</div>';
+
+      // Validators groups
+      $subQuery = [
+         'SELECT' => "$groupUserTable.$groupFk",
+         'FROM' => $groupUserTable,
+         'INNER JOIN' => [
+            $userTable => [
+               'FKEY' => [
+                  $groupUserTable => $userFk,
+                  $userTable => 'id',
+               ]
+            ],
             $profileUserTable => [
                'FKEY' => [
                   $profileUserTable => $userFk,
-                  $userTable => 'id'
-               ]
+                  $userTable => 'id',
+               ],
             ],
             $profileTable => [
                'FKEY' => [
@@ -470,21 +508,8 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                ]
             ],
          ],
-         'LEFT JOIN' => [
-            $groupUserTable => [
-               'FKEY' => [
-                  $groupUserTable => $userFk,
-                  $userTable => 'id',
-               ],
-            ],
-            $groupTable => [
-               'FKEY' => [
-                  $groupTable => 'id',
-                  $groupUserTable => $groupFk,
-               ]
-            ]
-               ],
          'WHERE' => [
+            "$groupUserTable.$userFk" => new QueryExpression("`$userTable`.`id`"),
             "$profileRightTable.name" => "ticketvalidation",
             [
                'OR' => [
@@ -493,70 +518,53 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                ],
             ],
             "$userTable.is_active" => '1',
-         ] + $subentities,
-         'GROUP' => [
-            "$userTable.id",
-            "$userTable.name",
-         ]
-      ]);
-      $groups_users = [];
-
-      echo '<div id="validators_users" style="width: 100%">';
-      echo '<select name="_validator_users[]" size="4" style="width: 100%" multiple id="validator_users">';
-      foreach ($result as $user) {
-         $groups_users[] = $user['id'];
-         if (!empty($user['realname']) && !empty($user['firstname'])) {
-            $displayName = $user['realname'] . ' ' .$user['firstname'];
-         } else {
-            $displayName = $user['name'];
-         }
-         echo '<option value="' . $user['id'] . '"';
-         if (in_array($user['id'], $validators)) {
-            echo ' selected="selected"';
-         }
-         echo '>' . $displayName . '</option>';
-      }
-      echo '</select>';
-      echo '</div>';
-
-      // Validators groups
+         ],
+      ];
+      $groupsCondition = [
+         "$groupTable.id" => new QuerySubquery($subQuery),
+      ];
       echo '<div id="validators_groups" style="width: 100%">';
-      echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
-      if (!empty($groups_users)) {
-         $groupTable = Group::getTable();
-         $groupUserTable = Group_User::getTable();
-         $result = $DB->request([
-            'SELECT DISTINCT' => [
-               $groupTable => ['id', 'completename'],
-            ],
-            'FROM' => $groupTable,
-            'INNER JOIN' => [
-               $groupUserTable => [
-                  'FKEY' => [
-                     $groupTable => 'id',
-                     $groupUserTable => Group::getForeignKeyField()
-                  ],
-               ]
-            ],
-            'WHERE' => [
-               "$groupUserTable.users_id" => $groups_users,
-            ],
-            'ORDER' => [
-               "$groupTable.completename"
-            ],
-         ]);
-         foreach ($result as $group) {
-            echo '<option value="' . $group['id'] . '"';
-            if (in_array($group['id'], $validators)) {
-               echo ' selected="selected"';
-            }
-            echo '>' . $group['completename'] . '</option>';
-         }
-      }
-      echo '</select>';
+      Dropdown::show(
+         Group::class, [
+         'condition' => $groupsCondition
+      ]);
+
+      // echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
+      // if (!empty($groups_users)) {
+      //    $groupTable = Group::getTable();
+      //    $groupUserTable = Group_User::getTable();
+      //    $result = $DB->request([
+      //       'SELECT DISTINCT' => [
+      //          $groupTable => ['id', 'completename'],
+      //       ],
+      //       'FROM' => $groupTable,
+      //       'INNER JOIN' => [
+      //          $groupUserTable => [
+      //             'FKEY' => [
+      //                $groupTable => 'id',
+      //                $groupUserTable => Group::getForeignKeyField()
+      //             ],
+      //          ]
+      //       ],
+      //       'WHERE' => [
+      //          "$groupUserTable.users_id" => $usersCondition,
+      //       ],
+      //       'ORDER' => [
+      //          "$groupTable.completename"
+      //       ],
+      //    ]);
+      //    foreach ($result as $group) {
+      //       echo '<option value="' . $group['id'] . '"';
+      //       if (in_array($group['id'], $validators)) {
+      //          echo ' selected="selected"';
+      //       }
+      //       echo '>' . $group['completename'] . '</option>';
+      //    }
+      // }
+      // echo '</select>';
       echo '</div>';
 
-      $script = 'function changeValidators(value) {
+      $script = 'function plugin_formcreator_changeValidators(value) {
                   if (value == 1) {
                      document.getElementById("validators_users").style.display  = "block";
                      document.getElementById("validators_groups").style.display = "none";
@@ -568,7 +576,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                      document.getElementById("validators_groups").style.display = "none";
                   }
                }
-               $(document).ready(function() {changeValidators(' . $this->fields["validation_required"] . ');});';
+               $(document).ready(function() {plugin_formcreator_changeValidators(' . $this->fields["validation_required"] . ');});';
       echo Html::scriptBlock($script);
 
       echo '</td>';

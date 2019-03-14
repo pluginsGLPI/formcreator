@@ -505,12 +505,6 @@ form.formcreator_form {
    display: none;
 }
 
-.validators_bloc .select2-container {
-   float: left;
-   width: 13% !important;
-   margin: 0 1% 0 0;
-}
-
 #tag_question_value .select2-container, #tag_specific_value .select2-container {
    width: 98%;
 }
