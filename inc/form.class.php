@@ -2190,6 +2190,41 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
    }
 
    /**
+    * Show form to add a new target
+    *
+    * @return void
+    */
+    public function showAdTargetForm() {
+      echo '<form name="form_target" method="post" action="'.static::getFormURL().'">';
+      echo '<table class="tab_cadre_fixe">';
+
+      echo '<tr><th colspan="4">'.__('Add a destination', 'formcreator').'</th></tr>';
+
+      echo '<tr class="line1">';
+      echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
+      echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="30%">';
+      $typeNames = [];
+      foreach($this->getTargetTypes() as $targetType) {
+         $typeNames[$targetType] = $targetType::getTypeName();
+      }
+      Dropdown::showFromArray('itemtype', $typeNames);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="line0">';
+      echo '<td colspan="4" class="center">';
+      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.(int) $_REQUEST['form_id'].'" />';
+      echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
+      echo '</td>';
+      echo '</tr>';
+
+      echo '</table>';
+      Html::closeForm();
+   }
+
+   /**
     * Process import of json file(s) sended by the submit of self::showImportForm
     * @param  array  $params GET/POST data that need to contain the filename(s) in _json_file key
     */
