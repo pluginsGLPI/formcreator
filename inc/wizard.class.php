@@ -244,7 +244,7 @@ class PluginFormcreatorWizard {
 
       echo "<span class='status status_incoming'>
             <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                     Toolbox::append_params(PluginFormcreatorIssue::getIncomingCriteria(), '&amp;')."'>
+                     Toolbox::append_params(PluginFormcreatorIssue::getProcessingCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count[Ticket::INCOMING]."
             </span>
