@@ -276,7 +276,7 @@ class PluginFormcreatorTarget extends CommonDBTM
       $target['_skip_create_actors']         = true;
 
       // escape text fields
-      foreach (['name', 'title'] as $key) {
+      foreach (['name'] as $key) {
          $target[$key] = $DB->escape($target[$key]);
       }
 
