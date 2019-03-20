@@ -108,7 +108,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
 
       $item = new static();
 
-      if ($showField
+      if (!$showField
           = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
                                                 'uuid',
                                                 $condition['show_field'])) {
