@@ -211,7 +211,7 @@ class PluginFormcreatorWizard {
       if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
          echo '?noAUTO=1';
       }
-      echo '" class="fa fa-sign-out-alt" title="'.__s('Logout').'">';
+      echo '" class="fa fa-sign-out fa-sign-out-alt" title="'.__s('Logout').'">';
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
