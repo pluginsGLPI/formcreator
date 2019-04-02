@@ -75,10 +75,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
       $query = "SELECT DISTINCT
                   NULL                           AS `id`,
+                  `f`.`name`                     AS `name`,
                   CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
                   `fanswer`.`id`                 AS `original_id`,
                   'PluginFormcreatorFormAnswer'  AS `sub_itemtype`,
-                  `f`.`name`                     AS `name`,
                   `fanswer`.`status`             AS `status`,
                   `fanswer`.`request_date`       AS `date_creation`,
                   `fanswer`.`request_date`       AS `date_mod`,
@@ -100,10 +100,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
                SELECT DISTINCT
                   NULL                          AS `id`,
+                  `tic`.`name`                  AS `name`,
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  `tic`.`name`                  AS `name`,
                   `tic`.`status`                AS `status`,
                   `tic`.`date`                  AS `date_creation`,
                   `tic`.`date_mod`              AS `date_mod`,
