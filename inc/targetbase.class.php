@@ -1031,7 +1031,7 @@ SCRIPT;
    }
 
    protected function showActorsSettings() {
-      global $DB, $CFG_GLPI;
+      global $DB;
 
       // Get available questions for actors lists
       $itemActor = $this->getItem_Actor();
