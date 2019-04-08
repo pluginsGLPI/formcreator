@@ -130,7 +130,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -153,7 +153,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -166,7 +166,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                   ]
                ],
             ],
-            'expecetedError' => null,
+            'expectedError' => null,
          ],
          'field type incompatible' => [
             'input' => [
@@ -179,7 +179,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -193,7 +193,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                ],
             ],
             'expected' => [],
-            'expecetedError' => 'This type of question is not compatible with public forms.',
+            'expectedError' => 'This type of question is not compatible with public forms.',
          ],
          'non existent field type' => [
             'input' => [
@@ -206,7 +206,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -220,7 +220,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                ],
             ],
             'expected' => [],
-            'expecetedError' => 'Field type nonexistent is not available for question question-name.',
+            'expectedError' => 'Field type nonexistent is not available for question question-name.',
          ],
       ];
 
