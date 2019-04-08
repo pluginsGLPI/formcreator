@@ -2,6 +2,33 @@
 // fix empty CFG_GLPI on boostrap; see https://github.com/sebastianbergmann/phpunit/issues/325
 global $CFG_GLPI, $GLPI_CACHE;
 
+
+/**
+ * Recursively remove a directory
+ *
+ * @param string $src
+ * @return void
+ */
+function tests_rrmdir($src) {
+   $dir = opendir($src);
+   if ($dir === false) {
+      return;
+   }
+   while(false !== ( $file = readdir($dir)) ) {
+      if (( $file != '.' ) && ( $file != '..' )) {
+         $full = $src . '/' . $file;
+         if ( is_dir($full) ) {
+            tests_rrmdir($full);
+         }
+         else {
+            unlink($full);
+         }
+      }
+   }
+   closedir($dir);
+   rmdir($src);
+}
+
 //disable session cookies
 ini_set('session.use_cookies', 0);
 ini_set("memory_limit", "-1");
@@ -27,6 +54,10 @@ define('GLPI_LOG_DIR', __DIR__ . '/logs');
 if (!defined('STDERR')) {
    define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
 }
+
+define('GLPI_CACHE_DIR', __DIR__ . '/cache');
+//tests_rrmdir(GLPI_CACHE_DIR);
+//@mkdir(GLPI_CACHE_DIR);
 
 // Giving --debug argument to atoum will be detected by GLPI too
 // the error handler in Toolbox may output to stdout a message and break process communication
