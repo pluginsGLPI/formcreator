@@ -1,3 +1,19 @@
+<a name="2.8.1"></a>
+## [2.8.1](https://github.com/pluginsglpi/formcreator/compare/v2.8.0...v2.8.1) (2019-04-08)
+
+
+### Bug Fixes
+
+* **filefield:** fix bad value in generated targets ([d3aeb0d](https://github.com/pluginsglpi/formcreator/commit/d3aeb0d))
+* **form_validator:** import valodators from JSON ([b6ea017](https://github.com/pluginsglpi/formcreator/commit/b6ea017))
+* **glpiselect:** show user firstname and lastname ([575dbf8](https://github.com/pluginsglpi/formcreator/commit/575dbf8))
+* **issue:** mis ordered columns in resync ([cf9aea1](https://github.com/pluginsglpi/formcreator/commit/cf9aea1))
+* **issue:** resynchronization error ([65cadb3](https://github.com/pluginsglpi/formcreator/commit/65cadb3))
+* **question_condition:** inverted import condition ([1299b77](https://github.com/pluginsglpi/formcreator/commit/1299b77))
+* **wizard:** inconsistencies in counters ([ff95440](https://github.com/pluginsglpi/formcreator/commit/ff95440))
+
+
+
 <a name="2.8.0"></a>
 # [2.8.0](https://github.com/pluginsglpi/formcreator/compare/v2.7.0...v2.8.0) (2019-03-06)
 
