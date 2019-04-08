@@ -75,10 +75,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
       // several tickets linked to the same form_answer => 1 issue which is the form_answer sub_itemtype
       $query = "SELECT DISTINCT
                   NULL                           AS `id`,
+                  `f`.`name`                     AS `name`,
                   CONCAT('f_',`fanswer`.`id`)    AS `display_id`,
                   `fanswer`.`id`                 AS `original_id`,
                   'PluginFormcreatorFormAnswer'  AS `sub_itemtype`,
-                  `f`.`name`                     AS `name`,
                   `fanswer`.`status`             AS `status`,
                   `fanswer`.`request_date`       AS `date_creation`,
                   `fanswer`.`request_date`       AS `date_mod`,
@@ -93,7 +93,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
                LEFT JOIN `glpi_items_tickets` AS `itic`
                   ON `itic`.`items_id` = `fanswer`.`id`
                   AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
-               WHERE `fanswer`.`is_deleted` = '0'
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`tickets_id`) != 1
 
@@ -101,10 +100,10 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
                SELECT DISTINCT
                   NULL                          AS `id`,
+                  `tic`.`name`                  AS `name`,
                   CONCAT('t_',`tic`.`id`)       AS `display_id`,
                   `tic`.`id`                    AS `original_id`,
                   'Ticket'                      AS `sub_itemtype`,
-                  `tic`.`name`                  AS `name`,
                   `tic`.`status`                AS `status`,
                   `tic`.`date`                  AS `date_creation`,
                   `tic`.`date_mod`              AS `date_mod`,
@@ -601,12 +600,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return $all_status;
    }
 
-   static function getIncomingCriteria() {
+   static function getProcessingCriteria() {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'process',
-                              'value'      => 'notold'],
+                              'value'      => 'process'],
                              ['field'      => 8,
                              'searchtype'  => 'equals',
                              'value'       => $currentUser]],
@@ -617,7 +615,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'process',
                               'value'      => Ticket::WAITING],
                               ['field'      => 8,
                               'searchtype'  => 'equals',
@@ -629,22 +626,18 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'process',
-                              'value'      => 'notclosed',
+                              'value'      => 'waiting',
                               'link'       => 'AND'],
                              ['field' => 9,
                               'searchtype' => 'equals',
-                              'value'      => 'process',
                               'value'      => $currentUser,
                               'link'       => 'AND'],
                              ['field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'process',
-                              'value'      => 'notclosed',
+                              'value'      => 'waiting',
                               'link'       => 'OR'],
                              ['field' => 11,
                               'searchtype' => 'equals',
-                              'value'      => 'process',
                               'value'      => $currentUser,
                               'link'       => 'AND']],
               'reset'    => 'reset'];
@@ -670,7 +663,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       ];
 
       $searchIncoming = Search::getDatas(PluginFormcreatorIssue::class,
-                                         self::getIncomingCriteria());
+                                         self::getProcessingCriteria());
       if ($searchIncoming['data']['totalcount'] > 0) {
          $status[Ticket::INCOMING] = $searchIncoming['data']['totalcount'];
       }

@@ -211,7 +211,7 @@ class PluginFormcreatorWizard {
       if (isset($_SESSION['glpiextauth']) && $_SESSION['glpiextauth']) {
          echo '?noAUTO=1';
       }
-      echo '" class="fa fa-sign-out-alt" title="'.__s('Logout').'">';
+      echo '" class="fa fa-sign-out fa-sign-out-alt" title="'.__s('Logout').'">';
       echo '<span id="logout_icon" title="'.__s('Logout').'" alt="'.__s('Logout').'" class="button-icon"></span></a>';
       echo '</li>';
 
@@ -244,7 +244,7 @@ class PluginFormcreatorWizard {
 
       echo "<span class='status status_incoming'>
             <a href='".FORMCREATOR_ROOTDOC."/front/issue.php?".
-                     Toolbox::append_params(PluginFormcreatorIssue::getIncomingCriteria(), '&amp;')."'>
+                     Toolbox::append_params(PluginFormcreatorIssue::getProcessingCriteria(), '&amp;')."'>
             <span class='status_number'>".
             $status_count[Ticket::INCOMING]."
             </span>

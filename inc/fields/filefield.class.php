@@ -71,10 +71,9 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       if ($this->uploadData === null) {
          $this->uploadData = [];
       }
-      if (count($this->uploadData) === 0) {
+      $this->value = __('No attached document', 'formcreator');;
+      if (count($this->uploadData) > 0) {
          $this->value = __('Attached document', 'formcreator');
-      } else {
-         $this->value = '';
       }
    }
 

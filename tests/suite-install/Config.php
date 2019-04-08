@@ -91,16 +91,14 @@ class Config extends CommonTestCase {
       $this->resetGLPILogs();
 
       $plugin = new \Plugin();
+      // Since GLPI 9.4 plugins list is cached
+      $plugin->checkStates(true);
       $plugin->getFromDBbyDir($pluginname);
 
       // Install the plugin
       ob_start(function($in) { return ''; });
       $plugin->install($plugin->fields['id']);
       ob_end_clean();
-
-      // Assert the database matches the schema
-      $filename = GLPI_ROOT."/plugins/$pluginname/install/mysql/plugin_" . $pluginname . "_empty.sql";
-      $this->checkInstall($filename, 'glpi_plugin_' . $pluginname . '_', 'install');
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
@@ -109,9 +107,6 @@ class Config extends CommonTestCase {
       // Check the version saved in configuration
       $this->checkConfig();
       $this->testPluginName();
-
-      // Enable debug mode for enrollment messages
-      \Config::setConfigurationValues($pluginname, ['debug_enrolment' => '1']);
 
       // Take a snapshot of the database before any test
       $this->mysql_dump($DB->dbuser, $DB->dbhost, $DB->dbpassword, $DB->dbdefault, './save.sql');
@@ -163,11 +158,13 @@ class Config extends CommonTestCase {
    }
 
    public function checkConfig() {
+      $pluginName = TEST_PLUGIN_NAME;
+
       // Check the version saved in configuration
-      $config = \Config::getConfigurationValues($pluginname);
+      $config = \Config::getConfigurationValues($pluginName);
       $this->array($config)
          ->hasKeys(['schema_version'])
-         ->size(1);
+         ->hasSize(1);
       $this->string($config['schema_version'])->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
    }
 }
