@@ -75,7 +75,7 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
    }
 
    public function getDocumentsForTarget() {
-      return [];;
+      return [];
    }
 
    public function isValid() {

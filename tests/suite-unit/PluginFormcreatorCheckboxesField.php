@@ -521,4 +521,9 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
 }

@@ -255,7 +255,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          }
          $allowedDropdownValues = [];
          $stdtypes = Dropdown::getStandardDropdownItemTypes();
-         foreach (Dropdown::getStandardDropdownItemTypes() as $categoryOfTypes) {
+         foreach ($stdtypes as $categoryOfTypes) {
             $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
          }
          if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {

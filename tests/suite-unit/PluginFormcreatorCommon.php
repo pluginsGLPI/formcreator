@@ -39,4 +39,80 @@ class PluginFormcreatorCommon extends CommonTestCase {
       // The ID must be > 0 (aka found)
       $this->integer((integer) $requestTypeId)->isGreaterThan(0);
    }
+
+   public function testIsNotificationEnabled() {
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = '0';
+      $output = \PluginFormcreatorCommon::isNotificationEnabled();
+      $this->boolean($output)->isFalse();
+
+      $CFG_GLPI['use_notifications'] = '1';
+      $output = \PluginFormcreatorCommon::isNotificationEnabled();
+      $this->boolean($output)->isTrue();
+   }
+
+   public function testSetNotification() {
+      global $CFG_GLPI;
+
+      $CFG_GLPI['use_notifications'] = '1';
+      \PluginFormcreatorCommon::setNotification(false);
+      $this->integer((int) $CFG_GLPI['use_notifications'])->isEqualTo('0');
+
+      \PluginFormcreatorCommon::setNotification(true);
+      $this->integer((int) $CFG_GLPI['use_notifications'])->isEqualTo('1');
+   }
+
+   public function providerGetLinkName() {
+      return [
+         [
+            'value'     => '1',
+            'inverted'  => false,
+            'expected'  => 'Linked to',
+         ],
+         [
+            'value'     => '2',
+            'inverted'  => false,
+            'expected'  => 'Duplicates',
+         ],
+         [
+            'value'     => '3',
+            'inverted'  => false,
+            'expected'  => 'Son of',
+         ],
+         [
+            'value'     => '4',
+            'inverted'  => false,
+            'expected'  => 'Parent of',
+         ],
+         [
+            'value'     => '1',
+            'inverted'  => true,
+            'expected'  => 'Linked to',
+         ],
+         [
+            'value'     => '2',
+            'inverted'  => true,
+            'expected'  => 'Duplicated by',
+         ],
+         [
+            'value'     => '3',
+            'inverted'  => true,
+            'expected'  => 'Parent of',
+         ],
+         [
+            'value'     => '4',
+            'inverted'  => true,
+            'expected'  => 'Son of',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetLinkName
+    */
+   public function testGetLinkName($value, $inverted, $expected) {
+      $output = \PluginFormcreatorCommon::getLinkName($value, $inverted);
+      $this->string($output)->isEqualTo($expected);
+   }
 }
