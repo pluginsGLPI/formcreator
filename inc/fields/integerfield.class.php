@@ -223,11 +223,6 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['integer'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function getEmptyParameters() {
       $regexDoc = '<small>';
       $regexDoc.= '<a href="http://php.net/manual/reference.pcre.pattern.syntax.php" target="_blank">';

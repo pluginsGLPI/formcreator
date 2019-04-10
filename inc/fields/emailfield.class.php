@@ -125,11 +125,6 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['email'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function prepareQuestionInputForSave($input) {
       $input['values'] = '';
       $this->value = $input['default_values'];

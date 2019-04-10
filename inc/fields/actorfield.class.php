@@ -253,11 +253,6 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['actor'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function prepareQuestionInputForSave($input) {
       $parsed  = [];
       $defaultValue = $input['default_values'];

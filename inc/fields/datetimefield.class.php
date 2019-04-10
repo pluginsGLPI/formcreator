@@ -112,11 +112,6 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['datetime'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       if ($this->value === '') {
          $answer = '0000-00-00 00:00';

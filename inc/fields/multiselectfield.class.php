@@ -270,11 +270,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['multiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function getEmptyParameters() {
       return [
          'range' => new PluginFormcreatorQuestionRange(

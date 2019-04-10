@@ -155,11 +155,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['tag'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       if (!class_exists(PluginTagTag::class)) {
          // Plugin Tag not available

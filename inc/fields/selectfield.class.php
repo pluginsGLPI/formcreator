@@ -144,11 +144,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['select'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function getEmptyParameters() {
       return [];
    }

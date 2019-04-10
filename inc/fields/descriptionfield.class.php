@@ -115,11 +115,6 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['description'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }

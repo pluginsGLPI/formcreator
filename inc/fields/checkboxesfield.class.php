@@ -280,11 +280,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['checkboxes'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function getEmptyParameters() {
       return [
          'range' => new PluginFormcreatorQuestionRange(

@@ -103,21 +103,6 @@ class PluginFormcreatorFields
       return $tab_field_types_name;
    }
 
-   public static function printAllTabFieldsForJS() {
-      $tabFieldsForJS = '';
-      // Get field types and file path
-      $tab_field_types = self::getTypes();
-
-      // Get field types preference for JS
-      foreach (array_keys($tab_field_types) as $field_type) {
-         $classname = PluginFormcreatorFields::getFieldClassname($field_type);
-         if (method_exists($classname, 'getJSFields')) {
-            $tabFieldsForJS .= PHP_EOL.'            '.$classname::getJSFields();
-         }
-      }
-      return $tabFieldsForJS;
-   }
-
    /**
     * Check if a question should be shown or not
     *
