@@ -100,19 +100,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return $input;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 0,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
+   public static function canRequire() {
+      return false;
    }
 
    public function equals($value) {

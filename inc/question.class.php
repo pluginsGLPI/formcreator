@@ -216,7 +216,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             echo '<td align="center">';
 
             $classname = PluginFormcreatorFields::getFieldClassname($question['fieldtype']);
-            $fields = $classname::getPrefs();
 
             // avoid quote js error
             $question['name'] = htmlspecialchars_decode($question['name'], ENT_QUOTES);
@@ -233,7 +232,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
                      onclick="duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
             echo "</span>";
 
-            if ($fields['required'] != 0) {
+            if ($classname::canRequire()) {
                $required_pic = ($question['required'] ? "required": "not-required");
                echo "<span class='form_control pointer'>";
                echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/formcreator/pics/$required_pic.png'
