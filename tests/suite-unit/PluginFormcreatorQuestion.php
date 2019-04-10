@@ -325,4 +325,47 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->integer((int) $question->fields['order'])
          ->isEqualTo($expectedOrder);
    }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $instance = $this->getQuestion();
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'fieldtype',
+         'required',
+         'show_empty',
+         'default_values',
+         'values',
+         'range_min',
+         'range_max',
+         'description',
+         'order',
+         'show_rule',
+      ];
+      $extraFields = [
+         '_conditions',
+         '_parameters',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
 }

@@ -131,6 +131,39 @@ class PluginFormcreatorSection extends CommonTestCase {
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
    }
 
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $instance = $this->getSection();
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'order',
+      ];
+      $extraFields = [
+         '_questions',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
+
    public function testMoveUp() {
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm();

@@ -1031,9 +1031,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    }
 
    public function export($remove_uuid = false) {
-      global $DB;
-
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 

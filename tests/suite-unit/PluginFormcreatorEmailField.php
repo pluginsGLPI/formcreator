@@ -40,6 +40,11 @@ class PluginFormcreatorEmailField extends CommonTestCase {
       $this->boolean($output)->isEqualTo(true);
    }
 
+   public function getName() {
+      $output = \PluginFormcreatorEmailField::getName();
+      $this->string($output)->isEqualTo('Email');
+   }
+
    public function providerParseAnswerValue() {
       return [
          [
@@ -93,6 +98,48 @@ class PluginFormcreatorEmailField extends CommonTestCase {
       $instance = new \PluginFormcreatorEmailField(['id' => 1]);
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value' => 'foo@bar.baz',
+            'answer' => '',
+            'expected' => false,
+         ],
+         [
+            'value' => 'foo@bar.baz',
+            'answer' => 'foo@bar.baz',
+            'expected' => true,
+         ],
+         [
+            'value' => 'foo@bar.baz',
+            'answer' => 'foo@bar.com',
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorEmailField(['id' => '1']);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return $this->providerEquals();
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+    public function testNotEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorEmailField(['id' => '1'], $answer);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo(!$expected);
    }
 
    public function testGreaterThan() {

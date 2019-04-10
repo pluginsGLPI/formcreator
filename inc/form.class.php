@@ -1726,7 +1726,7 @@ PluginFormcreatorExportableInterface
    function export($remove_uuid = false) {
       global $DB;
 
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
@@ -1737,13 +1737,12 @@ PluginFormcreatorExportableInterface
       $form_profile   = new PluginFormcreatorForm_Profile;
 
       // replace entity id
-      if ($form['entities_id'] > 0) {
-         $form['_entity']
-            = Dropdown::getDropdownName(Entity::getTable(),
-                                        $form['entities_id']);
-      }
+      $form['_entity']
+         = Dropdown::getDropdownName(Entity::getTable(),
+                                       $form['entities_id']);
 
       // replace form category id
+      $form['_plugin_formcreator_category'] = '';
       if ($form['plugin_formcreator_categories_id'] > 0) {
          $form['_plugin_formcreator_category']
             = Dropdown::getDropdownName(PluginFormcreatorCategory::getTable(),
@@ -2035,7 +2034,7 @@ PluginFormcreatorExportableInterface
       $formCategory = new PluginFormcreatorCategory();
       $formCategoryFk = PluginFormcreatorCategory::getForeignKeyField();
       $formCategoryId = 0;
-      if (isset($input['_plugin_formcreator_category'])) {
+      if ($input['_plugin_formcreator_category'] != '') {
          $formCategoryId = $formCategory->import([
             'completename' => $input['_plugin_formcreator_category'],
          ]);

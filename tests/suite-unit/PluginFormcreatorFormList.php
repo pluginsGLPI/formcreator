@@ -61,4 +61,17 @@ class PluginFormcreatorFormList extends CommonTestCase {
       $output = $instance->getTypeName($nb);
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function testGetMenuContent() {
+      $output = \PluginFormcreatorFormList::getMenuContent();
+      $this->string($output['links']['search'])->isEqualTo('/plugins/formcreator/front/formlist.php');
+      $this->array($output['links'])->notHasKey('add');
+      $this->string($output['links']['config'])->isEqualTo('/plugins/formcreator/front/form.php');
+
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorFormList::getMenuContent();
+      $this->string($output['links']['search'])->isEqualTo('/plugins/formcreator/front/formlist.php');
+      $this->string($output['links']['add'])->isEqualTo('/plugins/formcreator/front/form.form.php');
+      $this->string($output['links']['config'])->isEqualTo('/plugins/formcreator/front/form.php');
+   }
 }

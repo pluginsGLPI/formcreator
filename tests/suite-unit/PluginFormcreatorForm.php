@@ -219,100 +219,54 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->integer((int) $foundNotifications['cpt'])->isEqualTo(2);
    }
 
-   /**
-    * @cover PluginFormcreatorForm::export
-    */
-   public function testExportForm() {
-      // instanciate classes
-      $form                = new \PluginFormcreatorForm;
-      $form_section        = new \PluginFormcreatorSection;
-      $form_question       = new \PluginFormcreatorQuestion;
-      $form_condition      = new \PluginFormcreatorQuestion_Condition;
-      $form_validator      = new \PluginFormcreatorForm_Validator;
-      $form_profile        = new \PluginFormcreatorForm_Profile;
-      $targetTicket        = new \PluginFormcreatorTargetTicket();
-      $item_targetTicket   = new \PluginFormcreatorItem_TargetTicket();
+   public function testExport() {
+      $instance = $this->newTestedInstance();
 
-      // create objects
-      $forms_id = $form->add([
-         'name'                => "test export form",
-         'is_active'           => true,
-         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER
-      ]);
-      $sections_id = $form_section->add([
-         'name'                        => "test export section",
-         'plugin_formcreator_forms_id' => $forms_id
-      ]);
-      $questions_id_1 = $form_question->add([
-         'name'                           => "test export question 1",
-         'fieldtype'                      => 'text',
-         'plugin_formcreator_sections_id' => $sections_id
-      ]);
-      $questions_id_2 = $form_question->add([
-         'name'                           => "test export question 2",
-         'fieldtype'                      => 'textarea',
-         'plugin_formcreator_sections_id' => $sections_id
-      ]);
-      $form_condition->add([
-         'plugin_formcreator_questions_id' => $questions_id_1,
-         'show_field'                      => $questions_id_2,
-         'show_condition'                  => \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-         'show_value'                      => 'test'
-      ]);
-      $form_validator->add([
-         'plugin_formcreator_forms_id' => $forms_id,
-         'itemtype'                    => 'User',
-         'items_id'                    => 2
-      ]);
-      $form_validator->add([
-         'plugin_formcreator_forms_id' => $forms_id,
-         'itemtype'                    => 'User',
-         'items_id'                    => 3
-      ]);
-      $targetTicket_id = $targetTicket->add([
-         'name'         => $this->getUniqueString(),
-         'plugin_formcreator_forms_id' => $forms_id,
-         'content'      => '##FULLFORM##'
-      ]);
-      $form_profile->add(['plugin_formcreator_forms_id' => $forms_id,
-                                                   'profiles_id' => 1]);
-      $item_targetTicket->add(['plugin_formcreator_targettickets_id' => $targetTicket_id,
-                               'link'     => \Ticket_Ticket::LINK_TO,
-                               'itemtype' => $targetTicket->getType(),
-                               'items_id' => $targetTicket_id
-      ]);
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
 
-      $form->getFromDB($form->getID());
-      $export = $form->export();
+      // Prepare an item to export
+      $instance = $this->getForm();
+      $instance->getFromDB($instance->getID());
 
-      $this->_checkForm($export);
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
 
-      foreach ($export['_sections'] as $section) {
-         $this->_checkSection($section);
-      }
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'is_recursive',
+         'access_rights',
+         'requesttype',
+         'description',
+         'content',
+         'is_active',
+         'language',
+         'helpdesk_home',
+         'is_deleted',
+         'validation_required',
+         'is_default',
+      ];
+      $extraFields = [
+         '_entity',
+         '_plugin_formcreator_category',
+         '_profiles',
+         '_sections',
+         '_targets',
+         '_validators',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
 
-      foreach ($export['_validators'] as $validator) {
-         $this->_checkValidator($validator);
-      }
-
-      foreach ($export['_targets'] as $targetType => $targets) {
-         foreach ($targets as $target) {
-            switch ($targetType) {
-               case \PluginFormcreatorTargetTicket::class:
-                  $this->_checkTargetTicket($target);
-                  break;
-
-               case \PluginFormcreatorTargetChange::class:
-                  $this->_checkTargetChange($target);
-                  break;
-            }
-         }
-      }
-
-      foreach ($export['_profiles'] as $form_profile) {
-         $this->_checkFormProfile($form_profile);
-      }
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
+
 
    protected function _checkForm($form = []) {
       $keys = [
@@ -390,21 +344,21 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    public function providerIsPublicAcess() {
       return [
-         'not public' =>[
+         'not public' => [
             'input' => [
                'access_rights' => (string) \PluginFormcreatorForm::ACCESS_PRIVATE,
                'name' => $this->getUniqueString()
             ],
             'expected' => false,
          ],
-         'public' =>[
+         'public' => [
             'input' => [
                'access_rights' => (string) \PluginFormcreatorForm::ACCESS_PUBLIC,
                'name' => $this->getUniqueString()
             ],
             'expected' => true,
          ],
-         'by profile' =>[
+         'by profile' => [
             'input' => [
                'access_rights' => (string) \PluginFormcreatorForm::ACCESS_RESTRICTED,
                'name' => $this->getUniqueString()
