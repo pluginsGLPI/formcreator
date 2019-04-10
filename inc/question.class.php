@@ -912,6 +912,20 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
     * @return integer|boolean ID of  the new question, false otherwise
     */
    public function duplicate() {
+      $linker = new PluginFormcreatorLinker();
+
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $export = $this->export(true);
+      $export['uuid'] = plugin_formcreator_getUuid();
+      $newQµuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
+
+      if ($newQµuestionId === false) {
+         return false;
+      }
+      $linker->linkPostponed();
+
+      return $newQµuestionId;
+
       global $DB;
 
       $oldQuestionId       = $this->getID();
@@ -969,8 +983,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $input['plugin_formcreator_sections_id'] = $containerId;
-      $input['_skip_checks']                   = true;
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $input[$sectionFk] = $containerId;
+      $input['_skip_checks'] = true;
 
       $item = new self;
       // Find an existing question to update, only if an UUID is available
@@ -1007,10 +1022,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
       $linker->addObject($originalId, $item);
 
-      if ($questions_id
-          && isset($input['_conditions'])) {
-         $linker->addObject($originalId, $item);
-
+      if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
             PluginFormcreatorQuestion_Condition::import($linker, $condition, $questions_id);
          }
@@ -1038,7 +1050,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $question = $this->fields;
 
       // remove key and fk
-      unset($question['plugin_formcreator_sections_id']);
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      unset($question[$sectionFk]);
 
       // get question conditions
       $question['_conditions'] = [];

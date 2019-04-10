@@ -132,18 +132,7 @@ extends PluginFormcreatorQuestionParameter
       if ($remove_uuid) {
          $idToRemove = 'uuid';
       }
-      unset($question[$idToRemove]);
-
-      return $parameter;
-   }
-
-   public function duplicate(PluginFormcreatorQuestion $newQuestion, array $tab_questions) {
-      $parameter = parent::duplicate($newQuestion, $tab_questions);
-
-      // update the question ID the parameter depends on
-      if (isset($tab_questions[$parameter->fields['plugin_formcreator_questions_id_2']])) {
-         $parameter->fields['plugin_formcreator_questions_id_2'] = $tab_questions[$parameter->fields['plugin_formcreator_questions_id_2']];
-      }
+      unset($parameter[$idToRemove]);
 
       return $parameter;
    }

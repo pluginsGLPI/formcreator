@@ -161,100 +161,20 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
     * @return integer|boolean ID of the new section, false otherwise
     */
    public function duplicate() {
-      global $DB;
+      $linker = new PluginFormcreatorLinker();
 
-      $oldSectionId        = $this->getID();
-      $newSection          = new static();
-      $section_question    = new PluginFormcreatorQuestion();
-      $question_condition  = new PluginFormcreatorQuestion_Condition();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $export = $this->export(true);
+      $export['uuid'] = plugin_formcreator_getUuid();
+      $newSectionId = static::import($linker, $export, $this->fields[$formFk]);
 
-      $tab_questions       = [];
-
-      $row = $this->fields;
-      unset($row['id'],
-            $row['uuid']);
-
-      // escape text fields
-      foreach (['name'] as $key) {
-         $row[$key] = $DB->escape($row[$key]);
-      }
-
-      $newSection_id = $newSection->add($row);
-      if ($newSection_id === false) {
+      if ($newSectionId === false) {
          return false;
       }
+      $linker->linkPostponed();
 
-      // Form questions
-      $rows = $DB->request([
-         'FROM'  => $section_question::getTable(),
-         'WHERE' => [
-            'plugin_formcreator_sections_id' => $oldSectionId
-         ],
-         'ORDER' => 'order ASC'
-      ]);
-      foreach ($rows as $questions_id => $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_sections_id'] = $newSection_id;
-         $row['_skip_checks'] = true;
-
-         // escape text fields
-         foreach (['name', 'description'] as $key) {
-            $row[$key] = $DB->escape($row[$key]);
-         }
-
-         if (!$new_questions_id = $section_question->add($row)) {
-            return false;
-         }
-
-         $tab_questions[$questions_id] = $new_questions_id;
-      }
-
-      // Form questions parameters
-      foreach ($tab_questions as $questions_id => $new_questions_id) {
-         $oldQuestion = new PluginFormcreatorQuestion();
-         $oldQuestion->getFromDB($questions_id);
-         $this->field = PluginFormcreatorFields::getFieldInstance(
-            $oldQuestion->getField('fieldtype'),
-            $oldQuestion
-         );
-         $parameters = $this->field->getParameters();
-         foreach ($parameters as $parameter) {
-            if (!$parameter->isNewItem()) {
-               // Should always happen
-               $newQuestion = new PluginFormcreatorQuestion();
-               $newQuestion->getFromDB($new_questions_id);
-               $parameter = $parameter->duplicate($newQuestion, $tab_questions);
-               $parameter->add($parameter->fields);
-            }
-         }
-      }
-
-      // Form questions conditions
-      if (count($tab_questions) > 0) {
-         $rows = $DB->request([
-            'FROM'    => $question_condition::getTable(),
-            'WHERE'   => [
-               'plugin_formcreator_questions_id' => $tab_questions
-            ]
-         ]);
-         foreach ($rows as $row) {
-            unset($row['id'],
-                  $row['uuid']);
-            if (isset($tab_questions[$row['show_field']])) {
-               // update show_field if id in show_field belongs to the section being duplicated
-               $row['show_field'] = $tab_questions[$row['show_field']];
-            }
-            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-            if (!$question_condition->add($row)) {
-               return false;
-            }
-         }
-      }
-
-      return $newSection_id;
+      return $newSectionId;
    }
-
 
    public function moveUp() {
       $order         = $this->fields['order'];
@@ -358,8 +278,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
                return 0;
             }
             return ($a['order'] < $b['order']) ? -1 : 1;
-         }
-         );
+         });
 
          foreach ($input['_questions'] as $question) {
             PluginFormcreatorQuestion::import($linker, $question, $sectionId);
@@ -380,7 +299,8 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $section       = $this->fields;
 
       // remove key and fk
-      unset($section['plugin_formcreator_forms_id']);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      unset($section[$formFk]);
 
       // get questions
       $section['_questions'] = [];

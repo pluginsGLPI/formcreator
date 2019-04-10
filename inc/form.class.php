@@ -1583,7 +1583,7 @@ PluginFormcreatorExportableInterface
     * @return Boolean true if success, false otherwise.
     */
    public function duplicate() {
-      $linker              = new PluginFormcreatorLinker();
+      $linker = new PluginFormcreatorLinker();
 
       $export = $this->export(true);
       $export['uuid'] = plugin_formcreator_getUuid();
