@@ -39,4 +39,77 @@ class PluginFormcreatorEmailField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function providerParseAnswerValue() {
+      return [
+         [
+            'input' => 42,
+            'expected' => false,
+         ],
+         [
+            'input' => '',
+            'expected' => true,
+         ],
+         [
+            'input' => 'foo@bar.baz',
+            'expected' => true,
+         ],
+         [
+            'input' => 'not an email',
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerParseAnswerValue
+    */
+   public function testParseAnswerValue($input, $expected) {
+      $instance = $this->newTestedInstance([
+         'id' => 1
+      ]);
+      $output = $instance->parseAnswerValues([
+         'formcreator_field_1' => $input
+      ]);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerSerializeValue() {
+      return $this->providerParseAnswerValue();
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorEmailField(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
+
+      $this->string($output)->isEqualTo($expected ? $value : '');
+   }
+
+   public  function  testIsAnonymousFormCompatible() {
+      $instance = new \PluginFormcreatorEmailField(['id' => 1]);
+      $output = $instance->isAnonymousFormCompatible();
+      $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testGreaterThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorEmailField([]);
+            $instance->greaterThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testLessThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorEmailField([]);
+            $instance->lessThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
 }
