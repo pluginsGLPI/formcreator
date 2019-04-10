@@ -99,39 +99,57 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $parameter = [], $questions_id = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $parameter['plugin_formcreator_questions_id'] = $questions_id;
-      $fieldName = $parameter['fieldname'];
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $input[$questionFk] = $containerId;
+      $fieldName = $input['fieldname'];
 
       // get a built instance of the parameter
       $question = new PluginFormcreatorquestion();
-      $question->getFromDB($questions_id);
+      $question->getFromDB($containerId);
       $field = PluginFormcreatorFields::getFieldInstance(
          $question->getField('fieldtype'),
          $question
       );
       $parameters = $field->getEmptyParameters();
       $item = $parameters[$fieldName];
-      $found = $item->getFromDBByCrit([
-         'plugin_formcreator_questions_id' => $questions_id,
-         'fieldname' => $fieldName,
-      ]);
-      if (!$item->convertUuids($parameter)) {
-         $linker->postpone($parameter['uuid'], $item->getType(), $parameter, $questions_id);
+      // Find an existing section to update, only if an UUID is available
+      if (isset($input['uuid'])) {
+         $parameterId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
+      if (!$item->convertUuids($input)) {
+         $linker->postpone($input['uuid'], $item->getType(), $input, $containerId);
          return false;
       }
 
       // escape text fields
       foreach (['fieldname'] as $key) {
-         $parameter[$key] = $DB->escape($parameter[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
-      if ($found) {
-         $parameter['id'] = $item->getID();
-         $item->update($parameter);
+
+      // Add or update section
+      if (!$item->isNewItem()) {
+         $input['id'] = $parameterId;
+         $originalId = $input['id'];
+         $item->update($input);
       } else {
-         $item->add($parameter);
+         $originalId = $input['id'];
+         unset($input['id']);
+         $parameterId = $item->add($input);
+      }
+      if ($parameterId === false) {
+         throw new ImportFailureException();
+      }
+
+      // add the section to the linker
+      if (isset($input['uuid'])) {
+         $originalId = $input['uuid'];
       }
       $linker->addObject($item->fields['uuid'], $item);
    }
@@ -149,25 +167,5 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
     */
    protected function convertUuids(&$parameter) {
       return true;
-   }
-
-   /**
-    * Duplicates a parameter
-    * @param PluginFormcreatorQuestion $newQuestion question which will contain the new parameter
-    * @param array $tab_questions map old question ID => new question ID
-    * @return PluginFormcreatorQuestionParameter new isntance (not saved in DB)
-    */
-   public function duplicate(PluginFormcreatorQuestion $newQuestion, array $tab_questions) {
-      $parameter = new static($this->field, ['fieldName' => $this->fieldName, 'label' => $this->label]);
-      $row = $this->fields;
-      unset($row['id']);
-
-      // Update the question ID linked to the parameter with the old/new question ID map
-      $questionKey = PluginFormcreatorQuestion::getForeignKeyField();
-      $row[$questionKey] = $tab_questions[$this->fields[$questionKey]];
-
-      // return  the new instance, not saved yet in DB
-      $parameter->fields = $row;
-      return $parameter;
    }
 }

@@ -109,14 +109,14 @@ extends PluginFormcreatorQuestionParameter
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $parameter = [], $question_id = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
       // escape text fields
       foreach (['regex'] as $key) {
-         $parameter[$key] = $DB->escape($parameter[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      parent::import($linker, $parameter, $question_id);
+      parent::import($linker, $input, $containerId);
    }
 }
