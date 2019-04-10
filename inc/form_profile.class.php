@@ -202,7 +202,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
