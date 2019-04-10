@@ -41,7 +41,7 @@ interface PluginFormcreatorFieldInterface
     */
    public static function getName();
 
-   public static function getPrefs();
+   public static function canRequire();
 
    /**
     * Are the prerequisites met to use this field ?

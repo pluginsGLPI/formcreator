@@ -424,19 +424,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return $input;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 1,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 1,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
+   public static function canRequire() {
+      return true;
    }
 
    /**
