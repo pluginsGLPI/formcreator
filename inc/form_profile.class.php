@@ -121,7 +121,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
                ]
             ],
             'WHERE' => [
-               "$formProfile.$formFk" => $item->getID(),
+               "$formProfileTable.$formFk" => $item->getID(),
             ],
          ]);
          foreach ($result as $row) {
@@ -190,7 +190,7 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       if (isset($input['uuid'])) {
          $originalId = $input['uuid'];
       }
-      $linker->addObject($originalId, $form_obj);
+      $linker->addObject($originalId, $item);
 
       return $formProfileId;
    }
