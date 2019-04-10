@@ -439,11 +439,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['dropdown'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    /**
     * get groups of the current user
     *

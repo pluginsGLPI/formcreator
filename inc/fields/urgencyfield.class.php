@@ -190,11 +190,6 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['urgency'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       $available = $this->getAvailableValues();
       return strcasecmp($available[$this->value], $value) === 0;

@@ -723,8 +723,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    public function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
-      $rootDoc = $CFG_GLPI['root_doc'];
-
       // Find the form of the question
       $section = new PluginFormcreatorSection();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
@@ -835,9 +833,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '</td>';
       echo '</tr>';
 
-      // DOM selectors of all possible parameters
-      $allParameterSelectors = [];
-
       // Empty row for question-specific settings
       // To be replaced bydynamically
       echo '<tr class="plugin_formcreator_question_specific">';
@@ -906,8 +901,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       }
       echo '</td>';
       echo '</tr>';
-      $rootDoc = $CFG_GLPI['root_doc'];
-      $allTabFields = PluginFormcreatorFields::printAllTabFieldsForJS();
       echo '</table>';
 
       echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");

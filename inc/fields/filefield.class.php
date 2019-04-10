@@ -124,11 +124,6 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['file'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    /**
     * Save an uploaded file into a document object, link it to the answers
     * and returns the document ID

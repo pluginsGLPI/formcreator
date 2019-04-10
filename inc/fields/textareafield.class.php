@@ -148,11 +148,6 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       return $this->value;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['textarea'] = 'showFields(".implode(', ', $prefs).");';";
-   }
-
    public function equals($value) {
       return $this->value == $value;
    }

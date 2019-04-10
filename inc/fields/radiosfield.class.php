@@ -231,11 +231,6 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['radios'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       return $this->value == $value;
    }

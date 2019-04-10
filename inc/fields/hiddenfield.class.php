@@ -133,11 +133,6 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return true;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['hidden'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       return $this->value == $value;
    }

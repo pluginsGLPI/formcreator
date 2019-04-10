@@ -43,8 +43,6 @@ interface PluginFormcreatorFieldInterface
 
    public static function getPrefs();
 
-   public static function getJSFields();
-
    /**
     * Are the prerequisites met to use this field ?
     */

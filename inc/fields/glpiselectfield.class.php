@@ -154,11 +154,6 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       ];
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['glpiselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
-   }
-
    public function equals($value) {
       $value = html_entity_decode($value);
       $itemtype = $this->fields['values'];
