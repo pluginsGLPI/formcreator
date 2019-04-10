@@ -91,7 +91,7 @@ extends PluginFormcreatorQuestionParameter
    }
 
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 

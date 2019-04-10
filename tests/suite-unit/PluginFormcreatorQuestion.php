@@ -348,8 +348,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'show_empty',
          'default_values',
          'values',
-         'range_min',
-         'range_max',
          'description',
          'order',
          'show_rule',
