@@ -1409,7 +1409,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $question['_skip_checks']                   = true;
 
       // escape text fields
-      foreach (['name', 'description'] as $key) {
+      foreach (['name', 'description', 'values'] as $key) {
          $question[$key] = $DB->escape($question[$key]);
       }
 
