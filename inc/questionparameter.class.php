@@ -115,7 +115,7 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
       );
       $parameters = $field->getEmptyParameters();
       $item = $parameters[$fieldName];
-      // Find an existing section to update, only if an UUID is available
+      // Find an existing parameter to update, only if an UUID is available
       if (isset($input['uuid'])) {
          $parameterId = plugin_formcreator_getFromDBByField(
             $item,
@@ -123,17 +123,13 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
             $input['uuid']
          );
       }
-      if (!$item->convertUuids($input)) {
-         $linker->postpone($input['uuid'], $item->getType(), $input, $containerId);
-         return false;
-      }
 
       // escape text fields
       foreach (['fieldname'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
       }
 
-      // Add or update section
+      // Add or update parameter
       if (!$item->isNewItem()) {
          $input['id'] = $parameterId;
          $originalId = $input['id'];
@@ -147,11 +143,16 @@ implements PluginFormcreatorQuestionParameterInterface, PluginFormcreatorExporta
          throw new ImportFailureException();
       }
 
-      // add the section to the linker
+      if (!$item->convertUuids($input)) {
+         $linker->postpone($input['uuid'], $item->getType(), $input, $containerId);
+         return false;
+      }
+
+      // add the parameter to the linker
       if (isset($input['uuid'])) {
          $originalId = $input['uuid'];
       }
-      $linker->addObject($item->fields['uuid'], $item);
+      $linker->addObject($originalId, $item);
    }
 
    /**

@@ -201,7 +201,7 @@ abstract class CommonTestCase extends CommonDBTestCase
          'default_values'                 => '',
          'desription'                     => '',
          'order'                          => '1',
-         'show_rule'                      =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+         'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
          '_parameters'     => [
             'text' => [
                'range' => [
@@ -218,6 +218,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       $question = new \PluginFormcreatorQuestion();
       $question->add($input);
       $question->getFromDB($question->getID());
+      $question->updateParameters($input);
 
       return $question;
    }
