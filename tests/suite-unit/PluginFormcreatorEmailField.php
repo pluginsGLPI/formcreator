@@ -136,7 +136,7 @@ class PluginFormcreatorEmailField extends CommonTestCase {
    /**
     * @dataProvider providerNotEquals
     */
-    public function testNotEquals($value, $answer, $expected) {
+   public function testNotEquals($value, $answer, $expected) {
       $instance = new \PluginFormcreatorEmailField(['id' => '1'], $answer);
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo(!$expected);

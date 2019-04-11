@@ -14,13 +14,12 @@ function tests_rrmdir($src) {
    if ($dir === false) {
       return;
    }
-   while(false !== ( $file = readdir($dir)) ) {
+   while (false !== ( $file = readdir($dir))) {
       if (( $file != '.' ) && ( $file != '..' )) {
          $full = $src . '/' . $file;
-         if ( is_dir($full) ) {
+         if (is_dir($full)) {
             tests_rrmdir($full);
-         }
-         else {
+         } else {
             unlink($full);
          }
       }

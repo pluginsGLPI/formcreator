@@ -478,7 +478,8 @@ PluginFormcreatorExportableInterface
       Dropdown::show(
          User::class, [
          'condition' => $usersCondition
-      ]);
+         ]
+      );
       echo '</div>';
 
       // Validators groups
@@ -530,7 +531,8 @@ PluginFormcreatorExportableInterface
       Dropdown::show(
          Group::class, [
          'condition' => $groupsCondition
-      ]);
+         ]
+      );
 
       // echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
       // if (!empty($groups_users)) {
@@ -1919,7 +1921,7 @@ PluginFormcreatorExportableInterface
     *
     * @return void
     */
-    public function showAdTargetForm() {
+   public function showAdTargetForm() {
       echo '<form name="form_target" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
 
@@ -1931,7 +1933,7 @@ PluginFormcreatorExportableInterface
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $typeNames = [];
-      foreach($this->getTargetTypes() as $targetType) {
+      foreach ($this->getTargetTypes() as $targetType) {
          $typeNames[$targetType] = $targetType::getTypeName();
       }
       Dropdown::showFromArray('itemtype', $typeNames);
@@ -2156,7 +2158,7 @@ PluginFormcreatorExportableInterface
       // Import validators
       if (isset($input['_validators'])) {
          $importedItems = [];
-         foreach($input['_validators'] as $validator) {
+         foreach ($input['_validators'] as $validator) {
             $importedItem = PluginFormcreatorForm_Validator::import(
                $linker,
                $validator,
