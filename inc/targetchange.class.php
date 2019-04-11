@@ -111,7 +111,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
       }
 
-
    }
 
    /**
@@ -199,7 +198,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $input[$key] = $DB->escape($input[$key]);
       }
 
-      // Add or update 
+      // Add or update
       if (!$item->isNewItem()) {
          $input['id'] = $targetChangeId;
          $originalId = $input['id'];
@@ -439,7 +438,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @param CommonDBTM $item
     * @return boolean
     */
-    public function pre_purgeItem() {
+   public function pre_purgeItem() {
       if (!parent::pre_purgeItem()) {
          $this->input = false;
          return false;

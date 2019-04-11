@@ -95,7 +95,7 @@ class PluginFormcreatorQuestionRange extends CommonTestCase {
                   'range_max' => '5',
                ],
             ]
-         ]  
+         ]
       ]);
       $instance->getFromDBByCrit([
          'plugin_formcreator_questions_id' => $question->getID(),

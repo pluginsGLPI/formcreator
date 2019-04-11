@@ -92,7 +92,7 @@ class PluginFormcreatorQuestionRegex extends CommonTestCase {
                   'regex' => '/a-zA-Z/',
                ],
             ]
-         ]  
+         ]
       ]);
       $instance->getFromDBByCrit([
          'plugin_formcreator_questions_id' => $question->getID(),

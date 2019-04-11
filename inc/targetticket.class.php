@@ -451,7 +451,7 @@ SCRIPT;
     * @param CommonDBTM $item
     * @return boolean
     */
-    public function pre_purgeItem() {
+   public function pre_purgeItem() {
       if (!parent::pre_purgeItem()) {
          $this->input = false;
          return false;
@@ -931,7 +931,7 @@ SCRIPT;
          $input[$key] = $DB->escape($input[$key]);
       }
 
-      // Add or update 
+      // Add or update
       if (!$item->isNewItem()) {
          $input['id'] = $targetTicketId;
          $originalId = $input['id'];
