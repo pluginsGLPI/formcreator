@@ -202,4 +202,12 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorFloatField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

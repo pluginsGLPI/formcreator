@@ -257,4 +257,12 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorTextField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

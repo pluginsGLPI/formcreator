@@ -57,4 +57,12 @@ class PluginFormcreatorIpField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorIpField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isFalse();
+   }
 }

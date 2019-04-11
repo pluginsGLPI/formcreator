@@ -57,4 +57,12 @@ class PluginFormcreatorFileField extends CommonTestCase {
       $this->string($instance->getValueForTargetText(true))
          ->isEqualTo('Attached document');
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorFileField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

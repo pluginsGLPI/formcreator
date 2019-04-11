@@ -213,4 +213,12 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorIntegerField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

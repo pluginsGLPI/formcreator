@@ -314,4 +314,12 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
       $output = $instance->getValueForTargetText(true);
       $this->string($output)->isEqualTo('bar foo');
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorGlpiselectField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

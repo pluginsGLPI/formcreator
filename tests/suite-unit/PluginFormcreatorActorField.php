@@ -382,4 +382,11 @@ class PluginFormcreatorActorField extends CommonTestCase {
       $instance = $this->newTestedInstance([]);
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
-}
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorActorField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }}
