@@ -917,67 +917,14 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $export = $this->export(true);
       $export['uuid'] = plugin_formcreator_getUuid();
-      $newQµuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
+      $newQuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
 
-      if ($newQµuestionId === false) {
+      if ($newQuestionId === false) {
          return false;
       }
       $linker->linkPostponed();
 
-      return $newQµuestionId;
-
-      global $DB;
-
-      $oldQuestionId       = $this->getID();
-      $newQuestion         = new static();
-      $question_condition  = new PluginFormcreatorQuestion_Condition();
-
-      $row = $this->fields;
-      unset($row['id'],
-            $row['uuid']);
-
-      $row['_skip_checks'] = true;
-
-      // escape text fields
-      foreach (['name', 'description'] as $key) {
-         $row[$key] = $DB->escape($row[$key]);
-      }
-
-      $newQuestion_id = $newQuestion->add($row);
-      if ($newQuestion_id === false) {
-         return false;
-      }
-
-      // Form questions parameters
-      $this->field = PluginFormcreatorFields::getFieldInstance(
-         $this->getField('fieldtype'),
-         $this
-      );
-      $parameters = $this->field->getParameters();
-      foreach ($parameters as $parameter) {
-         $row = $parameter->fields;
-         $row[PluginFormcreatorQuestion::getForeignKeyField()] = $newQuestion->getID();
-         unset($row['id']);
-         $parameter->add($row);
-      }
-
-      // Form questions conditions
-      $rows = $DB->request([
-         'FROM'    => $question_condition::getTable(),
-         'WHERE'   => [
-            'plugin_formcreator_questions_id' => $oldQuestionId
-         ]
-      ]);
-      foreach ($rows as $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_questions_id'] = $newQuestion_id;
-         if (!$question_condition->add($row)) {
-            return false;
-         }
-      }
-
-      return $newQuestion_id;
+      return $newQuestionId;
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
