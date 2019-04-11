@@ -82,7 +82,6 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
          'display'   => false,
       ]);
 
-      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';
