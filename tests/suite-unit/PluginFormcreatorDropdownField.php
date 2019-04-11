@@ -242,4 +242,12 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorDropdownField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

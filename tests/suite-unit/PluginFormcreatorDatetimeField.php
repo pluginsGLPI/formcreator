@@ -293,4 +293,12 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $instance = $this->newTestedInstance([]);
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorDatetimeField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }

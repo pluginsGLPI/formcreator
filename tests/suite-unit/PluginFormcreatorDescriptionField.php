@@ -109,4 +109,11 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorDescriptionField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isFalse();
+   }
 }

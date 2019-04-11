@@ -85,9 +85,17 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextareaField([]);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorTextareaField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
    }
 }

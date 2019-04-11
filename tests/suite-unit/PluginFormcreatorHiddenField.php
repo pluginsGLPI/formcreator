@@ -55,4 +55,12 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorHiddenField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isFalse();
+   }
 }

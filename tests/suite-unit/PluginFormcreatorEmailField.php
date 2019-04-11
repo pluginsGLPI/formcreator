@@ -159,4 +159,12 @@ class PluginFormcreatorEmailField extends CommonTestCase {
          }
       )->isInstanceOf(\PluginFormcreatorComparisonException::class);
    }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorEmailField([
+         'id' => '1',
+      ]);
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
 }
