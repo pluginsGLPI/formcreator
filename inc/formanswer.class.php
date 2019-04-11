@@ -1025,7 +1025,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Generates all targets for the answers
     */
    public function generateTarget() {
-      global $CFG_GLPI, $DB;
+      global $CFG_GLPI;
 
       $success = true;
 
@@ -1101,7 +1101,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @return String Full form questions and answers to be print
     */
    public function getFullForm($richText = false) {
-      global $CFG_GLPI, $DB;
+      global $DB;
 
       $question_no = 0;
       $output      = '';

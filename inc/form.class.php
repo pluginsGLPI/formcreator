@@ -418,18 +418,6 @@ PluginFormcreatorExportableInterface
             'plugin_formcreator_forms_id' => $this->getID()
          ]
       ]);
-      $validators = [];
-      foreach ($rows as $row) {
-         $validators[] = $row['items_id'];
-      }
-
-      // If the form is recursive, authorize the validators in sub-entities
-      // If it isn't, only the validators of the entity of the form
-      if ($this->isRecursive()) {
-         $entites = getSonsOf('glpi_entities', $this->getEntityID());
-      } else {
-         $entites = $this->getEntityID();
-      }
 
       // Select all users with ticket validation right and the groups
       $userTable = User::getTable();
@@ -440,7 +428,6 @@ PluginFormcreatorExportableInterface
       $profileTable = Profile::getTable();
       $profileFk = Profile::getForeignKeyField();
       $profileRightTable = ProfileRight::getTable();
-      $profileRightFk = ProfileRight::getForeignKeyField();
       $groupUserTable = Group_User::getTable();
       $subQuery = [
          'SELECT' => "$profileUserTable.$userFk",
@@ -534,39 +521,6 @@ PluginFormcreatorExportableInterface
          ]
       );
 
-      // echo '<select name="_validator_groups[]" size="4" style="width: 100%" multiple id="validator_groups">';
-      // if (!empty($groups_users)) {
-      //    $groupTable = Group::getTable();
-      //    $groupUserTable = Group_User::getTable();
-      //    $result = $DB->request([
-      //       'SELECT DISTINCT' => [
-      //          $groupTable => ['id', 'completename'],
-      //       ],
-      //       'FROM' => $groupTable,
-      //       'INNER JOIN' => [
-      //          $groupUserTable => [
-      //             'FKEY' => [
-      //                $groupTable => 'id',
-      //                $groupUserTable => Group::getForeignKeyField()
-      //             ],
-      //          ]
-      //       ],
-      //       'WHERE' => [
-      //          "$groupUserTable.users_id" => $usersCondition,
-      //       ],
-      //       'ORDER' => [
-      //          "$groupTable.completename"
-      //       ],
-      //    ]);
-      //    foreach ($result as $group) {
-      //       echo '<option value="' . $group['id'] . '"';
-      //       if (in_array($group['id'], $validators)) {
-      //          echo ' selected="selected"';
-      //       }
-      //       echo '>' . $group['completename'] . '</option>';
-      //    }
-      // }
-      // echo '</select>';
       echo '</div>';
 
       $script = 'function plugin_formcreator_changeValidators(value) {
@@ -597,7 +551,7 @@ PluginFormcreatorExportableInterface
    }
 
    public function showTargets($ID, $options = []) {
-      global $CFG_GLPI, $DB;
+      global $CFG_GLPI;
 
       echo '<table class="tab_cadre_fixe">';
 
@@ -1063,14 +1017,6 @@ PluginFormcreatorExportableInterface
       $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
-      $query = "SELECT fa.`id`, f.`name`, fa.`status`, fa.`request_date`
-                      FROM glpi_plugin_formcreator_forms f
-                      INNER JOIN glpi_plugin_formcreator_formanswers fa ON f.`id` = fa.`plugin_formcreator_forms_id`
-                      WHERE fa.`requester_id` = '$userId'
-                      AND f.is_deleted = 0
-                      ORDER BY fa.`status` ASC, fa.`request_date` DESC
-                      LIMIT 0, 5";
-
       $formAnswerTable = PluginFormAnswer::getTable();
       $formTable = self::getTable();
       $formFk = self::getForeignKeyField();
@@ -1554,25 +1500,27 @@ PluginFormcreatorExportableInterface
     * @param integer $questionId
     */
    public function getByQuestionId($questionId) {
-      $table_sections = PluginFormcreatorSection::getTable();
-      $table_questions = PluginFormcreatorQuestion::getTable();
+      $formTable = PluginFormcreatorForm::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
+      $questionTable = PluginFormcreatorQuestion::getTable();
       $this->getFromDBByRequest([
          'INNER JOIN' => [
-            PluginFormcreatorSection::getTable() => [
+            $sectionTable => [
                'FKEY' => [
-                  PluginFormcreatorForm::getTable()    => 'id',
-                  PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getForeignKeyField(),
+                  $formTable    => 'id',
+                  $sectionTable => $sectionFk,
                ]
             ],
-            PluginFormcreatorQuestion::getTable() => [
+            $questionTable => [
                'FKEY' => [
-                  PluginFormcreatorQuestion::getTable() => PluginFormcreatorSection::getForeignKeyField(),
-                  PluginFormcreatorSection::getTable()  => 'id'
+                  $questionTable => $sectionFk,
+                  $sectionTable  => 'id'
                ]
             ]
          ],
          'WHERE' => [
-            PluginFormcreatorQuestion::getTable() . '.id' => $questionId,
+            $questionTable . '.id' => $questionId,
          ]
       ]);
    }
