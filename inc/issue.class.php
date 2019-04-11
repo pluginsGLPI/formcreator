@@ -143,8 +143,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function display($options = []) {
-      global $CFG_GLPI;
-
       $itemtype = $options['sub_itemtype'];
       if (!in_array($itemtype, [Ticket::class, PluginFormcreatorFormAnswer::class])) {
          html::displayRightError();
@@ -462,7 +460,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
-
       if (!is_array($values)) {
          $values = [$field => $values];
       }
@@ -485,8 +482,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
-
-
 
    static function getDefaultSearchRequest() {
 
@@ -563,7 +558,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
       return '';
    }
-
 
    static function getClosedStatusArray() {
       return Ticket::getClosedStatusArray();
