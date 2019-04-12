@@ -305,7 +305,6 @@ function plugin_formcreator_replaceHelpdesk() {
  * Generate unique id for form based on server name, glpi directory and basetime
  **/
 function plugin_formcreator_getUuid() {
-
    //encode uname -a, ex Linux localhost 2.4.21-0.13mdk #1 Fri Mar 14 15:08:06 EST 2003 i686
    $serverSubSha1 = substr(sha1(php_uname('a')), 0, 8);
    // encode script current dir, ex : /var/www/glpi_X

@@ -1974,10 +1974,10 @@ SCRIPT;
    }
 
    /**
-    * Converts tags in template fields from an identifier to an other.
+    * Converts tags in template fields from ID to UUID.
     * Used for export into JSON
     *
-    * @return array all fields of the object wih converted tempalte fields
+    * @return array all fields of the object wih converted template fields
     */
    protected function convertTags($input) {
       $question = new PluginFormcreatorQuestion();

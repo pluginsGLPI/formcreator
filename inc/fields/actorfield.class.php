@@ -82,8 +82,6 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function displayField($canEdit = true) {
-      global $CFG_GLPI;
-
       if ($canEdit) {
          $value = $this->sanitizeValue($this->value);
          $initialValue = [];

@@ -29,6 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 /**
  * A question parameter to handle a depdency to an other question. For example
  * the content og the question A is computed from the content of the question B. In
@@ -92,7 +98,8 @@ extends PluginFormcreatorQuestionParameter
             'display_emptychoice'   => true,
             'value'                 => $selected,
             'used'                  => [$question->getID() => ''],
-         ]);
+         ]
+      );
 
       // build HTML code
       $selector = $this->domId;
@@ -118,40 +125,98 @@ extends PluginFormcreatorQuestionParameter
       return $this->fieldName;
    }
 
+   public function post_getEmpty() {
+      $this->fields['plugin_formcreator_questions_id_2'] = '0';
+   }
+
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+      global $DB;
+
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
+
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $input[$questionFk] = $containerId;
+
+      $question = new PluginFormcreatorQuestion();
+      $question->getFromDB($containerId);
+      $field = PluginFormcreatorFields::getFieldInstance(
+         $question->fields['fieldtype'],
+         $question
+      );
+ 
+      $item = $field->getEmptyParameters();
+      $item = $item[$input['fieldname']];
+
+      // Find an existing condition to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['plugin_formcreator_questions_id_2']
+         );
+      }
+      
+      // escape text fields
+      foreach (['fieldname'] as $key) {
+         $input[$key] = $DB->escape($input[$key]);
+      }
+
+      // set ID for linked objects
+      $linked = $linker->getObject($input['plugin_formcreator_questions_id_2'], PluginFormcreatorQuestion::class);
+      if ($linked === false) {
+         $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+         return false;
+      }
+      $input['plugin_formcreator_questions_id_2'] = $linked->getID();
+      
+      // Add or update condition
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
+      } else {
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
+      }
+
+      // add the parameter to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
+   }
+
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
       $parameter = $this->fields;
-      $this->convertIds($parameter);
-      unset($parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
+
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      unset($parameter[$questionFk]);
 
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         $question = new PluginFormcreatorQuestion();
+         $question->getFromDB($parameter['plugin_formcreator_questions_id_2']);
+         $parameter['plugin_formcreator_questions_id_2'] = $question->fields['uuid'];
       }
       unset($parameter[$idToRemove]);
 
       return $parameter;
-   }
-
-   protected function convertIds(&$parameter) {
-      $question = new PluginFormcreatorQuestion();
-      $question->getFromDB($this->fields['plugin_formcreator_questions_id_2']);
-      $parameter['plugin_formcreator_questions_id_2'] = $question->getField('uuid');
-   }
-
-
-   protected function convertUuids(&$parameter) {
-      if ($questionId2
-          = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
-                                                  'uuid',
-                                                  $parameter['plugin_formcreator_questions_id_2'])) {
-         $parameter['plugin_formcreator_questions_id_2'] = $questionId2;
-         return true;
-      }
-      return false;
    }
 }

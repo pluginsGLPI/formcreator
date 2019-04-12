@@ -891,16 +891,19 @@ SCRIPT;
       global $DB;
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
+
       $item = new self;
       // Find an existing target to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
       if (isset($input['uuid'])) {
-         $targetTicketId = plugin_formcreator_getFromDBByField(
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
          );
-      } else {
-         $targetTicketId = $input['id'];
       }
 
       $input['_skip_checks'] = true;
@@ -909,7 +912,6 @@ SCRIPT;
       // Assume that all questions are already imported
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
-
       $questionIdentifier = 'id';
       if (isset($input['uuid'])) {
          $questionIdentifier = 'uuid';
@@ -932,38 +934,34 @@ SCRIPT;
       }
 
       // Add or update
-      if (!$item->isNewItem()) {
-         $input['id'] = $targetTicketId;
-         $originalId = $input['id'];
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         $originalId = $input['id'];
          unset($input['id']);
-         $targetTicketId = $item->add($input);
+         $itemId = $item->add($input);
       }
-      if ($targetTicketId === false) {
-         throw new ImportFailureException();
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
       // add the target to the linker
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
-      }
       $linker->addObject($originalId, $item);
 
       if (isset($input['_actors'])) {
          foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $targetTicketId);
+            PluginFormcreatorTargetTicket_Actor::import($linker, $actor, $itemId);
          }
       }
 
       if (isset($input['_ticket_relations'])) {
          foreach ($input['_ticket_relations'] as $ticketLink) {
-            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $targetTicketId);
+            PluginFormcreatorItem_TargetTicket::import($linker, $ticketLink, $itemId);
          }
       }
 
-      return $targetTicketId;
+      return $itemId;
    }
 
    protected function getTaggableFields() {
@@ -980,30 +978,47 @@ SCRIPT;
    public function export($remove_uuid = false) {
       global $DB;
 
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
-      $target_data = $this->convertTags($this->fields);
+      $target_data = $this->fields;
+
+      // remove key and fk
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      unset($target_data[$formFk]);
+
+      // remove ID or UUID
+      $idToRemove = 'id';
+      if ($remove_uuid) {
+         $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         $target_data = $this->convertTags($this->fields);
+      }
+      unset($target_data[$idToRemove]);
 
       // replace dropdown ids
+      $target_data['_tickettemplate'] = '';
       if ($target_data['tickettemplates_id'] > 0) {
          $target_data['_tickettemplate']
             = Dropdown::getDropdownName('glpi_tickettemplates',
                                         $target_data['tickettemplates_id']);
       }
+      unset($target_data['tickettemplates_id']);
 
       // get target actors
       $target_data['_actors'] = [];
-      $foreignKey = self::getForeignKeyField();
+      $myFk = self::getForeignKeyField();
       $all_target_actors = $DB->request([
          'SELECT' => ['id'],
          'FROM'    => PluginFormcreatorTargetTicket_Actor::getTable(),
          'WHERE'   => [
-            $foreignKey => $this->getID()
+            $myFk => $this->getID()
          ]
       ]);
 
+      // Export sub items
       $form_target_actor = $this->getItem_Actor();
       foreach ($all_target_actors as $target_actor) {
          if ($form_target_actor->getFromDB($target_actor['id'])) {
@@ -1023,16 +1038,16 @@ SCRIPT;
       ]);
       foreach ($all_ticketLinks as $ticketLink) {
          $target_ticketLink->getFromDB($ticketLink['id']);
-         $target_data['_ticket_relations'][] = $target_ticketLink->export();
+         $target_data['_ticket_relations'][] = $target_ticketLink->export($remove_uuid);
       }
-
-      // remove key and fk
-      unset($target_data['tickettemplates_id']);
 
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         $target_data = $this->convertTags($this->fields);
       }
       unset($target_data[$idToRemove]);
 

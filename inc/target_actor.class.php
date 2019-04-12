@@ -85,56 +85,75 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM implements Plugi
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
-      $item = new static;
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
 
-      $foreignKeyField = $item->getTargetItem()->getForeignKeyField();
-      $input[$foreignKeyField] = $containerId;
+      $targetFk = $this->getTargetItem()->getForeignKeyField();
+      $input[$targetFk] = $containerId;
 
-      // retrieve FK
+      $item = new static();
+      // Find an existing condition to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
+
+      // set ID for linked objects
       if (isset($input['_question'])) {
-         $question = new PluginFormcreatorQuestion;
-
-         if ($questions_id = plugin_formcreator_getFromDBByField($question, 'uuid', $actor['_question'])) {
-            $input['actor_value'] = $questions_id;
-         } else {
+         $linked = $linker->getObject($input['_question'], PluginFormcreatorQuestion::class);
+         if ($linked === false) {
+            $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
             return false;
          }
-
+         $input['actor_value'] = $linked->getID();
       } else if (isset($input['_user'])) {
          $user = new User;
-         if ($users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user'])) {
-            $input['actor_value'] = $users_id;
-         } else {
-            return false;
+         $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user']);
+         if ($users_id === false) {
+            throw new ImportFailureException('failed to find a user');
          }
+         $input['actor_value'] = $users_id;
       } else if (isset($input['_group'])) {
          $group = new Group;
-         if ($groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group'])) {
-            $input['actor_value'] = $groups_id;
-         } else {
-            return false;
+         $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group']);
+         if ($groups_id === false) {
+            throw new ImportFailureException('failed to find a group');
          }
+         $input['actor_value'] = $groups_id;
       } else if (isset($input['_supplier'])) {
          $supplier = new Supplier;
-         if ($suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier'])) {
-            $input['actor_value'] = $suppliers_id;
-         } else {
-            return false;
+         $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
+         if ($suppliers_id === false) {
+            throw new ImportFailureException('failed to find a supplier');            
          }
+         $input['actor_value'] = $suppliers_id;
       }
 
-      if ($actors_id = plugin_formcreator_getFromDBByField($item, 'uuid', $input['uuid'])) {
-         // add id key
-         $input['id'] = $actors_id;
-
-         // update actor
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         //create actor
-         $actors_id = $item->add($input);
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
-      return $actors_id;
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 
    /**
@@ -144,54 +163,56 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBTM implements Plugi
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
       $target_actor = $this->fields;
 
-      $foreignKeyField = $this->getTargetItem()->getForeignKeyField();
-      unset($target_actor['id'],
-            $target_actor[$foreignKeyField]);
+      $targetFk = $this->getTargetItem()->getForeignKeyField();
+      unset($target_actor[$targetFk]);
 
-      // export FK
-      switch ($target_actor['actor_type']) {
-         case self::ACTOR_TYPE_QUESTION_PERSON:
-         case self::ACTOR_TYPE_QUESTION_GROUP:
-         case self::ACTOR_TYPE_SUPPLIER:
-         case self::ACTOR_TYPE_QUESTION_ACTORS:
-            $question = new PluginFormcreatorQuestion;
-            if ($question->getFromDB($target_actor['actor_value'])) {
-               $target_actor['_question'] = $question->fields['uuid'];
-               unset($target_actor['actor_value']);
-            }
-            break;
-         case self::ACTOR_TYPE_PERSON:
-            $user = new User;
-            if ($user->getFromDB($target_actor['actor_value'])) {
-               $target_actor['_user'] = $user->fields['name'];
-               unset($target_actor['actor_value']);
-            }
-            break;
-         case self::ACTOR_TYPE_GROUP:
-            $group = new Group;
-            if ($group->getFromDB($target_actor['actor_value'])) {
-               $target_actor['_group'] = $group->fields['completename'];
-               unset($target_actor['actor_value']);
-            }
-            break;
-         case self::ACTOR_TYPE_SUPPLIER:
-            $supplier = new Supplier;
-            if ($supplier->getFromDB($target_actor['actor_value'])) {
-               $target_actor['_supplier'] = $supplier->fields['name'];
-               unset($target_actor['actor_value']);
-            }
-            break;
-      }
-
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $target_actor['uuid'] = '';
+         $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         switch ($target_actor['actor_type']) {
+            case self::ACTOR_TYPE_QUESTION_PERSON:
+            case self::ACTOR_TYPE_QUESTION_GROUP:
+            case self::ACTOR_TYPE_SUPPLIER:
+            case self::ACTOR_TYPE_QUESTION_ACTORS:
+               $question = new PluginFormcreatorQuestion;
+               if ($question->getFromDB($target_actor['actor_value'])) {
+                  $target_actor['_question'] = $question->fields['uuid'];
+                  unset($target_actor['actor_value']);
+               }
+               break;
+            case self::ACTOR_TYPE_PERSON:
+               $user = new User;
+               if ($user->getFromDB($target_actor['actor_value'])) {
+                  $target_actor['_user'] = $user->fields['name'];
+                  unset($target_actor['actor_value']);
+               }
+               break;
+            case self::ACTOR_TYPE_GROUP:
+               $group = new Group;
+               if ($group->getFromDB($target_actor['actor_value'])) {
+                  $target_actor['_group'] = $group->fields['completename'];
+                  unset($target_actor['actor_value']);
+               }
+               break;
+            case self::ACTOR_TYPE_SUPPLIER:
+               $supplier = new Supplier;
+               if ($supplier->getFromDB($target_actor['actor_value'])) {
+                  $target_actor['_supplier'] = $supplier->fields['name'];
+                  unset($target_actor['actor_value']);
+               }
+               break;
+         }
       }
+      unset($target_actor[$idToRemove]);
 
       return $target_actor;
    }

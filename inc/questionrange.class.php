@@ -29,6 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
+}
+
 /**
  * A question parameter to handle a depdency to an other question. For example
  * the content og the question A is computed from the content of the question B. In
@@ -101,8 +107,9 @@ extends PluginFormcreatorQuestionParameter
       }
 
       $parameter = $this->fields;
-      $this->convertIds($parameter);
-      unset($parameter[PluginFormcreatorQuestion::getForeignKeyField()]);
+
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      unset($parameter[$questionFk]);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -114,14 +121,61 @@ extends PluginFormcreatorQuestionParameter
       return $parameter;
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $parameter = [], $question_id = 0) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
+
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
+
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $input[$questionFk] = $containerId;
+
+      $question = new PluginFormcreatorQuestion();
+      $question->getFromDB($containerId);
+      $field = PluginFormcreatorFields::getFieldInstance(
+         $question->fields['fieldtype'],
+         $question
+      );
+ 
+      $item = $field->getEmptyParameters();
+      $item = $item[$input['fieldname']];
+
+      // Find an existing condition to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
+      }
 
       // escape text fields
       foreach (['range_min', 'range_max'] as $key) {
-         $parameter[$key] = $DB->escape($parameter[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      parent::import($linker, $parameter, $question_id);
+      // Add or update condition
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
+      } else {
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
+      }
+ 
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 }

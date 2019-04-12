@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -916,7 +918,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $export = $this->export(true);
-      $export['uuid'] = plugin_formcreator_getUuid();
       $newQuestionId = static::import($linker, $export, $this->fields[$sectionFk]);
 
       if ($newQuestionId === false) {
@@ -930,14 +931,22 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
+
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $input[$sectionFk] = $containerId;
       $input['_skip_checks'] = true;
 
-      $item = new self;
+      $item = new self();
       // Find an existing question to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
       if (isset($input['uuid'])) {
-         $questions_id = plugin_formcreator_getFromDBByField(
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
@@ -949,44 +958,46 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          $input[$key] = $DB->escape($input[$key]);
       }
 
-      if (!$item->isNewItem()) {
-         $input['id'] = $questions_id;
-         $originalId = $input['id'];
+      // Add or update question
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->field = PluginFormcreatorFields::getFieldInstance(
             $input['fieldtype'],
             $item
          );
          $item->update($input);
       } else {
-         $originalId = $input['id'];
          unset($input['id']);
-         $questions_id = $item->add($input);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
       // add the question to the linker
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
-      }
       $linker->addObject($originalId, $item);
 
+      // Import conditions 
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorQuestion_Condition::import($linker, $condition, $questions_id);
+            PluginFormcreatorQuestion_Condition::import($linker, $condition, $itemId);
          }
-         $questionInstance = new self();
-         $questionInstance->fields = $input;
-         $questionInstance->fields['id'] = $questions_id;
          $field = PluginFormcreatorFields::getFieldInstance(
             $input['fieldtype'],
-            $questionInstance
+            $item
          );
+      }
+
+      // Import parameters
+      if (isset($input['_parameters'])) {
          $parameters = $field->getParameters();
          foreach ($parameters as $fieldName => $parameter) {
-            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $questions_id);
+            $parameter::import($linker, $input['_parameters'][$input['fieldtype']][$fieldName], $itemId);
          }
       }
 
-      return $questions_id;
+      return $itemId;
    }
 
    public function export($remove_uuid = false) {
@@ -1003,10 +1014,9 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       // get question conditions
       $question['_conditions'] = [];
       $condition = new PluginFormcreatorQuestion_Condition();
-      foreach ($condition->getConditionsFromQuestion($this->getID()) as $conditionId => $condition) {
-         if ($condition->getFromDB($conditionId)) {
-            $question['_conditions'][] = $condition->export($remove_uuid);
-         }
+      $all_conditions = $condition->getConditionsFromQuestion($this->getID());
+      foreach ($all_conditions as $condition) {
+         $question['_conditions'][] = $condition->export($remove_uuid);
       }
 
       // get question parameters
