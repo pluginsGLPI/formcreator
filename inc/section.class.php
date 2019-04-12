@@ -165,7 +165,6 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       $export = $this->export(true);
-      $export['uuid'] = plugin_formcreator_getUuid();
       $newSectionId = static::import($linker, $export, $this->fields[$formFk]);
 
       if ($newSectionId === false) {
@@ -231,15 +230,23 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
 
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk]        = $containerId;
       $input['_skip_checks'] = true;
 
       $item = new self;
       // Find an existing section to update, only if an UUID is available
-      if (isset($input['uuid'])) {
-         $sectionId = plugin_formcreator_getFromDBByField(
+      $itemId = false;
+       /** @var string $idKey key to use as ID (id or uuid) */
+       $idKey = 'id'; 
+       if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
@@ -252,23 +259,19 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       }
 
       // Add or update section
-      if (!$item->isNewItem()) {
-         $input['id'] = $sectionId;
-         $originalId = $input['id'];
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         $originalId = $input['id'];
          unset($input['id']);
-         $sectionId = $item->add($input);
+         $itemId = $item->add($input);
       }
-      if ($sectionId === false) {
-         throw new ImportFailureException();
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
       // add the section to the linker
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
-      }
       $linker->addObject($originalId, $item);
 
       if (isset($input['_questions'])) {
@@ -281,11 +284,11 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
          });
 
          foreach ($input['_questions'] as $question) {
-            PluginFormcreatorQuestion::import($linker, $question, $sectionId);
+            PluginFormcreatorQuestion::import($linker, $question, $itemId);
          }
       }
 
-      return $sectionId;
+      return $itemId;
    }
 
    public function export($remove_uuid = false) {
@@ -295,7 +298,6 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
          return false;
       }
 
-      $form_question = new PluginFormcreatorQuestion;
       $section       = $this->fields;
 
       // remove key and fk
@@ -303,6 +305,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       unset($section[$formFk]);
 
       // get questions
+      $form_question = new PluginFormcreatorQuestion;
       $section['_questions'] = [];
       $all_questions = $DB->request([
          'SELECT' => ['id'],

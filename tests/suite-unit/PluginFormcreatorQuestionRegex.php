@@ -119,4 +119,32 @@ class PluginFormcreatorQuestionRegex extends CommonTestCase {
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
+
+   public function testImport() {
+      $question = $this->getQuestion();
+
+      $input = [
+         'regex' => '/[a-zA-Z]/',
+         'fieldname' => 'regex',
+         'uuid' => plugin_formcreator_getUuid(),
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $parameterId = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());
+      $this->integer($parameterId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input) {
+            \PluginFormcreatorQuestionRegex::import($linker, $input);
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory');
+
+      $input['id'] = $parameterId;
+      $parameterId2 = \PluginFormcreatorQuestionRegex::import($linker, $input, $question->getID());
+      $this->variable($parameterId2)->isNotFalse();
+      $this->integer((int) $parameterId2)->isNotEqualTo($parameterId);
+   }
 }

@@ -73,6 +73,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       switch ($method) {
+         case 'testImport':
+            self::login('glpi', 'glpi');
+            break;
+
          case 'testPrepareInputForAdd':
          case 'testPrepareInputForUpdate':
             $this->form = new \PluginFormcreatorForm;
@@ -225,6 +229,46 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       ];
 
       return $dataset;
+   }
+
+   public function testImport() {
+      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
+      $section = $this->getSection();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         'name' => $this->getUniqueString(),
+         $sectionFk => $section->getID(),
+         'fieldtype' => 'text',
+         'required' => '0',
+         'show_empty' => '1',
+         'default_values' => '',
+         'values' => '',
+         'description' => '',
+         'order' => '1',
+         'show_rule' => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker ();
+      $questionId = \PluginFormcreatorQuestion::import($linker, $input);
+      $this->integer($questionId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input) {
+            \PluginFormcreatorQuestion::import($linker, $input);
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $questionId;
+      $questionId2 = \PluginFormcreatorQuestion::import($linker, $input);
+      $this->integer((int) $questionId)->isNotEqualTo($questionId2);
+   }
+
+   public function providerPrepareInputForUpdate() {
+      return providerPrepareInputForAdd();
    }
 
    /**

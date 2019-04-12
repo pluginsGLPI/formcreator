@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -76,39 +78,61 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       ];
    }
 
-   public static function import(PluginFormcreatorLinker $linker, $questions_id = 0, $condition = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $item = new static();
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
 
-      if (!$showField
-          = plugin_formcreator_getFromDBByField(new PluginFormcreatorQuestion(),
-                                                'uuid',
-                                                $condition['show_field'])) {
-         $linker->postpone($condition['uuid'], $item->getType(), $condition, $questions_id);
-         return false;
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $input[$questionFk] = $containerId;
+
+      $item = new self();
+      // Find an existing condition to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+            $item,
+            'uuid',
+            $input['uuid']
+         );
       }
 
       // escape text fields
       foreach (['show_value'] as $key) {
-         $condition[$key] = $DB->escape($condition[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      $condition['show_field'] = $showField;
-      $condition['plugin_formcreator_questions_id'] = $questions_id;
+      // set ID for linked objects
+      $linked = $linker->getObject($input['show_field'], PluginFormcreatorQuestion::class);
+      if ($linked === false) {
+         $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+         return false;
+      }
+      $input['show_field'] = $linked->getID();
 
-      if ($conditions_id = plugin_formcreator_getFromDBByField($item, 'uuid', $condition['uuid'])) {
-         // add id key
-         $condition['id'] = $conditions_id;
-
-         // prepare update condition
-         $item->update($condition);
+      // Add or update condition
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
       } else {
-         // prepare create condition
-         $item->add($condition);
+         unset($input['id']);
+         $itemId = $item->add($input);
       }
-      $linker->addObject($condition['uuid'], $item);
-      return $conditions_id;
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
+      }
+
+      // add the question to the linker
+      $linker->addObject($originalId, $item);
+
+      return $itemId;
    }
 
    /**
@@ -118,21 +142,24 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
-      $question = new PluginFormcreatorQuestion();
-      $question->getFromDB($this->fields['show_field']);
       $condition = $this->fields;
-      $condition['show_field'] = $question->fields['uuid'];
 
-      unset($condition['plugin_formcreator_questions_id']);
+      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      unset($condition[$questionFk]);
 
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         $question = new PluginFormcreatorQuestion();
+         $question->getFromDB($condition['show_field']);
+         $condition['show_field'] = $question->fields['uuid'];
       }
       unset($condition[$idToRemove]);
 

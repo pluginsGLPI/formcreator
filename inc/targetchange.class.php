@@ -120,36 +120,55 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
    public function export($remove_uuid = false) {
       global $DB;
 
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
-      $target_data = $this->convertTags($this->fields);
+      $target_data = $this->fields;
+
+      // remove key and fk
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      unset($target_data[$formFk]);
+
+      // remove ID or UUID
+      $idToRemove = 'id';
+      if ($remove_uuid) {
+         $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         $target_data = $this->convertTags($this->fields);
+      }
+      unset($target_data[$idToRemove]);
 
       // get target actors
       $target_data['_actors'] = [];
-      $foreignKey = self::getForeignKeyField();
+      $myFk = self::getForeignKeyField();
       $all_target_actors = $DB->request([
          'SELECT' => ['id'],
          'FROM'    => PluginFormcreatorTargetChange_Actor::getTable(),
          'WHERE'   => [
-            $foreignKey => $this->getID()
+            $myFk => $this->getID()
          ]
       ]);
 
+      // Export sub items
       $form_target_actor = $this->getItem_Actor();
       foreach ($all_target_actors as $target_actor) {
          if ($form_target_actor->getFromDB($target_actor['id'])) {
             $target_data['_actors'][] = $form_target_actor->export($remove_uuid);
          }
       }
+
       // remove ID or UUID
       $idToRemove = 'id';
       if ($remove_uuid) {
          $idToRemove = 'uuid';
+      } else {
+         // Convert IDs into UUIDs
+         $target_data = $this->convertTags($this->fields);
       }
       unset($target_data[$idToRemove]);
-
+      
       return $target_data;
    }
 
@@ -160,14 +179,16 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       $item = new self();
       // Find an existing target to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
       if (isset($input['uuid'])) {
-         $targetChangeId = plugin_formcreator_getFromDBByField(
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
          );
-      } else {
-         $targetChangeId = $input['id'];
       }
 
       $input['_skip_checks'] = true;
@@ -176,7 +197,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Assume that all questions are already imported
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
-
       $questionIdentifier = 'id';
       if (isset($input['uuid'])) {
          $questionIdentifier = 'uuid';
@@ -199,33 +219,28 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       }
 
       // Add or update
-      if (!$item->isNewItem()) {
-         $input['id'] = $targetChangeId;
-         $originalId = $input['id'];
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         $originalId = $input['id'];
          unset($input['id']);
-         $targetChangeId = $item->add($input);
+         $itemId = $item->add($input);
       }
-      if ($targetChangeId === false) {
-         throw new ImportFailureException();
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
       // add the target to the linker
-      $originalId = $input['id'];
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
-      }
       $linker->addObject($originalId, $item);
 
       if (isset($input['_actors'])) {
          foreach ($input['_actors'] as $actor) {
-            PluginFormcreatorTargetChange_Actor::import($linker, $actor, $targetChangeId);
+            PluginFormcreatorTargetChange_Actor::import($linker, $actor, $itemId);
          }
       }
 
-      return $targetChangeId;
+      return $itemId;
    }
 
    /**
@@ -236,8 +251,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return NULL         Nothing, just display the form
     */
    public function showForm($options = []) {
-      global $CFG_GLPI, $DB;
-
       $rand = mt_rand();
 
       $form = $this->getForm();
@@ -360,8 +373,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return array the modified $input array
     */
    public function prepareInputForUpdate($input) {
-      global $CFG_GLPI;
-
       // Control fields values :
       if (!isset($input['_skip_checks'])
             || !$input['_skip_checks']) {
@@ -455,8 +466,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     * @return Change|false generated change
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
-      global $DB;
-
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
          '_users_id_requester'         => [],

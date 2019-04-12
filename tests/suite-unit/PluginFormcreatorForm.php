@@ -35,6 +35,14 @@ class PluginFormcreatorForm extends CommonTestCase {
 
    protected $formData;
 
+   public function beforeTestMethod($method) {
+      parent::beforeTestMethod($method);
+      switch ($method) {
+         case 'testImport':
+            self::login('glpi', 'glpi');
+      }
+   }
+
    public function providerGetTypeName() {
       return [
          [
@@ -267,7 +275,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
 
-
    protected function _checkForm($form = []) {
       $keys = [
          'is_recursive',
@@ -468,5 +475,44 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]))->isTrue();
 
       $CFG_GLPI['use_notifications'] = $use_notifications;
+   }
+
+   public function testImport() {
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         'name' => $this->getUniqueString(),
+         '_entity' => 'Root entity',
+         'is_recursive' => '1',
+         'access_rights' => \PluginFormcreatorForm::ACCESS_RESTRICTED,
+         'description' => '',
+         'content' => '',
+         '_plugin_formcreator_category' => '',
+         'is_active' => '1',
+         'language' => '',
+         'helpdesk_home' => '1',
+         'is_deleted' => '0',
+         'validation_required' => '0',
+         'usage_count' => '0',
+         'is_default' => '0',
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker ();
+      $formId = \PluginFormcreatorForm::import($linker, $input);
+      $this->integer($formId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input) {
+            \PluginFormcreatorForm::import($linker, $input);
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $formId;
+      $formId2 = \PluginFormcreatorForm::import($linker, $input);
+      $this->variable($formId2)->isNotFalse();
+      $this->integer((int) $formId)->isNotEqualTo($formId2);
    }
 }

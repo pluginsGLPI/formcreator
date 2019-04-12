@@ -59,4 +59,43 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
       $output = $questionCondition->getConditionsFromQuestion($question->getID());
       $this->array($output)->hasSize(2);
    }
+
+   public function testImport() {
+      $question = $this->getQuestion();
+      $form = $question->getForm();
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $input = [
+         'show_field' => $question2->fields['uuid'],
+         'show_value' => 'foo',
+         'show_condition' => '=',
+         'show_logic' => '1',
+         'order' => '1',
+         'uuid' => plugin_formcreator_getUuid(),
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $linker->addObject($question2->fields['uuid'], $question2);
+      $conditionId = \PluginFormcreatorQuestion_Condition::import($linker, $input, $question->getID());
+      $this->integer($conditionId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input) {
+            \PluginFormcreatorQuestion_Condition::import($linker, $input);
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory');
+
+      $linker = new \PluginFormcreatorLinker();
+      $linker->addObject($question2->getID(), $question2);
+      $input['id'] = $conditionId;
+      $input['show_field'] = $question2->getID();
+      $conditionId2 = \PluginFormcreatorQuestion_Condition::import($linker, $input);
+      $this->variable($conditionId2)->isNotFalse();
+      $this->integer((int) $conditionId)->isNotEqualTo($conditionId2);
+   }
 }

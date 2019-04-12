@@ -1536,7 +1536,6 @@ PluginFormcreatorExportableInterface
       $linker = new PluginFormcreatorLinker();
 
       $export = $this->export(true);
-      $export['uuid'] = plugin_formcreator_getUuid();
       $new_form_id =  static::import($linker, $export);
       if ($new_form_id === false) {
          return false;
@@ -1906,12 +1905,20 @@ PluginFormcreatorExportableInterface
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
 
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $item = new self();
       // Find an existing form to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id'; 
       if (isset($input['uuid'])) {
-         $forms_id = plugin_formcreator_getFromDBByField(
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
@@ -1932,14 +1939,14 @@ PluginFormcreatorExportableInterface
          if (!$entity->isNewItem() && $entity->canUpdateItem()) {
             $entityId = $entity->getID();
          } else {
-            if ($forms_id !== false) {
+            if ($itemId !== false) {
                // The form is in an entity where we don't have UPDATE right
                Session::addMessageAfterRedirect(
                   sprintf(__('The form %1$s already exists and is in an unmodifiable entity.', 'formcreator'), $input['name']),
                   false,
                   WARNING
                );
-               throw new ImportFailureException();
+               throw new ImportFailureException('failed to add or update the item');
             }
          }
       }
@@ -1962,23 +1969,19 @@ PluginFormcreatorExportableInterface
       }
 
       // Add or update the form
-      if (!$item->isNewItem()) {
-         $input['id'] = $forms_id;
-         $originalId = $input['id'];
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         $originalId = $input['id'];
          unset($input['id']);
-         $forms_id = $item->add($input);
+         $itemId = $item->add($input);
       }
-      if ($forms_id === false) {
-         throw new ImportFailureException();
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
       // add the form to the linker
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
-      }
       $linker->addObject($originalId, $item);
 
       // import form_profiles
@@ -1988,7 +1991,7 @@ PluginFormcreatorExportableInterface
             $importedItem = PluginFormcreatorForm_Profile::import(
                $linker,
                $formProfile,
-               $forms_id
+               $itemId
             );
             if ($importedItem === false) {
                // Falied to import a form_profile
@@ -2000,7 +2003,7 @@ PluginFormcreatorExportableInterface
          if (count($importedItems) > 0) {
             $FormProfile = new PluginFormcreatorForm_Profile();
             $FormProfile->deleteByCriteria([
-               $formFk => $forms_id,
+               $formFk => $itemId,
                ['NOT' => ['id' => $importedItems]]
             ]);
          }
@@ -2022,7 +2025,7 @@ PluginFormcreatorExportableInterface
             $importedItem = PluginFormcreatorSection::import(
                $linker,
                $section,
-               $forms_id
+               $itemId
             );
             if ($importedItem === false) {
                // Falied to import a section
@@ -2033,7 +2036,7 @@ PluginFormcreatorExportableInterface
          // Delete all other restrictions
          $FormProfile = new PluginFormcreatorSection();
          $FormProfile->deleteByCriteria([
-            $formFk => $forms_id,
+            $formFk => $itemId,
             ['NOT' => ['id' => $importedItems]]
          ]);
       }
@@ -2048,7 +2051,7 @@ PluginFormcreatorExportableInterface
                   $importedItem = $targetType::import(
                      $linker,
                      $targetData,
-                     $forms_id
+                     $itemId
                   );
                   if ($importedItem === false) {
                      // Falied to import a section
@@ -2061,7 +2064,7 @@ PluginFormcreatorExportableInterface
             if (count($importedItems)) {
                $target = new $targetType();
                $target->deleteByCriteria([
-                  $formFk => $forms_id,
+                  $formFk => $itemId,
                   ['NOT' => ['id' => $importedItems]]
                ]);
             }
@@ -2075,7 +2078,7 @@ PluginFormcreatorExportableInterface
             $importedItem = PluginFormcreatorForm_Validator::import(
                $linker,
                $validator,
-               $forms_id
+               $itemId
             );
             if ($importedItem === false) {
                // Failed to import a section
@@ -2086,13 +2089,13 @@ PluginFormcreatorExportableInterface
          if (count($importedItems)) {
             $form_validator = new PluginFormcreatorForm_Validator;
             $form_validator->deleteByCriteria([
-               $formFk => $forms_id,
+               $formFk => $itemId,
                ['NOT' => ['id' => $importedItems]]
             ]);
          }
       }
 
-      return $forms_id;
+      return $itemId;
    }
 
    public function createDocumentType() {
