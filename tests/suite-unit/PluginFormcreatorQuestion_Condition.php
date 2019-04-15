@@ -48,7 +48,7 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
    }
 
    public function testGetEnumShowCondition() {
-      $output = \PluginFormcreatorQuestion_Condition::getEnumShowLogic();
+      $output = \PluginFormcreatorQuestion_Condition::getEnumShowCondition();
       $this->array($output)
          ->isIdenticalTo([
             '1' => '=',
