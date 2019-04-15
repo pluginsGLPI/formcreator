@@ -67,7 +67,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       ];
    }
 
-   public function getEnumShowCondition() {
+   public static function getEnumShowCondition() {
       return [
          self::SHOW_CONDITION_EQ => '=',
          self::SHOW_CONDITION_NE => '≠',
@@ -204,8 +204,6 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
     * @return string
     */
    public function getConditionHtml($form_id, $questionId = 0, $isFirst = false) {
-      global $CFG_GLPI;
-
       if ($this->isNewItem()) {
          $show_field       = '';
          $show_condition   = PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ;
