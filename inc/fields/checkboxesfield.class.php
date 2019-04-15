@@ -143,7 +143,6 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    }
 
    public function deserializeValue($value) {
-      $deserialized  = [];
       $this->value = ($value !== null && $value !== '')
                   ? explode("\r\n", $value)
                   : [];

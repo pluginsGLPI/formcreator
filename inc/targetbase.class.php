@@ -33,10 +33,12 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-abstract class PluginFormcreatorTargetBase extends CommonDBTM implements
+abstract class PluginFormcreatorTargetBase extends CommonDBChild implements
 PluginFormcreatorExportableInterface,
 PluginFormcreatorTargetInterface
 {
+   static public $itemtype = PluginFormcreatorForm::class;
+   static public $items_id = 'plugin_formcreator_forms_id';
 
    /** @var array $requesters requester actors of the target */
    protected $requesters;

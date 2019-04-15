@@ -251,11 +251,6 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
    }
 
    public function providerDeserializeValue() {
-      $user = new \User();
-      $user->getFromDBbyName('glpi');
-      $glpiId = $user->getID();
-      $user->getFromDBbyName('normal');
-      $normalId = $user->getID();
       return [
          [
             'value'     => null,

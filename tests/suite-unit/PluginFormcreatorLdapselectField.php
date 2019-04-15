@@ -59,4 +59,88 @@ class PluginFormcreatorLdapselectField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+   
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => 'foo',
+            'expected'  => 'foo',
+         ],
+         [
+            'value'     => "test d'apostrophe",
+            'expected'  => "test d'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorLdapselectField(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      return [
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => "foo",
+            'expected'  => 'foo',
+         ],
+         [
+            'value'     => "test d'apostrophe",
+            'expected'  => "test d'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorLdapselectField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providergetValueForDesign() {
+      return [
+         [
+            'value' => '',
+            'expected' => '',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providergetValueForDesign
+    */
+   public function testGetValueForDesign($value, $expected) {
+      $instance = new \PluginFormcreatorLdapselectField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   
 }

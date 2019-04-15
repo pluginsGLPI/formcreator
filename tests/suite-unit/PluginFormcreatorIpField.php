@@ -65,4 +65,94 @@ class PluginFormcreatorIpField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
    }
+   
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function testGetDesignSpecializationField() {
+      $instance = new \PluginFormcreatorHiddenField([]);
+      $output = $instance->getDesignSpecializationField();
+      $this->string($output['label'])->isEqualTo('');
+      $this->string($output['field'])->isEqualTo('');
+      $this->boolean($output['may_be_empty'])->isEqualTo(false);
+      $this->boolean($output['may_be_required'])->isEqualTo(false);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '127.0.1.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '127.0.0.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorIpField(['id' => '1']);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return [
+         [
+            'value'     => '',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '127.0.1.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '127.0.0.1',
+            'answer'    => '127.0.0.1',
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+    public function testNotEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorIpField(['id' => '1'], $answer);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
+   public function testGreaterThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorIpField([]);
+            $instance->greaterThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
+
+   public function testLessThan() {
+      $this->exception(
+         function() {
+            $instance = new \PluginFormcreatorIpField([]);
+            $instance->lessThan('');
+         }
+      )->isInstanceOf(\PluginFormcreatorComparisonException::class);
+   }
 }

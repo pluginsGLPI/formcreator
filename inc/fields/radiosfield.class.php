@@ -131,10 +131,9 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
                   false,
                   ERROR);
             return [];
-         } else {
-            // trim values
-            $input['values'] = $this->trimValue($input['values']);
          }
+         // trim values
+         $input['values'] = $this->trimValue($input['values']);
       }
       if (isset($input['default_values'])) {
          // trim values

@@ -168,4 +168,133 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+   
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+   public function testGetEmptyParameters() {
+      $instance = $this->newTestedInstance([]);
+      $output = $instance->getEmptyParameters();
+      $this->array($output)
+         ->isIdenticalTo([]);
+   }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value' => '',
+            'expected' => '',
+         ],
+         [
+            'value' => "foo",
+            'expected' => "foo",
+         ],
+         [
+            'value'     => 'test d\'apostrophe',
+            'expected'  => "test d\'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorSelectField([]);
+      $instance->prepareQuestionInputForSave([
+         'default_values' => $value,
+      ]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      return [
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => 'foo',
+            'expected'  => 'foo' ,
+         ],
+         [
+            'value'     => 'test d\'apostrophe',
+            'expected'  => 'test d\'apostrophe',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorSelectField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo($expected);
+   }
+   
+   public function providerparseAnswerValues() {
+      return [
+         [
+            'id' => '1',
+            'input' => [
+               'formcreator_field_1' => ''
+            ],
+            'expected' => true,
+            'expectedValue' => '',
+         ],
+         [
+            'id' => '1',
+            'input' => [
+               'formcreator_field_1' => 'test d\'apostrophe',
+            ],
+            'expected' => true,
+            'expectedValue' => "test d'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerparseAnswerValues
+    */
+   public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance(['id' => $id]);
+      $output = $instance->parseAnswerValues($input);
+      $this->boolean($output)->isEqualTo($expected);
+
+      $outputValue = $instance->getValueForTargetText(false);
+      if ($expected === false) {
+         $this->variable($outputValue)->isNull();
+      } else {
+         $this->string($outputValue)
+            ->isEqualTo($expectedValue);
+      }
+   }
+
+   public function providerGetValueForDesign() {
+      return [
+         [
+            'value' => null,
+            'expected' => '',
+         ],
+         [
+            'value' => 'foo',
+            'expected' => 'foo',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForDesign
+    */
+   public function testGetValueForDesign($value, $expected) {
+      $instance = new \PluginFormcreatorSelectField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
 }
