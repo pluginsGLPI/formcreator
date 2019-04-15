@@ -38,6 +38,28 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
       self::login('glpi', 'glpi');
    }
 
+   public function testGetEnumShowLogic() {
+      $output = \PluginFormcreatorQuestion_Condition::getEnumShowLogic();
+      $this->array($output)
+         ->isIdenticalTo([
+            '1' => 'AND',
+            '2' => 'OR'
+         ]);
+   }
+
+   public function testGetEnumShowCondition() {
+      $output = \PluginFormcreatorQuestion_Condition::getEnumShowLogic();
+      $this->array($output)
+         ->isIdenticalTo([
+            '1' => '=',
+            '2' => '≠',
+            '3' => '<',
+            '4' => '>',
+            '5' => '≤',
+            '6' => '≥',
+         ]);
+   }
+
    public function testGetConditionsFromQuestion() {
       // crete a question with some conditions
       $question = $this->getQuestion();
