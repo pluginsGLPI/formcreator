@@ -98,4 +98,215 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+
+   public function providerSerializeValue() {
+      return [
+         [
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => 'foo',
+            'expected'  => 'foo',
+         ],
+         [
+            'value'     => "test d'apostrophe",
+            'expected'  => "test d\'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerSerializeValue
+    */
+   public function testSerializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorRadiosField(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $instance->prepareQuestionInputForSave([
+         'default_values' => $value,
+      ]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerDeserializeValue() {
+      return [
+         [
+            'value'     => null,
+            'expected'  => '',
+         ],
+         [
+            'value'     => '',
+            'expected'  => '',
+         ],
+         [
+            'value'     => "foo",
+            'expected'  => 'foo',
+         ],
+         [
+            'value'     => "test d'apostrophe",
+            'expected'  => "test d'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerDeserializeValue
+    */
+   public function testDeserializeValue($value, $expected) {
+      $instance = new \PluginFormcreatorRadiosField(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForTargetText(false);
+      $this->string($output)->isEqualTo($expected);
+   }
+   
+   public function providerparseAnswerValues() {
+      return [
+         [
+            'id' => '1',
+            'input' => [
+               'formcreator_field_1' => ''
+            ],
+            'expected' => true,
+            'expectedValue' => '',
+         ],
+         [
+            'id' => '1',
+            'input' => [
+               'formcreator_field_1' => 'test d\'apostrophe',
+            ],
+            'expected' => true,
+            'expectedValue' => "test d'apostrophe",
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerparseAnswerValues
+    */
+   public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance(['id' => $id]);
+      $output = $instance->parseAnswerValues($input);
+      $this->boolean($output)->isEqualTo($expected);
+
+      $outputValue = $instance->getValueForTargetText(false);
+      if ($expected === false) {
+         $this->variable($outputValue)->isNull();
+      } else {
+         $this->string($outputValue)
+            ->isEqualTo($expectedValue);
+      }
+   }
+
+   public function providerGetValueForDesign() {
+      return [
+         [
+            'value' => null,
+            'expected' => '',
+         ],
+         [
+            'value' => 'foo',
+            'expected' => 'foo',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetValueForDesign
+    */
+   public function testGetValueForDesign($value, $expected) {
+      $instance = new \PluginFormcreatorRadiosField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerIsValid() {
+      return [
+         [
+            'fields' => [
+               'name' => '',
+               'required' => false,
+            ],
+            'value' => '',
+            'expected' => true,
+         ],
+         [
+            'fields' => [
+               'name' => '',
+               'required' => true,
+            ],
+            'value' => '',
+            'expected' => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerIsValid
+    */
+   public function testIsValid($fields, $value, $expected) {
+      $instance = new \PluginFormcreatorRadiosField($fields);
+      $instance->deserializeValue($value);
+      $output = $instance->isValid();
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public  function providerEquals() {
+      return [
+         [
+            'fields' => [
+               'values' => ""
+            ],
+            'value' => "",
+            'compare' => '',
+            'expected' => true
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a",
+            'compare' => 'b',
+            'expected' => false
+         ],
+         [
+            'fields' => [
+               'values' => "a\r\nb\r\nc"
+            ],
+            'value' => "a",
+            'compare' => 'a',
+            'expected' => true
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerEquals
+    */
+   public function testEquals($fields, $value, $compare, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->equals($compare);
+      $this->boolean($output)->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return $this->providerEquals();
+   }
+
+   /**
+    * @dataprovider providerNotEquals
+    */
+   public function testNotEquals($fields, $value, $compare, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->notEquals($compare);
+      $this->boolean($output)->isEqualTo(!$expected);
+   }
 }

@@ -73,6 +73,46 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->string($output)->isEqualTo($expected);
    }
 
+   public function testCanCreate() {
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorForm::canCreate();
+      $this->boolean((bool) $output)->isTrue();
+
+      $this->login('normal', 'normal');
+      $output = \PluginFormcreatorForm::canCreate();
+      $this->boolean((bool) $output)->isFalse();
+   }
+
+   public function testCanView() {
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorForm::canView();
+      $this->boolean((bool) $output)->isTrue();
+
+      $this->login('normal', 'normal');
+      $output = \PluginFormcreatorForm::canView();
+      $this->boolean((bool) $output)->isFalse();
+   }
+
+   public function testCanDelete() {
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorForm::canDelete();
+      $this->boolean((bool) $output)->isTrue();
+
+      $this->login('normal', 'normal');
+      $output = \PluginFormcreatorForm::canDelete();
+      $this->boolean((bool) $output)->isFalse();
+   }
+
+   public function testCanPurge() {
+      $this->login('glpi', 'glpi');
+      $output = \PluginFormcreatorForm::canPurge();
+      $this->boolean((bool) $output)->isTrue();
+
+      $this->login('normal', 'normal');
+      $output = \PluginFormcreatorForm::canPurge();
+      $this->boolean((bool) $output)->isFalse();
+   }
+
    protected function formProvider() {
       return [
          [

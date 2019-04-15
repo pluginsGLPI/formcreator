@@ -140,20 +140,114 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       ];
    }
 
+   public function providerIsValid() {
+      return [
+         [
+            'input' => [
+               'name' =>  'fieldname',
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+               ]),
+               'required' => '0',
+               'dropdown_values' => \Location::class,
+               'dropdown_default_value' => '0',
+            ],
+            'expected' => true,
+         ],
+         [
+            'input' => [
+               'name' =>  'fieldname',
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+               ]),
+               'required' => '1',
+               'dropdown_values' => \Location::class,
+               'dropdown_default_value' => '0',
+            ],
+            'expected' => false,
+         ],
+         [
+            'input' => [
+               'name' =>  'fieldname',
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+               ]),
+               'required' => '1',
+               'dropdown_values' => \Location::class,
+               'dropdown_default_value' => '42',
+            ],
+            'expected' => true,
+         ],
+      ];
+   }
+
    /**
-    * @dataProvider providerTestIsValid
+    * @dataProvider providerIsValid
     */
    public function testIsValid($input, $expected) {
-      $instance = new \PluginFormcreatorDropdownField([
-         'values' => json_encode([
-            'itemtype' => $input['dropdown_values']
-         ]),
-         'required' => '0',
-      ]);
+      $instance = new \PluginFormcreatorDropdownField($input);
       $instance->prepareQuestionInputForSave($input);
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expected);
    }
+
+   public function providerGetValueForTargetText() {
+      $location = new \Location();
+      $location->add([
+         'name' => $this->getUniqueString(),
+      ]);
+      return [
+         [
+            'fields' => [
+               'name' =>  'fieldname',
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+               ]),
+               'required' => '1',
+               'dropdown_values' => \Location::class,
+               'dropdown_default_value' => '42',
+            ],
+            'value' => "",
+            'expected' => '&nbsp;'
+         ],
+         [
+            'fields' => [
+               'name' =>  'fieldname',
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+               ]),
+               'required' => '1',
+               'dropdown_values' => \Location::class,
+               'dropdown_default_value' => '',
+            ],
+            'value' => $location->getID(),
+            'expected' => $location->fields['completename']
+         ],
+      ];
+   }
+
+   /**
+    * @dataprovider providerGetValueForTargetText
+    */
+   public function testGetValueForTargetText($fields, $value, $expected) {
+      $instance = $this->newTestedInstance($fields);
+      $instance->deserializeValue($value);
+
+      $output = $instance->getValueForTargetText(true);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetDesignSpecializationField() {
+      $instance = new \PluginFormcreatorDropdownField([
+         'values' => json_encode([
+            'itemtype' => \User::class,
+         ]),
+      ]);
+      $output = $instance->getDesignSpecializationField();
+      $this->boolean($output['may_be_empty'])->isEqualTo(true);
+      $this->boolean($output['may_be_required'])->isEqualTo(true);
+   }
+
 
    public function providerEquals() {
       $location1 = new \Location();

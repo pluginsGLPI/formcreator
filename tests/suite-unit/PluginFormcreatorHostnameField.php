@@ -47,7 +47,7 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
-   public function getDesignSpecializationField() {
+   public function testGetDesignSpecializationField() {
       $instance = new \PluginFormcreatorHostnameField([]);
       $output = $instance->getDesignSpecializationField();
       $this->array($output)->isIdenticalTo([
@@ -269,5 +269,10 @@ class PluginFormcreatorHostnameField extends CommonTestCase {
       $instance = new \PluginFormcreatorHostnameField(['id' => '1'], $answer);
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->lessThan($value))->isEqualTo($expected);
+   }
+   
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

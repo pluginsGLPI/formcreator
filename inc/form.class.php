@@ -46,30 +46,19 @@ PluginFormcreatorExportableInterface
    const ACCESS_PRIVATE      = 1;
    const ACCESS_RESTRICTED   = 2;
 
-   /**
-    * Check if current user have the right to create and modify requests
-    *
-    * @return boolean True if he can create and modify requests
-    */
    public static function canCreate() {
       return Session::haveRight('entity', UPDATE);
    }
 
-   /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
    public static function canView() {
       return Session::haveRight('entity', UPDATE);
    }
 
-   /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
    public static function canDelete() {
+      return Session::haveRight('entity', UPDATE);
+   }
+
+   public static function canPurge() {
       return Session::haveRight('entity', UPDATE);
    }
 

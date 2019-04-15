@@ -170,15 +170,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    }
 
    /**
-    * Undocumented function
-    *
     * @dataProvider providerparseAnswerValues
-    *
-    * @param [type] $id
-    * @param [type] $input
-    * @param [type] $expected
-    * @param [type] $expectedValue
-    * @return void
     */
    public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
       $instance = $this->newTestedInstance(['id' => $id]);

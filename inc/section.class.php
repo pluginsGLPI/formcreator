@@ -38,25 +38,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
    static public $itemtype = PluginFormcreatorForm::class;
-   static public $items_id = "plugin_formcreator_forms_id";
-
-   /**
-    * Check if current user have the right to create and modify requests
-    *
-    * @return boolean True if he can create and modify requests
-    */
-   public static function canCreate() {
-      return true;
-   }
-
-   /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
-   public static function canView() {
-      return true;
-   }
+   static public $items_id = 'plugin_formcreator_forms_id';
 
    /**
     * Returns the type name with consideration of plural

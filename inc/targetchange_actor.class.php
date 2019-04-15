@@ -35,6 +35,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorTargetChange_Actor extends PluginFormcreatorTarget_Actor
 {
+   static public $itemtype = PluginFormcreatorTargetChange::class;
+   static public $items_id = 'plugin_formcreator_targetchanges_id';
 
    protected function getTargetItem() {
       return new PluginFormcreatorTargetChange();

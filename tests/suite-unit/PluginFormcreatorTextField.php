@@ -265,4 +265,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
+   
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
 }

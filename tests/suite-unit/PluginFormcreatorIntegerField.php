@@ -34,7 +34,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorIntegerField extends CommonTestCase {
 
-   public function provider() {
+   public function providerIsValid() {
       $dataset = [
          [
             'fields'          => [
@@ -185,7 +185,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    }
 
    /**
-    * @dataProvider provider
+    * @dataProvider providerIsValid
     */
    public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
@@ -220,5 +220,10 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       ]);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
+   }
+   
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

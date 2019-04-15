@@ -41,7 +41,7 @@ PluginFormcreatorExportableInterface
 {
 
       // From CommonDBRelation
-   static public $itemtype_1          = 'PluginFormcreatorForm';
+   static public $itemtype_1          = PluginFormcreatorForm::class;
    static public $items_id_1          = 'plugin_formcreator_forms_id';
 
    static public $itemtype_2          = 'itemtype';
@@ -62,51 +62,55 @@ PluginFormcreatorExportableInterface
    }
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $forms_id = 0) {
-      $formFk = PluginFormcreatotrForm::getForeigkKeyField();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $input[$formFk] = $forms_id;
 
       $item = new self();
+       /** @var string $idKey key to use as ID (id or uuid) */
+       $idKey = 'id'; 
       if (isset($input['uuid'])) {
-         $validators_id = plugin_formcreator_getFromDBByField(
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
          );
       }
       // Find the validator
-      if (!in_array($validator['itemtype'], [User::class, Group::class])) {
+      if (!in_array($input['itemtype'], [User::class, Group::class])) {
          return false;
       }
-      $linkedItemtype = $validator['itemtype'];
+      $linkedItemtype = $input['itemtype'];
       $linkedItem = new $linkedItemtype();
       $crit = [
-         'name' => $validator['_item'],
+         'name' => $input['_item'],
       ];
       if (!$linkedItem->getFromDBByCrit($crit)) {
          // validator not found. Let's ignore it
          return false;
       }
-      $validator['items_id'] = $linkedItem->getID();
+      $input['items_id'] = $linkedItem->getID();
 
       // Add or update the form validator
-      if (!$item->isNewItem()) {
-         $input['id'] = $validators_id;
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         $validators_id = $item->add($input);
+         unset($input['id']);
+         $itemId = $item->add($input);
       }
-      if ($validators_id === false) {
+      if ($itemId === false) {
          throw new ImportFailureException();
       }
 
       // add the item to the linker
-      $originalId = $input['id'];
       if (isset($input['uuid'])) {
          $originalId = $input['uuid'];
       }
       $linker->addObject($originalId, $item);
 
-      return $validators_id;
+      return $itemId;
    }
 
    /**
@@ -116,7 +120,7 @@ PluginFormcreatorExportableInterface
     * @return array the array with all data (with sub tables)
     */
    public function export($remove_uuid = false) {
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
@@ -125,7 +129,7 @@ PluginFormcreatorExportableInterface
       // remove key and fk
       unset($validator['plugin_formcreator_forms_id']);
 
-      if (is_subclass_of($validator['itemtype'], 'CommonDBTM')) {
+      if (is_subclass_of($validator['itemtype'], CommonDBTM::class)) {
          $validator_obj = new $validator['itemtype'];
          if ($validator_obj->getFromDB($validator['items_id'])) {
 

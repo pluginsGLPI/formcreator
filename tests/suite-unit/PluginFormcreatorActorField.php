@@ -32,8 +32,7 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorActorField extends CommonTestCase {
-
-   public function getDesignSpecializationField() {
+   public function testGetDesignSpecializationField() {
       $instance = new \PluginFormcreatorHostnameField([]);
       $output = $instance->getDesignSpecializationField();
       $this->string($output['label'])->isEqualTo('');
@@ -243,10 +242,6 @@ class PluginFormcreatorActorField extends CommonTestCase {
 
    /**
     * @dataProvider providerGetValueForDesign
-    *
-    * @param [type] $value
-    * @param [type] $expected
-    * @return void
     */
    public function testGetValueForDesign($value, $expected) {
       $instance = new \PluginFormcreatorActorField([]);

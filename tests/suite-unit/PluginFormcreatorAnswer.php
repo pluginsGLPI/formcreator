@@ -32,16 +32,6 @@ namespace tests\units;
 use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorAnswer extends CommonTestCase {
-   public function testCanCreate() {
-      $output = \PluginFormcreatorAnswer::canCreate();
-      $this->boolean($output)->isTrue();
-   }
-
-   public function testCanView() {
-      $output = \PluginFormcreatorAnswer::canView();
-      $this->boolean($output)->isTrue();
-   }
-
    public function providerGetTypeName() {
       return [
          [
@@ -68,35 +58,4 @@ class PluginFormcreatorAnswer extends CommonTestCase {
       $output = \PluginFormcreatorAnswer::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
    }
-
-   public function providerPrepareInputForAdd() {
-      return [
-         [
-
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForAdd
-    */
-   public function testPrepareInputForAdd() {
-
-   }
-
-   public function providerPrepareInputForUpdate() {
-      return [
-         [
-
-         ],
-      ];
-   }
-
-   /**
-    * @dataProvider providerPrepareInputForUpdate
-    */
-   public function testPrepareInputForUpdate() {
-
-   }
-
 }

@@ -42,9 +42,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $form           = new \PluginFormcreatorForm;
       $form_section   = new \PluginFormcreatorSection;
       $form_question  = new \PluginFormcreatorQuestion;
-      $form_condition = new \PluginFormcreatorQuestion_Condition;
-      $form_validator = new \PluginFormcreatorForm_Validator;
-      $form_profile   = new \PluginFormcreatorForm_Profile;
 
       // create objects
       $forms_id = $form->add([
@@ -93,8 +90,35 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       }
    }
 
+   public function providerGetTypeName() {
+      return [
+         [
+            'input' => 0,
+            'expected' => 'Questions',
+         ],
+         [
+            'input' => 1,
+            'expected' => 'Question',
+         ],
+         [
+            'input' => 2,
+            'expected' => 'Questions',
+         ],
+      ];
+   }
+
    /**
-    * @cover\PluginFormcreatorQuestion::clone
+    * @dataProvider providerGetTypeName
+    * @param integer $number
+    * @param string $expected
+    */
+   public function testGetTypeName($number, $expected) {
+      $output = \PluginFormcreatorQuestion::getTypeName($number);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   /**
+    *
     */
    public function testDuplicate() {
       $question = $this->getQuestion();
