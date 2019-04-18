@@ -109,13 +109,20 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   `tic`.`date_mod`              AS `date_mod`,
                   `tic`.`entities_id`           AS `entities_id`,
                   0                             AS `is_recursive`,
-                  `tic`.`users_id_recipient`    AS `requester_id`,
+                  `tu`.`users_id`               AS `requester_id`,
                   0                             AS `validator_id`,
                   `tic`.`content`               AS `comment`
                FROM `glpi_tickets` AS `tic`
                LEFT JOIN `glpi_items_tickets` AS `itic`
                   ON `itic`.`tickets_id` = `tic`.`id`
                   AND `itic`.`itemtype` = 'PluginFormcreatorFormAnswer'
+               LEFT JOIN (
+                  SELECT `users_id`, `tickets_id`
+                  FROM `glpi_tickets_users` AS `tu`
+                  WHERE `tu`.`type` = '"  . CommonITILActor::REQUESTER . "'
+                  ORDER BY `id` ASC
+                  LIMIT 1
+               ) AS `tu` ON (`tic`.`id` = `tu`.`tickets_id`)
                WHERE `tic`.`is_deleted` = 0
                GROUP BY `original_id`
                HAVING COUNT(`itic`.`items_id`) <= 1";

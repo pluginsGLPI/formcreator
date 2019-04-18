@@ -288,6 +288,19 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
    if ($item instanceof Ticket) {
       if (!isset($CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'])) {
          // run this hook only if the plugin is not generating tickets
+         $requester = $DB->request([
+            'SELECT' => 'users_id',
+            'FROM' => Ticket_User::getTable(),
+            'WHERE' => [
+               'tickets_id' => $item->getID(),
+               'type' =>  '1',
+            ],
+            'ORDER' => ['id'],
+            'LIMIT' => '1',
+         ])->next();
+         if (count($requester) < 1) {
+            $requester['users_id'] = 0;
+         }
          $issue = new PluginFormcreatorIssue();
          $issue->add([
             'original_id'     => $item->getID(),
@@ -298,7 +311,7 @@ function plugin_formcreator_hook_add_ticket(CommonDBTM $item) {
             'date_mod'        => $item->fields['date_mod'],
             'entities_id'     => $item->fields['entities_id'],
             'is_recursive'    => '0',
-            'requester_id'    => $item->fields['users_id_recipient'],
+            'requester_id'    => $requester['users_id'],
             'validator_id'    => '0',
             'comment'         => addslashes($item->fields['content']),
          ]);

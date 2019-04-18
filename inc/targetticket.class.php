@@ -1205,6 +1205,7 @@ EOS;
       if (count($this->assignedGroups['_groups_id_assign']) > 0) {
          $data = $this->assignedGroups + $data;
       }
+      $data['users_id_recipient'] = $requesters_id;
 
       // Create the target ticket
       if (!$ticketID = $ticket->add($data)) {

@@ -848,26 +848,27 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'SELECT' => ['id'],
                'FROM'   => $itemTicket::getTable(),
                'WHERE'  => [
-                  'itemtype' => 'PluginFormcreatorFormAnswer',
+                  'itemtype' => PluginFormcreatorFormAnswer::class,
                   'items_id' => $formAnswerId,
                ]
             ]);
             if (count($rows) != 1) {
+               $issueData = [
+                  'original_id'     => $id,
+                  'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
+                  'name'            => addslashes($this->fields['name']),
+                  'status'          => $status,
+                  'date_creation'   => $this->fields['request_date'],
+                  'date_mod'        => $this->fields['request_date'],
+                  'entities_id'     => $this->fields['entities_id'],
+                  'is_recursive'    => $this->fields['is_recursive'],
+                  'requester_id'    => $this->fields['requester_id'],
+                  'validator_id'    => $this->fields['users_id_validator'],
+                  'comment'         => '',
+               ];
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
-                  $issue->add([
-                     'original_id'     => $id,
-                     'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-                     'name'            => addslashes($this->fields['name']),
-                     'status'          => $status,
-                     'date_creation'   => $this->fields['request_date'],
-                     'date_mod'        => $this->fields['request_date'],
-                     'entities_id'     => $this->fields['entities_id'],
-                     'is_recursive'    => $this->fields['is_recursive'],
-                     'requester_id'    => $this->fields['requester_id'],
-                     'validator_id'    => $this->fields['users_id_validator'],
-                     'comment'         => '',
-                  ]);
+                  $issue->add($issueData);
                } else {
                   $issue->getFromDBByCrit([
                      'AND' => [
@@ -875,21 +876,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                        'original_id'  => $formAnswerId
                      ]
                   ]);
+                  $issueData['id'] = $issue->getID();
                   $id = $this->getID();
-                  $issue->update([
-                     'id'              => $issue->getID(),
-                     'original_id'     => $id,
-                     'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-                     'name'            => addslashes($this->fields['name']),
-                     'status'          => $status,
-                     'date_creation'   => $this->fields['request_date'],
-                     'date_mod'        => $this->fields['request_date'],
-                     'entities_id'     => $this->fields['entities_id'],
-                     'is_recursive'    => $this->fields['is_recursive'],
-                     'requester_id'    => $this->fields['requester_id'],
-                     'validator_id'    => $this->fields['users_id_validator'],
-                     'comment'         => '',
-                  ]);
+                  $issueData['original_id'] = $id;
+                  $issue->update($issueData);
                }
             } else {
                $ticket = new Ticket();
@@ -897,20 +887,30 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                $itemTicket->getFromDB($result['id']);
                $ticket->getFromDB($itemTicket->getField('tickets_id'));
                $ticketId = $ticket->getID();
+               $ticketUser = new Ticket_User();
+               $ticketUserRow = $ticketUser->find([
+                  'tickets_id' => $ticketId,
+                  'type' => CommonITILActor::REQUESTER,
+               ], [
+                  'id ASC'
+               ],
+               1);
+               $ticketUserRow = array_pop($ticketUserRow);
+               $issueData = [
+                  'original_id'     => $ticketId,
+                  'sub_itemtype'    => Ticket::class,
+                  'name'            => addslashes($ticket->fields['name']),
+                  'status'          => $ticket->fields['status'],
+                  'date_creation'   => $ticket->fields['date'],
+                  'date_mod'        => $ticket->fields['date_mod'],
+                  'entities_id'     => $ticket->fields['entities_id'],
+                  'is_recursive'    => '0',
+                  'requester_id'    => $ticketUserRow['users_id'],
+                  'validator_id'    => '',
+                  'comment'         => addslashes($ticket->fields['content']),
+               ];
                if ($is_newFormAnswer) {
-                  $issue->add([
-                     'original_id'     => $ticketId,
-                     'sub_itemtype'    => 'Ticket',
-                     'name'            => addslashes($ticket->getField('name')),
-                     'status'          => $ticket->getField('status'),
-                     'date_creation'   => $ticket->getField('date'),
-                     'date_mod'        => $ticket->getField('date_mod'),
-                     'entities_id'     => $ticket->getField('entities_id'),
-                     'is_recursive'    => '0',
-                     'requester_id'    => $ticket->getField('users_id_recipient'),
-                     'validator_id'    => '',
-                     'comment'         => addslashes($ticket->getField('content')),
-                  ]);
+                  $issue->add($issueData);
                } else {
                   $issue->getFromDBByCrit([
                     'AND' => [
@@ -918,20 +918,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                       'original_id'  => $formAnswerId
                     ]
                   ]);
-                  $issue->update([
-                     'id'              => $issue->getID(),
-                     'original_id'     => $ticketId,
-                     'sub_itemtype'    => 'Ticket',
-                     'name'            => addslashes($ticket->getField('name')),
-                     'status'          => $ticket->getField('status'),
-                     'date_creation'   => $ticket->getField('date'),
-                     'date_mod'        => $ticket->getField('date_mod'),
-                     'entities_id'     => $ticket->getField('entities_id'),
-                     'is_recursive'    => '0',
-                     'requester_id'    => $ticket->getField('users_id_recipient'),
-                     'validator_id'    => '',
-                     'comment'         => addslashes($ticket->getField('content')),
-                  ]);
+                  $issueData['id'] = $issue->getID();
+                  $issue->update($issueData);
                }
             }
          } else {
