@@ -386,7 +386,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function parseAnswerValues($input) {
+   public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!isset($input[$key])) {
          $input[$key] = '0';
