@@ -185,7 +185,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return "tab_fields_fields['ldapselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function parseAnswerValues($input) {
+   public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!isset($input[$key])) {
          $input[$key] = '';

@@ -325,7 +325,7 @@ class PluginFormcreatorFields
             $question->fields['fieldtype'],
             $question
          );
-         $fields[$id]->parseAnswerValues($input);
+         $fields[$id]->parseAnswerValues($input, true);
       }
 
       $questionToShow = [];
