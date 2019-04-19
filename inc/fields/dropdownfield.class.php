@@ -230,7 +230,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function isValid() {
       // If the field is required it can't be empty
       $itemtype = json_decode($this->fields['values'], true);
-      $itemtype = $itemtype['itemtype'];
+      if ($itemtype === null) {
+         $itemtype = $this->fields['values'];
+      } else {
+         $itemtype = $itemtype['itemtype'];
+      }
       $dropdown = new $itemtype();
       if ($this->isRequired() && $dropdown->isNewId($this->value)) {
          Session::addMessageAfterRedirect(
