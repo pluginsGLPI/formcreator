@@ -178,26 +178,25 @@ class PluginFormcreatorSection extends CommonTestCase {
       $uuid = plugin_formcreator_getUuid();
       $input = [
          'name' => $this->getUniqueString(),
-         $formFk => $form->getID(),
          'order' => '1',
          'uuid' => $uuid,
       ];
 
       $linker = new \PluginFormcreatorLinker ();
-      $sectionId = \PluginFormcreatorSection::import($linker, $input);
+      $sectionId = \PluginFormcreatorSection::import($linker, $input, $form->getID());
       $this->integer($sectionId)->isGreaterThan(0);
 
       unset($input['uuid']);
 
       $this->exception(
-         function() use($linker, $input) {
-            \PluginFormcreatorSection::import($linker, $input);
+         function() use($linker, $input, $form) {
+            \PluginFormcreatorSection::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
       ->hasMessage('UUID or ID is mandatory'); // passes
 
       $input['id'] = $sectionId;
-      $sectionId2 = \PluginFormcreatorSection::import($linker, $input);
+      $sectionId2 = \PluginFormcreatorSection::import($linker, $input, $form->getID());
       $this->variable($sectionId2)->isNotFalse();
       $this->integer((int) $sectionId)->isNotEqualTo($sectionId2);
    }

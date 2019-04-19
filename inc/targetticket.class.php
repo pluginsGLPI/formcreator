@@ -890,6 +890,10 @@ SCRIPT;
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
+
       $formFk = PluginFormcreatorForm::getForeignKeyField();
 
       $item = new self;
@@ -912,25 +916,27 @@ SCRIPT;
       // Assume that all questions are already imported
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
-      $questionIdentifier = 'id';
-      if (isset($input['uuid'])) {
-         $questionIdentifier = 'uuid';
-      }
-      $taggableFields = $item->getTaggableFields();
-      foreach ($questions as $question) {
-         $id         = $question->getID();
-         $originalId = $question->fields[$questionIdentifier];
-         foreach ($taggableFields as $field) {
-            $content = $input[$field];
-            $content = str_replace("##question_$originalId##", "##question_$id##", $content);
-            $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
-            $input[$field] = $content;
+      if ($questions !== false) {
+         $questionIdentifier = 'id';
+         if (isset($input['uuid'])) {
+            $questionIdentifier = 'uuid';
          }
-      }
+         $taggableFields = $item->getTaggableFields();
+         foreach ($questions as $question) {
+            $id         = $question->getID();
+            $originalId = $question->fields[$questionIdentifier];
+            foreach ($taggableFields as $field) {
+               $content = $input[$field];
+               $content = str_replace("##question_$originalId##", "##question_$id##", $content);
+               $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+               $input[$field] = $content;
+            }
+         }
 
-      // escape text fields
-      foreach ($taggableFields as $key) {
-         $input[$key] = $DB->escape($input[$key]);
+         // escape text fields
+         foreach ($taggableFields as $key) {
+            $input[$key] = $DB->escape($input[$key]);
+         }
       }
 
       // Add or update
@@ -988,16 +994,6 @@ SCRIPT;
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       unset($target_data[$formFk]);
 
-      // remove ID or UUID
-      $idToRemove = 'id';
-      if ($remove_uuid) {
-         $idToRemove = 'uuid';
-      } else {
-         // Convert IDs into UUIDs
-         $target_data = $this->convertTags($this->fields);
-      }
-      unset($target_data[$idToRemove]);
-
       // replace dropdown ids
       $target_data['_tickettemplate'] = '';
       if ($target_data['tickettemplates_id'] > 0) {
@@ -1047,7 +1043,7 @@ SCRIPT;
          $idToRemove = 'uuid';
       } else {
          // Convert IDs into UUIDs
-         $target_data = $this->convertTags($this->fields);
+         $target_data = $this->convertTags($target_data);
       }
       unset($target_data[$idToRemove]);
 

@@ -44,6 +44,114 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       }
    }
 
+   public function providerGetTypeName() {
+      return [
+         [
+            'input' => 0,
+            'expected' => 'Target changes',
+         ],
+         [
+            'input' => 1,
+            'expected' => 'Target change',
+         ],
+         [
+            'input' => 2,
+            'expected' => 'Target changes',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetTypeName
+    * @param integer $number
+    * @param string $expected
+    */
+   public function testGetTypeName($number, $expected) {
+      $output = \PluginFormcreatorTargetChange::getTypeName($number);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetEnumUrgencyRule() {
+      $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetBase::URGENCY_RULE_NONE      => 'Medium',
+         \PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
+         \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
+      ]);
+   }
+
+   public function getEnumCategoryRule() {
+      $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
+      $this->array($output)->isEqualTo([
+         'none'      => 'None',
+         'specific'  => 'Specific category',
+         'answer'    => 'Equals to the answer to the question',
+      ]);
+   }
+
+   public function testGetItem_User() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetItem_User();
+      $this->object($output)->isInstanceOf(\Change_User::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Group() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetItem_Group();
+      $this->object($output)->isInstanceOf(\Change_Group::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Supplier() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetItem_Supplier();
+      $this->object($output)->isInstanceOf(\Change_Supplier::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Item() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetItem_Item();
+      $this->object($output)->isInstanceOf(\Change_Item::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Actor() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetItem_Actor();
+      $this->object($output)->isInstanceOf(\PluginFormcreatorTargetChange_Actor::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetCategoryFilter() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetCategoryFilter();
+      $this->array($output)->isEqualTo([
+         'is_change' => 1,
+      ]);
+   }
+
+   public function testGetTaggableFields() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetTaggableFields();
+      $this->array($output)->isEqualTo([
+         'name',
+         'content',
+         'impactcontent',
+         'controlistcontent',
+         'rolloutplancontent',
+         'backoutplancontent',
+         'checklistcontent',
+      ]);
+   }
+
+   public function testGetTargetItemtypeName() {
+      $instance = new PluginFormcreatorTargetChangeDummy();
+      $output = $instance->publicGetTargetItemtypeName();
+      $this->string($output)->isEqualTo(\Change::class);
+   }
+
    /**
     *
     * @return void
@@ -197,4 +305,58 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $output = $instance->publicSetTargetEntity([], $formAnswer, $requesterId);
       $this->integer((int) $output['entities_id'])->isEqualTo($entityId);
    }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $instance = $this->getTargetChange();
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'content',
+         'impactcontent',
+         'controlistcontent',
+         'rolloutplancontent',
+         'backoutplancontent',
+         'checklistcontent',
+         'due_date_rule',
+         'due_date_question',
+         'due_date_value',
+         'due_date_period',
+         'urgency_rule',
+         'urgency_question',
+         'validation_followup',
+         'destination_entity',
+         'destination_entity_value',
+         'tag_type',
+         'tag_questions',
+         'tag_specifics',
+         'category_rule',
+         'category_question',
+      ];
+      $extraFields = [
+         '_actors',
+      ];
+      
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
+
 }

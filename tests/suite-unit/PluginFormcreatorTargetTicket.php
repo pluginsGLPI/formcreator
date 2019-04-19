@@ -44,6 +44,112 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       }
    }
 
+   public function providerGetTypeName() {
+      return [
+         [
+            'input' => 0,
+            'expected' => 'Target tickets',
+         ],
+         [
+            'input' => 1,
+            'expected' => 'Target ticket',
+         ],
+         [
+            'input' => 2,
+            'expected' => 'Target tickets',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerGetTypeName
+    * @param integer $number
+    * @param string $expected
+    */
+   public function testGetTypeName($number, $expected) {
+      $output = \PluginFormcreatorTargetTicket::getTypeName($number);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetEnumUrgencyRule() {
+      $output = \PluginFormcreatorTargetTicket::getEnumUrgencyRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetBase::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
+         \PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
+         \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
+      ]);
+   }
+
+   public function getEnumCategoryRule() {
+      $output = \PluginFormcreatorTargetTicket::getEnumUrgencyRule();
+      $this->array($output)->isEqualTo([
+         'none'      => 'None',
+         'specific'  => 'Specific category',
+         'answer'    => 'Equals to the answer to the question',
+      ]);
+   }
+
+   public function testGetItem_User() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetItem_User();
+      $this->object($output)->isInstanceOf(\Ticket_User::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Group() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetItem_Group();
+      $this->object($output)->isInstanceOf(\Group_Ticket::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Supplier() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetItem_Supplier();
+      $this->object($output)->isInstanceOf(\Supplier_Ticket::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Item() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetItem_Item();
+      $this->object($output)->isInstanceOf(\Item_Ticket::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetItem_Actor() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetItem_Actor();
+      $this->object($output)->isInstanceOf(\PluginFormcreatorTargetTicket_Actor::class);
+      $this->boolean($output->isNewItem())->isTrue();
+   }
+
+   public function testGetCategoryFilter() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetCategoryFilter();
+      $this->array($output)->isEqualTo([
+         'OR' => [
+            'is_request'  => 1,
+            'is_incident' => 1
+         ]
+      ]);
+   }
+
+   public function testGetTaggableFields() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetTaggableFields();
+      $this->array($output)->isEqualTo([
+         'name',
+         'content',
+      ]);
+   }
+
+   public function testGetTargetItemtypeName() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $output = $instance->publicGetTargetItemtypeName();
+      $this->string($output)->isEqualTo(\Ticket::class);
+   }
+
    /**
     * Tests that deleting a target ticket of a form also deletes relations between tickets and generated tickets
     *
@@ -329,5 +435,104 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $output = $instance->publicPrepareTemplate($template, $formAnswer, true);
       $this->string($output)->isEqualTo($expected[1]);
+   }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $instance = $this->getTargetTicket();
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'content',
+         'due_date_rule',
+         'due_date_question',
+         'due_date_value',
+         'due_date_period',
+         'urgency_rule',
+         'urgency_question',
+         'location_rule',
+         'location_question',
+         'validation_followup',
+         'destination_entity',
+         'destination_entity_value',
+         'tag_type',
+         'tag_questions',
+         'tag_specifics',
+         'category_rule',
+         'category_question',
+         'associate_rule',
+         'associate_question',
+      ];
+      $extraFields = [
+         '_tickettemplate',
+         '_actors',
+         '_ticket_relations',
+      ];
+      
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
+
+   public function testImport() {
+      $form = $this->getForm();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         'name' => $this->getUniqueString(), 
+         'content' => $this->getUniqueString(),
+         'due_date_rule' => \PluginFormcreatorTargetTicket::DUE_DATE_RULE_NONE,
+         'due_date_question' => '0',
+         'due_date_value' => '',
+         'due_date_period' => '',
+         'urgency_rule' => \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE,
+         'urgency_question' => '0',
+         'location_rule' => \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE,
+         'location_question' => '0',
+         'validation_followup' => '1',
+         'destination_entity' => '0',
+         'destination_entity_value' => '',
+         'tag_type' => \PluginFormcreatorTargetTicket::TAG_TYPE_NONE,
+         'tag_questions' => '0',
+         'tag_specifics' => '',
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE,
+         'category_question' => '0',
+         'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE,
+         'associate_question' => '0',
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $targetTicketId = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
+      $this->integer($targetTicketId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input, $form) {
+            \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $targetTicketId;
+      $targetTicketId2 = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
+      $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
    }
 }

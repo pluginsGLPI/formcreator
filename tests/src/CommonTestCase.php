@@ -230,7 +230,7 @@ abstract class CommonTestCase extends CommonDBTestCase
 
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
-         $input[$formFk] = $this->getForm();
+         $input[$formFk] = $this->getForm()->getID();
       }
 
       $targetTicket = new \PluginFormcreatorTargetTicket();
@@ -246,7 +246,7 @@ abstract class CommonTestCase extends CommonDBTestCase
 
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       if (!isset($input[$formFk])) {
-         $input[$formFk] = $this->getForm();
+         $input[$formFk] = $this->getForm()->getID();
       }
 
       $targetChange = new \PluginFormcreatorTargetChange();

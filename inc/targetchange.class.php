@@ -130,16 +130,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       $formFk = PluginFormcreatorForm::getForeignKeyField();
       unset($target_data[$formFk]);
 
-      // remove ID or UUID
-      $idToRemove = 'id';
-      if ($remove_uuid) {
-         $idToRemove = 'uuid';
-      } else {
-         // Convert IDs into UUIDs
-         $target_data = $this->convertTags($this->fields);
-      }
-      unset($target_data[$idToRemove]);
-
       // get target actors
       $target_data['_actors'] = [];
       $myFk = self::getForeignKeyField();
@@ -165,7 +155,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $idToRemove = 'uuid';
       } else {
          // Convert IDs into UUIDs
-         $target_data = $this->convertTags($this->fields);
+         $target_data = $this->convertTags($target_data);
       }
       unset($target_data[$idToRemove]);
       
@@ -174,6 +164,10 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
+
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
 
       $formFk = PluginFormcreatorForm::getForeignKeyField();
 
