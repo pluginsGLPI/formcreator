@@ -558,7 +558,7 @@ PluginFormcreatorExportableInterface
             $targetItemUrl = Toolbox::getItemTypeFormURL($targetType) . '?id=' . $targetId;
             echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
 
-            echo $target->fields['name'];
+            echo $target->fields['target_name'];
             echo '</td>';
 
             echo '<td align="center" width="32">';
@@ -2439,7 +2439,7 @@ PluginFormcreatorExportableInterface
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
+      echo '<td width="40%"><input type="text" name="target_name" style="width:100%;" value="" /></td>';
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $targetTypes = [];
