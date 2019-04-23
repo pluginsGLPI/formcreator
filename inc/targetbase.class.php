@@ -1366,7 +1366,7 @@ SCRIPT;
       Html::closeForm();
 
       // => List of saved observers
-      foreach ($actors['observer'] as $id => $values) {
+      foreach ($actors[PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER] as $id => $values) {
          echo '<div>';
          switch ($values['actor_type']) {
             case PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR :
