@@ -144,9 +144,8 @@ class PluginFormcreatorUpgradeTo2_6 {
       $table = PluginFormcreatorTargetTicket::getTable();
       $migration->addField($table, 'uuid', 'string', ['after' => 'category_question']);
       $migration->migrationOneTable($table);
-      $obj = new PluginFormcreatorTargetTicket();
       $all_targetTickets = $DB->request([
-         'FROM'   => $obj::getTable(),
+         'FROM'   => PluginFormcreatorTargetTicket::getTable(),
          'WHERE'  => [
             'uuid' => null,
          ]
@@ -154,9 +153,11 @@ class PluginFormcreatorUpgradeTo2_6 {
       foreach ($all_targetTickets as $targetTicket) {
          $targetTicket['_skip_checks'] = true;
          $targetTicket['title'] = $targetTicket['name'];
-         $obj->update($targetTicket);
+         $query = "UPDATE $table
+                   SET `uuid` = '" . plugin_formcreator_getUuid() . "'
+                   WHERE `id` = " . $targetTicket['id'];
+         $DB->query($query);
       }
-      unset($obj);
 
       $enum_category_rule      = "'".implode("', '", array_keys(PluginFormcreatorTargetTicket::getEnumCategoryRule()))."'";
       $table = 'glpi_plugin_formcreator_targettickets';
