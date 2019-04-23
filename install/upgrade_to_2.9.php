@@ -48,6 +48,7 @@ class PluginFormcreatorUpgradeTo2_9 {
       $formFk = 'plugin_formcreator_forms_id';
       foreach ($tables as $table) {
          $migration->addField($table, $formFk, 'integer', ['after' => 'name']);
+         $migration->addField($table, 'target_name', 'string', ['after' => $formFk]);
          $migration->addField($table, 'uuid', 'string');
          $migration->migrationOneTable($table);
       }
@@ -68,7 +69,8 @@ class PluginFormcreatorUpgradeTo2_9 {
             $table,
             [
                $formFk => $target[$formFk],
-               'uuid'  => plugin_formcreator_getUuid(),
+               'uuid'  => $target['uuid'],
+               'target_name' => $target['name'],
             ],
             [
                'id' => $target['items_id'],

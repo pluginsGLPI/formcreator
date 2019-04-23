@@ -93,14 +93,21 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     * @return void
     */
    public function showForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
-
       $rand = mt_rand();
 
       $form = $this->getForm();
 
       echo '<div class="center" style="width: 950px; margin: 0 auto;">';
       echo '<form name="form_target" method="post" action="' . self::getFormURL() . '">';
+
+      // General information: target_name
+      echo '<table class="tab_cadre_fixe">';
+      echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
+      echo '<tr class="line1">';
+      echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
+      echo '<td width="85%"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '" /></td>';
+      echo '</tr>';
+      echo '</table>';
 
       // Ticket information: title, template...
       echo '<table class="tab_cadre_fixe">';
