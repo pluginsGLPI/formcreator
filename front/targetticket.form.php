@@ -41,7 +41,7 @@ if (!$plugin->isActivated('formcreator')) {
 $targetticket = new PluginFormcreatorTargetTicket();
 
 // Edit an existing target ticket
-if (isset($_POST["update"])) {
+if (isset($_POST['update'])) {
    $targetticket->update($_POST);
    Html::back();
 

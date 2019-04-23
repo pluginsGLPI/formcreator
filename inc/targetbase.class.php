@@ -776,7 +776,7 @@ EOS;
       Dropdown::showFromArray('due_date_rule', self::getEnumDueDateRule(),
          [
             'value'     => $this->fields['due_date_rule'],
-            'on_change' => 'formcreatorChangeDueDate(this.value)',
+            'on_change' => 'plugin_formcreator_formcreatorChangeDueDate(this.value)',
             'display_emptychoice' => true
          ]
       );
@@ -1102,27 +1102,27 @@ SCRIPT;
       // Requester header
       echo '<th width="33%">';
       echo _n('Requester', 'Requesters', 1) . ' &nbsp;';
-      echo '<img title="Ajouter" alt="Ajouter" onclick="displayRequesterForm()" class="pointer"
+      echo '<img title="Ajouter" alt="Ajouter" onclick="plugin_formcreator_displayRequesterForm()" class="pointer"
                id="btn_add_requester" src="../../../pics/add_dropdown.png">';
-      echo '<img title="Annuler" alt="Annuler" onclick="hideRequesterForm()" class="pointer"
+      echo '<img title="Annuler" alt="Annuler" onclick="plugin_formcreator_hideRequesterForm()" class="pointer"
                id="btn_cancel_requester" src="../../../pics/delete.png" style="display:none">';
       echo '</th>';
 
       // Watcher header
       echo '<th width="34%">';
       echo _n('Watcher', 'Watchers', 1) . ' &nbsp;';
-      echo '<img title="Ajouter" alt="Ajouter" onclick="displayWatcherForm()" class="pointer"
+      echo '<img title="Ajouter" alt="Ajouter" onclick="plugin_formcreator_displayWatcherForm()" class="pointer"
                id="btn_add_watcher" src="../../../pics/add_dropdown.png">';
-      echo '<img title="Annuler" alt="Annuler" onclick="hideWatcherForm()" class="pointer"
+      echo '<img title="Annuler" alt="Annuler" onclick="plugin_formcreator_hideWatcherForm()" class="pointer"
                id="btn_cancel_watcher" src="../../../pics/delete.png" style="display:none">';
       echo '</th>';
 
       // Assigned header
       echo '<th width="33%">';
       echo __('Assigned to') . ' &nbsp;';
-      echo '<img title="Ajouter" alt="Ajouter" onclick="displayAssignedForm()" class="pointer"
+      echo '<img title="Ajouter" alt="Ajouter" onclick="plugin_formcreator_displayAssignedForm()" class="pointer"
                id="btn_add_assigned" src="../../../pics/add_dropdown.png">';
-      echo '<img title="Annuler" alt="Annuler" onclick="hideAssignedForm()" class="pointer"
+      echo '<img title="Annuler" alt="Annuler" onclick="plugin_formcreator_hideAssignedForm()" class="pointer"
                id="btn_cancel_assigned" src="../../../pics/delete.png" style="display:none">';
       echo '</th>';
 
@@ -1143,13 +1143,13 @@ SCRIPT;
       Dropdown::showFromArray(
          'actor_type',
          $dropdownItems, [
-            'on_change'         => 'formcreatorChangeActorRequester(this.value)'
+            'on_change'         => 'plugin_formcreator_ChangeActorRequester(this.value)'
          ]
       );
 
       echo '<div id="block_requester_user" style="display:none">';
       User::dropdown([
-         'name' => 'actor_value_person',
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
          'right' => 'all',
          'all'   => 0,
       ]);
@@ -1157,21 +1157,18 @@ SCRIPT;
 
       echo '<div id="block_requester_group" style="display:none">';
       Group::dropdown([
-         'name' => 'actor_value_group',
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
       ]);
       echo '</div>';
 
       echo '<div id="block_requester_question_user" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_person', $questions_user_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'values' => User::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
          [
             'value' => 0
          ]
@@ -1179,9 +1176,6 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_requester_question_group" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
@@ -1196,15 +1190,12 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_requester_question_actors" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['actor'],
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
          [
             'value' => 0
          ]
@@ -1218,7 +1209,7 @@ SCRIPT;
 
       echo '<p align="center">';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="hidden" name="actor_role" value="requester" />';
+      echo '<input type="hidden" name="actor_role" value="' . PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER . '" />';
       echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
 
@@ -1283,12 +1274,12 @@ SCRIPT;
       unset($dropdownItems['supplier']);
       unset($dropdownItems['question_supplier']);
       Dropdown::showFromArray('actor_type',
-         $dropdownItems, ['on_change' => 'formcreatorChangeActorWatcher(this.value)']
+         $dropdownItems, ['on_change' => 'plugin_formcreator_ChangeActorWatcher(this.value)']
       );
 
       echo '<div id="block_watcher_user" style="display:none">';
       User::dropdown([
-         'name' => 'actor_value_person',
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
          'right' => 'all',
          'all'   => 0,
       ]);
@@ -1296,21 +1287,18 @@ SCRIPT;
 
       echo '<div id="block_watcher_group" style="display:none">';
       Group::dropdown([
-         'name' => 'actor_value_group',
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
       ]);
       echo '</div>';
 
       echo '<div id="block_watcher_question_user" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_person', $questions_user_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'values' => User::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
          [
             'value' => 0
          ]
@@ -1318,16 +1306,13 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_watcher_question_group" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'values' => Group::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_GROUP,
          [
             'value' => 0
          ]
@@ -1335,15 +1320,12 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_watcher_question_actors" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['actor'],
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
          [
             'value' => 0
          ]
@@ -1357,7 +1339,7 @@ SCRIPT;
 
       echo '<p align="center">';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="hidden" name="actor_role" value="observer" />';
+      echo '<input type="hidden" name="actor_role" value="' . PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER . '" />';
       echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
 
@@ -1422,13 +1404,13 @@ SCRIPT;
       Dropdown::showFromArray(
          'actor_type',
          $dropdownItems, [
-           'on_change'         => 'formcreatorChangeActorAssigned(this.value)'
+           'on_change'         => 'plugin_formcreator_ChangeActorAssigned(this.value)'
          ]
       );
 
       echo '<div id="block_assigned_user" style="display:none">';
       User::dropdown([
-            'name' => 'actor_value_person',
+            'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_PERSON,
             'right' => 'all',
             'all'   => 0,
       ]);
@@ -1436,27 +1418,24 @@ SCRIPT;
 
       echo '<div id="block_assigned_group" style="display:none">';
       Group::dropdown([
-         'name' => 'actor_value_group',
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
       ]);
       echo '</div>';
 
       echo '<div id="block_assigned_supplier" style="display:none">';
       Supplier::dropdown([
-         'name' => 'actor_value_supplier',
+         'name' => 'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_SUPPLIER,
       ]);
       echo '</div>';
 
       echo '<div id="block_assigned_question_user" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_person', $questions_user_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'values' => User::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
          [
             'value' => 0
          ]
@@ -1464,16 +1443,13 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_assigned_question_group" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_group', $questions_group_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'values' => Group::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_GROUP,
          [
             'value' => 0
          ]
@@ -1481,15 +1457,12 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_assigned_question_actors" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_actors', $questions_actors_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['actor'],
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_ACTORS,
          [
             'value' => 0
          ]
@@ -1497,16 +1470,13 @@ SCRIPT;
       echo '</div>';
 
       echo '<div id="block_assigned_question_supplier" style="display:none">';
-      // Dropdown::showFromArray('actor_value_question_supplier', $questions_supplier_list, [
-      //    'value' => $this->fields['due_date_question'],
-      // ]);
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
             'fieldtype' => ['glpiselect'],
             'values' => Supplier::class,
          ],
-         'actor_value_question_person',
+         'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_SUPPLIER,
          [
             'value' => 0
          ]
@@ -1520,7 +1490,7 @@ SCRIPT;
 
       echo '<p align="center">';
       echo '<input type="hidden" name="id" value="' . $this->getID() . '" />';
-      echo '<input type="hidden" name="actor_role" value="assigned" />';
+      echo '<input type="hidden" name="actor_role" value="' . PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED . '" />';
       echo '<input type="submit" value="' . __('Add') . '" class="submit_button" />';
       echo '</p>';
 
@@ -1816,23 +1786,25 @@ SCRIPT;
    }
 
    public function post_addItem() {
-      if (!$this->skipCreateActors) {
-         $target_actor = $this->getItem_Actor();
-         $myFk = self::getForeignKeyField();
-         $target_actor->add([
-            $myFk                 => $this->getID(),
-            'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
-            'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
-            'use_notification'    => '1',
-         ]);
-         $target_actor = $this->getItem_Actor();
-         $target_actor->add([
-            $myFk                 => $this->getID(),
-            'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
-            'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
-            'use_notification'    => '1',
-         ]);
-      }
+      if ($this->skipCreateActors) {
+         return;
+      } 
+
+      $target_actor = $this->getItem_Actor();
+      $myFk = self::getForeignKeyField();
+      $target_actor->add([
+         $myFk                 => $this->getID(),
+         'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER,
+         'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_CREATOR,
+         'use_notification'    => '1',
+      ]);
+      $target_actor = $this->getItem_Actor();
+      $target_actor->add([
+         $myFk                 => $this->getID(),
+         'actor_role'          => PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER,
+         'actor_type'          => PluginFormcreatorTarget_Actor::ACTOR_TYPE_VALIDATOR,
+         'use_notification'    => '1',
+      ]);
    }
 
    protected static function getDeleteImage($id) {
