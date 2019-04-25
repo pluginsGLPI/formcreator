@@ -74,18 +74,27 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testGetEnumUrgencyRule() {
       $output = \PluginFormcreatorTargetTicket::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetBase::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
-         \PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
-         \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::URGENCY_RULE_NONE      => 'Urgency from template or Medium',
+         \PluginFormcreatorTargetTicket::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
+         \PluginFormcreatorTargetTicket::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
    }
 
-   public function getEnumCategoryRule() {
-      $output = \PluginFormcreatorTargetTicket::getEnumUrgencyRule();
+   public function testGetEnumAssociateRule() {
+      $output = \PluginFormcreatorTargetTicket::getEnumAssociateRule();
       $this->array($output)->isEqualTo([
-         'none'      => 'None',
-         'specific'  => 'Specific category',
-         'answer'    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_NONE      => 'None',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_SPECIFIC  => 'Specific asset',
+         \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER    => 'Equals to the answer to the question',
+      ]);
+   }
+
+   public function testGetEnumCategoryRule() {
+      $output = \PluginFormcreatorTargetTicket::getEnumCategoryRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_NONE      => 'Category from template or none',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC  => 'Specific category',
+         \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
    }
 
@@ -479,7 +488,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          '_actors',
          '_ticket_relations',
       ];
-      
+
       $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
@@ -495,7 +504,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $form = $this->getForm();
       $uuid = plugin_formcreator_getUuid();
       $input = [
-         'name' => $this->getUniqueString(), 
+         'name' => $this->getUniqueString(),
          'content' => $this->getUniqueString(),
          'due_date_rule' => \PluginFormcreatorTargetTicket::DUE_DATE_RULE_NONE,
          'due_date_question' => '0',
@@ -529,7 +538,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
          }
       )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
-      ->hasMessage('UUID or ID is mandatory'); // passes
+         ->hasMessage('UUID or ID is mandatory'); // passes
 
       $input['id'] = $targetTicketId;
       $targetTicketId2 = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());

@@ -71,21 +71,90 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $this->string($output)->isEqualTo($expected);
    }
 
+   public function providerPrepareInputForUpdate() {
+      return [
+         [
+            'input' => [
+               'content' => '',
+            ],
+            'expected' => [
+            ],
+            'message' => 'The name cannot be empty!',
+         ],
+         [
+            'input' => [
+               'name' => 'something',
+               'content' => '',
+            ],
+            'expected' => [
+            ],
+            'message' => 'The description cannot be empty!',
+         ],
+         [
+            'input' => [
+               'name' => 'something',
+               'content' => 'foo',
+               'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_SPECIFIC,
+               '_destination_entity_value_specific' => '0',
+               'urgency_rule' => \PluginFormcreatorTargetChange::URGENCY_RULE_SPECIFIC,
+               '_urgency_specific' => '3',
+               'category_rule' => \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE,
+               'category_question' => '0',
+            ],
+            'expected' => [
+               'name' => 'something',
+               'content' => 'foo',
+               'destination_entity' => \PluginFormcreatorTargetChange::DESTINATION_ENTITY_SPECIFIC,
+               'destination_entity_value' => '0',
+               'urgency_rule' => \PluginFormcreatorTargetChange::URGENCY_RULE_SPECIFIC,
+               'urgency_question' => '3',
+               'category_rule' => \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE,
+               'category_question' => '0',
+            ],
+            'message' => null,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareInputForUpdate
+    */
+   public function testPrepareInputForUpdate($input, $expected, $message) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->prepareInputForUpdate($input);
+
+      if ($message !== null) {
+         $this->sessionHasMessage($message, ERROR);
+         $this->array($output)->hasSize(0);
+         return;
+      }
+
+      $this->string($output['name'])->isEqualTo($expected['name']);
+      $this->string($output['content'])->isEqualTo($expected['content']);
+      $this->string($output['name'])->isEqualTo($expected['name']);
+      $this->integer($output['destination_entity'])->isEqualTo($expected['destination_entity']);
+      $this->string($output['destination_entity_value'])->isEqualTo($expected['destination_entity_value']);
+      $this->integer($output['urgency_rule'])->isEqualTo($expected['urgency_rule']);
+      $this->string($output['urgency_question'])->isEqualTo($expected['urgency_question']);
+      $this->integer($output['category_rule'])->isEqualTo($expected['category_rule']);
+      $this->string($output['category_question'])->isEqualTo($expected['category_question']);
+   }
+
    public function testGetEnumUrgencyRule() {
       $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
       $this->array($output)->isEqualTo([
-         \PluginFormcreatorTargetBase::URGENCY_RULE_NONE      => 'Medium',
-         \PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
-         \PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetChange::URGENCY_RULE_NONE      => 'Medium',
+         \PluginFormcreatorTargetChange::URGENCY_RULE_SPECIFIC  => 'Specific urgency',
+         \PluginFormcreatorTargetChange::URGENCY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
    }
 
-   public function getEnumCategoryRule() {
-      $output = \PluginFormcreatorTargetChange::getEnumUrgencyRule();
+   public function testGetEnumCategoryRule() {
+      $output = \PluginFormcreatorTargetChange::getEnumCategoryRule();
       $this->array($output)->isEqualTo([
-         'none'      => 'None',
-         'specific'  => 'Specific category',
-         'answer'    => 'Equals to the answer to the question',
+         \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => 'None',
+         \PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => 'Specific category',
+         \PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => 'Equals to the answer to the question',
       ]);
    }
 
@@ -347,7 +416,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $extraFields = [
          '_actors',
       ];
-      
+
       $this->array($output)
          ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
@@ -359,4 +428,49 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
 
+   public function testImport() {
+      $form = $this->getForm();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         'name' => $this->getUniqueString(),
+         'content' => $this->getUniqueString(),
+         'impactcontent' => $this->getUniqueString(),
+         'controlistcontent' => $this->getUniqueString(),
+         'rolloutplancontent' => $this->getUniqueString(),
+         'backoutplancontent' => $this->getUniqueString(),
+         'checklistcontent' => $this->getUniqueString(),
+         'due_date_rule' => \PluginFormcreatorTargetChange::DUE_DATE_RULE_NONE,
+         'due_date_question' => '0',
+         'due_date_value' => '',
+         'due_date_period' => '',
+         'urgency_rule' => \PluginFormcreatorTargetChange::URGENCY_RULE_NONE,
+         'urgency_question' => '0',
+         'validation_followup' => '1',
+         'destination_entity' => '0',
+         'destination_entity_value' => '',
+         'tag_type' => \PluginFormcreatorTargetChange::TAG_TYPE_NONE,
+         'tag_questions' => '0',
+         'tag_specifics' => '',
+         'category_rule' => \PluginFormcreatorTargetChange::CATEGORY_RULE_NONE,
+         'category_question' => '0',
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $targetChangeId = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
+      $this->integer($targetChangeId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input, $form) {
+            \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+         ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $targetChangeId;
+      $targetChangeId2 = \PluginFormcreatorTargetChange::import($linker, $input, $form->getID());
+      $this->integer((int) $targetChangeId)->isNotEqualTo($targetChangeId2);
+   }
 }

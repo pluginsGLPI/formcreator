@@ -688,4 +688,134 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->variable($formId2)->isNotFalse();
       $this->integer((int) $formId)->isNotEqualTo($formId2);
    }
+
+   /**
+    * not to be run by atoum because testEnableDocumentType depends on the
+    * existence of the json document type
+    *
+    * @return void
+    */
+   public function _testCreateDocumentType() {
+      $documentType = new \DocumentType();
+      $documentType->deleteByCriteria([
+         'ext' => 'json'
+      ]);
+
+      $rows = $documentType->find([
+         'ext' => 'json',
+      ]);
+      $this->array($rows)->hasSize(0);
+
+      $instance = $this->newTestedInstance();
+      $instance->createDocumentType();
+      $rows = $documentType->find([
+         'ext' => 'json',
+      ]);
+      $this->array($rows)->hasSize(1);
+   }
+
+    public function testEnableDocumentType() {
+      $this->_testCreateDocumentType();
+
+      $documentType = new \DocumentType();
+      $documentType->getFromDBByCrit([
+         'ext' => 'json'
+      ]);
+      $success = $documentType->update([
+         'id' => $documentType->getID(),
+         'is_uploadable' => '0',
+      ]);
+      $this->boolean($success)->isTrue();
+
+      $instance = $this->newTestedInstance();
+      $instance->enableDocumentType();
+      $rows = $documentType->find([
+         'ext' => 'json',
+      ]);
+      $this->array($rows)->hasSize(1);
+      $row = array_pop($rows);
+      $this->integer((int) $row['is_uploadable'])->isEqualTo(1);
+   }
+
+   public function providerAddTarget() {
+      // Have a non existent form ID
+      $form = $this->getForm();
+      $form->delete([
+         'id' => $form->getID()
+      ], 1);
+      return [
+         [
+            'input' => [
+               'itemtype' => 'Nothing'
+            ],
+            'expected' => false,
+         ],
+         [
+            'input' => [
+               'itemtype' => \PluginFormcreatorTargetTicket::class,
+               'plugin_formcreator_forms_id' => $form->getID(),
+            ],
+            'expected' => false,
+         ],
+         [
+            'input' => [
+               'itemtype' => \PluginFormcreatorTargetTicket::class,
+               'plugin_formcreator_forms_id' => $this->getForm()->getID(),
+            ],
+            'expected' => true,
+         ],
+         [
+            'input' => [
+               'itemtype' => \PluginFormcreatorTargetChange::class,
+               'plugin_formcreator_forms_id' => $this->getForm()->getID(),
+            ],
+            'expected' => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerAddTarget
+    */
+   public function testAddTarget($input, $expected) {
+      $instance = $this->newTestedInstance();
+      $output = $instance->addTarget($input);
+
+      if ($expected === false) {
+         //End of test on expected failure
+         $this->boolean($output)->isEqualTo($expected);
+         return;
+      }
+
+      $this->integer((int) $output);
+
+      $target = new $input['itemtype']();
+      $rows = $target->find([
+         'plugin_formcreator_forms_id' => $input['plugin_formcreator_forms_id'],
+      ]);
+      $this->array($rows)->hasSize(1);
+   }
+
+   public function testDeleteTarget() {
+      $instance = $this->newTestedInstance();
+
+      $output = $instance->deleteTarget([
+         'itemtype' => 'Nothing',
+      ]);
+      $this->boolean($output)->isFalse();
+
+      $output = $instance->addTarget([
+         'itemtype' => \PluginFormcreatorTargetChange::class,
+         'plugin_formcreator_forms_id' => $this->getForm()->getID(),
+      ]);
+      $instance->deleteTarget([
+         'itemtype' => \PluginFormcreatorTargetChange::class,
+         'items_id' => $output,
+      ]);
+
+      $target = new \PluginFormcreatorTargetChange();
+      $output = $target->getFromDB($output);
+      $this->boolean($output)->isFalse();
+
+   }
 }

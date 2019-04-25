@@ -2472,7 +2472,7 @@ PluginFormcreatorExportableInterface
       $itemtype = $input['itemtype'];
       if (!in_array($itemtype, $this->getTargetTypes())) {
          Session::addMessageAfterRedirect(
-            __('Unsuported target type.', 'formcreator'),
+            __('Unsupported target type.', 'formcreator'),
             false,
             ERROR
          );
@@ -2497,6 +2497,12 @@ PluginFormcreatorExportableInterface
       return $item->add($input);
    }
 
+   /**
+    * Delete a target fromfor the form
+    *
+    * @param aray $input
+    * @return boolean
+    */
    public function deleteTarget($input) {
       $itemtype = $input['itemtype'];
       if (!in_array($itemtype, $this->getTargetTypes())) {
@@ -2510,5 +2516,6 @@ PluginFormcreatorExportableInterface
 
       $item = new $itemtype();
       $item->delete(['id' => $input['items_id']]);
+      return true;
    }
 }

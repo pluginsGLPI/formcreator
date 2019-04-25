@@ -51,9 +51,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
    static function getEnumCategoryRule() {
       return [
-         'none'      => __('None', 'formcreator'),
-         'specific'  => __('Specific category', 'formcreator'),
-         'answer'    => __('Equals to the answer to the question', 'formcreator'),
+         PluginFormcreatorTargetChange::CATEGORY_RULE_NONE      => __('None', 'formcreator'),
+         PluginFormcreatorTargetChange::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
+         PluginFormcreatorTargetChange::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
    }
 
@@ -158,7 +158,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $target_data = $this->convertTags($target_data);
       }
       unset($target_data[$idToRemove]);
-      
+
       return $target_data;
    }
 
@@ -175,7 +175,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Find an existing target to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          $idKey = 'uuid';
          $itemId = plugin_formcreator_getFromDBByField(
@@ -191,25 +191,27 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Assume that all questions are already imported
       // convert question uuid into id
       $questions = $linker->getObjectsByType(PluginFormcreatorQuestion::class);
-      $questionIdentifier = 'id';
-      if (isset($input['uuid'])) {
-         $questionIdentifier = 'uuid';
-      }
-      $taggableFields = $item->getTaggableFields();
-      foreach ($questions as $question) {
-         $id         = $question['id'];
-         $originalId = $question[$questionIdentifier];
-         foreach ($taggableFields as $field) {
-            $content = $input[$field];
-            $content = str_replace("##question_$originalId##", "##question_$id##", $content);
-            $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
-            $input[$field] = $content;
+      if ($questions !== false) {
+         $questionIdentifier = 'id';
+         if (isset($input['uuid'])) {
+            $questionIdentifier = 'uuid';
          }
-      }
+         $taggableFields = $item->getTaggableFields();
+         foreach ($questions as $question) {
+            $id         = $question['id'];
+            $originalId = $question[$questionIdentifier];
+            foreach ($taggableFields as $field) {
+               $content = $input[$field];
+               $content = str_replace("##question_$originalId##", "##question_$id##", $content);
+               $content = str_replace("##answer_$originalId##", "##answer_$id##", $content);
+               $input[$field] = $content;
+            }
+         }
 
-      // escape text fields
-      foreach ($taggableFields as $key) {
-         $input[$key] = $DB->escape($input[$key]);
+         // escape text fields
+         foreach ($taggableFields as $key) {
+            $input[$key] = $DB->escape($input[$key]);
+         }
       }
 
       // Add or update
@@ -386,7 +388,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          // - content is required
-         if (empty($input['content'])) {
+         if (strlen($input['content']) < 1) {
             Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
             return [];
          }
@@ -396,12 +398,15 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          switch ($input['destination_entity']) {
             case self::DESTINATION_ENTITY_SPECIFIC :
                $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
+               unset($input['_destination_entity_value_specific']);
                break;
             case self::DESTINATION_ENTITY_USER :
                $input['destination_entity_value'] = $input['_destination_entity_value_user'];
+               unset($input['_destination_entity_value_user']);
                break;
             case self::DESTINATION_ENTITY_ENTITY :
                $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
+               unset($input['_destination_entity_value_entity']);
                break;
             default :
                $input['destination_entity_value'] = 'NULL';
@@ -409,11 +414,13 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          }
 
          switch ($input['urgency_rule']) {
-            case PluginFormcreatorTargetBase::URGENCY_RULE_ANSWER:
+            case self::URGENCY_RULE_ANSWER:
                $input['urgency_question'] = $input['_urgency_question'];
+               unset($input['_urgency_question']);
                break;
-            case PluginFormcreatorTargetBase::URGENCY_RULE_SPECIFIC:
+            case self::URGENCY_RULE_SPECIFIC:
                $input['urgency_question'] = $input['_urgency_specific'];
+               unset($input['_urgency_specific']);
                break;
             default:
                $input['urgency_question'] = '0';
@@ -422,9 +429,11 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          switch ($input['category_rule']) {
             case self::CATEGORY_RULE_ANSWER:
                $input['category_question'] = $input['_category_question'];
+               unset($input['_category_question']);
                break;
             case self::CATEGORY_RULE_SPECIFIC:
                $input['category_question'] = $input['_category_specific'];
+               unset($input['_category_specific']);
                break;
             default:
                $input['category_question'] = '0';

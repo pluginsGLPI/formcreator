@@ -78,9 +78,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       ];
    }
 
-   static function getEnumAssociateRule() {
+   public static function getEnumAssociateRule() {
       return [
-         self::ASSOCIATE_RULE_NONE      => __('none', 'formcreator'),
+         self::ASSOCIATE_RULE_NONE      => __('None', 'formcreator'),
          self::ASSOCIATE_RULE_SPECIFIC  => __('Specific asset', 'formcreator'),
          self::ASSOCIATE_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
       ];
@@ -361,8 +361,6 @@ SCRIPT;
     * @return array the modified $input array
     */
    public function prepareInputForUpdate($input) {
-      global $CFG_GLPI;
-
       // Control fields values :
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
@@ -907,7 +905,7 @@ SCRIPT;
       // Find an existing target to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          $idKey = 'uuid';
          $itemId = plugin_formcreator_getFromDBByField(
