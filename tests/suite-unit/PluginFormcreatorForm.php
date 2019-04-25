@@ -39,6 +39,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       parent::beforeTestMethod($method);
       switch ($method) {
          case 'testImport':
+         case 'testCanPurgeItem':
             self::login('glpi', 'glpi');
       }
    }
@@ -111,6 +112,19 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->login('normal', 'normal');
       $output = \PluginFormcreatorForm::canPurge();
       $this->boolean((bool) $output)->isFalse();
+   }
+
+   public function testCanPurgeItem() {
+      $form = $this->getForm();
+      $output = $form->canPurgeItem();
+      $this->boolean((boolean) $output)->isTrue();
+
+      $form->saveForm([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+      ]);
+
+      $output = $form->canPurgeItem();
+      $this->boolean((boolean) $output)->isFalse();
    }
 
    protected function formProvider() {
@@ -204,18 +218,81 @@ class PluginFormcreatorForm extends CommonTestCase {
       }
    }
 
-   /**
-    * @dataProvider formProvider
-    */
-   public function testPurgeForm($formData) {
-      $form = new \PluginFormcreatorForm();
-      $form->add($formData);
-      $this->boolean($form->isNewItem())->isFalse();
+   public function testDefineTabs() {
+      $form = $this->getForm();
+      $output = $form->defineTabs();
+      $this->array($output)->isEqualTo([
+         'PluginFormcreatorForm$main' => "Form",
+         'PluginFormcreatorQuestion$1' => "Questions",
+         'PluginFormcreatorForm_Profile$1' => "Access types",
+         'PluginFormcreatorForm$1' => "Targets",
+         'PluginFormcreatorForm$2' => "Preview",
+         'PluginFormcreatorFormAnswer$1' => "Form answers",
+      ]);
+   }
 
-      $success = $form->delete([
-         'id'              => $form->getID(),
+   public function testGetTabNameForItem() {
+      $form = $this->getForm();
+      $item = new \Central();
+      $output = $form->getTabNameForItem($item);
+      $this->string($output)->isEqualTo('Forms');
+
+      $item = $form;
+      $output = $form->getTabNameForItem($item);
+      $this->array($output)->isEqualTo([
+         1 => 'Targets',
+         2 => 'Preview',
+      ]);
+
+      $item = new \User();
+      $output = $form->getTabNameForItem($item);
+      $this->string($output)->isEqualTo('');
+   }
+
+   public function testPost_purgeItem() {
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         'users_id' => 2, // glpi
+      ]);
+      $section = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetChange = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $targetTicket = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $validator = new \PluginFormcreatorForm_Validator();
+      $validator->getFromDBByCrit([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'itemtype' => \User::class,
+      ]);
+
+      $formProfile = new \PluginFormcreatorForm_Profile();
+      $formProfile->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'profiles_id' => 6 // technician
+      ]);
+
+      $form->delete([
+         'id' => $form->getID(),
       ], 1);
-      $this->boolean($success)->isTrue();
+
+      $output = $section->getFromDB($section->getID()) ;
+      $this->boolean($output)->isFalse();
+
+      $output = $targetChange->getFromDB($targetChange->getID());
+      $this->boolean($output)->isFalse();
+
+      $output = $targetTicket->getFromDB($targetTicket->getID());
+      $this->boolean($output)->isFalse();
+
+      $output = $validator->getFromDB($validator->getID());
+      $this->boolean($output)->isFalse();
+
+      $output = $formProfile->getFromDB($formProfile->getID());
+      $this->boolean($output)->isFalse();
    }
 
    public function testCreateValidationNotification() {
