@@ -295,6 +295,62 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($output)->isFalse();
    }
 
+   public  function testUpdateValidators() {
+      $form = $this->getForm();
+
+      $formValidator = new \PluginFormcreatorForm_Validator();
+      $rows = $formValidator->find([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->array($rows)->hasSize(0);
+
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER,
+         '_validator_users' => ['2'], // glpi account
+      ]);
+
+      $rows = $formValidator->find([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->array($rows)->hasSize(1);
+      $formValidator->getFromResultSet(array_pop($rows));
+      $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(2);
+      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\User::class);
+      $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
+
+      $form = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_GROUP,
+         '_validator_groups' => ['1'], // a group ID (not created in this test)
+      ]);
+      $rows = $formValidator->find([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $this->array($rows)->hasSize(1);
+      $formValidator->getFromResultSet(array_pop($rows));
+      $this->integer((int) $formValidator->fields['items_id'])->isEqualTo(1);
+      $this->string( $formValidator->fields['itemtype'])->isEqualTo(\Group::class);
+      $this->integer((int) $formValidator->fields['plugin_formcreator_forms_id'])->isEqualTo($form->getID());
+   }
+
+   public function testIncreateUsageCount() {
+      $form = $this->getForm();
+      $this->integer((int) $form->fields['usage_count'])->isEqualTo(0);
+
+      $form->increaseUsageCount();
+      $this->integer((int) $form->fields['usage_count'])->isEqualTo(1);
+   }
+
+   public function testGetByQuestionId() {
+      $question = $this->getQuestion();
+      $section = new \PluginFormcreatorSection();
+      $section->getFromDB($question->fields['plugin_formcreator_sections_id']) ;
+      $expected = $section->fields['plugin_formcreator_forms_id'];
+      $form = $this->newTestedInstance();
+      $form->getByQuestionId($question->getID());
+
+      $this->integer((int) $form->getID())->isEqualTo($expected);
+   }
+
    public function testCreateValidationNotification() {
       global $DB;
 

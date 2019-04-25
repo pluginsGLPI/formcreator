@@ -1392,7 +1392,7 @@ PluginFormcreatorExportableInterface
     */
    private function updateValidators() {
       if (!isset($this->input['validation_required'])) {
-         return true;
+         return;
       }
 
       $form_validator = new PluginFormcreatorForm_Validator();
@@ -1406,11 +1406,11 @@ PluginFormcreatorExportableInterface
          switch ($this->input['validation_required']) {
             case PluginFormcreatorForm_Validator::VALIDATION_USER:
                $validators = $this->input['_validator_users'];
-               $validatorItemtype = 'User';
+               $validatorItemtype = User::class;
                break;
             case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
                $validators = $this->input['_validator_groups'];
-               $validatorItemtype = 'Group';
+               $validatorItemtype = Group::class;
                break;
          }
          foreach ($validators as $itemId) {
@@ -1484,6 +1484,7 @@ PluginFormcreatorExportableInterface
     */
    public function getByQuestionId($questionId) {
       $formTable = PluginFormcreatorForm::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
       $sectionTable = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questionTable = PluginFormcreatorQuestion::getTable();
@@ -1492,7 +1493,7 @@ PluginFormcreatorExportableInterface
             $sectionTable => [
                'FKEY' => [
                   $formTable    => 'id',
-                  $sectionTable => $sectionFk,
+                  $sectionTable => $formFk,
                ]
             ],
             $questionTable => [
