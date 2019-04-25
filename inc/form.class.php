@@ -228,7 +228,6 @@ PluginFormcreatorExportableInterface
     * @return String                 Html string to be displayed for the form field
     */
    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
-
       if (!is_array($values)) {
          $values = [$field => $values];
       }
@@ -607,11 +606,6 @@ PluginFormcreatorExportableInterface
       global $DB;
 
       switch ($item->getType()) {
-         case PluginFormcreatorConfig::class:
-            $found  = $DB->request(self::getTable(), []);
-            $number = count($found);
-            return self::createTabEntry(self::getTypeName($number), $number);
-            break;
          case PluginFormcreatorForm::class:
             $nb = 0;
             foreach ($this->getTargetTypes() as $targetType) {
@@ -632,7 +626,7 @@ PluginFormcreatorExportableInterface
                2 => __('Preview'),
             ];
             break;
-         case 'Central':
+         case Central::class:
             return _n('Form', 'Forms', Session::getPluralNumber(), 'formcreator');
             break;
       }
@@ -1903,7 +1897,7 @@ PluginFormcreatorExportableInterface
       // Find an existing form to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          // Try to find an existing item to update
          $idKey = 'uuid';
