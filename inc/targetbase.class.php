@@ -173,7 +173,7 @@ PluginFormcreatorTargetInterface
    const LOCATION_RULE_SPECIFIC = 2;
    const LOCATION_RULE_ANSWER = 3;
 
-   static function getEnumDestinationEntity() {
+   public static function getEnumDestinationEntity() {
       return [
          self::DESTINATION_ENTITY_CURRENT   => __('Current active entity', 'formcreator'),
          self::DESTINATION_ENTITY_REQUESTER => __("Default requester user's entity", 'formcreator'),
@@ -187,7 +187,7 @@ PluginFormcreatorTargetInterface
       ];
    }
 
-   static function getEnumTagType() {
+   public static function getEnumTagType() {
       return [
          self::TAG_TYPE_NONE                   => __('None'),
          self::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
@@ -197,7 +197,7 @@ PluginFormcreatorTargetInterface
       ];
    }
 
-   static function getEnumDueDateRule() {
+   public static function getEnumDueDateRule() {
       return [
          self::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
          self::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
@@ -205,7 +205,7 @@ PluginFormcreatorTargetInterface
       ];
    }
 
-   static function getEnumUrgencyRule() {
+   public static function getEnumUrgencyRule() {
       return [
          self::URGENCY_RULE_NONE      => __('Urgency from template or Medium', 'formcreator'),
          self::URGENCY_RULE_SPECIFIC  => __('Specific urgency', 'formcreator'),
@@ -213,7 +213,7 @@ PluginFormcreatorTargetInterface
       ];
    }
 
-   static function getEnumCategoryRule() {
+   public static function getEnumCategoryRule() {
       return [
          self::CATEGORY_RULE_NONE      => __('Category from template or none', 'formcreator'),
          self::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
@@ -221,7 +221,7 @@ PluginFormcreatorTargetInterface
       ];
    }
 
-   static function getEnumLocationRule() {
+   public static function getEnumLocationRule() {
       return [
          self::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
          self::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
@@ -1747,7 +1747,6 @@ SCRIPT;
    }
 
    public function prepareInputForUpdate($input) {
-      global $DB;
       if (isset($input['name'])
          && empty($input['name'])) {
          Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
@@ -1788,7 +1787,7 @@ SCRIPT;
    public function post_addItem() {
       if ($this->skipCreateActors) {
          return;
-      } 
+      }
 
       $target_actor = $this->getItem_Actor();
       $myFk = self::getForeignKeyField();
