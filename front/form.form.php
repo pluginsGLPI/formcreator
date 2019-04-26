@@ -125,16 +125,21 @@ if (isset($_POST["add"])) {
       }
       $form->increaseUsageCount();
 
-      // If user was not authenticated, remove temporary user
       if ($_SESSION['glpiname'] == 'formcreator_temp_user') {
+         // Form was saved by an annymous user
          unset($_SESSION['glpiname']);
          Html::redirect('formdisplay.php?answer_saved');
-      } else if (plugin_formcreator_replaceHelpdesk()) {
+      }
+      if (plugin_formcreator_replaceHelpdesk()) {
+         // Form was saved from the service catalog
          Html::redirect('issue.php');
-      } else {
-         Html::back();
+      }
+      if (strpos($_SERVER['HTTP_REFERER'], 'formdisplay.php') !== false) {
+         // Form was saved from helpdesk (assistance > forms)
          Html::redirect('formlist.php');
       }
+      // Form was saved from preview tab, go back to the preview
+      Html::back();
    }
 
 } else {
