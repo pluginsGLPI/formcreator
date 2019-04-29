@@ -124,4 +124,35 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
+
+   public function testImport() {
+      $form = $this->getForm();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         '_profile' => 'Technician',
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $formProfileId = \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
+      $this->integer($formProfileId)->isGreaterThan(0);
+
+      $instance = $this->newTestedInstance();
+      $instance->delete([
+         'id' => $formProfileId
+      ], 1);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input, $form) {
+            \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+         ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $formProfileId;
+      $formProfileId2 = \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
+      $this->integer((int) $formProfileId)->isNotEqualTo($formProfileId2);
+   }
 }
