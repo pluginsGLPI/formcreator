@@ -393,4 +393,5 @@ class PluginFormcreatorActorField extends CommonTestCase {
       ]);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
-   }}
+   }
+}

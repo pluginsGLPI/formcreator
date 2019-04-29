@@ -2359,6 +2359,7 @@ PluginFormcreatorExportableInterface
 
    /**
     * gets the form containing the given section
+    *
     * @param PluginFormcreatorSection $section
     * @return boolean true if success else false
     */
@@ -2369,6 +2370,11 @@ PluginFormcreatorExportableInterface
       return $this->getFromDB($section->getField(self::getForeignKeyField()));
    }
 
+   /**
+    * Get an array of instances of all fields for the form
+    *
+    * @return array
+    */
    public function getFields() {
       $fields = [];
       if ($this->isNewItem()) {
@@ -2387,6 +2393,11 @@ PluginFormcreatorExportableInterface
       return $fields;
    }
 
+   /**
+    * Get supported target itemtypes
+    *
+    * @return array
+    */
    public function getTargetTypes() {
       return [
          PluginFormcreatorTargetTicket::class,

@@ -650,11 +650,11 @@ SCRIPT;
       $this->prepareActors($form, $formanswer);
 
       if (count($this->requesters['_users_id_requester']) == 0) {
-         $this->addActor(self::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
+         $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
          $requesters_id = $formanswer->fields['requester_id'];
       } else if (count($this->requesters['_users_id_requester']) >= 1) {
          if ($this->requesters['_users_id_requester'][0] == 0) {
-            $this->addActor(self::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
+            $this->addActor(PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER, $formanswer->fields['requester_id'], true);
             $requesters_id = $formanswer->fields['requester_id'];
          } else {
             $requesters_id = $this->requesters['_users_id_requester'][0];

@@ -39,6 +39,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       parent::beforeTestMethod($method);
       switch ($method) {
          case 'testSetTargetEntity':
+         case 'testSetTargetCategory':
             $this->boolean($this->login('glpi', 'glpi'))->isTrue();
             break;
       }
@@ -69,6 +70,50 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    public function testGetTypeName($number, $expected) {
       $output = \PluginFormcreatorTargetTicket::getTypeName($number);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetEnumDestinationEntity() {
+      $output = \PluginFormcreatorTargetTicket::getEnumDestinationEntity();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_CURRENT      => 'Current active entity',
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER  => "Default requester user's entity",
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_FIRST    => "First dynamic requester user's entity (alphabetical)",
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_REQUESTER_DYN_LAST      => "Last dynamic requester user's entity (alphabetical)",
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_FORM  => 'The form entity',
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_VALIDATOR    => 'Default entity of the validator',
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_SPECIFIC      => 'Specific entity',
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_USER  => 'Default entity of a user type question answer',
+         \PluginFormcreatorTargetTicket::DESTINATION_ENTITY_ENTITY    => 'From a GLPI object > Entity type question answer',
+      ]);
+   }
+
+   public function testGetEnumTagType() {
+      $output = \PluginFormcreatorTargetTicket::getEnumTagType();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::TAG_TYPE_NONE                   => __('None'),
+         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS              => __('Tags from questions', 'formcreator'),
+         \PluginFormcreatorTargetTicket::TAG_TYPE_SPECIFICS              => __('Specific tags', 'formcreator'),
+         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS_AND_SPECIFIC => __('Tags from questions and specific tags', 'formcreator'),
+         \PluginFormcreatorTargetTicket::TAG_TYPE_QUESTIONS_OR_SPECIFIC  => __('Tags from questions or specific tags', 'formcreator')
+      ]);
+   }
+
+   public function testGetEnumDateType() {
+      $output = \PluginFormcreatorTargetTicket::getEnumDueDateRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_ANSWER => __('equals to the answer to the question', 'formcreator'),
+         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_TICKET => __('calculated from the ticket creation date', 'formcreator'),
+         \PluginFormcreatorTargetTicket::DUE_DATE_RULE_CALC => __('calculated from the answer to the question', 'formcreator'),
+      ]);
+   }
+
+   public function testGetEnumLocationType() {
+      $output = \PluginFormcreatorTargetTicket::getEnumLocationRule();
+      $this->array($output)->isEqualTo([
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_NONE      => __('Location from template or none', 'formcreator'),
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_SPECIFIC  => __('Specific location', 'formcreator'),
+         \PluginFormcreatorTargetTicket::LOCATION_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+      ]);
    }
 
    public function testGetEnumUrgencyRule() {
@@ -543,5 +588,101 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $input['id'] = $targetTicketId;
       $targetTicketId2 = \PluginFormcreatorTargetTicket::import($linker, $input, $form->getID());
       $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
+   }
+
+   public function providerSetTargetCategory() {
+      $dataSet = [];
+
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $question = $this->getQuestion([
+         'fieldtype' => 'dropdown',
+         'values' => json_encode([
+            'itemtype' => 'ITILCategory',
+            'show_ticket_categories' =>'both',
+            'show_ticket_categories_depth' => '0',
+            'show_ticket_categories_root' => '0',
+         ]),
+      ]);
+      $form = new \PluginFormcreatorForm();
+      $form->getByQuestionId($question->getID());
+      $fields = $form->getFields();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER,
+         'category_question' => $question->getID(),
+      ]);
+      $input = [
+         'formcreator_field_' . $question->getID() => '42',
+      ];
+      foreach ($fields as $id => $field) {
+         $field->parseAnswerValues($input);
+      }
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->saveAnswers(
+         $form,
+         $input,
+         $fields
+      );
+
+      $dataSet[] = [
+         'instance' => $instance,
+         'data' => [
+         ],
+         'formanswer' => $formAnswer,
+         'expected' => [
+            'itilcategories_id' => '42',
+         ],
+      ];
+
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $question = $this->getQuestion([
+         'fieldtype' => 'dropdown',
+         'values' => json_encode([
+            'itemtype' => 'ITILCategory',
+            'show_ticket_categories' =>'both',
+            'show_ticket_categories_depth' => '0',
+            'show_ticket_categories_root' => '0',
+         ]),
+      ]);
+      $form = new \PluginFormcreatorForm();
+      $form->getByQuestionId($question->getID());
+      $fields = $form->getFields();
+      $instance->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC,
+         'category_question' => '41',
+      ]);
+      $input = [
+         'formcreator_field_' . $question->getID() => '42',
+      ];
+      foreach ($fields as $id => $field) {
+         $field->parseAnswerValues($input);
+      }
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->saveAnswers(
+         $form,
+         $input,
+         $fields
+      );
+
+      $dataSet[] = [
+         'instance' => $instance,
+         'data' => [
+         ],
+         'formanswer' => $formAnswer,
+         'expected' => [
+            'itilcategories_id' => '41',
+         ],
+      ];
+
+      return $dataSet;
+   }
+
+   /**
+    * @dataProvider providerSetTargetCategory
+    */
+   public function testSetTargetCategory($instance, $data, $formanswer, $expected) {
+      $output = $instance->publicSetTargetCategory($data, $formanswer);
+      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected['itilcategories_id']);
    }
 }

@@ -28,6 +28,7 @@
  * @link      http://plugins.glpi-project.org/#/plugin/formcreator
  * ---------------------------------------------------------------------
  */
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -154,10 +155,21 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
     * @return integer|false the form_Profile ID or false on error
     */
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
+
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk] = $containerId;
       $item = new self();
-      // Find an existing form_profile to update, only if an UUID is available
+      // Find an existing form to update, only if an UUID is available
+      $itemId = false;
+      /** @var string $idKey key to use as ID (id or uuid) */
+      $idKey = 'id';
       if (isset($input['uuid'])) {
-         $formProfileId = plugin_formcreator_getFromDBByField(
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
             $item,
             'uuid',
             $input['uuid']
@@ -167,7 +179,6 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       // Set the profile of the form_profile
       $profile = new Profile;
       $formFk  = PluginFormcreatorForm::getForeignKeyField();
-      $input[$formFk] = $containerId;
       if (!plugin_formcreator_getFromDBByField($profile, 'name', $input['_profile'])) {
          // Profile not found, lets ignore this import
          return true;
@@ -175,24 +186,22 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
       $input[Profile::getForeignKeyField()] = $profile->getID();
 
       // Add or update the form_profile
-      if (!$item->isNewItem()) {
-         $input['id'] = $formProfileId;
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
          $item->update($input);
       } else {
-         $formProfileId = $item->add($input);
+         unset($input['id']);
+         $itemId = $item->add($input);
       }
-      if ($formProfileId === false) {
-         throw new ImportFailureException();
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
-      // add the form to the linker
-      $originalId = $input['id'];
-      if (isset($input['uuid'])) {
-         $originalId = $input['uuid'];
-      }
+      // add the form_profile to the linker
       $linker->addObject($originalId, $item);
 
-      return $formProfileId;
+      return $itemId;
    }
 
    /**

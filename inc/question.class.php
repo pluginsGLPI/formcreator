@@ -557,43 +557,50 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $question_condition->deleteByCriteria(['plugin_formcreator_questions_id' => $input['id']]);
 
-      if (isset($input['show_field']) && isset($input['show_condition'])
-            && isset($input['show_value']) && isset($input['show_logic'])) {
-         if (is_array($input['show_field']) && is_array($input['show_condition'])
-               && is_array($input['show_value']) && is_array($input['show_logic'])) {
-            // All arrays of condition exists
-            if ($input['show_rule'] != self::SHOW_RULE_ALWAYS) {
-               if ((count($input['show_field']) == count($input['show_condition'])
-                     && count($input['show_value']) == count($input['show_logic'])
-                     && count($input['show_field']) == count($input['show_value']))) {
-                  // Arrays all have the same count and have at least one item
-                  $order = 0;
-                  while (count($input['show_field']) > 0) {
-                     $order++;
-                     $value            = array_shift($input['show_value']);
-                     $showField       = (int) array_shift($input['show_field']);
-                     $showCondition   = html_entity_decode(array_shift($input['show_condition']));
-                     $showLogic        = array_shift($input['show_logic']);
-                     $question_condition = new PluginFormcreatorQuestion_Condition();
-                     $question_condition->add([
-                           'plugin_formcreator_questions_id'   => $input['id'],
-                           'show_field'                        => $showField,
-                           'show_condition'                    => $showCondition,
-                           'show_value'                        => $value,
-                           'show_logic'                        => $showLogic,
-                           'order'                             => $order,
-                     ]);
-                     if ($question_condition->isNewItem()) {
-                        return false;
-                     }
-                  }
-                  return true;
-               }
-            }
+      if (!isset($input['show_field']) || !isset($input['show_condition'])
+         || !isset($input['show_value']) || !isset($input['show_logic'])) {
+         return  false;
+      }
+
+      if (!is_array($input['show_field']) || !is_array($input['show_condition'])
+         || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
+         return false;
+      }
+
+      // All arrays of condition exists
+      if ($input['show_rule'] == self::SHOW_RULE_ALWAYS) {
+         return false;
+      }
+
+      if (!(count($input['show_field']) == count($input['show_condition'])
+            && count($input['show_value']) == count($input['show_logic'])
+            && count($input['show_field']) == count($input['show_value']))) {
+         return false;
+      }
+
+      // Arrays all have the same count and have at least one item
+      $order = 0;
+      while (count($input['show_field']) > 0) {
+         $order++;
+         $value            = array_shift($input['show_value']);
+         $showField        = (int) array_shift($input['show_field']);
+         $showCondition    = html_entity_decode(array_shift($input['show_condition']));
+         $showLogic        = array_shift($input['show_logic']);
+         $question_condition = new PluginFormcreatorQuestion_Condition();
+         $question_condition->add([
+               'plugin_formcreator_questions_id'   => $input['id'],
+               'show_field'                        => $showField,
+               'show_condition'                    => $showCondition,
+               'show_value'                        => $value,
+               'show_logic'                        => $showLogic,
+               'order'                             => $order,
+         ]);
+         if ($question_condition->isNewItem()) {
+            return false;
          }
       }
 
-      return false;
+      return true;
    }
 
    /**
@@ -925,7 +932,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       // Find an existing question to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          $idKey = 'uuid';
          $itemId = plugin_formcreator_getFromDBByField(
@@ -960,7 +967,7 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       // add the question to the linker
       $linker->addObject($originalId, $item);
 
-      // Import conditions 
+      // Import conditions
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
             PluginFormcreatorQuestion_Condition::import($linker, $condition, $itemId);

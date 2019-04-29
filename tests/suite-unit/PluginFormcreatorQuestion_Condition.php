@@ -120,4 +120,68 @@ class PluginFormcreatorQuestion_Condition extends CommonTestCase {
       $this->variable($conditionId2)->isNotFalse();
       $this->integer((int) $conditionId)->isNotEqualTo($conditionId2);
    }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $form = $this->getForm();
+      $question1 = $this->getQuestion([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+      $question2->updateConditions([
+         'id' => $question2->getID(),
+         'show_rule' => \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+         'show_field' => [
+            $question1->getID(),
+         ],
+         'show_condition' =>[
+            \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+         ],
+         'show_value' => [
+            'foo',
+         ],
+         'show_logic' => [
+            \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND,
+         ]
+      ]);
+      $instance = $this->getTargetTicket();
+      $instance->getFromDB($instance->getID());
+
+      $instance = $this->newTestedInstance();
+      $instance->getFromDBByCrit([
+         'plugin_formcreator_questions_id' => $question2->getID(),
+         'order' => '1',
+      ]);
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'show_field',
+         'show_condition',
+         'show_value',
+         'show_logic',
+         'order',
+      ];
+      $extraFields = [];
+
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
 }

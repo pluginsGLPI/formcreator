@@ -76,4 +76,8 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
    public function publicGetTargetItemtypeName() {
       return $this->getTargetItemtypeName();
    }
+
+   public function publicSetTargetCategory($data, $formanswer) {
+      return $this->setTargetCategory($data, $formanswer);
+   }
 }
