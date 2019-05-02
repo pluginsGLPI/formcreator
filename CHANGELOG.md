@@ -1,3 +1,18 @@
+<a name="2.8.2"></a>
+## [2.8.2](https://github.com-btry/pluginsglpi/formcreator/compare/v2.8.1...v2.8.2) (2019-05-02)
+
+
+### Bug Fixes
+
+* **dropdownfield:** upgraded fields from 2.5 may crash ([8233b75](https://github.com-btry/pluginsglpi/formcreator/commit/8233b75))
+* **filefield:** uploaded files lost ([1cec1e0](https://github.com-btry/pluginsglpi/formcreator/commit/1cec1e0))
+* **form:** redirect to formlist after filling a form ([51fe9ae](https://github.com-btry/pluginsglpi/formcreator/commit/51fe9ae))
+* **issue:** warnings with GLPI 9.3 ([04791f4](https://github.com-btry/pluginsglpi/formcreator/commit/04791f4))
+* **question:** quote escaping in import ([ed4b021](https://github.com-btry/pluginsglpi/formcreator/commit/ed4b021))
+* **serviceCatalog:** fix left menu for some languages ([f1bc390](https://github.com-btry/pluginsglpi/formcreator/commit/f1bc390))
+
+
+
 <a name="2.8.1"></a>
 ## [2.8.1](https://github.com/pluginsglpi/formcreator/compare/v2.8.0...v2.8.1) (2019-04-08)
 
