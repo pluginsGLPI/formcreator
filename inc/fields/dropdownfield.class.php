@@ -82,7 +82,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $ticketCategoriesOptions = [
          'request'  => __('Request categories', 'formcreator'),
          'incident' => __('Incident categories', 'formcreator'),
-         'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categoqries', 'formcreator'),
+         'both'     => __('Request categories', 'formcreator'). " + ".__('Incident categories', 'formcreator'),
          'change'   => __('Change'),
          'all'      => __('All'),
       ];
