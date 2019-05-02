@@ -733,7 +733,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   'plugin_formcreator_questions_id' => $questionId,
                ]);
                $answer->update([
-
                   'id'     => $answer->getID(),
                   'answer' => $fields[$questionId]->serializeValue(),
                ], 0);

@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
-   static public $itemtype = "PluginFormcreatorForm";
+   static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = "plugin_formcreator_forms_id";
 
    /**

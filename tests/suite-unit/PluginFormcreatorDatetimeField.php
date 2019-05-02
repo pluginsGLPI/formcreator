@@ -199,15 +199,84 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       return [
          [
             'id' => '1',
-            'input' => []
-         ]
+            'input' => [],
+         ],
       ];
    }
 
    public function testSerializeValue() {
-      $instance = $this->newTestedInstance([]);
+      $value = $expected = '2019-01-01 12:00';
+      $instance = $this->newTestedInstance(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
    }
 
+   public function testGetValueForDesign() {
+      $value = $expected = '2019-01-01 12:00';
+      $instance = new \PluginFormcreatorDatetimeField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'     => '2019-01-01 00:00',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '2019-01-01 02:00',
+            'answer'    => '2019-01-01 03:00',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '2019-01-01 03:00',
+            'answer'    => '2019-01-01 03:00',
+            'expected'  => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorDatetimeField(['id' => '1']);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return [
+         [
+            'value'     => '2019-01-01 00:00',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01 02:00',
+            'answer'    => '2019-01-01 03:00',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01 03:00',
+            'answer'    => '2019-01-01 03:00',
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorDatetimeField(['id' => '1'], $answer);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
 
    public function testIsAnonymousFormCompatible() {
       $instance = new \PluginFormcreatorDatetimeField([]);
@@ -219,5 +288,10 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
       $instance = $this->newTestedInstance([]);
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

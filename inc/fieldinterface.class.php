@@ -113,9 +113,10 @@ interface PluginFormcreatorFieldInterface
    /**
     * Read the value of the field from answers
     * @param array $input answers of all questions of the form
+    * @param boolean $nonDestructive for File field, ensure that the file uploads imported as document
     * @return boolean true on sucess, false otherwise
     */
-   public function parseAnswerValues($input);
+   public function parseAnswerValues($input, $nonDestructive = false);
 
    /**
     * Prepares an answer value for output in a target object

@@ -179,7 +179,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       return "tab_fields_fields['text'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
-   public function parseAnswerValues($input) {
+   public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!isset($input[$key])) {
          return false;

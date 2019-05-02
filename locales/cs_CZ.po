@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-05 12:16+0100\n"
-"PO-Revision-Date: 2018-12-05 11:16+0000\n"
+"POT-Creation-Date: 2019-04-26 10:41+0200\n"
+"PO-Revision-Date: 2019-04-26 08:41+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Language: cs_CZ\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#: hook.php:69 inc/category.class.php:44 inc/form.class.php:216
+#: hook.php:69 inc/category.class.php:44 inc/form.class.php:207
 msgid "Form category"
 msgid_plural "Form categories"
 msgstr[0] "Kategorie formuláře"
@@ -27,10 +27,14 @@ msgstr[1] "Kategorie formuláře"
 msgstr[2] "Kategorií formuláře"
 msgstr[3] "Kategorie formuláře"
 
-#: setup.php:61 setup.php:194 ajax/homepage_link.php:38
-#: inc/entityconfig.class.php:58 inc/form.class.php:94 inc/form.class.php:543
-#: inc/form.class.php:2107 inc/formanswer.class.php:173
-#: inc/formlist.class.php:48 js/scripts.js.php:74
+#: setup.php:184 inc/form.class.php:102 inc/formlist.class.php:56
+#: inc/formlist.class.php:57
+msgid "Forms waiting for validation"
+msgstr "Formuláře čekající na ověření"
+
+#: setup.php:194 ajax/homepage_link.php:38 inc/entityconfig.class.php:57
+#: inc/form.class.php:94 inc/form.class.php:539 inc/form.class.php:2228
+#: inc/formanswer.class.php:169 inc/formlist.class.php:48 js/scripts.js.php:74
 msgid "Form"
 msgid_plural "Forms"
 msgstr[0] "Formulář"
@@ -38,28 +42,23 @@ msgstr[1] "Formuláře"
 msgstr[2] "Formulářů"
 msgstr[3] "Formuláře"
 
-#: setup.php:184 inc/form.class.php:102 inc/formlist.class.php:56
-#: inc/formlist.class.php:57
-msgid "Forms waiting for validation"
-msgstr "Formuláře čekající na ověření"
-
-#: front/form.php:47 front/formanswer.form.php:79 front/formanswer.form.php:84
+#: front/form.php:47 front/formanswer.form.php:83 front/formanswer.form.php:88
 #: front/formanswer.php:48 front/formanswer.php:53 front/issue.php:48
-#: front/issue.php:53 front/targetchange.form.php:80
-#: front/targetticket.form.php:76 inc/form.class.php:2213
-#: inc/form.class.php:2220
+#: front/issue.php:53 front/targetchange.form.php:76
+#: front/targetticket.form.php:76 inc/form.class.php:2334
+#: inc/form.class.php:2341
 msgid "Form Creator"
 msgstr "Tvorba formulářů"
 
-#: front/formanswer.form.php:75 front/formanswer.php:44
+#: front/formanswer.form.php:79 front/formanswer.php:44
 #: front/issue.form.php:59 front/issue.php:44 front/knowbaseitem.form.php:47
 #: front/reservation.form.php:48 front/reservation.php:48
 #: front/reservationitem.php:44 front/wizard.php:46 front/wizardfeeds.php:47
-#: inc/form.class.php:2208
+#: inc/form.class.php:2329
 msgid "Service catalog"
 msgstr "Katalog služeb"
 
-#: front/formlist.php:48 front/formlist.php:54 inc/form.class.php:2210
+#: front/formlist.php:48 front/formlist.php:54 inc/form.class.php:2331
 msgid "Form list"
 msgstr "Seznam formulářů"
 
@@ -71,8 +70,8 @@ msgstr "Otázka byla úspěšně uložena!"
 msgid "The question has been successfully updated!"
 msgstr "Otázka byla úspěšně aktualizována!"
 
-#: inc/answer.class.php:68 inc/targetchange.class.php:782
-#: inc/targetticket.class.php:658
+#: inc/answer.class.php:68 inc/targetchange.class.php:814
+#: inc/targetticket.class.php:673
 msgid "Answer"
 msgid_plural "Answers"
 msgstr[0] "Odpověď"
@@ -84,23 +83,23 @@ msgstr[3] "Odpovědi"
 msgid "Knowbase category"
 msgstr "Kategorie databáze znalostí"
 
-#: inc/entityconfig.class.php:93
+#: inc/entityconfig.class.php:91
 msgid "Helpdesk"
 msgstr "Služba podpory"
 
-#: inc/entityconfig.class.php:102
+#: inc/entityconfig.class.php:100
 msgid "GLPi's helpdesk"
 msgstr "GLPI služba podpory"
 
-#: inc/entityconfig.class.php:103
+#: inc/entityconfig.class.php:101
 msgid "Service catalog simplified"
 msgstr "Zjednodušený katalog služeb"
 
-#: inc/entityconfig.class.php:104
+#: inc/entityconfig.class.php:102
 msgid "Service catalog extended"
 msgstr "Rozšířený katalog služeb"
 
-#: inc/entityconfig.class.php:107
+#: inc/entityconfig.class.php:105
 msgid "Helpdesk mode"
 msgstr "Režim služby podpory"
 
@@ -108,35 +107,35 @@ msgstr "Režim služby podpory"
 msgid "Import forms"
 msgstr "Importovat formuláře"
 
-#: inc/form.class.php:190
+#: inc/form.class.php:181
 msgid "Homepage"
 msgstr "Domovská stránka"
 
-#: inc/form.class.php:203
+#: inc/form.class.php:194
 msgid "Access"
 msgstr "Přístup"
 
-#: inc/form.class.php:270 inc/form.class.php:325 inc/form_profile.class.php:84
+#: inc/form.class.php:261 inc/form.class.php:316 inc/form_profile.class.php:84
 msgid "Public access"
 msgstr "Veřejný přístup"
 
-#: inc/form.class.php:271 inc/form.class.php:329 inc/form_profile.class.php:85
+#: inc/form.class.php:262 inc/form.class.php:320 inc/form_profile.class.php:85
 msgid "Private access"
 msgstr "Soukromý přístup"
 
-#: inc/form.class.php:272 inc/form.class.php:333 inc/form_profile.class.php:86
+#: inc/form.class.php:263 inc/form.class.php:324 inc/form_profile.class.php:86
 msgid "Restricted access"
 msgstr "Omezený přístup"
 
-#: inc/form.class.php:284 inc/form.class.php:341 inc/form.class.php:395
+#: inc/form.class.php:275 inc/form.class.php:332 inc/form.class.php:386
 msgid "All langages"
 msgstr "Všechny jazyky"
 
-#: inc/form.class.php:380
+#: inc/form.class.php:371
 msgid "Direct access on homepage"
 msgstr "Přímý přístup na domovskou stránku"
 
-#: inc/form.class.php:401
+#: inc/form.class.php:392
 msgid "Header"
 msgid_plural "Headers"
 msgstr[0] "Hlavička"
@@ -144,15 +143,15 @@ msgstr[1] "Hlavičky"
 msgstr[2] "Hlaviček"
 msgstr[3] "Hlavičky"
 
-#: inc/form.class.php:407
+#: inc/form.class.php:398
 msgid "Need to be validate?"
 msgstr "Je třeba ověřit?"
 
-#: inc/form.class.php:514
+#: inc/form.class.php:509
 msgid "Default form in service catalog"
 msgstr "Výchozí formulář v katalogu služeb"
 
-#: inc/form.class.php:623 inc/targetbase.class.php:732
+#: inc/form.class.php:619 inc/targetbase.class.php:776
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Kategorie"
@@ -160,139 +159,144 @@ msgstr[1] "Kategorie"
 msgstr[2] "Kategorií"
 msgstr[3] "Kategorie"
 
-#: inc/form.class.php:624
+#: inc/form.class.php:620
 msgid "see all"
 msgstr "zobrazit vše"
 
-#: inc/form.class.php:642
+#: inc/form.class.php:638
 msgid "Popularity sort"
 msgstr "Řazení podle oblíbenosti"
 
-#: inc/form.class.php:646
+#: inc/form.class.php:642
 msgid "Alphabetic sort"
 msgstr "Abecední řazení"
 
-#: inc/form.class.php:816
+#: inc/form.class.php:812
 msgid "Please, describe your need here"
 msgstr "Zde popište své potřeby"
 
-#: inc/form.class.php:825
+#: inc/form.class.php:821
 msgid "My last forms (requester)"
 msgstr "Mé poslední formuláře (žadatel)"
 
-#: inc/form.class.php:835
+#: inc/form.class.php:831
 msgid "No form posted yet"
 msgstr "Nebyl odeslán žádný formulář"
 
-#: inc/form.class.php:847
+#: inc/form.class.php:843
 msgid "All my forms (requester)"
 msgstr "Všechny mé formuláře (žadatel)"
 
-#: inc/form.class.php:857
+#: inc/form.class.php:853
 msgid "My last forms (validator)"
 msgstr "Mé poslední formuláře (ověřovatel)"
 
-#: inc/form.class.php:877
+#: inc/form.class.php:873
 msgid "No form waiting for validation"
 msgstr "Žádný formulář nečeká na ověření"
 
-#: inc/form.class.php:895
+#: inc/form.class.php:891
 msgid "All my forms (validator)"
 msgstr "Všechny mé formuláře (ověřovatel)"
 
-#: inc/form.class.php:929 inc/formanswer.class.php:471
+#: inc/form.class.php:924 inc/formanswer.class.php:481
 msgid "Print this form"
 msgstr "Vytisknout tento formulář"
 
-#: inc/form.class.php:1001
+#: inc/form.class.php:1008
 msgid "Choose a validator"
 msgstr "Vyberte ověřovatele"
 
-#: inc/form.class.php:1038 inc/target.class.php:141
+#: inc/form.class.php:1045 inc/target.class.php:152
 msgid "The name cannot be empty!"
 msgstr "Jméno nemůže být prázdné!"
 
-#: inc/form.class.php:1091
+#: inc/form.class.php:1098
 #, php-format
 msgid "The question %s is not compatible with public forms"
-msgstr ""
+msgstr "Otázka %s není kompatibilní s veřejnými formuláři"
 
-#: inc/form.class.php:1203
+#: inc/form.class.php:1209
 msgid "You must select validator!"
-msgstr ""
+msgstr "Je třeba vybrat ověřovatele!"
 
-#: inc/form.class.php:1287
+#: inc/form.class.php:1284
 msgid "Duplicate"
 msgstr "Kopírovat"
 
-#: inc/form.class.php:1597
+#: inc/form.class.php:1644
 #, php-format
 msgid "Form duplicated: %s"
 msgstr "Formulář byl zkopírován: %s"
 
-#: inc/form.class.php:1608
+#: inc/form.class.php:1655
 #, php-format
 msgid "Form Transfered: %s"
 msgstr "Formulář byl přesunut: %s"
 
-#: inc/form.class.php:1754
+#: inc/form.class.php:1827
 msgid "Upload of JSON files not allowed."
 msgstr "Nahrání JSON souborů není dovoleno."
 
-#: inc/form.class.php:1757
+#: inc/form.class.php:1830
 msgid "You may allow JSON files right now."
 msgstr "JSON soubory můžete povolit právě teď."
 
-#: inc/form.class.php:1758
+#: inc/form.class.php:1831
 msgctxt "button"
 msgid "Create"
 msgstr "Vytvořit"
 
-#: inc/form.class.php:1761 inc/form.class.php:1772
+#: inc/form.class.php:1834 inc/form.class.php:1845
 msgid "Please contact your GLPI administrator."
 msgstr "Obraťte se na svého správce GLPI."
 
-#: inc/form.class.php:1762 inc/form.class.php:1773
+#: inc/form.class.php:1835 inc/form.class.php:1846
 msgctxt "button"
 msgid "Back"
 msgstr "Zpět"
 
-#: inc/form.class.php:1765
+#: inc/form.class.php:1838
 msgid "Upload of JSON files not enabled."
 msgstr "Nahrávání JSON souborů není zapnuto."
 
-#: inc/form.class.php:1768 inc/form.class.php:1771
+#: inc/form.class.php:1841 inc/form.class.php:1844
 msgid "You may enable JSON files right now."
 msgstr "JSON soubory můžete zapnout právě teď."
 
-#: inc/form.class.php:1769
+#: inc/form.class.php:1842
 msgctxt "button"
 msgid "Enable"
 msgstr "Zapnout"
 
-#: inc/form.class.php:1853
+#: inc/form.class.php:1925
 #, php-format
 msgid "Forms successfully imported from %s"
 msgstr "Formuláře byly úspěšně importovány z %s"
 
-#: inc/form.class.php:1856
+#: inc/form.class.php:1928
 #, php-format
 msgid "Failed to import forms from %s"
-msgstr ""
+msgstr "Nepodařilo se importovat formuláře z %s"
 
-#: inc/form.class.php:2037
+#: inc/form.class.php:2055
+#, php-format
+msgid "The form %1$s already exists and is in an unmodifiable entity."
+msgstr "Formulář %1$s už existuje a je entitou, kterou nelze upravovat."
+
+#: inc/form.class.php:2158
 msgid "Failed to create JSON document type"
 msgstr "Nepodařilo se vytvořit typ dokumentu JSON"
 
-#: inc/form.class.php:2044
+#: inc/form.class.php:2165
 msgid "JSON document type not found"
 msgstr "Typ JSON dokumentu nenalezen"
 
-#: inc/form.class.php:2051
+#: inc/form.class.php:2172
 msgid "Failed to update JSON document type"
 msgstr "Nepodařilo se aktualizovat typ JSON dokumentu"
 
-#: inc/form.class.php:2111
+#: inc/form.class.php:2232
 msgid "Forms without category"
 msgstr "Formuláře bez kategorie"
 
@@ -316,7 +320,7 @@ msgstr "Odkaz na formulář"
 msgid "Please active the form to view the link"
 msgstr "Pro zobrazení odkazu si aktivujte formulář"
 
-#: inc/formanswer.class.php:127 inc/issue.class.php:481
+#: inc/formanswer.class.php:132 inc/issue.class.php:477
 msgid "Form answer"
 msgid_plural "Form answers"
 msgstr[0] "Odpověď formuláře"
@@ -324,75 +328,75 @@ msgstr[1] "Odpovědi formuláře"
 msgstr[2] "Odpovědí formuláře"
 msgstr[3] "Odpovědi formuláře"
 
-#: inc/formanswer.class.php:193 inc/issue.class.php:385
+#: inc/formanswer.class.php:189 inc/issue.class.php:381
 msgid "Form approver"
 msgstr "Schvalovatel formuláře"
 
-#: inc/formanswer.class.php:212
+#: inc/formanswer.class.php:208
 msgid "Form approver group"
 msgstr "Skupina schvalovatele formuláře"
 
-#: inc/formanswer.class.php:314
+#: inc/formanswer.class.php:310
 msgid "waiting"
 msgstr "čekající"
 
-#: inc/formanswer.class.php:315
+#: inc/formanswer.class.php:311
 msgid "accepted"
 msgstr "schválen"
 
-#: inc/formanswer.class.php:316
+#: inc/formanswer.class.php:312
 msgid "refused"
 msgstr "zamítnut"
 
-#: inc/formanswer.class.php:488
+#: inc/formanswer.class.php:498
 msgid "Form accepted by validator."
 msgstr "Formulář byl schválen ověřovatelem."
 
-#: inc/formanswer.class.php:490
+#: inc/formanswer.class.php:500
 msgid "Form successfully saved."
 msgstr "Formulář byl úspěšně uložen."
 
-#: inc/formanswer.class.php:584 inc/notificationtargetformanswer.class.php:82
+#: inc/formanswer.class.php:595 inc/notificationtargetformanswer.class.php:82
 msgid "Requester"
 msgstr "Žadatel"
 
-#: inc/formanswer.class.php:601
+#: inc/formanswer.class.php:612
 msgid "Comment"
 msgstr "Komentář"
 
-#: inc/formanswer.class.php:606
+#: inc/formanswer.class.php:617
 msgid "Required if refused"
 msgstr "Požadováno pokud je zamítnuto"
 
-#: inc/formanswer.class.php:612
+#: inc/formanswer.class.php:623
 msgid "Refuse"
 msgstr "Zamítnout"
 
-#: inc/formanswer.class.php:615
+#: inc/formanswer.class.php:626
 msgid "Accept"
 msgstr "Schválit"
 
-#: inc/formanswer.class.php:632
+#: inc/formanswer.class.php:643
 msgid "Refused comment is required!"
 msgstr "Komentář k zamítnutí je povinný!"
 
-#: inc/formanswer.class.php:812
+#: inc/formanswer.class.php:824
 msgid "Cannot generate targets!"
 msgstr "Není možné vytvářet cíle!"
 
-#: inc/formanswer.class.php:934 inc/formanswer.class.php:1066
+#: inc/formanswer.class.php:953 inc/formanswer.class.php:1087
 msgid "The form has been successfully saved!"
 msgstr "Formulář byl úspěšně uložen!"
 
-#: inc/formanswer.class.php:986 inc/formanswer.class.php:1020
+#: inc/formanswer.class.php:1005 inc/formanswer.class.php:1038
 msgid "You are not the validator of these answers"
 msgstr "Nejste ověřovatelem těchto odpovědí"
 
-#: inc/formanswer.class.php:1116 inc/formanswer.class.php:1118
+#: inc/formanswer.class.php:1144 inc/formanswer.class.php:1146
 msgid "Form data"
 msgstr "Data formuláře"
 
-#: inc/issue.class.php:42 inc/issue.class.php:292
+#: inc/issue.class.php:42 inc/issue.class.php:288
 msgid "Issue"
 msgid_plural "Issues"
 msgstr[0] "Problém"
@@ -404,7 +408,7 @@ msgstr[3] "Problémy"
 msgid "Update issue data from tickets and form answers"
 msgstr "Aktualizovat data problému z požadavků a odpovědí z formulářů"
 
-#: inc/issue.class.php:404
+#: inc/issue.class.php:400
 msgid "Ticket approver"
 msgstr "Schvalovatel požadavku"
 
@@ -412,19 +416,19 @@ msgstr "Schvalovatel požadavku"
 msgid "The form as been saved"
 msgstr "Formulář byl uložen"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:306
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:270
 msgid "A form need to be validate"
 msgstr "Formulář je třeba ověřit"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:312
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:276
 msgid "The form is refused"
 msgstr "Formulář byl zamítnut"
 
-#: inc/notificationtargetformanswer.class.php:48 install/install.php:318
+#: inc/notificationtargetformanswer.class.php:48 install/install.php:282
 msgid "The form is accepted"
 msgstr "Formulář byl přijat"
 
-#: inc/notificationtargetformanswer.class.php:49 install/install.php:324
+#: inc/notificationtargetformanswer.class.php:49 install/install.php:288
 msgid "The form is deleted"
 msgstr "Formulář byl smazán"
 
@@ -456,10 +460,10 @@ msgstr "Odkaz ověření"
 msgid "Request #"
 msgstr "Žádost č."
 
-#: inc/question.class.php:70 inc/targetbase.class.php:733
-#: inc/targetbase.class.php:803 inc/targetbase.class.php:884
-#: inc/targetbase.class.php:1030 inc/targetchange.class.php:780
-#: inc/targetticket.class.php:656
+#: inc/question.class.php:70 inc/targetbase.class.php:777
+#: inc/targetbase.class.php:847 inc/targetbase.class.php:928
+#: inc/targetbase.class.php:1075 inc/targetchange.class.php:812
+#: inc/targetticket.class.php:671
 msgid "Question"
 msgid_plural "Questions"
 msgstr[0] "Otázka"
@@ -467,59 +471,59 @@ msgstr[1] "Otázky"
 msgstr[2] "Otázek"
 msgstr[3] "Otázky"
 
-#: inc/question.class.php:149 inc/question.class.php:203
-#: inc/target.class.php:103
+#: inc/question.class.php:166 inc/question.class.php:225
+#: inc/target.class.php:114
 msgid "Delete"
 msgstr "Smazat"
 
-#: inc/question.class.php:217 inc/question.class.php:904
+#: inc/question.class.php:239 inc/question.class.php:926
 msgid "Required"
 msgstr "Povinné"
 
-#: inc/question.class.php:246 inc/question.class.php:696
+#: inc/question.class.php:268 inc/question.class.php:719
 msgid "Add a question"
 msgstr "Přidat otázku"
 
-#: inc/question.class.php:256 inc/section.class.php:442
+#: inc/question.class.php:278 inc/section.class.php:478
 msgid "Add a section"
 msgstr "Přidat sekci"
 
-#: inc/question.class.php:275 inc/section.class.php:86
+#: inc/question.class.php:297 inc/section.class.php:84
 #: inc/section.class.php:120
 msgid "The title is required"
 msgstr "Název je povinný"
 
-#: inc/question.class.php:283
+#: inc/question.class.php:305
 msgid "The field type is required"
 msgstr "Typ kolonky je povinný"
 
-#: inc/question.class.php:290
+#: inc/question.class.php:312
 msgid "The section is required"
 msgstr "Sekce je povinná"
 
-#: inc/question.class.php:305
+#: inc/question.class.php:327
 #, php-format
 msgid "Field type %1$s is not available for question %2$s."
-msgstr ""
+msgstr "Typ kolonky %1$s není k dispozici pro otázku %2$s."
 
-#: inc/question.class.php:325
+#: inc/question.class.php:347
 msgid "This type of question is not compatible with public forms."
-msgstr ""
+msgstr "Tento typ otázky není kompatibilní s veřejnými formuláři."
 
-#: inc/question.class.php:334
+#: inc/question.class.php:356
 msgid "This type of question requires parameters"
-msgstr ""
+msgstr "Tento typ otázky vyžaduje parametry"
 
-#: inc/question.class.php:340
+#: inc/question.class.php:362
 msgid "A parameter is missing for this question type"
-msgstr ""
+msgstr "Chybí parametr pro tento typ otázky"
 
-#: inc/question.class.php:696
+#: inc/question.class.php:719
 msgid "Edit a question"
 msgstr "Upravit otázku"
 
-#: inc/question.class.php:732 inc/section.class.php:68
-#: inc/targetchange.class.php:783 inc/targetticket.class.php:659
+#: inc/question.class.php:755 inc/section.class.php:68
+#: inc/targetchange.class.php:815 inc/targetticket.class.php:674
 msgid "Section"
 msgid_plural "Sections"
 msgstr[0] "Sekce"
@@ -527,7 +531,7 @@ msgstr[1] "Sekce"
 msgstr[2] "Sekcí"
 msgstr[3] "Sekce"
 
-#: inc/question.class.php:755 inc/fields/glpiselectfield.class.php:41
+#: inc/question.class.php:776 inc/fields/glpiselectfield.class.php:41
 msgid "GLPI object"
 msgid_plural "GLPI objects"
 msgstr[0] "GLPI objekt"
@@ -535,67 +539,67 @@ msgstr[1] "GLPI objekty"
 msgstr[2] "GLPI objektů"
 msgstr[3] "GLPI objekty"
 
-#: inc/question.class.php:916
+#: inc/question.class.php:938
 msgid "Show empty"
 msgstr "Zobrazit prázdné"
 
-#: inc/question.class.php:932
+#: inc/question.class.php:954
 msgid "Show ticket categories"
 msgstr "Zobrazit kategorie požadavků"
 
-#: inc/question.class.php:937 inc/question.class.php:939
+#: inc/question.class.php:959 inc/question.class.php:961
 msgid "Request categories"
 msgstr "Kategorie požadavků"
 
-#: inc/question.class.php:938 inc/question.class.php:939
+#: inc/question.class.php:960 inc/question.class.php:961
 msgid "Incident categories"
 msgstr "Kategorie incidentů"
 
-#: inc/question.class.php:952
+#: inc/question.class.php:974
 msgid "Limit ticket categories depth"
 msgstr "Omezit hloubku kategorií požadavku"
 
-#: inc/question.class.php:963
+#: inc/question.class.php:985
 msgid "No limit"
 msgstr "Žádný limit"
 
-#: inc/question.class.php:971
+#: inc/question.class.php:993
 msgid "ticket categories root"
-msgstr ""
+msgstr "kořen kategorií požadavků"
 
-#: inc/question.class.php:995
+#: inc/question.class.php:1017
 msgid "One per line for lists"
 msgstr "Jeden na řádek pro seznamy"
 
-#: inc/question.class.php:1040
+#: inc/question.class.php:1062
 msgid "Values"
 msgstr "Hodnoty"
 
-#: inc/question.class.php:1041
+#: inc/question.class.php:1063
 msgid "One per line"
 msgstr "Jeden na řádek"
 
-#: inc/question.class.php:1053
+#: inc/question.class.php:1075
 msgid "Filter"
 msgstr "Filtr"
 
-#: inc/question.class.php:1064
+#: inc/question.class.php:1086
 msgid "Attribute"
 msgstr "Atribut"
 
-#: inc/question.class.php:1103
+#: inc/question.class.php:1125
 msgid "Show field"
 msgstr "Zobrazit kolonku"
 
-#: inc/question.class.php:1111
+#: inc/question.class.php:1133
 msgid "Always displayed"
 msgstr "Vždy zobrazeno"
 
-#: inc/question.class.php:1112
+#: inc/question.class.php:1134
 msgid "Hidden unless"
 msgstr "Skrýt dokud"
 
-#: inc/question.class.php:1113
+#: inc/question.class.php:1135
 msgid "Displayed unless"
 msgstr "Zobrazit dokud"
 
@@ -613,7 +617,7 @@ msgid ""
 "question to help users."
 msgstr "Do popisu otázky zadejte další podmínky ověřování, které pomohou uživatelům."
 
-#: inc/section.class.php:444
+#: inc/section.class.php:480
 msgid "Edit a section"
 msgstr "Upravit sekci"
 
@@ -625,7 +629,7 @@ msgstr[1] "Cíle"
 msgstr[2] "Cílů"
 msgstr[3] "Cíle"
 
-#: inc/target.class.php:79
+#: inc/target.class.php:86
 msgid "Destinations"
 msgid_plural "Destinations"
 msgstr[0] "Cíl"
@@ -633,29 +637,29 @@ msgstr[1] "Cíle"
 msgstr[2] "Cílů"
 msgstr[3] "Cíle"
 
-#: inc/target.class.php:115 inc/target.class.php:332
+#: inc/target.class.php:126 inc/target.class.php:357
 msgid "Add a destination"
 msgstr "Přidat cíl"
 
-#: inc/target.class.php:148
+#: inc/target.class.php:159
 msgid "The type cannot be empty!"
 msgstr "Typ nemůže být prázdný!"
 
-#: inc/target.class.php:207
+#: inc/target.class.php:218
 msgid "Bad type of target"
-msgstr ""
+msgstr "Chybný typ cíle"
 
-#: inc/target_actor.class.php:44 inc/targetchange.class.php:492
-#: inc/targetchange.class.php:599 inc/targetchange.class.php:719
-#: inc/targetticket.class.php:367 inc/targetticket.class.php:476
-#: inc/targetticket.class.php:595
+#: inc/target_actor.class.php:44 inc/targetchange.class.php:524
+#: inc/targetchange.class.php:631 inc/targetchange.class.php:751
+#: inc/targetticket.class.php:382 inc/targetticket.class.php:491
+#: inc/targetticket.class.php:610
 msgid "Form requester"
 msgstr "Zadavatel formuláře"
 
-#: inc/target_actor.class.php:45 inc/targetchange.class.php:495
-#: inc/targetchange.class.php:602 inc/targetchange.class.php:722
-#: inc/targetticket.class.php:370 inc/targetticket.class.php:479
-#: inc/targetticket.class.php:598
+#: inc/target_actor.class.php:45 inc/targetchange.class.php:527
+#: inc/targetchange.class.php:634 inc/targetchange.class.php:754
+#: inc/targetticket.class.php:385 inc/targetticket.class.php:494
+#: inc/targetticket.class.php:613
 msgid "Form validator"
 msgstr "Ověřování formulářů"
 
@@ -663,10 +667,10 @@ msgstr "Ověřování formulářů"
 msgid "Specific person"
 msgstr "Konkrétní osoba"
 
-#: inc/target_actor.class.php:47 inc/targetchange.class.php:505
-#: inc/targetchange.class.php:612 inc/targetchange.class.php:732
-#: inc/targetticket.class.php:380 inc/targetticket.class.php:489
-#: inc/targetticket.class.php:608
+#: inc/target_actor.class.php:47 inc/targetchange.class.php:537
+#: inc/targetchange.class.php:644 inc/targetchange.class.php:764
+#: inc/targetticket.class.php:395 inc/targetticket.class.php:504
+#: inc/targetticket.class.php:623
 msgid "Person from the question"
 msgstr "Osoba z otázky"
 
@@ -674,10 +678,10 @@ msgstr "Osoba z otázky"
 msgid "Specific group"
 msgstr "Konkrétní skupina"
 
-#: inc/target_actor.class.php:49 inc/targetchange.class.php:516
-#: inc/targetchange.class.php:623 inc/targetchange.class.php:743
-#: inc/targetticket.class.php:391 inc/targetticket.class.php:500
-#: inc/targetticket.class.php:619
+#: inc/target_actor.class.php:49 inc/targetchange.class.php:548
+#: inc/targetchange.class.php:655 inc/targetchange.class.php:775
+#: inc/targetticket.class.php:406 inc/targetticket.class.php:515
+#: inc/targetticket.class.php:634
 msgid "Group from the question"
 msgstr "Skupina z otázky"
 
@@ -685,15 +689,15 @@ msgstr "Skupina z otázky"
 msgid "Specific supplier"
 msgstr "Konkrétní dodavatel"
 
-#: inc/target_actor.class.php:51 inc/targetchange.class.php:760
-#: inc/targetticket.class.php:636
+#: inc/target_actor.class.php:51 inc/targetchange.class.php:792
+#: inc/targetticket.class.php:651
 msgid "Supplier from the question"
 msgstr "Dodavatel z otázky"
 
-#: inc/target_actor.class.php:52 inc/targetchange.class.php:522
-#: inc/targetchange.class.php:629 inc/targetchange.class.php:749
-#: inc/targetticket.class.php:397 inc/targetticket.class.php:506
-#: inc/targetticket.class.php:625
+#: inc/target_actor.class.php:52 inc/targetchange.class.php:554
+#: inc/targetchange.class.php:661 inc/targetchange.class.php:781
+#: inc/targetticket.class.php:412 inc/targetticket.class.php:521
+#: inc/targetticket.class.php:640
 msgid "Actors from the question"
 msgstr "Účastníci z otázky"
 
@@ -791,35 +795,35 @@ msgstr "Umístění ze šablony nebo žádné"
 msgid "Specific location"
 msgstr "Konkrétní umístění"
 
-#: inc/targetbase.class.php:553
+#: inc/targetbase.class.php:597
 msgid "User type question"
 msgstr "Typ uživatele dle otázky"
 
-#: inc/targetbase.class.php:554
+#: inc/targetbase.class.php:598
 msgid "Entity type question"
 msgstr "Typ entity dle otázky"
 
-#: inc/targetbase.class.php:699
+#: inc/targetbase.class.php:743
 msgid "Ticket category"
 msgstr "Kategorie požadavku"
 
-#: inc/targetbase.class.php:804
+#: inc/targetbase.class.php:848
 msgid "Urgency "
 msgstr "Naléhavost"
 
-#: inc/targetbase.class.php:843
+#: inc/targetbase.class.php:887
 msgid "Ticket tags"
 msgstr "Tagy požadavků"
 
-#: inc/targetbase.class.php:885
+#: inc/targetbase.class.php:929
 msgid "Tags"
 msgstr "Štítky"
 
-#: inc/targetbase.class.php:1031
+#: inc/targetbase.class.php:1076
 msgid "Location "
 msgstr "Umístění"
 
-#: inc/targetchange.class.php:41 inc/targetchange.class.php:229
+#: inc/targetchange.class.php:41 inc/targetchange.class.php:261
 msgid "Target change"
 msgid_plural "Target changes"
 msgstr[0] "Změna cíle"
@@ -835,35 +839,35 @@ msgstr "Střední"
 msgid "None"
 msgstr "Žádné"
 
-#: inc/targetchange.class.php:217 inc/targetticket.class.php:97
+#: inc/targetchange.class.php:249 inc/targetticket.class.php:110
 msgid "Edit a destination"
 msgstr "Upravit cíl"
 
-#: inc/targetchange.class.php:232
+#: inc/targetchange.class.php:264
 msgid "Change title"
 msgstr "Změnit nadpis"
 
-#: inc/targetchange.class.php:308 inc/targetticket.class.php:184
+#: inc/targetchange.class.php:340 inc/targetticket.class.php:197
 msgid "Cancel"
 msgstr "Storno"
 
-#: inc/targetchange.class.php:391
+#: inc/targetchange.class.php:423
 msgid "Change actors"
 msgstr "Změnit účastníky"
 
-#: inc/targetchange.class.php:787 inc/targetticket.class.php:663
+#: inc/targetchange.class.php:819 inc/targetticket.class.php:678
 msgid "Full form"
 msgstr "Celý formulář"
 
-#: inc/targetchange.class.php:833 inc/targetticket.class.php:843
+#: inc/targetchange.class.php:865 inc/targetticket.class.php:886
 msgid "The title cannot be empty!"
 msgstr "Název nemůže být prázdný!"
 
-#: inc/targetchange.class.php:839 inc/targetticket.class.php:849
+#: inc/targetchange.class.php:871 inc/targetticket.class.php:892
 msgid "The description cannot be empty!"
 msgstr "Popis nemůže být prázdný"
 
-#: inc/targetticket.class.php:41 inc/targetticket.class.php:109
+#: inc/targetticket.class.php:41 inc/targetticket.class.php:122
 msgid "Target ticket"
 msgid_plural "Target tickets"
 msgstr[0] "Cílový požadavek"
@@ -871,47 +875,47 @@ msgstr[1] "Cílové požadavky"
 msgstr[2] "Cílových požadavků"
 msgstr[3] "Cílové požadavky"
 
-#: inc/targetticket.class.php:112
+#: inc/targetticket.class.php:125
 msgid "Ticket title"
 msgstr "Název požadavku"
 
-#: inc/targetticket.class.php:171
+#: inc/targetticket.class.php:184
 msgid "Add validation message as first ticket followup"
 msgstr "Přidat kontrolní zprávu při první změně požadavku"
 
-#: inc/targetticket.class.php:266
+#: inc/targetticket.class.php:281
 msgid "Ticket actors"
 msgstr "Účastníci požadavku"
 
-#: inc/targetticket.class.php:701
+#: inc/targetticket.class.php:718
 msgid "Link to an other ticket"
 msgstr "Odkázat na jiný požadavek"
 
-#: inc/targetticket.class.php:710
+#: inc/targetticket.class.php:727
 msgid "An other destination of this form"
 msgstr "Druhý cíl tohoto formuláře"
 
-#: inc/targetticket.class.php:711
+#: inc/targetticket.class.php:728
 msgid "An existing ticket"
 msgstr "Existující požadavek"
 
-#: inc/targetticket.class.php:933
+#: inc/targetticket.class.php:976
 msgid "Invalid link type"
 msgstr "Neplatný typ odkazu"
 
-#: inc/targetticket.class.php:949
+#: inc/targetticket.class.php:992
 msgid "Invalid linked item type"
 msgstr "Neplatný typ odkazované položky"
 
-#: inc/targetticket.class.php:962
+#: inc/targetticket.class.php:1005
 msgid "Linked item does not exists"
 msgstr "Odkazovaná položka neexistuje"
 
-#: inc/targetticket.class.php:975
+#: inc/targetticket.class.php:1018
 msgid "Failed to link the item"
 msgstr "Nepodařilo se odkázat na položku"
 
-#: inc/targetticket.class.php:1310 install/install.php:319
+#: inc/targetticket.class.php:1274 install/install.php:283
 msgid "Your form has been accepted by the validator"
 msgstr "Váš formulář byl ověřen ověřovatelem"
 
@@ -923,19 +927,19 @@ msgstr "Požádat o pomoc"
 msgid "My requests for assistance"
 msgstr "Mé žádosti o pomoc"
 
-#: inc/wizard.class.php:117 inc/wizard.class.php:118
+#: inc/wizard.class.php:118 inc/wizard.class.php:119
 msgid "Book an asset"
 msgstr "Zamluvit si majetek"
 
-#: inc/wizard.class.php:126 inc/wizard.class.php:127
+#: inc/wizard.class.php:127 inc/wizard.class.php:128
 msgid "Consult feeds"
 msgstr "Konzultovat zdroje"
 
-#: inc/wizard.class.php:270
+#: inc/wizard.class.php:271
 msgid "To validate"
 msgstr "K ověření"
 
-#: inc/wizard.class.php:280
+#: inc/wizard.class.php:281
 msgid "Closed"
 msgstr "Uzavřeno"
 
@@ -950,14 +954,14 @@ msgstr[3] "Účastníci"
 #: inc/fields/actorfield.class.php:194
 #: inc/fields/checkboxesfield.class.php:140 inc/fields/datefield.class.php:85
 #: inc/fields/datetimefield.class.php:88
-#: inc/fields/dropdownfield.class.php:190 inc/fields/emailfield.class.php:95
+#: inc/fields/dropdownfield.class.php:241 inc/fields/emailfield.class.php:95
 #: inc/fields/floatfield.class.php:92 inc/fields/glpiselectfield.class.php:65
 #: inc/fields/integerfield.class.php:93
 #: inc/fields/ldapselectfield.class.php:113
 #: inc/fields/multiselectfield.class.php:103
 #: inc/fields/radiosfield.class.php:181 inc/fields/selectfield.class.php:124
-#: inc/fields/tagfield.class.php:110 inc/fields/textareafield.class.php:102
-#: inc/fields/textfield.class.php:93 inc/fields/urgencyfield.class.php:139
+#: inc/fields/tagfield.class.php:113 inc/fields/textareafield.class.php:102
+#: inc/fields/textfield.class.php:93 inc/fields/urgencyfield.class.php:146
 msgid "A required field is empty:"
 msgstr "Není vyplněná povinná kolonka:"
 
@@ -982,29 +986,29 @@ msgid "Checkboxes"
 msgstr "Zaškrtávací kolonka"
 
 #: inc/fields/checkboxesfield.class.php:180
-#: inc/fields/dropdownfield.class.php:204
+#: inc/fields/dropdownfield.class.php:255
 #: inc/fields/glpiselectfield.class.php:48
 #: inc/fields/multiselectfield.class.php:139
 #: inc/fields/radiosfield.class.php:87
 msgid "The field value is required:"
 msgstr "Je třeba vyplnit hodnotu do kolonky:"
 
-#: inc/fields/checkboxesfield.class.php:253
-#: inc/fields/floatfield.class.php:226 inc/fields/integerfield.class.php:214
+#: inc/fields/checkboxesfield.class.php:251
+#: inc/fields/floatfield.class.php:230 inc/fields/integerfield.class.php:218
 #: inc/fields/multiselectfield.class.php:240
-#: inc/fields/textfield.class.php:213
+#: inc/fields/textfield.class.php:214
 msgid "Range"
 msgstr "Rozmezí"
 
 #: inc/fields/datetimefield.class.php:99
 msgid "Date & time"
-msgstr ""
+msgstr "Datum a čas"
 
 #: inc/fields/descriptionfield.class.php:78
 msgid "A description field should have a description:"
 msgstr "Kolonka popis by měla obsahovat popis:"
 
-#: inc/fields/dropdownfield.class.php:216
+#: inc/fields/dropdownfield.class.php:267
 msgid "Invalid dropdown type:"
 msgstr "Neplatný typ rozbalovací nabídky:"
 
@@ -1012,9 +1016,17 @@ msgstr "Neplatný typ rozbalovací nabídky:"
 msgid "This is not a valid e-mail:"
 msgstr "Toto není platná e-mailová adresa:"
 
-#: inc/fields/filefield.class.php:79 inc/fields/filefield.class.php:208
+#: inc/fields/filefield.class.php:74
+msgid "No attached document"
+msgstr "Bez připojených dokumentů"
+
+#: inc/fields/filefield.class.php:76 inc/fields/filefield.class.php:212
 msgid "Attached document"
 msgstr "Připojený dokument"
+
+#: inc/fields/filefield.class.php:98
+msgid "A required file is missing:"
+msgstr "Chybí požadovaný soubor:"
 
 #: inc/fields/floatfield.class.php:107
 msgid "This is not a number:"
@@ -1044,13 +1056,13 @@ msgstr "Desetinné číslo"
 msgid "The regular expression is invalid"
 msgstr "Regulární výraz není platný"
 
-#: inc/fields/floatfield.class.php:211 inc/fields/integerfield.class.php:199
-#: inc/fields/textfield.class.php:198
+#: inc/fields/floatfield.class.php:215 inc/fields/integerfield.class.php:203
+#: inc/fields/textfield.class.php:199
 msgid "Regular expression"
 msgstr "Regulární výraz"
 
-#: inc/fields/floatfield.class.php:218 inc/fields/integerfield.class.php:206
-#: inc/fields/textfield.class.php:205
+#: inc/fields/floatfield.class.php:222 inc/fields/integerfield.class.php:210
+#: inc/fields/textfield.class.php:206
 msgid "Additional validation"
 msgstr "Dodatečné ověření"
 
@@ -1068,11 +1080,11 @@ msgstr "LDAP výběr"
 
 #: inc/fields/ldapselectfield.class.php:126
 msgid "LDAP directory not defined!"
-msgstr ""
+msgstr "Není určený LDAP adresář!"
 
 #: inc/fields/ldapselectfield.class.php:133
 msgid "LDAP directory not found!"
-msgstr ""
+msgstr "LDAP adresář nenalezen!"
 
 #: inc/fields/ldapselectfield.class.php:154
 msgid "Cannot recover LDAP informations!"
@@ -1090,7 +1102,7 @@ msgstr "Přepínač"
 msgid "Select"
 msgstr "Vybrat"
 
-#: inc/fields/tagfield.class.php:139
+#: inc/fields/tagfield.class.php:142
 msgid "Tag"
 msgid_plural "Tags"
 msgstr[0] "Štítek"
@@ -1102,46 +1114,51 @@ msgstr[3] "Štítky"
 msgid "Textarea"
 msgstr "Textové pole"
 
-#: inc/fields/textfield.class.php:123 inc/fields/textfield.class.php:128
+#: inc/fields/textfield.class.php:123
 #, php-format
 msgid "The text is too short (minimum %d characters):"
 msgstr "Text je příliš krátký (přinejmenším %d znaků):"
+
+#: inc/fields/textfield.class.php:128
+#, php-format
+msgid "The text is too long (maximum %d characters):"
+msgstr "Text je příliš dlouhý (nejvýše %d znaků):"
 
 #: inc/fields/textfield.class.php:136
 msgid "Text"
 msgstr "Text"
 
-#: install/install.php:300
+#: install/install.php:264
 msgid "A form has been created"
 msgstr "Formulář byl vytvořen"
 
-#: install/install.php:301
+#: install/install.php:265
 msgid "Your request has been saved"
 msgstr "Vaše žádost byla uložena"
 
-#: install/install.php:302
+#: install/install.php:266
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr "Dobrý den,\\n Váš požadavek z GLPI byl úspěšně uložen pod číslem ##formcreator.request_id## a předán týmu podpory. Odpovědi můžete vidět na následujícím odkazu:\\n##formcreator.validation_link##"
 
-#: install/install.php:307
+#: install/install.php:271
 msgid "A form from GLPI need to be validate"
 msgstr "Formulář z GLPI je třeba ověřit"
 
-#: install/install.php:308
+#: install/install.php:272
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr "Dobrý den,\\n je třeba, aby formulář z GLPI byl ověřen a vy jste byl vybrán jako ověřovatel.\\n K formuláři můžete přistoupit kliknutím na tento odkaz:\\n##formcreator.validation_link##"
 
-#: install/install.php:313
+#: install/install.php:277
 msgid "Your form has been refused by the validator"
 msgstr "Váš formulář byl zamítnut ověřovatelem"
 
-#: install/install.php:314
+#: install/install.php:278
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1149,23 +1166,23 @@ msgid ""
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr "Dobrý den,\\n váš formulář byl žel zamítnut ověřovatelem z tohoto důvodu: \\n##formcreator.validation_comment##\\n\\nFormulář můžete nadále upravovat kliknutím na tento odkaz:\\n##formcreator.validation_link##"
 
-#: install/install.php:320
+#: install/install.php:284
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr "Dobrý den,\\n Váš formulář byl schválen ověřovatelem.\\n Váš požadavek bude brzy řešen."
 
-#: install/install.php:325
+#: install/install.php:289
 msgid "Your form has been deleted by an administrator"
 msgstr "Váš formulář byl smazán správcem"
 
-#: install/install.php:326
+#: install/install.php:290
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr "Dobrý den,\\n Váš formulář nebude řešen a byl smazán správcem."
 
-#: install/install.php:527 install/upgrade_to_2.5.php:418
+#: install/install.php:505 install/upgrade_to_2.5.php:413
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Vytváření formulářů – problémy katalogu synchronizační služby"
 

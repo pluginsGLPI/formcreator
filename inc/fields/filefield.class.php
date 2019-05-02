@@ -188,7 +188,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       return null;
    }
 
-   public function parseAnswerValues($input) {
+   public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (isset($input["_$key"])) {
          if (!is_array($input["_$key"])) {
@@ -197,12 +197,16 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
          $answer_value = [];
          $index = 0;
-         foreach ($input["_$key"] as $document) {
-            if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-               $prefix = $input['_prefix_formcreator_field_' . $this->fields['id']][$index];
-               $answer_value[] = $this->saveDocument($document, $prefix);
+         if ($nonDestructive) {
+            $index = count($input["_$key"]);
+         } else {
+            foreach ($input["_$key"] as $document) {
+               if (is_file(GLPI_TMP_DIR . '/' . $document)) {
+                  $prefix = $input['_prefix_formcreator_field_' . $this->fields['id']][$index];
+                  $answer_value[] = $this->saveDocument($document, $prefix);
+               }
+               $index++;
             }
-            $index++;
          }
          $this->uploadData = $answer_value;
          $this->value = __('Attached document', 'formcreator');

@@ -160,4 +160,86 @@ class PluginFormcreatorDateField extends CommonTestCase {
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
+
+   public function testSerializeValue() {
+      $value = $expected = '2019-01-01';
+      $instance = $this->newTestedInstance(['id' => 1]);
+      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $output = $instance->serializeValue();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testGetValueForDesign() {
+      $value = $expected = '2019-01-01';
+      $instance = new \PluginFormcreatorDateField([]);
+      $instance->deserializeValue($value);
+      $output = $instance->getValueForDesign();
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerEquals() {
+      return [
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2018-01-01',
+            'expected'  => false,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2019-01-01',
+            'expected'  => true,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerEquals
+    */
+   public function testEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorDateField(['id' => '1']);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->equals($value))->isEqualTo($expected);
+   }
+
+   public function providerNotEquals() {
+      return [
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2018-01-01',
+            'expected'  => true,
+         ],
+         [
+            'value'     => '2019-01-01',
+            'answer'    => '2019-01-01',
+            'expected'  => false,
+         ],
+
+      ];
+   }
+
+   /**
+    * @dataProvider providerNotEquals
+    */
+   public function testNotEquals($value, $answer, $expected) {
+      $instance = new \PluginFormcreatorDateField(['id' => '1'], $answer);
+      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $this->boolean($instance->notEquals($value))->isEqualTo($expected);
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance([]);
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
+   }
+
+
 }

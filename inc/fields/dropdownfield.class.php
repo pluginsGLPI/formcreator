@@ -230,7 +230,11 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function isValid() {
       // If the field is required it can't be empty
       $itemtype = json_decode($this->fields['values'], true);
-      $itemtype = $itemtype['itemtype'];
+      if ($itemtype === null) {
+         $itemtype = $this->fields['values'];
+      } else {
+         $itemtype = $itemtype['itemtype'];
+      }
       $dropdown = new $itemtype();
       if ($this->isRequired() && $dropdown->isNewId($this->value)) {
          Session::addMessageAfterRedirect(
@@ -255,7 +259,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          }
          $allowedDropdownValues = [];
          $stdtypes = Dropdown::getStandardDropdownItemTypes();
-         foreach (Dropdown::getStandardDropdownItemTypes() as $categoryOfTypes) {
+         foreach ($stdtypes as $categoryOfTypes) {
             $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));
          }
          if (!in_array($input['dropdown_values'], $allowedDropdownValues)) {
@@ -386,7 +390,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return !$this->greaterThan($value) && !$this->equals($value);
    }
 
-   public function parseAnswerValues($input) {
+   public function parseAnswerValues($input, $nonDestructive = false) {
       $key = 'formcreator_field_' . $this->fields['id'];
       if (!isset($input[$key])) {
          $input[$key] = '0';

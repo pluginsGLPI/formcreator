@@ -544,11 +544,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   $content = '';
             }
             $link = FORMCREATOR_ROOTDOC . "/front/issue.form.php?id=".$id."&sub_itemtype=".$data['raw']['sub_itemtype'];
+            $key = 'id';
             $tooltip = Html::showToolTip(nl2br(Html::Clean($content)), [
-               'applyto' => $itemtype.$data[$itemtype . '_' . $option_id][0]['id'],
+               'applyto' => $itemtype.$data['raw'][$key],
                'display' => false,
             ]);
-            return '<a id="' . $itemtype.$data[$itemtype . '_' . $option_id][0]['id'] . '" href="' . $link . '">'
+            return '<a id="' . $itemtype.$data['raw'][$key] . '" href="' . $link . '">'
                . sprintf(__('%1$s %2$s'), $name, $tooltip)
                . '</a>';
 

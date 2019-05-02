@@ -51,6 +51,11 @@ class PluginFormcreatorCommon {
       return $enum;
    }
 
+   /**
+    * Get status of notifications
+    *
+    * @return boolean
+    */
    public static function isNotificationEnabled() {
       global $CFG_GLPI;
       $notification = $CFG_GLPI['use_notifications'];
@@ -58,6 +63,12 @@ class PluginFormcreatorCommon {
       return ($notification == '1');
    }
 
+   /**
+    * Enable or disable notifications
+    *
+    * @param boolean $enable
+    * @return void
+    */
    public static function setNotification($enable) {
       global $CFG_GLPI;
 

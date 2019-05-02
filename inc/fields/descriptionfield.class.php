@@ -122,7 +122,7 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       throw new PluginFormcreatorComparisonException('Meaningless comparison');
    }
 
-   public function parseAnswerValues($input) {
+   public function parseAnswerValues($input, $nonDestructive = false) {
       return true;
    }
 

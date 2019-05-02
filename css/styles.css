@@ -1154,9 +1154,9 @@ a.plugin_formcreator_formTile_title {
 .plugin_formcreator_services li {
    padding:  5px 0 5px 13px;
    width: 100%;
-   height: 48px;
    line-height: 38px;
    box-sizing: border-box;
+   clear: left;
 }
 
 .plugin_formcreator_leftMenu .plugin_formcreator_services li a {
@@ -1214,11 +1214,13 @@ a.plugin_formcreator_formTile_title {
 
 span.fc_list_icon {
    width: 42px;
-   height: 24px;
-   display: inline-block;
+   height: 48px;
    vertical-align: middle;
    font-size: 1.7em;
    color: #FFFFFF;
+   float: left;
+   padding-top: 5px;
+   box-sizing: border-box;
 }
 
 .plugin_formcreator_entityProfile {
