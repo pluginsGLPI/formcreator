@@ -134,7 +134,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
          $supplier = new Supplier;
          $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
          if ($suppliers_id === false) {
-            throw new ImportFailureException('failed to find a supplier');            
+            throw new ImportFailureException('failed to find a supplier');
          }
          $input['actor_value'] = $suppliers_id;
       }

@@ -279,7 +279,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'id' => $form->getID(),
       ], 1);
 
-      $output = $section->getFromDB($section->getID()) ;
+      $output = $section->getFromDB($section->getID());
       $this->boolean($output)->isFalse();
 
       $output = $targetChange->getFromDB($targetChange->getID());
@@ -343,7 +343,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testGetByQuestionId() {
       $question = $this->getQuestion();
       $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields['plugin_formcreator_sections_id']) ;
+      $section->getFromDB($question->fields['plugin_formcreator_sections_id']);
       $expected = $section->fields['plugin_formcreator_forms_id'];
       $form = $this->newTestedInstance();
       $form->getByQuestionId($question->getID());
@@ -714,23 +714,23 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->array($rows)->hasSize(1);
    }
 
-    public function testEnableDocumentType() {
+   public function testEnableDocumentType() {
       $this->_testCreateDocumentType();
 
       $documentType = new \DocumentType();
       $documentType->getFromDBByCrit([
-         'ext' => 'json'
+        'ext' => 'json'
       ]);
       $success = $documentType->update([
-         'id' => $documentType->getID(),
-         'is_uploadable' => '0',
+        'id' => $documentType->getID(),
+        'is_uploadable' => '0',
       ]);
       $this->boolean($success)->isTrue();
 
       $instance = $this->newTestedInstance();
       $instance->enableDocumentType();
       $rows = $documentType->find([
-         'ext' => 'json',
+        'ext' => 'json',
       ]);
       $this->array($rows)->hasSize(1);
       $row = array_pop($rows);

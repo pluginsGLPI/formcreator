@@ -168,7 +168,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
-   
+
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance([]);
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
@@ -236,7 +236,7 @@ class PluginFormcreatorSelectField extends CommonTestCase {
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
-   
+
    public function providerparseAnswerValues() {
       return [
          [

@@ -67,7 +67,7 @@ PluginFormcreatorExportableInterface
 
       $item = new self();
        /** @var string $idKey key to use as ID (id or uuid) */
-       $idKey = 'id'; 
+       $idKey = 'id';
       if (isset($input['uuid'])) {
          $idKey = 'uuid';
          $itemId = plugin_formcreator_getFromDBByField(

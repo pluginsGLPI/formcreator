@@ -114,6 +114,5 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $validId = \PluginFormcreatorForm_Validator::isNewId($formValidatorId);
       $this->boolean($validId)->isFalse();
 
-
    }
 }

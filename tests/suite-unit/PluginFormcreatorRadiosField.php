@@ -162,7 +162,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
-   
+
    public function providerparseAnswerValues() {
       return [
          [

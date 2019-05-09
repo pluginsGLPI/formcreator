@@ -92,7 +92,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       // Find an existing condition to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          // Try to find an existing item to update
          $idKey = 'uuid';

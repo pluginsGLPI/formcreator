@@ -102,7 +102,7 @@ extends PluginFormcreatorQuestionParameter
       }
 
       $parameter = $this->fields;
- 
+
       $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
       unset($parameter[$questionFk]);
 
@@ -132,14 +132,14 @@ extends PluginFormcreatorQuestionParameter
          $question->fields['fieldtype'],
          $question
       );
- 
+
       $item = $field->getEmptyParameters();
       $item = $item[$input['fieldname']];
 
       // Find an existing condition to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          // Try to find an existing item to update
          $idKey = 'uuid';
@@ -167,7 +167,7 @@ extends PluginFormcreatorQuestionParameter
       if ($itemId === false) {
          throw new ImportFailureException('failed to add or update the item');
       }
- 
+
       // add the question to the linker
       $linker->addObject($originalId, $item);
 
