@@ -1179,7 +1179,7 @@ JAVASCRIPT;
          if (!$target->isNewItem()) {
             $target->update([
                'id' => $target->getID(),
-               'name' => $DB->escape($input['name']),
+               'name' => $input['name'],
             ]);
          }
       }
