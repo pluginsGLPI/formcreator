@@ -119,7 +119,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo('foo');
    }
-   
+
    public function providerGetValueForTargetText() {
       return [
          [
@@ -202,7 +202,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
    /**
     * @dataProvider providerNotEquals
     */
-    public function testNotEquals($value, $answer, $expected) {
+   public function testNotEquals($value, $answer, $expected) {
       $instance = new \PluginFormcreatorHiddenField(['id' => '1'], $answer);
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
@@ -236,7 +236,7 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
    /**
     * @dataProvider providerGreaterThan
     */
-    public function testGreaterThan($value, $answer, $expected) {
+   public function testGreaterThan($value, $answer, $expected) {
       $instance = new \PluginFormcreatorHiddenField(['id' => '1'], $answer);
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->greaterThan($value))->isEqualTo($expected);
@@ -270,12 +270,12 @@ class PluginFormcreatorHiddenField extends CommonTestCase {
    /**
     * @dataProvider providerLessThan
     */
-    public function testLessThan($value, $answer, $expected) {
+   public function testLessThan($value, $answer, $expected) {
       $instance = new \PluginFormcreatorHiddenField(['id' => '1'], $answer);
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->lessThan($value))->isEqualTo($expected);
    }
-   
+
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance([]);
       $this->array($instance->getDocumentsForTarget())->hasSize(0);

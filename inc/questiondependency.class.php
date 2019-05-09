@@ -145,14 +145,14 @@ extends PluginFormcreatorQuestionParameter
          $question->fields['fieldtype'],
          $question
       );
- 
+
       $item = $field->getEmptyParameters();
       $item = $item[$input['fieldname']];
 
       // Find an existing condition to update, only if an UUID is available
       $itemId = false;
       /** @var string $idKey key to use as ID (id or uuid) */
-      $idKey = 'id'; 
+      $idKey = 'id';
       if (isset($input['uuid'])) {
          // Try to find an existing item to update
          $idKey = 'uuid';
@@ -162,7 +162,7 @@ extends PluginFormcreatorQuestionParameter
             $input['plugin_formcreator_questions_id_2']
          );
       }
-      
+
       // escape text fields
       foreach (['fieldname'] as $key) {
          $input[$key] = $DB->escape($input[$key]);
@@ -175,7 +175,7 @@ extends PluginFormcreatorQuestionParameter
          return false;
       }
       $input['plugin_formcreator_questions_id_2'] = $linked->getID();
-      
+
       // Add or update condition
       $originalId = $input[$idKey];
       if ($itemId !== false) {

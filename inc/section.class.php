@@ -225,13 +225,13 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       $itemId = false;
        /** @var string $idKey key to use as ID (id or uuid) */
        $idKey = 'id';
-       if (isset($input['uuid'])) {
+      if (isset($input['uuid'])) {
          // Try to find an existing item to update
          $idKey = 'uuid';
          $itemId = plugin_formcreator_getFromDBByField(
-            $item,
-            'uuid',
-            $input['uuid']
+           $item,
+           'uuid',
+           $input['uuid']
          );
       }
 

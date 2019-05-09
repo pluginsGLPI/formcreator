@@ -65,7 +65,7 @@ class PluginFormcreatorIpField extends CommonTestCase {
       $output = $instance->canRequire();
       $this->boolean($output)->isFalse();
    }
-   
+
    public function testGetDocumentsForTarget() {
       $instance = $this->newTestedInstance([]);
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
@@ -132,7 +132,7 @@ class PluginFormcreatorIpField extends CommonTestCase {
    /**
     * @dataProvider providerNotEquals
     */
-    public function testNotEquals($value, $answer, $expected) {
+   public function testNotEquals($value, $answer, $expected) {
       $instance = new \PluginFormcreatorIpField(['id' => '1'], $answer);
       $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
