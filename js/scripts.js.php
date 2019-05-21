@@ -1023,3 +1023,11 @@ function plugin_formcreator_changeLDAP(ldap) {
       document.getElementById('ldap_filter').value = response;
    });
 }
+
+/**
+ * preview of the selected pictogram
+ */
+function plugin_formceator_showPictogram(id, preview) {
+   var value = $(id).val();
+   $('#' + preview).removeClass().addClass(value);
+}

@@ -827,20 +827,20 @@ form.formcreator_form {
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
    padding: 10px 40px 15px 10px;
+   height: 33px;
+   line-height: 33px;
    display: block;
-   background: transparent no-repeat top 10px right 10px;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
    cursor: pointer;
 }
 
-.plugin_formcreator_formTile.form a.plugin_formcreator_formTile_title {
-   background-image: url(../pics/form.png);
-}
-
-.plugin_formcreator_formTile.faq a.plugin_formcreator_formTile_title {
-   background-image: url(../pics/faq.png);
+.plugin_formcreator_formTile  i.fa, .plugin_formcreator_formTile  i.fab, .plugin_formcreator_formTile  i.fas {
+   font-size: 2.5em;
+   margin-right: 10px;
+   float: left;
+   margin: 10px;
 }
 
 .plugin_formcreator_formTile_description {

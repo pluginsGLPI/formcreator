@@ -284,6 +284,9 @@ class PluginFormcreatorUpgradeTo2_9 {
             ]
          );
       }
+
+      $table = 'glpi_plugin_formcreator_forms';
+      $migration->addField($table, 'icon', 'string', ['after' => 'is_recursive']);
    }
 
    /**

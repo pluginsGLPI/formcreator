@@ -165,4 +165,42 @@ class PluginFormcreatorCommon {
 
       return implode(' ', $matches);
    }
+
+   /**
+    * get the list of pictograms available for the current version of GLPI
+    *
+    * @return array
+    */
+   public static function getFontAwesomePictoNames() {
+      if (version_compare(static::getGlpiVersion(), '9.4') < 0) {
+         $list = require_once(__DIR__ . '/../data/font-awesome_9.3.php');
+      } else {
+         $list = require_once(__DIR__ . '/../data/font-awesome_9.4.php');
+      }
+      return $list;
+   }
+
+   /**
+    * Show a dropdown with Font Awesome pictograms
+    *
+    * @param string $name name of the HTML input
+    * @param array $options
+    * @return mixed
+    */
+   public static function showFontAwesomeDropdown($name, $options = []) {
+      $items = [];
+      foreach (static::getFontAwesomePictoNames() as $key => $value) {
+         $items[$key] = /* '<i class="' . $key . '"></i>' . */ $value;
+      }
+
+      $previewId = $name . '_preview';
+      $options['on_change'] = 'plugin_formceator_showPictogram(this, "' . $previewId . '")';
+      $options['display'] = false;
+      if (!isset($options['value'])) {
+         $options['value'] = '';
+      }
+      $output = Dropdown::showFromArray($name, $items, $options);
+      $output .= '<i id="' . $previewId . '" class="'. $options['value'] . '"></i>';
+      echo $output;
+   }
 }
