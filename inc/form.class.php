@@ -819,7 +819,7 @@ PluginFormcreatorExportableInterface
 
       $result_forms = $DB->request([
          'SELECT' => [
-            $table_form => ['id', 'name', 'description', 'usage_count', 'is_default'],
+            $table_form => ['id', 'name', 'icon', 'description', 'usage_count', 'is_default'],
          ],
          'FROM' => $table_form,
          'LEFT JOIN' => [
@@ -869,6 +869,7 @@ PluginFormcreatorExportableInterface
             $formList[] = [
                'id'           => $form['id'],
                'name'         => $form['name'],
+               'icon'         => $form['icon'],
                'description'  => $form['description'],
                'type'         => 'form',
                'usage_count'  => $form['usage_count'],
@@ -950,7 +951,7 @@ PluginFormcreatorExportableInterface
 
          $query_forms = [
             'SELECT' => [
-               $table_form => ['id', 'name', 'description', 'usage_count'],
+               $table_form => ['id', 'name', 'icon', 'description', 'usage_count'],
             ],
             'FROM' => $table_form,
             'LEFT JOIN' => [
@@ -973,6 +974,7 @@ PluginFormcreatorExportableInterface
                $formList[] = [
                   'id'           => $form['id'],
                   'name'         => $form['name'],
+                  'icon'         => $form['icon'],
                   'description'  => $form['description'],
                   'type'         => 'form',
                   'usage_count'  => $form['usage_count'],

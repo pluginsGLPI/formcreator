@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `name` varchar(255) NOT NULL,
   `entities_id` int(11) NOT NULL DEFAULT '0',
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
+  `icon` varchar(255) NOT NULL DEFAULT '',
   `access_rights` tinyint(1) NOT NULL DEFAULT '1',
   `requesttype` int(11) NOT NULL DEFAULT '0',
   `description` varchar(255) DEFAULT NULL,
