@@ -37,8 +37,4 @@ class PluginFormcreatorTargetTicket_Actor extends PluginFormcreatorTarget_Actor
 {
    static public $itemtype = PluginFormcreatorTargetTicket::class;
    static public $items_id = 'plugin_formcreator_targettickets_id';
-
-   protected function getTargetItem() {
-      return new PluginFormcreatorTargetTicket();
-   }
 }

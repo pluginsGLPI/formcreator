@@ -35,8 +35,6 @@ if (!defined('GLPI_ROOT')) {
 
 abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements PluginFormcreatorExportableInterface
 {
-   abstract protected function getTargetItem();
-
    const ACTOR_TYPE_CREATOR = 1;
    const ACTOR_TYPE_VALIDATOR = 2;
    const ACTOR_TYPE_PERSON = 3;
@@ -89,9 +87,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
-      $targetItem = $this->getTargetItem();
-      $targetFk = $targetItem::getForeignKeyField();
-      $input[$targetFk] = $containerId;
+      $input[static::$items_id] = $containerId;
 
       $item = new static();
       // Find an existing condition to update, only if an UUID is available
@@ -170,8 +166,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
       $target_actor = $this->fields;
 
-      $targetFk = $this->getTargetItem()->getForeignKeyField();
-      unset($target_actor[$targetFk]);
+      unset($target_actor[static::$items_id]);
 
       // remove ID or UUID
       $idToRemove = 'id';
