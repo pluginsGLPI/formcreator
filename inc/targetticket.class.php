@@ -158,6 +158,12 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // Location selection
       // -------------------------------------------------------------------------------------------
       $this->showLocationSettings($rand);
+
+      // -------------------------------------------------------------------------------------------
+      // Condition selection
+      // -------------------------------------------------------------------------------------------
+      $this->showConditionSettings($rand);
+
       // -------------------------------------------------------------------------------------------
       //  Tags
       // -------------------------------------------------------------------------------------------
@@ -1095,218 +1101,246 @@ EOS;
       ];
 
       $data = Ticket::getDefaultValues();
-      $ticket  = new Ticket();
       $form    = $formanswer->getForm();
       $answer  = new PluginFormcreatorAnswer();
 
-      $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
-
-      // Get predefined Fields
-      $ttp                  = new TicketTemplatePredefinedField();
-      $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
-
-      if (isset($predefined_fields['_users_id_requester'])) {
-         $this->addActor('requester', $predefined_fields['_users_id_requester'], true);
-         unset($predefined_fields['_users_id_requester']);
+      $createTicket = false;
+      if(!empty($this->fields['has_condition'])) {
+         $conditionValues = $DB->request([
+            'SELECT' => ['answer'],
+            'FROM'   => PluginFormcreatorAnswer::getTable(),
+            'WHERE'  => [
+               'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+               'plugin_formcreator_questions_id'   => $this->fields['condition_question']
+            ]
+         ])->next();
+         $conditionValues = $conditionValues['answer'];
+         $conditionValuesArray = preg_split("/\\r\\n/", $conditionValues);
+         foreach ($conditionValuesArray as $conditionValue) {
+            if($conditionValue == $this->fields['condition_value']) {
+               $createTicket = true;
+            }
+         }
+         
       }
-      if (isset($predefined_fields['_users_id_observer'])) {
-         $this->addActor('observer', $predefined_fields['_users_id_observer'], true);
-         unset($predefined_fields['_users_id_observer']);
-      }
-      if (isset($predefined_fields['_users_id_assign'])) {
-         $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
-         unset($predefined_fields['_users_id_assign']);
-      }
-
-      if (isset($predefined_fields['_groups_id_requester'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_requester']);
-         unset($predefined_fields['_groups_id_requester']);
-      }
-      if (isset($predefined_fields['_groups_id_observer'])) {
-         $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
-         unset($predefined_fields['_groups_id_observer']);
-      }
-      if (isset($predefined_fields['_groups_id_assign'])) {
-         $this->addGroupActor('assigned', $predefined_fields['_groups_id_assign']);
-         unset($predefined_fields['_groups_id_assign']);
+      else {
+         $createTicket = true;
       }
 
-      $data = array_merge($data, $predefined_fields);
+      if($createTicket === true) {
+         $ticket  = new Ticket();
 
-      // Parse data
-      // TODO: generate instances of all answers of the form and use them for the fullform computation
-      //       and the computation from a admin-defined target ticket template
-      $richText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
-      $data['name'] = $this->prepareTemplate(
-         $this->fields['name'],
-         $formanswer,
-         false
-      );
-      $data['name'] = Toolbox::addslashes_deep($data['name']);
-      $data['name'] = $this->parseTags($data['name'], $formanswer);
+         $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 
-      $data['content'] = $this->prepareTemplate(
-         $this->fields['content'],
-         $formanswer,
-         $richText
-      );
+         // Get predefined Fields
+         $ttp                  = new TicketTemplatePredefinedField();
+         $predefined_fields    = $ttp->getPredefinedFields($this->fields['tickettemplates_id'], true);
 
-      $data['content'] = Toolbox::addslashes_deep($data['content']);
-      $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
+         if (isset($predefined_fields['_users_id_requester'])) {
+            $this->addActor('requester', $predefined_fields['_users_id_requester'], true);
+            unset($predefined_fields['_users_id_requester']);
+         }
+         if (isset($predefined_fields['_users_id_observer'])) {
+            $this->addActor('observer', $predefined_fields['_users_id_observer'], true);
+            unset($predefined_fields['_users_id_observer']);
+         }
+         if (isset($predefined_fields['_users_id_assign'])) {
+            $this->addActor('assigned', $predefined_fields['_users_id_assign'], true);
+            unset($predefined_fields['_users_id_assign']);
+         }
 
-      $data['_users_id_recipient'] = $_SESSION['glpiID'];
-      $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
+         if (isset($predefined_fields['_groups_id_requester'])) {
+            $this->addGroupActor('assigned', $predefined_fields['_groups_id_requester']);
+            unset($predefined_fields['_groups_id_requester']);
+         }
+         if (isset($predefined_fields['_groups_id_observer'])) {
+            $this->addGroupActor('observer', $predefined_fields['_groups_id_observer']);
+            unset($predefined_fields['_groups_id_observer']);
+         }
+         if (isset($predefined_fields['_groups_id_assign'])) {
+            $this->addGroupActor('assigned', $predefined_fields['_groups_id_assign']);
+            unset($predefined_fields['_groups_id_assign']);
+         }
 
-      $this->prepareActors($form, $formanswer);
+         $data = array_merge($data, $predefined_fields);
 
-      if (count($this->requesters['_users_id_requester']) == 0) {
-         $this->addActor('requester', $formanswer->fields['requester_id'], true);
-         $requesters_id = $formanswer->fields['requester_id'];
-      } else if (count($this->requesters['_users_id_requester']) >= 1) {
-         if ($this->requesters['_users_id_requester'][0] == 0) {
+         // Parse data
+         // TODO: generate instances of all answers of the form and use them for the fullform computation
+         //       and the computation from a admin-defined target ticket template
+         $richText = version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text'];
+         $data['name'] = $this->prepareTemplate(
+            $this->fields['name'],
+            $formanswer,
+            false
+         );
+         $data['name'] = Toolbox::addslashes_deep($data['name']);
+         $data['name'] = $this->parseTags($data['name'], $formanswer);
+
+         $data['content'] = $this->prepareTemplate(
+            $this->fields['content'],
+            $formanswer,
+            $richText
+         );
+
+         $data['content'] = Toolbox::addslashes_deep($data['content']);
+         $data['content'] = $this->parseTags($data['content'], $formanswer, $richText);
+
+         $data['_users_id_recipient'] = $_SESSION['glpiID'];
+         $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];
+
+         $this->prepareActors($form, $formanswer);
+
+         if (count($this->requesters['_users_id_requester']) == 0) {
             $this->addActor('requester', $formanswer->fields['requester_id'], true);
             $requesters_id = $formanswer->fields['requester_id'];
-         } else {
-            $requesters_id = $this->requesters['_users_id_requester'][0];
-         }
+         } else if (count($this->requesters['_users_id_requester']) >= 1) {
+            if ($this->requesters['_users_id_requester'][0] == 0) {
+               $this->addActor('requester', $formanswer->fields['requester_id'], true);
+               $requesters_id = $formanswer->fields['requester_id'];
+            } else {
+               $requesters_id = $this->requesters['_users_id_requester'][0];
+            }
 
-         // If only one requester, revert array of requesters into a scalar
-         // This is needed to process business rule affecting location of a ticket with the location of the user
-         if (count($this->requesters['_users_id_requester']) == 1) {
-            $this->requesters['_users_id_requester'] = array_pop($this->requesters['_users_id_requester']);
-         }
-      }
-
-      $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
-      $data = $this->setTargetDueDate($data, $formanswer);
-      $data = $this->setTargetUrgency($data, $formanswer);
-      $data = $this->setTargetCategory($data, $formanswer);
-      $data = $this->setTargetLocation($data, $formanswer);
-
-      // There is always at least one requester
-      $data = $this->requesters + $data;
-
-      // Overwrite default actors only if populated
-      if (count($this->observers['_users_id_observer']) > 0) {
-         $data = $this->observers + $data;
-      }
-      if (count($this->assigned['_users_id_assign']) > 0) {
-         $data = $this->assigned + $data;
-      }
-      if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
-         $data = $this->assignedSuppliers + $data;
-      }
-      if (count($this->requesterGroups['_groups_id_requester']) > 0) {
-         $data = $this->requesterGroups + $data;
-      }
-      if (count($this->observerGroups['_groups_id_observer']) > 0) {
-         $data = $this->observerGroups + $data;
-      }
-      if (count($this->assignedGroups['_groups_id_assign']) > 0) {
-         $data = $this->assignedGroups + $data;
-      }
-
-      // Create the target ticket
-      if (!$ticketID = $ticket->add($data)) {
-         return null;
-      }
-
-      // Add tag if presents
-      $plugin = new Plugin();
-      if ($plugin->isActivated('tag')) {
-
-         $tagObj = new PluginTagTagItem();
-         $tags   = [];
-
-         // Add question tags
-         if (($this->fields['tag_type'] == 'questions'
-               || $this->fields['tag_type'] == 'questions_and_specific'
-               || $this->fields['tag_type'] == 'questions_or_specific')
-            && (!empty($this->fields['tag_questions']))) {
-
-            $query = "SELECT answer
-                      FROM `glpi_plugin_formcreator_answers`
-                      WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
-                      AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
-            $result = $DB->query($query);
-            while ($line = $DB->fetch_array($result)) {
-               $tab = json_decode($line['answer']);
-               if (is_array($tab)) {
-                  $tags = array_merge($tags, $tab);
-               }
+            // If only one requester, revert array of requesters into a scalar
+            // This is needed to process business rule affecting location of a ticket with the location of the user
+            if (count($this->requesters['_users_id_requester']) == 1) {
+               $this->requesters['_users_id_requester'] = array_pop($this->requesters['_users_id_requester']);
             }
          }
 
-         // Add specific tags
-         if ($this->fields['tag_type'] == 'specifics'
-             || $this->fields['tag_type'] == 'questions_and_specific'
-             || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
-             && (!empty($this->fields['tag_specifics']))) {
+         $data = $this->setTargetEntity($data, $formanswer, $requesters_id);
+         $data = $this->setTargetDueDate($data, $formanswer);
+         $data = $this->setTargetUrgency($data, $formanswer);
+         $data = $this->setTargetCategory($data, $formanswer);
+         $data = $this->setTargetLocation($data, $formanswer);
 
-            $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+         // There is always at least one requester
+         $data = $this->requesters + $data;
+
+         // Overwrite default actors only if populated
+         if (count($this->observers['_users_id_observer']) > 0) {
+            $data = $this->observers + $data;
+         }
+         if (count($this->assigned['_users_id_assign']) > 0) {
+            $data = $this->assigned + $data;
+         }
+         if (count($this->assignedSuppliers['_suppliers_id_assign']) > 0) {
+            $data = $this->assignedSuppliers + $data;
+         }
+         if (count($this->requesterGroups['_groups_id_requester']) > 0) {
+            $data = $this->requesterGroups + $data;
+         }
+         if (count($this->observerGroups['_groups_id_observer']) > 0) {
+            $data = $this->observerGroups + $data;
+         }
+         if (count($this->assignedGroups['_groups_id_assign']) > 0) {
+            $data = $this->assignedGroups + $data;
          }
 
-         $tags = array_unique($tags);
-
-         // Save tags in DB
-         foreach ($tags as $tag) {
-            $tagObj->add([
-               'plugin_tag_tags_id' => $tag,
-               'items_id'           => $ticketID,
-               'itemtype'           => Ticket::class,
-            ]);
-         }
-      }
-
-      // Add link between Ticket and FormAnswer
-      $itemlink = $this->getItem_Item();
-      $itemlink->add([
-         'itemtype'   => PluginFormcreatorFormAnswer::class,
-         'items_id'   => $formanswer->fields['id'],
-         'tickets_id' => $ticketID,
-      ]);
-
-      $this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
-
-      // Attach validation message as first ticket followup if validation is required and
-      // if is set in ticket target configuration
-      if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
-         $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
-         if (!empty($formanswer->fields['comment'])) {
-            $message.= "\n".addslashes($formanswer->fields['comment']);
+         // Create the target ticket
+         if (!$ticketID = $ticket->add($data)) {
+            return null;
          }
 
-         // Disable email notification when adding a followup
-         $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
-         PluginFormcreatorCommon::setNotification(false);
+         // Add tag if presents
+         $plugin = new Plugin();
+         if ($plugin->isActivated('tag')) {
 
-         $followUpInput = [
-           'date'     => $_SESSION['glpi_currenttime'],
-           'users_id' => Session::getLoginUserID(),
-           'content'  => $message,
-         ];
-         if (class_exists(ITILFollowup::class)) {
-            // GLPI 9.4+
-            $followUpInput += [
-               'items_id' => $ticketID,
-               'itemtype' => Ticket::class,
+            $tagObj = new PluginTagTagItem();
+            $tags   = [];
+
+            // Add question tags
+            if (($this->fields['tag_type'] == 'questions'
+                  || $this->fields['tag_type'] == 'questions_and_specific'
+                  || $this->fields['tag_type'] == 'questions_or_specific')
+               && (!empty($this->fields['tag_questions']))) {
+
+               $query = "SELECT answer
+                         FROM `glpi_plugin_formcreator_answers`
+                         WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
+                         AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
+               $result = $DB->query($query);
+               while ($line = $DB->fetch_array($result)) {
+                  $tab = json_decode($line['answer']);
+                  if (is_array($tab)) {
+                     $tags = array_merge($tags, $tab);
+                  }
+               }
+            }
+
+            // Add specific tags
+            if ($this->fields['tag_type'] == 'specifics'
+                || $this->fields['tag_type'] == 'questions_and_specific'
+                || ($this->fields['tag_type'] == 'questions_or_specific' && empty($tags))
+                && (!empty($this->fields['tag_specifics']))) {
+
+               $tags = array_merge($tags, explode(',', $this->fields['tag_specifics']));
+            }
+
+            $tags = array_unique($tags);
+
+            // Save tags in DB
+            foreach ($tags as $tag) {
+               $tagObj->add([
+                  'plugin_tag_tags_id' => $tag,
+                  'items_id'           => $ticketID,
+                  'itemtype'           => Ticket::class,
+               ]);
+            }
+         }
+
+         // Add link between Ticket and FormAnswer
+         $itemlink = $this->getItem_Item();
+         $itemlink->add([
+            'itemtype'   => PluginFormcreatorFormAnswer::class,
+            'items_id'   => $formanswer->fields['id'],
+            'tickets_id' => $ticketID,
+         ]);
+
+         $this->attachDocument($formanswer->getID(), Ticket::class, $ticketID);
+
+         // Attach validation message as first ticket followup if validation is required and
+         // if is set in ticket target configuration
+         if ($form->fields['validation_required'] && $this->fields['validation_followup']) {
+            $message = addslashes(__('Your form has been accepted by the validator', 'formcreator'));
+            if (!empty($formanswer->fields['comment'])) {
+               $message.= "\n".addslashes($formanswer->fields['comment']);
+            }
+
+            // Disable email notification when adding a followup
+            $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
+            PluginFormcreatorCommon::setNotification(false);
+
+            $followUpInput = [
+              'date'     => $_SESSION['glpi_currenttime'],
+              'users_id' => Session::getLoginUserID(),
+              'content'  => $message,
             ];
-            $ticketFollowup = new ITILFollowup();
-            $ticketFollowup->add($followUpInput);
-         } else {
-            // GLPI < 9.4
-            $followUpInput += [
-               'tickets_id' => $ticketID,
-            ];
-            $ticketFollowup = new TicketFollowup();
-            $ticketFollowup->add($followUpInput);
+            if (class_exists(ITILFollowup::class)) {
+               // GLPI 9.4+
+               $followUpInput += [
+                  'items_id' => $ticketID,
+                  'itemtype' => Ticket::class,
+               ];
+               $ticketFollowup = new ITILFollowup();
+               $ticketFollowup->add($followUpInput);
+            } else {
+               // GLPI < 9.4
+               $followUpInput += [
+                  'tickets_id' => $ticketID,
+               ];
+               $ticketFollowup = new TicketFollowup();
+               $ticketFollowup->add($followUpInput);
+            }
+
+            // Restore mail notification setting
+            PluginFormcreatorCommon::setNotification($use_mailing);
          }
-
-         // Restore mail notification setting
-         PluginFormcreatorCommon::setNotification($use_mailing);
+         return $ticket;
       }
-
-      return $ticket;
+      else {
+         return true;
+      }
    }
 
    protected function setTargetUrgency($data, $formanswer) {

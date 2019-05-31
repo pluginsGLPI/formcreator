@@ -1038,6 +1038,94 @@ EOS;
       return $content;
    }
 
+   protected function showConditionSettings($rand) {
+      global $DB;
+
+      echo '<tr class="line0">';
+      
+      echo '<td width="15%">' . __('Condition') . '</td>';
+      echo '<td width="45%">';
+
+      $options[0] = __('No');
+      $options[1] = __('Yes');
+
+      $params['value'] = $this->fields['has_condition'];
+      $params['on_change'] = 'change_condition()';
+      $params['width'] = "65px";
+      $params['rand'] = $rand;
+
+      Dropdown::showFromArray("has_condition", $options, $params);
+      $script = <<<JAVASCRIPT
+         function change_condition() {
+            $('#condition_question_title').hide();
+            $('#condition_question_value').hide();
+
+            switch($('#dropdown_has_condition$rand').val()) {
+               case  "0" :
+                  $('#condition_question_title').hide();
+                  $('#condition_question_question').hide();
+                  $('#condition_question_value').hide();
+                  break;
+               case "1":
+                  $('#condition_question_title').show();
+                  $('#condition_question_question').css("display", "inline");
+                  $('#condition_question_value').css("display", "inline");
+                  break;
+            }
+         }
+         change_condition();
+         function get_condition_value() {
+            var id = $("#dropdown_condition_question1").val();
+            $.get("conditionvalues.php?id="+id, function(data) {
+              $('#condition_question_value').html(data);
+            });
+         }
+JAVASCRIPT;
+      echo Html::scriptBlock($script);
+      echo '</td>';
+      echo '<td width="15%">';
+      echo '<span id="condition_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '</td>';
+      echo '<td width="25%">';
+
+      echo '<div id="condition_question_question" style="display: none">';
+      // select all user questions (GLPI Object)
+      $query2 = "SELECT q.id, q.name, q.values
+                FROM glpi_plugin_formcreator_questions q
+                INNER JOIN glpi_plugin_formcreator_sections s
+                  ON s.id = q.plugin_formcreator_sections_id
+                INNER JOIN glpi_plugin_formcreator_targets t
+                  ON s.plugin_formcreator_forms_id = t.plugin_formcreator_forms_id
+                WHERE t.items_id = ".$this->getID()."
+                AND q.fieldtype = 'checkboxes'";
+      $result2 = $DB->query($query2);
+      $condition_questions = [];
+      $first_condition_question;
+      while ($question = $DB->fetch_array($result2)) {
+         $decodedValues = json_decode($question['values'], JSON_OBJECT_AS_ARRAY);
+         if($condition_questions == []) {
+            $first_condition_question = $question['id'];
+         }
+         $condition_questions[$question['id']] = $question['name'];
+      }
+
+      Dropdown::showFromArray('condition_question', $condition_questions, [
+         'value' => $this->fields['condition_question'],
+         'on_change' => 'get_condition_value();',
+         'rand' => '1',
+      ]);
+
+      echo '</div>';
+      echo '<div id="condition_question_value" style="display: none">';
+      $script = <<<JAVASCRIPT
+        get_condition_value();
+JAVASCRIPT;
+      echo Html::scriptBlock($script);
+      echo '</div>';
+      echo '</td>';
+      echo '</tr>';
+   }
+
    protected function showLocationSettings($rand) {
       global $DB;
 
@@ -1179,7 +1267,7 @@ JAVASCRIPT;
          if (!$target->isNewItem()) {
             $target->update([
                'id' => $target->getID(),
-               'name' => $input['name'],
+               'name' => $DB->escape($input['name']),
             ]);
          }
       }
@@ -1212,4 +1300,5 @@ JAVASCRIPT;
 
       return $template;
    }
+
 }

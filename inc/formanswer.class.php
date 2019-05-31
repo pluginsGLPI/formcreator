@@ -1079,8 +1079,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $success = false;
             break;
          }
-         // Map [itemtype of the target] [item ID of the target] = ID of the generated target
-         $generatedTargets->addTarget($targetObject, $generatedTarget);
+         if ($generatedTarget === true) {
+         }
+         else {
+            // Map [itemtype of the target] [item ID of the target] = ID of the generated target
+            $generatedTargets->addTarget($targetObject, $generatedTarget);
+         }
       }
       $generatedTargets->buildCompositeRelations();
 

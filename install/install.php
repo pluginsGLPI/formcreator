@@ -74,7 +74,13 @@ class PluginFormcreatorInstall {
    public function install(Migration $migration) {
       $this->migration = $migration;
       $this->installSchema();
-
+      $table = "glpi_plugin_formcreator_targettickets" ;
+      if (!$DB->fieldExists($table, 'has_condition')) {
+        $migration->displayMessage("Upgrade ".$table);
+        $migration->addField($table, 'has_condition', 'tinyint(1)', ['after' => 'location_question']);
+        $migration->addField($table, 'condition_question', 'int(11)', ['after' => 'has_condition']);
+        $migration->addField($table, 'condition_value', 'varchar(255)', ['after' => 'condition_question']);
+      }
       $this->configureExistingEntities();
       $this->createRequestType();
       $this->createDefaultDisplayPreferences();
@@ -92,6 +98,7 @@ class PluginFormcreatorInstall {
     * Upgrade the plugin
     */
    public function upgrade(Migration $migration) {
+      global $DB;
       $this->migration = $migration;
       if (isset($_SESSION['plugin_formcreator']['cli']) && $_SESSION['plugin_formcreator']['cli'] == 'force-upgrade') {
          // Might return false
