@@ -209,21 +209,17 @@ class PluginFormcreatorInstall {
 
       $this->migration->displayMessage("Configure existing entities");
 
-      $query = "SELECT `id` FROM `glpi_entities`
-                WHERE `id` NOT IN (
-                   SELECT `id` FROM `glpi_plugin_formcreator_entityconfigs`
-                )";
+      $query = "INSERT INTO glpi_plugin_formcreator_entityconfigs
+                  (id, replace_helpdesk)
+                SELECT ent.id, IF(ent.id = 0, 0, ".PluginFormcreatorEntityconfig::CONFIG_PARENT.")
+                FROM glpi_entities ent
+                LEFT JOIN glpi_plugin_formcreator_entityconfigs conf
+                  ON ent.id = conf.id
+                WHERE conf.id IS NULL";
       $result = $DB->query($query);
       if (!$result) {
          Toolbox::logInFile('sql-errors', $DB->error());
          die ($DB->error());
-      }
-      while ($row = $DB->fetch_assoc($result)) {
-         $entityConfig = new PluginFormcreatorEntityconfig();
-         $entityConfig->add([
-               'id'                 => $row['id'],
-               'replace_helpdesk'   => ($row['id'] == 0) ? 0 : PluginFormcreatorEntityconfig::CONFIG_PARENT
-         ]);
       }
    }
 
