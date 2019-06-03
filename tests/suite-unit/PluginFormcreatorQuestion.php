@@ -229,10 +229,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       return $dataset;
    }
 
-   public function providerPrepareInputForUpdate() {
-      return providerPrepareInputForAdd();
-   }
-
    /**
     * @dataProvider providerPrepareInputForAdd
     */
@@ -253,6 +249,10 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          // The method added a UUID key
          $this->array($output)->size->isEqualTo(count($expected) + 1);
       }
+   }
+
+   public function providerPrepareInputForUpdate() {
+      return providerPrepareInputForAdd();
    }
 
    /**

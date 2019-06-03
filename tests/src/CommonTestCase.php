@@ -217,6 +217,7 @@ abstract class CommonTestCase extends CommonDBTestCase
       $input = array_merge($defaultInput, $input);
       $question = new \PluginFormcreatorQuestion();
       $question->add($input);
+      $question->getFromDB($question->getID());
 
       return $question;
    }

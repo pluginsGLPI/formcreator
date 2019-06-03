@@ -68,6 +68,7 @@ if (isset($args)) {
       // Use test GLPi's database
       // Requires use of cliinstall of GLPI with --tests argument
       define('GLPI_ROOT', dirname(dirname(dirname(__DIR__))));
+      define('GLPI_CACHE_DIR', GLPI_ROOT . '/tests/files/_cache');
       define("GLPI_CONFIG_DIR", GLPI_ROOT . "/tests");
    }
 }
@@ -105,14 +106,15 @@ $auth->user = $user;
 Session::init($auth);
 
 if (!$DB->tableExists("glpi_configs")) {
-   die("GLPI not installed\n");
+   die("GLPI not installed" . PHP_EOL);
 }
 
 $plugin = new Plugin();
 
 // Install the plugin
+$plugin->checkStates(true);
 if (!$plugin->getFromDBbyDir("formcreator")) {
-   print("Failed : GLPi does not find the plugin");
+   print("Failed : GLPi does not find the plugin" . PHP_EOL);
    exit(1);
 }
 print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
@@ -125,17 +127,17 @@ if ($args['--force-upgrade']) {
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
 ob_end_clean();
-print("Done\n");
+print("Done" . PHP_EOL);
 
 // Enable the plugin
-print("Activating Plugin...\n");
+print("Activating Plugin..." . PHP_EOL);
 if (!$plugin->activate($plugin->fields['id'])) {
-   print("Activation failed\n");
+   print("Activation failed" . PHP_EOL);
    exit(1);
 }
-print("Activation Done\n");
+print("Activation Done" . PHP_EOL);
 
 //Load the plugin
-print("Loading Plugin...\n");
+print("Loading Plugin..." . PHP_EOL);
 $plugin->load("formcreator");
-print("Load Done...\n");
+print("Load Done..." . PHP_EOL);
