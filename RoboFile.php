@@ -183,7 +183,6 @@ class RoboFile extends RoboFilePlugin
          ->commit('docs(locales): update translations')
          ->run();
 
-
       $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
