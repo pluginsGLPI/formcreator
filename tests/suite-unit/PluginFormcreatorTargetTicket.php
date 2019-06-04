@@ -509,6 +509,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $fieldsWithoutID = [
          'name',
          'content',
+         'target_name',
          'due_date_rule',
          'due_date_question',
          'due_date_value',
