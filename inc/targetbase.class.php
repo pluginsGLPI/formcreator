@@ -1743,20 +1743,6 @@ SCRIPT;
          $this->skipCreateActors = true;
       }
 
-      if (isset($input['name'])) {
-         $target = new PluginFormcreatorTarget();
-         $target->getFromDBByCrit([
-            'itemtype' => static ::class,
-            'items_id' => $this->getID()
-         ]);
-         if (!$target->isNewItem()) {
-            $target->update([
-               'id' => $target->getID(),
-               'name' => $input['name'],
-            ]);
-         }
-      }
-
       // generate a uniq id
       if (!isset($input['uuid'])
           || empty($input['uuid'])) {
