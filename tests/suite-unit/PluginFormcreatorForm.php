@@ -418,6 +418,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $fieldsWithoutID = [
          'name',
          'is_recursive',
+         'icon',
          'access_rights',
          'requesttype',
          'description',
