@@ -290,10 +290,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
       $this->integer((int) $questionId)->isNotEqualTo($questionId2);
    }
 
-   public function providerPrepareInputForUpdate() {
-      return providerPrepareInputForAdd();
-   }
-
    /**
     * @dataProvider providerPrepareInputForAdd
     */
