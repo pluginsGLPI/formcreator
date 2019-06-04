@@ -7,9 +7,10 @@ env:
     - DBUSER=root
     - DBNAME=glpitest
     - OLDDBNAME=glpiupgradetest
-    - AFTER_SUCCESS_BRANCH=9.4/bugfixes
+    - AFTER_SUCCESS_BRANCH=9.4.0
   matrix:
-    - GLPI_BRANCH=9.4/bugfixes
+    - GLPI_BRANCH=9.4.0
+    - GLPI_BRANCH=9.5/bugfixes
     # - GLPI_BRANCH=master
 
 php:

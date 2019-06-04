@@ -54,7 +54,6 @@ if (!defined('STDERR')) {
    define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
 }
 
-define('GLPI_CACHE_DIR', __DIR__ . '/cache');
 //tests_rrmdir(GLPI_CACHE_DIR);
 //@mkdir(GLPI_CACHE_DIR);
 
