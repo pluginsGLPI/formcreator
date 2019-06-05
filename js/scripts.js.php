@@ -38,7 +38,6 @@ var rootDoc          = CFG_GLPI['root_doc'];
 var currentCategory  = "0";
 var sortByName = false;
 var tiles = [];
-var helpdeskHome = 0;
 var serviceCatalogEnabled = false;
 var slinkyCategories;
 var timers = [];
@@ -257,7 +256,7 @@ function getFormAndFaqItems(categoryId) {
    deferred = jQuery.Deferred();
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/homepage_wizard.php',
-      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: helpdeskHome},
+      data: {wizard: 'forms', categoriesId: categoryId, keywords: keywords, helpdeskHome: 0},
       type: "GET",
       dataType: "json"
    }).done(function (response) {
