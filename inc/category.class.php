@@ -94,6 +94,46 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       ]);
 
       // Selects categories containing forms or sub-categories
+      // $subQuery = [];
+      // $subQuery[] = new QuerySubQuery([
+      //    'COUNT' => 'count',
+      //    'FROM' => $form_table,
+      //    'WHERE' => [
+      //       "AND" => [
+      //          "$form_table.is_active" => '1',
+      //          "$form_table.is_deleted" => '0',
+      //          "$form_table.plugin_formcreator_categories_id" => $cat_table."id",
+      //          "$form_table.language" => [$_SESSION['glpilanguage'], '', '0', null],
+      //          'OR' => [
+      //             'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
+      //             "$form_table.id" => new QuerySubQuery([
+      //                'SELECT' => 'plugin_formcreator_forms_id',
+      //                'FROM' => $table_fp,
+      //                'WHERE' => [
+      //                   'profiles_id' => $_SESSION['glpiactiveprofile']['id']
+      //                ]
+      //             ])
+      //          ]
+      //       ]
+      //       + $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false)
+      //       + ($helpdeskHome ? ["$form_table.helpdesk_home" => '1'] : [])
+      //    ],
+      // ]);
+      // $subQuery[] = new QuerySubQuery([
+      //    'COUNT' => 'count',
+      //    'FROM' => "$cat_table AS cat2",
+      //    'WHERE' => [
+      //       new QueryExpression("`cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`"),
+      //    ],
+      // ]);
+      // $subQuery[] = new QuerySubQuery([
+      //    'COUNT' => 'count',
+      //    'FROM' => "$cat_table AS cat2",
+      //    'WHERE' => [
+      //       new QueryExpression("`cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`"),
+      //    ],
+      // ]);
+      // TODO: To solve the 3rd OR for faq count
       $where      = "(SELECT COUNT($form_table.id)
          FROM $form_table
          WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`

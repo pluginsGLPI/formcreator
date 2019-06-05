@@ -294,7 +294,7 @@ function plugin_formcreator_replaceHelpdesk() {
       $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
       if ($helpdeskMode != '0'
             && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         return $helpdeskMode;
+         return true;
       }
    }
    return false;
