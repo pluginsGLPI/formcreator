@@ -158,6 +158,16 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                $dparams['condition'] = $dparams_cond_crit;
             }
 
+            $emptyItem = new $itemtype();
+            $emptyItem->getEmpty();
+            $dparams['displaywith'] = [];
+            if (isset($emptyItem->fields['serial'])) {
+               $dparams['displaywith'][] = 'serial';
+            }
+            if (isset($emptyItem->fields['otherserial'])) {
+               $dparams['displaywith'][] = 'otherserial';
+            }
+
             $itemtype::dropdown($dparams);
          }
          echo PHP_EOL;
