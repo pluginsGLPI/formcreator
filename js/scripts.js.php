@@ -308,6 +308,9 @@ function showTiles(tiles, defaultForms) {
    $('#plugin_formcreator_formlist').masonry({
       horizontalOrder: true
    });
+   $('#plugin_formcreator_faqlist').masonry({
+      horizontalOrder: true
+   });
 }
 
 function updateWizardFormsView(categoryId) {
@@ -322,6 +325,9 @@ function updateWizardFormsView(categoryId) {
          $('#plugin_formcreator_wizard_forms').empty();
          $('#plugin_formcreator_wizard_forms').prepend(html);
          $('#plugin_formcreator_formlist').masonry({
+            horizontalOrder: true
+         });
+         $('#plugin_formcreator_faqlist').masonry({
             horizontalOrder: true
          });
       }
@@ -357,47 +363,62 @@ function buildTiles(list) {
    if (list.length == 0) {
       html = '<p id="plugin_formcreator_formlist">'
       + "<?php echo Toolbox::addslashes_deep(__('No form yet in this category', 'formcreator')) ?>"
-      + '</p>';
+      + '</p>'
+      +'<p id="plugin_formcreator_faqlist"></p>';
    } else {
-      var items = [];
-      $.each(list, function (key, form) {
+      var forms = [];
+      var faqs = [];
+      $.each(list, function (key, item) {
          // Build a HTML tile
-         if (form.type == 'form') {
-            url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + form.id;
+         if (item.type == 'form') {
+            url = rootDoc + '/plugins/formcreator/front/formdisplay.php?id=' + item.id;
          } else {
             if (serviceCatalogEnabled) {
-               url = rootDoc + '/plugins/formcreator/front/knowbaseitem.form.php?id=' + form.id;
+               url = rootDoc + '/plugins/formcreator/front/knowbaseitem.form.php?id=' + item.id;
             } else {
-               url = rootDoc + '/front/knowbaseitem.form.php?id=' + form.id;
+               url = rootDoc + '/front/knowbaseitem.form.php?id=' + item.id;
             }
          }
 
          description = '';
-         if (form.description) {
+         if (item.description) {
             description = '<div class="plugin_formcreator_formTile_description">'
-                          +form.description
+                          +item.description
                           +'</div>';
          }
 
          var default_class = '';
-         if (JSON.parse(form.is_default)) {
+         if (JSON.parse(item.is_default)) {
             default_class = 'default_form';
          }
 
-         items.push(
-            '<div class="plugin_formcreator_formTile '+form.type+' '+default_class+'" title="'+form.description+'">'
-            + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
-            + form.name
-            + '</a>'
-            + description
-            + '</div>'
-         );
+         if (item.type == 'form') {
+            forms.push(
+               '<div class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+               + item.name
+               + '</a>'
+               + description
+               + '</div>'
+            );
+         } else {
+            faqs.push(
+               '<div class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
+               + item.name
+               + '</a>'
+               + description
+               + '</div>'
+            );
+         }
       });
 
       // concatenate all HTML parts
       html = '<div id="plugin_formcreator_formlist">'
-      + items.join("")
-      + '</div>';
+      + forms.join("")
+      + '</div><div id="plugin_formcreator_faqlist">'
+      + faqs.join("")
+      + '</div>'
    }
 
    return html;
