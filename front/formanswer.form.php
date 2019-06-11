@@ -69,7 +69,7 @@ if (isset($_POST['update'])) {
 
    // Show target ticket form
 } else {
-   $formanswer->getFromDB(intval((int) $_GET['id']));
+   $formanswer->getFromDB((int) $_GET['id']);
    if (!$formanswer->checkEntity()) {
       Html::displayRightError();
    }
