@@ -128,11 +128,10 @@ function plugin_formcreator_getCondition($itemtype) {
  * @return String          Specific search request
  */
 function plugin_formcreator_addDefaultWhere($itemtype) {
-   $condition = "";
-   $table = getTableForItemType($itemtype);
+   $condition = '';
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
-         $condition = Search::addDefaultWhere("Ticket");
+         $condition = Search::addDefaultWhere(Ticket::class);
          $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          break;
@@ -141,6 +140,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
             // Context is displaying the answers for a given form
+            $table = $itemtype::getTable();
             $formFk = PluginFormcreatorForm::getForeignKeyField();
             $condition = "`$table`.`$formFk` = ".
                          $_SESSION['formcreator']['form_search_answers'];
