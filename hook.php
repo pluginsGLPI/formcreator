@@ -92,21 +92,31 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
 
 
 function plugin_formcreator_canValidate() {
-   return Session::haveRight('config', UPDATE)
-          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
+   return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
 }
 
 function plugin_formcreator_getCondition($itemtype) {
-   $table = getTableForItemType($itemtype);
-   if ($itemtype == PluginFormcreatorFormAnswer::class
-       && plugin_formcreator_canValidate()) {
-      $condition = " 1=1 ";
-
-   } else {
-      $condition = " `$table`.`requester_id` = " . $_SESSION['glpiID'];
+   $table = $itemtype::getTable();
+   if ($itemtype == PluginFormcreatorFormAnswer::class) {
+      if (Session::haveRight('config', UPDATE)) {
+         return "";
+      }
+      if (plugin_formcreator_canValidate()) {
+         $groupUser = new Group_User();
+         $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+         $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
+         if (count($groups) < 1) {
+            $condition .= ")";
+         } else {
+            $groups = implode(',', $groups);
+            $condition .= " OR `$table`.`groups_id_validator` IN ($groups) )";
+         }
+         return $condition;
+      }
    }
-   return $condition;
+
+   return " `$table`.`requester_id` = " . $_SESSION['glpiID'];
 }
 
 /**
