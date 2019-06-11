@@ -997,7 +997,7 @@ PluginFormcreatorExportableInterface
       $userId = $_SESSION['glpiID'];
       echo '<div class="plugin_formcreator_card">';
       echo '<div class="plugin_formcreator_heading">'.__('My last forms (requester)', 'formcreator').'</div>';
-      $formAnswerTable = PluginFormAnswer::getTable();
+      $formAnswerTable = PluginFormcreatorFormAnswer::getTable();
       $formTable = self::getTable();
       $formFk = self::getForeignKeyField();
       $request = [
