@@ -1,15 +1,36 @@
+<a name="2.8.3"></a>
+## [2.8.3](https://github.com/pluginsglpi/formcreator/compare/v2.8.2...v2.8.3) (2019-06-13)
+
+
+### Bug Fixes
+
+* **filefield:** file upload mai fail ([c69a5d0](https://github.com/pluginsglpi/formcreator/commit/c69a5d0))
+* **form:** import of forms in non existing entity ([8446e47](https://github.com/pluginsglpi/formcreator/commit/8446e47))
+* **form:** missing log tab ([3ee8400](https://github.com/pluginsglpi/formcreator/commit/3ee8400))
+* **form_validator:** possible call to non existing method ([7c85532](https://github.com/pluginsglpi/formcreator/commit/7c85532))
+* **install:** upgrade from 2.5.x to 2.8 alters target ticket name ([f4a21e7](https://github.com/pluginsglpi/formcreator/commit/f4a21e7))
+* **question_condition:** unable to use some comparisons ([fad48aa](https://github.com/pluginsglpi/formcreator/commit/fad48aa))
+* **targetticket:** set default document category ([a5dc10d](https://github.com/pluginsglpi/formcreator/commit/a5dc10d))
+* **targetticket,targetchange:** useless escaping ([529c592](https://github.com/pluginsglpi/formcreator/commit/529c592))
+
+
+### Features
+
+* **dropdown:** show serial and inventory number when available ([bb92244](https://github.com/pluginsglpi/formcreator/commit/bb92244))
+
+
 <a name="2.8.2"></a>
 ## [2.8.2](https://github.com-btry/pluginsglpi/formcreator/compare/v2.8.1...v2.8.2) (2019-05-02)
 
 
 ### Bug Fixes
 
-* **dropdownfield:** upgraded fields from 2.5 may crash ([8233b75](https://github.com-btry/pluginsglpi/formcreator/commit/8233b75))
-* **filefield:** uploaded files lost ([1cec1e0](https://github.com-btry/pluginsglpi/formcreator/commit/1cec1e0))
-* **form:** redirect to formlist after filling a form ([51fe9ae](https://github.com-btry/pluginsglpi/formcreator/commit/51fe9ae))
-* **issue:** warnings with GLPI 9.3 ([04791f4](https://github.com-btry/pluginsglpi/formcreator/commit/04791f4))
-* **question:** quote escaping in import ([ed4b021](https://github.com-btry/pluginsglpi/formcreator/commit/ed4b021))
-* **serviceCatalog:** fix left menu for some languages ([f1bc390](https://github.com-btry/pluginsglpi/formcreator/commit/f1bc390))
+* **dropdownfield:** upgraded fields from 2.5 may crash ([8233b75](https://github.com/pluginsglpi/formcreator/commit/8233b75))
+* **filefield:** uploaded files lost ([1cec1e0](https://github.com/pluginsglpi/formcreator/commit/1cec1e0))
+* **form:** redirect to formlist after filling a form ([51fe9ae](https://github.com/pluginsglpi/formcreator/commit/51fe9ae))
+* **issue:** warnings with GLPI 9.3 ([04791f4](https://github.com/pluginsglpi/formcreator/commit/04791f4))
+* **question:** quote escaping in import ([ed4b021](https://github.com/pluginsglpi/formcreator/commit/ed4b021))
+* **serviceCatalog:** fix left menu for some languages ([f1bc390](https://github.com/pluginsglpi/formcreator/commit/f1bc390))
 
 
 
