@@ -2057,6 +2057,14 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   WARNING
                );
                return false;
+            } else {
+                // The form is in an entity which does not exists yet
+                Session::addMessageAfterRedirect(
+                  sprintf(__('The entity %1$s is required for the form %2$s.', 'formcreator'), $form['_entity'], $form['name']),
+                  false,
+                  WARNING
+               );
+               return false;
             }
          }
       }
