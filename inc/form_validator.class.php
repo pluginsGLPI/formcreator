@@ -83,7 +83,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation {
       $crit = [
          'name' => $validator['_item'],
       ];
-      if (!$linkedItem->getFromDBByName($crit)) {
+      if (!$linkedItem->getFromDBByCrit($crit)) {
          // validator not found. Let's ignore it
          return false;
       }
