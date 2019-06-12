@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
                     10%
-                                            <small>of 87</small>
+                                            <small>of 88</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -149,7 +149,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#parseAnswerValues">PluginFormcreatorFileField::parseAnswerValues()</a></td>
-                                        <td style="text-align: center">19</td>
+                                        <td style="text-align: center">20</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -1732,25 +1732,32 @@ layout: coverage
                     <th id="L204" class="number uncovered">204</th>
 
                     <td class="uncovered" >
-                        <pre>               if (is_file(GLPI_TMP_DIR . &#039;/&#039; . $document)) {</pre>
+                        <pre>               $document = Toolbox::stripslashes_deep($document);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L205" class="number uncovered">205</th>
 
                     <td class="uncovered" >
-                        <pre>                  $prefix = $input[&#039;_prefix_formcreator_field_&#039; . $this-&gt;fields[&#039;id&#039;]][$index];</pre>
+                        <pre>               if (is_file(GLPI_TMP_DIR . &#039;/&#039; . $document)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L206" class="number uncovered">206</th>
 
                     <td class="uncovered" >
+                        <pre>                  $prefix = $input[&#039;_prefix_formcreator_field_&#039; . $this-&gt;fields[&#039;id&#039;]][$index];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L207" class="number uncovered">207</th>
+
+                    <td class="uncovered" >
                         <pre>                  $answer_value[] = $this-&gt;saveDocument($document, $prefix);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number ">207</th>
+                    <th id="L208" class="number ">208</th>
 
                     <td class="" >
                         <pre>               }
@@ -1758,14 +1765,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L208" class="number uncovered">208</th>
+                    <th id="L209" class="number uncovered">209</th>
 
                     <td class="uncovered" >
                         <pre>               $index++;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L209" class="number ">209</th>
+                    <th id="L210" class="number ">210</th>
 
                     <td class="" >
                         <pre>            }
@@ -1773,7 +1780,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L210" class="number ">210</th>
+                    <th id="L211" class="number ">211</th>
 
                     <td class="" >
                         <pre>         }
@@ -1781,28 +1788,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L211" class="number uncovered">211</th>
+                    <th id="L212" class="number uncovered">212</th>
 
                     <td class="uncovered" >
                         <pre>         $this-&gt;uploadData = $answer_value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L212" class="number uncovered">212</th>
+                    <th id="L213" class="number uncovered">213</th>
 
                     <td class="uncovered" >
                         <pre>         $this-&gt;value = __(&#039;Attached document&#039;, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L213" class="number uncovered">213</th>
+                    <th id="L214" class="number uncovered">214</th>
 
                     <td class="uncovered" >
                         <pre>         return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L214" class="number ">214</th>
+                    <th id="L215" class="number ">215</th>
 
                     <td class="" >
                         <pre>      }
@@ -1810,35 +1817,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L215" class="number uncovered">215</th>
+                    <th id="L216" class="number uncovered">216</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;uploadData = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L216" class="number uncovered">216</th>
+                    <th id="L217" class="number uncovered">217</th>
 
                     <td class="uncovered" >
                         <pre>      $this-&gt;value = &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L217" class="number uncovered">217</th>
+                    <th id="L218" class="number uncovered">218</th>
 
                     <td class="uncovered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L218" class="number unreach">218</th>
+                    <th id="L219" class="number unreach">219</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L219" class="number ">219</th>
+                    <th id="L220" class="number ">220</th>
 
                     <td class="" >
                         <pre>
@@ -1846,28 +1853,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="equals">
-                    <th id="L220" class="number ">220</th>
+                    <th id="L221" class="number ">221</th>
 
                     <td class="" id="equals">
                         <pre>   public function equals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L221" class="number uncovered">221</th>
+                    <th id="L222" class="number uncovered">222</th>
 
                     <td class="uncovered" >
                         <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L222" class="number unreach">222</th>
+                    <th id="L223" class="number unreach">223</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L223" class="number ">223</th>
+                    <th id="L224" class="number ">224</th>
 
                     <td class="" >
                         <pre>
@@ -1875,28 +1882,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="notEquals">
-                    <th id="L224" class="number ">224</th>
+                    <th id="L225" class="number ">225</th>
 
                     <td class="" id="notEquals">
                         <pre>   public function notEquals($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L225" class="number uncovered">225</th>
+                    <th id="L226" class="number uncovered">226</th>
 
                     <td class="uncovered" >
                         <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L226" class="number unreach">226</th>
+                    <th id="L227" class="number unreach">227</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L227" class="number ">227</th>
+                    <th id="L228" class="number ">228</th>
 
                     <td class="" >
                         <pre>
@@ -1904,28 +1911,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="greaterThan">
-                    <th id="L228" class="number ">228</th>
+                    <th id="L229" class="number ">229</th>
 
                     <td class="" id="greaterThan">
                         <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L229" class="number uncovered">229</th>
+                    <th id="L230" class="number uncovered">230</th>
 
                     <td class="uncovered" >
                         <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L230" class="number unreach">230</th>
+                    <th id="L231" class="number unreach">231</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L231" class="number ">231</th>
+                    <th id="L232" class="number ">232</th>
 
                     <td class="" >
                         <pre>
@@ -1933,28 +1940,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="lessThan">
-                    <th id="L232" class="number ">232</th>
+                    <th id="L233" class="number ">233</th>
 
                     <td class="" id="lessThan">
                         <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L233" class="number uncovered">233</th>
+                    <th id="L234" class="number uncovered">234</th>
 
                     <td class="uncovered" >
                         <pre>      throw new PluginFormcreatorComparisonException(&#039;Meaningless comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L234" class="number unreach">234</th>
+                    <th id="L235" class="number unreach">235</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L235" class="number ">235</th>
+                    <th id="L236" class="number ">236</th>
 
                     <td class="" >
                         <pre>
@@ -1962,28 +1969,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="isAnonymousFormCompatible">
-                    <th id="L236" class="number ">236</th>
+                    <th id="L237" class="number ">237</th>
 
                     <td class="" id="isAnonymousFormCompatible">
                         <pre>   public function isAnonymousFormCompatible() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L237" class="number uncovered">237</th>
+                    <th id="L238" class="number uncovered">238</th>
 
                     <td class="uncovered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L238" class="number unreach">238</th>
+                    <th id="L239" class="number unreach">239</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L239" class="number ">239</th>
+                    <th id="L240" class="number ">240</th>
 
                     <td class="" >
                         <pre>}
