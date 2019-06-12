@@ -1928,6 +1928,14 @@ PluginFormcreatorExportableInterface
                   WARNING
                );
                throw new ImportFailureException('failed to add or update the item');
+            } else {
+               // The form is in an entity which does not exists yet
+               Session::addMessageAfterRedirect(
+                  sprintf(__('The entity %1$s is required for the form %2$s.', 'formcreator'), $input['_entity'], $input['name']),
+                  false,
+                  WARNING
+               );
+               throw new ImportFailureException('failed to add or update the item');
             }
          }
       }
