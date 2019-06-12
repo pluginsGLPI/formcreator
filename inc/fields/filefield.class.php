@@ -201,6 +201,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             $index = count($input["_$key"]);
          } else {
             foreach ($input["_$key"] as $document) {
+               $document = Toolbox::stripslashes_deep($document);
                if (is_file(GLPI_TMP_DIR . '/' . $document)) {
                   $prefix = $input['_prefix_formcreator_field_' . $this->fields['id']][$index];
                   $answer_value[] = $this->saveDocument($document, $prefix);
