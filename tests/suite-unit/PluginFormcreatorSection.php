@@ -80,7 +80,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       global $DB;
 
       // instanciate classes
-      $form           = new \PluginFormcreatorForm;
+      $form      = new \PluginFormcreatorForm;
       $section   = new \PluginFormcreatorSection;
       $question  = new \PluginFormcreatorQuestion;
 
