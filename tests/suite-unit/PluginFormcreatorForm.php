@@ -40,6 +40,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       switch ($method) {
          case 'testImport':
          case 'testCanPurgeItem':
+         case 'testDuplicate':
             self::login('glpi', 'glpi');
       }
    }
@@ -818,5 +819,93 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $target->getFromDB($output);
       $this->boolean($output)->isFalse();
 
+   }
+
+   public function testDuplicate() {
+      // get form
+      $form = $this->getForm([
+         'name'                  => 'a form',
+         'description'           => 'form description',
+         'content'               => 'a content',
+         'is_active'             => 1,
+         'validation_required'   => 0,
+      ]);
+
+      $section_ids = [];
+      $section_ids[] = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $section_ids[] = $this->getSection([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $targetTicket_ids = [];
+      $targetChange_ids = [];
+
+      $targetTicket_ids[] = $this->getTargetTicket([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      $targetChange_ids[] = $this->getTargetChange([
+         'plugin_formcreator_forms_id' => $form->getID(),
+      ]);
+
+      // clone it
+      $newForm_id = $form->duplicate();
+      $this->integer($newForm_id)->isGreaterThan(0);
+
+      // get cloned form
+      $new_form = new \PluginFormcreatorForm();
+      $new_form->getFromDB($newForm_id);
+
+      // check uuid
+      $this->string($new_form->getField('uuid'))->isNotEqualTo($form->getField('uuid'));
+
+      // check sections
+      $all_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($form->getID());
+      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+      $all_new_sections = (new \PluginFormcreatorSection())->getSectionsFromForm($new_form->getID());
+      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+
+      // check that all sections uuid are new
+      $uuids = $new_uuids = [];
+      foreach ($all_sections as $section) {
+         $uuids[] = $section->fields['uuid'];
+      }
+      foreach ($all_new_sections as $section) {
+         $new_uuids[] = $section->fields['uuid'];
+      }
+      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+
+      // check target tickets
+      $all_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetTicketsForForm($form->getID());
+      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+      $all_new_targetTickets = (new \PluginFormcreatorTargetTicket())->getTargetTicketsForForm($new_form->getID());
+      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+
+      // check that all sections uuid are new
+      foreach ($all_targetTickets as $targetTicket) {
+         $uuids[] = $targetTicket->fields['uuid'];
+      }
+      foreach ($all_new_targetTickets as $targetTicket) {
+         $new_uuids[] = $targetTicket->fields['uuid'];
+      }
+      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+
+      // check target changes
+      $all_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetChangesForForm($form->getID());
+      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+      $all_new_targetChanges = (new \PluginFormcreatorTargetChange())->getTargetChangesForForm($new_form->getID());
+      $this->integer(count($all_sections))->isEqualTo(count($section_ids));
+
+      // check that all sections uuid are new
+      foreach ($all_targetChanges as $targetChange) {
+         $uuids[] = $targetChange->fields['uuid'];
+      }
+      foreach ($all_new_targetChanges as $targetChange) {
+         $new_uuids[] = $targetChange->fields['uuid'];
+      }
+      $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
    }
 }

@@ -1085,4 +1085,31 @@ SCRIPT;
       unset($input['items_id']);
       return $input;
    }
+
+   /**
+    * get all target tickets for a form
+    *
+    * @param integer $formId
+    * @return array
+    */
+   public function getTargetTicketsForForm($formId) {
+      global $DB;
+
+      $targets = [];
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => self::getTable(),
+         'WHERE'  => [
+            'plugin_formcreator_forms_id' => $formId
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
+      foreach ($rows as $row) {
+         $target = new self();
+         $target->getFromDB($row['id']);
+         $targets[$row['id']] = $target;
+      }
+
+      return $targets;
+   }
 }
