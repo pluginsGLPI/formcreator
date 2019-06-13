@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-26 10:41+0200\n"
-"PO-Revision-Date: 2019-04-26 08:41+0000\n"
+"POT-Creation-Date: 2019-06-12 15:53+0200\n"
+"PO-Revision-Date: 2019-06-12 13:53+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Latvian (Latvia) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/lv_LV/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid "Forms waiting for validation"
 msgstr "Formas gaida apstiprinājumu"
 
 #: setup.php:194 ajax/homepage_link.php:38 inc/entityconfig.class.php:57
-#: inc/form.class.php:94 inc/form.class.php:539 inc/form.class.php:2228
+#: inc/form.class.php:94 inc/form.class.php:539 inc/form.class.php:2236
 #: inc/formanswer.class.php:169 inc/formlist.class.php:48 js/scripts.js.php:74
 msgid "Form"
 msgid_plural "Forms"
@@ -42,8 +42,8 @@ msgstr[2] "Formas"
 #: front/form.php:47 front/formanswer.form.php:83 front/formanswer.form.php:88
 #: front/formanswer.php:48 front/formanswer.php:53 front/issue.php:48
 #: front/issue.php:53 front/targetchange.form.php:76
-#: front/targetticket.form.php:76 inc/form.class.php:2334
-#: inc/form.class.php:2341
+#: front/targetticket.form.php:76 inc/form.class.php:2342
+#: inc/form.class.php:2349
 msgid "Form Creator"
 msgstr "Formas Veidotājs"
 
@@ -51,11 +51,11 @@ msgstr "Formas Veidotājs"
 #: front/issue.form.php:59 front/issue.php:44 front/knowbaseitem.form.php:47
 #: front/reservation.form.php:48 front/reservation.php:48
 #: front/reservationitem.php:44 front/wizard.php:46 front/wizardfeeds.php:47
-#: inc/form.class.php:2329
+#: inc/form.class.php:2337
 msgid "Service catalog"
 msgstr "Servisu katalogs"
 
-#: front/formlist.php:48 front/formlist.php:54 inc/form.class.php:2331
+#: front/formlist.php:48 front/formlist.php:54 inc/form.class.php:2339
 msgid "Form list"
 msgstr "Formas saraksts"
 
@@ -146,7 +146,7 @@ msgstr "Nepieciešama apstiprināšana?"
 msgid "Default form in service catalog"
 msgstr "Noklusēta forma servisu katalogā"
 
-#: inc/form.class.php:619 inc/targetbase.class.php:776
+#: inc/form.class.php:619 inc/targetbase.class.php:788
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Kategorijas"
@@ -278,19 +278,24 @@ msgstr ""
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr ""
 
-#: inc/form.class.php:2158
+#: inc/form.class.php:2063
+#, php-format
+msgid "The entity %1$s is required for the form %2$s."
+msgstr ""
+
+#: inc/form.class.php:2166
 msgid "Failed to create JSON document type"
 msgstr "Neizdevās izveidot JSON dokumenta tipu"
 
-#: inc/form.class.php:2165
+#: inc/form.class.php:2173
 msgid "JSON document type not found"
 msgstr "JSON dokumenta tips nav atrasts"
 
-#: inc/form.class.php:2172
+#: inc/form.class.php:2180
 msgid "Failed to update JSON document type"
 msgstr "Neizdevās atjaunot JSON dokumenta tipu"
 
-#: inc/form.class.php:2232
+#: inc/form.class.php:2240
 msgid "Forms without category"
 msgstr "Formas bez kategorijas"
 
@@ -407,19 +412,19 @@ msgstr "Pieteikuma apstiprinātājs"
 msgid "The form as been saved"
 msgstr "Forma saglabāta"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:270
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:266
 msgid "A form need to be validate"
 msgstr "Formai jābūt apstiprinātai"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:276
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:272
 msgid "The form is refused"
 msgstr "Forma noraidīta"
 
-#: inc/notificationtargetformanswer.class.php:48 install/install.php:282
+#: inc/notificationtargetformanswer.class.php:48 install/install.php:278
 msgid "The form is accepted"
 msgstr "Forma akceptēta"
 
-#: inc/notificationtargetformanswer.class.php:49 install/install.php:288
+#: inc/notificationtargetformanswer.class.php:49 install/install.php:284
 msgid "The form is deleted"
 msgstr "Forma izdzēsta"
 
@@ -451,9 +456,9 @@ msgstr "Apstiprināšanas links"
 msgid "Request #"
 msgstr "Pieprasījums #"
 
-#: inc/question.class.php:70 inc/targetbase.class.php:777
-#: inc/targetbase.class.php:847 inc/targetbase.class.php:928
-#: inc/targetbase.class.php:1075 inc/targetchange.class.php:812
+#: inc/question.class.php:70 inc/targetbase.class.php:789
+#: inc/targetbase.class.php:859 inc/targetbase.class.php:940
+#: inc/targetbase.class.php:1087 inc/targetchange.class.php:812
 #: inc/targetticket.class.php:671
 msgid "Question"
 msgid_plural "Questions"
@@ -781,31 +786,31 @@ msgstr "Vieta no veidnes vai nenorādīta"
 msgid "Specific location"
 msgstr "Noteikta vieta"
 
-#: inc/targetbase.class.php:597
+#: inc/targetbase.class.php:609
 msgid "User type question"
 msgstr "Lietotāja jautājuma tips"
 
-#: inc/targetbase.class.php:598
+#: inc/targetbase.class.php:610
 msgid "Entity type question"
 msgstr "Nodaļas jautājuma tips"
 
-#: inc/targetbase.class.php:743
+#: inc/targetbase.class.php:755
 msgid "Ticket category"
 msgstr "Pieteikumu kategorija"
 
-#: inc/targetbase.class.php:848
+#: inc/targetbase.class.php:860
 msgid "Urgency "
 msgstr "Steidzamība"
 
-#: inc/targetbase.class.php:887
+#: inc/targetbase.class.php:899
 msgid "Ticket tags"
 msgstr "Pieteikumu tagi"
 
-#: inc/targetbase.class.php:929
+#: inc/targetbase.class.php:941
 msgid "Tags"
 msgstr "Tagi"
 
-#: inc/targetbase.class.php:1076
+#: inc/targetbase.class.php:1088
 msgid "Location "
 msgstr "Atrašanās vietas"
 
@@ -899,7 +904,7 @@ msgstr "Salinkota vienība neeksistē"
 msgid "Failed to link the item"
 msgstr "Neizdevis salinkot ar vienību"
 
-#: inc/targetticket.class.php:1274 install/install.php:283
+#: inc/targetticket.class.php:1274 install/install.php:279
 msgid "Your form has been accepted by the validator"
 msgstr "Jūsu formu akceptēja apstiprinātājs"
 
@@ -937,7 +942,7 @@ msgstr[2] "Dalībnieki"
 #: inc/fields/actorfield.class.php:194
 #: inc/fields/checkboxesfield.class.php:140 inc/fields/datefield.class.php:85
 #: inc/fields/datetimefield.class.php:88
-#: inc/fields/dropdownfield.class.php:241 inc/fields/emailfield.class.php:95
+#: inc/fields/dropdownfield.class.php:251 inc/fields/emailfield.class.php:95
 #: inc/fields/floatfield.class.php:92 inc/fields/glpiselectfield.class.php:65
 #: inc/fields/integerfield.class.php:93
 #: inc/fields/ldapselectfield.class.php:113
@@ -969,7 +974,7 @@ msgid "Checkboxes"
 msgstr "Izvēles rūtiņas"
 
 #: inc/fields/checkboxesfield.class.php:180
-#: inc/fields/dropdownfield.class.php:255
+#: inc/fields/dropdownfield.class.php:265
 #: inc/fields/glpiselectfield.class.php:48
 #: inc/fields/multiselectfield.class.php:139
 #: inc/fields/radiosfield.class.php:87
@@ -991,7 +996,7 @@ msgstr ""
 msgid "A description field should have a description:"
 msgstr "Apraksta laukam jābūt aizpildītam:"
 
-#: inc/fields/dropdownfield.class.php:267
+#: inc/fields/dropdownfield.class.php:277
 msgid "Invalid dropdown type:"
 msgstr "Nederīga tips izritošai izvēlnei"
 
@@ -1003,7 +1008,7 @@ msgstr "Šīs e-pasts nav derīgs:"
 msgid "No attached document"
 msgstr ""
 
-#: inc/fields/filefield.class.php:76 inc/fields/filefield.class.php:212
+#: inc/fields/filefield.class.php:76 inc/fields/filefield.class.php:213
 msgid "Attached document"
 msgstr "Pievienots dokuments"
 
@@ -1110,37 +1115,37 @@ msgstr "Teksts ir pārāk garš (maksimāli ir %d simbolu):"
 msgid "Text"
 msgstr "Teksts"
 
-#: install/install.php:264
+#: install/install.php:260
 msgid "A form has been created"
 msgstr "Forma izveidota"
 
-#: install/install.php:265
+#: install/install.php:261
 msgid "Your request has been saved"
 msgstr "Jūsu pieprasījums saglabāts"
 
-#: install/install.php:266
+#: install/install.php:262
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr "Sveicināti,\\nJūsu pieprasījums no GLPI veiksmīgi saglabāts ar numuru ##formcreator.request_id## un nodots helpdesk komandai.\\nJūs varat sekot līdzi sekojošā vietnē:\\n##formcreator.validation_link##"
 
-#: install/install.php:271
+#: install/install.php:267
 msgid "A form from GLPI need to be validate"
 msgstr "Formai no GLPI jābūt apstiprinātai"
 
-#: install/install.php:272
+#: install/install.php:268
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr "Sveicināti,\\nFormai no GLPI jābūt apstiprinātai un jūs tika izvēlēti kā apstiprinātājs.\\nJūs varat piekļūt tam sekojošā vietnē:\\n##formcreator.validation_link##"
 
-#: install/install.php:277
+#: install/install.php:273
 msgid "Your form has been refused by the validator"
 msgstr "Jūsu formu noraidījis apstiprinātājs"
 
-#: install/install.php:278
+#: install/install.php:274
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1148,23 +1153,23 @@ msgid ""
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr "Sveicināti,\\nJūsu formu noraidīta apstiprinātājs ar sekojošo iemeslu:\\n##formcreator.validation_comment##\\n\\nJūs varat veikt izmaiņas un atkartoti iesniegt formu sekojošā vietnē:\\n##formcreator.validation_link##"
 
-#: install/install.php:284
+#: install/install.php:280
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr "Sveicināti,\\nInformējam, jūsu formu akceptēja apstiprinātājs.\\nJūsu pieteikums drīz tiks izskatīts."
 
-#: install/install.php:289
+#: install/install.php:285
 msgid "Your form has been deleted by an administrator"
 msgstr "Jūsu formu izdzēsa administrators"
 
-#: install/install.php:290
+#: install/install.php:286
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr "Sveicināti,\\nInformējam, jūsu pieprasījums netiks izskatīts un tika izdzēsts."
 
-#: install/install.php:505 install/upgrade_to_2.5.php:413
+#: install/install.php:501 install/upgrade_to_2.5.php:413
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Sinhronizēt problēmas ar servisa katalogu"
 

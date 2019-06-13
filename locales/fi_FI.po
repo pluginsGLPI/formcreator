@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - Formcreator\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-26 10:41+0200\n"
-"PO-Revision-Date: 2019-04-26 08:41+0000\n"
+"POT-Creation-Date: 2019-06-12 15:53+0200\n"
+"PO-Revision-Date: 2019-06-12 13:53+0000\n"
 "Last-Translator: Thierry Bugier <tbugier@teclib.com>\n"
 "Language-Team: Finnish (Finland) (http://www.transifex.com/teclib/glpi-project-plugin-formcreator/language/fi_FI/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgid "Forms waiting for validation"
 msgstr "Vahvistusta odottavat lomakkeet"
 
 #: setup.php:194 ajax/homepage_link.php:38 inc/entityconfig.class.php:57
-#: inc/form.class.php:94 inc/form.class.php:539 inc/form.class.php:2228
+#: inc/form.class.php:94 inc/form.class.php:539 inc/form.class.php:2236
 #: inc/formanswer.class.php:169 inc/formlist.class.php:48 js/scripts.js.php:74
 msgid "Form"
 msgid_plural "Forms"
@@ -40,8 +40,8 @@ msgstr[1] "Lomakkeet"
 #: front/form.php:47 front/formanswer.form.php:83 front/formanswer.form.php:88
 #: front/formanswer.php:48 front/formanswer.php:53 front/issue.php:48
 #: front/issue.php:53 front/targetchange.form.php:76
-#: front/targetticket.form.php:76 inc/form.class.php:2334
-#: inc/form.class.php:2341
+#: front/targetticket.form.php:76 inc/form.class.php:2342
+#: inc/form.class.php:2349
 msgid "Form Creator"
 msgstr "Lomakkeen tekijä"
 
@@ -49,11 +49,11 @@ msgstr "Lomakkeen tekijä"
 #: front/issue.form.php:59 front/issue.php:44 front/knowbaseitem.form.php:47
 #: front/reservation.form.php:48 front/reservation.php:48
 #: front/reservationitem.php:44 front/wizard.php:46 front/wizardfeeds.php:47
-#: inc/form.class.php:2329
+#: inc/form.class.php:2337
 msgid "Service catalog"
 msgstr "Palveluluettelo"
 
-#: front/formlist.php:48 front/formlist.php:54 inc/form.class.php:2331
+#: front/formlist.php:48 front/formlist.php:54 inc/form.class.php:2339
 msgid "Form list"
 msgstr "Lomakelista"
 
@@ -142,7 +142,7 @@ msgstr "Täytyykö vahvistaa?"
 msgid "Default form in service catalog"
 msgstr "Oletuslomake palveluluettelossa"
 
-#: inc/form.class.php:619 inc/targetbase.class.php:776
+#: inc/form.class.php:619 inc/targetbase.class.php:788
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Luokka"
@@ -273,19 +273,24 @@ msgstr "Lomakkeiden tuonti epäonnistui kohteesta %s"
 msgid "The form %1$s already exists and is in an unmodifiable entity."
 msgstr ""
 
-#: inc/form.class.php:2158
+#: inc/form.class.php:2063
+#, php-format
+msgid "The entity %1$s is required for the form %2$s."
+msgstr ""
+
+#: inc/form.class.php:2166
 msgid "Failed to create JSON document type"
 msgstr "JSON-asiakirjatyyppiä ei voitu luoda"
 
-#: inc/form.class.php:2165
+#: inc/form.class.php:2173
 msgid "JSON document type not found"
 msgstr "JSON-dokumenttityyppiä ei löydy"
 
-#: inc/form.class.php:2172
+#: inc/form.class.php:2180
 msgid "Failed to update JSON document type"
 msgstr "JSON-dokumenttityypin päivittäminen epäonnistui"
 
-#: inc/form.class.php:2232
+#: inc/form.class.php:2240
 msgid "Forms without category"
 msgstr "Lomakkeet ilman kategoriaa"
 
@@ -399,19 +404,19 @@ msgstr "Tiketin hyväksyjä"
 msgid "The form as been saved"
 msgstr "Lomake on tallennettu"
 
-#: inc/notificationtargetformanswer.class.php:46 install/install.php:270
+#: inc/notificationtargetformanswer.class.php:46 install/install.php:266
 msgid "A form need to be validate"
 msgstr "Lomake on vahvistettava"
 
-#: inc/notificationtargetformanswer.class.php:47 install/install.php:276
+#: inc/notificationtargetformanswer.class.php:47 install/install.php:272
 msgid "The form is refused"
 msgstr "Lomake on hylätty"
 
-#: inc/notificationtargetformanswer.class.php:48 install/install.php:282
+#: inc/notificationtargetformanswer.class.php:48 install/install.php:278
 msgid "The form is accepted"
 msgstr "Lomake on hyväksytty"
 
-#: inc/notificationtargetformanswer.class.php:49 install/install.php:288
+#: inc/notificationtargetformanswer.class.php:49 install/install.php:284
 msgid "The form is deleted"
 msgstr "Lomake on poistettu"
 
@@ -443,9 +448,9 @@ msgstr "Vahvistuslinkki"
 msgid "Request #"
 msgstr "Pyyntö #"
 
-#: inc/question.class.php:70 inc/targetbase.class.php:777
-#: inc/targetbase.class.php:847 inc/targetbase.class.php:928
-#: inc/targetbase.class.php:1075 inc/targetchange.class.php:812
+#: inc/question.class.php:70 inc/targetbase.class.php:789
+#: inc/targetbase.class.php:859 inc/targetbase.class.php:940
+#: inc/targetbase.class.php:1087 inc/targetchange.class.php:812
 #: inc/targetticket.class.php:671
 msgid "Question"
 msgid_plural "Questions"
@@ -768,31 +773,31 @@ msgstr "Sijainti mallista tai ei mitään"
 msgid "Specific location"
 msgstr "Tietty sijainti"
 
-#: inc/targetbase.class.php:597
+#: inc/targetbase.class.php:609
 msgid "User type question"
 msgstr "Käyttäjätyyppinen kysymys"
 
-#: inc/targetbase.class.php:598
+#: inc/targetbase.class.php:610
 msgid "Entity type question"
 msgstr "Yksikkötyyppinen kysymys"
 
-#: inc/targetbase.class.php:743
+#: inc/targetbase.class.php:755
 msgid "Ticket category"
 msgstr "Tiketin kategoria"
 
-#: inc/targetbase.class.php:848
+#: inc/targetbase.class.php:860
 msgid "Urgency "
 msgstr "Kiireellisyys"
 
-#: inc/targetbase.class.php:887
+#: inc/targetbase.class.php:899
 msgid "Ticket tags"
 msgstr "Tiketin tunnisteet"
 
-#: inc/targetbase.class.php:929
+#: inc/targetbase.class.php:941
 msgid "Tags"
 msgstr "Tunnisteet"
 
-#: inc/targetbase.class.php:1076
+#: inc/targetbase.class.php:1088
 msgid "Location "
 msgstr "Sijainti"
 
@@ -884,7 +889,7 @@ msgstr "Linkitetty kohde ei ole olemassa"
 msgid "Failed to link the item"
 msgstr "Kohteen linkittäminen epäonnistui"
 
-#: inc/targetticket.class.php:1274 install/install.php:283
+#: inc/targetticket.class.php:1274 install/install.php:279
 msgid "Your form has been accepted by the validator"
 msgstr "Vahvistaja on hyväksynyt lomakkeesi"
 
@@ -921,7 +926,7 @@ msgstr[1] "Toimijat"
 #: inc/fields/actorfield.class.php:194
 #: inc/fields/checkboxesfield.class.php:140 inc/fields/datefield.class.php:85
 #: inc/fields/datetimefield.class.php:88
-#: inc/fields/dropdownfield.class.php:241 inc/fields/emailfield.class.php:95
+#: inc/fields/dropdownfield.class.php:251 inc/fields/emailfield.class.php:95
 #: inc/fields/floatfield.class.php:92 inc/fields/glpiselectfield.class.php:65
 #: inc/fields/integerfield.class.php:93
 #: inc/fields/ldapselectfield.class.php:113
@@ -953,7 +958,7 @@ msgid "Checkboxes"
 msgstr "Valintaruudut"
 
 #: inc/fields/checkboxesfield.class.php:180
-#: inc/fields/dropdownfield.class.php:255
+#: inc/fields/dropdownfield.class.php:265
 #: inc/fields/glpiselectfield.class.php:48
 #: inc/fields/multiselectfield.class.php:139
 #: inc/fields/radiosfield.class.php:87
@@ -975,7 +980,7 @@ msgstr "Päivämäärä & aika"
 msgid "A description field should have a description:"
 msgstr "Kuvauskentällä pitäisi olla kuvaus:"
 
-#: inc/fields/dropdownfield.class.php:267
+#: inc/fields/dropdownfield.class.php:277
 msgid "Invalid dropdown type:"
 msgstr "Virheellinen pudotustyyppi:"
 
@@ -987,7 +992,7 @@ msgstr "Tämä ei ole kelvollinen sähköpostiosoite:"
 msgid "No attached document"
 msgstr ""
 
-#: inc/fields/filefield.class.php:76 inc/fields/filefield.class.php:212
+#: inc/fields/filefield.class.php:76 inc/fields/filefield.class.php:213
 msgid "Attached document"
 msgstr "Liitetiedosto"
 
@@ -1093,37 +1098,37 @@ msgstr "Teksti on liian pitkä (enintään %d merkkiä):"
 msgid "Text"
 msgstr "Teksti"
 
-#: install/install.php:264
+#: install/install.php:260
 msgid "A form has been created"
 msgstr "Lomake on luotu"
 
-#: install/install.php:265
+#: install/install.php:261
 msgid "Your request has been saved"
 msgstr "Pyyntösi on tallennettu"
 
-#: install/install.php:266
+#: install/install.php:262
 msgid ""
 "Hi,\\nYour request from GLPI has been successfully saved with number "
 "##formcreator.request_id## and transmitted to the helpdesk team.\\nYou can "
 "see your answers onto the following link:\\n##formcreator.validation_link##"
 msgstr "Hei, \\nGLPI:n pyyntösi on tallennettu numerolla ## formcreator.request_id## ja lähetetty helpdesk-tiimiin. \\nVoit nähdä vastauksesi seuraavasta linkistä: \\n## formcreator.validation_link##"
 
-#: install/install.php:271
+#: install/install.php:267
 msgid "A form from GLPI need to be validate"
 msgstr "GLPI-lomake on vahvistettava"
 
-#: install/install.php:272
+#: install/install.php:268
 msgid ""
 "Hi,\\nA form from GLPI need to be validate and you have been choosen as the "
 "validator.\\nYou can access it by clicking onto this "
 "link:\\n##formcreator.validation_link##"
 msgstr "Hei,\\nGLPI lomake tarvitsee vahvistuksen ja sinut on valittu vahvistajaksi.\\nPääset lomakkeeseen klikkaamalla tätä linkkiä:\\n##formcreator.validation_link##"
 
-#: install/install.php:277
+#: install/install.php:273
 msgid "Your form has been refused by the validator"
 msgstr "Vahvistaja on hylännyt lomakkeesi"
 
-#: install/install.php:278
+#: install/install.php:274
 msgid ""
 "Hi,\\nWe are sorry to inform you that your form has been refused by the "
 "validator for the reason "
@@ -1131,23 +1136,23 @@ msgid ""
 "resubmit it by clicking onto this link:\\n##formcreator.validation_link##"
 msgstr "Hei,\\nPahoittelemme, että vahvistaja on hylännyt lomakkeesi seuraavasta syystä:\\n##formcreator.validation_comment##\\n\\nVoit edelleen muokata lomaketta ja lähettää sen uudelleen napsauttamalla tätä linkkiä:\\n##formcreator.validation_link##"
 
-#: install/install.php:284
+#: install/install.php:280
 msgid ""
 "Hi,\\nWe are pleased to inform you that your form has been accepted by the "
 "validator.\\nYour request will be considered soon."
 msgstr "Hei,\\nMeillä on ilo ilmoittaa, että häväksyjä on hyväksynyt lomakkeenne.\\nPyyntösi käsitellään pian."
 
-#: install/install.php:289
+#: install/install.php:285
 msgid "Your form has been deleted by an administrator"
 msgstr "Järjestelmänvalvoja on poistanut lomakkeen"
 
-#: install/install.php:290
+#: install/install.php:286
 msgid ""
 "Hi,\\nWe are sorry to inform you that your request cannot be considered and "
 "has been deleted by an administrator."
 msgstr "Hei,\\nPahoittelemme, että pyyntöäsi ei voida ottaa huomioon, ja järjestelmänvalvoja on poistanut sen."
 
-#: install/install.php:505 install/upgrade_to_2.5.php:413
+#: install/install.php:501 install/upgrade_to_2.5.php:413
 msgid "Formcreator - Sync service catalog issues"
 msgstr "Formcreator - Synkronoi palveluluettelon teemat"
 
