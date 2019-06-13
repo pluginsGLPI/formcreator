@@ -98,7 +98,7 @@ class PluginFormcreatorSection extends CommonTestCase {
                                              'plugin_formcreator_sections_id' => $sections_id]);
 
       //get section
-      plugin_formcreator_getFromDBByField($section, 'name', "test clone section");
+      $section->getFromDB($sections_id);
 
       //clone it
       $newSection_id = $section->duplicate();
