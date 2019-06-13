@@ -51,7 +51,7 @@ if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
 define('GLPI_LOG_DIR', __DIR__ . '/logs');
 @mkdir(GLPI_LOG_DIR);
 if (!defined('STDERR')) {
-   define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
+   //define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
 }
 
 //tests_rrmdir(GLPI_CACHE_DIR);
@@ -71,4 +71,4 @@ include (GLPI_ROOT . "/inc/includes.php");
 $GLPI_CACHE = Config::getCache('cache_db');
 
 // If GLPI debug mode is disabled, atoum cannot produce backtaces
-//\Toolbox::setDebugMode(Session::DEBUG_MODE);
+\Toolbox::setDebugMode(Session::DEBUG_MODE);
