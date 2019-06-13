@@ -15,7 +15,8 @@ define('TEST_PLUGIN_NAME', 'formcreator');
 define('TU_USER', '_test_user');
 
 define('GLPI_ROOT', realpath(__DIR__ . '/../../../'));
-define("GLPI_CONFIG_DIR", GLPI_ROOT . "/tests");
+define('GLPI_CONFIG_DIR', GLPI_ROOT . "/tests");
+define('GLPI_CACHE_DIR', GLPI_ROOT . '/tests/files/_cache');
 if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
    echo "config_db.php missing. Did GLPI successfully initialized ?\n";
    exit(1);

@@ -531,13 +531,25 @@ abstract class PluginFormcreatorTargetBase extends CommonDBTM implements PluginF
     * Attach documents of the answer to the target
     */
    protected function attachDocument($formAnswerId, $itemtype, $targetID) {
+      global $CFG_GLPI;
+
       $docItem = new Document_Item();
-      if (count($this->attachedDocuments) > 0) {
-         foreach ($this->attachedDocuments as $documentID => $dummy) {
-            $docItem->add([
-               'documents_id' => $documentID,
-               'itemtype'     => $itemtype,
-               'items_id'     => $targetID
+      if (count($this->attachedDocuments) <= 0) {
+         return;
+      }
+
+      foreach ($this->attachedDocuments as $documentID => $dummy) {
+         $docItem->add([
+            'documents_id' => $documentID,
+            'itemtype'     => $itemtype,
+            'items_id'     => $targetID,
+         ]);
+         if ($itemtype === Ticket::class) {
+            $document = new Document();
+            $documentCategoryFk = DocumentCategory::getForeignKeyField();
+            $document->update([
+               'id' => $documentID,
+               $documentCategoryFk => $CFG_GLPI["documentcategories_id_forticket"],
             ]);
          }
       }
@@ -1179,7 +1191,7 @@ JAVASCRIPT;
          if (!$target->isNewItem()) {
             $target->update([
                'id' => $target->getID(),
-               'name' => $DB->escape($input['name']),
+               'name' => $input['name'],
             ]);
          }
       }

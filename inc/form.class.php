@@ -582,6 +582,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $this->addStandardTab(PluginFormcreatorTarget::class, $ong, $options);
       $this->addStandardTab(__CLASS__, $ong, $options);
       $this->addStandardTab(PluginFormcreatorFormAnswer::class, $ong, $options);
+      $this->addStandardTab(Log::class, $ong, $options);
       return $ong;
    }
 
@@ -2053,6 +2054,14 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                // The form is in an entity where we don't have UPDATE right
                Session::addMessageAfterRedirect(
                   sprintf(__('The form %1$s already exists and is in an unmodifiable entity.', 'formcreator'), $form['name']),
+                  false,
+                  WARNING
+               );
+               return false;
+            } else {
+                // The form is in an entity which does not exists yet
+                Session::addMessageAfterRedirect(
+                  sprintf(__('The entity %1$s is required for the form %2$s.', 'formcreator'), $form['_entity'], $form['name']),
                   false,
                   WARNING
                );

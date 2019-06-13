@@ -23,7 +23,8 @@
       "atoum/stubs": "^2.5",
       "glpi-project/tools": "^0.1.0",
       "glpi-project/coding-standard": "0.7.1",
-      "atoum/reports-extension": "^3.0"
+      "atoum/reports-extension": "^3.0",
+      "jakub-onderka/php-parallel-lint": "^1.0"
     },
     "autoload-dev": {
         "psr-4": {

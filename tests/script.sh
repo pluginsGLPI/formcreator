@@ -28,7 +28,8 @@ function installGlpi {
    if [ -e ../../scripts/cliinstall.php ] && [ "$DBPASSWD" != "" ]; then DBPASSWDARG="--pass=$DBPASSWD"; fi
    if [ -e ../../bin/console ] && [ "$DBPASSWD" != "" ]; then DBPASSWDARG="--db-password=$DBPASSWD"; fi
    echo Installing GLPI on database $DATABASE
-   rm ../../../tests/config_db.php > /dev/null 2>&1 || :
+   rm -rf ../../tests/files/_cache/cache_db/* ../../tests/files/_cache_/cache_trans/* ../../tests/files/_cache/*.json || true
+   rm ../../tests/config_db.php > /dev/null 2>&1 || true
    if [ -e ../../scripts/cliinstall.php ]; then php ../../scripts/cliinstall.php --db=$DATABASE --user=$DBUSER $DBPASSWDARG --tests ; fi
    if [ -e ../../bin/console ]; then php ../../bin/console glpi:database:install --db-name=$DATABASE --db-user=$DBUSER $DBPASSWDARG --config-dir=../../tests --no-interaction --no-plugins --force; fi
 }

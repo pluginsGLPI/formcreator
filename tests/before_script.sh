@@ -28,6 +28,7 @@ mysql -u root -e 'create database $DBNAME;'
 mysql -u root -e 'create database $OLDDBNAME;'
 git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
 composer install --no-dev --no-interaction
+mkdir -p tests/files/_cache
 IFS=/ read -a repo <<< $TRAVIS_REPO_SLUG
 mv ../${repo[1]} plugins/formcreator
 
