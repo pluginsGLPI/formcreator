@@ -10,6 +10,9 @@ abstract class CommonTestCase extends CommonDBTestCase
 {
    protected $str = null;
 
+   /** @var integer $debugMode save state of GLPI debug mode */
+   private $debugMode = null;
+
    public function beforeTestMethod($method) {
       self::resetGLPILogs();
    }
@@ -76,11 +79,25 @@ abstract class CommonTestCase extends CommonDBTestCase
    protected function login($name, $password, $noauto = false) {
       Session::start();
       $auth = new Auth();
+      $this->disableDebug();
       $result = $auth->login($name, $password, $noauto);
+      $this->restoreDebug();
       $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
       $this->setupGLPIFramework();
 
       return $result;
+   }
+
+   protected function disableDebug() {
+      $this->debugMode = Session::DEBUG_MODE;
+      if (isset($_SESSION['glpi_use_mode'])) {
+         $this->debugMode = $_SESSION['glpi_use_mode'];
+      }
+      \Toolbox::setDebugMode(Session::NORMAL_MODE);
+   }
+
+   protected function restoreDebug() {
+      \Toolbox::setDebugMode($this->debugMode);
    }
 
    public function afterTestMethod($method) {

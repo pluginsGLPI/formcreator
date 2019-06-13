@@ -619,11 +619,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $field->parseAnswerValues($input);
       }
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $this->disableDebug();
       $formAnswer->saveAnswers(
          $form,
          $input,
          $fields
       );
+      $this->restoreDebug();
 
       $dataSet[] = [
          'instance' => $instance,
@@ -660,11 +662,13 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $field->parseAnswerValues($input);
       }
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $this->disableDebug();
       $formAnswer->saveAnswers(
          $form,
          $input,
          $fields
       );
+      $this->restoreDebug();
 
       $dataSet[] = [
          'instance' => $instance,

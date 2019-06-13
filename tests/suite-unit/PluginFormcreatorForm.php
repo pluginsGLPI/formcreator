@@ -120,9 +120,11 @@ class PluginFormcreatorForm extends CommonTestCase {
       $output = $form->canPurgeItem();
       $this->boolean((boolean) $output)->isTrue();
 
+      $this->disableDebug();
       $form->saveForm([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
       ]);
+      $this->restoreDebug();
 
       $output = $form->canPurgeItem();
       $this->boolean((boolean) $output)->isFalse();
@@ -382,10 +384,12 @@ class PluginFormcreatorForm extends CommonTestCase {
       ]);
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $this->disableDebug();
       $formAnswerId = $formAnswer->saveAnswers($form, [
          'formcreator_form'         => $form->getID(),
          'formcreator_validator'    => $_SESSION['glpiID'],
       ], []);
+      $this->restoreDebug();
       $this->boolean($formAnswer->isNewId($formAnswerId))->isFalse();
 
       // 1 notification to the validator
