@@ -1281,9 +1281,10 @@ EOS;
          PluginFormcreatorCommon::setNotification(false);
 
          $followUpInput = [
-           'date'     => $_SESSION['glpi_currenttime'],
-           'users_id' => Session::getLoginUserID(),
-           'content'  => $message,
+           'date'                            => $_SESSION['glpi_currenttime'],
+           'users_id'                        => Session::getLoginUserID(),
+           'content'                         => $message,
+           '_do_not_compute_takeintoaccount' => true
          ];
          if (class_exists(ITILFollowup::class)) {
             // GLPI 9.4+
