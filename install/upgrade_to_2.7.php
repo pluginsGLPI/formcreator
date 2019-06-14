@@ -294,7 +294,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          'glpi_plugin_formcreator_issues',
       ];
       foreach ($tables as $table) {
-         $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id']);
+         $migration->changeField($table, 'name', 'name', 'VARCHAR(255) NOT NULL DEFAULT \'\' AFTER `id`');
       }
 
       //remove html entities in forms
