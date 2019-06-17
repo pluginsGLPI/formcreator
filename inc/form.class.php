@@ -46,6 +46,10 @@ PluginFormcreatorExportableInterface
    const ACCESS_PRIVATE      = 1;
    const ACCESS_RESTRICTED   = 2;
 
+   const VALIDATION_NONE     = 0;
+   const VALIDATION_USER     = 1;
+   const VALIDATION_GROUP    = 2;
+
    public static function canCreate() {
       return Session::haveRight('entity', UPDATE);
    }

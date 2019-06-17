@@ -737,23 +737,25 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Does the form need to be validated?
          $status = self::STATUS_ACCEPTED;
-         if ($form->fields['validation_required']) {
-            $status = self::STATUS_WAITING;
-         }
-
          $usersIdValidator = 0;
-         if ($form->getField('validation_required') == 1) {
-            $usersIdValidator = isset($data['formcreator_validator'])
-                                ? $data['formcreator_validator']
-                                : 0;
+         $groupIdValidator = 0;
+         $usersIdValidator = 0;
+         switch ($form->fields['validation_required']) {
+            case PluginFormcreatorForm::VALIDATION_USER:
+               $status = self::STATUS_WAITING;
+               $usersIdValidator = isset($data['formcreator_validator'])
+                                 ? $data['formcreator_validator']
+                                 : 0;
+               break;
+
+            case PluginFormcreatorForm::VALIDATION_GROUP:
+               $status = self::STATUS_WAITING;
+               $groupIdValidator = isset($data['formcreator_validator'])
+                                 ? $data['formcreator_validator']
+                                 : 0;
+               break;
          }
 
-         $groupIdValidator = 0;
-         if ($form->getField('validation_required') == 2) {
-            $groupIdValidator = isset($data['formcreator_validator'])
-                                ? $data['formcreator_validator']
-                                : 0;
-         }
          $id = $this->add([
             'entities_id'                 => isset($_SESSION['glpiactive_entity'])
                                                 ? $_SESSION['glpiactive_entity']
