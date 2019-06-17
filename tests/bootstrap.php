@@ -50,9 +50,9 @@ if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
 
 define('GLPI_LOG_DIR', __DIR__ . '/logs');
 @mkdir(GLPI_LOG_DIR);
-if (!defined('STDERR')) {
-   //define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
-}
+// if (!defined('STDERR')) {
+//    define('STDERR', fopen(GLPI_LOG_DIR . '/stderr.log', 'w'));
+// }
 
 //tests_rrmdir(GLPI_CACHE_DIR);
 //@mkdir(GLPI_CACHE_DIR);
