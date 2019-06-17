@@ -231,6 +231,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'PluginFormcreatorForm$1' => "Targets",
          'PluginFormcreatorForm$2' => "Preview",
          'PluginFormcreatorFormAnswer$1' => "Form answers",
+         'Log$1' => "Historical <sup class='tab_nb'>1</sup>",
       ]);
    }
 
