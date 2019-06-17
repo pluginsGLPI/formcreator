@@ -756,7 +756,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                break;
          }
 
-         $id = $this->add([
+         $formanswers_id = $this->add([
             'entities_id'                 => isset($_SESSION['glpiactive_entity'])
                                                 ? $_SESSION['glpiactive_entity']
                                                 : $form->fields['entities_id'],
@@ -775,7 +775,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          foreach ($questions as $questionId => $question) {
             $answer = new PluginFormcreatorAnswer();
             $answer->add([
-               'plugin_formcreator_formanswers_id'  => $id,
+               'plugin_formcreator_formanswers_id'  => $formanswers_id,
                'plugin_formcreator_questions_id'    => $question->getID(),
                'answer'                             => $fields[$questionId]->serializeValue(),
             ], [], 0);
@@ -827,12 +827,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Update issues table
          $issue = new PluginFormcreatorIssue();
-         $formAnswerId = $this->getID();
          if ($status != self::STATUS_REFUSED) {
-
             // If cannot get itemTicket from DB it happens either
             // when no item exist
-            // when several rows matches
+            // or when several rows matches
             // Both are processed the same way
             $itemTicket = new Item_Ticket();
             $rows = $DB->request([
@@ -840,14 +838,14 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'FROM'   => $itemTicket::getTable(),
                'WHERE'  => [
                   'itemtype' => PluginFormcreatorFormAnswer::class,
-                  'items_id' => $formAnswerId,
+                  'items_id' => $formanswers_id,
                ]
             ]);
             if ($rows->count() != 1) {
                if ($is_newFormAnswer) {
                   // This is a new answer for the form. Create an issue
                   $issue->add([
-                     'original_id'     => $id,
+                     'original_id'     => $formanswers_id,
                      'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
                      'name'            => addslashes($this->fields['name']),
                      'status'          => $status,
@@ -863,13 +861,12 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $issue->getFromDBByCrit([
                      'AND' => [
                        'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-                       'original_id'  => $formAnswerId
+                       'original_id'  => $formanswers_id
                      ]
                   ]);
-                  $id = $this->getID();
                   $issue->update([
                      'id'              => $issue->getID(),
-                     'original_id'     => $id,
+                     'original_id'     => $formanswers_id,
                      'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
                      'name'            => addslashes($this->fields['name']),
                      'status'          => $status,
@@ -883,15 +880,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   ]);
                }
             } else {
-               $ticket = new Ticket();
                $result = $rows->next();
                $itemTicket->getFromDB($result['id']);
-               $ticket->getFromDB($itemTicket->getField('tickets_id'));
+               $ticket = new Ticket();
+               if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
+                  throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $formanswers_id);
+               }
                $ticketId = $ticket->getID();
                if ($is_newFormAnswer) {
                   $issue->add([
                      'original_id'     => $ticketId,
-                     'sub_itemtype'    => 'Ticket',
+                     'sub_itemtype'    => Ticket::class,
                      'name'            => addslashes($ticket->getField('name')),
                      'status'          => $ticket->getField('status'),
                      'date_creation'   => $ticket->getField('date'),
@@ -906,13 +905,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   $issue->getFromDBByCrit([
                     'AND' => [
                       'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-                      'original_id'  => $formAnswerId
+                      'original_id'  => $formanswers_id
                     ]
                   ]);
                   $issue->update([
                      'id'              => $issue->getID(),
                      'original_id'     => $ticketId,
-                     'sub_itemtype'    => 'Ticket',
+                     'sub_itemtype'    => Ticket::class,
                      'name'            => addslashes($ticket->getField('name')),
                      'status'          => $ticket->getField('status'),
                      'date_creation'   => $ticket->getField('date'),
@@ -929,13 +928,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $issue->getFromDBByCrit([
               'AND' => [
                 'sub_itemtype' => PluginFormcreatorFormAnswer::class,
-                'original_id'  => $formAnswerId
+                'original_id'  => $formanswers_id
               ]
             ]);
             $issue->update([
                'id'              => $issue->getID(),
                'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
-               'original_id'     => $formAnswerId,
+               'original_id'     => $formanswers_id,
                'status'          => $status,
             ]);
          }
@@ -944,11 +943,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       Session::addMessageAfterRedirect(__('The form has been successfully saved!', 'formcreator'), true, INFO);
 
       // TODO: This reveals a real refactor need in this method !
-      if ($is_newFormAnswer) {
-         return $id;
-      } else {
-         return $this->getID();
-      }
+      return $formanswers_id;
    }
 
    /**
