@@ -123,7 +123,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   break;
 
                default:
-                  if (in_array($itemtype, $CFG_GLPI['ticket_types'])) {
+                  $assignableToTicket = in_array($itemtype, $CFG_GLPI['ticket_types']);
+                  if (Session::getLoginUserID()) {
+                     // Restrict assignable types to current profile's settings
+                     $assignableToTicket = CommonITILObject::isPossibleToAssignType($itemtype);
+                  }
+                  if ($assignableToTicket) {
                      $userFk = User::getForeignKeyField();
                      $groupFk = Group::getForeignKeyField();
                      $canViewAllHardware = Session::haveRight('helpdesk_hardware', pow(2, Ticket::HELPDESK_ALL_HARDWARE));
