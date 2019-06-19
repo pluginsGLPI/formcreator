@@ -228,22 +228,10 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          'Ticket'                         => __('An existing ticket', 'formcreator'),
       ];
       Dropdown::showFromArray('_link_itemtype', $elements, [
-         'on_change' => 'updateCompositePeerType()',
+         'on_change' => "plugin_formcretor_updateCompositePeerType($rand)",
          'rand'      => $rand,
       ]);
-      $script = <<<SCRIPT
-      function updateCompositePeerType() {
-         if ($('#dropdown__link_itemtype$rand').val() == 'Ticket') {
-            $('#plugin_formcreator_link_ticket').show();
-            $('#plugin_formcreator_link_target').hide();
-         } else {
-            $('#plugin_formcreator_link_ticket').hide();
-            $('#plugin_formcreator_link_target').show();
-         }
-      }
-      updateCompositePeerType();
-SCRIPT;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_updateCompositePeerType($rand);");
       // get already linked items
       $targetTicketId = $this->getID();
       $rows = $DB->request([

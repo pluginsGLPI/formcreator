@@ -1066,3 +1066,57 @@ function plugin_formceator_showPictogram(id, preview) {
    $('#' + preview).removeClass().addClass(value);
 }
 
+/**
+ * update composite ticket (links between tickets) in target ticket (design mode)
+ */
+function plugin_formcreator_updateCompositePeerType(rand) {
+   if ($('#dropdown__link_itemtype' + rand).val() == 'Ticket') {
+      $('#plugin_formcreator_link_ticket').show();
+      $('#plugin_formcreator_link_target').hide();
+   } else {
+      $('#plugin_formcreator_link_ticket').hide();
+      $('#plugin_formcreator_link_target').show();
+   }
+}
+
+/**
+ * update category settings in a form of a target object (design mode)
+ */
+ function plugin_formcreator_changeCategory(rand) {
+   $('#category_specific_title').hide();
+   $('#category_specific_value').hide();
+   $('#category_question_title').hide();
+   $('#category_question_value').hide();
+
+   switch($('#dropdown_category_rule' + rand).val()) {
+      case '3' :
+         $('#category_question_title').show();
+         $('#category_question_value').show();
+         break;
+      case '2' :
+         $('#category_specific_title').show();
+         $('#category_specific_value').show();
+         break;
+   }
+}
+
+/**
+ * change urgency of a target item (design mode)
+ */
+function plugin_formcreator_changeUrgency(rand) {
+   $('#urgency_specific_title').hide();
+   $('#urgency_specific_value').hide();
+   $('#urgency_question_title').hide();
+   $('#urgency_question_value').hide();
+
+   switch($('#dropdown_urgency_rule' + rand).val()) {
+      case '2' :
+         $('#urgency_question_title').show();
+         $('#urgency_question_value').show();
+         break;
+      case '3':
+         $('#urgency_specific_title').show();
+         $('#urgency_specific_value').show();
+         break;
+   }
+}
