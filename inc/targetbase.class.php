@@ -817,8 +817,6 @@ EOS;
    }
 
    protected function showCategorySettings(PluginFormcreatorForm $form, $rand) {
-      global $DB;
-
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Ticket category', 'formcreator') . '</td>';
       echo '<td width="25%">';
@@ -882,8 +880,6 @@ SCRIPT;
    }
 
    protected function showUrgencySettings(PluginFormcreatorForm $form, $rand) {
-      global $DB;
-
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Urgency') . '</td>';
       echo '<td width="45%">';
