@@ -825,31 +825,11 @@ EOS;
          static::getEnumCategoryRule(),
          [
             'value'     => $this->fields['category_rule'],
-            'on_change' => 'change_category()',
+            'on_change' => "plugin_formcreator_changeCategory($rand)",
             'rand'      => $rand,
          ]
       );
-      $script = <<<SCRIPT
-         function change_category() {
-            $('#category_specific_title').hide();
-            $('#category_specific_value').hide();
-            $('#category_question_title').hide();
-            $('#category_question_value').hide();
-
-            switch($('#dropdown_category_rule$rand').val()) {
-               case '3' :
-                  $('#category_question_title').show();
-                  $('#category_question_value').show();
-                  break;
-               case '2' :
-                  $('#category_specific_title').show();
-                  $('#category_specific_value').show();
-                  break;
-            }
-         }
-         change_category();
-SCRIPT;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_changeCategory($rand);");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
@@ -885,30 +865,10 @@ SCRIPT;
       echo '<td width="45%">';
       Dropdown::showFromArray('urgency_rule', static::getEnumUrgencyRule(), [
          'value'                 => $this->fields['urgency_rule'],
-         'on_change'             => 'change_urgency()',
+         'on_change'             => "plugin_formcreator_changeUrgency($rand)",
          'rand'                  => $rand
       ]);
-      $script = <<<EOS
-         function change_urgency() {
-            $('#urgency_specific_title').hide();
-            $('#urgency_specific_value').hide();
-            $('#urgency_question_title').hide();
-            $('#urgency_question_value').hide();
-
-            switch($('#dropdown_urgency_rule$rand').val()) {
-               case '2' :
-                  $('#urgency_question_title').show();
-                  $('#urgency_question_value').show();
-                  break;
-               case '3':
-                  $('#urgency_specific_title').show();
-                  $('#urgency_specific_value').show();
-                  break;
-            }
-         }
-         change_urgency();
-EOS;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_changeUrgency($rand);");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="urgency_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
