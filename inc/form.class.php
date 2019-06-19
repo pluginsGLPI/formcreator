@@ -369,6 +369,17 @@ PluginFormcreatorExportableInterface
       echo '</tr>';
 
       echo '<tr class="tab_bg_1">';
+      echo '<td>' . __('Form icon', 'formcreator') . '</td>';
+      echo '<td>';
+      PluginFormcreatorCommon::showFontAwesomeDropdown('icon', ['value' => $this->fields['icon']]);
+      echo '</td>';
+      echo '<td>' . __('Icon color', 'formcreator') . '</td>';
+      echo '<td>';
+      Html::showColorField('icon_color', ['value' => $this->fields['icon_color']]);
+      echo '</td>';
+      echo '</tr>';
+
+      echo '<tr class="tab_bg_1">';
       echo '<td>' . __('Description') . '</td>';
       echo '<td><input type="text" name="description" value="' . $this->fields['description'] . '" size="35" /></td>';
       echo '<td>' . __('Language') . '</td>';
@@ -818,7 +829,7 @@ PluginFormcreatorExportableInterface
 
       $result_forms = $DB->request([
          'SELECT' => [
-            $table_form => ['id', 'name', 'icon', 'description', 'usage_count', 'is_default'],
+            $table_form => ['id', 'name', 'icon', 'icon_color', 'description', 'usage_count', 'is_default'],
          ],
          'FROM' => $table_form,
          'LEFT JOIN' => [
@@ -867,6 +878,7 @@ PluginFormcreatorExportableInterface
                'id'           => $form['id'],
                'name'         => $form['name'],
                'icon'         => $form['icon'],
+               'icon_color'   => $form['icon_color'],
                'description'  => $form['description'],
                'type'         => 'form',
                'usage_count'  => $form['usage_count'],
@@ -974,6 +986,7 @@ PluginFormcreatorExportableInterface
                   'id'           => $form['id'],
                   'name'         => $form['name'],
                   'icon'         => $form['icon'],
+                  'icon_color'   => $form['icon_color'],
                   'description'  => $form['description'],
                   'type'         => 'form',
                   'usage_count'  => $form['usage_count'],
