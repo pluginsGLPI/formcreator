@@ -168,6 +168,7 @@ PluginFormcreatorTargetInterface
    const CATEGORY_RULE_NONE = 1;
    const CATEGORY_RULE_SPECIFIC = 2;
    const CATEGORY_RULE_ANSWER = 3;
+   const CATEGORY_RULE_NTH_VISIBLE_CATEGORY_QUESTION = 4;
 
    const LOCATION_RULE_NONE = 1;
    const LOCATION_RULE_SPECIFIC = 2;
@@ -218,6 +219,7 @@ PluginFormcreatorTargetInterface
          self::CATEGORY_RULE_NONE      => __('Category from template or none', 'formcreator'),
          self::CATEGORY_RULE_SPECIFIC  => __('Specific category', 'formcreator'),
          self::CATEGORY_RULE_ANSWER    => __('Equals to the answer to the question', 'formcreator'),
+         self::CATEGORY_RULE_NTH_VISIBLE_CATEGORY_QUESTION => __('N th visible category question', 'formcreator'),
       ];
    }
 
@@ -382,6 +384,48 @@ PluginFormcreatorTargetInterface
             break;
          case self::CATEGORY_RULE_SPECIFIC:
             $category = $this->fields['category_question'];
+            break;
+         case self::CATEGORY_RULE_NTH_VISIBLE_CATEGORY_QUESTION:
+            $form    = $formanswer->getForm();
+            $formFk = PluginFormcreatorForm::getForeignKeyField();
+            $questions = (new PluginFormcreatorQuestion())
+               ->getQuestionsFromForm($this->fields[$formFk]);
+            $fields = $form->getFields();
+            $answers_values = $formanswer->getAnswers($formanswer->getID());
+            $visibility = [];
+            // do not factorize the following foreach loops
+            foreach ($questions as $questionId => $question) {
+               $answer = $answers_values['formcreator_field_' . $questionId];
+               $fields[$questionId]->deserializeValue($answer);
+            }
+            foreach ($questions as $questionId => $question) {
+               $visibility[$questionId] = PluginFormcreatorFields::isVisible($questionId, $fields);
+            }
+            // build ordered list of visible ITIL category questions
+            $categoryQuestions = [];
+            foreach ($questions as $questionId => $question) {
+               if ($visibility[$questionId] && $question->fields['fieldtype'] == 'dropdown') {
+                  $decodedValues = json_decode($question->fields['values'], true);
+                  if ($decodedValues === null) {
+                     continue;
+                  }
+                  if ($decodedValues['itemtype'] == ITILCategory::class) {
+                     $categoryQuestions[] = $questionId;
+                  }
+               }
+            }
+            $nthQuestion = $this->fields['category_question'] - 1;
+            if (isset($categoryQuestions[$nthQuestion])) {
+               $category = $DB->request([
+                  'SELECT' => ['answer'],
+                  'FROM'   => PluginFormcreatorAnswer::getTable(),
+                  'WHERE'  => [
+                     'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                     'plugin_formcreator_questions_id'   => $categoryQuestions[$nthQuestion],
+                  ]
+               ])->next();
+               $category = $category['answer'];
+            }
             break;
          default:
             $category = null;
@@ -834,6 +878,7 @@ EOS;
       echo '<td width="15%">';
       echo '<span id="category_specific_title" style="display: none">' . __('Category', 'formcreator') . '</span>';
       echo '<span id="category_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
+      echo '<span id="category_nth_visible_question_title" style="display: none">' . __('Question index', 'formcreator') . '</span>';
       echo '</td>';
       echo '<td width="25%">';
       echo '<div id="category_question_value" style="display: none">';
@@ -854,6 +899,9 @@ EOS;
          'value'     => $this->fields["category_question"],
          'condition' => $this->getCategoryFilter(),
       ]);
+      echo '</div>';
+      echo '<div id="category_nth_visible_question_value" style="display: none">';
+      echo Html::input('_category_nth_visible', ['value' => $this->fields['category_question']]);
       echo '</div>';
       echo '</td>';
       echo '</tr>';

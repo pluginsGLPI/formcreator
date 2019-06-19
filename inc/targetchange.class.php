@@ -381,6 +381,17 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       // Control fields values :
       if (!isset($input['_skip_checks'])
             || !$input['_skip_checks']) {
+         // - name is required
+         if (empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+            return [];
+         }
+
+         // - content is required
+         if (strlen($input['content']) < 1) {
+            Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
+            return [];
+         }
 
          $input['content'] = Html::entity_decode_deep($input['content']);
          
@@ -428,6 +439,9 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
                case self::CATEGORY_RULE_SPECIFIC:
                   $input['category_question'] = $input['_category_specific'];
                   unset($input['_category_specific']);
+                  break;
+               case self::CATEGORY_RULE_NTH_VISIBLE_CATEGORY_QUESTION:
+                  $input['category_question'] = $input['_category_nth_visible'];
                   break;
                default:
                   $input['category_question'] = '0';

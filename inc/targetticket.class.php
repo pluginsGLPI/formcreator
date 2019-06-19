@@ -388,6 +388,9 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             case self::CATEGORY_RULE_SPECIFIC:
                $input['category_question'] = $input['_category_specific'];
                break;
+            case self::CATEGORY_RULE_NTH_VISIBLE_CATEGORY_QUESTION:
+               $input['category_question'] = $input['_category_nth_visible'];
+               break;
             default:
                $input['category_question'] = '0';
          }

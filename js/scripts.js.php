@@ -1087,13 +1087,19 @@ function plugin_formcreator_updateCompositePeerType(rand) {
    $('#category_specific_value').hide();
    $('#category_question_title').hide();
    $('#category_question_value').hide();
+   $('#category_nth_visible_question_title').hide();
+   $('#category_nth_visible_question_value').hide();
 
    switch($('#dropdown_category_rule' + rand).val()) {
-      case '3' :
+      case '4': // CATEGORY_RULE_NTH_VISIBLE_CATEGORY_QUESTION
+         $('#category_nth_visible_question_title').show();
+         $('#category_nth_visible_question_value').show();
+         break;
+      case '3' : // CATEGORY_RULE_ANSWER
          $('#category_question_title').show();
          $('#category_question_value').show();
          break;
-      case '2' :
+      case '2' : // CATEGORY_RULE_SPECIFIC
          $('#category_specific_title').show();
          $('#category_specific_value').show();
          break;
