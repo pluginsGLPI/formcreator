@@ -147,7 +147,7 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $this->createFontAwesomeList();
+      $this->buildFaData();
       $this->taskGitStack()
          ->stopOnFail()
          ->add('data/font-awesome.php')
@@ -574,7 +574,7 @@ class RoboFile extends RoboFilePlugin
       return $output;
    }
 
-   protected function createFontAwesomeList() {
+   public function buildFaData() {
       $versions = [
          [
             [
