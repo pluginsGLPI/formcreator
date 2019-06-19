@@ -261,7 +261,7 @@ function getFormAndFaqItems(categoryId) {
       dataType: "json"
    }).done(function (response) {
       deferred.resolve(response);
-   }).fail(function () {
+   }).fail(function (response) {
       deferred.reject();
    });
    return deferred.promise();
@@ -392,9 +392,18 @@ function buildTiles(list) {
             default_class = 'default_form';
          }
 
+         if (item.icon == '') {
+            if (item.type == 'form') {
+               item.icon = 'fa fa-question-circle';
+            } else {
+               item.icon = 'fa fa-clipboard-list';
+            }
+         }
+
          if (item.type == 'form') {
             forms.push(
                '<div class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               + '<i class="fa ' + item.icon + '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name
                + '</a>'
@@ -404,6 +413,7 @@ function buildTiles(list) {
          } else {
             faqs.push(
                '<div class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'
+               + '<i class="fa ' + item.icon + '"></i>'
                + '<a href="' + url + '" class="plugin_formcreator_formTile_title">'
                + item.name
                + '</a>'
@@ -1051,3 +1061,4 @@ function plugin_formceator_showPictogram(id, preview) {
    var value = $(id).val();
    $('#' + preview).removeClass().addClass(value);
 }
+

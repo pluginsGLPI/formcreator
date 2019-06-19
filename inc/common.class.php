@@ -73,6 +73,12 @@ class PluginFormcreatorCommon {
       $CFG_GLPI['use_notifications'] = $enable ? '1' : '0';
    }
 
+   public static function getGlpiVersion() {
+      return defined('GLPI_PREVER')
+             ? GLPI_PREVER
+             : GLPI_VERSION;
+   }
+
    /**
     * Get Link Name
     *
@@ -196,6 +202,7 @@ class PluginFormcreatorCommon {
       $previewId = $name . '_preview';
       $options['on_change'] = 'plugin_formceator_showPictogram(this, "' . $previewId . '")';
       $options['display'] = false;
+      $options['display_emptychoice'] = true;
       if (!isset($options['value'])) {
          $options['value'] = '';
       }
