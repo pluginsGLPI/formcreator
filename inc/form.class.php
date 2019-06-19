@@ -2076,7 +2076,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $formCategoryId = 0;
       if (isset($form['_plugin_formcreator_category'])) {
          $formCategoryId = $formCategory->import([
-            'completename' => $form['_plugin_formcreator_category'],
+            'completename' => Toolbox::addslashes_deep($form['_plugin_formcreator_category']),
          ]);
       }
       $form[$formCategoryFk] = $formCategoryId;
