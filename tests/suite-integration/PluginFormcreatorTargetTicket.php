@@ -152,7 +152,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $formId = $form->getID();
       $targetTicketsData = [
          [
-            'target_name'           => 'target 1',
+            'name'                  => 'target 1',
             'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
             'itemtype'              => \PluginFormcreatorTargetTicket::class,

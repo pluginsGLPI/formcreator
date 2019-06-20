@@ -143,6 +143,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targetchanges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
+  `target_name` varchar(255) NOT NULL DEFAULT '',
   `content` longtext,
   `impactcontent` longtext,
   `controlistcontent` longtext,

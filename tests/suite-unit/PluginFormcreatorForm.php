@@ -41,6 +41,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testImport':
          case 'testCanPurgeItem':
          case 'testDuplicate':
+         case 'testSaveForm':
             self::login('glpi', 'glpi');
       }
    }
@@ -594,8 +595,6 @@ class PluginFormcreatorForm extends CommonTestCase {
    public function testSaveForm() {
       global $CFG_GLPI;
 
-      $this->login('glpi', 'glpi');
-
       // disable notifications as we may fail in some case (not the purpose of this test btw)
       $use_notifications = $CFG_GLPI['use_notifications'];
       $CFG_GLPI['use_notifications'] = 0;
@@ -760,6 +759,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          ],
          [
             'input' => [
+               'name' => '',
                'itemtype' => \PluginFormcreatorTargetTicket::class,
                'plugin_formcreator_forms_id' => $form->getID(),
             ],
@@ -767,6 +767,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          ],
          [
             'input' => [
+               'name' => '',
                'itemtype' => \PluginFormcreatorTargetTicket::class,
                'plugin_formcreator_forms_id' => $this->getForm()->getID(),
             ],
@@ -774,6 +775,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          ],
          [
             'input' => [
+               'name' => '',
                'itemtype' => \PluginFormcreatorTargetChange::class,
                'plugin_formcreator_forms_id' => $this->getForm()->getID(),
             ],
@@ -813,6 +815,7 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean($output)->isFalse();
 
       $output = $instance->addTarget([
+         'name' => '',
          'itemtype' => \PluginFormcreatorTargetChange::class,
          'plugin_formcreator_forms_id' => $this->getForm()->getID(),
       ]);
