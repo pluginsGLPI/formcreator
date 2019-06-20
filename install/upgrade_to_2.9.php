@@ -56,6 +56,7 @@ class PluginFormcreatorUpgradeTo2_9 {
          'FROM' => 'glpi_plugin_formcreator_targets'
       ];
       foreach ($DB->request($request) as $target) {
+         $table = '';
          switch ($target['itemtype']) {
             case 'PluginFormcreatorTargetTicket':
                $table = 'glpi_plugin_formcreator_targettickets';
@@ -64,6 +65,9 @@ class PluginFormcreatorUpgradeTo2_9 {
             case 'PluginFormcreatorTargetChange':
                $table = 'glpi_plugin_formcreator_targetchanges';
                break;
+         }
+         if ($table === '') {
+            continue;
          }
          $DB->update(
             $table,

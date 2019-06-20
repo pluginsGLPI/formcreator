@@ -56,7 +56,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
 
       $targetTicket = new \PluginFormcreatorTargetTicket();
       $targetTicket->add([
-         'name'                        => 'a target',
+         'target_name'                 => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
       $targetTicket->getFromDB($targetTicket->getID());
@@ -152,7 +152,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $formId = $form->getID();
       $targetTicketsData = [
          [
-            'name'                  => 'target 1',
+            'target_name'           => 'target 1',
             'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
             'itemtype'              => \PluginFormcreatorTargetTicket::class,
@@ -161,7 +161,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             'expected'              => '5'
          ],
          [
-            'name'                  => 'target 2',
+            'target_name'           => 'target 2',
             'plugin_formcreator_forms_id' => $formId,
             'content'               => '##FULLFORM##',
             'itemtype'              => \PluginFormcreatorTargetTicket::class,
