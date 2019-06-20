@@ -703,6 +703,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $form->getByQuestionId($question->getID());
       $fields = $form->getFields();
       $instance->add([
+         'name' => 'foo',
          'plugin_formcreator_forms_id' => $form->getID(),
          'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER,
          'category_question' => $question->getID(),

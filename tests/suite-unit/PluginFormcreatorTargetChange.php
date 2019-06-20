@@ -75,6 +75,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       return [
          [
             'input' => [
+               'name' => '',
                'content' => '',
             ],
             'expected' => [
@@ -393,6 +394,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
       $fieldsWithoutID = [
          'name',
          'content',
+         'target_name',
          'impactcontent',
          'controlistcontent',
          'rolloutplancontent',

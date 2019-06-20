@@ -383,49 +383,55 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             || !$input['_skip_checks']) {
 
          $input['content'] = Html::entity_decode_deep($input['content']);
-
-         switch ($input['destination_entity']) {
-            case self::DESTINATION_ENTITY_SPECIFIC :
-               $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
-               unset($input['_destination_entity_value_specific']);
-               break;
-            case self::DESTINATION_ENTITY_USER :
-               $input['destination_entity_value'] = $input['_destination_entity_value_user'];
-               unset($input['_destination_entity_value_user']);
-               break;
-            case self::DESTINATION_ENTITY_ENTITY :
-               $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
-               unset($input['_destination_entity_value_entity']);
-               break;
-            default :
-               $input['destination_entity_value'] = 'NULL';
-               break;
+         
+         if (isset($input['destination_entity'])) {
+            switch ($input['destination_entity']) {
+               case self::DESTINATION_ENTITY_SPECIFIC :
+                  $input['destination_entity_value'] = $input['_destination_entity_value_specific'];
+                  unset($input['_destination_entity_value_specific']);
+                  break;
+               case self::DESTINATION_ENTITY_USER :
+                  $input['destination_entity_value'] = $input['_destination_entity_value_user'];
+                  unset($input['_destination_entity_value_user']);
+                  break;
+               case self::DESTINATION_ENTITY_ENTITY :
+                  $input['destination_entity_value'] = $input['_destination_entity_value_entity'];
+                  unset($input['_destination_entity_value_entity']);
+                  break;
+               default :
+                  $input['destination_entity_value'] = 'NULL';
+                  break;
+            }
          }
 
-         switch ($input['urgency_rule']) {
-            case self::URGENCY_RULE_ANSWER:
-               $input['urgency_question'] = $input['_urgency_question'];
-               unset($input['_urgency_question']);
-               break;
-            case self::URGENCY_RULE_SPECIFIC:
-               $input['urgency_question'] = $input['_urgency_specific'];
-               unset($input['_urgency_specific']);
-               break;
-            default:
-               $input['urgency_question'] = '0';
+         if (isset($input['urgency_rule'])) {
+            switch ($input['urgency_rule']) {
+               case self::URGENCY_RULE_ANSWER:
+                  $input['urgency_question'] = $input['_urgency_question'];
+                  unset($input['_urgency_question']);
+                  break;
+               case self::URGENCY_RULE_SPECIFIC:
+                  $input['urgency_question'] = $input['_urgency_specific'];
+                  unset($input['_urgency_specific']);
+                  break;
+               default:
+                  $input['urgency_question'] = '0';
+            }
          }
 
-         switch ($input['category_rule']) {
-            case self::CATEGORY_RULE_ANSWER:
-               $input['category_question'] = $input['_category_question'];
-               unset($input['_category_question']);
-               break;
-            case self::CATEGORY_RULE_SPECIFIC:
-               $input['category_question'] = $input['_category_specific'];
-               unset($input['_category_specific']);
-               break;
-            default:
-               $input['category_question'] = '0';
+         if (isset($input['category_rule'])) {
+            switch ($input['category_rule']) {
+               case self::CATEGORY_RULE_ANSWER:
+                  $input['category_question'] = $input['_category_question'];
+                  unset($input['_category_question']);
+                  break;
+               case self::CATEGORY_RULE_SPECIFIC:
+                  $input['category_question'] = $input['_category_specific'];
+                  unset($input['_category_specific']);
+                  break;
+               default:
+                  $input['category_question'] = '0';
+            }
          }
 
          $plugin = new Plugin();
