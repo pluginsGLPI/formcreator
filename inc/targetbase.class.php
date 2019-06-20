@@ -1714,7 +1714,7 @@ SCRIPT;
          return false;
       }
 
-      $input['name'] = $input['target_name'];
+      $input['target_name'] = $input['name'];
 
       // Set default content
       if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
@@ -1731,14 +1731,19 @@ SCRIPT;
    }
 
    public function prepareInputForUpdate($input) {
-      if (isset($input['name'])
-         && empty($input['name'])) {
-         Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-         return false;
-      }
+      if (!isset($input['_skip_checks'])
+            || !$input['_skip_checks']) {
+         if (isset($input['name'])
+            && empty($input['name'])) {
+            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
+            return [];
+         }
 
-      if (!isset($input['content']) || empty($input['content'])) {
-         $input['content'] = '##FULLFORM##';
+         // - content is required
+         if (strlen($input['content']) < 1) {
+            Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
+            return [];
+         }
       }
 
       if (isset($input['_skip_create_actors']) && $input['_skip_create_actors']) {

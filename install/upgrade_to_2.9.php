@@ -47,8 +47,10 @@ class PluginFormcreatorUpgradeTo2_9 {
       ];
       $formFk = 'plugin_formcreator_forms_id';
       foreach ($tables as $table) {
-         $migration->addField($table, $formFk, 'integer', ['after' => 'name']);
-         $migration->addField($table, 'target_name', 'string', ['after' => $formFk]);
+         $migration->addField($table, $formFk, 'integer', ['after' => 'id']);
+         $migration->changeField($table, 'name', 'target_name', 'string', ['after' => $formFk]);
+         $migration->migrationOneTable($table); // immediately rename the column
+         $migration->addField($table, 'name', 'string', ['after' => 'id']);
          $migration->addField($table, 'uuid', 'string');
          $migration->migrationOneTable($table);
       }
@@ -74,14 +76,14 @@ class PluginFormcreatorUpgradeTo2_9 {
             [
                $formFk => $target[$formFk],
                'uuid'  => $target['uuid'],
-               'target_name' => $target['name'],
+               'name'  => $target['name'],
             ],
             [
                'id' => $target['items_id'],
             ]
          );
       }
-      $migration->dropTable('glpi_plugin_formcreator_targets');
+      $migration->backupTables(['glpi_plugin_formcreator_targets']);
 
       // Remove enum for formanswer
       $this->enumToInt(
