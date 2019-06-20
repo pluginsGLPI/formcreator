@@ -1714,6 +1714,8 @@ SCRIPT;
          return false;
       }
 
+      $input['name'] = $input['target_name'];
+
       // Set default content
       if (!isset($input['content']) || isset($input['content']) && empty($input['content'])) {
          $input['content'] = '##FULLFORM##';
