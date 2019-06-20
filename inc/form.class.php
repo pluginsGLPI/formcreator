@@ -572,7 +572,7 @@ PluginFormcreatorExportableInterface
             $targetItemUrl = Toolbox::getItemTypeFormURL($targetType) . '?id=' . $targetId;
             echo '<td onclick="document.location=\'' . $targetItemUrl . '\'" style="cursor: pointer">';
 
-            echo $target->fields['target_name'];
+            echo $target->fields['name'];
             echo '</td>';
 
             echo '<td align="center" width="32">';
@@ -595,8 +595,8 @@ PluginFormcreatorExportableInterface
       echo '<tr class="line'.(($i + 1) % 2).'" id="add_target_row">';
       echo '<td colspan="3">';
       echo '<a href="javascript:plugin_formcreator_addTarget('.$ID.', \''.$token.'\');">
-                <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+" align="absmiddle" />
-                '.__('Add a destination', 'formcreator').'
+                <i class="fa fa-plus" />
+                '.__('Add a target', 'formcreator').'
             </a>';
       echo '</td>';
       echo '</tr>';
@@ -2463,11 +2463,11 @@ PluginFormcreatorExportableInterface
       echo '<form name="form_target" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
 
-      echo '<tr><th colspan="4">'.__('Add a destination', 'formcreator').'</th></tr>';
+      echo '<tr><th colspan="4">'.__('Add a target', 'formcreator').'</th></tr>';
 
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>'.__('Name').' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="40%"><input type="text" name="target_name" style="width:100%;" value="" /></td>';
+      echo '<td width="40%"><input type="text" name="name" style="width:100%;" value="" /></td>';
       echo '<td width="15%"><strong>'._n('Type', 'Types', 1).' <span style="color:red;">*</span></strong></td>';
       echo '<td width="30%">';
       $targetTypes = [];

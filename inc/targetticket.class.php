@@ -105,7 +105,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<tr><th colspan="2">' . __('Edit a destination', 'formcreator') . '</th></tr>';
       echo '<tr class="line1">';
       echo '<td width="15%"><strong>' . __('Name') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td width="85%"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '" /></td>';
+      echo '<td width="85%"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '" /></td>';
       echo '</tr>';
       echo '</table>';
 
@@ -116,7 +116,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Ticket title', 'formcreator') . ' <span style="color:red;">*</span></strong></td>';
-      echo '<td colspan="3"><input type="text" name="name" style="width:704px;" value="' . $this->fields['name'] . '"/></td>';
+      echo '<td colspan="3"><input type="text" name="target_name" style="width:704px;" value="' . $this->fields['target_name'] . '"/></td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
@@ -364,17 +364,6 @@ SCRIPT;
       // Control fields values :
       if (!isset($input['_skip_checks'])
           || !$input['_skip_checks']) {
-         // - name is required
-         if (empty($input['name'])) {
-            Session::addMessageAfterRedirect(__('The name cannot be empty!', 'formcreator'), false, ERROR);
-            return [];
-         }
-
-         // - comment is required
-         if (strlen($input['content']) < 1) {
-            Session::addMessageAfterRedirect(__('The description cannot be empty!', 'formcreator'), false, ERROR);
-            return [];
-         }
 
          $input['content'] = Html::entity_decode_deep($input['content']);
 
@@ -539,8 +528,6 @@ SCRIPT;
     * @return Ticket|false Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
-      global $DB, $CFG_GLPI;
-
       // Prepare actors structures for creation of the ticket
       $this->requesters = [
          '_users_id_requester'         => [],
@@ -628,7 +615,7 @@ SCRIPT;
       //       and the computation from a admin-defined target ticket template
       $richText = true;
       $data['name'] = $this->prepareTemplate(
-         $this->fields['name'],
+         $this->fields['target_name'],
          $formanswer,
          false
       );

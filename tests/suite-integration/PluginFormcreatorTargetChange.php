@@ -54,7 +54,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
 
       $targetChange = new \PluginFormcreatorTargetChange();
       $targetChange->add([
-         'target_name'                 => 'a target',
+         'name'                 => 'a target',
          'plugin_formcreator_forms_id' => $form->getID()
       ]);
       $this->boolean($targetChange->isNewItem())->isFalse();
