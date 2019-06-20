@@ -1964,7 +1964,7 @@ PluginFormcreatorExportableInterface
       $formCategoryId = 0;
       if ($input['_plugin_formcreator_category'] != '') {
          $formCategoryId = $formCategory->import([
-            'completename' => $input['_plugin_formcreator_category'],
+            'completename' => Toolbox::addslashes_deep($input['_plugin_formcreator_category']),
          ]);
       }
       $input[$formCategoryFk] = $formCategoryId;
