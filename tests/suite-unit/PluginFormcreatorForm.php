@@ -427,6 +427,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          'is_recursive',
          'icon',
          'icon_color',
+         'background_color',
          'access_rights',
          'requesttype',
          'description',
