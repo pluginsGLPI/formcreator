@@ -836,8 +836,15 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       if ($ldap_values === null) {
          $ldap_values = [];
       }
+      $current_entity = $_SESSION['glpiactive_entity'];
+      if ($current_entity == 0) {
+         $auth_ldap_condition = '';
+      } else {
+         $auth_ldap_condition = "glpi_authldaps.id = (select glpi_entities.authldaps_id from glpi_entities where id=${current_entity})";
+      }
       Dropdown::show('AuthLDAP', [
          'name'      => 'ldap_auth',
+         'condition' => $auth_ldap_condition,
          'rand'      => $rand,
          'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
          'on_change' => 'change_LDAP(this)',
