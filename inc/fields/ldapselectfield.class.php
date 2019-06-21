@@ -42,8 +42,14 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       if ($ldap_values === null) {
          $ldap_values = [];
       }
-      $field = Dropdown::show('AuthLDAP', [
+      $current_entity = $_SESSION['glpiactive_entity'];
+      $auth_ldap_condition = '';
+      if ($current_entity != 0) {
+         $auth_ldap_condition = "glpi_authldaps.id = (select glpi_entities.authldaps_id from glpi_entities where id=${current_entity})";
+      }
+      $field = Dropdown::show(AuthLDAP::class, [
          'name'      => 'ldap_auth',
+         'condition' => $auth_ldap_condition,
          'rand'      => $rand,
          'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
          'on_change' => 'plugin_formcreator_changeLDAP(this)',
