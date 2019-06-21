@@ -98,6 +98,10 @@ class DropdownField extends PluginFormcreatorAbstractField
          'on_change'           => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
          'display_emptychoice' => true,
          'display'             => false,
+         'specific_tags' => [
+            'data-type'     => __CLASS__,
+            'data-itemtype' => $itemtype
+         ],
       ]);
 
       $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
