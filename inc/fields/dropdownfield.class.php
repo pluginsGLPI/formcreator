@@ -56,6 +56,10 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'rand'      => $rand,
          'on_change' => 'plugin_formcreator_changeDropdownItemtype("' . $rand . '");',
          'display'   => false,
+         'specific_tags' => [
+            'data-type'     => __CLASS__,
+            'data-itemtype' => $itemtype
+         ],
       ]);
 
       $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
