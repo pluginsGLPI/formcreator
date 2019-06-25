@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_entityconfigs` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
   `entities_id` int(11) NOT NULL DEFAULT '0',
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
   `icon` varchar(255) NOT NULL DEFAULT '',
@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_formanswers` (
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `requester_id` int(11) DEFAULT NULL,
-  `users_id_validator` int(11) DEFAULT NULL,
-  `groups_id_validator` int(11) DEFAULT NULL,
+  `users_id_validator` int(11) NOT NULL DEFAULT '0',
+  `groups_id_validator` int(11) NOT NULL DEFAULT '0',
   `request_date` datetime NOT NULL,
   `status` int(11) DEFAULT '101',
   `comment` text,
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_forms_validators` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_sections_id` int(11) NOT NULL,
   `fieldtype` varchar(30) NOT NULL DEFAULT 'text',
   `required` tinyint(1) NOT NULL DEFAULT '0',
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   `uuid` varchar(255) DEFAULT NULL,
@@ -194,8 +194,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `due_date_period` int(11) DEFAULT NULL,
   `urgency_rule` int(11) DEFAULT '1',
   `urgency_question` int(11) NOT NULL DEFAULT '0',
-  `location_rule` int(11) NOT NULL DEFAULT '1',
-  `location_question` int(11) NOT NULL DEFAULT '0',
   `validation_followup` tinyint(1) NOT NULL DEFAULT '1',
   `destination_entity` int(11) NOT NULL DEFAULT '1',
   `destination_entity_value` int(11) DEFAULT NULL,
@@ -207,6 +205,8 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `associate_rule` int(11) NOT NULL DEFAULT '1',
   `associate_question` int(11) NOT NULL DEFAULT '0',
   `uuid` varchar(255) DEFAULT NULL,
+  `location_rule` enum('none','specific','answer') NOT NULL DEFAULT 'none',
+  `location_question` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   INDEX `tickettemplates_id` (`tickettemplates_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
