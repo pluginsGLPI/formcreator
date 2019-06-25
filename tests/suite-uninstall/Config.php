@@ -99,5 +99,4 @@ class Config extends CommonTestCase
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
    }
-
 }
