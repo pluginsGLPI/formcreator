@@ -121,6 +121,8 @@ class PluginFormcreatorUpgradeTo2_6 {
       // Fix bad foreign key
       $table = 'glpi_plugin_formcreator_answers';
       $migration->changeField($table, 'plugin_formcreator_question_id', 'plugin_formcreator_questions_id', 'integer');
+      $migration->dropKey($table, 'plugin_formcreator_question_id');
+      $migration->addKey($table, 'plugin_formcreator_questions_id', 'plugin_formcreator_questions_id');
 
       $table = 'glpi_plugin_formcreator_items_targettickets';
       if (!$DB->tableExists($table)) {

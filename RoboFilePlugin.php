@@ -36,7 +36,8 @@ class RoboFilePlugin extends \Robo\Tasks
       '/vendor/',
       '/node_modules/',
       '/lib/',
-      '/development/'
+      '/development/',
+      '/output/',
    ];
    protected $csfiles  = ['./'];
 
