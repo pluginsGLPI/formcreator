@@ -93,7 +93,5 @@ class Config extends CommonTestCase
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
-
    }
-
 }
