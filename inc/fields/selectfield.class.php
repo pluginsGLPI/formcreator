@@ -137,6 +137,10 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return [];
    }
 
+   public function getEmptyParameters() {
+      return [];
+   }
+
    public function equals($value) {
       return $this->value == $value;
    }
