@@ -168,7 +168,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          );
          $request = [
          'FROM' => $table,
-         'WHERE' => ['fieldtype' => ['float', 'integer', 'checkboxes', 'multiselect', 'text']]
+         'WHERE' => ['fieldtype' => ['float', 'integer', 'checkboxes', 'select', 'multiselect', 'text', 'textarea']]
          ];
          foreach ($DB->request($request) as $row) {
             $id = $row['id'];
