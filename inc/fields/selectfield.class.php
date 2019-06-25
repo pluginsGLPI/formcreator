@@ -151,6 +151,10 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return "tab_fields_fields['select'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
+   public function getEmptyParameters() {
+      return [];
+   }
+
    public function equals($value) {
       return $this->value == $value;
    }
