@@ -105,8 +105,6 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   `show_empty` tinyint(1) NOT NULL DEFAULT '0',
   `default_values` text,
   `values` text,
-  `range_min` varchar(10) DEFAULT NULL,
-  `range_max` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   `show_rule` enum('always','hidden','shown') NOT NULL DEFAULT 'always',
