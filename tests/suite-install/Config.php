@@ -148,6 +148,8 @@ class Config extends CommonTestCase {
          $update_diff = array_diff($updated_idx, $fresh_idx);
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
+
+      $this->testRequestType();
    }
 
    public function testPluginName() {
@@ -165,5 +167,11 @@ class Config extends CommonTestCase {
          ->hasKeys(['schema_version'])
          ->hasSize(1);
       $this->string($config['schema_version'])->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
+   }
+
+   public function testRequestType() {
+      $requestType = new \RequestType();
+      $requestType->getFromDBByCrit(['name' => 'Formcreator']);
+      $this->boolean($requestType->isNewItem())->isFalse();
    }
 }
