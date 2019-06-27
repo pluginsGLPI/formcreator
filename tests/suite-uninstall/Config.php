@@ -90,10 +90,14 @@ class Config extends CommonTestCase
       ])->next();
       $this->integer((int)$rows['cpt'])->isEqualTo(0);
 
+      // Check that the requesttype is NOT deleted
+      $requestType = new \RequestType();
+      $requestType->getFromDBByCrit(['name' => 'Formcreator']);
+      $this->boolean($requestType->isNewItem())->isFalse();
+   
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
-
    }
 
 }
