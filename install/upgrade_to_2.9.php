@@ -291,6 +291,10 @@ class PluginFormcreatorUpgradeTo2_9 {
          );
       }
 
+      $table = 'glpi_plugin_formcreator_targettickets';
+      $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
+      $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
+
       $table = 'glpi_plugin_formcreator_forms';
       $migration->addField($table, 'icon', 'string', ['after' => 'is_recursive']);
       $migration->addField($table, 'icon_color', 'string', ['after' => 'icon']);
