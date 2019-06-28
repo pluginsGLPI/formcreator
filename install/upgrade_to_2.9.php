@@ -95,7 +95,7 @@ class PluginFormcreatorUpgradeTo2_9 {
             'accepted' => 103,
          ],
          [
-            'default_value' => '1'
+            'value' => '101'
          ]
       );
 
@@ -109,7 +109,7 @@ class PluginFormcreatorUpgradeTo2_9 {
             'shown' => 3,
          ],
          [
-            'default_value' => '1'
+            'value' => '1'
          ]
       );
 
@@ -122,7 +122,7 @@ class PluginFormcreatorUpgradeTo2_9 {
             'OR'  => 2,
          ],
          [
-            'default_value' => '1'
+            'value' => '1'
          ]
       );
 
@@ -139,7 +139,7 @@ class PluginFormcreatorUpgradeTo2_9 {
             '>='  => 6,
          ],
          [
-            'default_value' => '1'
+            'value' => '1'
          ]
       );
 
@@ -158,7 +158,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'calc'     => 4,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
 
@@ -172,7 +172,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'month'  => 4,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
 
@@ -185,7 +185,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'answer'    => 3,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
 
@@ -205,7 +205,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'entity'                   => 9,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
 
@@ -221,7 +221,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'questions_or_specific'  => 5,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
 
@@ -235,7 +235,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'answer'    => 3,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
       }
@@ -249,7 +249,7 @@ class PluginFormcreatorUpgradeTo2_9 {
             'answer'    => 3,
          ],
          [
-            'default_value' => '1'
+            'value' => '1'
          ]
       );
 
@@ -267,7 +267,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'assigned'  => 3,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
 
@@ -286,7 +286,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'question_actors'   => 9,
             ],
             [
-               'default_value' => '1'
+               'value' => '1'
             ]
          );
       }
