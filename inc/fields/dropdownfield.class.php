@@ -248,7 +248,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       return Toolbox::addslashes_deep($value);
    }
 
-
    public function getDocumentsForTarget() {
       return [];
    }

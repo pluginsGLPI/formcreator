@@ -967,7 +967,7 @@ EOS;
          echo '<div id="tag_specific_value" style="display: none">';
 
          $result = $DB->request([
-            'SELECT' => ['name'],
+            'SELECT' => ['id', 'name'],
             'FROM'   => PluginTagTag::getTable(),
             'WHERE'  => [
                'AND' => [
