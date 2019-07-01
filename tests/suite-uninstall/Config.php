@@ -94,7 +94,7 @@ class Config extends CommonTestCase
       $requestType = new \RequestType();
       $requestType->getFromDBByCrit(['name' => 'Formcreator']);
       $this->boolean($requestType->isNewItem())->isFalse();
-   
+
       // TODO: need to find a reliable way to detect not clenaed
       // - NotificationTemplateTranslation
       // - Notification_NotificationTemplate
