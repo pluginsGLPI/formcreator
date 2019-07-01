@@ -90,7 +90,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function deserializeValue($value) {
-      $deserialized  = [];
       $this->value = ($value !== null && $value !== '')
                   ? explode("\r\n", $value)
                   : [];
