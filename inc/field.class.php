@@ -266,4 +266,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       }
       return $additions;
    }
+
+   public function getQuestionId() {
+      return $this->fields['id'];
+   }
 }
