@@ -973,7 +973,7 @@ SCRIPT;
          echo '<div id="tag_specific_value" style="display: none">';
 
          $result = $DB->request([
-            'SELECT' => ['name'],
+            'SELECT' => ['id', 'name'],
             'FROM'   => PluginTagTag::getTable(),
             'WHERE'  => [
                'AND' => [
@@ -1843,7 +1843,7 @@ SCRIPT;
             $formAnswerFk = PluginFormcreatorFormAnswer::getForeignKeyField();
             $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
             $result = $DB->request([
-               'SELECT' => ['answer'],
+               'SELECT' => ['plugin_formcreator_questions_id', 'answer'],
                'FROM' => PluginFormcreatorAnswer::getTable(),
                'WHERE' => [
                   $formAnswerFk => [(int) $formanswer->fields['id']],
@@ -1851,7 +1851,17 @@ SCRIPT;
                ],
             ]);
             foreach ($result as $line) {
-               $tab = json_decode($line['answer']);
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($line['plugin_formcreator_questions_id']);
+               $field = PluginFormcreatorFields::getFieldInstance(
+                  $question->fields['fieldtype'],
+                  $question
+               );
+               $field->deserializeValue($line['answer']);
+               $tab = $field->getRawValue();
+               if (is_integer($tab)) {
+                  $tab = [$tab];
+               }
                if (is_array($tab)) {
                   $tags = array_merge($tags, $tab);
                }
