@@ -404,7 +404,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          }
 
          $plugin = new Plugin();
-         if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         if ($plugin->isActivated('tag')) {
             $input['tag_questions'] = (!empty($input['_tag_questions']))
                                        ? implode(',', $input['_tag_questions'])
                                        : '';

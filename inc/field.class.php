@@ -67,8 +67,8 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
       return $input;
    }
 
-   public function getValueForTarget() {
-      return Toolbox::addslashes_deep($this->value);
+   public function getRawValue() {
+      return $this->value;
    }
 
    /**

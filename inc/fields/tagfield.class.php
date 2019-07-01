@@ -103,6 +103,11 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       return implode("\r\n", $this->value);
    }
 
+   public function getValueForTargetText($richText) {
+      $value = Dropdown::getDropdownName(PluginTagTag::getTable(), $this->value);
+      return Toolbox::addslashes_deep($value);
+   }
+
    public function isValid() {
       // If the field is required it can't be empty
       if ($this->isRequired() && $this->value == '') {
