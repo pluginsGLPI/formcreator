@@ -970,10 +970,13 @@ EOS;
             'SELECT' => ['name'],
             'FROM'   => PluginTagTag::getTable(),
             'WHERE'  => [
-               'OR' => [
-                  ['type_menu' => ['LIKE', $this->getTargetItemtypeName()]],
-                  ['type_menu' => ['LIKE', '0']],
-               ] + getEntitiesRestrictCriteria(PluginTagTag::getTable())
+               'AND' => [
+                  'OR' => [
+                     ['type_menu' => ['LIKE', '%"' . $this->getTargetItemtypeName() . '"%']],
+                     ['type_menu' => ['LIKE', '%"0"%']]
+                  ],
+                  getEntitiesRestrictCriteria(PluginTagTag::getTable()),
+               ]
             ]
          ]);
          $values = [];
