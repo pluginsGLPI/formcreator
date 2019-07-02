@@ -1120,3 +1120,21 @@ function plugin_formcreator_changeUrgency(rand) {
          break;
    }
 }
+
+function plugin_formcreator_change_associate(rand) {
+   $('#plugin_formcreator_associate_specific_title').hide();
+   $('#plugin_formcreator_associate_specific_value').hide();
+   $('#plugin_formcreator_associate_question_title').hide();
+   $('#plugin_formcreator_associate_question_value').hide();
+
+   switch($('#dropdown_associate_rule' + rand).val()) {
+      case '3': // PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER
+         $('#plugin_formcreator_associate_question_title').show();
+         $('#plugin_formcreator_associate_question_value').show();
+         break;
+      case '2': // PluginFormcreatorTargetTicket::ASSOCIATE_RULE_SPECIFIC
+         $('#plugin_formcreator_associate_specific_title').show();
+         $('#plugin_formcreator_associate_specific_value').show();
+         break;
+   }
+}

@@ -761,29 +761,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          'on_change'             => 'plugin_formcreator_change_associate()',
          'rand'                  => $rand
       ]);
-      $ruleAnswer = self::ASSOCIATE_RULE_ANSWER;
-      $ruleSpecific = self::ASSOCIATE_RULE_SPECIFIC;
-      $script = <<<SCRIPT
-         function plugin_formcreator_change_associate() {
-            $('#plugin_formcreator_associate_specific_title').hide();
-            $('#plugin_formcreator_associate_specific_value').hide();
-            $('#plugin_formcreator_associate_question_title').hide();
-            $('#plugin_formcreator_associate_question_value').hide();
-
-            switch($('#dropdown_associate_rule$rand').val()) {
-               case '$ruleAnswer':
-                  $('#plugin_formcreator_associate_question_title').show();
-                  $('#plugin_formcreator_associate_question_value').show();
-                  break;
-               case '$ruleSpecific':
-                  $('#plugin_formcreator_associate_specific_title').show();
-                  $('#plugin_formcreator_associate_specific_value').show();
-                  break;
-            }
-         }
-         plugin_formcreator_change_associate();
-SCRIPT;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_change_associate($rand)");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="plugin_formcreator_associate_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
