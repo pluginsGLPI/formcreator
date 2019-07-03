@@ -56,6 +56,7 @@ DOC;
 $docopt = new \Docopt\Handler();
 $args = $docopt->handle($doc);
 $args = $args->args;
+$pluginName = basename(dirname(__DIR__));
 
 $asUser = 'glpi';
 if (isset($args)) {
@@ -111,16 +112,16 @@ $plugin = new Plugin();
 
 // Install the plugin
 $plugin->checkStates(true);
-if (!$plugin->getFromDBbyDir("formcreator")) {
+if (!$plugin->getFromDBbyDir($pluginName)) {
    print("Failed : GLPi does not find the plugin" . PHP_EOL);
    exit(1);
 }
 print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
 if ($args['--force-install']) {
-   $_SESSION['plugin_formcreator']['cli'] = 'force-install';
+   $_SESSION["plugin_$pluginName"]['cli'] = 'force-install';
 }
 if ($args['--force-upgrade']) {
-   $_SESSION['plugin_formcreator']['cli'] = 'force-upgrade';
+   $_SESSION["plugin_$pluginName"]['cli'] = 'force-upgrade';
 }
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
@@ -137,5 +138,5 @@ print("Activation Done" . PHP_EOL);
 
 //Load the plugin
 print("Loading Plugin..." . PHP_EOL);
-$plugin->load("formcreator");
+$plugin->load($pluginName);
 print("Load Done..." . PHP_EOL);
