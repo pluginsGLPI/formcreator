@@ -245,7 +245,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       } else {
          $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($itemtype), $this->value);
       }
-      return Toolbox::addslashes_deep($value);
+      return $value;
    }
 
    public function getDocumentsForTarget() {
