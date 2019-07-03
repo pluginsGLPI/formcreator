@@ -249,7 +249,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'id'            => $optindex,
                'table'         => PluginFormcreatorAnswer::getTable(),
                'field'         => 'answer',
-               'name'          => $current_question->getField('name'),
+               'name'          => $current_question->fields['name'],
                'datatype'      => 'string',
                'massiveaction' => false,
                'nosearch'      => false,
