@@ -78,7 +78,17 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
          });");
       } else {
          echo '<div class="form_field">';
-         echo empty($this->value) ? '' : implode('<br />', json_decode($this->value));
+         $tagNames = [];
+         if (count($this->value) > 0) {
+            foreach ($this->value as $tagId) {
+               $tag = new PluginTagTag();
+               if (!$tag->getFromDB($tagId)) {
+                  continue;
+               }
+               $tagNames[] = $tag->fields['name'];
+            }
+         }
+         echo implode(', ', $tagNames);
          echo '</div>';
       }
    }
