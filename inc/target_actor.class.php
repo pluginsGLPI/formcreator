@@ -105,34 +105,44 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
       }
 
       // set ID for linked objects
-      if (isset($input['_question'])) {
-         $linked = $linker->getObject($input['_question'], PluginFormcreatorQuestion::class);
-         if ($linked === false) {
-            $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
-            return false;
-         }
-         $input['actor_value'] = $linked->getID();
-      } else if (isset($input['_user'])) {
-         $user = new User;
-         $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user']);
-         if ($users_id === false) {
-            throw new ImportFailureException('failed to find a user');
-         }
-         $input['actor_value'] = $users_id;
-      } else if (isset($input['_group'])) {
-         $group = new Group;
-         $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group']);
-         if ($groups_id === false) {
-            throw new ImportFailureException('failed to find a group');
-         }
-         $input['actor_value'] = $groups_id;
-      } else if (isset($input['_supplier'])) {
-         $supplier = new Supplier;
-         $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
-         if ($suppliers_id === false) {
-            throw new ImportFailureException('failed to find a supplier');
-         }
-         $input['actor_value'] = $suppliers_id;
+      switch ($input['actor_type']) {
+         case self::ACTOR_TYPE_QUESTION_PERSON :
+         case self::ACTOR_TYPE_QUESTION_GROUP :
+         case self::ACTOR_TYPE_QUESTION_SUPPLIER :
+            $question = $linker->getObject($input['actor_value'], PluginFormcreatorQuestion::class);
+            if ($question === false) {
+               $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
+               return false;
+            }
+            $input['actor_value'] = $question->getID();
+            break;
+
+         case self::ACTOR_TYPE_PERSON:
+            $user = new User;
+            $users_id = plugin_formcreator_getFromDBByField($user, 'name', $input['_user']);
+            if ($users_id === false) {
+               throw new ImportFailureException('failed to find a user');
+            }
+            $input['actor_value'] = $users_id;
+            break;
+
+         case self::ACTOR_TYPE_GROUP:
+            $group = new Group;
+            $groups_id = plugin_formcreator_getFromDBByField($group, 'completename', $input['_group']);
+            if ($groups_id === false) {
+               throw new ImportFailureException('failed to find a group');
+            }
+            $input['actor_value'] = $groups_id;
+            break;
+
+         case self::ACTOR_TYPE_SUPPLIER:
+            $supplier = new Supplier;
+            $suppliers_id = plugin_formcreator_getFromDBByField($supplier, 'name', $input['_supplier']);
+            if ($suppliers_id === false) {
+               throw new ImportFailureException('failed to find a supplier');
+            }
+            $input['actor_value'] = $suppliers_id;
+            break;
       }
 
       $originalId = $input[$idKey];
@@ -166,6 +176,7 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
 
       $target_actor = $this->fields;
 
+      // remove key and fk
       unset($target_actor[static::$items_id]);
 
       // remove ID or UUID
@@ -181,29 +192,25 @@ abstract class PluginFormcreatorTarget_Actor extends CommonDBChild implements Pl
             case self::ACTOR_TYPE_QUESTION_ACTORS:
                $question = new PluginFormcreatorQuestion;
                if ($question->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['_question'] = $question->fields['uuid'];
-                  unset($target_actor['actor_value']);
+                  $target_actor['actor_value'] = $question->fields['uuid'];
                }
                break;
             case self::ACTOR_TYPE_PERSON:
                $user = new User;
                if ($user->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['_user'] = $user->fields['name'];
-                  unset($target_actor['actor_value']);
+                  $target_actor['actor_value'] = $user->fields['name'];
                }
                break;
             case self::ACTOR_TYPE_GROUP:
                $group = new Group;
                if ($group->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['_group'] = $group->fields['completename'];
-                  unset($target_actor['actor_value']);
+                  $target_actor['actor_value'] = $group->fields['completename'];
                }
                break;
             case self::ACTOR_TYPE_SUPPLIER:
                $supplier = new Supplier;
                if ($supplier->getFromDB($target_actor['actor_value'])) {
-                  $target_actor['_supplier'] = $supplier->fields['name'];
-                  unset($target_actor['actor_value']);
+                  $target_actor['actor_value'] = $supplier->fields['name'];
                }
                break;
          }

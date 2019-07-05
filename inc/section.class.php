@@ -293,7 +293,7 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
          'SELECT' => ['id'],
          'FROM'   => $form_question::getTable(),
          'WHERE'  => [
-            'plugin_formcreator_sections_id' => $this->getID()
+            self::getForeignKeyField() => $this->getID()
          ]
       ]);
       foreach ($all_questions as $question) {
