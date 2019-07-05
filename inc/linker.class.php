@@ -102,7 +102,7 @@ class PluginFormcreatorLinker
             $postponedCount += count($postponedItemtypeList);
             $newList = $postponedItemtypeList;
             foreach ($postponedItemtypeList as $originalId => $postponedItem) {
-               if ($itemtype::import($this, $postponedItem['relationId'], $postponedItem['input']) === false) {
+               if ($itemtype::import($this, $postponedItem['input'], $postponedItem['relationId']) === false) {
                   $newList[$originalId] = $postponedItem;
                   $postponedAgainCount++;
                }
