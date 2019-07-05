@@ -1541,7 +1541,15 @@ PluginFormcreatorExportableInterface
       if ($new_form_id === false) {
          return false;
       }
+      $newForm = new self();
+      $newForm->getFromDB($new_form_id);
+      $newName = $newForm->fields['name'] . ' [' . __('Duplicate', 'formcreator') . ']';
+      $newForm->update([
+         'id' => $new_form_id,
+         'name' => Toolbox::addslashes_deep($newName),
+      ]);
       $linker->linkPostponed();
+
 
       return $new_form_id;
    }
