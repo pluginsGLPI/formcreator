@@ -1106,8 +1106,15 @@ SCRIPT;
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => ['glpiselect'],
-            'values' => User::class,
+            'OR' => [
+               'AND' => [
+                  'fieldtype' => ['glpiselect'],
+                  'values' => User::class,
+               ],
+               [
+                  'fieldtype' => ['email'],
+               ]
+            ],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
          [
@@ -1236,8 +1243,15 @@ SCRIPT;
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => ['glpiselect'],
-            'values' => User::class,
+            'OR' => [
+               'AND' => [
+                  'fieldtype' => ['glpiselect'],
+                  'values' => User::class,
+               ],
+               [
+                  'fieldtype' => ['email'],
+               ]
+            ],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
          [
@@ -1373,8 +1387,15 @@ SCRIPT;
       PluginFormcreatorQuestion::dropdownForForm(
          $this->getForm()->getID(),
          [
-            'fieldtype' => ['glpiselect'],
-            'values' => User::class,
+            'OR' => [
+               'AND' => [
+                  'fieldtype' => ['glpiselect'],
+                  'values' => User::class,
+               ],
+               [
+                  'fieldtype' => ['email'],
+               ]
+            ],
          ],
          'actor_value_' . PluginFormcreatorTarget_Actor::ACTOR_TYPE_QUESTION_PERSON,
          [
