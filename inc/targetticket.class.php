@@ -696,8 +696,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          $i++;
          echo '<tr class="line' . ($i % 2) . '">';
          echo '<td colspan="2">' . $question['question'] . '</td>';
-         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
-         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
+         echo '<td align="center">##question_' . $question['id'] . '##</td>';
+         echo '<td align="center">##answer_' . $question['id'] . '##</td>';
          echo '<td align="center">' . $question['section'] . '</td>';
          echo '</tr>';
       }
