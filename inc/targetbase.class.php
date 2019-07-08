@@ -1816,8 +1816,8 @@ SCRIPT;
 
       echo '<tr class="line0">';
       echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center"><code>-</code></td>';
-      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
+      echo '<td align="center">-</td>';
+      echo '<td align="center"><strong>##FULLFORM##</strong></td>';
       echo '<td align="center">-</td>';
       echo '</tr>';
 
@@ -1830,8 +1830,8 @@ SCRIPT;
             $i++;
             echo '<tr class="line' . ($i % 2) . '">';
             echo '<td colspan="2">' . $questionName . '</td>';
-            echo '<td align="center"><code>##question_' . $questionId . '##</code></td>';
-            echo '<td align="center"><code>##answer_' . $questionId . '##</code></td>';
+            echo '<td align="center">##question_' . $questionId . '##</td>';
+            echo '<td align="center">##answer_' . $questionId . '##</td>';
             echo '<td align="center">' . $sectionName . '</td>';
             echo '</tr>';
          }
