@@ -676,8 +676,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line0">';
       echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center"><code>-</code></td>';
-      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
+      echo '<td align="center">-</td>';
+      echo '<td align="center"><strong>##FULLFORM##</strong></td>';
       echo '<td align="center">-</td>';
       echo '</tr>';
 
