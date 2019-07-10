@@ -212,9 +212,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       if (!is_string($input[$key])) {
          return false;
       }
-      if ($input[$key] != (float) str_replace(',', '.', $input[$key])) {
-         return false;
-      }
+      $input[$key] != (float) str_replace(',', '.', $input[$key]);
 
        $this->value = $input[$key];
        return true;
