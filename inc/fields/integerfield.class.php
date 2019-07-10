@@ -242,9 +242,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       if (!is_string($input[$key])) {
          return false;
       }
-      if ($input[$key] != (int) $input[$key]) {
-         return false;
-      }
+      $input[$key] != (int) $input[$key];
 
        $this->value = $input[$key];
        return true;
