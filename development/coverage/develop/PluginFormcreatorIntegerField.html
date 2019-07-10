@@ -1003,14 +1003,14 @@ layout: coverage
                     <th id="L106" class="number ">106</th>
 
                     <td class="" id="isValidValue">
-                        <pre>   public function isValidValue() {<span class="label label-success">86%</span><div class="btn-group"></div></pre>
+                        <pre>   public function isValidValue($value) {<span class="label label-success">86%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L107" class="number covered">107</th>
 
                     <td class="covered" >
-                        <pre>      if (!empty($this-&gt;value) &amp;&amp; !ctype_digit($this-&gt;value)) {</pre>
+                        <pre>      if (!empty($value) &amp;&amp; !ctype_digit($value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1091,7 +1091,7 @@ layout: coverage
                     <th id="L118" class="number uncovered">118</th>
 
                     <td class="uncovered" >
-                        <pre>            if (!preg_match($regex, $this-&gt;value)) {</pre>
+                        <pre>            if (!preg_match($regex, $value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1173,7 +1173,7 @@ layout: coverage
                     <th id="L129" class="number covered">129</th>
 
                     <td class="covered" >
-                        <pre>         if ($rangeMin &gt; 0 &amp;&amp; $this-&gt;value &lt; $rangeMin) {</pre>
+                        <pre>         if ($rangeMin &gt; 0 &amp;&amp; $value &lt; $rangeMin) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1217,7 +1217,7 @@ layout: coverage
                     <th id="L135" class="number covered">135</th>
 
                     <td class="covered" >
-                        <pre>         if ($rangeMax &gt; 0 &amp;&amp; $this-&gt;value &gt; $rangeMax) {</pre>
+                        <pre>         if ($rangeMax &gt; 0 &amp;&amp; $value &gt; $rangeMax) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
