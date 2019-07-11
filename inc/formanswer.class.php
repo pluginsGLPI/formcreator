@@ -1155,12 +1155,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $question = new PluginFormcreatorQuestion();
 
       $found_questions = $question->getQuestionsFromForm($this->fields['plugin_formcreator_forms_id']);
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+      foreach ($found_questions as $questionId => $question) {
+         $answer = $answers_values['formcreator_field_' . $questionId];
+         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
          );
-         $fields[$id]->parseAnswerValues($answers_values);
+         $fields[$questionId]->deserializeValue($answer);
       }
 
       // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)
