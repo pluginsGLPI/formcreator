@@ -199,19 +199,19 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    }
 
    public function equals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      return $this->value == $value;
    }
 
    public function notEquals($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      return !$this->equals($value);
    }
 
    public function greaterThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      return $this->value > $value;
    }
 
    public function lessThan($value) {
-      throw new PluginFormcreatorComparisonException('Meaningless comparison');
+      return !$this->greaterThan($value) && !$this->equals($value);
    }
 
    public function isAnonymousFormCompatible() {
