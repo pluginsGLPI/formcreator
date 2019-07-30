@@ -1138,3 +1138,47 @@ function plugin_formcreator_change_associate(rand) {
          break;
    }
 }
+
+function plugin_formcreator_change_location(rand) {
+   $('#location_specific_title').hide();
+   $('#location_specific_value').hide();
+   $('#location_question_title').hide();
+   $('#location_question_value').hide();
+
+   switch($('#dropdown_location_rule' + rand).val()) {
+      case '3' : // PluginFormcreatorTargetBase::CATEGORY_RULE_ANSWER
+         $('#location_question_title').show();
+         $('#location_question_value').show();
+         break;
+      case '2' : // PluginFormcreatorTargetBase::CATEGORY_RULE_SPECIFIC
+         $('#location_specific_title').show();
+         $('#location_specific_value').show();
+         break;
+   }
+}
+
+function plugin_formcreator_change_entity(rand) {
+   $('#entity_specific_title').hide();
+   $('#entity_user_title').hide();
+   $('#entity_entity_title').hide();
+   $('#entity_specific_value').hide();
+   $('#entity_user_value').hide();
+   $('#entity_entity_value').hide();
+
+   switch($('#dropdown_destination_entity' + rand).val()) {
+      case '7' : // PluginFormcreatorTargetBase::DESTINATION_ENTITY_SPECIFIC
+         $('#entity_specific_title').show();
+         $('#entity_specific_value').show();
+         break;
+      case '8' : // PluginFormcreatorTargetBase::DESTINATION_ENTITY_USER
+         $('#entity_user_title').show();
+         $('#entity_user_value').show();
+         break;
+      case '9' : // PluginFormcreatorTargetBase::DESTINATION_ENTITY_ENTITY
+         $('#entity_entity_title').show();
+         $('#entity_entity_value').show();
+         break;
+   }
+}
+
+
