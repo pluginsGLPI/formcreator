@@ -758,7 +758,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<td width="45%">';
       Dropdown::showFromArray('associate_rule', static::getEnumAssociateRule(), [
          'value'                 => $this->fields['associate_rule'],
-         'on_change'             => 'plugin_formcreator_change_associate()',
+         'on_change'             => "plugin_formcreator_change_associate($rand)",
          'rand'                  => $rand
       ]);
       echo Html::scriptBlock("plugin_formcreator_change_associate($rand)");
