@@ -659,39 +659,12 @@ PluginFormcreatorTargetInterface
          self::getEnumDestinationEntity(),
          [
             'value'     => $this->fields['destination_entity'],
-            'on_change' => 'change_entity()',
+            'on_change' => "plugin_formcreator_change_entity($rand)",
             'rand'      => $rand,
          ]
       );
 
-      $script = <<<EOS
-         function change_entity() {
-            $('#entity_specific_title').hide();
-            $('#entity_user_title').hide();
-            $('#entity_entity_title').hide();
-            $('#entity_specific_value').hide();
-            $('#entity_user_value').hide();
-            $('#entity_entity_value').hide();
-
-            switch($('#dropdown_destination_entity$rand').val()) {
-               case '7' : // DESTINATION_ENTITY_SPECIFIC
-                  $('#entity_specific_title').show();
-                  $('#entity_specific_value').show();
-                  break;
-               case '8' : // DESTINATION_ENTITY_USER
-                  $('#entity_user_title').show();
-                  $('#entity_user_value').show();
-                  break;
-               case '9' : // DESTINATION_ENTITY_ENTITY
-                  $('#entity_entity_title').show();
-                  $('#entity_entity_value').show();
-                  break;
-            }
-         }
-         change_entity();
-EOS;
-
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_change_entity($rand)");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="entity_specific_title" style="display: none">' . _n('Entity', 'Entities', 1) . '</span>';
@@ -1530,32 +1503,11 @@ SCRIPT;
       echo '<td width="45%">';
       Dropdown::showFromArray('location_rule', static::getEnumLocationRule(), [
          'value'                 => $this->fields['location_rule'],
-         'on_change'             => 'change_location()',
+         'on_change'             => "plugin_formcreator_change_location($rand)",
          'rand'                  => $rand
       ]);
-      $locationRuleAnswer = self::CATEGORY_RULE_ANSWER;
-      $locationRuleSpecific = self::CATEGORY_RULE_SPECIFIC;
-      $script = <<<SCRIPT
-         function change_location() {
-            $('#location_specific_title').hide();
-            $('#location_specific_value').hide();
-            $('#location_question_title').hide();
-            $('#location_question_value').hide();
 
-            switch($('#dropdown_location_rule$rand').val()) {
-               case '$locationRuleAnswer' :
-                  $('#location_question_title').show();
-                  $('#location_question_value').show();
-                  break;
-               case '$locationRuleSpecific' :
-                  $('#location_specific_title').show();
-                  $('#location_specific_value').show();
-                  break;
-            }
-         }
-         change_location();
-SCRIPT;
-      echo Html::scriptBlock($script);
+      echo Html::scriptBlock("plugin_formcreator_change_location($rand)");
       echo '</td>';
       echo '<td width="15%">';
       echo '<span id="location_question_title" style="display: none">' . __('Question', 'formcreator') . '</span>';
