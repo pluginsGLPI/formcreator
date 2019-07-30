@@ -135,6 +135,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $this->showDueDateSettings($form, $rand);
       echo '</tr>';
 
+      $this->showTypeSettings($rand);
       // -------------------------------------------------------------------------------------------
       //  associated elements of the target
       // -------------------------------------------------------------------------------------------
@@ -648,6 +649,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $data = $this->setTargetCategory($data, $formanswer);
       $data = $this->setTargetLocation($data, $formanswer);
       $data = $this->setTargetAssociatedItem($data, $formanswer);
+      $data = $this->setTargetType($data, $formanswer);
 
       // There is always at least one requester
       $data = $this->requesters + $data;
@@ -750,8 +752,19 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return $data;
    }
 
+   protected  function showTypeSettings($rand) {
+      echo '<tr class="line0">';
+      echo '<td width="15%">' . __('Type') . '</td>';
+      echo '<td width="25%">';
+      Ticket::dropdownType('type', ['value' => $this->fields['type'], 'rand' => $rand]);
+      echo '</td>';
+      echo '<td></td>';
+      echo '<td></td>';
+      echo '</tr>';
+   }
+
    protected function showAssociateSettings($rand) {
-      global $DB, $CFG_GLPI;
+      global $CFG_GLPI;
 
       echo '<tr class="line0">';
       echo '<td width="15%">' . __('Associated elements') . '</td>';

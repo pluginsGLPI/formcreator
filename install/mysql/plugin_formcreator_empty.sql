@@ -186,6 +186,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_targettickets` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `target_name` varchar(255) NOT NULL DEFAULT '',
+  `type` int(11) DEFAULT '1',
   `tickettemplates_id` int(11) DEFAULT NULL,
   `content` longtext,
   `due_date_rule` int(11) DEFAULT '1',
