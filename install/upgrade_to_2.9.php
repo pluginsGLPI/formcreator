@@ -300,6 +300,9 @@ class PluginFormcreatorUpgradeTo2_9 {
       $migration->addField($table, 'icon', 'string', ['after' => 'is_recursive']);
       $migration->addField($table, 'icon_color', 'string', ['after' => 'icon']);
       $migration->addField($table, 'background_color', 'string', ['after' => 'icon']);
+
+      $table = 'glpi_plugin_formcreator_answers';
+      $migration->changeField($table, 'answer', 'answer', 'longtext');
    }
 
    /**
