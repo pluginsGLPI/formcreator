@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_answers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plugin_formcreator_formanswers_id` int(11) NOT NULL DEFAULT '0',
   `plugin_formcreator_questions_id` int(11) NOT NULL DEFAULT '0',
-  `answer` text,
+  `answer` longtext,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_formanswers_id` (`plugin_formcreator_formanswers_id`),
   INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
