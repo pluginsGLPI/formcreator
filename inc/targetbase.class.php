@@ -1032,8 +1032,6 @@ EOS;
             $name = '';
             $value = '';
          } else {
-
-
             $name  = $question->getField('name');
             $value = $fields[$questionId]->getValueForTargetText($richText);
          }
