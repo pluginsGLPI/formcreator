@@ -1032,6 +1032,8 @@ EOS;
             $name = '';
             $value = '';
          } else {
+
+
             $name  = $question->getField('name');
             $value = $fields[$questionId]->getValueForTargetText($richText);
          }
@@ -1046,6 +1048,110 @@ EOS;
                if (!is_array($value)) {
                   $value = [$value];
                }
+            }
+         }
+
+         // Check for object properties to display
+         if ($question->getField('fieldtype') == 'glpiselect') {
+            // Load target item from DB
+            $itemtype = $question->getField('values');
+            $item = new $itemtype;
+            $item->getFromDB($answer);
+
+            // First, search for properties name, e.g. ##question_1.name##
+            $matches = [];
+            $regex = "/##question_$questionId\.(?<property>[a-zA-Z0-9_.]+)##/";
+            preg_match_all($regex, $content, $matches);
+
+            foreach ($matches["property"] as $property) {
+               $placeholder = "##question_$questionId.$property##";
+
+               // Check if table name is specified
+               $property = explode('.', $property);
+               if (count($property) == 2) {
+                   $searchOption = $item->getSearchOptionByField(
+                      'field',
+                      $property[1],
+                      $property[0]
+                   );
+                   $property = $property[1];
+               } else {
+                   $searchOption = $item->getSearchOptionByField(
+                      'field',
+                      $property[0]
+                   );
+                   $property = $property[0];
+               }
+
+               // Replace placeholder in content
+               $content = str_replace(
+                  $placeholder,
+                  Toolbox::addslashes_deep("$name - {$searchOption['name']}"),
+                  $content
+               );
+            }
+
+            // Secondly, search for properties values, e.g. ##answer_1.name##
+            $matches = [];
+            $regex = "/##answer_$questionId\.(?<property>[a-zA-Z0-9_.]+)##/";
+            preg_match_all($regex, $content, $matches);
+
+            foreach ($matches["property"] as $property) {
+               $placeholder = "##answer_$questionId.$property##";
+
+               // Check if table name is specified
+               $property = explode('.', $property);
+               if (count($property) == 2) {
+                  $searchOption = $item->getSearchOptionByField(
+                     'field',
+                     $property[1],
+                     $property[0]
+                  );
+                  $property = $property[1];
+               } else {
+                  $searchOption = $item->getSearchOptionByField(
+                     'field',
+                     $property[0]
+                  );
+                  $property = $property[0];
+               }
+
+               // Execute search
+               $data = Search::prepareDatasForSearch(get_class($item), [
+                  'criteria' => [
+                     [
+                        'field'      => $searchOption['id'],
+                        'searchtype' => "contains",
+                        'value'      => "",
+                     ],
+                     [
+                        'field'      => 2,
+                        'searchtype' => "equals",
+                        'value'      => $answer,
+                     ]
+                  ]
+               ]);
+               Search::constructSQL($data);
+               Search::constructData($data);
+
+               $propertyValue = "";
+               foreach ($data['data']['rows'] as $row) {
+                  $targetKey = get_class($item) . "_" . $searchOption['id'];
+                  // Add each result
+                  for ($i=0; $i < $row[$targetKey]['count']; $i++) {
+                     $propertyValue .=$row[$targetKey][$i]['name'];
+                     if ($i+1 < $row[$targetKey]['count']) {
+                        $propertyValue .= ", ";
+                     }
+                  }
+               }
+
+               // Replace placeholder in content
+               $content = str_replace(
+                  $placeholder,
+                  Toolbox::addslashes_deep($propertyValue),
+                  $content
+               );
             }
          }
       }
