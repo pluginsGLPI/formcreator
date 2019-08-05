@@ -52,8 +52,8 @@ if ($_REQUEST['wizard'] == 'categories') {
                                                    : true;
 }
 
-function plugin_formcreator_showWizardCategories($helpdeskHome = false) {
-   $tree = PluginFormcreatorCategory::getCategoryTree(0, $helpdeskHome);
+function plugin_formcreator_showWizardCategories() {
+   $tree = PluginFormcreatorCategory::getCategoryTree(0, false);
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 
