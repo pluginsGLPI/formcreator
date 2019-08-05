@@ -94,7 +94,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       ]);
 
       // Selects categories containing forms or sub-categories
-      // TODO: To solve the 3rd OR for faq count
       $categoryFk = self::getForeignKeyField();
       $query = "SELECT `id`, `name`, `$categoryFk` as `parent`, `level`, (
          (

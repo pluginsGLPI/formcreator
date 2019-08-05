@@ -695,7 +695,6 @@ PluginFormcreatorExportableInterface
 
       echo '<div class="plugin_formcreator_marginRight plugin_formcreator_card">';
       $this->showWizard();
-      // echo '<hr style="clear:both; height:0; background: transparent; border:none" />';
       echo '</div>';
 
       echo '<div id="plugin_formcreator_lastForms">';
