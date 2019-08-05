@@ -619,8 +619,6 @@ PluginFormcreatorExportableInterface
     * @return String                   Name to be displayed
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      global $DB;
-
       switch ($item->getType()) {
          case PluginFormcreatorForm::class:
             $nb = 0;
