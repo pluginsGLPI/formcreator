@@ -118,23 +118,23 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
          $formFk = PluginFormcreatorForm::getForeignKeyField();
          $result = $DB->request([
             'SELECT' => [
-               $profileTable     => ['id', 'name'],
-               $formProfileTable => ['profiles_id'],
+               'p'     => ['id', 'name'],
+               'f'     => ['profiles_id'],
+               new QueryExpression('IF(f.`profiles_id` IS NOT NULL, 1, 0) AS `is_enabled`')
             ],
+            'FROM' => "$profileTable as p",
             'LEFT JOIN' => [
-               $formProfileTable => [
+               "$formProfileTable as f" => [
                   'FKEY' => [
-                     $profileTable     => 'id',
-                     $formProfileTable => 'profiles_id'
+                     "p"     => 'id',
+                     "f" => 'profiles_id',
+                     ['AND' => ["f.$formFk" => $item->getID()]]
                   ]
                ]
             ],
-            'WHERE' => [
-               "$formProfileTable.$formFk" => $item->getID(),
-            ],
          ]);
          foreach ($result as $row) {
-            $checked = $row['profile'] !== null ? ' checked' : '';
+            $checked = $row['is_enabled'] !== '0' ? ' checked' : '';
             echo '<tr><td colspan="2"><label>';
             echo '<input type="checkbox" name="profiles_id[]" value="'.$row['id'].'" '.$checked.'> ';
             echo $row['name'];
