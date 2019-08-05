@@ -67,6 +67,14 @@ class PluginFormcreatorForm_Profile extends CommonDBRelation implements PluginFo
    }
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+      switch (get_class($item)) {
+         case PluginFormcreatorForm::class:
+            static::showForForm($item, $withtemplate);
+            break;
+      }
+   }
+
+   public static function showForForm(CommonDBTM $item, $withtemplate = '') {
       global $DB, $CFG_GLPI;
 
       echo "<form name='notificationtargets_form' id='notificationtargets_form'
