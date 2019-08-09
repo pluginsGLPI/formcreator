@@ -1049,112 +1049,124 @@ EOS;
             }
          }
 
-         // Check for object properties to display
          if ($question->getField('fieldtype') == 'glpiselect') {
-            // Load target item from DB
-            $itemtype = $question->getField('values');
-            $item = new $itemtype;
-            $item->getFromDB($answer);
-
-            // First, search for properties name, e.g. ##question_1.name##
-            $matches = [];
-            $regex = "/##question_$questionId\.(?<property>[a-zA-Z0-9_.]+)##/";
-            preg_match_all($regex, $content, $matches);
-
-            foreach ($matches["property"] as $property) {
-               $placeholder = "##question_$questionId.$property##";
-
-               // Check if table name is specified
-               $property = explode('.', $property);
-               if (count($property) == 2) {
-                   $searchOption = $item->getSearchOptionByField(
-                      'field',
-                      $property[1],
-                      $property[0]
-                   );
-                   $property = $property[1];
-               } else {
-                   $searchOption = $item->getSearchOptionByField(
-                      'field',
-                      $property[0]
-                   );
-                   $property = $property[0];
-               }
-
-               // Replace placeholder in content
-               $content = str_replace(
-                  $placeholder,
-                  Toolbox::addslashes_deep("$name - {$searchOption['name']}"),
-                  $content
-               );
-            }
-
-            // Secondly, search for properties values, e.g. ##answer_1.name##
-            $matches = [];
-            $regex = "/##answer_$questionId\.(?<property>[a-zA-Z0-9_.]+)##/";
-            preg_match_all($regex, $content, $matches);
-
-            foreach ($matches["property"] as $property) {
-               $placeholder = "##answer_$questionId.$property##";
-
-               // Check if table name is specified
-               $property = explode('.', $property);
-               if (count($property) == 2) {
-                  $searchOption = $item->getSearchOptionByField(
-                     'field',
-                     $property[1],
-                     $property[0]
-                  );
-                  $property = $property[1];
-               } else {
-                  $searchOption = $item->getSearchOptionByField(
-                     'field',
-                     $property[0]
-                  );
-                  $property = $property[0];
-               }
-
-               // Execute search
-               $data = Search::prepareDatasForSearch(get_class($item), [
-                  'criteria' => [
-                     [
-                        'field'      => $searchOption['id'],
-                        'searchtype' => "contains",
-                        'value'      => "",
-                     ],
-                     [
-                        'field'      => 2,
-                        'searchtype' => "equals",
-                        'value'      => $answer,
-                     ]
-                  ]
-               ]);
-               Search::constructSQL($data);
-               Search::constructData($data);
-
-               $propertyValue = "";
-               foreach ($data['data']['rows'] as $row) {
-                  $targetKey = get_class($item) . "_" . $searchOption['id'];
-                  // Add each result
-                  for ($i=0; $i < $row[$targetKey]['count']; $i++) {
-                     $propertyValue .=$row[$targetKey][$i]['name'];
-                     if ($i+1 < $row[$targetKey]['count']) {
-                        $propertyValue .= ", ";
-                     }
-                  }
-               }
-
-               // Replace placeholder in content
-               $content = str_replace(
-                  $placeholder,
-                  Toolbox::addslashes_deep($propertyValue),
-                  $content
-               );
-            }
+            $content = $this->parseObjectProperties(
+               $question,
+               $questionId,
+               $answer,
+               $content
+            );
          }
       }
 
       return $content;
+   }
+
+   /**
+    * Check for object properties placeholder to commpute.
+    * The expected format is ##answer_X.search_option_english_label##
+    *
+    * We use search option to be able to access data that may be outside
+    * the given object in a generic way (e.g. email adresses for user,
+    * this is data that is not stored in the user table. The searchOption
+    * will give us the details on how to retrieve it).
+    *
+    * We also have a direct link between each searchOptions and their
+    * labels that also us to use the label in the placeholder.
+    * The user only need to look at his search menu to find the available
+    * fields.
+    *
+    * Since we look for a searchOption by its name, it is not impossible
+    * to find duplicates (they will usually by in differents groups in the
+    * search dropdown).
+    * For now we will use the first result.
+    * An improvement would be to allow the user to specify the group in
+    * the placeholder :
+    * ##answer_X.search_option_group.search_option_english_label##
+    * If not specified, search_option_group would be the default "common"
+    * group.
+    *
+    * @param PluginFormCreatorQuestion $question
+    * @param int                       $questionID
+    * @param PluginFormCreatorAnswer   $answer
+    * @param string                    $content
+    *
+    * @return string
+    */
+   private function parseObjectProperties(
+      $question,
+      $questionID,
+      $answer,
+      $content
+   ) {
+      global $TRANSLATE;
+
+      // We need english locale to search searchOptions by name
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+
+      try {
+         // Load target item from DB
+         $itemtype = $question->getField('values');
+         $item = new $itemtype;
+         $item->getFromDB($answer);
+
+         // Search for placeholders
+         $matches = [];
+         $regex = "/##answer_$questionID\.(?<property>[a-zA-Z0-9_.]+)##/";
+         preg_match_all($regex, $content, $matches);
+
+         // For each placeholder found
+         foreach ($matches["property"] as $property) {
+            $placeholder = "##answer_$questionID.$property##";
+            // Convert Property_Name to Property Name
+            $property = str_replace("_", " ", $property);
+            $searchOption = $item->getSearchOptionByField("name", $property);
+
+            // Execute search
+            $data = Search::prepareDatasForSearch(get_class($item), [
+               'criteria' => [
+                  [
+                     'field'      => $searchOption['id'],
+                     'searchtype' => "contains",
+                     'value'      => "",
+                  ],
+                  [
+                     'field'      => 2,
+                     'searchtype' => "equals",
+                     'value'      => $answer,
+                  ]
+               ]
+            ]);
+            Search::constructSQL($data);
+            Search::constructData($data);
+
+            // Handle search result, there may be multiple values
+            $propertyValue = "";
+            foreach ($data['data']['rows'] as $row) {
+               $targetKey = get_class($item) . "_" . $searchOption['id'];
+               // Add each result
+               for ($i=0; $i < $row[$targetKey]['count']; $i++) {
+                  $propertyValue .=$row[$targetKey][$i]['name'];
+                  if ($i+1 < $row[$targetKey]['count']) {
+                     $propertyValue .= ", ";
+                  }
+               }
+            }
+
+            // Replace placeholder in content
+            $content = str_replace(
+               $placeholder,
+               Toolbox::addslashes_deep($propertyValue),
+               $content
+            );
+
+            return $content;
+         }
+      } finally {
+         // Put the old locales on succes or if an expection was thrown
+         $TRANSLATE->setLocale($oldLocale);
+      }
    }
 
    protected function showLocationSettings($rand) {
