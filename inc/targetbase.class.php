@@ -1105,68 +1105,64 @@ EOS;
       $oldLocale = $TRANSLATE->getLocale();
       $TRANSLATE->setLocale("en_GB");
 
-      try {
-         // Load target item from DB
-         $itemtype = $question->getField('values');
-         $item = new $itemtype;
-         $item->getFromDB($answer);
+      // Load target item from DB
+      $itemtype = $question->getField('values');
+      $item = new $itemtype;
+      $item->getFromDB($answer);
 
-         // Search for placeholders
-         $matches = [];
-         $regex = "/##answer_$questionID\.(?<property>[a-zA-Z0-9_.]+)##/";
-         preg_match_all($regex, $content, $matches);
+      // Search for placeholders
+      $matches = [];
+      $regex = "/##answer_$questionID\.(?<property>[a-zA-Z0-9_.]+)##/";
+      preg_match_all($regex, $content, $matches);
 
-         // For each placeholder found
-         foreach ($matches["property"] as $property) {
-            $placeholder = "##answer_$questionID.$property##";
-            // Convert Property_Name to Property Name
-            $property = str_replace("_", " ", $property);
-            $searchOption = $item->getSearchOptionByField("name", $property);
+      // For each placeholder found
+      foreach ($matches["property"] as $property) {
+         $placeholder = "##answer_$questionID.$property##";
+         // Convert Property_Name to Property Name
+         $property = str_replace("_", " ", $property);
+         $searchOption = $item->getSearchOptionByField("name", $property);
 
-            // Execute search
-            $data = Search::prepareDatasForSearch(get_class($item), [
-               'criteria' => [
-                  [
-                     'field'      => $searchOption['id'],
-                     'searchtype' => "contains",
-                     'value'      => "",
-                  ],
-                  [
-                     'field'      => 2,
-                     'searchtype' => "equals",
-                     'value'      => $answer,
-                  ]
+         // Execute search
+         $data = Search::prepareDatasForSearch(get_class($item), [
+            'criteria' => [
+               [
+                  'field'      => $searchOption['id'],
+                  'searchtype' => "contains",
+                  'value'      => "",
+               ],
+               [
+                  'field'      => 2,
+                  'searchtype' => "equals",
+                  'value'      => $answer,
                ]
-            ]);
-            Search::constructSQL($data);
-            Search::constructData($data);
+            ]
+         ]);
+         Search::constructSQL($data);
+         Search::constructData($data);
 
-            // Handle search result, there may be multiple values
-            $propertyValue = "";
-            foreach ($data['data']['rows'] as $row) {
-               $targetKey = get_class($item) . "_" . $searchOption['id'];
-               // Add each result
-               for ($i=0; $i < $row[$targetKey]['count']; $i++) {
-                  $propertyValue .=$row[$targetKey][$i]['name'];
-                  if ($i+1 < $row[$targetKey]['count']) {
-                     $propertyValue .= ", ";
-                  }
+         // Handle search result, there may be multiple values
+         $propertyValue = "";
+         foreach ($data['data']['rows'] as $row) {
+            $targetKey = get_class($item) . "_" . $searchOption['id'];
+            // Add each result
+            for ($i=0; $i < $row[$targetKey]['count']; $i++) {
+               $propertyValue .=$row[$targetKey][$i]['name'];
+               if ($i+1 < $row[$targetKey]['count']) {
+                  $propertyValue .= ", ";
                }
             }
-
-            // Replace placeholder in content
-            $content = str_replace(
-               $placeholder,
-               Toolbox::addslashes_deep($propertyValue),
-               $content
-            );
-
-            return $content;
          }
-      } finally {
-         // Put the old locales on succes or if an expection was thrown
-         $TRANSLATE->setLocale($oldLocale);
+
+         // Replace placeholder in content
+         $content = str_replace(
+            $placeholder,
+            Toolbox::addslashes_deep($propertyValue),
+            $content
+         );
       }
+      // Put the old locales on succes or if an expection was thrown
+      $TRANSLATE->setLocale($oldLocale);
+      return $content;
    }
 
    protected function showLocationSettings($rand) {
