@@ -414,15 +414,6 @@ PluginFormcreatorExportableInterface
       echo '</td>';
       echo '<td colspan="2">';
 
-      // Validators users
-      $rows = $DB->request([
-         'SELECT' => ['items_id'],
-         'FROM'   => PluginFormcreatorForm_Validator::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
-         ]
-      ]);
-
       // Select all users with ticket validation right and the groups
       $userTable = User::getTable();
       $userFk = User::getForeignKeyField();
