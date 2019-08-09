@@ -339,8 +339,6 @@ PluginFormcreatorExportableInterface
     * @return NULL   Nothing, just display the form
     */
    public function showForm($ID, $options = []) {
-      global $DB;
-
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
