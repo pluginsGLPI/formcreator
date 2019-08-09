@@ -858,6 +858,20 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       return $data;
    }
 
+   protected function setTargetType($data, $formanswer) {
+      switch ($this->fields['type']) {
+         case Ticket::INCIDENT_TYPE:
+            $data['type'] = Ticket::INCIDENT_TYPE;
+            break;
+
+         case Ticket::DEMAND_TYPE:
+            $data['type'] = Ticket::DEMAND_TYPE;
+            break;
+      }
+
+      return $data;
+   }
+
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
