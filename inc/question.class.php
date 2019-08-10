@@ -827,6 +827,21 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<td></td><td></td><td></td><td></td>';
       echo '</tr>';
 
+      echo '<tr class="line1" id="description_tr">';
+      // Description of the question
+      echo '<td>';
+      echo '<label for="description" id="label_description">';
+      echo __('Description');
+      echo '</label>';
+      echo '</td>';
+
+      echo '<td width="80%" colspan="3">';
+      echo '<textarea name="description" id="description" rows="6" cols="108"'
+           .'style="width: 97%">'.$this->fields['description'].'</textarea>';
+      Html::initEditorSystem('description');
+      echo '</td>';
+      echo '</tr>';
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
@@ -845,21 +860,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       foreach ($questionConditions as $questionCondition) {
          echo $questionCondition->getConditionHtml($form_id);
       }
-
-      echo '<tr class="line1" id="description_tr">';
-      // Description of the question
-      echo '<td>';
-      echo '<label for="description" id="label_description">';
-      echo __('Description');
-      echo '</label>';
-      echo '</td>';
-
-      echo '<td width="80%" colspan="3">';
-      echo '<textarea name="description" id="description" rows="6" cols="108"'
-           .'style="width: 97%">'.$this->fields['description'].'</textarea>';
-      Html::initEditorSystem('description');
-      echo '</td>';
-      echo '</tr>';
 
       echo '<tr">';
       echo '<td colspan="4">';
