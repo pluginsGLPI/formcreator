@@ -711,8 +711,6 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
    }
 
    public function showForm($ID, $options = []) {
-      global $CFG_GLPI;
-
       // Find the form of the question
       $section = new PluginFormcreatorSection();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
