@@ -1,7 +1,5 @@
 <?php
 
-use function GuzzleHttp\json_encode;
-
 include ('../../../inc/includes.php');
 header('Content-Type: application/json');
 
