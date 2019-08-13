@@ -990,14 +990,14 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo '<tr class="line1" id="cat_root_tr">';
       echo '<td>';
       echo '<label for="dropdown_root_ticket_categories'.$rand.'" id="label_root_ticket_categories">';
-      echo __('ticket categories root', 'formcreator');
+      echo __('Tree root', 'formcreator');
       echo '</label>';
       echo '</td>';
       echo '<td id="td_show_ticket_categories_root">';
       echo '</td>';
       echo '<td>';
       echo '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
-      echo __('Limit ticket categories depth', 'formcreator');
+      echo __('Max depth of tree', 'formcreator');
       echo '</label>';
       echo '</td>';
       echo '<td id="td_show_ticket_categories_depth">';
