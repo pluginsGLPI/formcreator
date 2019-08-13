@@ -711,6 +711,11 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
 
       $rand = mt_rand();
       $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
+
+      // Hidden input for CommonTreeDropdown values
+      $val = $this->fields['values'];
+      echo "<input id='commonTreeDropdownValues' type='hidden' value='$val'>";
+
       echo '<form name="form_question" method="post" action="'.$action.'">';
 
       echo '<table class="tab_cadre_fixe">';
@@ -977,20 +982,8 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       ]);
       echo '</td>';
       echo '<td>';
-      echo '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
-      echo __('Limit ticket categories depth', 'formcreator');
-      echo '</label>';
       echo '</td>';
       echo '<td>';
-      dropdown::showNumber('show_ticket_categories_depth', [
-                           'rand'  => $rand,
-                           'value' => isset($decodedValues['show_ticket_categories_depth'])
-                                      ? $decodedValues['show_ticket_categories_depth']
-                                      : 0,
-                           'min' => 1,
-                           'max' => 16,
-                           'toadd' => [0 => __('No limit', 'formcreator')],
-      ]);
       echo '</td>';
       echo '</tr>';
 
@@ -1000,20 +993,14 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
       echo __('ticket categories root', 'formcreator');
       echo '</label>';
       echo '</td>';
-      echo '<td>';
-      $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $rootValue = isset($decodedValue['show_ticket_categories_root'])
-                     ? $decodedValue['show_ticket_categories_root']
-                     : Dropdown::EMPTY_VALUE;
-      Dropdown::show(ITILCategory::class, [
-         'name'  => 'show_ticket_categories_root',
-         'value' => $rootValue,
-         'rand'  => $rand,
-      ]);
+      echo '<td id="td_show_ticket_categories_root">';
       echo '</td>';
       echo '<td>';
+      echo '<label for="dropdown_show_ticket_categories_depth'.$rand.'" id="label_show_ticket_categories_depth">';
+      echo __('Limit ticket categories depth', 'formcreator');
+      echo '</label>';
       echo '</td>';
-      echo '<td>';
+      echo '<td id="td_show_ticket_categories_depth">';
       echo '</td>';
       echo '</tr>';
 
@@ -1222,13 +1209,32 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
             document.getElementById('label_dropdown_values').style.display                   = 'inline';
             dd = document.getElementById('dropdown_dropdown_values$rand');
             ddvalue = dd.options[dd.selectedIndex].value;
-            if(ddvalue == 'ITILCategory') {
-               document.getElementById('cat_restrict_tr').style.display                      = 'table-row';
-               document.getElementById('cat_root_tr').style.display                          = 'table-row';
-            } else {
-               document.getElementById('cat_restrict_tr').style.display                      = 'none';
-               document.getElementById('cat_root_tr').style.display                          = 'none';
-            }
+            $.get('../ajax/commonTree.php', {
+                  itemtype: ddvalue,
+                  values: $('#commonTreeDropdownValues').val()
+               })
+               .done(function(data) {
+                  // Not a CommonTreeDropdown: hide root/restrict/depth fields
+                  if (data == '') {
+                     document.getElementById('cat_restrict_tr').style.display = 'none';
+                     document.getElementById('cat_root_tr').style.display = 'none';
+                     return;
+                  }
+
+                  // Show specific 'restrict' field for ITILCategory
+                  if (ddvalue == 'ITILCategory') {
+                     document.getElementById('cat_restrict_tr').style.display = 'table-row';
+                  } else {
+                     document.getElementById('cat_restrict_tr').style.display = 'none';
+                  }
+
+                  // Update root/depth select
+                  $('#td_show_ticket_categories_root').html(data.root);
+                  $('#td_show_ticket_categories_depth').html(data.depth);
+
+                  // Show root/depth field
+                  document.getElementById('cat_root_tr').style.display = 'table-row';
+               });
          } else {
             document.getElementById('dropdown_values_field').style.display = 'none';
             document.getElementById('label_dropdown_values').style.display                   = 'none';
