@@ -36,8 +36,8 @@ before_script:
    fi
 
   - # setup GLPI and its plugins
-  - mysql -u root -e 'create database $DBNAME;'
-  - mysql -u root -e 'create database $OLDDBNAME;'
+  - mysql -h 127.0.0.1 -u root -e 'create database $DBNAME;'
+  - mysql -h 127.0.0.1 -u root -e 'create database $OLDDBNAME;'
   - git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
   - composer install --no-dev --no-interaction
   - mkdir -p tests/files/_cache
