@@ -101,7 +101,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             "$form_table.plugin_formcreator_categories_id" => new QueryExpression("$cat_table.id"),
             'language' => [$_SESSION['glpilanguage'], '', '0', null],
             'OR' => [
-               'access_rights' => ['!=' => PluginFormcreatorForm::ACCESS_RESTRICTED],
+               'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
                'id' => new QuerySubQuery([
                   'SELECT' => 'plugin_formcreator_forms_id',
                   'FROM' => $table_fp,
@@ -116,8 +116,8 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'COUNT' => 'count',
          'FROM' => (new QueryExpression("($query_faqs) as faqs")),
          'WHERE' => [
-            "faqs.knowbaseitemcategories_id" => "$cat_table.knowbaseitemcategories_id",
-            "faqs.knowbaseitemcategories_id" => ['!=' => '0'],
+            [(new QueryExpression("faqs.knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
+            ["faqs.knowbaseitemcategories_id" => ['!=', '0'],],
          ]
       ]);
       $request = [

@@ -64,7 +64,6 @@ class PluginFormcreatorCategory extends CommonTestCase {
 
    public function testGetCategoryTree() {
       $this->login('glpi', 'glpi');
-      $_SESSION["glpicronuserrunning"] = true;
 
       // create a sub entity which will take in the forms and cateory for this test
       // and not conflict with previous data
@@ -98,7 +97,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
             'name'                             => "testgetCategoryTree form $i",
             'entities_id'                      => $entities_id,
             'is_active'                        => 1,
-            'is_helpdesk_home'                 => 1,
+            'helpdesk_home'                    => 1,
             'plugin_formcreator_categories_id' => $categories[$i]
          ]);
       }
