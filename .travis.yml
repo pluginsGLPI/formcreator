@@ -9,9 +9,13 @@ env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
     - CS=7.2
-    - DBUSER=root
-    - DBNAME=glpitest
-    - OLDDBNAME=glpiupgradetest
+    - DB_HOST=127.0.0.1
+    - MYSQL_ROOT_USER=root
+    - DB_USER=glpi
+    - DB_PASSWD=glpi
+    - DB_NAME=glpitest
+    - OLD_DB_NAME=glpiupgradetest
+    - PLUGINNAME=formcreator
     - AFTER_SUCCESS_BRANCH=9.4.0
   matrix:
     - GLPI_BRANCH=9.4.0
@@ -32,6 +36,7 @@ matrix:
       env: GLPI_BRANCH=9.5/bugfixes
   allow_failures:
     - php: nightly
+    - env: GLPI_BRANCH=9.5/bugfixes
 #    - env: GLPI_BRANCH=master
 
 before_script:
@@ -42,57 +47,35 @@ before_script:
       composer config -g github-oauth.github.com $GH_TOKEN
    fi
 
-  - # setup GLPI and its plugins
-  - mysql -h 127.0.0.1 -u root -e 'create database $DBNAME;'
-  - mysql -h 127.0.0.1 -u root -e 'create database $OLDDBNAME;'
-  - git clone --depth=35 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
-  - composer install --no-dev --no-interaction
-  - mkdir -p tests/files/_cache
-  - IFS=/ read -a repo <<< $TRAVIS_REPO_SLUG
-  - mv ../${repo[1]} plugins/formcreator
-
-  - # prepare plugin to test
-  - cd plugins/formcreator
-  - composer install
+  - # set -x
+  - . ./tests/script-functions.sh
+  - . ./tests/script-specific-functions.sh
+  - init_databases
+  - install_glpi && install_plugin
 
 script:
-  - # setup code coverage
   - COVERAGE="-ncc"
-  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBChild CommonDBConnexity CommonDBRelation"; fi
+  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then COVERAGE="--nccfc CommonTreeDropdown CommonDropdown CommonDBTM CommonGLPI CommonDBConnexity CommonDBRelation"; fi
 
   - # install GLPI with an old schema of the plugin and upgrade it
-  - export PASSWORDARG=""
-  - if [ "$DBPASSWD" != "" ]; then export PASSWORDARG="-p$DBPASSWD"; fi
-  - if [ -e ../../scripts/cliinstall.php ] && [ "$DBPASSWD" != "" ]; then DBPASSWDARG="--pass=$DBPASSWD"; fi
-  - if [ -e ../../bin/console ] && [ "$DBPASSWD" != "" ]; then DBPASSWDARG="--db-password=$DBPASSWD"; fi
-  - echo Installing GLPI on database $OLDDBNAME
-  - rm ../../tests/files/_cache/cache_db/* ../../tests/files/_cache_/cache_trans/* ../../tests/files/_cache/*.json || true
-  - rm ../../tests/config_db.php || true
-  - php ../../bin/console dependencies install || true
-  - if [ -e ../../scripts/cliinstall.php ]; then php ../../scripts/cliinstall.php --db=$OLDDBNAME --user=$DBUSER $DBPASSWDARG --tests ; fi
-  - if [ -e ../../bin/console ]; then php ../../bin/console glpi:database:install --db-name=$OLDDBNAME --db-user=$DBUSER $DBPASSWDARG --config-dir=../../tests --no-interaction --no-plugins --force; fi
-  - mysql -u $DBUSER $PASSWORDARG $OLDDBNAME < tests/plugin_formcreator_empty_2.5.0.sql
-  - mysql -u $DBUSER $PASSWORDARG $OLDDBNAME < tests/plugin_formcreator_config_2.5.0.sql
+  - export GLPI_CONFIG_DIR="tests/config-$OLD_DB_NAME"
+  - init_glpi $OLD_DB_NAME $DB_USER $DB_PASSWD && init_plugin
   - # upgrade test
-  - php scripts/cliinstall.php --tests
+  - echo status of plugins
+  - mysql -h$DB_HOST -u$DB_USER -p$DB_PASSWD $OLD_DB_NAME -e "select name,directory,version,state from glpi_plugins WHERE directory IN ('formcreator')"
+  - plugin_test_upgrade
 
   - # install GLPI with a fresh install of the plugin
-  - if [ -e ../../scripts/cliinstall.php ] && [ "$DBPASSWD" != "" ]; then DBPASSWDARG="--pass=$DBPASSWD"; fi
-  - if [ -e ../../bin/console ] && [ "$DBPASSWD" != "" ]; then DBPASSWDARG="--db-password=$DBPASSWD"; fi
-  - echo Installing GLPI on database $DBNAME
-  - rm -r ../../tests/files/_cache/cache_db/* ../../tests/files/_cache_/cache_trans/* ../../tests/files/_cache/*.json || true
-  - rm ../../tests/config_db.php || true
-  - if [ -e ../../scripts/cliinstall.php ]; then php ../../scripts/cliinstall.php --db=$DBNAME --user=$DBUSER $DBPASSWDARG --tests ; fi
-  - if [ -e ../../bin/console ]; then php ../../bin/console glpi:database:install --db-name=$DBNAME --db-user=$DBUSER $DBPASSWDARG --config-dir=../../tests --no-interaction --no-plugins --force; fi
+  - export GLPI_CONFIG_DIR="tests/config-$DB_NAME"
+  - init_glpi $DB_NAME $DB_USER $DB_PASSWD && init_plugin
   - # fresh install test
-  - ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-install -ncc
-  - ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-integration $COVERAGE
-  - ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-unit $COVERAGE
-  - ./vendor/bin/atoum -ft -bf tests/bootstrap.php -d tests/suite-uninstall -ncc
-  - ./vendor/bin/parallel-lint --exclude vendor .
-  - if [ "${TRAVIS_PHP_VERSION:0:3}" = "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/robo --no-interaction code:cs; fi
+  - plugin_test_install
+  - plugin_test
+  - plugin_test_uninstall
+  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then plugin_test_cs; fi
 
 after_success:
+  - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then vendor/bin/parallel-lint --exclude vendor .; fi
   # let's update the documentation and locales
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "$CS" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then tests/after_success.sh; fi
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "$APIDOCS_PHP" ] && [ "$GLPI_BRANCH" = "$AFTER_SUCCESS_BRANCH" ]; then tests/apidocs.sh; fi

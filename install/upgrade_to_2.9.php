@@ -48,9 +48,9 @@ class PluginFormcreatorUpgradeTo2_9 {
       $formFk = 'plugin_formcreator_forms_id';
       foreach ($tables as $table) {
          $migration->addField($table, $formFk, 'integer', ['after' => 'id']);
-         $migration->changeField($table, 'name', 'target_name', 'string', ['after' => $formFk]);
+         $migration->changeField($table, 'name', 'target_name', 'string', ['after' => $formFk, 'value' => '']);
          $migration->migrationOneTable($table); // immediately rename the column
-         $migration->addField($table, 'name', 'string', ['after' => 'id']);
+         $migration->addField($table, 'name', 'string', ['after' => 'id', 'value' => '']);
          $migration->addField($table, 'uuid', 'string');
          $migration->migrationOneTable($table);
       }
@@ -139,7 +139,7 @@ class PluginFormcreatorUpgradeTo2_9 {
             '>='  => 6,
          ],
          [
-            'value' => '1'
+            'value' => '0'
          ]
       );
 
@@ -172,7 +172,7 @@ class PluginFormcreatorUpgradeTo2_9 {
                'month'  => 4,
             ],
             [
-               'value' => '1'
+               'value' => '0'
             ]
          );
 
@@ -292,14 +292,14 @@ class PluginFormcreatorUpgradeTo2_9 {
       }
 
       $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
+      $migration->changeField($table, 'associate_rule', 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
       $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
       $migration->addField($table, 'type', 'integer', ['after' => 'target_name', 'value' => '1']);
 
       $table = 'glpi_plugin_formcreator_forms';
-      $migration->addField($table, 'icon', 'string', ['after' => 'is_recursive']);
-      $migration->addField($table, 'icon_color', 'string', ['after' => 'icon']);
-      $migration->addField($table, 'background_color', 'string', ['after' => 'icon']);
+      $migration->addField($table, 'icon', 'string', ['after' => 'is_recursive', 'value' => '']);
+      $migration->addField($table, 'icon_color', 'string', ['after' => 'icon', 'value' => '']);
+      $migration->addField($table, 'background_color', 'string', ['after' => 'icon_color', 'value' => '']);
 
       $table = 'glpi_plugin_formcreator_answers';
       $migration->changeField($table, 'answer', 'answer', 'longtext');
@@ -316,6 +316,7 @@ class PluginFormcreatorUpgradeTo2_9 {
     */
    protected function enumToInt($table, $field, array $map, $options = []) {
       global $DB;
+
       $isEnum = PluginFormcreatorCommon::getEnumValues($table, $field);
       if (count($isEnum) > 0) {
          $this->migration->addField(
@@ -335,7 +336,9 @@ class PluginFormcreatorUpgradeTo2_9 {
          $this->migration->changeField(
             $table,
             "new_$field",
-            $field, 'integer'
+            $field, 
+            'integer',
+            $options
          );
       }
    }
