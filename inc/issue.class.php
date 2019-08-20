@@ -323,8 +323,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
          'field'              => 'status',
          'name'               => __('Status'),
          'searchtype'         => [
-            '0'                  => 'equals',
-            '1'                  => 'notequals'
+            '0'                  => 'equals'
          ],
          'datatype'           => 'specific',
          'massiveaction'      => false
