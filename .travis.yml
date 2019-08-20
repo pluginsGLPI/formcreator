@@ -1,5 +1,10 @@
 language: php
 
+sudo: required
+
+services:
+  - mysql
+
 env:
   global:
     - GLPI_SOURCE="https://github.com/glpi-project/glpi"
