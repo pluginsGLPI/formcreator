@@ -201,10 +201,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case 'all':
-                  $tocheck = array_merge($item->getNewStatusArray(),
-                                         $item->getProcessStatusArray(),
-                                         $item->getSolvedStatusArray(),
-                                         $item->getClosedStatusArray());
+                  $tocheck = array_keys($item->getAllStatusArray());
                   break;
 
                case Ticket::INCOMING:
