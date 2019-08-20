@@ -508,16 +508,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // Test the exported data
       $fieldsWithoutID = [
          'name',
-         'content',
          'target_name',
+         'type',
+         'content',
          'due_date_rule',
          'due_date_question',
          'due_date_value',
          'due_date_period',
          'urgency_rule',
          'urgency_question',
-         'location_rule',
-         'location_question',
          'validation_followup',
          'destination_entity',
          'destination_entity_value',
@@ -528,6 +527,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'category_question',
          'associate_rule',
          'associate_question',
+         'location_rule',
+         'location_question',
       ];
       $extraFields = [
          '_tickettemplate',
