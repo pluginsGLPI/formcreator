@@ -1391,7 +1391,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $qc_rows = $DB->request([
             'FROM'  => $question_condition::getTable(),
             'WHERE' => [
-               'plugin_formcreator_questions_id' => $tab_questions
+               'plugin_formcreator_questions_id' => array_keys($tab_questions)
             ]
          ]);
          foreach ($qc_rows as $row) {
