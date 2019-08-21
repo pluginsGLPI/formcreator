@@ -55,11 +55,6 @@ class PluginFormcreatorUpgradeTo2_8 {
          "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
       );
 
-      // add item association rule
-      $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question']);
-      $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
-
       // Rename the plugin
       $plugin = new Plugin();
       $plugin->getFromDBbyDir('formcreator');

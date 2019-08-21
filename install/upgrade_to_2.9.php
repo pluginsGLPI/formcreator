@@ -291,8 +291,9 @@ class PluginFormcreatorUpgradeTo2_9 {
          );
       }
 
+      // add item association rule
       $table = 'glpi_plugin_formcreator_targettickets';
-      $migration->changeField($table, 'associate_rule', 'associate_rule', 'integer', ['after' => 'category_question', 'value' => '1']);
+      $migration->addField($table, 'associate_rule', 'integer', ['after' => 'category_question']);
       $migration->addField($table, 'associate_question', 'integer', ['after' => 'associate_rule']);
       $migration->addField($table, 'type', 'integer', ['after' => 'target_name', 'value' => '1']);
 
