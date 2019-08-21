@@ -788,12 +788,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          $options = [];
       }
       $options['_canupdate'] = true;
-      $targetTicketFk = self::getForeignKeyField();
       $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
-      $targetTicketId = $this->getID();
-      $exclude = implode("', '", [PluginFormcreatorTargetTicket::class, Ticket::class]);
-      $rows = $itemTargetTicket->find("`$targetTicketFk` = '$targetTicketId'
-         AND `itemtype` NOT IN ('$exclude')");
+      $rows = $itemTargetTicket->find([
+         self::getForeignKeyField() => $this->getID(),
+         [
+            'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, Ticket::class]],
+         ],
+      ]);
       foreach ($rows as $row) {
          $options['items_id'][$row['itemtype']][$row['id']] = $row['id'];
       }
@@ -848,12 +849,13 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             break;
 
          case self::ASSOCIATE_RULE_SPECIFIC:
-            $targetTicketFk = self::getForeignKeyField();
             $itemTargetTicket = new PluginFormcreatorItem_TargetTicket();
-            $targetTicketId = $this->getID();
-            $exclude = implode("', '", [PluginFormcreatorTargetTicket::class, Ticket::class]);
-            $rows = $itemTargetTicket->find("`$targetTicketFk` = '$targetTicketId'
-               AND `itemtype` NOT IN ('$exclude')");
+            $rows = $itemTargetTicket->find([
+               self::getForeignKeyField() => $this->getID(),
+               [
+                  'NOT' => ['itemtype' => [PluginFormcreatorTargetTicket::class, Ticket::class]],
+               ],
+            ]);
             foreach ($rows as $row) {
                $data['items_id'] = [$row['itemtype'] => [$row['items_id'] => $row['items_id']]];
             }
