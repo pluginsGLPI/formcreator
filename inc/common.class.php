@@ -43,6 +43,9 @@ class PluginFormcreatorCommon {
          $type = $data['Type'];
          $matches = null;
          preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
+         if (!isset($matches[1])) {
+            return [];
+         }
          $enum = explode("','", $matches[1]);
       }
 

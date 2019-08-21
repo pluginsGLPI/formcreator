@@ -369,12 +369,15 @@ PluginFormcreatorExportableInterface
       echo '<tr class="tab_bg_1">';
       echo '<td>' . __('Form icon', 'formcreator') . '</td>';
       echo '<td>';
-      PluginFormcreatorCommon::showFontAwesomeDropdown('icon', ['value' => $this->fields['icon']]);
-      Html::showColorField('icon_color', ['value' => $this->fields['icon_color']]);
+      $icon = $this->fields['icon'] == '' ? 'fa fa-question-circle' : $this->fields['icon'];
+      PluginFormcreatorCommon::showFontAwesomeDropdown('icon', ['value' => $icon]);
+      $iconColor = $this->fields['icon_color'] == '' ? '#999999' : $this->fields['icon_color'];
+      Html::showColorField('icon_color', ['value' => $iconColor]);
       echo '</td>';
       echo '<td>' . __('Background color', 'formcreator') . '</td>';
       echo '<td>';
-      Html::showColorField('background_color', ['value' => $this->fields['background_color']]);
+      $tileColor = $this->fields['background_color'] == '' ? '#E7E7E7' : $this->fields['background_color'];
+      Html::showColorField('background_color', ['value' => $tileColor]);
       echo '</td>';
       echo '</tr>';
 

@@ -401,7 +401,7 @@ function buildTiles(list) {
          }
 
          if (item.icon_color == '') {
-            item.icon_color = '#000000';
+            item.icon_color = '#999999';
          }
 
          if (item.type == 'form') {
