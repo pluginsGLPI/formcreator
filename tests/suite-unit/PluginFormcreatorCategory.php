@@ -99,7 +99,7 @@ class PluginFormcreatorCategory extends CommonTestCase {
             'name'                             => "testgetCategoryTree form $i",
             'entities_id'                      => $entities_id,
             'is_active'                        => 1,
-            'is_helpdesk_home'                 => 1,
+            'helpdesk_home'                    => 1,
             'plugin_formcreator_categories_id' => $categories[$i]
          ]);
       }
