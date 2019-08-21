@@ -741,4 +741,48 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       // $output = $instance->publicSetTargetCategory($data, $formAnswer);
       // $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected['itilcategories_id']);
    }
+
+   public function testSetTargetAssociatedItem() {
+      $instance = new PluginFormcreatorTargetTicketDummy();
+      $question = $this->getQuestion([
+         'fieldtype' => 'glpiselect',
+         'values' => \Computer::class,
+      ]);
+      $form = new \PluginFormcreatorForm();
+      $form->getByQuestionId($question->getID());
+
+      $computer = new \Computer();
+      $computer->add([
+         'name' => $this->getUniqueString(),
+         'entities_id' => '0',
+      ]);
+      $this->boolean($computer->isNewItem())->isFalse();
+      $formAnswer = new \PluginFormcreatorFormAnswer;
+      $formAnswer->add([
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'name' => $form->fields['name'],
+         'requester_d' => 2, // glpi user id
+         'status' => '101',
+      ]);
+      $this->boolean($formAnswer->isNewItem())->isFalse();
+      $answer = new \PluginFormcreatorAnswer();
+      $answer->add([
+         \PluginFormcreatorFormAnswer::getForeignKeyField() => $formAnswer->getID(),
+         \PluginFormcreatorQuestion::getForeignKeyField() => $question->getID(),
+         'answer' => $computer->getID(),
+      ]);
+      $this->boolean($answer->isNewItem())->isFalse();
+      $instance->add([
+         'name' => '',
+         'target_name' => '',
+         \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'content' => '##FULLFORM',
+         'associate_rule' => \PluginFormcreatorTargetTicket::ASSOCIATE_RULE_ANSWER,
+         'associate_question' => $question->getID(),
+      ]);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $output = $instance->publicSetTargetAssociatedItem([], $formAnswer);
+      $this->array($output['items_id']['Computer'])->hasSize(1);
+      $this->integer((int) $output['items_id']['Computer'][$computer->getID()])->isEqualTo($computer->getID());
+   }
 }

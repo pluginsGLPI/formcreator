@@ -80,4 +80,8 @@ class PluginFormcreatorTargetTicketDummy extends \PluginFormcreatorTargetTicket
    public function publicSetTargetCategory($data, $formanswer) {
       return $this->setTargetCategory($data, $formanswer);
    }
+
+   public function publicSetTargetAssociatedItem($data, $formanswer) {
+      return $this->setTargetAssociatedItem($data, $formanswer);
+   }
 }

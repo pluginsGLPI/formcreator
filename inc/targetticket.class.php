@@ -816,6 +816,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
    }
 
    protected function setTargetAssociatedItem($data, $formanswer) {
+      global $DB;
+
       switch ($this->fields['associate_rule']) {
          case self::ASSOCIATE_RULE_ANSWER:
             // find the itemtype of the associated item
@@ -825,12 +827,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             $itemtype = $question->fields['values'];
 
             // find the id of the associated item
-            $answer  = new PluginFormcreatorAnswer();
-            $formAnswerId = $formanswer->fields['id'];
-            $found  = $answer->find("`plugin_formcreator_forms_answers_id` = '$formAnswerId'
-                  AND `plugin_formcreator_questions_id` = '$associateQuestion'");
-            $associate = array_shift($found);
-            $itemId = $associate['answer'];
+            $item = $DB->request([
+               'SELECT' => ['answer'],
+               'FROM'   => PluginFormcreatorAnswer::getTable(),
+               'WHERE'  => [
+                  'plugin_formcreator_formanswers_id' => $formanswer->fields['id'],
+                  'plugin_formcreator_questions_id'   => $associateQuestion
+               ]
+            ])->next();
+            $itemId = $item['answer'];
 
             // associate the item if it exists
             if (!class_exists($itemtype)) {
