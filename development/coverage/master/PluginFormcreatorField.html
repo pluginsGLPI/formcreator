@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
                     29%
-                                            <small>of 72</small>
+                                            <small>of 73</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -64,7 +64,7 @@ layout: coverage
 </td>
                                             </tr>
             <tr>
-            <td><a href="#getValueForTarget">PluginFormcreatorField::getValueForTarget()</a></td>
+            <td><a href="#getRawValue">PluginFormcreatorField::getRawValue()</a></td>
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
@@ -143,6 +143,13 @@ layout: coverage
             <tr>
             <td><a href="#deleteParameters">PluginFormcreatorField::deleteParameters()</a></td>
                                         <td style="text-align: center">4</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getQuestionId">PluginFormcreatorField::getQuestionId()</a></td>
+                                        <td style="text-align: center">1</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -654,18 +661,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getValueForTarget">
+                            <tr class="line" id="getRawValue">
                     <th id="L62" class="number ">62</th>
 
-                    <td class="" id="getValueForTarget">
-                        <pre>   public function getValueForTarget() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="getRawValue">
+                        <pre>   public function getRawValue() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L63" class="number uncovered">63</th>
 
                     <td class="uncovered" >
-                        <pre>      return Toolbox::addslashes_deep($this-&gt;value);</pre>
+                        <pre>      return $this-&gt;value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1742,6 +1749,35 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L209" class="number ">209</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getQuestionId">
+                    <th id="L210" class="number ">210</th>
+
+                    <td class="" id="getQuestionId">
+                        <pre>   public function getQuestionId() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L211" class="number uncovered">211</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $this-&gt;fields[&#039;id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L212" class="number unreach">212</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L213" class="number ">213</th>
 
                     <td class="" >
                         <pre>}

@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
-                    27%
-                                            <small>of 224</small>
+                    26%
+                                            <small>of 239</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -65,7 +65,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#displayField">PluginFormcreatorDropdownField::displayField()</a></td>
-                                        <td style="text-align: center">102</td>
+                                        <td style="text-align: center">117</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -1142,192 +1142,33 @@ layout: coverage
                     <th id="L126" class="number uncovered">126</th>
 
                     <td class="uncovered" >
-                        <pre>                  if (in_array($itemtype, $CFG_GLPI[&#039;ticket_types&#039;])) {</pre>
+                        <pre>                  $assignableToTicket = in_array($itemtype, $CFG_GLPI[&#039;ticket_types&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L127" class="number uncovered">127</th>
 
                     <td class="uncovered" >
-                        <pre>                     $userFk = User::getForeignKeyField();</pre>
+                        <pre>                  if (Session::getLoginUserID()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L128" class="number uncovered">128</th>
+                    <th id="L128" class="number ">128</th>
 
-                    <td class="uncovered" >
-                        <pre>                     $groupFk = Group::getForeignKeyField();</pre>
+                    <td class="" >
+                        <pre>                     // Restrict assignable types to current profile&#039;s settings
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L129" class="number uncovered">129</th>
 
                     <td class="uncovered" >
-                        <pre>                     $canViewAllHardware = Session::haveRight(&#039;helpdesk_hardware&#039;, pow(2, Ticket::HELPDESK_ALL_HARDWARE));</pre>
+                        <pre>                     $assignableToTicket = CommonITILObject::isPossibleToAssignType($itemtype);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L130" class="number uncovered">130</th>
-
-                    <td class="uncovered" >
-                        <pre>                     $canViewMyHardware = Session::haveRight(&#039;helpdesk_hardware&#039;, pow(2, Ticket::HELPDESK_MY_HARDWARE));</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L131" class="number uncovered">131</th>
-
-                    <td class="uncovered" >
-                        <pre>                     $canViewGroupHardware = Session::haveRight(&#039;show_group_hardware&#039;, &#039;1&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L132" class="number uncovered">132</th>
-
-                    <td class="uncovered" >
-                        <pre>                     $groups = [];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L133" class="number uncovered">133</th>
-
-                    <td class="uncovered" >
-                        <pre>                     if ($canViewGroupHardware) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L134" class="number uncovered">134</th>
-
-                    <td class="uncovered" >
-                        <pre>                        $groups = $this-&gt;getMyGroups(Session::getLoginUserID());</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L135" class="number ">135</th>
-
-                    <td class="" >
-                        <pre>                     }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L136" class="number uncovered">136</th>
-
-                    <td class="uncovered" >
-                        <pre>                     if ($DB-&gt;fieldExists($itemtype::getTable(), $userFk)</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L137" class="number uncovered">137</th>
-
-                    <td class="uncovered" >
-                        <pre>                        &amp;&amp; !$canViewAllHardware &amp;&amp; $canViewMyHardware) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L138" class="number uncovered">138</th>
-
-                    <td class="uncovered" >
-                        <pre>                        $userId = $_SESSION[&#039;glpiID&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L139" class="number uncovered">139</th>
-
-                    <td class="uncovered" >
-                        <pre>                        $dparams[&#039;condition&#039;] = &quot;`$userFk`=&#039;$userId&#039;&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L140" class="number uncovered">140</th>
-
-                    <td class="uncovered" >
-                        <pre>                        $dparams_cond_crit[$userFk] = $userId;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L141" class="number ">141</th>
-
-                    <td class="" >
-                        <pre>                     }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L142" class="number uncovered">142</th>
-
-                    <td class="uncovered" >
-                        <pre>                     if ($DB-&gt;fieldExists($itemtype::getTable(), $groupFk)</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L143" class="number uncovered">143</th>
-
-                    <td class="uncovered" >
-                        <pre>                        &amp;&amp; !$canViewAllHardware &amp;&amp; count($groups) &gt; 0) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L144" class="number ">144</th>
-
-                    <td class="" >
-                        <pre>                        $dparams_cond_crit = [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L145" class="number ">145</th>
-
-                    <td class="" >
-                        <pre>                           &#039;OR&#039; =&gt; [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L146" class="number uncovered">146</th>
-
-                    <td class="uncovered" >
-                        <pre>                              $groupFk =&gt; $groups,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L147" class="number uncovered">147</th>
-
-                    <td class="uncovered" >
-                        <pre>                           ] + $dparams_cond_crit</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L148" class="number ">148</th>
-
-                    <td class="" >
-                        <pre>                        ];
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L149" class="number uncovered">149</th>
-
-                    <td class="uncovered" >
-                        <pre>                        $groups = implode(&quot;&#039;, &#039;&quot;, $groups);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L150" class="number uncovered">150</th>
-
-                    <td class="uncovered" >
-                        <pre>                        $dparams[&#039;condition&#039;] .= &quot; OR `$groupFk` IN (&#039;$groups&#039;)&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L151" class="number ">151</th>
-
-                    <td class="" >
-                        <pre>                     }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L152" class="number ">152</th>
+                    <th id="L130" class="number ">130</th>
 
                     <td class="" >
                         <pre>                  }
@@ -1335,56 +1176,214 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L131" class="number uncovered">131</th>
+
+                    <td class="uncovered" >
+                        <pre>                  if ($assignableToTicket) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L132" class="number uncovered">132</th>
+
+                    <td class="uncovered" >
+                        <pre>                     $userFk = User::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L133" class="number uncovered">133</th>
+
+                    <td class="uncovered" >
+                        <pre>                     $groupFk = Group::getForeignKeyField();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L134" class="number uncovered">134</th>
+
+                    <td class="uncovered" >
+                        <pre>                     $canViewAllHardware = Session::haveRight(&#039;helpdesk_hardware&#039;, pow(2, Ticket::HELPDESK_ALL_HARDWARE));</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L135" class="number uncovered">135</th>
+
+                    <td class="uncovered" >
+                        <pre>                     $canViewMyHardware = Session::haveRight(&#039;helpdesk_hardware&#039;, pow(2, Ticket::HELPDESK_MY_HARDWARE));</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L136" class="number uncovered">136</th>
+
+                    <td class="uncovered" >
+                        <pre>                     $canViewGroupHardware = Session::haveRight(&#039;show_group_hardware&#039;, &#039;1&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L137" class="number uncovered">137</th>
+
+                    <td class="uncovered" >
+                        <pre>                     $groups = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L138" class="number uncovered">138</th>
+
+                    <td class="uncovered" >
+                        <pre>                     if ($canViewGroupHardware) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L139" class="number uncovered">139</th>
+
+                    <td class="uncovered" >
+                        <pre>                        $groups = $this-&gt;getMyGroups(Session::getLoginUserID());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L140" class="number ">140</th>
+
+                    <td class="" >
+                        <pre>                     }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L141" class="number uncovered">141</th>
+
+                    <td class="uncovered" >
+                        <pre>                     if ($DB-&gt;fieldExists($itemtype::getTable(), $userFk)</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L142" class="number uncovered">142</th>
+
+                    <td class="uncovered" >
+                        <pre>                        &amp;&amp; !$canViewAllHardware &amp;&amp; $canViewMyHardware) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L143" class="number uncovered">143</th>
+
+                    <td class="uncovered" >
+                        <pre>                        $userId = $_SESSION[&#039;glpiID&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L144" class="number uncovered">144</th>
+
+                    <td class="uncovered" >
+                        <pre>                        $dparams[&#039;condition&#039;] = &quot;`$userFk`=&#039;$userId&#039;&quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L145" class="number uncovered">145</th>
+
+                    <td class="uncovered" >
+                        <pre>                        $dparams_cond_crit[$userFk] = $userId;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L146" class="number ">146</th>
+
+                    <td class="" >
+                        <pre>                     }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L147" class="number uncovered">147</th>
+
+                    <td class="uncovered" >
+                        <pre>                     if ($DB-&gt;fieldExists($itemtype::getTable(), $groupFk)</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L148" class="number uncovered">148</th>
+
+                    <td class="uncovered" >
+                        <pre>                        &amp;&amp; !$canViewAllHardware &amp;&amp; count($groups) &gt; 0) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L149" class="number ">149</th>
+
+                    <td class="" >
+                        <pre>                        $dparams_cond_crit = [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L150" class="number ">150</th>
+
+                    <td class="" >
+                        <pre>                           &#039;OR&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L151" class="number uncovered">151</th>
+
+                    <td class="uncovered" >
+                        <pre>                              $groupFk =&gt; $groups,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L152" class="number uncovered">152</th>
+
+                    <td class="uncovered" >
+                        <pre>                           ] + $dparams_cond_crit</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L153" class="number ">153</th>
 
                     <td class="" >
-                        <pre>            }
+                        <pre>                        ];
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L154" class="number ">154</th>
+                    <th id="L154" class="number uncovered">154</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="uncovered" >
+                        <pre>                        $groups = implode(&quot;&#039;, &#039;&quot;, $groups);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L155" class="number ">155</th>
+                    <th id="L155" class="number uncovered">155</th>
 
-                    <td class="" >
-                        <pre>            // TODO remove if and the above raw queries (in $dparams[&#039;condition&#039;])
-</pre>
+                    <td class="uncovered" >
+                        <pre>                        $dparams[&#039;condition&#039;] .= &quot; OR `$groupFk` IN (&#039;$groups&#039;)&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L156" class="number ">156</th>
 
                     <td class="" >
-                        <pre>            // when 9.3/bf compat will no be needed anymore
+                        <pre>                     }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L157" class="number uncovered">157</th>
+                    <th id="L157" class="number ">157</th>
 
-                    <td class="uncovered" >
-                        <pre>            if (version_compare(GLPI_VERSION, &quot;9.4&quot;, &#039;&gt;=&#039;)) {</pre>
+                    <td class="" >
+                        <pre>                  }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L158" class="number uncovered">158</th>
+                    <th id="L158" class="number ">158</th>
 
-                    <td class="uncovered" >
-                        <pre>               $dparams[&#039;condition&#039;] = $dparams_cond_crit;</pre>
+                    <td class="" >
+                        <pre>            }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L159" class="number ">159</th>
 
                     <td class="" >
-                        <pre>            }
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1392,47 +1391,34 @@ layout: coverage
                     <th id="L160" class="number ">160</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>            // TODO remove if and the above raw queries (in $dparams[&#039;condition&#039;])
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number uncovered">161</th>
+                    <th id="L161" class="number ">161</th>
 
-                    <td class="uncovered" >
-                        <pre>            $emptyItem = new $itemtype();</pre>
+                    <td class="" >
+                        <pre>            // when 9.3/bf compat will no be needed anymore
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L162" class="number uncovered">162</th>
 
                     <td class="uncovered" >
-                        <pre>            $emptyItem-&gt;getEmpty();</pre>
+                        <pre>            if (version_compare(GLPI_VERSION, &quot;9.4&quot;, &#039;&gt;=&#039;)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L163" class="number uncovered">163</th>
 
                     <td class="uncovered" >
-                        <pre>            $dparams[&#039;displaywith&#039;] = [];</pre>
+                        <pre>               $dparams[&#039;condition&#039;] = $dparams_cond_crit;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L164" class="number uncovered">164</th>
-
-                    <td class="uncovered" >
-                        <pre>            if (isset($emptyItem-&gt;fields[&#039;serial&#039;])) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L165" class="number uncovered">165</th>
-
-                    <td class="uncovered" >
-                        <pre>               $dparams[&#039;displaywith&#039;][] = &#039;serial&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L166" class="number ">166</th>
+                    <th id="L164" class="number ">164</th>
 
                     <td class="" >
                         <pre>            }
@@ -1440,29 +1426,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L167" class="number uncovered">167</th>
-
-                    <td class="uncovered" >
-                        <pre>            if (isset($emptyItem-&gt;fields[&#039;otherserial&#039;])) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L168" class="number uncovered">168</th>
-
-                    <td class="uncovered" >
-                        <pre>               $dparams[&#039;displaywith&#039;][] = &#039;otherserial&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L169" class="number ">169</th>
-
-                    <td class="" >
-                        <pre>            }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L170" class="number ">170</th>
+                    <th id="L165" class="number ">165</th>
 
                     <td class="" >
                         <pre>
@@ -1470,134 +1434,167 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number uncovered">171</th>
+                    <th id="L166" class="number uncovered">166</th>
 
                     <td class="uncovered" >
-                        <pre>            $itemtype::dropdown($dparams);</pre>
+                        <pre>            $emptyItem = new $itemtype();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number ">172</th>
+                    <th id="L167" class="number uncovered">167</th>
+
+                    <td class="uncovered" >
+                        <pre>            $emptyItem-&gt;getEmpty();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L168" class="number uncovered">168</th>
+
+                    <td class="uncovered" >
+                        <pre>            $dparams[&#039;displaywith&#039;] = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L169" class="number uncovered">169</th>
+
+                    <td class="uncovered" >
+                        <pre>            if (isset($emptyItem-&gt;fields[&#039;serial&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L170" class="number uncovered">170</th>
+
+                    <td class="uncovered" >
+                        <pre>               $dparams[&#039;displaywith&#039;][] = &#039;serial&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L171" class="number ">171</th>
 
                     <td class="" >
-                        <pre>         }
+                        <pre>            }
 </pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L172" class="number uncovered">172</th>
+
+                    <td class="uncovered" >
+                        <pre>            if (isset($emptyItem-&gt;fields[&#039;otherserial&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L173" class="number uncovered">173</th>
 
                     <td class="uncovered" >
-                        <pre>         echo PHP_EOL;</pre>
+                        <pre>               $dparams[&#039;displaywith&#039;][] = &#039;otherserial&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L174" class="number uncovered">174</th>
+                    <th id="L174" class="number ">174</th>
 
-                    <td class="uncovered" >
-                        <pre>         echo Html::scriptBlock(&quot;$(function() {</pre>
+                    <td class="" >
+                        <pre>            }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L175" class="number uncovered">175</th>
 
                     <td class="uncovered" >
-                        <pre>            pluginFormcreatorInitializeDropdown(&#039;$fieldName&#039;, &#039;$rand&#039;);</pre>
+                        <pre>            if (count($dparams[&#039;displaywith&#039;]) &gt; 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number ">176</th>
+                    <th id="L176" class="number uncovered">176</th>
 
-                    <td class="" >
-                        <pre>         });&quot;);
-</pre>
+                    <td class="uncovered" >
+                        <pre>               $dparams[&#039;itemtype&#039;] = $itemtype;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L177" class="number ">177</th>
+                    <th id="L177" class="number uncovered">177</th>
 
-                    <td class="" >
-                        <pre>      } else {
-</pre>
+                    <td class="uncovered" >
+                        <pre>               $dparams[&#039;table&#039;] = $itemtype::getTable();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L178" class="number uncovered">178</th>
 
                     <td class="uncovered" >
-                        <pre>         $decodedValues = json_decode($this-&gt;fields[&#039;values&#039;], JSON_OBJECT_AS_ARRAY);</pre>
+                        <pre>               $dparams[&#039;multiple&#039;] = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L179" class="number uncovered">179</th>
 
                     <td class="uncovered" >
-                        <pre>         if ($decodedValues === null) {</pre>
+                        <pre>               $dparams[&#039;valuename&#039;] = Dropdown::EMPTY_VALUE;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L180" class="number uncovered">180</th>
 
                     <td class="uncovered" >
-                        <pre>            $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
+                        <pre>               if ($dparams[&#039;value&#039;] != 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L181" class="number ">181</th>
-
-                    <td class="" >
-                        <pre>         } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L182" class="number uncovered">182</th>
+                    <th id="L181" class="number uncovered">181</th>
 
                     <td class="uncovered" >
-                        <pre>            $itemtype = $decodedValues[&#039;itemtype&#039;];</pre>
+                        <pre>                  $dparams[&#039;valuename&#039;] = $dparams[&#039;value&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L183" class="number ">183</th>
+                    <th id="L182" class="number ">182</th>
 
                     <td class="" >
-                        <pre>         }
+                        <pre>               }
 </pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L183" class="number uncovered">183</th>
+
+                    <td class="uncovered" >
+                        <pre>               echo Html::jsAjaxDropdown(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L184" class="number uncovered">184</th>
 
                     <td class="uncovered" >
-                        <pre>         $item = new $itemtype();</pre>
+                        <pre>                  $fieldName,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L185" class="number uncovered">185</th>
 
                     <td class="uncovered" >
-                        <pre>         $value = &#039;&#039;;</pre>
+                        <pre>                  $domId,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L186" class="number uncovered">186</th>
 
                     <td class="uncovered" >
-                        <pre>         if ($item-&gt;getFromDB($this-&gt;value)) {</pre>
+                        <pre>                  $CFG_GLPI[&#039;root_doc&#039;].&quot;/ajax/getDropdownFindNum.php&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L187" class="number uncovered">187</th>
 
                     <td class="uncovered" >
-                        <pre>            $value = $item-&gt;getField(&#039;name&#039;);</pre>
+                        <pre>                  $dparams</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L188" class="number ">188</th>
 
                     <td class="" >
-                        <pre>         }
+                        <pre>               );
 </pre>
                     </td>
                 </tr>
@@ -1605,7 +1602,7 @@ layout: coverage
                     <th id="L189" class="number ">189</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>            } else {
 </pre>
                     </td>
                 </tr>
@@ -1613,153 +1610,155 @@ layout: coverage
                     <th id="L190" class="number uncovered">190</th>
 
                     <td class="uncovered" >
-                        <pre>         echo $value;</pre>
+                        <pre>               $itemtype::dropdown($dparams);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L191" class="number ">191</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>            }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L192" class="number uncovered">192</th>
-
-                    <td class="uncovered" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L193" class="number ">193</th>
+                    <th id="L192" class="number ">192</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         }
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="serializeValue">
-                    <th id="L194" class="number ">194</th>
+                            <tr class="line" id="">
+                    <th id="L193" class="number uncovered">193</th>
 
-                    <td class="" id="serializeValue">
-                        <pre>   public function serializeValue() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
+                    <td class="uncovered" >
+                        <pre>         echo PHP_EOL;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L195" class="number covered">195</th>
+                    <th id="L194" class="number uncovered">194</th>
 
-                    <td class="covered" >
-                        <pre>      if ($this-&gt;value === null || $this-&gt;value === &#039;&#039;) {</pre>
+                    <td class="uncovered" >
+                        <pre>         echo Html::scriptBlock(&quot;$(function() {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L196" class="number covered">196</th>
+                    <th id="L195" class="number uncovered">195</th>
 
-                    <td class="covered" >
-                        <pre>         return &#039;&#039;;</pre>
+                    <td class="uncovered" >
+                        <pre>            pluginFormcreatorInitializeDropdown(&#039;$fieldName&#039;, &#039;$rand&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L196" class="number ">196</th>
+
+                    <td class="" >
+                        <pre>         });&quot;);
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L197" class="number ">197</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>      } else {
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L198" class="number ">198</th>
+                    <th id="L198" class="number uncovered">198</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="uncovered" >
+                        <pre>         $decodedValues = json_decode($this-&gt;fields[&#039;values&#039;], JSON_OBJECT_AS_ARRAY);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L199" class="number uncovered">199</th>
 
                     <td class="uncovered" >
-                        <pre>      return $this-&gt;value;</pre>
+                        <pre>         if ($decodedValues === null) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L200" class="number unreach">200</th>
+                    <th id="L200" class="number uncovered">200</th>
 
-                    <td class="unreach" >
-                        <pre>   }</pre>
+                    <td class="uncovered" >
+                        <pre>            $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L201" class="number ">201</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         } else {
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="deserializeValue">
-                    <th id="L202" class="number ">202</th>
+                            <tr class="line" id="">
+                    <th id="L202" class="number uncovered">202</th>
 
-                    <td class="" id="deserializeValue">
-                        <pre>   public function deserializeValue($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="uncovered" >
+                        <pre>            $itemtype = $decodedValues[&#039;itemtype&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L203" class="number covered">203</th>
+                    <th id="L203" class="number ">203</th>
 
-                    <td class="covered" >
-                        <pre>      $this-&gt;value = ($value !== null &amp;&amp; $value !== &#039;&#039;)</pre>
+                    <td class="" >
+                        <pre>         }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L204" class="number covered">204</th>
+                    <th id="L204" class="number uncovered">204</th>
 
-                    <td class="covered" >
-                        <pre>                  ? $value</pre>
+                    <td class="uncovered" >
+                        <pre>         $item = new $itemtype();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L205" class="number covered">205</th>
+                    <th id="L205" class="number uncovered">205</th>
 
-                    <td class="covered" >
-                        <pre>                  : &#039;&#039;;</pre>
+                    <td class="uncovered" >
+                        <pre>         $value = &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L206" class="number covered">206</th>
+                    <th id="L206" class="number uncovered">206</th>
 
-                    <td class="covered" >
-                        <pre>   }</pre>
+                    <td class="uncovered" >
+                        <pre>         if ($item-&gt;getFromDB($this-&gt;value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number ">207</th>
+                    <th id="L207" class="number uncovered">207</th>
+
+                    <td class="uncovered" >
+                        <pre>            $value = $item-&gt;getField(&#039;name&#039;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L208" class="number ">208</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L209" class="number ">209</th>
 
                     <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getValueForDesign">
-                    <th id="L208" class="number ">208</th>
-
-                    <td class="" id="getValueForDesign">
-                        <pre>   public function getValueForDesign() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L209" class="number covered">209</th>
-
-                    <td class="covered" >
-                        <pre>      if ($this-&gt;value === null) {</pre>
-                    </td>
-                </tr>
                             <tr class="line" id="">
                     <th id="L210" class="number uncovered">210</th>
 
                     <td class="uncovered" >
-                        <pre>         return &#039;&#039;;</pre>
+                        <pre>         echo $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1771,7 +1770,51 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L212" class="number ">212</th>
+                    <th id="L212" class="number uncovered">212</th>
+
+                    <td class="uncovered" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L213" class="number ">213</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="serializeValue">
+                    <th id="L214" class="number ">214</th>
+
+                    <td class="" id="serializeValue">
+                        <pre>   public function serializeValue() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L215" class="number covered">215</th>
+
+                    <td class="covered" >
+                        <pre>      if ($this-&gt;value === null || $this-&gt;value === &#039;&#039;) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L216" class="number covered">216</th>
+
+                    <td class="covered" >
+                        <pre>         return &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L217" class="number ">217</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L218" class="number ">218</th>
 
                     <td class="" >
                         <pre>
@@ -1779,108 +1822,93 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L213" class="number covered">213</th>
+                    <th id="L219" class="number uncovered">219</th>
 
-                    <td class="covered" >
+                    <td class="uncovered" >
                         <pre>      return $this-&gt;value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L214" class="number unreach">214</th>
+                    <th id="L220" class="number unreach">220</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L215" class="number ">215</th>
+                    <th id="L221" class="number ">221</th>
 
                     <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getValueForTargetText">
-                    <th id="L216" class="number ">216</th>
-
-                    <td class="" id="getValueForTargetText">
-                        <pre>   public function getValueForTargetText($richText) {<span class="label label-success">89%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L217" class="number covered">217</th>
-
-                    <td class="covered" >
-                        <pre>      $DbUtil = new DbUtils();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L218" class="number covered">218</th>
-
-                    <td class="covered" >
-                        <pre>      $decodedValues = json_decode($this-&gt;fields[&#039;values&#039;], JSON_OBJECT_AS_ARRAY);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L219" class="number covered">219</th>
-
-                    <td class="covered" >
-                        <pre>      $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L220" class="number covered">220</th>
-
-                    <td class="covered" >
-                        <pre>      if (isset($decodedValues[&#039;itemtype&#039;])) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L221" class="number uncovered">221</th>
-
-                    <td class="uncovered" >
-                        <pre>         $itemtype = $decodedValues[&#039;itemtype&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
+                            <tr class="line" id="deserializeValue">
                     <th id="L222" class="number ">222</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="" id="deserializeValue">
+                        <pre>   public function deserializeValue($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L223" class="number covered">223</th>
 
                     <td class="covered" >
-                        <pre>      if ($itemtype == User::class) {</pre>
+                        <pre>      $this-&gt;value = ($value !== null &amp;&amp; $value !== &#039;&#039;)</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L224" class="number covered">224</th>
 
                     <td class="covered" >
-                        <pre>         $value = (new DBUtils())-&gt;getUserName($this-&gt;value);</pre>
+                        <pre>                  ? $value</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L225" class="number ">225</th>
+                    <th id="L225" class="number covered">225</th>
 
-                    <td class="" >
-                        <pre>      } else {
-</pre>
+                    <td class="covered" >
+                        <pre>                  : &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L226" class="number covered">226</th>
 
                     <td class="covered" >
-                        <pre>         $value = Dropdown::getDropdownName($DbUtil-&gt;getTableForItemType($itemtype), $this-&gt;value);</pre>
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L227" class="number ">227</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getValueForDesign">
+                    <th id="L228" class="number ">228</th>
+
+                    <td class="" id="getValueForDesign">
+                        <pre>   public function getValueForDesign() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L229" class="number covered">229</th>
+
+                    <td class="covered" >
+                        <pre>      if ($this-&gt;value === null) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L230" class="number uncovered">230</th>
+
+                    <td class="uncovered" >
+                        <pre>         return &#039;&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L231" class="number ">231</th>
 
                     <td class="" >
                         <pre>      }
@@ -1888,47 +1916,18 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L228" class="number covered">228</th>
-
-                    <td class="covered" >
-                        <pre>      return Toolbox::addslashes_deep($value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L229" class="number unreach">229</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L230" class="number ">230</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L231" class="number ">231</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getDocumentsForTarget">
                     <th id="L232" class="number ">232</th>
 
-                    <td class="" id="getDocumentsForTarget">
-                        <pre>   public function getDocumentsForTarget() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L233" class="number covered">233</th>
 
                     <td class="covered" >
-                        <pre>      return [];</pre>
+                        <pre>      return $this-&gt;value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1946,69 +1945,68 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="getName">
+                            <tr class="line" id="getValueForTargetText">
                     <th id="L236" class="number ">236</th>
 
-                    <td class="" id="getName">
-                        <pre>   public static function getName() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="getValueForTargetText">
+                        <pre>   public function getValueForTargetText($richText) {<span class="label label-success">89%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L237" class="number covered">237</th>
 
                     <td class="covered" >
-                        <pre>      return _n(&#039;Dropdown&#039;, &#039;Dropdowns&#039;, 1);</pre>
+                        <pre>      $DbUtil = new DbUtils();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L238" class="number unreach">238</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L239" class="number ">239</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="isValid">
-                    <th id="L240" class="number ">240</th>
-
-                    <td class="" id="isValid">
-                        <pre>   public function isValid() {<span class="label label-warning">50%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L241" class="number ">241</th>
-
-                    <td class="" >
-                        <pre>      // If the field is required it can&#039;t be empty
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L242" class="number covered">242</th>
+                    <th id="L238" class="number covered">238</th>
 
                     <td class="covered" >
-                        <pre>      $itemtype = json_decode($this-&gt;fields[&#039;values&#039;], true);</pre>
+                        <pre>      $decodedValues = json_decode($this-&gt;fields[&#039;values&#039;], JSON_OBJECT_AS_ARRAY);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L239" class="number covered">239</th>
+
+                    <td class="covered" >
+                        <pre>      $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L240" class="number covered">240</th>
+
+                    <td class="covered" >
+                        <pre>      if (isset($decodedValues[&#039;itemtype&#039;])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L241" class="number uncovered">241</th>
+
+                    <td class="uncovered" >
+                        <pre>         $itemtype = $decodedValues[&#039;itemtype&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L242" class="number ">242</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L243" class="number covered">243</th>
 
                     <td class="covered" >
-                        <pre>      if ($itemtype === null) {</pre>
+                        <pre>      if ($itemtype == User::class) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L244" class="number uncovered">244</th>
+                    <th id="L244" class="number covered">244</th>
 
-                    <td class="uncovered" >
-                        <pre>         $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
+                    <td class="covered" >
+                        <pre>         $value = (new DBUtils())-&gt;getUserName($this-&gt;value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2023,7 +2021,7 @@ layout: coverage
                     <th id="L246" class="number covered">246</th>
 
                     <td class="covered" >
-                        <pre>         $itemtype = $itemtype[&#039;itemtype&#039;];</pre>
+                        <pre>         $value = Dropdown::getDropdownName($DbUtil-&gt;getTableForItemType($itemtype), $this-&gt;value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2038,53 +2036,135 @@ layout: coverage
                     <th id="L248" class="number covered">248</th>
 
                     <td class="covered" >
-                        <pre>      $dropdown = new $itemtype();</pre>
+                        <pre>      return $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L249" class="number covered">249</th>
+                    <th id="L249" class="number unreach">249</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L250" class="number ">250</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getDocumentsForTarget">
+                    <th id="L251" class="number ">251</th>
+
+                    <td class="" id="getDocumentsForTarget">
+                        <pre>   public function getDocumentsForTarget() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L252" class="number covered">252</th>
 
                     <td class="covered" >
-                        <pre>      if ($this-&gt;isRequired() &amp;&amp; $dropdown-&gt;isNewId($this-&gt;value)) {</pre>
+                        <pre>      return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L250" class="number uncovered">250</th>
+                    <th id="L253" class="number unreach">253</th>
 
-                    <td class="uncovered" >
-                        <pre>         Session::addMessageAfterRedirect(</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L251" class="number uncovered">251</th>
+                    <th id="L254" class="number ">254</th>
 
-                    <td class="uncovered" >
-                        <pre>            __(&#039;A required field is empty:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $this-&gt;getLabel(),</pre>
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
-                            <tr class="line" id="">
-                    <th id="L252" class="number uncovered">252</th>
-
-                    <td class="uncovered" >
-                        <pre>            false,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L253" class="number uncovered">253</th>
-
-                    <td class="uncovered" >
-                        <pre>            ERROR);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L254" class="number uncovered">254</th>
-
-                    <td class="uncovered" >
-                        <pre>         return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
+                            <tr class="line" id="getName">
                     <th id="L255" class="number ">255</th>
+
+                    <td class="" id="getName">
+                        <pre>   public static function getName() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L256" class="number covered">256</th>
+
+                    <td class="covered" >
+                        <pre>      return _n(&#039;Dropdown&#039;, &#039;Dropdowns&#039;, 1);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L257" class="number unreach">257</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L258" class="number ">258</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="isValid">
+                    <th id="L259" class="number ">259</th>
+
+                    <td class="" id="isValid">
+                        <pre>   public function isValid() {<span class="label label-warning">50%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L260" class="number ">260</th>
+
+                    <td class="" >
+                        <pre>      // If the field is required it can&#039;t be empty
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L261" class="number covered">261</th>
+
+                    <td class="covered" >
+                        <pre>      $itemtype = json_decode($this-&gt;fields[&#039;values&#039;], true);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L262" class="number covered">262</th>
+
+                    <td class="covered" >
+                        <pre>      if ($itemtype === null) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L263" class="number uncovered">263</th>
+
+                    <td class="uncovered" >
+                        <pre>         $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L264" class="number ">264</th>
+
+                    <td class="" >
+                        <pre>      } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L265" class="number covered">265</th>
+
+                    <td class="covered" >
+                        <pre>         $itemtype = $itemtype[&#039;itemtype&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L266" class="number ">266</th>
 
                     <td class="" >
                         <pre>      }
@@ -2092,7 +2172,64 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L256" class="number ">256</th>
+                    <th id="L267" class="number covered">267</th>
+
+                    <td class="covered" >
+                        <pre>      $dropdown = new $itemtype();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L268" class="number covered">268</th>
+
+                    <td class="covered" >
+                        <pre>      if ($this-&gt;isRequired() &amp;&amp; $dropdown-&gt;isNewId($this-&gt;value)) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L269" class="number uncovered">269</th>
+
+                    <td class="uncovered" >
+                        <pre>         Session::addMessageAfterRedirect(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L270" class="number uncovered">270</th>
+
+                    <td class="uncovered" >
+                        <pre>            __(&#039;A required field is empty:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $this-&gt;getLabel(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L271" class="number uncovered">271</th>
+
+                    <td class="uncovered" >
+                        <pre>            false,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L272" class="number uncovered">272</th>
+
+                    <td class="uncovered" >
+                        <pre>            ERROR);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L273" class="number uncovered">273</th>
+
+                    <td class="uncovered" >
+                        <pre>         return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L274" class="number ">274</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L275" class="number ">275</th>
 
                     <td class="" >
                         <pre>
@@ -2100,7 +2237,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L257" class="number ">257</th>
+                    <th id="L276" class="number ">276</th>
 
                     <td class="" >
                         <pre>      // All is OK
@@ -2108,21 +2245,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L258" class="number covered">258</th>
+                    <th id="L277" class="number covered">277</th>
 
                     <td class="covered" >
                         <pre>      return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L259" class="number unreach">259</th>
+                    <th id="L278" class="number unreach">278</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L260" class="number ">260</th>
+                    <th id="L279" class="number ">279</th>
 
                     <td class="" >
                         <pre>
@@ -2130,63 +2267,63 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="prepareQuestionInputForSave">
-                    <th id="L261" class="number ">261</th>
+                    <th id="L280" class="number ">280</th>
 
                     <td class="" id="prepareQuestionInputForSave">
                         <pre>   public function prepareQuestionInputForSave($input) {<span class="label label-warning">63%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L262" class="number covered">262</th>
+                    <th id="L281" class="number covered">281</th>
 
                     <td class="covered" >
                         <pre>      if (isset($input[&#039;dropdown_values&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L263" class="number covered">263</th>
+                    <th id="L282" class="number covered">282</th>
 
                     <td class="covered" >
                         <pre>         if (empty($input[&#039;dropdown_values&#039;])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L264" class="number uncovered">264</th>
+                    <th id="L283" class="number uncovered">283</th>
 
                     <td class="uncovered" >
                         <pre>            Session::addMessageAfterRedirect(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L265" class="number uncovered">265</th>
+                    <th id="L284" class="number uncovered">284</th>
 
                     <td class="uncovered" >
                         <pre>                  __(&#039;The field value is required:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $input[&#039;name&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L266" class="number uncovered">266</th>
+                    <th id="L285" class="number uncovered">285</th>
 
                     <td class="uncovered" >
                         <pre>                  false,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L267" class="number uncovered">267</th>
+                    <th id="L286" class="number uncovered">286</th>
 
                     <td class="uncovered" >
                         <pre>                  ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L268" class="number uncovered">268</th>
+                    <th id="L287" class="number uncovered">287</th>
 
                     <td class="uncovered" >
                         <pre>            return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L269" class="number ">269</th>
+                    <th id="L288" class="number ">288</th>
 
                     <td class="" >
                         <pre>         }
@@ -2194,35 +2331,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L270" class="number covered">270</th>
+                    <th id="L289" class="number covered">289</th>
 
                     <td class="covered" >
                         <pre>         $allowedDropdownValues = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L271" class="number covered">271</th>
+                    <th id="L290" class="number covered">290</th>
 
                     <td class="covered" >
                         <pre>         $stdtypes = Dropdown::getStandardDropdownItemTypes();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L272" class="number covered">272</th>
+                    <th id="L291" class="number covered">291</th>
 
                     <td class="covered" >
                         <pre>         foreach ($stdtypes as $categoryOfTypes) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L273" class="number covered">273</th>
+                    <th id="L292" class="number covered">292</th>
 
                     <td class="covered" >
                         <pre>            $allowedDropdownValues = array_merge($allowedDropdownValues, array_keys($categoryOfTypes));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L274" class="number ">274</th>
+                    <th id="L293" class="number ">293</th>
 
                     <td class="" >
                         <pre>         }
@@ -2230,49 +2367,49 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L275" class="number covered">275</th>
+                    <th id="L294" class="number covered">294</th>
 
                     <td class="covered" >
                         <pre>         if (!in_array($input[&#039;dropdown_values&#039;], $allowedDropdownValues)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L276" class="number uncovered">276</th>
+                    <th id="L295" class="number uncovered">295</th>
 
                     <td class="uncovered" >
                         <pre>            Session::addMessageAfterRedirect(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L277" class="number uncovered">277</th>
+                    <th id="L296" class="number uncovered">296</th>
 
                     <td class="uncovered" >
                         <pre>                  __(&#039;Invalid dropdown type:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $input[&#039;name&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L278" class="number uncovered">278</th>
+                    <th id="L297" class="number uncovered">297</th>
 
                     <td class="uncovered" >
                         <pre>                  false,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L279" class="number uncovered">279</th>
+                    <th id="L298" class="number uncovered">298</th>
 
                     <td class="uncovered" >
                         <pre>                  ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L280" class="number uncovered">280</th>
+                    <th id="L299" class="number uncovered">299</th>
 
                     <td class="uncovered" >
                         <pre>            return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L281" class="number ">281</th>
+                    <th id="L300" class="number ">300</th>
 
                     <td class="" >
                         <pre>         }
@@ -2280,21 +2417,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L282" class="number covered">282</th>
+                    <th id="L301" class="number covered">301</th>
 
                     <td class="covered" >
                         <pre>         $input[&#039;values&#039;] = [</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L283" class="number covered">283</th>
+                    <th id="L302" class="number covered">302</th>
 
                     <td class="covered" >
                         <pre>            &#039;itemtype&#039; =&gt; $input[&#039;dropdown_values&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L284" class="number ">284</th>
+                    <th id="L303" class="number ">303</th>
 
                     <td class="" >
                         <pre>         ];
@@ -2302,35 +2439,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L285" class="number covered">285</th>
+                    <th id="L304" class="number covered">304</th>
 
                     <td class="covered" >
                         <pre>         if ($input[&#039;dropdown_values&#039;] == ITILCategory::class) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L286" class="number covered">286</th>
+                    <th id="L305" class="number covered">305</th>
 
                     <td class="covered" >
                         <pre>            $input[&#039;values&#039;][&#039;show_ticket_categories&#039;] = $input[&#039;show_ticket_categories&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L287" class="number covered">287</th>
+                    <th id="L306" class="number covered">306</th>
 
                     <td class="covered" >
                         <pre>            if ($input[&#039;show_ticket_categories_depth&#039;] != (int) $input[&#039;show_ticket_categories_depth&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L288" class="number uncovered">288</th>
+                    <th id="L307" class="number uncovered">307</th>
 
                     <td class="uncovered" >
                         <pre>               $input[&#039;values&#039;][&#039;show_ticket_categories_depth&#039;] = 0;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L289" class="number ">289</th>
+                    <th id="L308" class="number ">308</th>
 
                     <td class="" >
                         <pre>            } else {
@@ -2338,14 +2475,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L290" class="number covered">290</th>
+                    <th id="L309" class="number covered">309</th>
 
                     <td class="covered" >
                         <pre>               $input[&#039;values&#039;][&#039;show_ticket_categories_depth&#039;] = $input[&#039;show_ticket_categories_depth&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L291" class="number ">291</th>
+                    <th id="L310" class="number ">310</th>
 
                     <td class="" >
                         <pre>            }
@@ -2353,28 +2490,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L292" class="number covered">292</th>
+                    <th id="L311" class="number covered">311</th>
 
                     <td class="covered" >
                         <pre>            $input[&#039;values&#039;][&#039;show_ticket_categories_root&#039;] = isset($input[&#039;show_ticket_categories_root&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L293" class="number uncovered">293</th>
+                    <th id="L312" class="number uncovered">312</th>
 
                     <td class="uncovered" >
                         <pre>                                                              ? $input[&#039;show_ticket_categories_root&#039;]</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L294" class="number covered">294</th>
+                    <th id="L313" class="number covered">313</th>
 
                     <td class="covered" >
                         <pre>                                                              : &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L295" class="number ">295</th>
+                    <th id="L314" class="number ">314</th>
 
                     <td class="" >
                         <pre>         }
@@ -2382,35 +2519,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L296" class="number covered">296</th>
+                    <th id="L315" class="number covered">315</th>
 
                     <td class="covered" >
                         <pre>         $input[&#039;values&#039;] = json_encode($input[&#039;values&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L297" class="number covered">297</th>
+                    <th id="L316" class="number covered">316</th>
 
                     <td class="covered" >
                         <pre>         unset($input[&#039;show_ticket_categories&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L298" class="number covered">298</th>
+                    <th id="L317" class="number covered">317</th>
 
                     <td class="covered" >
                         <pre>         unset($input[&#039;show_ticket_categories_depth&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L299" class="number covered">299</th>
+                    <th id="L318" class="number covered">318</th>
 
                     <td class="covered" >
                         <pre>         $this-&gt;value = isset($input[&#039;dropdown_default_value&#039;]) ? $input[&#039;dropdown_default_value&#039;] : &#039;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L300" class="number ">300</th>
+                    <th id="L319" class="number ">319</th>
 
                     <td class="" >
                         <pre>      }
@@ -2418,7 +2555,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L301" class="number ">301</th>
+                    <th id="L320" class="number ">320</th>
 
                     <td class="" >
                         <pre>
@@ -2426,21 +2563,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L302" class="number covered">302</th>
+                    <th id="L321" class="number covered">321</th>
 
                     <td class="covered" >
                         <pre>      return $input;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L303" class="number unreach">303</th>
+                    <th id="L322" class="number unreach">322</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L304" class="number ">304</th>
+                    <th id="L323" class="number ">323</th>
 
                     <td class="" >
                         <pre>
@@ -2448,14 +2585,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getPrefs">
-                    <th id="L305" class="number ">305</th>
+                    <th id="L324" class="number ">324</th>
 
                     <td class="" id="getPrefs">
                         <pre>   public static function getPrefs() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L306" class="number ">306</th>
+                    <th id="L325" class="number ">325</th>
 
                     <td class="" >
                         <pre>      return [
@@ -2463,14 +2600,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L307" class="number uncovered">307</th>
+                    <th id="L326" class="number uncovered">326</th>
 
                     <td class="uncovered" >
                         <pre>         &#039;required&#039;       =&gt; 1,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L308" class="number ">308</th>
+                    <th id="L327" class="number ">327</th>
 
                     <td class="" >
                         <pre>         &#039;default_values&#039; =&gt; 0,
@@ -2478,7 +2615,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L309" class="number ">309</th>
+                    <th id="L328" class="number ">328</th>
 
                     <td class="" >
                         <pre>         &#039;values&#039;         =&gt; 0,
@@ -2486,7 +2623,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L310" class="number ">310</th>
+                    <th id="L329" class="number ">329</th>
 
                     <td class="" >
                         <pre>         &#039;range&#039;          =&gt; 0,
@@ -2494,7 +2631,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L311" class="number ">311</th>
+                    <th id="L330" class="number ">330</th>
 
                     <td class="" >
                         <pre>         &#039;show_empty&#039;     =&gt; 1,
@@ -2502,7 +2639,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L312" class="number ">312</th>
+                    <th id="L331" class="number ">331</th>
 
                     <td class="" >
                         <pre>         &#039;regex&#039;          =&gt; 0,
@@ -2510,7 +2647,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L313" class="number ">313</th>
+                    <th id="L332" class="number ">332</th>
 
                     <td class="" >
                         <pre>         &#039;show_type&#039;      =&gt; 1,
@@ -2518,7 +2655,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L314" class="number ">314</th>
+                    <th id="L333" class="number ">333</th>
 
                     <td class="" >
                         <pre>         &#039;dropdown_value&#039; =&gt; 1,
@@ -2526,7 +2663,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L315" class="number ">315</th>
+                    <th id="L334" class="number ">334</th>
 
                     <td class="" >
                         <pre>         &#039;glpi_objects&#039;   =&gt; 0,
@@ -2534,7 +2671,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L316" class="number ">316</th>
+                    <th id="L335" class="number ">335</th>
 
                     <td class="" >
                         <pre>         &#039;ldap_values&#039;    =&gt; 0,
@@ -2542,7 +2679,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L317" class="number ">317</th>
+                    <th id="L336" class="number ">336</th>
 
                     <td class="" >
                         <pre>      ];
@@ -2550,14 +2687,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L318" class="number unreach">318</th>
+                    <th id="L337" class="number unreach">337</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L319" class="number ">319</th>
+                    <th id="L338" class="number ">338</th>
 
                     <td class="" >
                         <pre>
@@ -2565,171 +2702,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="getJSFields">
-                    <th id="L320" class="number ">320</th>
+                    <th id="L339" class="number ">339</th>
 
                     <td class="" id="getJSFields">
                         <pre>   public static function getJSFields() {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L321" class="number uncovered">321</th>
+                    <th id="L340" class="number uncovered">340</th>
 
                     <td class="uncovered" >
                         <pre>      $prefs = self::getPrefs();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L322" class="number uncovered">322</th>
+                    <th id="L341" class="number uncovered">341</th>
 
                     <td class="uncovered" >
                         <pre>      return &quot;tab_fields_fields[&#039;dropdown&#039;] = &#039;showFields(&quot; . implode(&#039;, &#039;, $prefs) . &quot;);&#039;;&quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L323" class="number unreach">323</th>
+                    <th id="L342" class="number unreach">342</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L324" class="number ">324</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getMyGroups">
-                    <th id="L325" class="number ">325</th>
-
-                    <td class="" id="getMyGroups">
-                        <pre>   private function getMyGroups($userID) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L326" class="number uncovered">326</th>
-
-                    <td class="uncovered" >
-                        <pre>      global $DB;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L327" class="number ">327</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L328" class="number ">328</th>
-
-                    <td class="" >
-                        <pre>      // from Item_Ticket::dropdownMyDevices()
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L329" class="number uncovered">329</th>
-
-                    <td class="uncovered" >
-                        <pre>      $DbUtil = new DbUtils();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L330" class="number uncovered">330</th>
-
-                    <td class="uncovered" >
-                        <pre>      $group_where = &quot;&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L331" class="number ">331</th>
-
-                    <td class="" >
-                        <pre>      $query       = &quot;SELECT `glpi_groups_users`.`groups_id`, `glpi_groups`.`name`
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L332" class="number ">332</th>
-
-                    <td class="" >
-                        <pre>                        FROM `glpi_groups_users`
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L333" class="number ">333</th>
-
-                    <td class="" >
-                        <pre>                        LEFT JOIN `glpi_groups`
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L334" class="number ">334</th>
-
-                    <td class="" >
-                        <pre>                        ON (`glpi_groups`.`id` = `glpi_groups_users`.`groups_id`)
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L335" class="number uncovered">335</th>
-
-                    <td class="uncovered" >
-                        <pre>                        WHERE `glpi_groups_users`.`users_id` = &#039;$userID&#039; &quot; .</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L336" class="number uncovered">336</th>
-
-                    <td class="uncovered" >
-                        <pre>                              $DbUtil-&gt;getEntitiesRestrictRequest(</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L337" class="number uncovered">337</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 &quot;AND&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L338" class="number uncovered">338</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 &quot;glpi_groups&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L339" class="number uncovered">339</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 &quot;&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L340" class="number uncovered">340</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 $_SESSION[&#039;glpiactive_entity&#039;],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L341" class="number uncovered">341</th>
-
-                    <td class="uncovered" >
-                        <pre>                                 $_SESSION[&#039;glpiactive_entity_recursive&#039;]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L342" class="number uncovered">342</th>
-
-                    <td class="uncovered" >
-                        <pre>      $result  = $DB-&gt;query($query);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2740,36 +2737,176 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="">
-                    <th id="L344" class="number uncovered">344</th>
+                            <tr class="line" id="getMyGroups">
+                    <th id="L344" class="number ">344</th>
 
-                    <td class="uncovered" >
-                        <pre>      $first   = true;</pre>
+                    <td class="" id="getMyGroups">
+                        <pre>   private function getMyGroups($userID) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L345" class="number uncovered">345</th>
 
                     <td class="uncovered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L346" class="number ">346</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L347" class="number ">347</th>
+
+                    <td class="" >
+                        <pre>      // from Item_Ticket::dropdownMyDevices()
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L348" class="number uncovered">348</th>
+
+                    <td class="uncovered" >
+                        <pre>      $DbUtil = new DbUtils();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L349" class="number uncovered">349</th>
+
+                    <td class="uncovered" >
+                        <pre>      $group_where = &quot;&quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L350" class="number ">350</th>
+
+                    <td class="" >
+                        <pre>      $query       = &quot;SELECT `glpi_groups_users`.`groups_id`, `glpi_groups`.`name`
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L351" class="number ">351</th>
+
+                    <td class="" >
+                        <pre>                        FROM `glpi_groups_users`
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L352" class="number ">352</th>
+
+                    <td class="" >
+                        <pre>                        LEFT JOIN `glpi_groups`
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L353" class="number ">353</th>
+
+                    <td class="" >
+                        <pre>                        ON (`glpi_groups`.`id` = `glpi_groups_users`.`groups_id`)
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L354" class="number uncovered">354</th>
+
+                    <td class="uncovered" >
+                        <pre>                        WHERE `glpi_groups_users`.`users_id` = &#039;$userID&#039; &quot; .</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L355" class="number uncovered">355</th>
+
+                    <td class="uncovered" >
+                        <pre>                              $DbUtil-&gt;getEntitiesRestrictRequest(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L356" class="number uncovered">356</th>
+
+                    <td class="uncovered" >
+                        <pre>                                 &quot;AND&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L357" class="number uncovered">357</th>
+
+                    <td class="uncovered" >
+                        <pre>                                 &quot;glpi_groups&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L358" class="number uncovered">358</th>
+
+                    <td class="uncovered" >
+                        <pre>                                 &quot;&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L359" class="number uncovered">359</th>
+
+                    <td class="uncovered" >
+                        <pre>                                 $_SESSION[&#039;glpiactive_entity&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L360" class="number uncovered">360</th>
+
+                    <td class="uncovered" >
+                        <pre>                                 $_SESSION[&#039;glpiactive_entity_recursive&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L361" class="number uncovered">361</th>
+
+                    <td class="uncovered" >
+                        <pre>      $result  = $DB-&gt;query($query);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L362" class="number ">362</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L363" class="number uncovered">363</th>
+
+                    <td class="uncovered" >
+                        <pre>      $first   = true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L364" class="number uncovered">364</th>
+
+                    <td class="uncovered" >
                         <pre>      $devices = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L346" class="number uncovered">346</th>
+                    <th id="L365" class="number uncovered">365</th>
 
                     <td class="uncovered" >
                         <pre>      if ($DB-&gt;numrows($result) === 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L347" class="number uncovered">347</th>
+                    <th id="L366" class="number uncovered">366</th>
 
                     <td class="uncovered" >
                         <pre>         return [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L348" class="number ">348</th>
+                    <th id="L367" class="number ">367</th>
 
                     <td class="" >
                         <pre>      }
@@ -2777,28 +2914,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L349" class="number uncovered">349</th>
+                    <th id="L368" class="number uncovered">368</th>
 
                     <td class="uncovered" >
                         <pre>      while ($data = $DB-&gt;fetch_assoc($result)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L350" class="number uncovered">350</th>
+                    <th id="L369" class="number uncovered">369</th>
 
                     <td class="uncovered" >
                         <pre>         if ($first) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L351" class="number uncovered">351</th>
+                    <th id="L370" class="number uncovered">370</th>
 
                     <td class="uncovered" >
                         <pre>            $first = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L352" class="number ">352</th>
+                    <th id="L371" class="number ">371</th>
 
                     <td class="" >
                         <pre>         } else {
@@ -2806,14 +2943,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L353" class="number uncovered">353</th>
+                    <th id="L372" class="number uncovered">372</th>
 
                     <td class="uncovered" >
                         <pre>            $group_where .= &quot; OR &quot;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L354" class="number ">354</th>
+                    <th id="L373" class="number ">373</th>
 
                     <td class="" >
                         <pre>         }
@@ -2821,155 +2958,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L355" class="number uncovered">355</th>
+                    <th id="L374" class="number uncovered">374</th>
 
                     <td class="uncovered" >
                         <pre>         $a_groups                     = getAncestorsOf(&quot;glpi_groups&quot;, $data[&quot;groups_id&quot;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L356" class="number uncovered">356</th>
-
-                    <td class="uncovered" >
-                        <pre>         $a_groups[$data[&quot;groups_id&quot;]] = $data[&quot;groups_id&quot;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L357" class="number ">357</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L358" class="number uncovered">358</th>
-
-                    <td class="uncovered" >
-                        <pre>      return $a_groups;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L359" class="number unreach">359</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L360" class="number ">360</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="equals">
-                    <th id="L361" class="number ">361</th>
-
-                    <td class="" id="equals">
-                        <pre>   public function equals($value) {<span class="label label-success">75%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L362" class="number covered">362</th>
-
-                    <td class="covered" >
-                        <pre>      $value = html_entity_decode($value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L363" class="number covered">363</th>
-
-                    <td class="covered" >
-                        <pre>      $itemtype = json_decode($this-&gt;fields[&#039;values&#039;], true);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L364" class="number covered">364</th>
-
-                    <td class="covered" >
-                        <pre>      $itemtype = $itemtype[&#039;itemtype&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L365" class="number covered">365</th>
-
-                    <td class="covered" >
-                        <pre>      $dropdown = new $itemtype();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L366" class="number covered">366</th>
-
-                    <td class="covered" >
-                        <pre>      if ($dropdown-&gt;isNewId($this-&gt;value)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L367" class="number uncovered">367</th>
-
-                    <td class="uncovered" >
-                        <pre>         return ($value === &#039;&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L368" class="number ">368</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L369" class="number covered">369</th>
-
-                    <td class="covered" >
-                        <pre>      if (!$dropdown-&gt;getFromDB($this-&gt;value)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L370" class="number uncovered">370</th>
-
-                    <td class="uncovered" >
-                        <pre>         throw new PluginFormcreatorComparisonException(&#039;Item not found for comparison&#039;);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L371" class="number ">371</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L372" class="number covered">372</th>
-
-                    <td class="covered" >
-                        <pre>      if ($dropdown instanceof CommonTreeDropdown) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L373" class="number covered">373</th>
-
-                    <td class="covered" >
-                        <pre>         $name = $dropdown-&gt;getField($dropdown-&gt;getCompleteNameField());</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L374" class="number ">374</th>
-
-                    <td class="" >
-                        <pre>      } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L375" class="number uncovered">375</th>
 
                     <td class="uncovered" >
-                        <pre>         $name = $dropdown-&gt;getField($dropdown-&gt;getNameField());</pre>
+                        <pre>         $a_groups[$data[&quot;groups_id&quot;]] = $data[&quot;groups_id&quot;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2981,10 +2980,10 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L377" class="number covered">377</th>
+                    <th id="L377" class="number uncovered">377</th>
 
-                    <td class="covered" >
-                        <pre>      return $name == $value;</pre>
+                    <td class="uncovered" >
+                        <pre>      return $a_groups;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -3002,67 +3001,67 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="notEquals">
+                            <tr class="line" id="equals">
                     <th id="L380" class="number ">380</th>
 
-                    <td class="" id="notEquals">
-                        <pre>   public function notEquals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    <td class="" id="equals">
+                        <pre>   public function equals($value) {<span class="label label-success">75%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L381" class="number covered">381</th>
 
                     <td class="covered" >
-                        <pre>      return !$this-&gt;equals($value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L382" class="number unreach">382</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L383" class="number ">383</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="greaterThan">
-                    <th id="L384" class="number ">384</th>
-
-                    <td class="" id="greaterThan">
-                        <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L385" class="number uncovered">385</th>
-
-                    <td class="uncovered" >
                         <pre>      $value = html_entity_decode($value);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L382" class="number covered">382</th>
+
+                    <td class="covered" >
+                        <pre>      $itemtype = json_decode($this-&gt;fields[&#039;values&#039;], true);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L383" class="number covered">383</th>
+
+                    <td class="covered" >
+                        <pre>      $itemtype = $itemtype[&#039;itemtype&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L384" class="number covered">384</th>
+
+                    <td class="covered" >
+                        <pre>      $dropdown = new $itemtype();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L385" class="number covered">385</th>
+
+                    <td class="covered" >
+                        <pre>      if ($dropdown-&gt;isNewId($this-&gt;value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L386" class="number uncovered">386</th>
 
                     <td class="uncovered" >
-                        <pre>      $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
+                        <pre>         return ($value === &#039;&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L387" class="number uncovered">387</th>
+                    <th id="L387" class="number ">387</th>
 
-                    <td class="uncovered" >
-                        <pre>      $dropdown = new $itemtype();</pre>
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L388" class="number uncovered">388</th>
+                    <th id="L388" class="number covered">388</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      if (!$dropdown-&gt;getFromDB($this-&gt;value)) {</pre>
                     </td>
                 </tr>
@@ -3082,16 +3081,16 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L391" class="number uncovered">391</th>
+                    <th id="L391" class="number covered">391</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      if ($dropdown instanceof CommonTreeDropdown) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L392" class="number uncovered">392</th>
+                    <th id="L392" class="number covered">392</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>         $name = $dropdown-&gt;getField($dropdown-&gt;getCompleteNameField());</pre>
                     </td>
                 </tr>
@@ -3119,10 +3118,10 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L396" class="number uncovered">396</th>
+                    <th id="L396" class="number covered">396</th>
 
-                    <td class="uncovered" >
-                        <pre>      return $name &gt; $value;</pre>
+                    <td class="covered" >
+                        <pre>      return $name == $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -3140,18 +3139,18 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="lessThan">
+                            <tr class="line" id="notEquals">
                     <th id="L399" class="number ">399</th>
 
-                    <td class="" id="lessThan">
-                        <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    <td class="" id="notEquals">
+                        <pre>   public function notEquals($value) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L400" class="number uncovered">400</th>
+                    <th id="L400" class="number covered">400</th>
 
-                    <td class="uncovered" >
-                        <pre>      return !$this-&gt;greaterThan($value) &amp;&amp; !$this-&gt;equals($value);</pre>
+                    <td class="covered" >
+                        <pre>      return !$this-&gt;equals($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -3169,66 +3168,50 @@ layout: coverage
 </pre>
                     </td>
                 </tr>
-                            <tr class="line" id="parseAnswerValues">
+                            <tr class="line" id="greaterThan">
                     <th id="L403" class="number ">403</th>
 
-                    <td class="" id="parseAnswerValues">
-                        <pre>   public function parseAnswerValues($input, $nonDestructive = false) {<span class="label label-success">71%</span><div class="btn-group"></div></pre>
+                    <td class="" id="greaterThan">
+                        <pre>   public function greaterThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L404" class="number covered">404</th>
+                    <th id="L404" class="number uncovered">404</th>
 
-                    <td class="covered" >
-                        <pre>      $key = &#039;formcreator_field_&#039; . $this-&gt;fields[&#039;id&#039;];</pre>
+                    <td class="uncovered" >
+                        <pre>      $value = html_entity_decode($value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L405" class="number covered">405</th>
+                    <th id="L405" class="number uncovered">405</th>
 
-                    <td class="covered" >
-                        <pre>      if (!isset($input[$key])) {</pre>
+                    <td class="uncovered" >
+                        <pre>      $itemtype = $this-&gt;fields[&#039;values&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L406" class="number uncovered">406</th>
 
                     <td class="uncovered" >
-                        <pre>         $input[$key] = &#039;0&#039;;</pre>
+                        <pre>      $dropdown = new $itemtype();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L407" class="number ">407</th>
-
-                    <td class="" >
-                        <pre>      } else {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L408" class="number covered">408</th>
-
-                    <td class="covered" >
-                        <pre>         if (!is_string($input[$key])) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L409" class="number uncovered">409</th>
+                    <th id="L407" class="number uncovered">407</th>
 
                     <td class="uncovered" >
-                        <pre>            return false;</pre>
+                        <pre>      if (!$dropdown-&gt;getFromDB($this-&gt;value)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L410" class="number ">410</th>
+                    <th id="L408" class="number uncovered">408</th>
 
-                    <td class="" >
-                        <pre>         }
-</pre>
+                    <td class="uncovered" >
+                        <pre>         throw new PluginFormcreatorComparisonException(&#039;Item not found for comparison&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L411" class="number ">411</th>
+                    <th id="L409" class="number ">409</th>
 
                     <td class="" >
                         <pre>      }
@@ -3236,28 +3219,182 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L412" class="number covered">412</th>
+                    <th id="L410" class="number uncovered">410</th>
 
-                    <td class="covered" >
-                        <pre>      $this-&gt;value = $input[$key];</pre>
+                    <td class="uncovered" >
+                        <pre>      if ($dropdown instanceof CommonTreeDropdown) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L413" class="number covered">413</th>
+                    <th id="L411" class="number uncovered">411</th>
 
-                    <td class="covered" >
-                        <pre>      return true;</pre>
+                    <td class="uncovered" >
+                        <pre>         $name = $dropdown-&gt;getField($dropdown-&gt;getCompleteNameField());</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L414" class="number unreach">414</th>
+                    <th id="L412" class="number ">412</th>
+
+                    <td class="" >
+                        <pre>      } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L413" class="number uncovered">413</th>
+
+                    <td class="uncovered" >
+                        <pre>         $name = $dropdown-&gt;getField($dropdown-&gt;getNameField());</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L414" class="number ">414</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L415" class="number uncovered">415</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $name &gt; $value;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L416" class="number unreach">416</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L415" class="number ">415</th>
+                    <th id="L417" class="number ">417</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="lessThan">
+                    <th id="L418" class="number ">418</th>
+
+                    <td class="" id="lessThan">
+                        <pre>   public function lessThan($value) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L419" class="number uncovered">419</th>
+
+                    <td class="uncovered" >
+                        <pre>      return !$this-&gt;greaterThan($value) &amp;&amp; !$this-&gt;equals($value);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L420" class="number unreach">420</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L421" class="number ">421</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="parseAnswerValues">
+                    <th id="L422" class="number ">422</th>
+
+                    <td class="" id="parseAnswerValues">
+                        <pre>   public function parseAnswerValues($input, $nonDestructive = false) {<span class="label label-success">71%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L423" class="number covered">423</th>
+
+                    <td class="covered" >
+                        <pre>      $key = &#039;formcreator_field_&#039; . $this-&gt;fields[&#039;id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L424" class="number covered">424</th>
+
+                    <td class="covered" >
+                        <pre>      if (!isset($input[$key])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L425" class="number uncovered">425</th>
+
+                    <td class="uncovered" >
+                        <pre>         $input[$key] = &#039;0&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L426" class="number ">426</th>
+
+                    <td class="" >
+                        <pre>      } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L427" class="number covered">427</th>
+
+                    <td class="covered" >
+                        <pre>         if (!is_string($input[$key])) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L428" class="number uncovered">428</th>
+
+                    <td class="uncovered" >
+                        <pre>            return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L429" class="number ">429</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L430" class="number ">430</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L431" class="number covered">431</th>
+
+                    <td class="covered" >
+                        <pre>      $this-&gt;value = $input[$key];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L432" class="number covered">432</th>
+
+                    <td class="covered" >
+                        <pre>      return true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L433" class="number unreach">433</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L434" class="number ">434</th>
 
                     <td class="" >
                         <pre>
@@ -3265,28 +3402,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="isAnonymousFormCompatible">
-                    <th id="L416" class="number ">416</th>
+                    <th id="L435" class="number ">435</th>
 
                     <td class="" id="isAnonymousFormCompatible">
                         <pre>   public function isAnonymousFormCompatible() {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L417" class="number covered">417</th>
+                    <th id="L436" class="number covered">436</th>
 
                     <td class="covered" >
                         <pre>      return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L418" class="number unreach">418</th>
+                    <th id="L437" class="number unreach">437</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L419" class="number ">419</th>
+                    <th id="L438" class="number ">438</th>
 
                     <td class="" >
                         <pre>}

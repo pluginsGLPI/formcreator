@@ -1602,7 +1602,7 @@ layout: coverage
                     <th id="L194" class="number uncovered">194</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = $conditionField-&gt;notEquals($condition[&#039;value&#039;]);</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;notEquals($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1683,7 +1683,7 @@ layout: coverage
                     <th id="L205" class="number covered">205</th>
 
                     <td class="covered" >
-                        <pre>                  $value = $conditionField-&gt;equals($condition[&#039;value&#039;]);</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;equals($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1764,7 +1764,7 @@ layout: coverage
                     <th id="L216" class="number uncovered">216</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = $conditionField-&gt;greaterThan($condition[&#039;value&#039;]);</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;greaterThan($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1845,7 +1845,7 @@ layout: coverage
                     <th id="L227" class="number uncovered">227</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = $conditionField-&gt;lessThan($condition[&#039;value&#039;]);</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;lessThan($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1926,14 +1926,14 @@ layout: coverage
                     <th id="L238" class="number uncovered">238</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = $conditionField-&gt;greaterThan($condition[&#039;value&#039;])</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; ($conditionField-&gt;greaterThan($condition[&#039;value&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L239" class="number uncovered">239</th>
 
                     <td class="uncovered" >
-                        <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]);</pre>
+                        <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2014,14 +2014,14 @@ layout: coverage
                     <th id="L250" class="number uncovered">250</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = $conditionField-&gt;lessThan($condition[&#039;value&#039;])</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; ($conditionField-&gt;lessThan($condition[&#039;value&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L251" class="number uncovered">251</th>
 
                     <td class="uncovered" >
-                        <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]);</pre>
+                        <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
