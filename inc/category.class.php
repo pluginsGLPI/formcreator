@@ -95,80 +95,74 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'contains' => ''
       ]);
 
-      // Selects categories containing forms or sub-categories
-      $where      = "(SELECT COUNT($form_table.id)
-         FROM $form_table
-         WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
-         AND $form_table.`is_active` = 1
-         AND $form_table.`is_deleted` = 0
-         $helpdesk
-         AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')
-         AND ".getEntitiesRestrictRequest("", $form_table, "", "", true, false)."
-         AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
-         SELECT plugin_formcreator_forms_id
-         FROM $table_fp
-         WHERE profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
-      ) > 0
-      OR (SELECT COUNT(*)
-         FROM `$cat_table` AS `cat2`
-         WHERE `cat2`.`plugin_formcreator_categories_id`=`$cat_table`.`id`
-      ) > 0
-      OR (SELECT COUNT(*)
-         FROM ($query_faqs) AS `faqs`
-         WHERE `faqs`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`
-         AND `faqs`.`knowbaseitemcategories_id` <> '0'
-      ) > 0";
+      $categoryFk = self::getForeignKeyField();
+      $query = "SELECT `id`, `name`, `$categoryFk` as `parent`, `level`, (
+         (
+            SELECT COUNT($form_table.id)
+            FROM $form_table
+            WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
+            AND $form_table.`is_active` = 1
+            AND $form_table.`is_deleted` = 0
+            $helpdesk
+            AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')
+            AND ".getEntitiesRestrictRequest("", $form_table, "", "", true, false)."
+            AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
+            SELECT plugin_formcreator_forms_id
+            FROM $table_fp
+            WHERE profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
+         )
+         + (
+            SELECT COUNT(*)
+            FROM ($query_faqs) AS `faqs`
+            WHERE `faqs`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`
+            AND `faqs`.`knowbaseitemcategories_id` <> '0'
+         )
+      ) as `items_count`
+      FROM $cat_table
+      ORDER BY `level` DESC, `name` DESC";
 
-      if ($rootId == 0) {
-         $query = "SELECT *
-                   FROM $cat_table
-                   WHERE `level` = '1'
-                     AND ($where)
-                   ORDER BY `name`";
-         $name = '';
-         $parent = 0;
-      } else {
-         $query = "SELECT *
-                   FROM $cat_table
-                   WHERE `plugin_formcreator_categories_id` = '$rootId'
-                     AND ($where)
-                   ORDER BY `name`";
-         $formCategory = new self();
-         $formCategory->getFromDB($rootId);
-         $name = $formCategory->getField('name');
-         $parent = $formCategory->getField('plugin_formcreator_categories_id');
-      }
-
-      $items = [];
+      $categories = [];
       if ($result = $DB->query($query)) {
-         if ($DB->numrows($result)) {
-            while ($item = $DB->fetch_assoc($result)) {
-               $items[$item['id']] = $item;
-            }
+         while ($category = $DB->fetch_assoc($result)) {
+            $categories[$category['id']] = $category;
          }
       }
 
-      // No sub-categories, then return
-      if (count($items) == 0) {
-         return [
-            'name'            => $name,
-            'parent'          => $parent,
-            'id'              => $rootId,
-            'subcategories'   => new stdClass()
-         ];
+      // Remove categories that have no items and no children
+      // Requires category list to be sorted by level DESC
+      foreach ($categories as $index => $category) {
+         $children = array_filter(
+            $categories,
+            function ($element) use ($category) {
+               return $category['id'] == $element['parent'];
+            }
+         );
+
+         if (empty($children) && 0 == $category['items_count']) {
+            unset($categories[$index]);
+            continue;
+         }
+         $categories[$index]['subcategories'] = [];
       }
 
-      // Generate sub categories
-      $children = [
-         'name'            => $name,
-         'parent'          => $parent,
-         'id'              => $rootId,
-         'subcategories'   => []
+      // Create root node
+      $nodes = [
+         'name'            => '',
+         'id'              => 0,
+         'parent'          => 0,
+         'subcategories'   => [],
       ];
-      foreach ($items as $categoryItem) {
-         $children['subcategories'][] = self::getCategoryTree($categoryItem['id']);
+      $flat = [
+         0 => &$nodes,
+      ];
+
+      // Build from root node to leaves
+      $categories = array_reverse($categories);
+      foreach ($categories as $category) {
+         $flat[$category['id']] = $category;
+         $flat[$category['parent']]['subcategories'][] = &$flat[$category['id']];
       }
 
-      return $children;
+      return $nodes;
    }
 }

@@ -405,6 +405,7 @@ abstract class CommonTestCase extends CommonDBTestCase
          'category_question',
          '_actors',
          '_ticket_relations',
+         'uuid',
       ];
       $this->array($targetticket)->notHasKeys([
          'id',

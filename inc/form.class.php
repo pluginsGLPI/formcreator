@@ -1391,7 +1391,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
          $qc_rows = $DB->request([
             'FROM'  => $question_condition::getTable(),
             'WHERE' => [
-               'plugin_formcreator_questions_id' => $tab_questions
+               'plugin_formcreator_questions_id' => array_keys($tab_questions)
             ]
          ]);
          foreach ($qc_rows as $row) {
@@ -1564,6 +1564,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   unset($tta_row['id'],
                         $tta_row['uuid']);
                   $tta_row['plugin_formcreator_targettickets_id'] = $new_target_item_id;
+                  if (in_array($tta_row['actor_type'], ['question_person', 'question_group', 'question_supplier','question_actors'])) {
+                     $tta_row['actor_value'] = $tab_questions[$tta_row['actor_value']];
+                  }
                   if (!$target_ticket_actor->add($tta_row)) {
                      return false;
                   }
@@ -1587,6 +1590,9 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
                   unset($tca_row['id'],
                         $tca_row['uuid']);
                   $tca_row['plugin_formcreator_targetchanges_id'] = $new_target_item_id;
+                  if (in_array($tca_row['actor_type'], ['question_person', 'question_group', 'question_supplier','question_actors'])) {
+                     $tca_row['actor_value'] = $tab_questions[$tca_row['actor_value']];
+                  }
                   if (!$target_change_actor->add($tca_row)) {
                      return false;
                   }
@@ -2076,7 +2082,7 @@ class PluginFormcreatorForm extends CommonDBTM implements PluginFormcreatorExpor
       $formCategoryId = 0;
       if (isset($form['_plugin_formcreator_category'])) {
          $formCategoryId = $formCategory->import([
-            'completename' => $form['_plugin_formcreator_category'],
+            'completename' => Toolbox::addslashes_deep($form['_plugin_formcreator_category']),
          ]);
       }
       $form[$formCategoryFk] = $formCategoryId;

@@ -94,21 +94,31 @@ function plugin_formcreator_addDefaultJoin($itemtype, $ref_table, &$already_link
 
 
 function plugin_formcreator_canValidate() {
-   return Session::haveRight('config', UPDATE)
-          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-          || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
+   return Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+      || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST);
 }
 
 function plugin_formcreator_getCondition($itemtype) {
-   $table = getTableForItemType($itemtype);
-   if ($itemtype == PluginFormcreatorFormAnswer::class
-       && plugin_formcreator_canValidate()) {
-      $condition = " 1=1 ";
-
-   } else {
-      $condition = " `$table`.`requester_id` = " . $_SESSION['glpiID'];
+   $table = $itemtype::getTable();
+   if ($itemtype == PluginFormcreatorFormAnswer::class) {
+      if (Session::haveRight('config', UPDATE)) {
+         return "";
+      }
+      if (plugin_formcreator_canValidate()) {
+         $groupUser = new Group_User();
+         $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+         $condition = " (`$table`.`users_id_validator` =". $_SESSION['glpiID'];
+         if (count($groups) < 1) {
+            $condition .= ")";
+         } else {
+            $groups = implode(',', $groups);
+            $condition .= " OR `$table`.`groups_id_validator` IN ($groups) )";
+         }
+         return $condition;
+      }
    }
-   return $condition;
+
+   return " `$table`.`requester_id` = " . $_SESSION['glpiID'];
 }
 
 /**
@@ -118,11 +128,10 @@ function plugin_formcreator_getCondition($itemtype) {
  * @return String          Specific search request
  */
 function plugin_formcreator_addDefaultWhere($itemtype) {
-   $condition = "";
-   $table = getTableForItemType($itemtype);
+   $condition = '';
    switch ($itemtype) {
       case PluginFormcreatorIssue::class:
-         $condition = Search::addDefaultWhere("Ticket");
+         $condition = Search::addDefaultWhere(Ticket::class);
          $condition = str_replace('`glpi_tickets`', '`glpi_plugin_formcreator_issues`', $condition);
          $condition = str_replace('`users_id_recipient`', '`requester_id`', $condition);
          break;
@@ -131,6 +140,7 @@ function plugin_formcreator_addDefaultWhere($itemtype) {
          if (isset($_SESSION['formcreator']['form_search_answers'])
              && $_SESSION['formcreator']['form_search_answers']) {
             // Context is displaying the answers for a given form
+            $table = $itemtype::getTable();
             $formFk = PluginFormcreatorForm::getForeignKeyField();
             $condition = "`$table`.`$formFk` = ".
                          $_SESSION['formcreator']['form_search_answers'];
@@ -191,10 +201,7 @@ function plugin_formcreator_addWhere($link, $nott, $itemtype, $ID, $val, $search
          if ($item = getItemForItemtype($itemtype)) {
             switch ($val) {
                case 'all':
-                  $tocheck = array_merge($item->getNewStatusArray(),
-                                         $item->getProcessStatusArray(),
-                                         $item->getSolvedStatusArray(),
-                                         $item->getClosedStatusArray());
+                  $tocheck = array_keys($item->getAllStatusArray());
                   break;
 
                case Ticket::INCOMING:

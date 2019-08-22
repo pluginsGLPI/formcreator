@@ -191,7 +191,7 @@ class PluginFormcreatorFields
                   return true;
                }
                try {
-                  $value = $conditionField->notEquals($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->notEquals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
@@ -202,7 +202,7 @@ class PluginFormcreatorFields
                   return false;
                }
                try {
-                  $value = $conditionField->equals($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->equals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
@@ -213,7 +213,7 @@ class PluginFormcreatorFields
                   return false;
                }
                try {
-                  $value = $conditionField->greaterThan($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->greaterThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
@@ -224,7 +224,7 @@ class PluginFormcreatorFields
                   return false;
                }
                try {
-                  $value = $conditionField->lessThan($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->lessThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
@@ -235,8 +235,8 @@ class PluginFormcreatorFields
                   return false;
                }
                try {
-                  $value = $conditionField->greaterThan($condition['value'])
-                           || $conditionField->equals($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && ($conditionField->greaterThan($condition['value'])
+                           || $conditionField->equals($condition['value']));
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
@@ -247,8 +247,8 @@ class PluginFormcreatorFields
                   return false;
                }
                try {
-                  $value = $conditionField->lessThan($condition['value'])
-                           || $conditionField->equals($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && ($conditionField->lessThan($condition['value'])
+                           || $conditionField->equals($condition['value']));
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }

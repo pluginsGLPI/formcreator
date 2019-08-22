@@ -817,8 +817,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       echo '<tr class="line0">';
       echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center"><code>-</code></td>';
-      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
+      echo '<td align="center">-</td>';
+      echo '<td align="center"><strong>##FULLFORM##</strong></td>';
       echo '<td align="center">-</td>';
       echo '</tr>';
 
@@ -837,8 +837,8 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          $i++;
          echo '<tr class="line' . ($i % 2) . '">';
          echo '<td colspan="2">' . $question['question'] . '</td>';
-         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
-         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
+         echo '<td align="center">##question_' . $question['id'] . '##</td>';
+         echo '<td align="center">##answer_' . $question['id'] . '##</td>';
          echo '<td align="center">' . $question['section'] . '</td>';
          echo '</tr>';
       }

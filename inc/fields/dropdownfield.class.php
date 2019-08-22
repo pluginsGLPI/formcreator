@@ -123,7 +123,12 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   break;
 
                default:
-                  if (in_array($itemtype, $CFG_GLPI['ticket_types'])) {
+                  $assignableToTicket = in_array($itemtype, $CFG_GLPI['ticket_types']);
+                  if (Session::getLoginUserID()) {
+                     // Restrict assignable types to current profile's settings
+                     $assignableToTicket = CommonITILObject::isPossibleToAssignType($itemtype);
+                  }
+                  if ($assignableToTicket) {
                      $userFk = User::getForeignKeyField();
                      $groupFk = Group::getForeignKeyField();
                      $canViewAllHardware = Session::haveRight('helpdesk_hardware', pow(2, Ticket::HELPDESK_ALL_HARDWARE));
@@ -167,8 +172,23 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             if (isset($emptyItem->fields['otherserial'])) {
                $dparams['displaywith'][] = 'otherserial';
             }
-
-            $itemtype::dropdown($dparams);
+            if (count($dparams['displaywith']) > 0) {
+               $dparams['itemtype'] = $itemtype;
+               $dparams['table'] = $itemtype::getTable();
+               $dparams['multiple'] = false;
+               $dparams['valuename'] = Dropdown::EMPTY_VALUE;
+               if ($dparams['value'] != 0) {
+                  $dparams['valuename'] = $dparams['value'];
+               }
+               echo Html::jsAjaxDropdown(
+                  $fieldName,
+                  $domId,
+                  $CFG_GLPI['root_doc']."/ajax/getDropdownFindNum.php",
+                  $dparams
+               );
+            } else {
+               $itemtype::dropdown($dparams);
+            }
          }
          echo PHP_EOL;
          echo Html::scriptBlock("$(function() {
@@ -225,9 +245,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       } else {
          $value = Dropdown::getDropdownName($DbUtil->getTableForItemType($itemtype), $this->value);
       }
-      return Toolbox::addslashes_deep($value);
+      return $value;
    }
-
 
    public function getDocumentsForTarget() {
       return [];

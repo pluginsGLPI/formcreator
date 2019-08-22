@@ -72,7 +72,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          return true;
       }
 
-      if ($_SESSION['glpiID'] == $this->getField('requester_id')) {
+      if ($_SESSION['glpiID'] == $this->fields['requester_id']) {
+         return true;
+      }
+
+      if ($_SESSION['glpiID'] == $this->fields['users_id_validator']) {
+         return true;
+      }
+
+      $groupUser = new Group_User();
+      $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
+      if (in_array($this->fields['users_id_validator'], $groups)) {
          return true;
       }
 
@@ -101,12 +111,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                return true;
             }
          } else {
-            $groupUser = new Group_User();
-            $groups = $groupUser->getUserGroups($_SESSION['glpiID']);
-            foreach ($groups as $group) {
-               if ($row['items_id'] == $group['id']) {
-                  return true;
-               }
+            if (in_array($row['items_id'], $groups)) {
+               return true;
             }
          }
       }
@@ -1155,12 +1161,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $question = new PluginFormcreatorQuestion();
 
       $found_questions = $question->getQuestionsFromForm($this->fields['plugin_formcreator_forms_id']);
-      foreach ($found_questions as $id => $question) {
-         $fields[$id] = PluginFormcreatorFields::getFieldInstance(
+      foreach ($found_questions as $questionId => $question) {
+         $answer = $answers_values['formcreator_field_' . $questionId];
+         $fields[$questionId] = PluginFormcreatorFields::getFieldInstance(
             $question->fields['fieldtype'],
             $question
          );
-         $fields[$id]->parseAnswerValues($answers_values);
+         $fields[$questionId]->deserializeValue($answer);
       }
 
       // TODO: code very close to PluginFormcreatorTargetBase::parseTags() (factorizable ?)

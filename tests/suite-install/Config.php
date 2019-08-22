@@ -47,10 +47,11 @@ class Config extends CommonTestCase {
             $this->login('glpi', 'glpi');
             break;
 
-         case 'testUpgradePlugin':
+         case 'testUpgradedPlugin':
             $this->olddb = new \DB();
             $this->string(getenv('OLDDBNAME'));
-            $this->olddb->dbdefault = getenv('OLDDBNAME');
+            $oldDbName = getenv('OLDDBNAME');
+            $this->olddb->dbdefault = $oldDbName;
             $this->olddb->connect();
             $this->boolean($this->olddb->connected)->isTrue();
             break;
@@ -60,7 +61,7 @@ class Config extends CommonTestCase {
    public function afterTestMethod($method) {
       parent::afterTestMethod($method);
       switch ($method) {
-         case 'testUpgradePlugin':
+         case 'testUpgradedPlugin':
             $this->olddb->close();
             break;
       }
@@ -117,7 +118,7 @@ class Config extends CommonTestCase {
       $this->integer($length)->isGreaterThan(0);
    }
 
-   public function testUpgradePlugin() {
+   public function testUpgradedPlugin() {
       global $DB;
 
       $pluginName = TEST_PLUGIN_NAME;
@@ -132,11 +133,11 @@ class Config extends CommonTestCase {
          $this->boolean($this->olddb->tableExists($table, false))
             ->isTrue("Table $table does not exists from migration!");
 
-         $create = $DB->getTableSchema($DB, $table);
+         $create = $DB->getTableSchema($table);
          $fresh = $create['schema'];
          $fresh_idx = $create['index'];
 
-         $update = $DB->getTableSchema($this->olddb, $table);
+         $update = $this->olddb->getTableSchema($table);
          $updated = $update['schema'];
          $updated_idx = $update['index'];
 
@@ -148,8 +149,9 @@ class Config extends CommonTestCase {
          $update_diff = array_diff($updated_idx, $fresh_idx);
          $this->array($update_diff)->isEmpty("Index missing in empty for $table: " . implode(', ', $update_diff));
       }
-   }
 
+      $this->testRequestType();
+   }
 
    public function testPluginName() {
       $plugin = new \Plugin();
@@ -166,5 +168,11 @@ class Config extends CommonTestCase {
          ->hasKeys(['schema_version'])
          ->hasSize(1);
       $this->string($config['schema_version'])->isEqualTo(PLUGIN_FORMCREATOR_SCHEMA_VERSION);
+   }
+
+   public function testRequestType() {
+      $requestType = new \RequestType();
+      $requestType->getFromDBByCrit(['name' => 'Formcreator']);
+      $this->boolean($requestType->isNewItem())->isFalse();
    }
 }

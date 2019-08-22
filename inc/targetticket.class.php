@@ -676,8 +676,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       echo '<tr class="line0">';
       echo '<td colspan="2"><strong>' . __('Full form', 'formcreator') . '</strong></td>';
-      echo '<td align="center"><code>-</code></td>';
-      echo '<td align="center"><code><strong>##FULLFORM##</strong></code></td>';
+      echo '<td align="center">-</td>';
+      echo '<td align="center"><strong>##FULLFORM##</strong></td>';
       echo '<td align="center">-</td>';
       echo '</tr>';
 
@@ -696,8 +696,8 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          $i++;
          echo '<tr class="line' . ($i % 2) . '">';
          echo '<td colspan="2">' . $question['question'] . '</td>';
-         echo '<td align="center"><code>##question_' . $question['id'] . '##</code></td>';
-         echo '<td align="center"><code>##answer_' . $question['id'] . '##</code></td>';
+         echo '<td align="center">##question_' . $question['id'] . '##</td>';
+         echo '<td align="center">##answer_' . $question['id'] . '##</td>';
          echo '<td align="center">' . $question['section'] . '</td>';
          echo '</tr>';
       }
@@ -946,7 +946,7 @@ EOS;
          }
 
          $plugin = new Plugin();
-         if ($plugin->isInstalled('tag') && $plugin->isActivated('tag')) {
+         if ($plugin->isActivated('tag')) {
             $input['tag_questions'] = (!empty($input['_tag_questions']))
                                        ? implode(',', $input['_tag_questions'])
                                        : '';
@@ -1214,7 +1214,6 @@ EOS;
       // Add tag if presents
       $plugin = new Plugin();
       if ($plugin->isActivated('tag')) {
-
          $tagObj = new PluginTagTagItem();
          $tags   = [];
 
@@ -1224,13 +1223,23 @@ EOS;
                || $this->fields['tag_type'] == 'questions_or_specific')
             && (!empty($this->fields['tag_questions']))) {
 
-            $query = "SELECT answer
+            $query = "SELECT plugin_formcreator_questions_id, answer
                       FROM `glpi_plugin_formcreator_answers`
                       WHERE `plugin_formcreator_formanswers_id` = " . $formanswer->fields['id'] . "
                       AND `plugin_formcreator_questions_id` IN (" . $this->fields['tag_questions'] . ")";
             $result = $DB->query($query);
             while ($line = $DB->fetch_array($result)) {
-               $tab = json_decode($line['answer']);
+               $question = new PluginFormcreatorQuestion();
+               $question->getFromDB($line['plugin_formcreator_questions_id']);
+               $field = PluginFormcreatorFields::getFieldInstance(
+                  $question->fields['fieldtype'],
+                  $question
+               );
+               $field->deserializeValue($line['answer']);
+               $tab = $field->getRawValue();
+               if (is_integer($tab)) {
+                  $tab = [$tab];
+               }
                if (is_array($tab)) {
                   $tags = array_merge($tags, $tab);
                }
@@ -1281,9 +1290,10 @@ EOS;
          PluginFormcreatorCommon::setNotification(false);
 
          $followUpInput = [
-           'date'     => $_SESSION['glpi_currenttime'],
-           'users_id' => Session::getLoginUserID(),
-           'content'  => $message,
+           'date'                            => $_SESSION['glpi_currenttime'],
+           'users_id'                        => Session::getLoginUserID(),
+           'content'                         => $message,
+           '_do_not_compute_takeintoaccount' => true
          ];
          if (class_exists(ITILFollowup::class)) {
             // GLPI 9.4+

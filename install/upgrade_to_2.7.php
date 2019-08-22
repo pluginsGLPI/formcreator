@@ -104,6 +104,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          );
       }
       $table = 'glpi_plugin_formcreator_formanswers';
+      $migration->backupTables([$table]);
       $migration->renameTable('glpi_plugin_formcreator_forms_answers', $table);
       $migration->migrationOneTable($table);
       $migration->dropField($table, 'is_deleted');
@@ -168,7 +169,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          );
          $request = [
          'FROM' => $table,
-         'WHERE' => ['fieldtype' => ['float', 'integer', 'checkboxes', 'multiselect', 'text']]
+         'WHERE' => ['fieldtype' => ['float', 'integer', 'checkboxes', 'multiselect', 'text', 'textarea']]
          ];
          foreach ($DB->request($request) as $row) {
             $id = $row['id'];
@@ -293,7 +294,7 @@ class PluginFormcreatorUpgradeTo2_7 {
          'glpi_plugin_formcreator_issues',
       ];
       foreach ($tables as $table) {
-         $migration->changeField($table, 'name', 'name', 'string', ['after' => 'id']);
+         $migration->changeField($table, 'name', 'name', 'VARCHAR(255) NOT NULL DEFAULT \'\' AFTER `id`');
       }
 
       //remove html entities in forms

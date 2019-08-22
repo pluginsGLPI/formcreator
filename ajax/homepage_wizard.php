@@ -38,7 +38,7 @@ if (!isset($_SESSION['glpiactiveprofile']['id'])) {
 }
 
 if ($_REQUEST['wizard'] == 'categories') {
-   plugin_formcreator_showWizardCategories(plugin_formcreator_replaceHelpdesk());
+   plugin_formcreator_showWizardCategories();
 } else if ($_REQUEST['wizard'] == 'forms') {
    if (isset($_REQUEST['categoriesId'])) {
       $categoriesId = intval($_REQUEST['categoriesId']);
@@ -54,8 +54,8 @@ if ($_REQUEST['wizard'] == 'categories') {
                                                    : true;
 }
 
-function plugin_formcreator_showWizardCategories($helpdesk = true) {
-   $tree = PluginFormcreatorCategory::getCategoryTree(0, $helpdesk);
+function plugin_formcreator_showWizardCategories() {
+   $tree = PluginFormcreatorCategory::getCategoryTree(0, false);
    echo json_encode($tree, JSON_UNESCAPED_SLASHES);
 }
 

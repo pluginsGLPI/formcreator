@@ -967,13 +967,16 @@ EOS;
          echo '<div id="tag_specific_value" style="display: none">';
 
          $result = $DB->request([
-            'SELECT' => ['name'],
+            'SELECT' => ['id', 'name'],
             'FROM'   => PluginTagTag::getTable(),
             'WHERE'  => [
-               'OR' => [
-                  ['type_menu' => ['LIKE', $this->getTargetItemtypeName()]],
-                  ['type_menu' => ['LIKE', '0']],
-               ] + getEntitiesRestrictCriteria(PluginTagTag::getTable())
+               'AND' => [
+                  'OR' => [
+                     ['type_menu' => ['LIKE', '%"' . $this->getTargetItemtypeName() . '"%']],
+                     ['type_menu' => ['LIKE', '%"0"%']]
+                  ],
+                  getEntitiesRestrictCriteria(PluginTagTag::getTable()),
+               ]
             ]
          ]);
          $values = [];
