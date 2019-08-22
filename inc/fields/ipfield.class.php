@@ -36,9 +36,6 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
    }
 
    public function getDesignSpecializationField() {
-      $label = '';
-      $field = '';
-
       $common = $common = parent::getDesignSpecializationField();
       $additions = $common['additions'];
 

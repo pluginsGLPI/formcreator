@@ -159,7 +159,6 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
-         $required     = $this->fields['required'] ? ' required' : '';
          if (!empty($this->fields['values'])) {
             $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
             if ($decodedValues === null) {

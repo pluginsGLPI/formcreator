@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
+global $CFG_GLPI;
 include ("../../../inc/includes.php");
 
 Session::checkRight("entity", UPDATE);

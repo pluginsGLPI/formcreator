@@ -40,8 +40,6 @@ class PluginFormcreatorDateField extends PluginFormcreatorField
          $id        = $this->fields['id'];
          $rand      = mt_rand();
          $fieldName = 'formcreator_field_' . $id;
-         $domId     = $fieldName . '_' . $rand;
-         $required  = ($canEdit && $this->fields['required']) ? ' required' : '';
 
          Html::showDateField($fieldName, [
             'value' => (strtotime($this->value) != '') ? $this->value : '',

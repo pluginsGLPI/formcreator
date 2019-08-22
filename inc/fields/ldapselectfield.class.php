@@ -218,7 +218,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
          ldap_control_paged_result($ds, 1);
          $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-         $entries       = ldap_get_entries($ds, $sn);
+         ldap_get_entries($ds, $sn);
       } catch (Exception $e) {
          Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
       }

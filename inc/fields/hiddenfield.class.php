@@ -38,9 +38,6 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    public function getDesignSpecializationField() {
       $rand = mt_rand();
 
-      $label = '';
-      $field = '';
-
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';

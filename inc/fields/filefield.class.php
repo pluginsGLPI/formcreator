@@ -39,8 +39,6 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $required = $this->isRequired() ? ' required' : '';
-
          echo Html::file([
             'name'    => 'formcreator_field_' . $this->fields['id'],
             'display' => false,
@@ -123,8 +121,6 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
     * @return integer|NULL
     */
    private function saveDocument($file, $prefix) {
-      global $DB;
-
       $sectionTable = PluginFormcreatorSection::getTable();
       $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $questionTable = PluginFormcreatorQuestion::getTable();

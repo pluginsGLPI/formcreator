@@ -409,8 +409,6 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteTicketRelation() {
-      global $CFG_GLPI;
-
       // Delete relations with tickets with email notifications disabled
       $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
       PluginFormcreatorCommon::setNotification(false);

@@ -494,7 +494,6 @@ class RoboFile extends RoboFilePlugin
       // update authors in formated template
       $headerMatch = [];
       $originalAuthors = [];
-      $authors = [];
       $authorsRegex = "#^.*(\@author .*)$#Um";
       preg_match('#^' . $prefix . '(.*)' . $suffix . '#Us', $source, $headerMatch);
       if (isset($headerMatch[0])) {

@@ -86,7 +86,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          $id           = $this->fields['id'];
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . $rand;
          $values       = $this->getAvailableValues();
          $tab_values   = [];
 
@@ -123,7 +122,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
    }
 
    public function deserializeValue($value) {
-      $deserialized  = [];
       $this->value = ($value !== null && $value !== '')
                   ? explode("\r\n", $value)
                   : [];
@@ -202,8 +200,6 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
    }
 
    public function getValueForTargetText($richText) {
-      global $CFG_GLPI;
-
       $input = $this->value;
       $value = [];
       $values = $this->getAvailableValues();

@@ -202,7 +202,6 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    protected function sanitizeValue($value) {
       $unknownUsers = [];
       $knownUsers = [];
-      $idToCheck = [];
       foreach ($value as $item) {
          $item = trim($item);
          if (filter_var($item, FILTER_VALIDATE_EMAIL) !== false) {

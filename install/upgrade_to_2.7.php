@@ -36,7 +36,6 @@ class PluginFormcreatorUpgradeTo2_7 {
       global $DB;
 
       // Rename PluginFormcreatorForm_Answer into PluginFormcreatorFormAnswer
-      $displayPreference = new DisplayPreference();
       $DB->update(
          'glpi_displaypreferences', [
             'itemtype' => 'PluginFormcreatorFormAnswer',

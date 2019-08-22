@@ -6,9 +6,6 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
    }
 
    public function getDesignSpecializationField() {
-      $label = '';
-      $field = '';
-
       $additions = '';
 
       return [

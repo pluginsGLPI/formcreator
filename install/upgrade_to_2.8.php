@@ -36,14 +36,12 @@ class PluginFormcreatorUpgradeTo2_8 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $this->migration = $migration;
 
       // Rename the plugin
       $plugin = new Plugin();
       $plugin->getFromDBbyDir('formcreator');
-      $success = $plugin->update([
+      $plugin->update([
          'id' => $plugin->getID(),
          'name' => 'Form Creator',
       ]);
@@ -58,7 +56,7 @@ class PluginFormcreatorUpgradeTo2_8 {
       // Rename the plugin
       $plugin = new Plugin();
       $plugin->getFromDBbyDir('formcreator');
-      $success = $plugin->update([
+      $plugin->update([
          'id' => $plugin->getID(),
          'name' => 'Form Creator',
       ]);

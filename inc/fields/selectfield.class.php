@@ -40,7 +40,6 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
          $id           = $this->fields['id'];
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . $rand;
          $values       = $this->getAvailableValues();
          $tab_values   = [];
 

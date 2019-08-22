@@ -38,8 +38,6 @@ class PluginFormcreatorUpgradeTo2_5 {
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
-
       $migration->displayMessage("Upgrade to schema version 2.5");
 
       $this->updateAnswer_2_5($migration);
@@ -467,7 +465,6 @@ class PluginFormcreatorUpgradeTo2_5 {
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
                $DB->query("INSERT INTO `$table` SELECT * FROM ($query) as `dt`");
-               $volume = 1;
             }
          }
       }
@@ -660,7 +657,6 @@ class PluginFormcreatorUpgradeTo2_5 {
                            break;
                      }
                   }
-                  $default_values = $values;
                   $values = '';
                   break;
 
@@ -950,7 +946,6 @@ class PluginFormcreatorUpgradeTo2_5 {
          }
 
          // Install or upgrade of TargetTicket is a prerequisite
-         $version   = plugin_version_formcreator();
          plugin_formcreator_updateTarget_2_5($migration);
          $table_targetticket = getTableForItemType('PluginFormcreatorTargetTicket');
 

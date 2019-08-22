@@ -64,13 +64,9 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function displayField($canEdit = true) {
-      global $CFG_GLPI;
-
       $id           = $this->fields['id'];
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
-      $domId        = $fieldName . '_' . $rand;
-      $required = $this->fields['required'] ? ' required' : '';
       $useRichText = true;
       if ($canEdit) {
          if ($useRichText) {

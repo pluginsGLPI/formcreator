@@ -79,8 +79,6 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
          $id           = $this->fields['id'];
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . '_' . $rand;
-         $required = $this->fields['required'] ? ' required' : '';
          Ticket::dropdownUrgency(['name'     => $fieldName,
                                   'value'    => $this->value,
                                   'comments' => false,

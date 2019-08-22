@@ -41,7 +41,6 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
-         $required     = $this->fields['required'] ? ' required' : '';
          $defaultValue = Html::cleanInputText($this->value);
 
          echo '<input type="email" class="form-control"

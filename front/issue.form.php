@@ -29,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
+global $CFG_GLPI;
 require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
