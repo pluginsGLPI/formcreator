@@ -207,7 +207,7 @@ class RoboFilePlugin extends \Robo\Tasks
 
       $strict = $options['strict'] ? '' : '-n';
 
-      $result = $this->taskExec("./vendor/bin/phpcs $csignore --standard=vendor/glpi-project/coding-standard/GlpiStandard/ {$strict} {$file}")->run();
+      $result = $this->taskExec("./vendor/bin/phpcs $csignore --standard=vendor/glpi-project/coding-standard/GlpiStandard/ --standard=tests/rulest.xml {$strict} {$file}")->run();
 
       if (!$result->wasSuccessful()) {
          if (!$options['autofix'] && !$options['no-interaction']) {

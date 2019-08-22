@@ -563,7 +563,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       $data = Ticket::getDefaultValues();
       $ticket  = new Ticket();
       $form    = $formanswer->getForm();
-      $answer  = new PluginFormcreatorAnswer();
 
       $data['requesttypes_id'] = PluginFormcreatorCommon::getFormcreatorRequestTypeId();
 

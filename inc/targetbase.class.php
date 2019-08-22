@@ -649,8 +649,6 @@ PluginFormcreatorTargetInterface
    }
 
    protected function showDestinationEntitySetings($rand) {
-      global $DB;
-
       echo '<tr class="line1">';
       echo '<td width="15%">' . __('Destination entity') . '</td>';
       echo '<td width="25%">';
@@ -722,8 +720,6 @@ PluginFormcreatorTargetInterface
    }
 
    protected  function showDueDateSettings(PluginFormcreatorForm $form, $rand) {
-      global $DB;
-
       echo '<td width="15%">' . __('Time to resolve') . '</td>';
       echo '<td width="45%">';
 
