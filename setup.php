@@ -245,14 +245,6 @@ function plugin_init_formcreator() {
 
          Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
       }
-
-      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
-         || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
-         || isset($_SESSION['glpiactiveprofile']) &&
-            $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         // Add specific JavaScript
-         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
-      }
    }
 }
 
