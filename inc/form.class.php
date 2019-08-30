@@ -56,7 +56,7 @@ PluginFormcreatorDuplicatableInterface
    }
 
    public static function canView() {
-      return Session::haveRight('entity', UPDATE);
+      return Session::haveRight('ticket', CREATE);
    }
 
    public static function canDelete() {
