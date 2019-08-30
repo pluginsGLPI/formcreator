@@ -35,6 +35,10 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorCategory extends CommonTreeDropdown
 {
+   static function canView() {
+      return Session::haveRight('ticket', CREATE);
+   }
+
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
 
