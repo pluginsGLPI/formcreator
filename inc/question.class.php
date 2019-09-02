@@ -35,7 +35,10 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreatorExportableInterface {
+class PluginFormcreatorQuestion extends CommonDBChild implements 
+PluginFormcreatorExportableInterface,
+PluginFormcreatorDuplicatableInterface
+{
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 

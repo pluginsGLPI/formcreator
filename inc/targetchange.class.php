@@ -97,22 +97,6 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       ];
    }
 
-   public function duplicate() {
-      $linker              = new PluginFormcreatorLinker();
-
-      // Add in the linker all objects the target may require
-      $form = $this->getForm();
-      foreach ($form->getQuestionsFromForm() as $questionId => $question) {
-         $linker->addObject($questionId, $question);
-         $condition = new PluginFormcreatorQuestion_Condition();
-
-         foreach ($condition->getConditionsFromQuestion($questionId) as $conditionId => $condition) {
-            $linker->addObject($conditionId, $condition);
-         }
-      }
-
-   }
-
    /**
     * Export in an array all the data of the current instanciated target ticket
     * @return array the array with all data (with sub tables)

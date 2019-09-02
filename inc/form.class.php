@@ -36,7 +36,8 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginFormcreatorForm extends CommonDBTM implements
-PluginFormcreatorExportableInterface
+PluginFormcreatorExportableInterface,
+PluginFormcreatorDuplicatableInterface
 {
    static $rightname = 'entity';
 
@@ -1516,9 +1517,7 @@ PluginFormcreatorExportableInterface
    }
 
    /**
-    * Duplicate a from. Execute duplicate action for massive action.
-    *
-    * NB: Queries are made directly in SQL without GLPI's API to avoid controls made by Add(), prepareInputForAdd(), etc.
+    * Duplicate a form. Execute duplicate action for massive action.
     *
     * @return Boolean true if success, false otherwise.
     */
@@ -1527,6 +1526,7 @@ PluginFormcreatorExportableInterface
 
       $export = $this->export(true);
       $new_form_id =  static::import($linker, $export);
+
       if ($new_form_id === false) {
          return false;
       }
@@ -1538,7 +1538,6 @@ PluginFormcreatorExportableInterface
          'name' => Toolbox::addslashes_deep($newName),
       ]);
       $linker->linkPostponed();
-
 
       return $new_form_id;
    }
