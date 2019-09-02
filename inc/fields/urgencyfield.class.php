@@ -50,7 +50,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= Ticket::dropdownUrgency([
          'name'     => 'default_values',
-         'value'    => $this->fields['default_values'],
+         'value'    => $this->questoin->fields['default_values'],
          'comments' => false,
          'rand'     => $rand,
          'display'  => false,
@@ -76,7 +76,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          Ticket::dropdownUrgency(['name'     => $fieldName,
@@ -105,7 +105,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '3';
       } else {

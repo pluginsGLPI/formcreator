@@ -37,13 +37,13 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $values       = $this->getAvailableValues();
          $tab_values   = [];
 
-         if (!empty($this->fields['values'])) {
+         if (!empty($this->question->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $tab_values[$value] = $value;
@@ -51,7 +51,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
             }
 
             Dropdown::showFromArray($fieldName, $tab_values, [
-               'display_emptychoice' => $this->fields['show_empty'] == 1,
+               'display_emptychoice' => $this->question->fields['show_empty'] == 1,
                'value'     => $this->value,
                'values'    => [],
                'rand'      => $rand,
@@ -79,7 +79,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }

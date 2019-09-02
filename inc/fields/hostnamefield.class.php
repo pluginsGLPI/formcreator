@@ -18,7 +18,7 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
    }
 
    public function show($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
@@ -67,7 +67,7 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }

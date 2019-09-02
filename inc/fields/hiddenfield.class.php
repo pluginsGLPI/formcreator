@@ -66,11 +66,11 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    }
 
    public function show($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->fields['default_values']);
+      $defaultValue = Html::cleanInputText($this->question->fields['default_values']);
       echo '<input type="hidden" class="form-control"
          name="' . $fieldName . '"
          id="' . $domId . '"
@@ -110,7 +110,7 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }

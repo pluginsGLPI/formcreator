@@ -40,7 +40,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    public function displayField($canEdit = true) {
       if ($canEdit) {
          echo Html::file([
-            'name'    => 'formcreator_field_' . $this->fields['id'],
+            'name'    => 'formcreator_field_' . $this->question->getID(),
             'display' => false,
             'multiple' => 'multiple',
          ]);
@@ -91,7 +91,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
       }
 
       if (!$this->isValidValue($this->value)) {
-         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(__('A required file is missing:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
          return false;
       }
 
@@ -143,7 +143,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
            ]
         ],
         'WHERE' => [
-           "$questionTable.id" => $this->fields['id'],
+           "$questionTable.id" => $this->question->getID(),
         ],
       ]);
       if ($form->isNewItem()) {
@@ -153,7 +153,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
 
       $doc                             = new Document();
       $file_data                       = [];
-      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->fields['name']);
+      $file_data["name"]               = Toolbox::addslashes_deep($form->getField('name'). ' - ' . $this->question->fields['name']);
       $file_data["entities_id"]        = isset($_SESSION['glpiactive_entity'])
                                        ? $_SESSION['glpiactive_entity']
                                        : $form->getField('entities_id');
@@ -167,7 +167,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input["_$key"])) {
          if (!is_array($input["_$key"])) {
             return false;
@@ -181,7 +181,7 @@ class PluginFormcreatorFileField extends PluginFormcreatorField
             foreach ($input["_$key"] as $document) {
                $document = Toolbox::stripslashes_deep($document);
                if (is_file(GLPI_TMP_DIR . '/' . $document)) {
-                  $prefix = $input['_prefix_formcreator_field_' . $this->fields['id']][$index];
+                  $prefix = $input['_prefix_formcreator_field_' . $this->question->getID()][$index];
                   $answer_value[] = $this->saveDocument($document, $prefix);
                }
                $index++;

@@ -38,7 +38,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    public function displayField($canEdit = true) {
       global $DB;
 
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       if ($canEdit) {
@@ -127,7 +127,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
       } else {

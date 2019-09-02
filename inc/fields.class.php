@@ -340,11 +340,11 @@ class PluginFormcreatorFields
     * @param array $data additional data
     * @return null|PluginFormcreatorFieldInterface
     */
-   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = null) {
+   public static function getFieldInstance($type, PluginFormcreatorQuestion $question) {
       $className = self::getFieldClassname($type);
       if (!self::fieldTypeExists($type)) {
          return null;
       }
-      return new $className($question->fields, $data);
+      return new $className($question);
    }
 }
