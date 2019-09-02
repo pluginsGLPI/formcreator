@@ -164,12 +164,6 @@ class RoboFile extends RoboFilePlugin
             ->run();
       }
 
-      $this->taskGitStack()
-         ->stopOnFail()
-         ->add('CHANGELOG.md')
-         ->commit('docs(changelog): update changelog')
-         ->run();
-
       // Update locales
       $this->localesGenerate();
       $this->taskGitStack()
@@ -183,7 +177,7 @@ class RoboFile extends RoboFilePlugin
       $pluginPath = $this->getProjectPath();
       $archiveWorkdir = "$pluginPath/output/dist/archive_workdir";
       $archiveFile = "$pluginPath/output/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
-      if (is_file($archiveWorkdir)) {
+      if (is_file($archiveFile)) {
          if (!is_writable(($archiveFile))) {
             throw new \RuntimeException('Failed to delete previous build (file is not writable)' . $archiveFile);
          }
@@ -319,11 +313,22 @@ class RoboFile extends RoboFilePlugin
    }
 
    /**
+    * Update the changelog
     */
-   protected function updateChangelog() {
+   public function updateChangelog() {
        exec("node_modules/.bin/conventional-changelog -p angular -i CHANGELOG.md -s", $output, $retCode);
       if ($retCode > 0) {
          throw new Exception("Failed to update the changelog");
+      }
+
+      $diff = $this->gitDiff(['CHANGELOG.md']);
+      $diff = implode("\n", $diff);
+      if ($diff != '') {
+         $this->taskGitStack()
+            ->stopOnFail()
+            ->add('CHANGELOG.md')
+            ->commit('docs(changelog): update changelog')
+            ->run();
       }
 
        return true;
