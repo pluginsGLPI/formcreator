@@ -1,3 +1,55 @@
+<a name="2.8.5"></a>
+## [2.8.5](https://github.com/pluginsglpi/formcreator/compare/v2.8.4...v2.8.5) (2019-09-02)
+
+
+### Bug Fixes
+
+* duplicate menu entry ([4075b1e](https://github.com/pluginsglpi/formcreator/commit/4075b1e))
+
+
+
+<a name="2.8.4"></a>
+## [2.8.4](https://github.com/pluginsglpi/formcreator/compare/v2.8.3...v2.8.4) (2019-08-21)
+
+
+### Bug Fixes
+
+* **dropdownfield:** restrict itemtypes assignables to ticket ([98a76f2](https://github.com/pluginsglpi/formcreator/commit/98a76f2))
+* **dropdownfield:** unwanted single quote escaping when rendering target ticket ([c149cd4](https://github.com/pluginsglpi/formcreator/commit/c149cd4))
+* **form:** anonymous forms don't load JS ([9d3ae4e](https://github.com/pluginsglpi/formcreator/commit/9d3ae4e))
+* **form:** duplicate question conditions ([552fe39](https://github.com/pluginsglpi/formcreator/commit/552fe39))
+* **form:** import of form category with single quote ([39f98da](https://github.com/pluginsglpi/formcreator/commit/39f98da))
+* **formanswer:** better restrict list of formanswers ([b918f21](https://github.com/pluginsglpi/formcreator/commit/b918f21))
+* **formanswer:** more permissive READ access to formanswers ([e2eda19](https://github.com/pluginsglpi/formcreator/commit/e2eda19))
+* **glpiobject:** make items more easily searchable ([0fd617b](https://github.com/pluginsglpi/formcreator/commit/0fd617b))
+* **instal:** useless columns in schema of fresh install ([8f54c95](https://github.com/pluginsglpi/formcreator/commit/8f54c95))
+* **install:** database schema inconsistencies between instal and upgrade ([46ac7ad](https://github.com/pluginsglpi/formcreator/commit/46ac7ad))
+* **install:** inconsistency between install and upgrade ([3c8b0b2](https://github.com/pluginsglpi/formcreator/commit/3c8b0b2))
+* **install:** move columns in somez tables ([2cecff7](https://github.com/pluginsglpi/formcreator/commit/2cecff7))
+* **install:** possible upgrade issue ([d50c7f6](https://github.com/pluginsglpi/formcreator/commit/d50c7f6))
+* **install:** upgrade to 2.7 misses range for select and textarea ([61e49d6](https://github.com/pluginsglpi/formcreator/commit/61e49d6))
+* **integerfield,floadfield:** avoid integrity checks in parseAnswerValue ([3cbaf61](https://github.com/pluginsglpi/formcreator/commit/3cbaf61))
+* **issue:** missing status for all statuses ([41cdc48](https://github.com/pluginsglpi/formcreator/commit/41cdc48))
+* **locales:** drop unwanted file ([a7429eb](https://github.com/pluginsglpi/formcreator/commit/a7429eb))
+* **question:** handle cascaded show/hide conditions ([76718c1](https://github.com/pluginsglpi/formcreator/commit/76718c1))
+* **selectfield:** select field cannot support range ([5138ac1](https://github.com/pluginsglpi/formcreator/commit/5138ac1))
+* **tagfield:** show in saved answers the tag names ([19a6c2b](https://github.com/pluginsglpi/formcreator/commit/19a6c2b))
+* **tags:** bad tag filter when selecting tags for target ticket ([299ba2c](https://github.com/pluginsglpi/formcreator/commit/299ba2c))
+* **target_actor,change_actor:** fix duplciation ([772fecd](https://github.com/pluginsglpi/formcreator/commit/772fecd))
+* **targetticket:** fix tags handling ([47db2d8](https://github.com/pluginsglpi/formcreator/commit/47db2d8))
+* **targetticket,targetchange:** fix not rendered fields ([fd25d4e](https://github.com/pluginsglpi/formcreator/commit/fd25d4e))
+* **targetticket,targetchange:** remove HTML code tag ([e7cabe7](https://github.com/pluginsglpi/formcreator/commit/e7cabe7))
+* **targetticket,targetchange:** remove more code tags ([a32b056](https://github.com/pluginsglpi/formcreator/commit/a32b056))
+* **wizard:** form categories may show when they are empty ([37edabf](https://github.com/pluginsglpi/formcreator/commit/37edabf))
+* **wizard:** inconsistency between helpesk and service catalog ([a41bbe4](https://github.com/pluginsglpi/formcreator/commit/a41bbe4))
+
+
+### Features
+
+* **ldapfield:** comparisons support ([9c55323](https://github.com/pluginsglpi/formcreator/commit/9c55323)), closes [#1454](https://github.com/pluginsglpi/formcreator/issues/1454)
+
+
+
 <a name="2.8.3"></a>
 ## [2.8.3](https://github.com/pluginsglpi/formcreator/compare/v2.8.2...v2.8.3) (2019-06-13)
 
@@ -20,7 +72,7 @@
 
 
 <a name="2.8.2"></a>
-## [2.8.2](https://github.com-btry/pluginsglpi/formcreator/compare/v2.8.1...v2.8.2) (2019-05-02)
+## [2.8.2](https://github.com/pluginsglpi/formcreator/compare/v2.8.1...v2.8.2) (2019-05-02)
 
 
 ### Bug Fixes
