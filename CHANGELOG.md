@@ -1,3 +1,13 @@
+<a name="2.8.5"></a>
+## [2.8.5](https://github.com/pluginsglpi/formcreator/compare/v2.8.4...v2.8.5) (2019-09-02)
+
+
+### Bug Fixes
+
+* duplicate menu entry ([4075b1e](https://github.com/pluginsglpi/formcreator/commit/4075b1e))
+
+
+
 <a name="2.8.4"></a>
 ## [2.8.4](https://github.com/pluginsglpi/formcreator/compare/v2.8.3...v2.8.4) (2019-08-21)
 
