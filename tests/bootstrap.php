@@ -49,4 +49,4 @@ include (GLPI_ROOT . "/inc/includes.php");
 $GLPI_CACHE = Config::getCache('cache_db');
 
 // If GLPI debug mode is disabled, atoum cannot produce backtaces
-\Toolbox::setDebugMode(Session::DEBUG_MODE);
+//\Toolbox::setDebugMode(Session::DEBUG_MODE);

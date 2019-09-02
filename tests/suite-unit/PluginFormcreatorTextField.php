@@ -57,7 +57,6 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
             'expectedIsValid' => true
          ],
@@ -83,7 +82,6 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
@@ -109,7 +107,6 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
@@ -135,7 +132,6 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
@@ -161,7 +157,6 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
@@ -172,22 +167,20 @@ class PluginFormcreatorTextField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testFieldIsValid($fields, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
-      $fieldInstance = new \PluginFormcreatorTextField($question->fields, $data);
+      $fieldInstance = new \PluginFormcreatorTextField($question);
 
       $isValid = $fieldInstance->isValid($fields['default_values']);
       $this->boolean($isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
    }
 
    public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getEmptyParameters();
       $this->array($output)
          ->hasKey('range')
@@ -205,7 +198,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -227,7 +220,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -252,22 +245,20 @@ class PluginFormcreatorTextField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorTextField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

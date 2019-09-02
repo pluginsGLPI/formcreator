@@ -64,7 +64,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
    }
 
    public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $useRichText = true;

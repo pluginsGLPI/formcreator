@@ -49,8 +49,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
    }
 
    public function show($canEdit = true) {
-      echo '<div class="description_field form-group" id="form-group-field-' . $this->fields['id'] . '">';
-      echo nl2br(html_entity_decode($this->fields['description']));
+      echo '<div class="description_field form-group" id="form-group-field-' . $this->question->getID() . '">';
+      echo nl2br(html_entity_decode($this->question->fields['description']));
       echo '</div>' . PHP_EOL;
    }
 

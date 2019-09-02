@@ -69,7 +69,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
@@ -135,7 +135,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
 
    private function isValidValue($value) {
       if (!empty($value) && !is_numeric($value)) {
-         Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
          return false;
       }
 
@@ -146,7 +146,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          $regex = $parameters['regex']->fields['regex'];
          if ($regex !== null && strlen($regex) > 0) {
             if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+               Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
                return false;
             }
          }
@@ -158,13 +158,13 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          $rangeMax = $parameters['range']->fields['range_max'];
          if ($rangeMin > 0 && $value < $rangeMin) {
             $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $rangeMin);
-            Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
+            Session::addMessageAfterRedirect($message . ' ' . $this->question->fields['name'], false, ERROR);
             return false;
          }
 
          if ($rangeMax > 0 && $value > $rangeMax) {
             $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $rangeMax);
-            Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
+            Session::addMessageAfterRedirect($message . ' ' . $this->question->fields['name'], false, ERROR);
             return false;
          }
       }
@@ -208,7 +208,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }

@@ -42,9 +42,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $label .= _n('Dropdown', 'Dropdowns', 1);
       $label .= '</label>';
 
-      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       if ($decodedValues === null) {
-         $itemtype = $this->fields['values'];
+         $itemtype = $this->question->fields['values'];
       } else {
          $itemtype = $decodedValues['itemtype'];
       }
@@ -58,7 +58,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
          'display'   => false,
       ]);
 
-      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $additions = '<tr class="plugin_formcreator_question_specific">';
       $additions .= '<td>';
       $additions .= '<label for="dropdown_default_values'.$rand.'">';
@@ -121,7 +121,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $decodedValue = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $decodedValue = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
       $rootValue = isset($decodedValue['show_ticket_categories_root'])
                      ? $decodedValue['show_ticket_categories_root']
                      : Dropdown::EMPTY_VALUE;
@@ -155,14 +155,14 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       global $DB, $CFG_GLPI;
 
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
-         if (!empty($this->fields['values'])) {
-            $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         if (!empty($this->question->fields['values'])) {
+            $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
             if ($decodedValues === null) {
-               $itemtype = $this->fields['values'];
+               $itemtype = $this->question->fields['values'];
             } else {
                $itemtype = $decodedValues['itemtype'];
             }
@@ -292,9 +292,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
             pluginFormcreatorInitializeDropdown('$fieldName', '$rand');
          });");
       } else {
-         $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
+         $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
          if ($decodedValues === null) {
-            $itemtype = $this->fields['values'];
+            $itemtype = $this->question->fields['values'];
          } else {
             $itemtype = $decodedValues['itemtype'];
          }
@@ -336,8 +336,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function getValueForTargetText($richText) {
       $DbUtil = new DbUtils();
-      $decodedValues = json_decode($this->fields['values'], JSON_OBJECT_AS_ARRAY);
-      $itemtype = $this->fields['values'];
+      $decodedValues = json_decode($this->question->fields['values'], JSON_OBJECT_AS_ARRAY);
+      $itemtype = $this->question->fields['values'];
       if (isset($decodedValues['itemtype'])) {
          $itemtype = $decodedValues['itemtype'];
       }
@@ -359,9 +359,9 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function isValid() {
       // If the field is required it can't be empty
-      $itemtype = json_decode($this->fields['values'], true);
+      $itemtype = json_decode($this->question->fields['values'], true);
       if ($itemtype === null) {
-         $itemtype = $this->fields['values'];
+         $itemtype = $this->question->fields['values'];
       } else {
          $itemtype = $itemtype['itemtype'];
       }
@@ -475,7 +475,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function equals($value) {
       $value = html_entity_decode($value);
-      $itemtype = json_decode($this->fields['values'], true);
+      $itemtype = json_decode($this->question->fields['values'], true);
       $itemtype = $itemtype['itemtype'];
       $dropdown = new $itemtype();
       if ($dropdown->isNewId($this->value)) {
@@ -498,7 +498,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
    public function greaterThan($value) {
       $value = html_entity_decode($value);
-      $itemtype = $this->fields['values'];
+      $itemtype = $this->question->fields['values'];
       $dropdown = new $itemtype();
       if (!$dropdown->getFromDB($this->value)) {
          throw new PluginFormcreatorComparisonException('Item not found for comparison');
@@ -516,7 +516,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '0';
       } else {

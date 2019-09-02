@@ -38,7 +38,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       $label .= _n('LDAP directory', 'LDAP directories', 1);
       $label .= '</label>';
 
-      $ldap_values = json_decode(plugin_formcreator_decode($this->fields['values']), JSON_OBJECT_AS_ARRAY);
+      $ldap_values = json_decode(plugin_formcreator_decode($this->question->fields['values']), JSON_OBJECT_AS_ARRAY);
       if ($ldap_values === null) {
          $ldap_values = [];
       }
@@ -103,11 +103,11 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    }
 
    public function getAvailableValues() {
-      if (empty($this->fields['values'])) {
+      if (empty($this->question->fields['values'])) {
          return [];
       }
 
-      $ldap_values   = json_decode(plugin_formcreator_decode($this->fields['values']));
+      $ldap_values   = json_decode(plugin_formcreator_decode($this->question->fields['values']));
       $ldap_dropdown = new RuleRightParameter();
       if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
          return [];
@@ -239,7 +239,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '';
       }

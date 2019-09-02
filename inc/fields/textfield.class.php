@@ -71,7 +71,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
@@ -144,7 +144,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $regex = $parameters['regex']->fields['regex'];
       if ($regex !== null && strlen($regex) > 0) {
          if (!preg_match($regex, $value)) {
-            Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+            Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
             return false;
          }
       }
@@ -153,12 +153,12 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $rangeMin = $parameters['range']->fields['range_min'];
       $rangeMax = $parameters['range']->fields['range_max'];
       if ($rangeMin > 0 && strlen($value) < $rangeMin) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->question->fields['name'], false, ERROR);
          return false;
       }
 
       if ($rangeMax > 0 && strlen($value) > $rangeMax) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->question->fields['name'], false, ERROR);
          return false;
       }
 
@@ -197,7 +197,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          return false;
       }

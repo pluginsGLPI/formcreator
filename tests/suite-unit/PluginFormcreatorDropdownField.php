@@ -41,7 +41,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
       $output = $instance->getName();
       $this->string($output)->isEqualTo('Dropdown');
    }
@@ -85,7 +85,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerPrepareQuestionInputForSave
     */
    public function testPrepareQuestionInputForSave($input, $expected) {
-      $instance = new \PluginFormcreatorDropdownField([]);
+      $instance = new \PluginFormcreatorDropdownField($this->getQuestion());
       $output = $instance->prepareQuestionInputForSave($input);
       $this->array($output)->hasSize(count($expected));
       foreach ($expected as $key => $value) {
@@ -94,85 +94,69 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDropdownField([]);
+      $instance = new \PluginFormcreatorDropdownField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isFalse();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testGetValueForDesign() {
       $value = $expected = 'foo';
-      $instance = new \PluginFormcreatorDropdownField([]);
+      $instance = new \PluginFormcreatorDropdownField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance(new \PluginFormcreatorQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
-   }
-
-   public function providerTestIsValid() {
-      $name = $this->getUniqueString();
-      return [
-         [
-            'input' => [
-               'name' => $name,
-               'dropdown_values' => \Location::class,
-            ],
-            'expected' => true
-         ],
-         [
-            'input' => [
-               'name' => $name,
-               'dropdown_values' => \ITILCategory::class,
-               'show_ticket_categories' => '2',
-               'show_ticket_categories_depth' => '3',
-            ],
-            'expected' => true
-         ],
-      ];
    }
 
    public function providerIsValid() {
       return [
          [
-            'input' => [
+            'question' => $this->getQuestion([
                'name' =>  'fieldname',
                'values' => json_encode([
                   'itemtype' => \Location::class,
                ]),
                'required' => '0',
+            ]),
+            'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '0',
             ],
             'expected' => true,
          ],
          [
-            'input' => [
+            'question' => $this->getQuestion([
                'name' =>  'fieldname',
                'values' => json_encode([
                   'itemtype' => \Location::class,
                ]),
                'required' => '1',
+            ]),
+            'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '0',
             ],
             'expected' => false,
          ],
          [
-            'input' => [
+            'question' => $this->getQuestion([
                'name' =>  'fieldname',
                'values' => json_encode([
                   'itemtype' => \Location::class,
                ]),
                'required' => '1',
+            ]), 
+            'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '42',
             ],
@@ -184,8 +168,8 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($input, $expected) {
-      $instance = new \PluginFormcreatorDropdownField($input);
+   public function testIsValid($question, $input, $expected) {
+      $instance = new \PluginFormcreatorDropdownField($question);
       $instance->prepareQuestionInputForSave($input);
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expected);
@@ -198,7 +182,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       ]);
       return [
          [
-            'fields' => [
+            'fields' => $this->getQuestion([
                'name' =>  'fieldname',
                'values' => json_encode([
                   'itemtype' => \Location::class,
@@ -206,12 +190,12 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                'required' => '1',
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '42',
-            ],
+            ]),
             'value' => "",
             'expected' => '&nbsp;'
          ],
          [
-            'fields' => [
+            'fields' => $this->getQuestion([
                'name' =>  'fieldname',
                'values' => json_encode([
                   'itemtype' => \Location::class,
@@ -219,7 +203,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                'required' => '1',
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '',
-            ],
+            ]),
             'value' => $location->getID(),
             'expected' => $location->fields['completename']
          ],
@@ -238,11 +222,13 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    }
 
    public function testGetDesignSpecializationField() {
-      $instance = new \PluginFormcreatorDropdownField([
+      $question = $this->getQuestion([
          'values' => json_encode([
             'itemtype' => \User::class,
          ]),
       ]);
+
+      $instance = new \PluginFormcreatorDropdownField($question);
       $output = $instance->getDesignSpecializationField();
       $this->boolean($output['may_be_empty'])->isEqualTo(true);
       $this->boolean($output['may_be_required'])->isEqualTo(true);
@@ -261,19 +247,17 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
 
       return [
          [
-            'fields'    => [
-               'id'        => '1',
+            'fields'    => $this->getQuestion([
                'values'    => json_encode(['itemtype' => \Location::class])
-            ],
+            ]),
             'value'     => $location1->fields['completename'],
             'answer'    => (string) $location1Id,
             'expected'  => true,
          ],
          [
-            'fields'    => [
-               'id'        => '1',
+            'fields'    => $this->getQuestion([
                'values'    => json_encode(['itemtype' => \Location::class])
-            ],
+            ]),
             'value'     => $location2->fields['completename'],
             'answer'    => (string) $location1Id,
             'expected'  => false,
@@ -285,11 +269,8 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerEquals
     */
    public function testEquals($fields, $value, $answer, $expected) {
-      $instance = new \PluginFormcreatorDropdownField([
-         'id' => '1',
-         'values' => $fields['values'],
-      ]);
-      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $instance = new \PluginFormcreatorDropdownField($fields);
+      $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
 
@@ -305,19 +286,17 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
 
       return [
          [
-            'fields'    => [
-               'id'        => '1',
+            'fields'    => $this->getQuestion([
                'values'    => json_encode(['itemtype' => \Location::class])
-            ],
+            ]),
             'value'     => $location1->fields['completename'],
             'answer'    => (string) $location1Id,
             'expected'  => false,
          ],
          [
-            'fields'    => [
-               'id'        => '1',
+            'fields'    => $this->getQuestion([
                'values'    => json_encode(['itemtype' => \Location::class])
-            ],
+            ]),
             'value'     => $location2->fields['completename'],
             'answer'    => (string) $location1Id,
             'expected'  => true,
@@ -329,18 +308,14 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
     * @dataProvider providerNotEquals
     */
    public function testNotEquals($fields, $value, $answer, $expected) {
-      $instance = new \PluginFormcreatorDropdownField([
-         'id' => '1',
-         'values' => $fields['values'],
-      ]);
-      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $instance = new \PluginFormcreatorDropdownField($fields);
+      $instance->parseAnswerValues(['formcreator_field_' . $fields->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo($expected);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorDropdownField([
-         'id' => '1',
-      ]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorDropdownField($question);
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

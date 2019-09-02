@@ -63,7 +63,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= '<textarea name="values" id="values" rows="4" cols="40"'
          .'style="width: 90%">'
-         .$this->fields['values']
+         .$this->question->fields['values']
          .'</textarea>';
       $additions .= '</td>';
       $additions .= '</tr>';
@@ -83,13 +83,13 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $values       = $this->getAvailableValues();
          $tab_values   = [];
 
-         if (!empty($this->fields['values'])) {
+         if (!empty($this->question->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $tab_values[$value] = $value;
@@ -97,7 +97,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
             }
 
             Dropdown::showFromArray($fieldName, $tab_values, [
-               'display_emptychoice' => $this->fields['show_empty'] == 1,
+               'display_emptychoice' => $this->question->fields['show_empty'] == 1,
                'value'     => '',
                'values'    => $this->value,
                'rand'      => $rand,
@@ -242,7 +242,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
       } else {

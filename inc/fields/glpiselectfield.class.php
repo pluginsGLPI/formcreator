@@ -76,7 +76,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       ];
       array_unshift($optgroup, '---');
       $field = Dropdown::showFromArray('glpi_objects', $optgroup, [
-         'value'     => $this->fields['values'],
+         'value'     => $this->question->fields['values'],
          'rand'      => $rand,
          'on_change' => 'plugin_formcreator_changeGlpiObjectItemType();',
          'display'   => false,
@@ -124,7 +124,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 
    public function isValid() {
       // If the field is required it can't be empty (0 is a valid value for entity)
-      $itemtype = $this->fields['values'];
+      $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
       if ($this->isRequired() && $item->isNewID($this->value)) {
          Session::addMessageAfterRedirect(
@@ -144,7 +144,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 
    public function equals($value) {
       $value = html_entity_decode($value);
-      $itemtype = $this->fields['values'];
+      $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
       if ($item->isNewId($this->value)) {
          return ($value === '');
@@ -161,7 +161,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
 
    public function greaterThan($value) {
       $value = html_entity_decode($value);
-      $itemtype = $this->fields['values'];
+      $itemtype = $this->question->fields['values'];
       $item = new $itemtype();
       if (!$item->getFromDB($this->value)) {
          throw new PluginFormcreatorComparisonException('Item not found for comparison');

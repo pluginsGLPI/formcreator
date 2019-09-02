@@ -34,13 +34,13 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorFileField extends CommonTestCase {
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testDeserializeValue() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue('invalid Json');
       $this->string($instance->getValueForTargetText(true))
          ->isEqualTo('No attached document');
@@ -59,9 +59,7 @@ class PluginFormcreatorFileField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorFileField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorFileField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }

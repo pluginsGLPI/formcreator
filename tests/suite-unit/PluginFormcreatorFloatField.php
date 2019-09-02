@@ -56,7 +56,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '',
             'expectedIsValid' => true
          ],
@@ -80,7 +79,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '2',
             'expectedIsValid' => true
          ],
@@ -103,7 +101,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '2',
             'expectedIsValid' => false
          ],
@@ -127,7 +124,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '5',
             'expectedIsValid' => false
          ],
@@ -151,7 +147,6 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '3.141592',
             'expectedIsValid' => true
          ],
@@ -163,7 +158,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
@@ -172,14 +167,14 @@ class PluginFormcreatorFloatField extends CommonTestCase {
       $this->boolean($question->isNewItem())->isFalse(json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
       $question->updateParameters($fields);
 
-      $instance = new \PluginFormcreatorFloatField($question->fields, $data);
+      $instance = new \PluginFormcreatorFloatField($question);
       $instance->deserializeValue($fields['default_values']);
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
    }
 
    public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getEmptyParameters();
       $this->array($output)
          ->hasKey('range')
@@ -192,28 +187,26 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorFloatField([]);
+      $instance = new \PluginFormcreatorFloatField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorFloatField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorFloatField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

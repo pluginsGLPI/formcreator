@@ -54,7 +54,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => [],
             'expectedIsValid' => true
          ],
@@ -77,7 +76,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3'],
             'expectedIsValid' => true
          ],
@@ -100,7 +98,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3'],
             'expectedIsValid' => false
          ],
@@ -123,7 +120,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3', '4'],
             'expectedIsValid' => true
          ],
@@ -146,7 +142,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3', '4', '2', '1', '6'],
             'expectedIsValid' => false
          ],
@@ -158,8 +153,9 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testGetAvailableValues($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($fields, $data);
+   public function testGetAvailableValues($fields, $expectedValue, $expectedValidity) {
+      $question = $this->getQuestion($fields);
+      $fieldInstance = new \PluginFormcreatorMultiSelectField($question);
 
       $availableValues = $fieldInstance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
@@ -173,17 +169,13 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      // Re-load the question from the DB
-      $question->getFromDB($question->getID());
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
-      $instance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
+      $instance = new \PluginFormcreatorMultiSelectField($question);
       $instance->deserializeValue($fields['default_values']);
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
@@ -210,11 +202,9 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields);
+      $fieldInstance = new \PluginFormcreatorMultiSelectField($question);
 
       // Test a value is mandatory
       $input = [
@@ -244,13 +234,13 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $instance = new \PluginFormcreatorMultiSelectField([]);
+      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
       $output = $instance->getName();
       $this->string($output)->isEqualTo('Multiselect');
    }
 
    public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getEmptyParameters();
       $this->array($output)
          ->hasKey('range')
@@ -260,27 +250,25 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorMultiSelectField([]);
+      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorMultiSelectField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

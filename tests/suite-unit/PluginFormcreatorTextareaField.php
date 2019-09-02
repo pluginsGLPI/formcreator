@@ -38,7 +38,7 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorTextareaField([]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -60,7 +60,7 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextareaField([]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -85,22 +85,20 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextareaField([]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorTextareaField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

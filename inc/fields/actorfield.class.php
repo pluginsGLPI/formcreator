@@ -92,7 +92,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
             ];
          }
          $initialValue = json_encode($initialValue);
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
@@ -266,7 +266,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $this->value = [];
          return true;

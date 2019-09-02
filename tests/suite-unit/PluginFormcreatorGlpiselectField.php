@@ -67,16 +67,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => $user->getID(),
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
             'expectedIsValid' => true
          ],
@@ -90,16 +82,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => '0',
             'expectedValue'   => '',
             'expectedIsValid' => false
          ],
@@ -113,16 +97,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => $user->getID(),
             'expectedValue'   => (new \DbUtils())->getUserName($user->getID()),
             'expectedIsValid' => true
          ],
@@ -136,16 +112,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => null,
             'expectedValue'   => '',
             'expectedIsValid' => true
          ],
@@ -160,16 +128,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => null,
             'expectedValue'   => $computer->getName(),
             'expectedIsValid' => true
          ],
@@ -183,16 +143,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => true,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => null,
             'expectedValue'   => '&nbsp;',
             'expectedIsValid' => true
          ],
@@ -206,16 +158,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => null,
             'expectedValue'   => $computer->getName(),
             'expectedIsValid' => true
          ],
@@ -229,16 +173,8 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
                'order'           => '1',
                'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => false,
-               '_parameters'     => [
-                  'date' => [
-                     'range' => [
-                        'range_min' => '',
-                        'range_max' => '',
-                     ]
-                  ]
-               ],
+               '_parameters'     => [],
             ],
-            'data'            => null,
             'expectedValue'   => '&nbsp;',
             'expectedIsValid' => true
          ],
@@ -254,8 +190,9 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
-      $instance = $this->newTestedInstance($fields, $data);
+   public function testIsValid($fields, $expectedValue, $expectedValidity) {
+      $question = $this->getQuestion($fields);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($fields['default_values']);
 
       $output = $instance->isValid();
@@ -263,13 +200,13 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorGlpiselectField([]);
+      $instance = new \PluginFormcreatorGlpiselectField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isFalse();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
@@ -286,7 +223,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'values'    => \Computer::class,
       ]);
-      $instance = $this->newTestedInstance($question->fields);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($computer->getID());
 
       // test for the target text
@@ -307,7 +244,7 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
          'fieldtype' => 'glpiselect',
          'values'    => \User::class,
       ]);
-      $instance = $this->newTestedInstance($question->fields);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($user->getID());
 
       // test the text for target
@@ -316,15 +253,13 @@ class PluginFormcreatorGlpiselectField extends CommonTestCase {
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorGlpiselectField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorGlpiselectField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

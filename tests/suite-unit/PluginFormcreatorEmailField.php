@@ -35,7 +35,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorEmailField extends CommonTestCase {
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
@@ -70,11 +70,10 @@ class PluginFormcreatorEmailField extends CommonTestCase {
     * @dataProvider providerParseAnswerValue
     */
    public function testParseAnswerValue($input, $expected) {
-      $instance = $this->newTestedInstance([
-         'id' => 1
-      ]);
+      $question = $this->getQuestion();
+      $instance = $this->newTestedInstance($question);
       $output = $instance->parseAnswerValues([
-         'formcreator_field_1' => $input
+         'formcreator_field_' . $question->getID() => $input
       ]);
       $this->boolean($output)->isEqualTo($expected);
    }
@@ -87,15 +86,17 @@ class PluginFormcreatorEmailField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorEmailField(['id' => 1]);
-      $instance->parseAnswerValues(['formcreator_field_1' => $value]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $output = $instance->serializeValue();
 
       $this->string($output)->isEqualTo($expected ? $value : '');
    }
 
-   public  function  testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorEmailField(['id' => 1]);
+   public function  testIsAnonymousFormCompatible() {
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question);
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isEqualTo(true);
    }
@@ -124,8 +125,9 @@ class PluginFormcreatorEmailField extends CommonTestCase {
     * @dataProvider providerEquals
     */
    public function testEquals($value, $answer, $expected) {
-      $instance = new \PluginFormcreatorEmailField(['id' => '1']);
-      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->equals($value))->isEqualTo($expected);
    }
 
@@ -137,15 +139,16 @@ class PluginFormcreatorEmailField extends CommonTestCase {
     * @dataProvider providerNotEquals
     */
    public function testNotEquals($value, $answer, $expected) {
-      $instance = new \PluginFormcreatorEmailField(['id' => '1'], $answer);
-      $instance->parseAnswerValues(['formcreator_field_1' => $answer]);
+      $question = $this->getQuestion();
+      $instance = new \PluginFormcreatorEmailField($question, $answer);
+      $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $answer]);
       $this->boolean($instance->notEquals($value))->isEqualTo(!$expected);
    }
 
    public function testGreaterThan() {
       $this->exception(
          function() {
-            $instance = new \PluginFormcreatorEmailField([]);
+            $instance = new \PluginFormcreatorEmailField($this->getQuestion());
             $instance->greaterThan('');
          }
       )->isInstanceOf(\PluginFormcreatorComparisonException::class);
@@ -154,23 +157,21 @@ class PluginFormcreatorEmailField extends CommonTestCase {
    public function testLessThan() {
       $this->exception(
          function() {
-            $instance = new \PluginFormcreatorEmailField([]);
+            $instance = new \PluginFormcreatorEmailField($this->getQuestion());
             $instance->lessThan('');
          }
       )->isInstanceOf(\PluginFormcreatorComparisonException::class);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorEmailField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorEmailField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

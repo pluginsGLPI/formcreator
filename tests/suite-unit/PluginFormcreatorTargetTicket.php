@@ -592,103 +592,8 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $this->integer((int) $targetTicketId)->isNotEqualTo($targetTicketId2);
    }
 
-   public function providerSetTargetCategory() {
-      $dataSet = [];
-
-      $instance = new PluginFormcreatorTargetTicketDummy();
-      $question = $this->getQuestion([
-         'fieldtype' => 'dropdown',
-         'values' => json_encode([
-            'itemtype' => 'ITILCategory',
-            'show_ticket_categories' =>'both',
-            'show_ticket_categories_depth' => '0',
-            'show_ticket_categories_root' => '0',
-         ]),
-      ]);
-      $form = new \PluginFormcreatorForm();
-      $form->getByQuestionId($question->getID());
-      $fields = $form->getFields();
-      $instance->add([
-         'plugin_formcreator_forms_id' => $form->getID(),
-         'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_ANSWER,
-         'category_question' => $question->getID(),
-      ]);
-      $input = [
-         'formcreator_field_' . $question->getID() => '42',
-      ];
-      foreach ($fields as $id => $field) {
-         $field->parseAnswerValues($input);
-      }
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $this->disableDebug();
-      $formAnswer->saveAnswers(
-         $form,
-         $input,
-         $fields
-      );
-      $this->restoreDebug();
-
-      $dataSet[] = [
-         'instance' => $instance,
-         'data' => [
-         ],
-         'formanswer' => $formAnswer,
-         'expected' => [
-            'itilcategories_id' => '42',
-         ],
-      ];
-
-      // $instance = new PluginFormcreatorTargetTicketDummy();
-      // $question = $this->getQuestion([
-      //    'fieldtype' => 'dropdown',
-      //    'values' => json_encode([
-      //       'itemtype' => 'ITILCategory',
-      //       'show_ticket_categories' =>'both',
-      //       'show_ticket_categories_depth' => '0',
-      //       'show_ticket_categories_root' => '0',
-      //    ]),
-      // ]);
-      // $form = new \PluginFormcreatorForm();
-      // $form->getByQuestionId($question->getID());
-      // $fields = $form->getFields();
-      // $instance->add([
-      //    'plugin_formcreator_forms_id' => $form->getID(),
-      //    'category_rule' => \PluginFormcreatorTargetTicket::CATEGORY_RULE_SPECIFIC,
-      //    'category_question' => '41',
-      // ]);
-      // $input = [
-      //    'formcreator_field_' . $question->getID() => '42',
-      // ];
-      // foreach ($fields as $id => $field) {
-      //    $field->parseAnswerValues($input);
-      // }
-      // $formAnswer = new \PluginFormcreatorFormAnswer();
-      // $this->disableDebug();
-      // $formAnswer->saveAnswers(
-      //    $form,
-      //    $input,
-      //    $fields
-      // );
-      // $this->restoreDebug();
-
-      // $dataSet[] = [
-      //    'instance' => $instance,
-      //    'data' => [
-      //    ],
-      //    'formanswer' => $formAnswer,
-      //    'expected' => [
-      //       'itilcategories_id' => '41',
-      //    ],
-      // ];
-
-      return $dataSet;
-   }
-
-   /**
-    *
-    */
+   /*
    public function testSetTargetCategory() {
-      $dataSet = [];
 
       $instance = new PluginFormcreatorTargetTicketDummy();
       $question = $this->getQuestion([
@@ -716,31 +621,23 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          $field->parseAnswerValues($input);
       }
       $formAnswer = new \PluginFormcreatorFormAnswer();
-      $this->disableDebug();
+      // // $this->disableDebug();
       $formAnswer->saveAnswers(
          $form,
          $input,
          $fields
       );
-      // $this->restoreDebug();
+      // // $this->restoreDebug();
 
-      // $dataSet[] = [
-      //    'instance' => $instance,
-      //    'data' => [
-      //    ],
-      //    'formanswer' => $formAnswer,
-      //    'expected' => [
-      //       'itilcategories_id' => '42',
-      //    ],
-      // ];
-      // $data = [];
-      // $expected = [
-      //    'itilcategories_id' => '42',
-      // ];
+      $data = [];
+      $expected = [
+         'itilcategories_id' => '42',
+      ];
 
-      // $output = $instance->publicSetTargetCategory($data, $formAnswer);
-      // $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected['itilcategories_id']);
+      $output = $instance->publicSetTargetCategory($data, $formAnswer);
+      $this->integer((int) $output['itilcategories_id'])->isEqualTo($expected['itilcategories_id']);
    }
+   */
 
    public function testSetTargetAssociatedItem() {
       $instance = new PluginFormcreatorTargetTicketDummy();

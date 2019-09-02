@@ -44,7 +44,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
          'range_min'       => 3,
          'range_max'       => 4,
       ];
-      $fieldInstance = new \PluginFormcreatorRadiosField($fields);
+      $question = $this->getQuestion($fields);
+      $fieldInstance = new \PluginFormcreatorRadiosField($question);
 
       // Test a value is mandatory
       $input = [
@@ -80,21 +81,19 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
 
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorRadiosField([]);
+      $instance = new \PluginFormcreatorRadiosField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorRadiosField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorRadiosField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
@@ -124,7 +123,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorRadiosField(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $question = $this->getQuestion(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $instance = new \PluginFormcreatorRadiosField($question);
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -157,7 +157,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorRadiosField(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $question = $this->getQuestion(['values' => 'foo\r\nbarr\r\ntest d\'apostrophe']);
+      $instance = new \PluginFormcreatorRadiosField($question);
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
@@ -166,18 +167,14 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    public function providerparseAnswerValues() {
       return [
          [
-            'id' => '1',
-            'input' => [
-               'formcreator_field_1' => ''
-            ],
+            'question' => $this->getQuestion(),
+            'value' => '',
             'expected' => true,
             'expectedValue' => '',
          ],
          [
-            'id' => '1',
-            'input' => [
-               'formcreator_field_1' => 'test d\'apostrophe',
-            ],
+            'question' => $this->getQuestion(),
+            'value' => 'test d\'apostrophe',
             'expected' => true,
             'expectedValue' => "test d'apostrophe",
          ],
@@ -187,9 +184,9 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
    /**
     * @dataProvider providerparseAnswerValues
     */
-   public function testParseAnswerValues($id, $input, $expected, $expectedValue) {
-      $instance = $this->newTestedInstance(['id' => $id]);
-      $output = $instance->parseAnswerValues($input);
+   public function testParseAnswerValues($question, $value, $expected, $expectedValue) {
+      $instance = $this->newTestedInstance($question);
+      $output = $instance->parseAnswerValues(['formcreator_field_' . $question->getID() => $value]);
       $this->boolean($output)->isEqualTo($expected);
 
       $outputValue = $instance->getValueForTargetText(false);
@@ -218,7 +215,7 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerGetValueForDesign
     */
    public function testGetValueForDesign($value, $expected) {
-      $instance = new \PluginFormcreatorRadiosField([]);
+      $instance = new \PluginFormcreatorRadiosField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
       $this->string($output)->isEqualTo($expected);
@@ -228,7 +225,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
       return [
          [
             'fields' => [
-               'name' => '',
+               'fieldtype' => 'radios',
+               'values' => 'a\r\nb',
                'required' => false,
             ],
             'value' => '',
@@ -236,7 +234,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
          ],
          [
             'fields' => [
-               'name' => '',
+               'fieldtype' => 'radios',
+               'values' => 'a\r\nb',
                'required' => true,
             ],
             'value' => '',
@@ -249,7 +248,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataProvider providerIsValid
     */
    public function testIsValid($fields, $value, $expected) {
-      $instance = new \PluginFormcreatorRadiosField($fields);
+      $question = $this->getQuestion($fields);
+      $instance = new \PluginFormcreatorRadiosField($question);
       $instance->deserializeValue($value);
       $output = $instance->isValid();
       $this->boolean($output)->isEqualTo($expected);
@@ -288,7 +288,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataprovider providerEquals
     */
    public function testEquals($fields, $value, $compare, $expected) {
-      $instance = $this->newTestedInstance($fields);
+      $question = $this->getQuestion($fields);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
 
       $output = $instance->equals($compare);
@@ -303,7 +304,8 @@ class PluginFormcreatorRadiosField extends CommonTestCase {
     * @dataprovider providerNotEquals
     */
    public function testNotEquals($fields, $value, $compare, $expected) {
-      $instance = $this->newTestedInstance($fields);
+      $question = $this->getQuestion($fields);
+      $instance = $this->newTestedInstance($question);
       $instance->deserializeValue($value);
 
       $output = $instance->notEquals($compare);

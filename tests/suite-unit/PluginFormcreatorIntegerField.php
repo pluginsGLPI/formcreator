@@ -56,7 +56,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '',
             'expectedIsValid' => true
          ],
@@ -80,7 +79,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '2',
             'expectedIsValid' => true
          ],
@@ -103,7 +101,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '2',
             'expectedIsValid' => false
          ],
@@ -127,7 +124,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '5',
             'expectedIsValid' => false
          ],
@@ -151,7 +147,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '3.4',
             'expectedIsValid' => false
          ],
@@ -175,7 +170,6 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '4',
             'expectedIsValid' => true
          ],
@@ -187,7 +181,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    /**
     * @dataProvider providerIsValid
     */
-   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
@@ -195,7 +189,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $question->add($fields);
       $question->updateParameters($fields);
 
-      $instance = new \PluginFormcreatorIntegerField($question->fields, $data);
+      $instance = new \PluginFormcreatorIntegerField($question);
       $instance->deserializeValue($fields['default_values']);
 
       $isValid = $instance->isValid();
@@ -203,27 +197,25 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorIntegerField([]);
+      $instance = new \PluginFormcreatorIntegerField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testCanRequire() {
-      $instance = new \PluginFormcreatorIntegerField([
-         'id' => '1',
-      ]);
+      $instance = new \PluginFormcreatorIntegerField($this->getQuestion());
       $output = $instance->canRequire();
       $this->boolean($output)->isTrue();
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

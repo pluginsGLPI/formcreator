@@ -63,7 +63,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= '<textarea name="values" id="values" rows="4" cols="40"'
          .'style="width: 90%">'
-         .$this->fields['values']
+         .$this->question->fields['values']
          .'</textarea>';
       $additions .= '</td>';
       $additions .= '</tr>';
@@ -82,7 +82,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
@@ -149,7 +149,7 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (isset($input[$key])) {
          if (!is_string($input[$key])) {
             return false;

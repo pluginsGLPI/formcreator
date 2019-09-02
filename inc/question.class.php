@@ -635,7 +635,7 @@ PluginFormcreatorDuplicatableInterface
 
    public function pre_deleteItem() {
       $this->field = PluginFormcreatorFields::getFieldInstance(
-         $this->getField('fieldtype'),
+         $this->fields['fieldtype'],
          $this
       );
       return $this->field->deleteParameters($this);
