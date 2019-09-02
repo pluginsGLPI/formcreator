@@ -183,7 +183,7 @@ class RoboFile extends RoboFilePlugin
       $pluginPath = $this->getProjectPath();
       $archiveWorkdir = "$pluginPath/output/dist/archive_workdir";
       $archiveFile = "$pluginPath/output/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
-      if (is_file($archiveWorkdir)) {
+      if (is_file($archiveFile)) {
          if (!is_writable(($archiveFile))) {
             throw new \RuntimeException('Failed to delete previous build (file is not writable)' . $archiveFile);
          }
