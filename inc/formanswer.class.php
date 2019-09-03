@@ -1081,7 +1081,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $targetObject = new $target['itemtype'];
          $targetObject->getFromDB($target['items_id']);
          $generatedTarget = $targetObject->save($this);
-         if ($generatedTarget === false) {
+         if ($generatedTarget === null) {
             $success = false;
             break;
          }

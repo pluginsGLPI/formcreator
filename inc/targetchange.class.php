@@ -932,7 +932,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     *
     * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
-    * @return Change|false generated change
+    * @return Change|null generated change
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
       global $DB;
@@ -1031,7 +1031,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Create the target change
       if (!$changeID = $change->add($data)) {
-         return false;
+         return null;
       }
 
       // Add tag if presents
