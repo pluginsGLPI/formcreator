@@ -1052,7 +1052,6 @@ EOS;
          if ($question->getField('fieldtype') == 'glpiselect') {
             $content = $this->parseObjectProperties(
                $question,
-               $questionId,
                $answer,
                $content
             );
@@ -1087,7 +1086,6 @@ EOS;
     * group.
     *
     * @param PluginFormCreatorQuestion $question
-    * @param int                       $questionID
     * @param PluginFormCreatorAnswer   $answer
     * @param string                    $content
     *
@@ -1095,11 +1093,13 @@ EOS;
     */
    private function parseObjectProperties(
       $question,
-      $questionID,
       $answer,
       $content
    ) {
       global $TRANSLATE;
+
+      // Get ID from question
+      $questionID = $question->fields['id'];
 
       // We need english locale to search searchOptions by name
       $oldLocale = $TRANSLATE->getLocale();
