@@ -454,7 +454,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
     *
     * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
-    * @return Change|false generated change
+    * @return Change|null generated change
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
       // Prepare actors structures for creation of the ticket
@@ -559,7 +559,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
 
       // Create the target change
       if (!$changeID = $change->add($data)) {
-         return false;
+         return null;
       }
 
       $this->saveTags($formanswer, $changeID);

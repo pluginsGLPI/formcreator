@@ -514,7 +514,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
     *
     * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
-    * @return Ticket|false Generated ticket if success, null otherwise
+    * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
       // Prepare actors structures for creation of the ticket

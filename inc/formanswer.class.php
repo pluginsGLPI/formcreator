@@ -1044,7 +1044,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       foreach ($all_targets as $targetType => $targets) {
          foreach ($targets as $targetObject) {
             $generatedTarget = $targetObject->save($this);
-            if ($generatedTarget === false) {
+            if ($generatedTarget === null) {
                $success = false;
                break;
             }
