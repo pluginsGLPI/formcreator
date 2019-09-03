@@ -1046,7 +1046,7 @@ EOS;
     *
     * @param  PluginFormcreatorFormAnswer $formanswer    Answers previously saved
     *
-    * @return Ticket|false Generated ticket if success, null otherwise
+    * @return Ticket|null Generated ticket if success, null otherwise
     */
    public function save(PluginFormcreatorFormAnswer $formanswer) {
       global $DB, $CFG_GLPI;
