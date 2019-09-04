@@ -767,7 +767,7 @@ layout: coverage
                     <th id="L74" class="number uncovered">74</th>
 
                     <td class="uncovered" >
-                        <pre>      $id           = $this-&gt;fields[&#039;id&#039;];</pre>
+                        <pre>      $id           = $this-&gt;question-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1301,7 +1301,7 @@ layout: coverage
                     <th id="L147" class="number uncovered">147</th>
 
                     <td class="uncovered" >
-                        <pre>            Session::addMessageAfterRedirect(__(&#039;Specific format does not match:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $this-&gt;fields[&#039;name&#039;], false, ERROR);</pre>
+                        <pre>            Session::addMessageAfterRedirect(__(&#039;Specific format does not match:&#039;, &#039;formcreator&#039;) . &#039; &#039; . $this-&gt;question-&gt;fields[&#039;name&#039;], false, ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1368,7 +1368,7 @@ layout: coverage
                     <th id="L156" class="number covered">156</th>
 
                     <td class="covered" >
-                        <pre>         Session::addMessageAfterRedirect(sprintf(__(&#039;The text is too short (minimum %d characters):&#039;, &#039;formcreator&#039;), $rangeMin) . &#039; &#039; . $this-&gt;fields[&#039;name&#039;], false, ERROR);</pre>
+                        <pre>         Session::addMessageAfterRedirect(sprintf(__(&#039;The text is too short (minimum %d characters):&#039;, &#039;formcreator&#039;), $rangeMin) . &#039; &#039; . $this-&gt;question-&gt;fields[&#039;name&#039;], false, ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1405,7 +1405,7 @@ layout: coverage
                     <th id="L161" class="number uncovered">161</th>
 
                     <td class="uncovered" >
-                        <pre>         Session::addMessageAfterRedirect(sprintf(__(&#039;The text is too long (maximum %d characters):&#039;, &#039;formcreator&#039;), $rangeMax) . &#039; &#039; . $this-&gt;fields[&#039;name&#039;], false, ERROR);</pre>
+                        <pre>         Session::addMessageAfterRedirect(sprintf(__(&#039;The text is too long (maximum %d characters):&#039;, &#039;formcreator&#039;), $rangeMax) . &#039; &#039; . $this-&gt;question-&gt;fields[&#039;name&#039;], false, ERROR);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1691,7 +1691,7 @@ layout: coverage
                     <th id="L200" class="number uncovered">200</th>
 
                     <td class="uncovered" >
-                        <pre>      $key = &#039;formcreator_field_&#039; . $this-&gt;fields[&#039;id&#039;];</pre>
+                        <pre>      $key = &#039;formcreator_field_&#039; . $this-&gt;question-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
