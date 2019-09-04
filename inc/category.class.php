@@ -35,12 +35,12 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorCategory extends CommonTreeDropdown
 {
-   static function canView() {
-      return Session::haveRight('ticket', CREATE);
-   }
-
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
+
+   static function canView() {
+      return parent::canView() || $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk';
+   }
 
    public static function getTypeName($nb = 1) {
       return _n('Form category', 'Form categories', $nb, 'formcreator');
