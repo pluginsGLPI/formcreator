@@ -903,7 +903,7 @@ layout: coverage
                     <th id="L59" class="number covered">59</th>
 
                     <td class="covered" >
-                        <pre>      return Session::haveRight(&#039;entity&#039;, UPDATE);</pre>
+                        <pre>      return Session::haveRight(&#039;entity&#039;, UPDATE) || $_SESSION[&#039;glpiactiveprofile&#039;][&#039;interface&#039;] == &#039;helpdesk&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
