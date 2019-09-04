@@ -792,6 +792,22 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
       }
       $('#dropdown_default_value_field').html(response);
       $('.plugin_formcreator_dropdown_ticket').toggle(showTicketCategorySpecific);
+
+      $.ajax({
+         url: rootDoc + '/plugins/formcreator/ajax/commonTree.php',
+         type: 'GET',
+         data: {
+            itemtype: dropdown_type,
+            root: $("#commonTreeDropdownRoot").val(),
+            maxDepth: $("#commonTreeDropdownMaxDepth").val(),
+         },
+      }).done(function(response) {
+         $('.plugin_formcreator_dropdown').html(response);
+         $('.plugin_formcreator_dropdown').toggle(true);
+      }).error(function() {
+         $('.plugin_formcreator_dropdown').html("");
+         $('.plugin_formcreator_dropdown').toggle(false);
+      });
    });
 }
 
