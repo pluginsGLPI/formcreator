@@ -181,12 +181,28 @@ class PluginFormcreatorCommon {
     * @return array
     */
    public static function getFontAwesomePictoNames() {
-      if (version_compare(static::getGlpiVersion(), '9.4') < 0) {
-         $list = require_once(__DIR__ . '/../data/font-awesome_9.3.php');
-      } else {
-         $list = require_once(__DIR__ . '/../data/font-awesome_9.4.php');
-      }
+      $list = require_once(__DIR__ . '/../' . self::getPictoFilename(GLPI_VERSION));
       return $list;
+   }
+
+   /**
+    * get the name of the php file containing the pictogram list depending on the version of GLPI
+    *
+    * @param $version string GLPI version
+    * @return string
+    */
+   public static function getPictoFilename($version) {
+      if (version_compare($version, '9.4') < 0) {
+         return 'data/font-awesome_9.3.php';
+      }
+      if (version_compare($version, '9.5') < 0) {
+         return 'data/font-awesome_9.4.php';
+      }
+      if (version_compare($version, '9.6') < 0) {
+         return 'data/font-awesome_9.5.php';
+      }
+
+      return '';
    }
 
    /**
