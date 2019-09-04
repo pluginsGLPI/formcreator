@@ -241,7 +241,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       $location1Id = $location1->add([
          'name' => $this->getUniqueString()
       ]);
-      $location2Id = $location2->add([
+      $location2->add([
          'name' => $this->getUniqueString()
       ]);
 
@@ -280,7 +280,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
       $location1Id = $location1->add([
          'name' => $this->getUniqueString()
       ]);
-      $location2Id = $location2->add([
+      $location2->add([
          'name' => $this->getUniqueString()
       ]);
 

@@ -673,7 +673,6 @@ class PluginFormcreatorUpgradeTo2_5 {
                   if (isset($options->type) && ($options->type == 2)) {
                      $required = 1;
                   }
-                  $default_values = $values;
                   $values = '';
                   break;
 

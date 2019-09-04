@@ -55,12 +55,12 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'plugin_formcreator_forms_id' => $forms_id
       ]);
 
-      $questions_id_1 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 1",
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $sections_id
       ]);
-      $questions_id_2 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 2",
          'fieldtype'                      => 'textarea',
          'plugin_formcreator_sections_id' => $sections_id
@@ -256,7 +256,6 @@ class PluginFormcreatorQuestion extends CommonTestCase {
    }
 
    public function testImport() {
-      $sectionFk = \PluginFormcreatorSection::getForeignKeyField();
       $section = $this->getSection();
       $uuid = plugin_formcreator_getUuid();
       $input = [

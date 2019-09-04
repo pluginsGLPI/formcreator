@@ -357,7 +357,7 @@ class PluginFormcreatorForm extends CommonTestCase {
    }
 
    public function testCreateValidationNotification() {
-      global $DB;
+      global $DB, $CFG_GLPI;
 
       // Enable notifications in GLPI
       \Config::setConfigurationValues(

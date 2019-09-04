@@ -37,9 +37,6 @@ class PluginFormcreatorSection extends CommonTestCase {
       $form           = new \PluginFormcreatorForm;
       $form_section   = new \PluginFormcreatorSection;
       $form_question  = new \PluginFormcreatorQuestion;
-      $form_condition = new \PluginFormcreatorQuestion_Condition;
-      $form_validator = new \PluginFormcreatorForm_Validator;
-      $form_profile   = new \PluginFormcreatorForm_Profile;
 
       // create objects
       $forms_id = $form->add([
@@ -53,12 +50,12 @@ class PluginFormcreatorSection extends CommonTestCase {
          'plugin_formcreator_forms_id' => $forms_id
       ]);
 
-      $questions_id_1 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 1",
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $sections_id
       ]);
-      $questions_id_2 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 2",
          'fieldtype'                      => 'textarea',
          'plugin_formcreator_sections_id' => $sections_id
@@ -90,10 +87,10 @@ class PluginFormcreatorSection extends CommonTestCase {
                                    'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
       $sections_id = $section->add(['name'                        => "test clone section",
                                          'plugin_formcreator_forms_id' => $forms_id]);
-      $questions_id_1 = $question->add(['name'                           => "test clone question 1",
+      $question->add(['name'                           => "test clone question 1",
                                              'fieldtype'                      => 'text',
                                              'plugin_formcreator_sections_id' => $sections_id]);
-      $questions_id_2 = $question->add(['name'                           => "test clone question 2",
+      $question->add(['name'                           => "test clone question 2",
                                              'fieldtype'                      => 'textarea',
                                              'plugin_formcreator_sections_id' => $sections_id]);
 
@@ -173,7 +170,6 @@ class PluginFormcreatorSection extends CommonTestCase {
    }
 
    public function testImport() {
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $form = $this->getForm();
       $uuid = plugin_formcreator_getUuid();
       $input = [

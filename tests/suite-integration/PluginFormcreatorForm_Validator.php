@@ -54,7 +54,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->boolean($group->isNewItem())->isFalse();
 
       $form = new \PluginFormcreatorForm();
-      $formId = $form->add([
+      $form->add([
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => 'a form for group validator',
          'description'           => 'form description',
@@ -76,7 +76,7 @@ class PluginFormcreatorForm_Validator extends CommonTestCase {
       $this->boolean($user->isNewItem())->isFalse();
 
       $form = new \PluginFormcreatorForm();
-      $formId = $form->add([
+      $form->add([
          'entities_id'           => $_SESSION['glpiactive_entity'],
          'name'                  => 'a form for user validator',
          'description'           => 'form description',

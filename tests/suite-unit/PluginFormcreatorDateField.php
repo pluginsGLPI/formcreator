@@ -34,7 +34,6 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorDateField extends CommonTestCase {
 
    public function providerGetValue() {
-      $a = null;
       $dataset = [
          [
             'question'           => $this->getQuestion([
