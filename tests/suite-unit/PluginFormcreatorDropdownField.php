@@ -54,10 +54,16 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
             'input' => [
                'name' => $name,
                'dropdown_values' => \Location::class,
+               'show_ticket_categories_depth' => '5',
+               'show_ticket_categories_root' => '0',
             ],
             'expected' => [
                'name' => $name,
-               'values' => json_encode(['itemtype' => \Location::class]),
+               'values' => json_encode([
+                  'itemtype' => \Location::class,
+                  'show_ticket_categories_depth' => '5',
+                  'show_ticket_categories_root' => '0',
+               ]),
                'dropdown_values' => \Location::class,
             ]
          ],
@@ -132,6 +138,8 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '0',
+               'show_ticket_categories_depth' => '5',
+               'show_ticket_categories_root' => '0',
             ],
             'expected' => true,
          ],
@@ -146,6 +154,8 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '0',
+               'show_ticket_categories_depth' => '5',
+               'show_ticket_categories_root' => '0',
             ],
             'expected' => false,
          ],
@@ -156,10 +166,12 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
                   'itemtype' => \Location::class,
                ]),
                'required' => '1',
-            ]), 
+            ]),
             'input' => [
                'dropdown_values' => \Location::class,
                'dropdown_default_value' => '42',
+               'show_ticket_categories_depth' => '5',
+               'show_ticket_categories_root' => '0',
             ],
             'expected' => true,
          ],
