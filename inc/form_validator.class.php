@@ -29,6 +29,8 @@
  * ---------------------------------------------------------------------
  */
 
+use tests\units\PluginFormcreatorForm_Validator as TestsPluginFormcreatorForm_Validator;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
@@ -40,7 +42,7 @@ class PluginFormcreatorForm_Validator extends CommonDBRelation implements
 PluginFormcreatorExportableInterface
 {
 
-      // From CommonDBRelation
+   // From CommonDBRelation
    static public $itemtype_1          = PluginFormcreatorForm::class;
    static public $items_id_1          = 'plugin_formcreator_forms_id';
 
@@ -150,5 +152,32 @@ PluginFormcreatorExportableInterface
       unset($validator[$idToRemove]);
 
       return $validator;
+   }
+
+   /**
+    * Get validators of type $itemtype associated to a form
+    *
+    * @param PluginFormcreatorForm $form
+    * @param string $itemtype
+    * @return void
+    */
+   public function getValidatorsForForm(PluginFormcreatorForm $form, $itemtype) {
+      if (!in_array($itemtype, [User::class, Group::class])) {
+         return [];
+      }
+
+      $result = [];
+      $found = $this->find([
+         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
+         'itemtype' => $itemtype,
+      ]);
+      foreach($found as $id => $row) {
+         $item = new self();
+         if ($item->getFromDB($id)) {
+            $result[$id] = $item;
+         }
+      }
+
+      return $result;
    }
 }

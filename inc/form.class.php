@@ -457,11 +457,15 @@ PluginFormcreatorDuplicatableInterface
       $usersCondition = [
          "$userTable.id" => new QuerySubquery($subQuery)
       ];
-
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $validatorUsers = $formValidator->getValidatorsForForm($this, User::class);
+      $validatorUser = array_shift($validatorUsers);
       echo '<div id="validators_users">';
       Dropdown::show(
          User::class, [
-         'condition' => $usersCondition
+            'name' => '_validator_users',
+            'value' => $validatorUser ? $validatorUser->fields['items_id'] : 0,
+            'condition' => $usersCondition,
          ]
       );
       echo '</div>';
@@ -511,10 +515,15 @@ PluginFormcreatorDuplicatableInterface
       $groupsCondition = [
          "$groupTable.id" => new QuerySubquery($subQuery),
       ];
+      $formValidator = new PluginFormcreatorForm_Validator();
+      $validatorgroups = $formValidator->getValidatorsForForm($this, Group::class);
+      $validatorgroup = array_shift($validatorgroups);
       echo '<div id="validators_groups" style="width: 100%">';
       Dropdown::show(
          Group::class, [
-         'condition' => $groupsCondition
+            'name' => '_validator_groups',
+            'value' => $validatorgroup ? $validatorgroup->fields['items_id'] : 0,
+            'condition' => $groupsCondition
          ]
       );
 
@@ -1220,9 +1229,9 @@ PluginFormcreatorDuplicatableInterface
          $validators = [0 => Dropdown::EMPTY_VALUE];
 
          // Groups
+         $formFk = self::getForeignKeyField();
          if ($this->fields['validation_required'] == 2) {
             $groupTable = Group::getTable();
-            $formFk = self::getForeignKeyField();
             $result = $DB->request([
                'SELECT' => [
                   $groupTable => ['id', 'completename']
@@ -1419,6 +1428,9 @@ PluginFormcreatorDuplicatableInterface
                $validators = $this->input['_validator_groups'];
                $validatorItemtype = Group::class;
                break;
+         }
+         if (!is_array($validators)) {
+            $validators = [$validators];
          }
          foreach ($validators as $itemId) {
             $form_validator = new PluginFormcreatorForm_Validator();
