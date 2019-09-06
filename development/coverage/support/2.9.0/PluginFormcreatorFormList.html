@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-success">
                     100%
-                                            <small>of 12</small>
+                                            <small>of 14</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -65,7 +65,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#getMenuContent">PluginFormcreatorFormList::getMenuContent()</a></td>
-                                        <td style="text-align: center">11</td>
+                                        <td style="text-align: center">13</td>
                 <td style="text-align: center">    
     <span class="label label-success">100%</span>
 </td>
@@ -496,25 +496,39 @@ layout: coverage
                     <th id="L53" class="number covered">53</th>
 
                     <td class="covered" >
-                        <pre>      $image = &#039;&lt;img src=&quot;&#039; . $CFG_GLPI[&#039;root_doc&#039;] . &#039;/plugins/formcreator/pics/check.png&quot;</pre>
+                        <pre>      $menu[&#039;title&#039;] = __(&#039;Forms waiting for validation&#039;, &#039;formcreator&#039;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L54" class="number covered">54</th>
 
                     <td class="covered" >
-                        <pre>                  title=&quot;&#039; . __(&#039;Forms waiting for validation&#039;, &#039;formcreator&#039;) . &#039;&quot;</pre>
+                        <pre>      $menu[&#039;page&#039;] = &#039;/plugins/formcreator/front/formlist.php&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L55" class="number covered">55</th>
 
                     <td class="covered" >
+                        <pre>      $image = &#039;&lt;img src=&quot;&#039; . $CFG_GLPI[&#039;root_doc&#039;] . &#039;/plugins/formcreator/pics/check.png&quot;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L56" class="number covered">56</th>
+
+                    <td class="covered" >
+                        <pre>                  title=&quot;&#039; . __(&#039;Forms waiting for validation&#039;, &#039;formcreator&#039;) . &#039;&quot;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L57" class="number covered">57</th>
+
+                    <td class="covered" >
                         <pre>                  alt=&quot;&#039; . __(&#039;Forms waiting for validation&#039;, &#039;formcreator&#039;) . &#039;&quot;&gt;&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L56" class="number ">56</th>
+                    <th id="L58" class="number ">58</th>
 
                     <td class="" >
                         <pre>
@@ -522,28 +536,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L57" class="number covered">57</th>
+                    <th id="L59" class="number covered">59</th>
 
                     <td class="covered" >
                         <pre>      $menu[&#039;links&#039;][&#039;search&#039;] = PluginFormcreatorFormList::getSearchURL(false);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L58" class="number covered">58</th>
+                    <th id="L60" class="number covered">60</th>
 
                     <td class="covered" >
                         <pre>      if (PluginFormcreatorForm::canCreate()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L59" class="number covered">59</th>
+                    <th id="L61" class="number covered">61</th>
 
                     <td class="covered" >
                         <pre>         $menu[&#039;links&#039;][&#039;add&#039;] = PluginFormcreatorForm::getFormURL(false);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L60" class="number ">60</th>
+                    <th id="L62" class="number ">62</th>
 
                     <td class="" >
                         <pre>      }
@@ -551,21 +565,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L61" class="number covered">61</th>
+                    <th id="L63" class="number covered">63</th>
 
                     <td class="covered" >
                         <pre>      $menu[&#039;links&#039;][&#039;config&#039;] = PluginFormcreatorForm::getSearchURL(false);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L62" class="number covered">62</th>
+                    <th id="L64" class="number covered">64</th>
 
                     <td class="covered" >
                         <pre>      $menu[&#039;links&#039;][$image]   = PluginFormcreatorFormAnswer::getSearchURL(false);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L63" class="number ">63</th>
+                    <th id="L65" class="number ">65</th>
 
                     <td class="" >
                         <pre>
@@ -573,21 +587,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L64" class="number covered">64</th>
+                    <th id="L66" class="number covered">66</th>
 
                     <td class="covered" >
                         <pre>      return $menu;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L65" class="number unreach">65</th>
+                    <th id="L67" class="number unreach">67</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L66" class="number ">66</th>
+                    <th id="L68" class="number ">68</th>
 
                     <td class="" >
                         <pre>
@@ -595,7 +609,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L67" class="number ">67</th>
+                    <th id="L69" class="number ">69</th>
 
                     <td class="" >
                         <pre>}
