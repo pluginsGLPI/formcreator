@@ -1244,7 +1244,6 @@ span.fc_list_icon {
 }
 
 #plugin_formcreator_avatar {
-   display: inline-block;
    border: 2px inset white;
    border-radius: 50%;
    padding: 2px;
@@ -1268,7 +1267,6 @@ span.fc_list_icon {
 
 .plugin_formcreator_userMenu_icons {
    float: right;
-   display: inline-block;
    margin: 12px 8px 0 8px;
 }
 
