@@ -41,7 +41,6 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testImport':
          case 'testCanPurgeItem':
          case 'testDuplicate':
-         case 'testSaveForm':
             self::login('glpi', 'glpi');
       }
    }
@@ -122,7 +121,8 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->boolean((boolean) $output)->isTrue();
 
       $this->disableDebug();
-      $form->saveForm([
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswer->add([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
       ]);
       $this->restoreDebug();
@@ -387,12 +387,12 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $this->disableDebug();
-      $formAnswerId = $formAnswer->saveAnswers($form, [
-         'formcreator_form'         => $form->getID(),
-         'formcreator_validator'    => $_SESSION['glpiID'],
-      ], []);
+      $formAnswerId = $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_validator'       => $_SESSION['glpiID'],
+      ]);
       $this->restoreDebug();
-      $this->boolean($formAnswer->isNewId($formAnswerId))->isFalse();
+      $this->boolean($formAnswer->isNewItem())->isFalse();
 
       // 1 notification to the validator
       // 1 notification to the requester
@@ -591,71 +591,6 @@ class PluginFormcreatorForm extends CommonTestCase {
       $form = new \PluginFormcreatorForm();
       $output = $form->getFromDBBySection($section);
       $this->boolean($output)->isEqualTo($expected);
-   }
-
-   public function testSaveForm() {
-      global $CFG_GLPI;
-
-      // disable notifications as we may fail in some case (not the purpose of this test btw)
-      $use_notifications = $CFG_GLPI['use_notifications'];
-      $CFG_GLPI['use_notifications'] = 0;
-
-      $answer = 'test answer to question';
-
-      // prepare a fake form with targets
-      $question = $this->getQuestion();
-      $section = new \PluginFormcreatorSection();
-      $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
-      $form = new \PluginFormcreatorForm();
-      $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
-      $formFk = \PluginFormcreatorForm::getForeignKeyField();
-      $this->getTargetTicket([
-         $formFk => $form->getID(),
-      ]);
-      $this->getTargetChange([
-         $formFk => $form->getID(),
-      ]);
-
-      // prepare input
-      $input = [
-         'formcreator_form' => $form->getID(),
-         'formcreator_field_'.$question->getID() => $answer
-      ];
-
-      // send form answer
-      $formAnswerId = $form->saveForm($input);
-      $formAnswer = new \PluginFormcreatorFormAnswer();
-      $this->boolean($formAnswer->isNewId($formAnswerId))->isFalse();
-
-      // check existence of generated target
-      // - ticket
-      $item_ticket = new \Item_Ticket;
-      $this->boolean($item_ticket->getFromDBByCrit([
-         'itemtype' => \PluginFormcreatorFormAnswer::class,
-         'items_id' => $formAnswerId,
-      ]))->isTrue();
-      $ticket = new \Ticket;
-      $this->boolean($ticket->getFromDB($item_ticket->fields['tickets_id']))->isTrue();
-      $this->string($ticket->fields['content'])->contains($answer);
-
-      // - change
-      $change_item = new \Change_Item;
-      $this->boolean($change_item->getFromDBByCrit([
-         'itemtype' => \PluginFormcreatorFormAnswer::class,
-         'items_id' => $formAnswerId,
-      ]))->isTrue();
-      $change = new \Change;
-      $this->boolean($change->getFromDB($change_item->fields['changes_id']))->isTrue();
-      $this->string($change->fields['content'])->contains($answer);
-
-      // - issue
-      $issue = new \PluginFormcreatorIssue;
-      $this->boolean($issue->getFromDBByCrit([
-        'sub_itemtype' => \Ticket::class,
-        'original_id'  => $ticket->getID()
-      ]))->isTrue();
-
-      $CFG_GLPI['use_notifications'] = $use_notifications;
    }
 
    public function testImport() {

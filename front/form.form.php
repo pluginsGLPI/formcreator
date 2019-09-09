@@ -120,7 +120,7 @@ if (isset($_POST['add'])) {
 
 } else if (isset($_POST['submit_formcreator'])) {
    // Save form to target
-   if ($form->getFromDB($_POST['formcreator_form'])) {
+   if ($form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
 
       // If user is not authenticated, create temporary user
       if (!isset($_SESSION['glpiname'])) {
@@ -128,7 +128,9 @@ if (isset($_POST['add'])) {
       }
 
       // Save form
-      if ($form->saveForm($_POST) === false) {
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      if ($formAnswer->add($_POST) === false) {
+      //if ($form->saveForm($_POST) === false) {
          Html::back();
       }
       $form->increaseUsageCount();

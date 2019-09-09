@@ -236,10 +236,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
             $saveFormData['formcreator_field_' . $question['question']->getID()] = $question['expected'];
          }
       }
-      $saveFormData['formcreator_form'] = $form->getID();
-      $form->getFromDB($form->getID());
-      $form->saveForm($saveFormData);
+      $saveFormData['plugin_formcreator_forms_id'] = $form->getID();
       $formAnswer = new \PluginFormcreatorFormAnswer();
+      $form->getFromDB($form->getID());
+      $formAnswer->add($saveFormData);
       $formAnswer->getFromDbByCrit([
          'plugin_formcreator_forms_id' => $form->getID(),
       ]);

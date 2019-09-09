@@ -483,7 +483,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getDefaultSearchRequest() {
-
       $search = ['criteria' => [0 => ['field'      => 4,
                                       'searchtype' => 'equals',
                                       'value'      => 'notclosed']],
@@ -549,8 +548,9 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
 
                case PluginFormcreatorFormAnswer::class:
+                  $elements = PluginFormcreatorFormAnswer::getStatuses();
                   return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
-                     ." ".__($data['raw']["ITEM_$num"], 'formcreator');
+                     ." ".__($elements[$data['raw']["ITEM_$num"]], 'formcreator');
             }
             break;
       }

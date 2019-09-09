@@ -35,6 +35,7 @@ class PluginFormcreatorDropdownField extends CommonTestCase {
    public function beforeTestMethod($method) {
       switch ($method) {
          case 'testPrepareQuestionInputForSave':
+         case 'testGetDesignSpecializationField':
          case 'testIsValid':
             $this->login('glpi', 'glpi');
       }

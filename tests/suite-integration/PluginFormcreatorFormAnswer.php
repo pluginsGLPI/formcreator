@@ -197,10 +197,10 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $maxId = $maxId['max_id'];
       $maxId === null ? 0 : $maxId;
 
-      $form->saveForm([
-         'formcreator_form'      => $form->getID(),
-         'status'                => 'waiting',
-         'formcreator_validator' => $_SESSION['glpiID'],
+      $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'status'                      => 'waiting',
+         'formcreator_validator'       => $_SESSION['glpiID'],
       ]);
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");

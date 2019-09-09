@@ -35,6 +35,8 @@ use GlpiPlugin\Formcreator\Tests\PluginFormcreatorTargetTicketDummy;
 
 class PluginFormcreatorTargetTicket extends CommonTestCase {
 
+   private $use_notifications;
+
    public function beforeTestMethod($method) {
       parent::beforeTestMethod($method);
       switch ($method) {
@@ -273,11 +275,15 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    /**
-    * @engine inline
-    *
+    * 
     * @return void
     */
    public function  testSetTargetEntity() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $form = $this->getForm();
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $targetTicket = $this->getTargetTicket([
@@ -294,6 +300,7 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString()
       ]);
+      \Session::changeActiveEntities($entityId);
       $targetTicket->update([
          'id' => $targetTicket->getID(),
          '_skip_checks' => true,
@@ -372,6 +379,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetTicket->getID());
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
@@ -394,6 +405,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'destination_entity_value' => "$entityId",
       ]);
       $instance->getFromDB($targetTicket->getID());
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -418,6 +432,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'entities_id' => $entityId,
       ]);
       $instance->getFromDB($targetTicket->getID());
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -428,6 +445,10 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    }
 
    public function providerPrepareTemplate() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
       $question = $this->getQuestion([
          'fieldtype' => 'textarea',
          '_parameters' => [
@@ -447,11 +468,12 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
       $section->getFromDB($question->fields[\PluginFormcreatorSection::getForeignKeyField()]);
       $form = new \PluginFormcreatorForm();
       $form->getFromDB($section->fields[\PluginFormcreatorForm::getForeignKeyField()]);
-      $formAnswerId = $form->saveForm([
+      $formAnswer = new \PluginFormcreatorFormAnswer();
+      $formAnswerId = $formAnswer->add([
+         'plugin_formcreator_forms_id' => $form->getID(),
          'validation_required' => 0,
          'formcreator_field_' . $question->getID() => 'foo',
       ]);
-      $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->getFromDB($formAnswerId);
       $sectionName = $section->fields['name'];
       $questionTag = '##question_' . $question->getID() . '##';
@@ -640,6 +662,11 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
    */
 
    public function testSetTargetAssociatedItem() {
+      global $CFG_GLPI;
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $instance = new PluginFormcreatorTargetTicketDummy();
       $question = $this->getQuestion([
          'fieldtype' => 'glpiselect',
@@ -660,15 +687,9 @@ class PluginFormcreatorTargetTicket extends CommonTestCase {
          'name' => $form->fields['name'],
          'requester_d' => 2, // glpi user id
          'status' => '101',
+         'formcreator_field_' . $question->getID() => (string) $computer->getID(),
       ]);
       $this->boolean($formAnswer->isNewItem())->isFalse();
-      $answer = new \PluginFormcreatorAnswer();
-      $answer->add([
-         \PluginFormcreatorFormAnswer::getForeignKeyField() => $formAnswer->getID(),
-         \PluginFormcreatorQuestion::getForeignKeyField() => $question->getID(),
-         'answer' => $computer->getID(),
-      ]);
-      $this->boolean($answer->isNewItem())->isFalse();
       $instance->add([
          'name' => '',
          'target_name' => '',

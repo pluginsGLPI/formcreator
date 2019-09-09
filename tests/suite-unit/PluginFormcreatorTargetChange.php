@@ -227,6 +227,11 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
     * @return void
     */
    public function  testSetTargetEntity() {
+      global $CFG_GLPI;
+      
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $form = $this->getForm();
       $formFk = \PluginFormcreatorForm::getForeignKeyField();
       $targetChange = $this->getTargetChange([
@@ -243,6 +248,7 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'entities_id' => '0',
          'name' => $this->getUniqueString()
       ]);
+      \Session::changeActiveEntities($entityId);
       $targetChange->update([
          'id' => $targetChange->getID(),
          '_skip_checks' => true,
@@ -250,6 +256,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer = new \PluginFormcreatorFormAnswer();
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
@@ -268,6 +278,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
@@ -304,6 +318,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          \Profile::getForeignKeyField() => 4, // Super admin
          \Entity::getForeignKeyField() => 0,
       ]);
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -321,6 +339,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'destination_entity_value' => '0',
       ]);
       $instance->getFromDB($targetChange->getID());
+      
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => $entityId,
@@ -343,6 +365,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'destination_entity_value' => "$entityId",
       ]);
       $instance->getFromDB($targetChange->getID());
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
@@ -367,6 +393,10 @@ class PluginFormcreatorTargetChange extends CommonTestCase {
          'entities_id' => $entityId,
       ]);
       $instance->getFromDB($targetChange->getID());
+
+      // Disable notification to avoid output to console
+      $CFG_GLPI['use_notifications'] = '0';
+
       $formAnswer->add([
          'plugin_formcreator_forms_id' => $form->getID(),
          'entities_id' => 0,
