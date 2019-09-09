@@ -33,7 +33,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorActorField extends CommonTestCase {
    public function testGetDesignSpecializationField() {
-      $instance = new \PluginFormcreatorActorField($this->getQuestion(['fieldtype' => 'actors']));
+      $instance = new \PluginFormcreatorActorField($this->getQuestion(['fieldtype' => 'actor']));
       $output = $instance->getDesignSpecializationField();
       $this->string($output['label'])->isEqualTo('');
       $this->string($output['field'])->isEqualTo('');
