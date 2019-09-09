@@ -1379,51 +1379,6 @@ PluginFormcreatorDuplicatableInterface
       }
    }
 
-   // /**
-   //  * Validates answers of a form and saves them in database
-   //  *
-   //  * @param array $input fields from the HTML form
-   //  * @return integer|boolean ID of the formanswer if success, false otherwise
-   //  */
-   // public function saveForm($input) {
-   //    $valid = true;
-   //    $fieldValidities = [];
-
-   //    $fields = $this->getFields();
-   //    foreach ($fields as $id => $question) {
-   //       $fieldValidities[$id] = $fields[$id]->parseAnswerValues($input);
-   //    }
-   //    // any invalid field will invalidate the answers
-   //    $valid = !in_array(false, $fieldValidities, true);
-
-   //    if ($valid) {
-   //       foreach ($fields as $id => $question) {
-   //          if (!$fields[$id]->isPrerequisites()) {
-   //             continue;
-   //          }
-   //          if (PluginFormcreatorFields::isVisible($id, $fields) && !$fields[$id]->isValid()) {
-   //             $valid = false;
-   //             break;
-   //          }
-   //       }
-   //    }
-
-   //    // Check required_validator
-   //    if ($this->fields['validation_required'] && empty($input['formcreator_validator'])) {
-   //       Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
-   //       $valid = false;
-   //    }
-
-   //    if (!$valid) {
-   //       // Save answers in session to display it again with the same values
-   //       $_SESSION['formcreator']['data'] = Toolbox::stripslashes_deep($input);
-   //       return false;
-   //    }
-
-   //    $formanswer = new PluginFormcreatorFormAnswer();
-   //    return $formanswer->saveAnswers($this, $input, $fields);
-   // }
-
    public function increaseUsageCount() {
       // Increase usage count of the form
       $this->update([
