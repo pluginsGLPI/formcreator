@@ -93,7 +93,7 @@ class PluginFormcreatorGlpiselectField extends PluginFormcreatorDropdownField
       $additions .= '<td></td>';
       $additions .= '<td></td>';
       $additions .= '</tr>';
-
+      $additions .= Html::scriptBlock("plugin_formcreator_changeGlpiObjectItemType($rand);");
       return [
          'label' => $label,
          'field' => $field,

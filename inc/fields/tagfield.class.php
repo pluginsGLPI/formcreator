@@ -35,6 +35,23 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       return class_exists(PluginTagTag::class);
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '';
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+   
    public function displayField($canEdit = true) {
       global $DB;
 

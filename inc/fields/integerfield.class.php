@@ -48,7 +48,7 @@ class PluginFormcreatorIntegerField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td id="dropdown_default_value_field">';
-      $value = Html::entities_deep($this->getValueForDesign());
+      $value = Html::entities_deep($this->question->fields['default_values']);
       $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
          .'style="width: 90%" value="'.$value.'">';
       $additions .= '</td>';

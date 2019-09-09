@@ -56,7 +56,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= '<textarea name="default_values" id="default_values" rows="4" cols="40"'
          .'style="width: 90%">'
-         .$this->getValueForDesign()
+         .$this->question->fields['default_values']
          .'</textarea>';
       $additions .= '</td>';
       $additions .= '<td>';

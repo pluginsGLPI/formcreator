@@ -776,12 +776,14 @@ function plugin_formcreator_removeNextCondition(target) {
 
 function plugin_formcreator_changeDropdownItemtype(rand) {
    dropdown_type = $('[name="form_question"] [name="dropdown_values"]').val();
+   dropdown_id   = $('[name="form_question"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: dropdown_type,
+         'id': dropdown_id
       },
    }).done(function(response) {
       showTicketCategorySpecific = false;
@@ -794,13 +796,15 @@ function plugin_formcreator_changeDropdownItemtype(rand) {
 }
 
 function plugin_formcreator_changeGlpiObjectItemType() {
-   glpi_object = $('[name="form_question"] [name="glpi_objects"]').val();
+   glpi_object    = $('[name="form_question"] [name="glpi_objects"]').val();
+   glpi_object_id = $('[name="form_question"] [name="id"]').val();
 
    $.ajax({
       url: rootDoc + '/plugins/formcreator/ajax/dropdown_values.php',
       type: 'GET',
       data: {
          dropdown_itemtype: glpi_object,
+         id: glpi_object_id
       },
    }).done(function(response) {
       $('#dropdown_default_value_field').html(response);

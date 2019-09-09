@@ -50,7 +50,7 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
       $additions .= '<td>';
       $additions .= Ticket::dropdownUrgency([
          'name'     => 'default_values',
-         'value'    => $this->questoin->fields['default_values'],
+         'value'    => $this->question->fields['default_values'],
          'comments' => false,
          'rand'     => $rand,
          'display'  => false,
