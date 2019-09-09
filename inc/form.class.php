@@ -2046,7 +2046,7 @@ PluginFormcreatorDuplicatableInterface
       $form_table       = PluginFormcreatorForm::getTable();
       $formFk           = PluginFormcreatorForm::getForeignKeyField();
       $table_fp         = PluginFormcreatorForm_Profile::getTable();
-      $formProfileFk    = PluginFormcreatorForm_Profile::getForeignKeyField();
+      $formProfileFk    = Profile::getForeignKeyField();
       $entitiesRestrict  = (new DBUtils())->getEntitiesRestrictCriteria($form_table, '', '', true, false);
       $language   = $_SESSION['glpilanguage'];
 
@@ -2061,11 +2061,11 @@ PluginFormcreatorDuplicatableInterface
             "$form_table.$formCategoryFk" => 0,
             "$form_table.is_active" => 1,
             "$form_table.is_deleted" => 0,
-            "$form_table.hesldesk_home" => 1,
+            "$form_table.helpdesk_home" => 1,
             "$form_table.language" => [0, '', null, $language],
             [
                'OR' => [
-                  'acess_rights' => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
+                  'access_rights' => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
                   "$form_table.id" => new QuerySubQuery([
                      'SELECT' => $formProfileFk,
                      'FROM' => $table_fp,
@@ -2103,7 +2103,7 @@ PluginFormcreatorDuplicatableInterface
             [
                'OR' => [
                   "$form_table.access_rights" => ['<>', PluginFormcreatorForm::ACCESS_RESTRICTED],
-                  "$form_table.'id'" => new QuerySubQuery([
+                  "$form_table.id" => new QuerySubQuery([
                      'SELECT' => $formFk,
                      'FROM' => $table_fp,
                      'WHERE' => [
