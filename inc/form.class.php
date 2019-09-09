@@ -1137,7 +1137,7 @@ PluginFormcreatorDuplicatableInterface
     * @return Null                     Nothing, just display the form
     */
    public function displayUserForm() {
-      global $CFG_GLPI, $DB;
+      global $CFG_GLPI;
 
       if (isset($_SESSION['formcreator']['data'])) {
          $data = $_SESSION['formcreator']['data'];

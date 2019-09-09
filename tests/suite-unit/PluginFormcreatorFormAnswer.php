@@ -52,7 +52,7 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
 
       $instance = $this->newTestedInstance();
-      $formAnswerId = $instance->add([
+      $instance->add([
          \PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
          'formcreator_field_' . $question->getID() => ''
       ]);

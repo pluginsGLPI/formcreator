@@ -1246,7 +1246,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $itemTicket->getFromDB($result['id']);
             $ticket = new Ticket();
             if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
-               throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $formanswers_id);
+               throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
             }
             $ticketId = $ticket->getID();
             $issue->add([
@@ -1306,7 +1306,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $itemTicket->getFromDB($result['id']);
             $ticket = new Ticket();
             if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
-               throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $formanswers_id);
+               throw new RuntimeException('Formcreator: Missing ticket ' . $itemTicket->fields['tickets_id'] . ' for formanswer ' . $this->getID());
             }
             $ticketId = $ticket->getID();
             $issue->getFromDBByCrit([
