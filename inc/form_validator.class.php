@@ -155,26 +155,46 @@ PluginFormcreatorExportableInterface
    }
 
    /**
-    * Get validators of type $itemtype associated to a form
+    * Get validators of type $itemtype associated to a form 
     *
     * @param PluginFormcreatorForm $form
     * @param string $itemtype
-    * @return void
+    * @return array array of User or Group objects
     */
    public function getValidatorsForForm(PluginFormcreatorForm $form, $itemtype) {
+      global $DB;
+
       if (!in_array($itemtype, [User::class, Group::class])) {
          return [];
       }
 
-      $result = [];
-      $found = $this->find([
-         PluginFormcreatorForm::getForeignKeyField() => $form->getID(),
-         'itemtype' => $itemtype,
+      $formValidatorTable = PluginFormcreatorForm_Validator::getTable();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $itemTable = $itemtype::getTable();
+
+      $rows = $DB->request([
+         'SELECT' => [
+            $itemTable => ['*']
+         ],
+         'FROM' => $itemTable,
+         'LEFT JOIN' => [
+            $formValidatorTable => [
+               'FKEY' => [
+                  $formValidatorTable => 'items_id',
+                  $itemTable => 'id'
+               ]
+            ],
+         ],
+         'WHERE' => [
+            "$formValidatorTable.itemtype" => $itemtype,
+            "$formValidatorTable.$formFk" => $form->getID(),
+         ],
       ]);
-      foreach($found as $id => $row) {
-         $item = new self();
-         if ($item->getFromDB($id)) {
-            $result[$id] = $item;
+      $result = [];
+      foreach ($rows as $row) {
+         $item = new $itemtype();
+         if ($item->getFromDB($row['id'])) {
+            $result[$row['id']] = $item;
          }
       }
 

@@ -464,7 +464,7 @@ PluginFormcreatorDuplicatableInterface
       Dropdown::show(
          User::class, [
             'name' => '_validator_users',
-            'value' => $validatorUser ? $validatorUser->fields['items_id'] : 0,
+            'value' => $validatorUser ? $validatorUser->getID() : 0,
             'condition' => $usersCondition,
          ]
       );
@@ -522,7 +522,7 @@ PluginFormcreatorDuplicatableInterface
       Dropdown::show(
          Group::class, [
             'name' => '_validator_groups',
-            'value' => $validatorgroup ? $validatorgroup->fields['items_id'] : 0,
+            'value' => $validatorgroup ? $validatorgroup->getID() : 0,
             'condition' => $groupsCondition
          ]
       );
@@ -1177,33 +1177,16 @@ PluginFormcreatorDuplicatableInterface
          echo html_entity_decode($this->fields['content']);
          echo '</div>';
       }
-      // Get and display sections of the form
-      $questions     = [];
 
-      $find_sections = $DB->request([
-         'SELECT' => ['id', 'name'],
-         'FROM'   => PluginFormcreatorSection::getTable(),
-         'WHERE'  => [
-            'plugin_formcreator_forms_id' => $this->getID()
-         ],
-         'ORDER'  => 'order ASC'
-      ]);
+      // Get and display sections of the form
+      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($this->getID());
       echo '<div class="form_section">';
-      foreach ($find_sections as $section_line) {
-         echo '<h2>' . $section_line['name'] . '</h2>';
+      foreach ($sections as $section) {
+         echo '<h2>' . $section->getField('name') . '</h2>';
 
          // Display all fields of the section
-         $questions = $DB->request([
-            'SELECT' => ['id'],
-            'FROM'   => PluginFormcreatorQuestion::getTable(),
-            'WHERE'  => [
-               'plugin_formcreator_sections_id' => $section_line['id']
-            ],
-            'ORDER'  => 'order ASC'
-         ]);
-         foreach ($questions as $question_line) {
-            $question = new PluginFormcreatorQuestion();
-            $question->getFromDB($question_line['id']);
+         $questions = (new PluginFormcreatorQuestion())->getQuestionsFromSection($section->getID());
+         foreach ($questions as $question) {
             $field = PluginFormcreatorFields::getFieldInstance(
                $question->fields['fieldtype'],
                $question
@@ -1211,7 +1194,7 @@ PluginFormcreatorDuplicatableInterface
             if (!$field->isPrerequisites()) {
                continue;
             }
-            if (isset($data['formcreator_field_' . $question_line['id']])) {
+            if (isset($data['formcreator_field_' . $question->getID()])) {
                $field->parseAnswerValues($data);
             } else {
                $field->deserializeValue($question->fields['default_values']);
@@ -1225,62 +1208,27 @@ PluginFormcreatorDuplicatableInterface
 
       // Show validator selector
       if ($this->fields['validation_required'] > 0) {
-         $table_form_validator = PluginFormcreatorForm_Validator::getTable();
          $validators = [0 => Dropdown::EMPTY_VALUE];
 
-         // Groups
-         $formFk = self::getForeignKeyField();
-         if ($this->fields['validation_required'] == 2) {
-            $groupTable = Group::getTable();
-            $result = $DB->request([
-               'SELECT' => [
-                  $groupTable => ['id', 'completename']
-               ],
-               'FROM' => $groupTable,
-               'LEFT JOIN' => [
-                  $table_form_validator => [
-                     'FKEY' => [
-                        $table_form_validator => 'items_id',
-                        $groupTable => 'id'
-                     ]
-                  ],
-               ],
-               'WHERE' => [
-                  "$table_form_validator.itemtype" => Group::class,
-                  "$table_form_validator.$formFk" => $this->getID(),
-               ],
-            ]);
+         $formValidator = new PluginFormcreatorForm_Validator();
+         if ($this->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
+            // Groups
+            $validatorType = Group::class;
+            $result = $formValidator->getValidatorsForForm($this, $validatorType);
             foreach ($result as $validator) {
-               $validators[$validator['id']] = $validator['completename'];
+               $validators[$validator->getID()] = $validator->fields['completename'];
             }
-
          } else {
+            $validatorType = User::class;
             // Users
-            $userTable = User::getTable();
-            $result = $DB->request([
-               'SELECT' => [
-                  $userTable => ['id', 'name', 'realname', 'firstname']
-               ],
-               'FROM' => $userTable,
-               'LEFT JOIN' => [
-                  $table_form_validator => [
-                     'FKEY' => [
-                        $table_form_validator => 'items_id',
-                        $userTable => 'id'
-                     ]
-                  ],
-               ],
-               'WHERE' => [
-                  "$table_form_validator.itemtype" => User::class,
-                  "$table_form_validator.$formFk" => $this->getID(),
-               ],
-            ]);
+            $result = $formValidator->getValidatorsForForm($this, $validatorType);
             foreach ($result as $validator) {
-               $validators[$validator['id']] = formatUserName($validator['id'], $validator['name'], $validator['realname'], $validator['firstname']);
+               $validators[$validator->getID()] = formatUserName($validator->getID(), $validator->fields['name'], $validator->fields['realname'], $validator->fields['firstname']);
             }
          }
 
-         echo '<div class="form-group required liste line' . (count($questions) + 1) % 2 . '" id="form-validator">';
+         echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
+         echo '<div class="form-group required liste" id="form-validator">';
          echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
          Dropdown::showFromArray('formcreator_validator', $validators);
          echo '</div>';
