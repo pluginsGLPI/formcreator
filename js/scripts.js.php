@@ -1181,4 +1181,15 @@ function plugin_formcreator_change_entity(rand) {
    }
 }
 
-
+function plugin_formcreator_changeValidators(value) {
+   if (value == 1) {
+      document.getElementById("validators_users").style.display  = "block";
+      document.getElementById("validators_groups").style.display = "none";
+   } else if (value == 2) {
+      document.getElementById("validators_users").style.display  = "none";
+      document.getElementById("validators_groups").style.display = "block";
+   } else {
+      document.getElementById("validators_users").style.display  = "none";
+      document.getElementById("validators_groups").style.display = "none";
+   }
+}
