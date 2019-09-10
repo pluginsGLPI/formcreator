@@ -36,8 +36,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function getDesignSpecializationField() {
-      $rand = mt_rand();
-
       $label = '';
       $field = '';
 
