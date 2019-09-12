@@ -56,7 +56,7 @@ PluginFormcreatorDuplicatableInterface
    }
 
    public static function canView() {
-      return Session::haveRight('entity', UPDATE) || $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk';
+      return true;
    }
 
    public static function canDelete() {
