@@ -36,7 +36,7 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    42%
+                    49%
                                             <small>of 81</small>
                                     </h1>
                 <strong>Lines</strong>
@@ -109,7 +109,7 @@ layout: coverage
             <td><a href="#prepareBooleanKeywords">PluginFormcreatorCommon::prepareBooleanKeywords()</a></td>
                                         <td style="text-align: center">6</td>
                 <td style="text-align: center">    
-    <span class="label label-danger">0%</span>
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -1387,7 +1387,7 @@ layout: coverage
                     <th id="L164" class="number ">164</th>
 
                     <td class="" id="prepareBooleanKeywords">
-                        <pre>   public static function prepareBooleanKeywords($keywords) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function prepareBooleanKeywords($keywords) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1399,31 +1399,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L166" class="number uncovered">166</th>
+                    <th id="L166" class="number covered">166</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      preg_match_all(&#039;/&quot;(?:\\\\.|[^\\\\&quot;])*&quot;|\S+/&#039;, $keywords, $matches);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L167" class="number uncovered">167</th>
+                    <th id="L167" class="number covered">167</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      $matches = $matches[0];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L168" class="number uncovered">168</th>
+                    <th id="L168" class="number covered">168</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      foreach ($matches as &amp;$keyword) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L169" class="number uncovered">169</th>
+                    <th id="L169" class="number covered">169</th>
 
-                    <td class="uncovered" >
-                        <pre>         if (strpos($keyword, &#039;&quot;&#039;) === 0) {</pre>
+                    <td class="covered" >
+                        <pre>         if (strpos($keyword, &#039;&quot;&#039;) !== 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1435,9 +1435,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number uncovered">171</th>
+                    <th id="L171" class="number covered">171</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>            $keyword .= &#039;*&#039;;</pre>
                     </td>
                 </tr>
@@ -1466,9 +1466,9 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number uncovered">175</th>
+                    <th id="L175" class="number covered">175</th>
 
-                    <td class="uncovered" >
+                    <td class="covered" >
                         <pre>      return implode(&#039; &#039;, $matches);</pre>
                     </td>
                 </tr>
