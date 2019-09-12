@@ -39,7 +39,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    var $can_be_translated = true;
 
    static function canView() {
-      return parent::canView() || $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk';
+      return true;
    }
 
    public static function getTypeName($nb = 1) {
