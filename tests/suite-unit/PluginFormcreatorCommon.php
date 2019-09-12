@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
+ *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -115,6 +116,7 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->string($output)->isEqualTo($expected);
    }
 
+
    public function providerGetPictoFilename() {
       return [
          [
@@ -147,6 +149,31 @@ class PluginFormcreatorCommon extends CommonTestCase {
     */
    public function testGetPictoFilename($version, $expected) {
       $output = \PluginFormcreatorCommon::getPictoFilename($version);
+      $this->string($output)->isEqualTo($expected);
+   }
+
+   public function providerPrepareBooleanKeywords() {
+      return [
+         [
+            'input' => '',
+            'expected' => '',
+         ],
+         [
+            'input' => 'foo bar',
+            'expected' => 'foo* bar*',
+         ],
+         [
+            'input' => 'foo bar ',
+            'expected' => 'foo* bar*',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareBooleanKeywords
+    */
+   public function testPrepareBooleanKeywords($input, $expected) {
+      $output = \PluginFormcreatorCommon::prepareBooleanKeywords($input);
       $this->string($output)->isEqualTo($expected);
    }
 }

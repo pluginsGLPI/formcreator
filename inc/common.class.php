@@ -166,7 +166,7 @@ class PluginFormcreatorCommon {
       preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $keywords, $matches);
       $matches = $matches[0];
       foreach ($matches as &$keyword) {
-         if (strpos($keyword, '"') === 0) {
+         if (strpos($keyword, '"') !== 0) {
             // keyword does not begins with a double quote (assume it does not ends with this char)
             $keyword .= '*';
          }
