@@ -531,4 +531,118 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return false;
    }
+
+   /**
+    * Check for object properties placeholder to commpute.
+    * The expected format is ##answer_X.search_option_english_label##
+    *
+    * We use search option to be able to access data that may be outside
+    * the given object in a generic way (e.g. email adresses for user,
+    * this is data that is not stored in the user table. The searchOption
+    * will give us the details on how to retrieve it).
+    *
+    * We also have a direct link between each searchOptions and their
+    * labels that also us to use the label in the placeholder.
+    * The user only need to look at his search menu to find the available
+    * fields.
+    *
+    * Since we look for a searchOption by its name, it is not impossible
+    * to find duplicates (they will usually by in differents groups in the
+    * search dropdown).
+    * For now we will use the first result.
+    * An improvement would be to allow the user to specify the group in
+    * the placeholder :
+    * ##answer_X.search_option_group.search_option_english_label##
+    * If not specified, search_option_group would be the default "common"
+    * group.
+    *
+    * @param PluginFormCreatorQuestion $question
+    * @param PluginFormCreatorAnswer   $answer
+    * @param string                    $content
+    *
+    * @return string
+    */
+   public function parseObjectProperties(
+      $answer,
+      $content
+   ) {
+      global $TRANSLATE;
+
+      // Get ID from question
+      // $questionID = $question->fields['id'];
+      $questionID = $this->getQuestionId();
+
+      // We need english locale to search searchOptions by name
+      $oldLocale = $TRANSLATE->getLocale();
+      $TRANSLATE->setLocale("en_GB");
+
+      // Load target item from DB
+      // $itemtype = $question->getField('values');
+      $itemtype = $this->question->fields['values'];
+
+      // Itemtype is stored in plaintext for PluginFormcreatorGlpiselectField and in
+      // json for PluginFormcreatorDropdownField
+      $json = json_decode($itemtype);
+
+      if ($json) {
+         $itemtype = $json->itemtype;
+      }
+
+      $item = new $itemtype;
+      $item->getFromDB($answer);
+
+      // Search for placeholders
+      $matches = [];
+      $regex = "/##answer_$questionID\.(?<property>[a-zA-Z0-9_.]+)##/";
+      preg_match_all($regex, $content, $matches);
+
+      // For each placeholder found
+      foreach ($matches["property"] as $property) {
+         $placeholder = "##answer_$questionID.$property##";
+         // Convert Property_Name to Property Name
+         $property = str_replace("_", " ", $property);
+         $searchOption = $item->getSearchOptionByField("name", $property);
+
+         // Execute search
+         $data = Search::prepareDatasForSearch(get_class($item), [
+            'criteria' => [
+               [
+                  'field'      => $searchOption['id'],
+                  'searchtype' => "contains",
+                  'value'      => "",
+               ],
+               [
+                  'field'      => 2,
+                  'searchtype' => "equals",
+                  'value'      => $answer,
+               ]
+            ]
+         ]);
+         Search::constructSQL($data);
+         Search::constructData($data);
+
+         // Handle search result, there may be multiple values
+         $propertyValue = "";
+         foreach ($data['data']['rows'] as $row) {
+            $targetKey = get_class($item) . "_" . $searchOption['id'];
+            // Add each result
+            for ($i=0; $i < $row[$targetKey]['count']; $i++) {
+               $propertyValue .=$row[$targetKey][$i]['name'];
+               if ($i+1 < $row[$targetKey]['count']) {
+                  $propertyValue .= ", ";
+               }
+            }
+         }
+
+         // Replace placeholder in content
+         $content = str_replace(
+            $placeholder,
+            Toolbox::addslashes_deep($propertyValue),
+            $content
+         );
+      }
+      // Put the old locales on succes or if an expection was thrown
+      $TRANSLATE->setLocale($oldLocale);
+      return $content;
+   }
 }
