@@ -115,4 +115,29 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $output = \PluginFormcreatorCommon::getLinkName($value, $inverted);
       $this->string($output)->isEqualTo($expected);
    }
+
+   public function providerPrepareBooleanKeywords() {
+      return [
+         [
+            'input' => '',
+            'expected' => '',
+         ],
+         [
+            'input' => 'foo bar',
+            'expected' => 'foo* bar*',
+         ],
+         [
+            'input' => 'foo bar ',
+            'expected' => 'foo* bar*',
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerPrepareBooleanKeywords
+    */
+   public function testPrepareBooleanKeywords($input, $expected) {
+      $output = \PluginFormcreatorCommon::prepareBooleanKeywords($input);
+      $this->string($output)->isEqualTo($expected);
+   }
 }
