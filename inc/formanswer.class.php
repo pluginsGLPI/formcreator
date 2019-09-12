@@ -1127,7 +1127,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             }
          }
 
-         if ($fields[$questionId] instanceof PluginFormcreatorDropdownField) {
+         if ($fields[$questionId] instanceof PluginFormcreatorGlpiselectField) {
             $content = $fields[$questionId]->parseObjectProperties($answer, $content);
          }
       }
