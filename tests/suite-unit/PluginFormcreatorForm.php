@@ -83,6 +83,10 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->login('normal', 'normal');
       $output = \PluginFormcreatorForm::canCreate();
       $this->boolean((bool) $output)->isFalse();
+
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::canCreate();
+      $this->boolean((bool) $output)->isFalse();
    }
 
    public function testCanView() {
@@ -92,7 +96,11 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $this->login('normal', 'normal');
       $output = \PluginFormcreatorForm::canView();
-      $this->boolean((bool) $output)->isFalse();
+      $this->boolean((bool) $output)->isTrue();
+
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::canView();
+      $this->boolean((bool) $output)->isTrue();
    }
 
    public function testCanDelete() {
@@ -103,6 +111,10 @@ class PluginFormcreatorForm extends CommonTestCase {
       $this->login('normal', 'normal');
       $output = \PluginFormcreatorForm::canDelete();
       $this->boolean((bool) $output)->isFalse();
+
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::canCreate();
+      $this->boolean((bool) $output)->isFalse();
    }
 
    public function testCanPurge() {
@@ -112,6 +124,9 @@ class PluginFormcreatorForm extends CommonTestCase {
 
       $this->login('normal', 'normal');
       $output = \PluginFormcreatorForm::canPurge();
+      $this->boolean((bool) $output)->isFalse();
+      $this->login('post-only', 'postonly');
+      $output = \PluginFormcreatorForm::canCreate();
       $this->boolean((bool) $output)->isFalse();
    }
 
