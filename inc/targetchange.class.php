@@ -513,7 +513,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
          true
       );
       $data['name'] = Toolbox::addslashes_deep($data['name']);
-      $data['name'] = $formanswer->parseTags($data['name']);
+      $data['name'] = $formanswer->parseTags($data['name'], $this);
 
       $changeFields = [
          'content',
@@ -530,7 +530,7 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
             true
          );
 
-         $data[$changeField] = $formanswer->parseTags($data[$changeField]);
+         $data[$changeField] = $formanswer->parseTags($data[$changeField], $this);
       }
 
       $data['_users_id_recipient']   = $_SESSION['glpiID'];
