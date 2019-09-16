@@ -608,7 +608,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          false
       );
       $data['name'] = Toolbox::addslashes_deep($data['name']);
-      $data['name'] = $formanswer->parseTags($data['name']);
+      $data['name'] = $formanswer->parseTags($data['name'], $this);
 
       $data['content'] = $this->prepareTemplate(
          $this->fields['content'],
@@ -617,7 +617,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       );
 
       $data['content'] = Toolbox::addslashes_deep($data['content']);
-      $data['content'] = $formanswer->parseTags($data['content'], $richText);
+      $data['content'] = $formanswer->parseTags($data['content'], $this, $richText);
 
       $data['_users_id_recipient'] = $_SESSION['glpiID'];
       $data['_tickettemplates_id'] = $this->fields['tickettemplates_id'];

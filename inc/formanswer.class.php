@@ -1083,10 +1083,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * Parse target content to replace TAGS like ##FULLFORM## by the values
     *
     * @param  string $content                            String to be parsed
+    * @param  PluginFormcreatorTargetInterface $target   Target for which output is being generated
     * @param  boolean $richText                          Disable rich text mode for field rendering
     * @return string                                     Parsed string with tags replaced by form values
     */
-   public function parseTags($content, $richText = false) {
+   public function parseTags($content, PluginFormcreatorTargetInterface $target, $richText = false) {
       // retrieve answers
       $answers_values = $this->getAnswers($this->getID());
 
@@ -1116,7 +1117,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $content = str_replace('##question_' . $questionId . '##', Toolbox::addslashes_deep($name), $content);
          $content = str_replace('##answer_' . $questionId . '##', Toolbox::addslashes_deep($value), $content);
          foreach ($fields[$questionId]->getDocumentsForTarget() as $documentId) {
-            $this->addAttachedDocument($documentId);
+            $target->addAttachedDocument($documentId);
          }
          if ($question->fields['fieldtype'] === 'file') {
             if (strpos($content, '##answer_' . $questionId . '##') !== false) {
