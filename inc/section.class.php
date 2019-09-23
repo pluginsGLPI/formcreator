@@ -383,4 +383,53 @@ PluginFormcreatorDuplicatableInterface
       echo '</table>';
       Html::closeForm();
    }
+
+   /**
+    * Get either:
+    *  - section and questions of the target parent form
+    *  - questions of target section
+    *
+    * @param int $parent target parent form
+    * @param int $id target section
+    * @return array
+    */
+   public static function getFullData($parent, $id = null) {
+      global $DB;
+
+      if ($parent) {
+         $data = [];
+         $data['_sections'] = iterator_to_array($DB->request([
+            'FROM' => \PluginFormcreatorSection::getTable(),
+            'WHERE' => ["plugin_formcreator_forms_id" => $parent]
+         ]));
+
+         $ids = [];
+         foreach ($data['_sections'] as $section) {
+            $ids[] = $section['id'];
+         }
+
+         if (!count($ids)) {
+            $ids[] = -1;
+         }
+
+         $data = $data + \PluginFormcreatorQuestion::getFullData($ids);
+      } else {
+         if ($id == null) {
+            throw new \InvalidArgumentException(
+               "Parameter 'id' can't be null if parameter 'parent' is not specified"
+            );
+         }
+
+         $data = \PluginFormcreatorQuestion::getFullData(null, $id);
+      }
+
+      return $data;
+   }
+
+   public function post_getFromDB() {
+      // Set additional data for the API
+      if (isAPI()) {
+         $this->fields += self::getFullData(null, $this->fields['id']);
+      }
+   }
 }

@@ -2477,4 +2477,11 @@ PluginFormcreatorDuplicatableInterface
       $item->delete(['id' => $input['items_id']]);
       return true;
    }
+
+   public function post_getFromDB() {
+      // Set additional data for the API
+      if (isAPI()) {
+         $this->fields += \PluginFormcreatorSection::getFullData($this->fields['id']);
+      }
+   }
 }
