@@ -1186,4 +1186,101 @@ PluginFormcreatorDuplicatableInterface
       $items = $question->getQuestionsFromFormBySection($formId, $crit);
       Dropdown::showFromArray($name, $items, []);
    }
+
+   /**
+    * Get linked data (conditions, regexes or ranges) for a question
+    *
+    * @param string    $table   target table containing the needed data (
+    *                           condition, range or regex)
+    * @param int|array $id      a single id or an array of ids
+    * @return array
+    */
+   public static function getQuestionDataById($table, $id) {
+      global $DB;
+
+      $validTargets = [
+         \PluginFormcreatorQuestion_Condition::getTable(),
+         \PluginFormcreatorQuestionRegex::getTable(),
+         \PluginFormcreatorQuestionRange::getTable(),
+      ];
+
+      if (array_search($table, $validTargets) === false) {
+         throw new \InvalidArgumentException("Invalid target ('$table')");
+      }
+
+      return iterator_to_array($DB->request([
+         'FROM' => $table,
+         'WHERE' => [
+            "plugin_formcreator_questions_id" => $id
+         ]
+      ]));
+   }
+
+   /**
+    * Get either:
+    *  - questions, conditions, regexes and range of target parent sections
+    *  - conditions, regexes and range of target question
+    *
+    * @param int $parents target parent sections
+    * @param int $id target question
+    * @return array
+    */
+   public static function getFullData($parents, $id = null) {
+      global $DB;
+
+      $data = [];
+
+      if ($parents) {
+         // Load questions
+         $data['_questions'] = iterator_to_array($DB->request([
+            'FROM' => \PluginFormcreatorQuestion::getTable(),
+            'WHERE' => [
+               "plugin_formcreator_sections_id" => $parents
+            ]
+         ]));
+
+         $questionIds = [];
+         foreach ($data['_questions'] as $question) {
+            $questionIds[] = $question['id'];
+         }
+
+         if (!count($questionIds)) {
+            $questionIds[] = -1;
+         }
+
+         $id = $questionIds;
+      }
+
+      if ($id == null) {
+         throw new \InvalidArgumentException(
+            "Parameter 'id' can't be null if parameter 'parents' is not specified"
+         );
+      }
+
+      // Load conditions, regexes and ranges
+      $data['_conditions'] = self::getQuestionDataById(
+         \PluginFormcreatorQuestion_Condition::getTable(),
+         $id
+      );
+      $data['_regexes'] = self::getQuestionDataById(
+         \PluginFormcreatorQuestionRegex::getTable(),
+         $id
+      );
+      $data['_ranges'] = self::getQuestionDataById(
+         \PluginFormcreatorQuestionRange::getTable(),
+         $id
+      );
+
+      // Load ip, may be needed for some questions
+      $data['_ip'] = \Toolbox::getRemoteIpAddress();
+
+      return $data;
+   }
+
+   public function post_getFromDB() {
+      // Set additional data for the API
+      if (isAPI()) {
+         $this->fields += self::getFullData(null, $this->fields['id']);
+      }
+   }
 }
