@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
                     43%
-                                            <small>of 353</small>
+                                            <small>of 356</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -191,7 +191,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#parseObjectProperties">PluginFormcreatorDropdownField::parseObjectProperties()</a></td>
-                                        <td style="text-align: center">36</td>
+                                        <td style="text-align: center">39</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
 </td>
@@ -4498,394 +4498,60 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L582" class="number uncovered">582</th>
+                    <th id="L582" class="number ">582</th>
 
-                    <td class="uncovered" >
-                        <pre>      $item = new $itemtype;</pre>
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L583" class="number uncovered">583</th>
+                    <th id="L583" class="number ">583</th>
 
-                    <td class="uncovered" >
-                        <pre>      $item-&gt;getFromDB($answer);</pre>
+                    <td class="" >
+                        <pre>      // Itemtype is stored in plaintext for PluginFormcreatorGlpiselectField and in
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L584" class="number ">584</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      // json for PluginFormcreatorDropdownField
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L585" class="number ">585</th>
-
-                    <td class="" >
-                        <pre>      // Search for placeholders
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L586" class="number uncovered">586</th>
+                    <th id="L585" class="number uncovered">585</th>
 
                     <td class="uncovered" >
-                        <pre>      $matches = [];</pre>
+                        <pre>      $json = json_decode($itemtype);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L586" class="number ">586</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L587" class="number uncovered">587</th>
 
                     <td class="uncovered" >
-                        <pre>      $regex = &quot;/##answer_$questionID\.(?&lt;property&gt;[a-zA-Z0-9_.]+)##/&quot;;</pre>
+                        <pre>      if ($json) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L588" class="number uncovered">588</th>
 
                     <td class="uncovered" >
-                        <pre>      preg_match_all($regex, $content, $matches);</pre>
+                        <pre>         $itemtype = $json-&gt;itemtype;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L589" class="number ">589</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L590" class="number ">590</th>
-
-                    <td class="" >
-                        <pre>      // For each placeholder found
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L591" class="number uncovered">591</th>
-
-                    <td class="uncovered" >
-                        <pre>      foreach ($matches[&quot;property&quot;] as $property) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L592" class="number uncovered">592</th>
-
-                    <td class="uncovered" >
-                        <pre>         $placeholder = &quot;##answer_$questionID.$property##&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L593" class="number ">593</th>
-
-                    <td class="" >
-                        <pre>         // Convert Property_Name to Property Name
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L594" class="number uncovered">594</th>
-
-                    <td class="uncovered" >
-                        <pre>         $property = str_replace(&quot;_&quot;, &quot; &quot;, $property);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L595" class="number uncovered">595</th>
-
-                    <td class="uncovered" >
-                        <pre>         $searchOption = $item-&gt;getSearchOptionByField(&quot;name&quot;, $property);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L596" class="number ">596</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L597" class="number ">597</th>
-
-                    <td class="" >
-                        <pre>         // Execute search
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L598" class="number uncovered">598</th>
-
-                    <td class="uncovered" >
-                        <pre>         $data = Search::prepareDatasForSearch(get_class($item), [</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L599" class="number ">599</th>
-
-                    <td class="" >
-                        <pre>            &#039;criteria&#039; =&gt; [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L600" class="number ">600</th>
-
-                    <td class="" >
-                        <pre>               [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L601" class="number uncovered">601</th>
-
-                    <td class="uncovered" >
-                        <pre>                  &#039;field&#039;      =&gt; $searchOption[&#039;id&#039;],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L602" class="number uncovered">602</th>
-
-                    <td class="uncovered" >
-                        <pre>                  &#039;searchtype&#039; =&gt; &quot;contains&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L603" class="number uncovered">603</th>
-
-                    <td class="uncovered" >
-                        <pre>                  &#039;value&#039;      =&gt; &quot;&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L604" class="number ">604</th>
-
-                    <td class="" >
-                        <pre>               ],
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L605" class="number ">605</th>
-
-                    <td class="" >
-                        <pre>               [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L606" class="number uncovered">606</th>
-
-                    <td class="uncovered" >
-                        <pre>                  &#039;field&#039;      =&gt; 2,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L607" class="number uncovered">607</th>
-
-                    <td class="uncovered" >
-                        <pre>                  &#039;searchtype&#039; =&gt; &quot;equals&quot;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L608" class="number uncovered">608</th>
-
-                    <td class="uncovered" >
-                        <pre>                  &#039;value&#039;      =&gt; $answer,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L609" class="number ">609</th>
-
-                    <td class="" >
-                        <pre>               ]
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L610" class="number ">610</th>
-
-                    <td class="" >
-                        <pre>            ]
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L611" class="number ">611</th>
-
-                    <td class="" >
-                        <pre>         ]);
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L612" class="number uncovered">612</th>
-
-                    <td class="uncovered" >
-                        <pre>         Search::constructSQL($data);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L613" class="number uncovered">613</th>
-
-                    <td class="uncovered" >
-                        <pre>         Search::constructData($data);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L614" class="number ">614</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L615" class="number ">615</th>
-
-                    <td class="" >
-                        <pre>         // Handle search result, there may be multiple values
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L616" class="number uncovered">616</th>
-
-                    <td class="uncovered" >
-                        <pre>         $propertyValue = &quot;&quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L617" class="number uncovered">617</th>
-
-                    <td class="uncovered" >
-                        <pre>         foreach ($data[&#039;data&#039;][&#039;rows&#039;] as $row) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L618" class="number uncovered">618</th>
-
-                    <td class="uncovered" >
-                        <pre>            $targetKey = get_class($item) . &quot;_&quot; . $searchOption[&#039;id&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L619" class="number ">619</th>
-
-                    <td class="" >
-                        <pre>            // Add each result
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L620" class="number uncovered">620</th>
-
-                    <td class="uncovered" >
-                        <pre>            for ($i=0; $i &lt; $row[$targetKey][&#039;count&#039;]; $i++) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L621" class="number uncovered">621</th>
-
-                    <td class="uncovered" >
-                        <pre>               $propertyValue .=$row[$targetKey][$i][&#039;name&#039;];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L622" class="number uncovered">622</th>
-
-                    <td class="uncovered" >
-                        <pre>               if ($i+1 &lt; $row[$targetKey][&#039;count&#039;]) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L623" class="number uncovered">623</th>
-
-                    <td class="uncovered" >
-                        <pre>                  $propertyValue .= &quot;, &quot;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L624" class="number ">624</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L625" class="number ">625</th>
-
-                    <td class="" >
-                        <pre>            }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L626" class="number ">626</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L627" class="number ">627</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L628" class="number ">628</th>
-
-                    <td class="" >
-                        <pre>         // Replace placeholder in content
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L629" class="number uncovered">629</th>
-
-                    <td class="uncovered" >
-                        <pre>         $content = str_replace(</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L630" class="number uncovered">630</th>
-
-                    <td class="uncovered" >
-                        <pre>            $placeholder,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L631" class="number uncovered">631</th>
-
-                    <td class="uncovered" >
-                        <pre>            Toolbox::addslashes_deep($propertyValue),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L632" class="number uncovered">632</th>
-
-                    <td class="uncovered" >
-                        <pre>            $content</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L633" class="number ">633</th>
-
-                    <td class="" >
-                        <pre>         );
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L634" class="number ">634</th>
 
                     <td class="" >
                         <pre>      }
@@ -4893,7 +4559,410 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L590" class="number ">590</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L591" class="number uncovered">591</th>
+
+                    <td class="uncovered" >
+                        <pre>      $item = new $itemtype;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L592" class="number uncovered">592</th>
+
+                    <td class="uncovered" >
+                        <pre>      $item-&gt;getFromDB($answer);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L593" class="number ">593</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L594" class="number ">594</th>
+
+                    <td class="" >
+                        <pre>      // Search for placeholders
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L595" class="number uncovered">595</th>
+
+                    <td class="uncovered" >
+                        <pre>      $matches = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L596" class="number uncovered">596</th>
+
+                    <td class="uncovered" >
+                        <pre>      $regex = &quot;/##answer_$questionID\.(?&lt;property&gt;[a-zA-Z0-9_.]+)##/&quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L597" class="number uncovered">597</th>
+
+                    <td class="uncovered" >
+                        <pre>      preg_match_all($regex, $content, $matches);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L598" class="number ">598</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L599" class="number ">599</th>
+
+                    <td class="" >
+                        <pre>      // For each placeholder found
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L600" class="number uncovered">600</th>
+
+                    <td class="uncovered" >
+                        <pre>      foreach ($matches[&quot;property&quot;] as $property) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L601" class="number uncovered">601</th>
+
+                    <td class="uncovered" >
+                        <pre>         $placeholder = &quot;##answer_$questionID.$property##&quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L602" class="number ">602</th>
+
+                    <td class="" >
+                        <pre>         // Convert Property_Name to Property Name
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L603" class="number uncovered">603</th>
+
+                    <td class="uncovered" >
+                        <pre>         $property = str_replace(&quot;_&quot;, &quot; &quot;, $property);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L604" class="number uncovered">604</th>
+
+                    <td class="uncovered" >
+                        <pre>         $searchOption = $item-&gt;getSearchOptionByField(&quot;name&quot;, $property);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L605" class="number ">605</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L606" class="number ">606</th>
+
+                    <td class="" >
+                        <pre>         // Execute search
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L607" class="number uncovered">607</th>
+
+                    <td class="uncovered" >
+                        <pre>         $data = Search::prepareDatasForSearch(get_class($item), [</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L608" class="number ">608</th>
+
+                    <td class="" >
+                        <pre>            &#039;criteria&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L609" class="number ">609</th>
+
+                    <td class="" >
+                        <pre>               [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L610" class="number uncovered">610</th>
+
+                    <td class="uncovered" >
+                        <pre>                  &#039;field&#039;      =&gt; $searchOption[&#039;id&#039;],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L611" class="number uncovered">611</th>
+
+                    <td class="uncovered" >
+                        <pre>                  &#039;searchtype&#039; =&gt; &quot;contains&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L612" class="number uncovered">612</th>
+
+                    <td class="uncovered" >
+                        <pre>                  &#039;value&#039;      =&gt; &quot;&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L613" class="number ">613</th>
+
+                    <td class="" >
+                        <pre>               ],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L614" class="number ">614</th>
+
+                    <td class="" >
+                        <pre>               [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L615" class="number uncovered">615</th>
+
+                    <td class="uncovered" >
+                        <pre>                  &#039;field&#039;      =&gt; 2,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L616" class="number uncovered">616</th>
+
+                    <td class="uncovered" >
+                        <pre>                  &#039;searchtype&#039; =&gt; &quot;equals&quot;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L617" class="number uncovered">617</th>
+
+                    <td class="uncovered" >
+                        <pre>                  &#039;value&#039;      =&gt; $answer,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L618" class="number ">618</th>
+
+                    <td class="" >
+                        <pre>               ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L619" class="number ">619</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L620" class="number ">620</th>
+
+                    <td class="" >
+                        <pre>         ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L621" class="number uncovered">621</th>
+
+                    <td class="uncovered" >
+                        <pre>         Search::constructSQL($data);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L622" class="number uncovered">622</th>
+
+                    <td class="uncovered" >
+                        <pre>         Search::constructData($data);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L623" class="number ">623</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L624" class="number ">624</th>
+
+                    <td class="" >
+                        <pre>         // Handle search result, there may be multiple values
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L625" class="number uncovered">625</th>
+
+                    <td class="uncovered" >
+                        <pre>         $propertyValue = &quot;&quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L626" class="number uncovered">626</th>
+
+                    <td class="uncovered" >
+                        <pre>         foreach ($data[&#039;data&#039;][&#039;rows&#039;] as $row) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L627" class="number uncovered">627</th>
+
+                    <td class="uncovered" >
+                        <pre>            $targetKey = get_class($item) . &quot;_&quot; . $searchOption[&#039;id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L628" class="number ">628</th>
+
+                    <td class="" >
+                        <pre>            // Add each result
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L629" class="number uncovered">629</th>
+
+                    <td class="uncovered" >
+                        <pre>            for ($i=0; $i &lt; $row[$targetKey][&#039;count&#039;]; $i++) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L630" class="number uncovered">630</th>
+
+                    <td class="uncovered" >
+                        <pre>               $propertyValue .=$row[$targetKey][$i][&#039;name&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L631" class="number uncovered">631</th>
+
+                    <td class="uncovered" >
+                        <pre>               if ($i+1 &lt; $row[$targetKey][&#039;count&#039;]) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L632" class="number uncovered">632</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $propertyValue .= &quot;, &quot;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L633" class="number ">633</th>
+
+                    <td class="" >
+                        <pre>               }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L634" class="number ">634</th>
+
+                    <td class="" >
+                        <pre>            }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L635" class="number ">635</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L636" class="number ">636</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L637" class="number ">637</th>
+
+                    <td class="" >
+                        <pre>         // Replace placeholder in content
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L638" class="number uncovered">638</th>
+
+                    <td class="uncovered" >
+                        <pre>         $content = str_replace(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L639" class="number uncovered">639</th>
+
+                    <td class="uncovered" >
+                        <pre>            $placeholder,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L640" class="number uncovered">640</th>
+
+                    <td class="uncovered" >
+                        <pre>            Toolbox::addslashes_deep($propertyValue),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L641" class="number uncovered">641</th>
+
+                    <td class="uncovered" >
+                        <pre>            $content</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L642" class="number ">642</th>
+
+                    <td class="" >
+                        <pre>         );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L643" class="number ">643</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L644" class="number ">644</th>
 
                     <td class="" >
                         <pre>      // Put the old locales on succes or if an expection was thrown
@@ -4901,28 +4970,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L636" class="number uncovered">636</th>
+                    <th id="L645" class="number uncovered">645</th>
 
                     <td class="uncovered" >
                         <pre>      $TRANSLATE-&gt;setLocale($oldLocale);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L637" class="number uncovered">637</th>
+                    <th id="L646" class="number uncovered">646</th>
 
                     <td class="uncovered" >
                         <pre>      return $content;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L638" class="number unreach">638</th>
+                    <th id="L647" class="number unreach">647</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L639" class="number ">639</th>
+                    <th id="L648" class="number ">648</th>
 
                     <td class="" >
                         <pre>}
