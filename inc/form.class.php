@@ -221,7 +221,7 @@ PluginFormcreatorDuplicatableInterface
          'id'                 => '31',
          'table'              => $this->getTable(),
          'field'              => 'icon',
-         'name'               => __('Icon'),
+         'name'               => __('Icon', 'formcreator'),
          'massiveaction'      => false
       ];
 
@@ -229,7 +229,7 @@ PluginFormcreatorDuplicatableInterface
          'id'                 => '32',
          'table'              => $this->getTable(),
          'field'              => 'icon_color',
-         'name'               => __('Icon color'),
+         'name'               => __('Icon color', 'formcreator'),
          'massiveaction'      => false
       ];
 
@@ -237,7 +237,7 @@ PluginFormcreatorDuplicatableInterface
          'id'                 => '33',
          'table'              => $this->getTable(),
          'field'              => 'background_color',
-         'name'               => __('Background color'),
+         'name'               => __('Background color', 'formcreator'),
          'massiveaction'      => false
       ];
 
