@@ -217,6 +217,30 @@ PluginFormcreatorDuplicatableInterface
          'massiveaction'      => true
       ];
 
+      $tab[] = [
+         'id'                 => '31',
+         'table'              => $this->getTable(),
+         'field'              => 'icon',
+         'name'               => __('Icon'),
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '32',
+         'table'              => $this->getTable(),
+         'field'              => 'icon_color',
+         'name'               => __('Icon color'),
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '33',
+         'table'              => $this->getTable(),
+         'field'              => 'background_color',
+         'name'               => __('Background color'),
+         'massiveaction'      => false
+      ];
+
       return $tab;
    }
 
