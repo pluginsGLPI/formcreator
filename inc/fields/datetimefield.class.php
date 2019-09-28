@@ -136,7 +136,7 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
       }
 
       if ($input[$key] != ''
-         && DateTime::createFromFormat("Y-m-d H:i", $input[$key]) === false) {
+         && DateTime::createFromFormat("Y-m-d H:i:s", $input[$key]) === false) {
          return false;
       }
 
