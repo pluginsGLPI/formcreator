@@ -101,12 +101,12 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 
    public function equals($value) {
       if ($this->value === '') {
-         $answer = '0000-00-00 00:00';
+         $answer = '0000-00-00 00:00:00';
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("Y-m-d H:i", $answer);
-      $compareDatetime = DateTime::createFromFormat("Y-m-d H:i", $value);
+      $answerDatetime = DateTime::createFromFormat("Y-m-d H:i:s", $answer);
+      $compareDatetime = DateTime::createFromFormat("Y-m-d H:i:s", $value);
       return $answerDatetime == $compareDatetime;
    }
 
@@ -116,12 +116,12 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
 
    public function greaterThan($value) {
       if (empty($this->value)) {
-         $answer = '0000-00-00 00:00';
+         $answer = '0000-00-00 00:00:00';
       } else {
          $answer = $this->value;
       }
-      $answerDatetime = DateTime::createFromFormat("Y-m-d H:i", $answer);
-      $compareDatetime = DateTime::createFromFormat("Y-m-d H:i", $value);
+      $answerDatetime = DateTime::createFromFormat("Y-m-d H:i:s", $answer);
+      $compareDatetime = DateTime::createFromFormat("Y-m-d H:i:s", $value);
       return $answerDatetime > $compareDatetime;
    }
 
