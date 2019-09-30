@@ -162,7 +162,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
          [
             'id' => '1',
             'input' => [
-               'formcreator_field_1' => '2018-12-25 23:00',
+               'formcreator_field_1' => '2018-12-25 23:00:00',
             ],
             'expected' => true,
             'expectedValue' => '2018-12-25 23:00',
@@ -205,7 +205,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    }
 
    public function testSerializeValue() {
-      $value = $expected = '2019-01-01 12:00';
+      $value = $expected = '2019-01-01 12:00:00';
       $instance = $this->newTestedInstance(['id' => 1]);
       $instance->parseAnswerValues(['formcreator_field_1' => $value]);
       $output = $instance->serializeValue();
@@ -213,7 +213,7 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    }
 
    public function testGetValueForDesign() {
-      $value = $expected = '2019-01-01 12:00';
+      $value = $expected = '2019-01-01 12:00:00';
       $instance = new \PluginFormcreatorDatetimeField([]);
       $instance->deserializeValue($value);
       $output = $instance->getValueForDesign();
@@ -223,18 +223,18 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    public function providerEquals() {
       return [
          [
-            'value'     => '2019-01-01 00:00',
+            'value'     => '2019-01-01 00:00:00',
             'answer'    => '',
             'expected'  => false,
          ],
          [
-            'value'     => '2019-01-01 02:00',
-            'answer'    => '2019-01-01 03:00',
+            'value'     => '2019-01-01 02:00:00',
+            'answer'    => '2019-01-01 03:00:00',
             'expected'  => false,
          ],
          [
-            'value'     => '2019-01-01 03:00',
-            'answer'    => '2019-01-01 03:00',
+            'value'     => '2019-01-01 03:00:00',
+            'answer'    => '2019-01-01 03:00:00',
             'expected'  => true,
          ],
       ];
@@ -252,18 +252,18 @@ class PluginFormcreatorDatetimeField extends CommonTestCase {
    public function providerNotEquals() {
       return [
          [
-            'value'     => '2019-01-01 00:00',
+            'value'     => '2019-01-01 00:00:00',
             'answer'    => '',
             'expected'  => true,
          ],
          [
-            'value'     => '2019-01-01 02:00',
-            'answer'    => '2019-01-01 03:00',
+            'value'     => '2019-01-01 02:00:00',
+            'answer'    => '2019-01-01 03:00:00',
             'expected'  => true,
          ],
          [
-            'value'     => '2019-01-01 03:00',
-            'answer'    => '2019-01-01 03:00',
+            'value'     => '2019-01-01 03:00:00',
+            'answer'    => '2019-01-01 03:00:00',
             'expected'  => false,
          ],
       ];
