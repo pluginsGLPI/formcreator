@@ -81,7 +81,12 @@ class Config extends CommonTestCase {
       // Drop tables of the plugin if they exist
       $query = "SHOW TABLES";
       $result = $DB->query($query);
-      while ($data = $DB->fetch_array($result)) {
+      if (version_compare(GLPI_VERSION, '9.5.0') >= 0) {
+         $data = $DB->fetchArray($result);
+      } else {
+         $data = $DB->fetch_array($result);
+      }
+      while ($data) {
          if (strstr($data[0], "glpi_plugin_$pluginname") !== false) {
             $DB->query("DROP TABLE " . $data[0]);
          }
