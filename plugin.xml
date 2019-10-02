@@ -274,6 +274,20 @@ Features
          <compatibility>9.3</compatibility>
          <compatibility>9.4</compatibility>
       </version>
+      <version>
+         <num>2.8.4</num>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.4</compatibility>
+      </version>
+      <version>
+         <num>2.8.5</num>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.4</compatibility>
+      </version>
+      <version>
+         <num>2.9.0-beta.1</num>
+         <compatibility>9.4</compatibility>
+      </version>
    </versions>
    <langs>
       <lang>ca_ES</lang>
