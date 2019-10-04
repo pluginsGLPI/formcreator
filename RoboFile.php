@@ -147,7 +147,6 @@ class RoboFile extends RoboFilePlugin
          }
       }
 
-      $this->buildFaData();
       $this->taskGitStack()
          ->stopOnFail()
          ->add('data/font-awesome.php')
@@ -177,11 +176,13 @@ class RoboFile extends RoboFilePlugin
          ->commit('docs(locales): update translations')
          ->run();
 
+      $this->buildFaData();
       $rev = 'HEAD';
       $pluginName = $this->getPluginName();
       $pluginPath = $this->getProjectPath();
       $archiveWorkdir = "$pluginPath/output/dist/archive_workdir";
       $archiveFile = "$pluginPath/output/dist/glpi-" . $this->getPluginName() . "-$version.tar.bz2";
+
       if (is_file($archiveFile)) {
          if (!is_writable(($archiveFile))) {
             throw new \RuntimeException('Failed to delete previous build (file is not writable)' . $archiveFile);
@@ -194,6 +195,10 @@ class RoboFile extends RoboFilePlugin
 
       // Extract from the repo all files we want to have in the redistribuable archive
       $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
+
+      // Add extra files to workdir
+      $success = copy($srcFile = __DIR__ . '/data/font-awesome_9.4.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.4.php");
+      $success = copy($srcFile = __DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
 
       // Add composer dependencies
       $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
