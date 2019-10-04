@@ -428,4 +428,29 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
          ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
    }
+
+   public function testMoveTop() {
+      $section = $this->getSection();
+      $question1 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+      $question2 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+      $question3 = $this->getQuestion([
+         'plugin_formcreator_sections_id' => $section->getID(),
+      ]);
+
+      $this->integer((int) $question1->fields['order'])->isEqualTo(1);
+      $this->integer((int) $question2->fields['order'])->isEqualTo(2);
+      $this->integer((int) $question3->fields['order'])->isEqualTo(3);
+      $question3->moveTop();
+      // Reload questions
+      $question1->getFromDB($question1->getID());
+      $question2->getFromDB($question2->getID());
+      $question3->getFromDB($question3->getID());
+      $this->integer((int) $question3->fields['order'])->isEqualTo(1);
+      $this->integer((int) $question1->fields['order'])->isEqualTo(2);
+      $this->integer((int) $question2->fields['order'])->isEqualTo(3);
+   }
 }

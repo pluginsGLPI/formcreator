@@ -176,7 +176,7 @@ PluginFormcreatorDuplicatableInterface
                      onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');"> ';
          }
          echo "</span>";
-
+          
          echo '</th>';
          echo '</tr>';
 
@@ -226,6 +226,10 @@ PluginFormcreatorDuplicatableInterface
                         title='" . __('Required', 'formcreator') . "'
                         onclick='setRequired(\"".$token."\", ".$question['id'].", ".($question['required']?0:1).")' > ";
                echo "</span>";
+            } else {
+               echo "<span class='form_control pointer'>";
+               echo '<div width="18px"></div>';
+               echo "</span>";
             }
 
             echo "<span class='form_control pointer'>";
@@ -244,6 +248,14 @@ PluginFormcreatorDuplicatableInterface
             }
             echo "</span>";
 
+            echo "<span class='form_control pointer'>";
+            if ($question['order'] != 1) {
+               echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/chevron-up.png"
+                        title="' . __('Bring top') . '"
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'top\');" align="absmiddle"> ';
+            }
+            echo "</span>";
+   
             echo '</td>';
             echo '</tr>';
          }
@@ -501,6 +513,40 @@ PluginFormcreatorDuplicatableInterface
          $otherItem->update([
             'id'           => $otherItem->getID(),
             'order'        => $order,
+            '_skip_checks' => true,
+         ]);
+      }
+   }
+
+   /**
+    * Moves the question to top
+    */
+   public function moveTop() {
+      global $DB;
+
+      $order      = $this->fields['order'];
+      $sectionId  = $this->fields['plugin_formcreator_sections_id'];
+      $otherItem  = new static();
+
+      $result = $DB->request([
+         'FROM'   => $otherItem->getTable(),
+         'WHERE' => [
+            'plugin_formcreator_sections_id' => $sectionId,
+            'order' => ['<', $order],
+         ],
+         'ORDER' => 'order ASC',
+      ]);
+
+      $this->update([
+         'id'     => $this->getID(),
+         'order'  => '1',
+         '_skip_checks' => true,
+      ]);
+
+      foreach ($result as $value) {
+         $otherItem->update([
+            'id'           => $value['id'],
+            'order'        => $value['order'] + 1,
             '_skip_checks' => true,
          ]);
       }
