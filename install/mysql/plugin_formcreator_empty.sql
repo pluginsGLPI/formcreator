@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_issues` (
   `is_recursive` tinyint(1) NOT NULL DEFAULT '0',
    `requester_id` int(11) NOT NULL DEFAULT '0',
   `validator_id` int(11) NOT NULL DEFAULT '0',
-  `comment` text,
+  `comment` longtext,
   PRIMARY KEY (`id`),
   INDEX `original_id_sub_itemtype` (`original_id`, `sub_itemtype`),
   INDEX `entities_id` (`entities_id`),
