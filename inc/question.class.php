@@ -188,6 +188,16 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
                      onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');"> ';
          }
          echo "</span>";
+          
+          echo "<span class='form_control pointer'>";
+          if ($section['order'] != 1) {
+             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/chevron-up.png"
+                      title="' . __('Bring top') . '"
+                      onclick="moveQuestion(\'' . $token . '\', ' . $section['id'] . ', \'top\');" align="absmiddle"> ';
+          }
+          echo "</span>";
+         
+
 
          echo '</th>';
          echo '</tr>';
@@ -515,6 +525,51 @@ class PluginFormcreatorQuestion extends CommonDBChild implements PluginFormcreat
          ]);
       }
    }
+
+   /**
+    * Moves the question to top
+    */
+    public function moveTop()
+    {
+       global $DB;
+ 
+       $order      = $this->fields['order'];
+       $sectionId  = $this->fields['plugin_formcreator_sections_id'];
+       $otherItem  = new static();
+ 
+ 
+ 
+       $result = $DB->request([
+          'FROM'   => $otherItem->getTable(),
+          'WHERE' => [
+             'plugin_formcreator_sections_id' => $sectionId,
+             'id' => ['<>', $this->getID()]
+          ],
+          'ORDER' => 'order ASC'
+       ]);
+ 
+       $array = [];
+       while ($data = $result->next()) {
+          $array[] = $data;
+       }
+ 
+       $this->update([
+          'id'     => $this->getID(),
+          'order'  => '1',
+          '_skip_checks' => true,
+       ]);
+ 
+       foreach ($array as $key => $value) {
+ 
+          $otherItem->update([
+             'id'           => $value['id'],
+             'order'        => $key+2,
+             '_skip_checks' => true,
+          ]);
+ 
+       }
+    }
+   
 
    /**
     * Moves the question down in the ordered list of questions in the section

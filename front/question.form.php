@@ -91,6 +91,8 @@ if (isset($_POST["add"])) {
    if ($question->getFromDB((int) $_POST['id'])) {
       if ($_POST['way'] == 'up') {
          $question->moveUp();
+      } else if($_POST['way'] == 'top'){
+         $question->moveTop();
       } else {
          $question->moveDown();
       }
