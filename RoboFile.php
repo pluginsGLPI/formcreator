@@ -197,9 +197,12 @@ class RoboFile extends RoboFilePlugin
       $this->_exec("git archive --prefix=$pluginName/ $rev $filesToArchive | tar x -C '$archiveWorkdir'");
 
       // Add extra files to workdir
-      $success = copy($srcFile = __DIR__ . '/data/font-awesome_9.4.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.4.php");
-      $success = copy($srcFile = __DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
+      $success = copy(__DIR__ . '/data/font-awesome_9.4.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.4.php");
+      $success = $success && copy(__DIR__ . '/data/font-awesome_9.5.php', "$archiveWorkdir/$pluginName/data/font-awesome_9.5.php");
 
+      if (!$success) {
+         throw new RuntimeException("failed to generate Font Awesome resources");
+      }
       // Add composer dependencies
       $this->_exec("composer install --no-dev --working-dir='$archiveWorkdir/$pluginName'");
 
