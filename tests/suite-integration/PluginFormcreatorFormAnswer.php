@@ -204,7 +204,12 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       ]);
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
-      $newId = $DB->fetch_assoc($result);
+      if (version_compare(GLPI_VERSION, '9.5') < 0) {
+         $fa = 'fetch_assoc';
+      } else {
+         $fa = 'fetchAssoc';
+      }
+      $newId = $DB->$fa($result);
       $newId = $newId['max_id'];
 
       $this->integer((int) $newId)->isGreaterThan((int) $maxId);

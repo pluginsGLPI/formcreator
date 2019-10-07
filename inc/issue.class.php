@@ -121,7 +121,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
       $result = $DB->query($countQuery);
       if ($result !== false) {
-         $count = $DB->fetch_assoc($result);
+         if (version_compare(GLPI_VERSION, '9.5') < 0) {
+            $fa = 'fetch_assoc';
+         } else {
+            $fa = 'fetchAssoc';
+         }
+         $count = $DB->$fa($result);
          $table = static::getTable();
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
