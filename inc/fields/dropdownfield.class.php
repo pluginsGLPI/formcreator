@@ -224,20 +224,25 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                   }
             }
 
-            // Apply max depth if defined (CommonTreeDropdown)
-            if (isset($decodedValues['show_ticket_categories_depth'])
-               && $decodedValues['show_ticket_categories_depth'] > 0) {
-               $dparams_cond_crit['level'] = ['<=', $decodedValues['show_ticket_categories_depth']];
-            }
-
             // Set specific root if defined (CommonTreeDropdown)
+            $baseLevel = 0;
             if (isset($decodedValues['show_ticket_categories_root'])
                && (int) $decodedValues['show_ticket_categories_root'] > 0) {
                   $sons = (new DBUtils)->getSonsOf(
-                     ItilCategory::getTable(),
+                     $itemtype::getTable(),
                      $decodedValues['show_ticket_categories_root']
                   );
                $dparams_cond_crit['id'] = $sons;
+               $rootItem = new $itemtype();
+               if ($rootItem->getFromDB($decodedValues['show_ticket_categories_root'])) {
+                  $baseLevel = $rootItem->fields['level'];
+               }
+            }
+
+            // Apply max depth if defined (CommonTreeDropdown)
+            if (isset($decodedValues['show_ticket_categories_depth'])
+               && $decodedValues['show_ticket_categories_depth'] > 0) {
+               $dparams_cond_crit['level'] = ['<=', $decodedValues['show_ticket_categories_depth'] + $baseLevel];
             }
 
             $dparams['condition'] = $dparams_cond_crit;
