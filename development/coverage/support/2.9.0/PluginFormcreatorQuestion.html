@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
-                    28%
-                                            <small>of 643</small>
+                    27%
+                                            <small>of 681</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -264,6 +264,27 @@ layout: coverage
                                         <td style="text-align: center">4</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getQuestionDataById">PluginFormcreatorQuestion::getQuestionDataById()</a></td>
+                                        <td style="text-align: center">9</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#getFullData">PluginFormcreatorQuestion::getFullData()</a></td>
+                                        <td style="text-align: center">26</td>
+                <td style="text-align: center">    
+    <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#post_getFromDB">PluginFormcreatorQuestion::post_getFromDB()</a></td>
+                                        <td style="text-align: center">3</td>
+                <td style="text-align: center">    
+    <span class="label label-warning">67%</span>
 </td>
                                             </tr>
         </tbody>
@@ -9468,6 +9489,739 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L1235" class="number ">1235</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1236" class="number ">1236</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1237" class="number ">1237</th>
+
+                    <td class="" >
+                        <pre>    * Get linked data (conditions, regexes or ranges) for a question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1238" class="number ">1238</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1239" class="number ">1239</th>
+
+                    <td class="" >
+                        <pre>    * @param string    $table   target table containing the needed data (
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1240" class="number ">1240</th>
+
+                    <td class="" >
+                        <pre>    *                           condition, range or regex)
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1241" class="number ">1241</th>
+
+                    <td class="" >
+                        <pre>    * @param int|array $id      a single id or an array of ids
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1242" class="number ">1242</th>
+
+                    <td class="" >
+                        <pre>    * @return array
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1243" class="number ">1243</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getQuestionDataById">
+                    <th id="L1244" class="number ">1244</th>
+
+                    <td class="" id="getQuestionDataById">
+                        <pre>   public static function getQuestionDataById($table, $id) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1245" class="number uncovered">1245</th>
+
+                    <td class="uncovered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1246" class="number ">1246</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1247" class="number ">1247</th>
+
+                    <td class="" >
+                        <pre>      $validTargets = [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1248" class="number uncovered">1248</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestion_Condition::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1249" class="number uncovered">1249</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRegex::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1250" class="number uncovered">1250</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRange::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1251" class="number ">1251</th>
+
+                    <td class="" >
+                        <pre>      ];
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1252" class="number ">1252</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1253" class="number uncovered">1253</th>
+
+                    <td class="uncovered" >
+                        <pre>      if (array_search($table, $validTargets) === false) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1254" class="number uncovered">1254</th>
+
+                    <td class="uncovered" >
+                        <pre>         throw new \InvalidArgumentException(&quot;Invalid target (&#039;$table&#039;)&quot;);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1255" class="number ">1255</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1256" class="number ">1256</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1257" class="number uncovered">1257</th>
+
+                    <td class="uncovered" >
+                        <pre>      return iterator_to_array($DB-&gt;request([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1258" class="number uncovered">1258</th>
+
+                    <td class="uncovered" >
+                        <pre>         &#039;FROM&#039; =&gt; $table,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1259" class="number ">1259</th>
+
+                    <td class="" >
+                        <pre>         &#039;WHERE&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1260" class="number uncovered">1260</th>
+
+                    <td class="uncovered" >
+                        <pre>            &quot;plugin_formcreator_questions_id&quot; =&gt; $id</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1261" class="number ">1261</th>
+
+                    <td class="" >
+                        <pre>         ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1262" class="number ">1262</th>
+
+                    <td class="" >
+                        <pre>      ]));
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1263" class="number unreach">1263</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1264" class="number ">1264</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1265" class="number ">1265</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1266" class="number ">1266</th>
+
+                    <td class="" >
+                        <pre>    * Get either:
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1267" class="number ">1267</th>
+
+                    <td class="" >
+                        <pre>    *  - questions, conditions, regexes and range of target parent sections
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1268" class="number ">1268</th>
+
+                    <td class="" >
+                        <pre>    *  - conditions, regexes and range of target question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1269" class="number ">1269</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1270" class="number ">1270</th>
+
+                    <td class="" >
+                        <pre>    * @param int $parents target parent sections
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1271" class="number ">1271</th>
+
+                    <td class="" >
+                        <pre>    * @param int $id target question
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1272" class="number ">1272</th>
+
+                    <td class="" >
+                        <pre>    * @return array
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1273" class="number ">1273</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getFullData">
+                    <th id="L1274" class="number ">1274</th>
+
+                    <td class="" id="getFullData">
+                        <pre>   public static function getFullData($parents, $id = null) {<span class="label label-danger">0%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1275" class="number uncovered">1275</th>
+
+                    <td class="uncovered" >
+                        <pre>      global $DB;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1276" class="number ">1276</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1277" class="number uncovered">1277</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1278" class="number ">1278</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1279" class="number uncovered">1279</th>
+
+                    <td class="uncovered" >
+                        <pre>      if ($parents) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1280" class="number ">1280</th>
+
+                    <td class="" >
+                        <pre>         // Load questions
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1281" class="number uncovered">1281</th>
+
+                    <td class="uncovered" >
+                        <pre>         $data[&#039;_questions&#039;] = iterator_to_array($DB-&gt;request([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1282" class="number uncovered">1282</th>
+
+                    <td class="uncovered" >
+                        <pre>            &#039;FROM&#039; =&gt; \PluginFormcreatorQuestion::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1283" class="number ">1283</th>
+
+                    <td class="" >
+                        <pre>            &#039;WHERE&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1284" class="number uncovered">1284</th>
+
+                    <td class="uncovered" >
+                        <pre>               &quot;plugin_formcreator_sections_id&quot; =&gt; $parents</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1285" class="number ">1285</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1286" class="number ">1286</th>
+
+                    <td class="" >
+                        <pre>         ]));
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1287" class="number ">1287</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1288" class="number uncovered">1288</th>
+
+                    <td class="uncovered" >
+                        <pre>         $questionIds = [];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1289" class="number uncovered">1289</th>
+
+                    <td class="uncovered" >
+                        <pre>         foreach ($data[&#039;_questions&#039;] as $question) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1290" class="number uncovered">1290</th>
+
+                    <td class="uncovered" >
+                        <pre>            $questionIds[] = $question[&#039;id&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1291" class="number ">1291</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1292" class="number ">1292</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1293" class="number uncovered">1293</th>
+
+                    <td class="uncovered" >
+                        <pre>         if (!count($questionIds)) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1294" class="number uncovered">1294</th>
+
+                    <td class="uncovered" >
+                        <pre>            $questionIds[] = -1;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1295" class="number ">1295</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1296" class="number ">1296</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1297" class="number uncovered">1297</th>
+
+                    <td class="uncovered" >
+                        <pre>         $id = $questionIds;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1298" class="number ">1298</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1299" class="number ">1299</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1300" class="number uncovered">1300</th>
+
+                    <td class="uncovered" >
+                        <pre>      if ($id == null) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1301" class="number uncovered">1301</th>
+
+                    <td class="uncovered" >
+                        <pre>         throw new \InvalidArgumentException(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1302" class="number uncovered">1302</th>
+
+                    <td class="uncovered" >
+                        <pre>            &quot;Parameter &#039;id&#039; can&#039;t be null if parameter &#039;parents&#039; is not specified&quot;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1303" class="number ">1303</th>
+
+                    <td class="" >
+                        <pre>         );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1304" class="number ">1304</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1305" class="number ">1305</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1306" class="number ">1306</th>
+
+                    <td class="" >
+                        <pre>      // Load conditions, regexes and ranges
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1307" class="number uncovered">1307</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;_conditions&#039;] = self::getQuestionDataById(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1308" class="number uncovered">1308</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestion_Condition::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1309" class="number uncovered">1309</th>
+
+                    <td class="uncovered" >
+                        <pre>         $id</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1310" class="number ">1310</th>
+
+                    <td class="" >
+                        <pre>      );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1311" class="number uncovered">1311</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;_regexes&#039;] = self::getQuestionDataById(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1312" class="number uncovered">1312</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRegex::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1313" class="number uncovered">1313</th>
+
+                    <td class="uncovered" >
+                        <pre>         $id</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1314" class="number ">1314</th>
+
+                    <td class="" >
+                        <pre>      );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1315" class="number uncovered">1315</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;_ranges&#039;] = self::getQuestionDataById(</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1316" class="number uncovered">1316</th>
+
+                    <td class="uncovered" >
+                        <pre>         \PluginFormcreatorQuestionRange::getTable(),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1317" class="number uncovered">1317</th>
+
+                    <td class="uncovered" >
+                        <pre>         $id</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1318" class="number ">1318</th>
+
+                    <td class="" >
+                        <pre>      );
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1319" class="number ">1319</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1320" class="number ">1320</th>
+
+                    <td class="" >
+                        <pre>      // Load ip, may be needed for some questions
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1321" class="number uncovered">1321</th>
+
+                    <td class="uncovered" >
+                        <pre>      $data[&#039;_ip&#039;] = \Toolbox::getRemoteIpAddress();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1322" class="number ">1322</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1323" class="number uncovered">1323</th>
+
+                    <td class="uncovered" >
+                        <pre>      return $data;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1324" class="number unreach">1324</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1325" class="number ">1325</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="post_getFromDB">
+                    <th id="L1326" class="number ">1326</th>
+
+                    <td class="" id="post_getFromDB">
+                        <pre>   public function post_getFromDB() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1327" class="number ">1327</th>
+
+                    <td class="" >
+                        <pre>      // Set additional data for the API
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1328" class="number covered">1328</th>
+
+                    <td class="covered" >
+                        <pre>      if (isAPI()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1329" class="number uncovered">1329</th>
+
+                    <td class="uncovered" >
+                        <pre>         $this-&gt;fields += self::getFullData(null, $this-&gt;fields[&#039;id&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1330" class="number ">1330</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1331" class="number covered">1331</th>
+
+                    <td class="covered" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1332" class="number ">1332</th>
 
                     <td class="" >
                         <pre>}

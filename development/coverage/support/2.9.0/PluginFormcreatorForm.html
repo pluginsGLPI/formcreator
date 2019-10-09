@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
                     31%
-                                            <small>of 1306</small>
+                                            <small>of 1309</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -418,6 +418,13 @@ layout: coverage
                                         <td style="text-align: center">10</td>
                 <td style="text-align: center">    
     <span class="label label-success">100%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#post_getFromDB">PluginFormcreatorForm::post_getFromDB()</a></td>
+                                        <td style="text-align: center">3</td>
+                <td style="text-align: center">    
+    <span class="label label-warning">67%</span>
 </td>
                                             </tr>
         </tbody>
@@ -18867,6 +18874,58 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L2480" class="number ">2480</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="post_getFromDB">
+                    <th id="L2481" class="number ">2481</th>
+
+                    <td class="" id="post_getFromDB">
+                        <pre>   public function post_getFromDB() {<span class="label label-warning">67%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2482" class="number ">2482</th>
+
+                    <td class="" >
+                        <pre>      // Set additional data for the API
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2483" class="number covered">2483</th>
+
+                    <td class="covered" >
+                        <pre>      if (isAPI()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2484" class="number uncovered">2484</th>
+
+                    <td class="uncovered" >
+                        <pre>         $this-&gt;fields += \PluginFormcreatorSection::getFullData($this-&gt;fields[&#039;id&#039;]);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2485" class="number ">2485</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2486" class="number covered">2486</th>
+
+                    <td class="covered" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L2487" class="number ">2487</th>
 
                     <td class="" >
                         <pre>}
