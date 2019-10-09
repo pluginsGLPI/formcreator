@@ -290,6 +290,8 @@ function plugin_formcreator_decode($string) {
 
 /**
  * Tells if helpdesk replacement is enabled for the current user
+ * 
+ * @return boolean|integer
  */
 function plugin_formcreator_replaceHelpdesk() {
    if (isset($_SESSION['glpiactiveprofile']['interface'])
@@ -298,7 +300,7 @@ function plugin_formcreator_replaceHelpdesk() {
       $helpdeskMode = PluginFormcreatorEntityconfig::getUsedConfig('replace_helpdesk', $_SESSION['glpiactive_entity']);
       if ($helpdeskMode != '0'
             && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-         return true;
+         return $helpdeskMode;
       }
    }
    return false;
