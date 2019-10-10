@@ -49,7 +49,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    private $questionFields = [];
    private $questions      = [];
-   private $form           = null;
 
    public static function getStatuses() {
       return [
@@ -753,10 +752,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    /**
     * Create or update answers of a form
     *
-    * @param          PluginFormcreatorForm $form
-    * @param array    $data answers
-    * @param array    $fields array of field: question id => instance
-    * @return integer ID of the created or updated Form Answer
+    * @param PluginFormcreatorForm  $form
+    * @param array                  $data answers
+    * @param array                  $fields array of field: question id => instance
+    * @return integer               ID of the created or updated Form Answer
     */
    public function saveAnswers(PluginFormcreatorForm $form, $data, $fields) {
       global $DB;
@@ -819,13 +818,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          $formanswers_id = $this->add([
             'entities_id'                 => isset($_SESSION['glpiactive_entity'])
-                                                ? $_SESSION['glpiactive_entity']
-                                                : $form->fields['entities_id'],
+                                             ? $_SESSION['glpiactive_entity']
+                                             : $form->fields['entities_id'],
             'is_recursive'                => $form->fields['is_recursive'],
             'plugin_formcreator_forms_id' => $form->getID(),
             'requester_id'                => isset($_SESSION['glpiID'])
-                                                ? $_SESSION['glpiID']
-                                                : 0,
+                                             ? $_SESSION['glpiID']
+                                             : 0,
             'users_id_validator'          => $usersIdValidator,
             'groups_id_validator'         => $groupIdValidator,
             'status'                      => $status,
@@ -1088,8 +1087,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $success = true;
 
       // Get all targets
-      $this->form->getFromDB($this->fields['plugin_formcreator_forms_id']);
-      $all_targets = $this->form->getTargetsFromForm();
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+      $all_targets = $form->getTargetsFromForm();
 
       $CFG_GLPI['plugin_formcreator_disable_hook_create_ticket'] = '1';
 
@@ -1400,13 +1400,13 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    protected function validateFormAnswer($input) {
       // Find the form the requester is answering to
-      $this->form = new PluginFormcreatorForm();
-      $this->form->getFromDB($input['plugin_formcreator_forms_id']);
+      $form = new PluginFormcreatorForm();
+      $form->getFromDB($input['plugin_formcreator_forms_id']);
 
       $valid = true;
       $fieldValidities = [];
 
-      $this->questionFields = $this->form->getFields();
+      $this->questionFields = $form->getFields();
       foreach ($this->questionFields as $id => $question) {
          $fieldValidities[$id] = $this->questionFields[$id]->parseAnswerValues($input);
       }
@@ -1428,7 +1428,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       // Check required_validator
-      if ($this->form->fields['validation_required'] && empty($input['formcreator_validator'])) {
+      if ($form->fields['validation_required'] && empty($input['formcreator_validator'])) {
          Session::addMessageAfterRedirect(__('You must select validator!', 'formcreator'), false, ERROR);
          $valid = false;
       }
@@ -1456,7 +1456,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             break;
          case self::STATUS_ACCEPTED :
             // Notify the requester
-            if ($this->form->fields['validation_required']) {
+            $form = new PluginFormcreatorForm();
+            $form->getFromDB($this->fields['plugin_formcreator_forms_id']);
+            if ($form->fields['validation_required'] != PluginFormcreatorForm::VALIDATION_NONE) {
                NotificationEvent::raiseEvent('plugin_formcreator_accepted', $this);
             } else {
                NotificationEvent::raiseEvent('plugin_formcreator_form_created', $this);
