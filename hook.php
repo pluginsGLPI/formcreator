@@ -111,8 +111,12 @@ function plugin_formcreator_getCondition($itemtype) {
          if (count($groups) < 1) {
             $condition .= ")";
          } else {
-            $groups = implode(',', $groups);
-            $condition .= " OR `$table`.`groups_id_validator` IN ($groups) )";
+            $groupIDs = [];
+            foreach ($groups as $group) {
+               $groupIDs[] = $group['id'];
+            }
+            $groupIDs = implode(',', $groupIDs);
+            $condition .= " OR `$table`.`groups_id_validator` IN ($groupIDs) )";
          }
          return $condition;
       }
