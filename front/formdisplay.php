@@ -45,10 +45,12 @@ PluginFormcreatorForm::header();
 if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
 
-   if (!$form->getFromDB((int) $_REQUEST['id'])) {
-      Html::displayNotFoundError();
-   }
-   if ($form->fields['is_active'] == '0') {
+   $criteria = [
+      'id'        => (int) $_REQUEST['id'],
+      'is_active' => '1',
+      'is_deleted'=> '0',
+   ];
+   if (!$form->getFromDBByCrit($criteria)) {
       Html::displayNotFoundError();
    }
 
