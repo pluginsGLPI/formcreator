@@ -47,7 +47,7 @@ if (isset($_REQUEST['id'])
    && is_numeric($_REQUEST['id'])) {
 
    if ($form->getFromDB((int) $_REQUEST['id'])) {
-      if ($form->fields['is_active'] == '0') {
+      if ($form->fields['is_active'] == '0' || $form->fields['is_deleted'] != '0') {
          Html::displayNotFoundError();
       }
       if ($form->fields['access_rights'] != PluginFormcreatorForm::ACCESS_PUBLIC) {
