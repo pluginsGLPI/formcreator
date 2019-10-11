@@ -592,13 +592,13 @@ PluginFormcreatorTargetInterface
    protected function addGroupActor($role, $group) {
       $actorType = null;
       switch ($role) {
-         case self::ACTOR_ROLE_REQUESTER:
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_REQUESTER:
             $actorType = &$this->requesterGroups['_groups_id_requester'];
             break;
-         case self::ACTOR_ROLE_OBSERVER :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_OBSERVER :
             $actorType = &$this->observerGroups['_groups_id_observer'];
             break;
-         case self::ACTOR_ROLE_ASSIGNED :
+         case PluginFormcreatorTarget_Actor::ACTOR_ROLE_ASSIGNED :
             $actorType = &$this->assignedGroups['_groups_id_assign'];
             break;
          default:
