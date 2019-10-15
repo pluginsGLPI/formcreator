@@ -196,19 +196,6 @@ function plugin_init_formcreator() {
             ];
          }
 
-         // Load JS and CSS files if we are on a page which need them
-         if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
-             || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
-             || isset($_SESSION['glpiactiveprofile']) &&
-                $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
-
-            $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
-
-            // Add specific JavaScript
-            $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
-         }
-
          if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator/front/targetticket.form.php') !== false) {
             if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
                Html::requireJs('tinymce');
@@ -233,6 +220,19 @@ function plugin_init_formcreator() {
          ]);
 
          Plugin::registerClass(PluginFormcreatorEntityconfig::class, ['addtabon' => Entity::class]);
+      }
+
+      // Load JS and CSS files if we are on a page which need them
+      if (strpos($_SERVER['REQUEST_URI'], 'plugins/formcreator') !== false
+         || strpos($_SERVER['REQUEST_URI'], 'central.php') !== false
+         || isset($_SESSION['glpiactiveprofile']) &&
+            $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+
+         $PLUGIN_HOOKS['add_css']['formcreator'][]        = 'lib/pqselect/pqselect.min.css';
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'lib/pqselect/pqselect.min.js';
+
+         // Add specific JavaScript
+         $PLUGIN_HOOKS['add_javascript']['formcreator'][] = 'js/scripts.js.php';
       }
    }
 }
