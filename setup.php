@@ -89,8 +89,10 @@ function plugin_formcreator_check_prerequisites() {
       $prerequisitesSuccess = false;
    }
 
-   $fi = new FilesystemIterator(__DIR__ . '/../', FilesystemIterator::SKIP_DOTS);
-   if (iterator_count($fi) < 1) {
+   $fi = new FilesystemIterator(__DIR__ . '/data/', FilesystemIterator::SKIP_DOTS);
+   if (iterator_count($fi) < 2) {
+      // There is index.html at least in  the directory, then 2 files must estxist
+      // to validate the existence of data files
       echo "You must run vendor/bin/robo build:fa-data in the directory of the plugin";
       $prerequisitesSuccess = false;
    }
