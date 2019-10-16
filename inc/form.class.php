@@ -430,9 +430,9 @@ PluginFormcreatorDuplicatableInterface
       echo '<td class="validators_bloc">';
 
       Dropdown::showFromArray('validation_required', [
-         0 => Dropdown::EMPTY_VALUE,
-         1 => _n('User', 'Users', 1),
-         2 => _n('Group', 'Groups', 1),
+         self::VALIDATION_NONE  => Dropdown::EMPTY_VALUE,
+         self::VALIDATION_USER  => User::getTypeName(1),
+         self::VALIDATION_GROUP => Group::getTypeName(1),
       ], [
          'value'     =>  $this->fields["validation_required"],
          'on_change' => 'plugin_formcreator_changeValidators(this.value)'
