@@ -128,4 +128,96 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
 
       $CFG_GLPI['use_notifications'] = $use_notifications;
    }
+
+   public function providerCanValidate() {
+      $validatorUserId = 42;
+      $group = new \Group();
+      $group->add([
+         'name' => $this->getUniqueString(),
+      ]);
+      $form1 = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_USER, 
+         '_validator_users' => $validatorUserId
+      ]); 
+
+      $form2 = $this->getForm([
+         'validation_required' => \PluginFormcreatorForm::VALIDATION_GROUP, 
+         '_validator_groups' => $group->getID()
+      ]); 
+      $groupUser = new \Group_User();
+      $groupUser->add([
+         'users_id' => $validatorUserId,
+         'groups_id' => $group->getID(),
+      ]);
+
+      return [
+         [
+            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'userId'    => $validatorUserId,
+            'form'      => $form1,
+            'expected'  => true,
+         ],
+         [
+            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => true,
+         ],
+         [
+            'right'     => \TicketValidation::VALIDATEINCIDENT,
+            'userId'    => $validatorUserId + 1,
+            'form'      => $form2,
+            'expected'  => false,
+         ],
+         [
+            'right'     => \TicketValidation::VALIDATEREQUEST,
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => true,
+         ],
+         [
+            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => true,
+         ],
+         [
+            'right'     => \TicketValidation::VALIDATEREQUEST | \TicketValidation::VALIDATEINCIDENT,
+            'userId'    => $validatorUserId + 1,
+            'form'      => $form2,
+            'expected'  => false,
+         ],         [
+            'right'     => 0,
+            'userId'    => $validatorUserId,
+            'form'      => $form2,
+            'expected'  => false,
+         ],
+      ];
+   }
+
+   /**
+    * @dataProvider providerCanValidate
+    */
+   public function testCanValidate($right, $userId, $form, $expected) {
+      // Save answers for a form
+      $instance = $this->newTestedInstance();
+      $input = [
+         'plugin_formcreator_forms_id' => $form->getID(),
+         'formcreator_validator' => $userId,
+      ];
+      $fields = $form->getFields();
+      foreach ($fields as $id => $question) {
+         $fields[$id]->parseAnswerValues($input);
+      }
+      $formAnswerId = $instance->add($input);
+
+      // test canValidate
+      $_SESSION['glpiID'] = $userId;
+      $_SESSION['glpiactiveprofile']['ticketvalidation'] = $right;
+      $instance = $this->newTestedInstance();
+      $instance->getFromDB($formAnswerId);
+      $this->boolean($instance->isNewItem())->isFalse();
+      $output = $instance->canValidate();
+      $this->boolean($output)->isEqualTo($expected);
+   }
 }

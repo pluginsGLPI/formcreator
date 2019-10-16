@@ -421,18 +421,19 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
    /**
     * Can the current user validate the form ?
-    *
-    * @param PluginFormcreatorForm $form
     */
-   public function canValidate($form, CommonDBTM $form_answer) {
+   public function canValidate() {
       if (!Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
          && !Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
          return false;
       }
 
+      $form = new PluginFormcreatorForm();
+      $formId = $this->fields[PluginFormcreatorForm::getForeignKeyField()];
+      $form->getFromDB($formId);
       switch ($form->fields['validation_required']) {
          case PluginFormcreatorForm_Validator::VALIDATION_USER:
-            return (Session::getLoginUserID() == $form_answer->fields['users_id_validator']);
+            return (Session::getLoginUserID() == $this->fields['users_id_validator']);
             break;
 
          case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
@@ -443,7 +444,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                   'FROM'   => PluginFormcreatorForm_Validator::getTable(),
                   'WHERE'  => [
                      'itemtype'                    => Group::class,
-                     'plugin_formcreator_forms_id' => $form->getID()
+                     'plugin_formcreator_forms_id' => $formId
                   ]
                ])
             ];
@@ -477,7 +478,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
-      $canValidate = $this->canValidate($form, $this);
+      $canValidate = $this->canValidate();
 
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
@@ -1037,7 +1038,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
 
       // Prepare form fields for validation
-      if (!$this->canValidate($form, $this)) {
+      if (!$this->canValidate()) {
          Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
          return false;
       }
@@ -1064,7 +1065,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
 
       // Prepare form fields for validation
-      if (!$this->canValidate($form, $this)) {
+      if (!$this->canValidate()) {
          Session::addMessageAfterRedirect(__('You are not the validator of these answers', 'formcreator'), true, ERROR);
          return false;
       }
