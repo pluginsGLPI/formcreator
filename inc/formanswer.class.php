@@ -1034,7 +1034,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['save_formanswer'] = true;
 
       $form   = new PluginFormcreatorForm();
-      $form->getFromDB((int) $input['formcreator_form']);
+      $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
 
       // Prepare form fields for validation
       if (!$this->canValidate($form, $this)) {
@@ -1061,7 +1061,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $input['save_formanswer']             = true;
 
       $form   = new PluginFormcreatorForm();
-      $form->getFromDB((int) $input['formcreator_form']);
+      $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
 
       // Prepare form fields for validation
       if (!$this->canValidate($form, $this)) {
