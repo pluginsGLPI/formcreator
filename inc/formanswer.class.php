@@ -425,17 +425,17 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     * @param PluginFormcreatorForm $form
     */
    public function canValidate($form, CommonDBTM $form_answer) {
+      if (!Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
+         && !Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
+         return false;
+      }
+
       switch ($form->fields['validation_required']) {
          case PluginFormcreatorForm_Validator::VALIDATION_USER:
             return (Session::getLoginUserID() == $form_answer->fields['users_id_validator']);
             break;
 
          case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
-            if (!Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-               && !Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-               return false;
-            }
-
             // Check the user is member of at least one validator group for the form answers
             $condition = [
                'glpi_groups.id' => new QuerySubQuery([
