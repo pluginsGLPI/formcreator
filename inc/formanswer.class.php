@@ -613,29 +613,26 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
          // Display validation form
       } else if (($this->fields['status'] == self::STATUS_WAITING) && $canValidate) {
-         if (Session::haveRight('ticketvalidation', TicketValidation::VALIDATEINCIDENT)
-            || Session::haveRight('ticketvalidation', TicketValidation::VALIDATEREQUEST)) {
-            echo '<div class="form-group required line1">';
-            echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
-            echo '<textarea class="form-control"
-                     rows="5"
-                     name="comment"
-                     id="comment">' . $this->fields['comment'] . '</textarea>';
-            echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
-            echo '</div>';
+         echo '<div class="form-group required line1">';
+         echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
+         echo '<textarea class="form-control"
+                  rows="5"
+                  name="comment"
+                  id="comment">' . $this->fields['comment'] . '</textarea>';
+         echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
+         echo '</div>';
 
-            echo '<div class="form-group line1">';
-            echo '<div class="center" style="float: left; width: 50%;">';
-            echo '<input type="submit" name="refuse_formanswer" class="submit_button"
-                     value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
-            echo '</div>';
-            echo '<div class="center">';
-            echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
-            echo '</div>';
-            echo '</div>';
-            $options['canedit'] = true;
-            $options['candel'] = false;
-         }
+         echo '<div class="form-group line1">';
+         echo '<div class="center" style="float: left; width: 50%;">';
+         echo '<input type="submit" name="refuse_formanswer" class="submit_button"
+                  value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
+         echo '</div>';
+         echo '<div class="center">';
+         echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
+         echo '</div>';
+         echo '</div>';
+         $options['canedit'] = true;
+         $options['candel'] = false;
       }
 
       echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . $form->getID() . '">';
