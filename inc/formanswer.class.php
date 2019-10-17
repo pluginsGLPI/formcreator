@@ -111,8 +111,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                return true;
             }
          } else {
-            if (in_array($row['items_id'], $groups)) {
-               return true;
+            foreach( $groups as $group) {
+               if ($group['id'] == $row['items_id']) {
+                  return true;
+               }
             }
          }
       }
