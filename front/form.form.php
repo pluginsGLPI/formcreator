@@ -130,7 +130,6 @@ if (isset($_POST['add'])) {
       // Save form
       $formAnswer = new PluginFormcreatorFormAnswer();
       if ($formAnswer->add($_POST) === false) {
-      //if ($form->saveForm($_POST) === false) {
          Html::back();
       }
       $form->increaseUsageCount();
