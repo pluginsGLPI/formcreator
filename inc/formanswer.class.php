@@ -480,7 +480,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $canEdit = $this->fields['status'] == self::STATUS_REFUSED
                  && $_SESSION['glpiID'] == $this->fields['requester_id'];
-      $canValidate = $this->canValidate();
 
       echo '<tr><td colspan="4" class="formcreator_form form_horizontal">';
 
@@ -612,23 +611,29 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          echo '</div>';
 
          // Display validation form
-      } else if (($this->fields['status'] == self::STATUS_WAITING) && $canValidate) {
+      } else if (($this->fields['status'] == self::STATUS_WAITING) && $this->canValidate()) {
          echo '<div class="form-group required line1">';
          echo '<label for="comment">' . __('Comment', 'formcreator') . ' <span class="red">*</span></label>';
-         echo '<textarea class="form-control"
-                  rows="5"
-                  name="comment"
-                  id="comment">' . $this->fields['comment'] . '</textarea>';
+         Html::textarea([
+            'name' => 'comment', 
+            'value' => $this->fields['comment']
+         ]);
          echo '<div class="help-block">' . __('Required if refused', 'formcreator') . '</div>';
          echo '</div>';
 
          echo '<div class="form-group line1">';
          echo '<div class="center" style="float: left; width: 50%;">';
-         echo '<input type="submit" name="refuse_formanswer" class="submit_button"
-                  value="' . __('Refuse', 'formcreator') . '" onclick="return checkComment(this);" />';
+         echo Html::submit(
+            __('Refuse', 'formcreator'), [
+               'name'      => 'refuse_formanswer',
+               'onclick'   => 'return checkComment(this)',
+         ]);
          echo '</div>';
          echo '<div class="center">';
-         echo '<input type="submit" name="accept_formanswer" class="submit_button" value="' . __('Accept', 'formcreator') . '" />';
+         echo Html::submit(
+            __('Accept', 'formcreator'), [
+               'name'      => 'accept_formanswer',
+         ]);
          echo '</div>';
          echo '</div>';
          $options['canedit'] = true;
@@ -643,7 +648,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       //      echo '</form>';
       echo '<script type="text/javascript">
                function checkComment(field) {
-                  if (document.getElementById("comment").value == "") {
+                  if ($("textarea[name=comment]").val() == "") {
                      alert("' . __('Refused comment is required!', 'formcreator') . '");
                      return false;
                   }
