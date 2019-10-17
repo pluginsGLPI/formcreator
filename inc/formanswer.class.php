@@ -720,18 +720,6 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
    }
 
    /**
-    * Prepare input data for updating the question
-    * Check fields values and get the order for the new question
-    *
-    * @param array $input data used to update the item
-    *
-    * @return array the modified $input array
-    */
-   public function prepareInputForUpdate($input) {
-      return $input;
-   }
-
-   /**
     * Actions done before deleting an item. In case of failure, prevents
     * actual deletion of the item
     *
