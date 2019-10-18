@@ -10142,32 +10142,25 @@ layout: coverage
                     <th id="L1317" class="number covered">1317</th>
 
                     <td class="covered" >
-                        <pre>         $itemTicket = new Item_Ticket();</pre>
+                        <pre>         $rows = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1318" class="number covered">1318</th>
 
                     <td class="covered" >
-                        <pre>         $rows = $DB-&gt;request([</pre>
+                        <pre>            &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1319" class="number covered">1319</th>
 
                     <td class="covered" >
-                        <pre>            &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
+                        <pre>            &#039;FROM&#039;   =&gt; Item_Ticket::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1320" class="number covered">1320</th>
-
-                    <td class="covered" >
-                        <pre>            &#039;FROM&#039;   =&gt; $itemTicket::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1321" class="number ">1321</th>
+                    <th id="L1320" class="number ">1320</th>
 
                     <td class="" >
                         <pre>            &#039;WHERE&#039;  =&gt; [
@@ -10175,7 +10168,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1322" class="number ">1322</th>
+                    <th id="L1321" class="number ">1321</th>
 
                     <td class="" >
                         <pre>               &#039;itemtype&#039; =&gt; PluginFormcreatorFormAnswer::class,
@@ -10183,14 +10176,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1323" class="number covered">1323</th>
+                    <th id="L1322" class="number covered">1322</th>
 
                     <td class="covered" >
                         <pre>               &#039;items_id&#039; =&gt; $this-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1324" class="number ">1324</th>
+                    <th id="L1323" class="number ">1323</th>
 
                     <td class="" >
                         <pre>            ]
@@ -10198,7 +10191,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1325" class="number ">1325</th>
+                    <th id="L1324" class="number ">1324</th>
 
                     <td class="" >
                         <pre>         ]);
@@ -10206,14 +10199,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1326" class="number covered">1326</th>
+                    <th id="L1325" class="number covered">1325</th>
 
                     <td class="covered" >
                         <pre>         if ($rows-&gt;count() != 1) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1327" class="number ">1327</th>
+                    <th id="L1326" class="number ">1326</th>
 
                     <td class="" >
                         <pre>            // This is a new answer for the form. Create an issue
@@ -10221,21 +10214,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1328" class="number covered">1328</th>
+                    <th id="L1327" class="number covered">1327</th>
 
                     <td class="covered" >
                         <pre>            $issue-&gt;add([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1329" class="number covered">1329</th>
+                    <th id="L1328" class="number covered">1328</th>
 
                     <td class="covered" >
                         <pre>               &#039;original_id&#039;     =&gt; $this-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1330" class="number ">1330</th>
+                    <th id="L1329" class="number ">1329</th>
 
                     <td class="" >
                         <pre>               &#039;sub_itemtype&#039;    =&gt; PluginFormcreatorFormAnswer::class,
@@ -10243,70 +10236,70 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1331" class="number covered">1331</th>
+                    <th id="L1330" class="number covered">1330</th>
 
                     <td class="covered" >
                         <pre>               &#039;name&#039;            =&gt; addslashes($this-&gt;fields[&#039;name&#039;]),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1332" class="number covered">1332</th>
+                    <th id="L1331" class="number covered">1331</th>
 
                     <td class="covered" >
                         <pre>               &#039;status&#039;          =&gt; $this-&gt;fields[&#039;status&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1333" class="number covered">1333</th>
+                    <th id="L1332" class="number covered">1332</th>
 
                     <td class="covered" >
                         <pre>               &#039;date_creation&#039;   =&gt; $this-&gt;fields[&#039;request_date&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1334" class="number covered">1334</th>
+                    <th id="L1333" class="number covered">1333</th>
 
                     <td class="covered" >
                         <pre>               &#039;date_mod&#039;        =&gt; $this-&gt;fields[&#039;request_date&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1335" class="number covered">1335</th>
+                    <th id="L1334" class="number covered">1334</th>
 
                     <td class="covered" >
                         <pre>               &#039;entities_id&#039;     =&gt; $this-&gt;fields[&#039;entities_id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1336" class="number covered">1336</th>
+                    <th id="L1335" class="number covered">1335</th>
 
                     <td class="covered" >
                         <pre>               &#039;is_recursive&#039;    =&gt; $this-&gt;fields[&#039;is_recursive&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1337" class="number covered">1337</th>
+                    <th id="L1336" class="number covered">1336</th>
 
                     <td class="covered" >
                         <pre>               &#039;requester_id&#039;    =&gt; $this-&gt;fields[&#039;requester_id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1338" class="number covered">1338</th>
+                    <th id="L1337" class="number covered">1337</th>
 
                     <td class="covered" >
                         <pre>               &#039;validator_id&#039;    =&gt; $this-&gt;fields[&#039;users_id_validator&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1339" class="number covered">1339</th>
+                    <th id="L1338" class="number covered">1338</th>
 
                     <td class="covered" >
                         <pre>               &#039;comment&#039;         =&gt; &#039;&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1340" class="number ">1340</th>
+                    <th id="L1339" class="number ">1339</th>
 
                     <td class="" >
                         <pre>            ]);
@@ -10314,7 +10307,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1341" class="number ">1341</th>
+                    <th id="L1340" class="number ">1340</th>
 
                     <td class="" >
                         <pre>         } else {
@@ -10322,10 +10315,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1342" class="number covered">1342</th>
+                    <th id="L1341" class="number covered">1341</th>
 
                     <td class="covered" >
                         <pre>            $result = $rows-&gt;next();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1342" class="number covered">1342</th>
+
+                    <td class="covered" >
+                        <pre>            $itemTicket = new Item_Ticket();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -10535,32 +10535,25 @@ layout: coverage
                     <th id="L1371" class="number uncovered">1371</th>
 
                     <td class="uncovered" >
-                        <pre>         $itemTicket = new Item_Ticket();</pre>
+                        <pre>         $rows = $DB-&gt;request([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1372" class="number uncovered">1372</th>
 
                     <td class="uncovered" >
-                        <pre>         $rows = $DB-&gt;request([</pre>
+                        <pre>            &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L1373" class="number uncovered">1373</th>
 
                     <td class="uncovered" >
-                        <pre>            &#039;SELECT&#039; =&gt; [&#039;id&#039;],</pre>
+                        <pre>            &#039;FROM&#039;   =&gt; Item_Ticket::getTable(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1374" class="number uncovered">1374</th>
-
-                    <td class="uncovered" >
-                        <pre>            &#039;FROM&#039;   =&gt; $itemTicket::getTable(),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L1375" class="number ">1375</th>
+                    <th id="L1374" class="number ">1374</th>
 
                     <td class="" >
                         <pre>            &#039;WHERE&#039;  =&gt; [
@@ -10568,7 +10561,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1376" class="number ">1376</th>
+                    <th id="L1375" class="number ">1375</th>
 
                     <td class="" >
                         <pre>               &#039;itemtype&#039; =&gt; PluginFormcreatorFormAnswer::class,
@@ -10576,14 +10569,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1377" class="number uncovered">1377</th>
+                    <th id="L1376" class="number uncovered">1376</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;items_id&#039; =&gt; $this-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1378" class="number ">1378</th>
+                    <th id="L1377" class="number ">1377</th>
 
                     <td class="" >
                         <pre>            ]
@@ -10591,7 +10584,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1379" class="number ">1379</th>
+                    <th id="L1378" class="number ">1378</th>
 
                     <td class="" >
                         <pre>         ]);
@@ -10599,21 +10592,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1380" class="number uncovered">1380</th>
+                    <th id="L1379" class="number uncovered">1379</th>
 
                     <td class="uncovered" >
                         <pre>         if ($rows-&gt;count() != 1) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1381" class="number uncovered">1381</th>
+                    <th id="L1380" class="number uncovered">1380</th>
 
                     <td class="uncovered" >
                         <pre>            $issue-&gt;getFromDBByCrit([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1382" class="number ">1382</th>
+                    <th id="L1381" class="number ">1381</th>
 
                     <td class="" >
                         <pre>               &#039;AND&#039; =&gt; [
@@ -10621,21 +10614,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1383" class="number uncovered">1383</th>
+                    <th id="L1382" class="number uncovered">1382</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;sub_itemtype&#039; =&gt; PluginFormcreatorFormAnswer::class,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1384" class="number uncovered">1384</th>
+                    <th id="L1383" class="number uncovered">1383</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;original_id&#039;  =&gt; $this-&gt;getID()</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1385" class="number ">1385</th>
+                    <th id="L1384" class="number ">1384</th>
 
                     <td class="" >
                         <pre>               ]
@@ -10643,7 +10636,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1386" class="number ">1386</th>
+                    <th id="L1385" class="number ">1385</th>
 
                     <td class="" >
                         <pre>            ]);
@@ -10651,28 +10644,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1387" class="number uncovered">1387</th>
+                    <th id="L1386" class="number uncovered">1386</th>
 
                     <td class="uncovered" >
                         <pre>            $issue-&gt;update([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1388" class="number uncovered">1388</th>
+                    <th id="L1387" class="number uncovered">1387</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;id&#039;              =&gt; $issue-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1389" class="number uncovered">1389</th>
+                    <th id="L1388" class="number uncovered">1388</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;original_id&#039;     =&gt; $this-&gt;getID(),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1390" class="number ">1390</th>
+                    <th id="L1389" class="number ">1389</th>
 
                     <td class="" >
                         <pre>               &#039;sub_itemtype&#039;    =&gt; PluginFormcreatorFormAnswer::class,
@@ -10680,70 +10673,70 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1391" class="number uncovered">1391</th>
+                    <th id="L1390" class="number uncovered">1390</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;name&#039;            =&gt; addslashes($this-&gt;fields[&#039;name&#039;]),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1392" class="number uncovered">1392</th>
+                    <th id="L1391" class="number uncovered">1391</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;status&#039;          =&gt; $this-&gt;fields[&#039;status&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1393" class="number uncovered">1393</th>
+                    <th id="L1392" class="number uncovered">1392</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;date_creation&#039;   =&gt; $this-&gt;fields[&#039;request_date&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1394" class="number uncovered">1394</th>
+                    <th id="L1393" class="number uncovered">1393</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;date_mod&#039;        =&gt; $this-&gt;fields[&#039;request_date&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1395" class="number uncovered">1395</th>
+                    <th id="L1394" class="number uncovered">1394</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;entities_id&#039;     =&gt; $this-&gt;fields[&#039;entities_id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1396" class="number uncovered">1396</th>
+                    <th id="L1395" class="number uncovered">1395</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;is_recursive&#039;    =&gt; $this-&gt;fields[&#039;is_recursive&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1397" class="number uncovered">1397</th>
+                    <th id="L1396" class="number uncovered">1396</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;requester_id&#039;    =&gt; $this-&gt;fields[&#039;requester_id&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1398" class="number uncovered">1398</th>
+                    <th id="L1397" class="number uncovered">1397</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;validator_id&#039;    =&gt; $this-&gt;fields[&#039;users_id_validator&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1399" class="number uncovered">1399</th>
+                    <th id="L1398" class="number uncovered">1398</th>
 
                     <td class="uncovered" >
                         <pre>               &#039;comment&#039;         =&gt; &#039;&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1400" class="number ">1400</th>
+                    <th id="L1399" class="number ">1399</th>
 
                     <td class="" >
                         <pre>            ]);
@@ -10751,7 +10744,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1401" class="number ">1401</th>
+                    <th id="L1400" class="number ">1400</th>
 
                     <td class="" >
                         <pre>         } else {
@@ -10759,10 +10752,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L1402" class="number uncovered">1402</th>
+                    <th id="L1401" class="number uncovered">1401</th>
 
                     <td class="uncovered" >
                         <pre>            $result = $rows-&gt;next();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L1402" class="number uncovered">1402</th>
+
+                    <td class="uncovered" >
+                        <pre>            $itemTicket = new Item_Ticket();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
