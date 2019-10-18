@@ -53,7 +53,9 @@ if (isset($_POST["add"])) {
       $question->updateConditions($_POST);
       $question->updateParameters($_POST);
    }
-   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+   $form = new PluginFormcreatorForm();
+   $form->getByQuestionId($question->getID());
+   Html::redirect(PluginFormcreatorForm::getFormURLWithID($form->getID()));
 
 } else if (isset($_POST["update"])) {
    // Edit an existing Question
@@ -63,7 +65,9 @@ if (isset($_POST["add"])) {
       $question->updateConditions($_POST);
       $question->updateParameters($_POST);
    }
-   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+   $form = new PluginFormcreatorForm();
+   $form->getByQuestionId($question->getID());
+   Html::redirect(PluginFormcreatorForm::getFormURLWithID($form->getID()));
 
 } else if (isset($_POST["delete_question"])) {
    // Delete a Question

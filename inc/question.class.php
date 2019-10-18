@@ -928,13 +928,14 @@ PluginFormcreatorDuplicatableInterface
       echo '<td colspan="4" class="center">';
       echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
       echo '<input type="hidden" name="id" value="'.$ID.'" />';
-      // plugin_formcreator_forms_id should be removed
-      // the form can be retrieved from plugin_formcreatior_sections_id
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($form_id).'" />';
       if (0 == $ID) {
-         echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
+         echo Html::submit(__('Add'), [
+            'name' => 'add'
+         ]);
       } else {
-         echo '<input type="submit" name="update" class="submit_button" value="'.__('Save').'" />';
+         echo Html::submit(__('Save'), [
+            'name' => 'update'
+         ]);
       }
       echo '</td>';
       echo '</tr>';
