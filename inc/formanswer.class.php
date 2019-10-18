@@ -1323,7 +1323,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]
          ]);
          if ($rows->count() != 1) {
-            // This is a new answer for the form. Create an issue
+            // There are several tickets for this form answer
+            // The issue must be created from this form answer
             $issue->add([
                'original_id'     => $this->getID(),
                'sub_itemtype'    => PluginFormcreatorFormAnswer::class,
@@ -1338,6 +1339,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'comment'         => '',
             ]);
          } else {
+            // There is one ticket for this form answer
+            // The issue must be created from this ticket
             $result = $rows->next();
             $itemTicket = new Item_Ticket();
             $itemTicket->getFromDB($result['id']);
@@ -1376,6 +1379,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]
          ]);
          if ($rows->count() != 1) {
+            // There are several tickets for this form answer
+            // The issue must be updated from this form answer
             $issue->getFromDBByCrit([
                'AND' => [
                'sub_itemtype' => PluginFormcreatorFormAnswer::class,
@@ -1397,6 +1402,8 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                'comment'         => '',
             ]);
          } else {
+            // There is one ticket for this form answer
+            // The issue must be updated from this ticket
             $result = $rows->next();
             $itemTicket = new Item_Ticket();
             $itemTicket->getFromDB($result['id']);
