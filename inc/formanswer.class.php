@@ -1314,10 +1314,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          // when no item exist
          // or when several rows matches
          // Both are processed the same way
-         $itemTicket = new Item_Ticket();
          $rows = $DB->request([
             'SELECT' => ['id'],
-            'FROM'   => $itemTicket::getTable(),
+            'FROM'   => Item_Ticket::getTable(),
             'WHERE'  => [
                'itemtype' => PluginFormcreatorFormAnswer::class,
                'items_id' => $this->getID(),
@@ -1340,6 +1339,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
          } else {
             $result = $rows->next();
+            $itemTicket = new Item_Ticket();
             $itemTicket->getFromDB($result['id']);
             $ticket = new Ticket();
             if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
@@ -1368,10 +1368,9 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
 
       $issue = new PluginFormcreatorIssue();
       if ($this->input['status'] != self::STATUS_REFUSED) {
-         $itemTicket = new Item_Ticket();
          $rows = $DB->request([
             'SELECT' => ['id'],
-            'FROM'   => $itemTicket::getTable(),
+            'FROM'   => Item_Ticket::getTable(),
             'WHERE'  => [
                'itemtype' => PluginFormcreatorFormAnswer::class,
                'items_id' => $this->getID(),
@@ -1400,6 +1399,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             ]);
          } else {
             $result = $rows->next();
+            $itemTicket = new Item_Ticket();
             $itemTicket->getFromDB($result['id']);
             $ticket = new Ticket();
             if (!$ticket->getFromDB($itemTicket->fields['tickets_id'])) {
