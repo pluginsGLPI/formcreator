@@ -810,7 +810,6 @@ form.formcreator_form {
    cursor: pointer;
    border-radius: 0;
    box-sizing: border-box;
-   //background-color: #E7E7E7;
    animation-name: fadeInUp ;
    animation-iteration-count: 1;
    animation-timing-function: ease-in;
@@ -827,8 +826,7 @@ form.formcreator_form {
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
    padding: 10px 40px 15px 10px;
-   height: 33px;
-   line-height: 33px;
+   //height: 33px;
    display: block;
 }
 
