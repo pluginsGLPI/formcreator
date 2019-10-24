@@ -885,9 +885,13 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
 
       echo '<td width="80%" colspan="3">';
-      echo '<textarea name="description" id="description" rows="6" cols="108"'
-           .'style="width: 97%">'.$this->fields['description'].'</textarea>';
-      Html::initEditorSystem('description');
+      echo Html::textarea([
+         'name'    => 'description',
+         'id'      => 'description',
+         'value'   => $this->fields['description'],
+         'enable_richtext' => true,
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 

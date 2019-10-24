@@ -421,8 +421,14 @@ PluginFormcreatorDuplicatableInterface
 
       echo '<tr class="tab_bg_1">';
       echo '<td>' . _n('Header', 'Headers', 1, 'formcreator') . '</td>';
-      echo '<td colspan="3"><textarea name="content" cols="124" rows="10">' . $this->fields["content"] . '</textarea></td>';
-      Html::initEditorSystem('content');
+      echo '<td colspan="3">';
+      echo Html::textarea([
+         'name'    => 'content',
+         'value'   => $this->fields["content"],
+         'enable_richtext' => true,
+         'display' => false,
+      ]);
+      echo '</td>';
       echo '</tr>';
 
       echo '<tr class="tab_bg_2">';

@@ -49,10 +49,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= '<textarea name="default_values" id="default_values" rows="4" cols="40"'
-         .'style="width: 90%">'
-         .$this->question->fields['default_values']
-         .'</textarea>';
+      $additions .= Html::textarea([
+         'name'             => 'default_values',
+         'id'               => 'default_values',
+         'value'            => $this->question->fields['default_values'],
+         'display'          => false,
+      ]);
       $additions .= '</td>';
       $additions .= '<td>';
       $additions .= '<label for="values'.$rand.'">';
@@ -61,10 +63,12 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= '<textarea name="values" id="values" rows="4" cols="40"'
-         .'style="width: 90%">'
-         .$this->question->fields['values']
-         .'</textarea>';
+      $additions .= Html::textarea([
+         'name'             => 'values',
+         'id'               => 'values',
+         'value'            => $this->question->fields['values'],
+         'display'          => false,
+      ]);
       $additions .= '</td>';
       $additions .= '</tr>';
 

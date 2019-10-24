@@ -260,42 +260,66 @@ class PluginFormcreatorTargetChange extends PluginFormcreatorTargetBase
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Description') . ' <span style="color:red;">*</span></strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="content" style="width:700px;" rows="15">' . $this->fields['content'] . '</textarea>';
+      echo Html::textarea([
+         'name'    => 'content',
+         'value'   => $this->fields['content'],
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Impacts') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="impactcontent" style="width:700px;" rows="15">' . $this->fields['impactcontent'] . '</textarea>';
+      echo Html::textarea([
+         'name'    => 'impactcontent',
+         'value'   => $this->fields['impactcontent'],
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Control list') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="controlistcontent" style="width:700px;" rows="15">' . $this->fields['controlistcontent'] . '</textarea>';
+      echo Html::textarea([
+         'name'    => 'controlistcontent',
+         'value'   => $this->fields['controlistcontent'],
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Deployment plan') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="rolloutplancontent" style="width:700px;" rows="15">' . $this->fields['rolloutplancontent'] . '</textarea>';
+      echo Html::textarea([
+         'name'    => 'rolloutplancontent',
+         'value'   => $this->fields['rolloutplancontent'],
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="line0">';
       echo '<td><strong>' . __('Backup plan') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="backoutplancontent" style="width:700px;" rows="15">' . $this->fields['backoutplancontent'] . '</textarea>';
+      echo Html::textarea([
+         'name'    => 'backoutplancontent',
+         'value'   => $this->fields['backoutplancontent'],
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 
       echo '<tr class="line1">';
       echo '<td><strong>' . __('Checklist') . ' </strong></td>';
       echo '<td colspan="3">';
-      echo '<textarea name="checklistcontent" style="width:700px;" rows="15">' . $this->fields['checklistcontent'] . '</textarea>';
+      echo Html::textarea([
+         'name'   => 'checklistcontent',
+         'vamue'  => $this->fields['checklistcontent'],
+         'display' => false,
+      ]);
       echo '</td>';
       echo '</tr>';
 
