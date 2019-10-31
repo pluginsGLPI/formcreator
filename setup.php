@@ -173,7 +173,9 @@ function plugin_init_formcreator() {
          }
          if (strpos($_SERVER['REQUEST_URI'], "front/ticket.form.php") !== false) {
             if (plugin_formcreator_replaceHelpdesk()) {
-               Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket');
+               if (!isset($_POST['update'])) {
+                  Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/issue.form.php?id=' . $_GET['id'] . '&sub_itemtype=Ticket');
+               }
             }
          }
 
