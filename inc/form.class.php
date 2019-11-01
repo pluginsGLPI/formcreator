@@ -907,13 +907,19 @@ PluginFormcreatorDuplicatableInterface
       }
 
       // Find FAQ entries
-      $query_faqs = new QueryExpression('(' . KnowbaseItem::getListRequest([
-            'faq'      => '1',
-            'contains' => $keywords
-      ]) . ') AS `faqs`');
+      $query_faqs = KnowbaseItem::getListRequest([
+         'faq'      => '1',
+         'contains' => $keywords
+      ]);
+      if (version_compare(GLPI_VERSION, "9.4") > 0) {
+         $subQuery = new DBMysqlIterator($DB);
+         $subQuery->buildQuery($query_faqs);
+         $query_faqs = '(' . $subQuery->getSQL() . ') AS `faqs`';
+      }
+
       $query_faqs = [
          'SELECT' => ['faqs' => '*'],
-         'FROM' => $query_faqs,
+         'FROM' => new QueryExpression('(' . $query_faqs . ') AS `faqs`'),
       ];
       if (count($selectedCategories) > 0) {
          $query_faqs['WHERE'] = [
