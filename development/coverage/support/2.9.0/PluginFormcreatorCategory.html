@@ -37,7 +37,7 @@ layout: coverage
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-success">
                     78%
-                                            <small>of 73</small>
+                                            <small>of 74</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -93,7 +93,7 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#getCategoryTree">PluginFormcreatorCategory::getCategoryTree()</a></td>
-                                        <td style="text-align: center">58</td>
+                                        <td style="text-align: center">59</td>
                 <td style="text-align: center">    
     <span class="label label-success">97%</span>
 </td>
@@ -1241,22 +1241,21 @@ layout: coverage
                     <th id="L150" class="number covered">150</th>
 
                     <td class="covered" >
-                        <pre>         $categories[$category[&#039;id&#039;]] = $category;</pre>
+                        <pre>         $category[&#039;name&#039;] = Dropdown::getDropdownName($cat_table, $category[&#039;id&#039;], 0, true, false);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L151" class="number ">151</th>
+                    <th id="L151" class="number covered">151</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="covered" >
+                        <pre>         $categories[$category[&#039;id&#039;]] = $category;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L152" class="number ">152</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -1264,7 +1263,7 @@ layout: coverage
                     <th id="L153" class="number ">153</th>
 
                     <td class="" >
-                        <pre>      // Remove categories that have no items and no children
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1272,54 +1271,62 @@ layout: coverage
                     <th id="L154" class="number ">154</th>
 
                     <td class="" >
-                        <pre>      // Requires category list to be sorted by level DESC
+                        <pre>      // Remove categories that have no items and no children
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L155" class="number covered">155</th>
+                    <th id="L155" class="number ">155</th>
 
-                    <td class="covered" >
-                        <pre>      foreach ($categories as $index =&gt; $category) {</pre>
+                    <td class="" >
+                        <pre>      // Requires category list to be sorted by level DESC
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L156" class="number covered">156</th>
 
                     <td class="covered" >
-                        <pre>         $children = array_filter(</pre>
+                        <pre>      foreach ($categories as $index =&gt; $category) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L157" class="number covered">157</th>
 
                     <td class="covered" >
-                        <pre>            $categories,</pre>
+                        <pre>         $children = array_filter(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L158" class="number covered">158</th>
 
                     <td class="covered" >
-                        <pre>            function ($element) use ($category) {</pre>
+                        <pre>            $categories,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L159" class="number covered">159</th>
 
                     <td class="covered" >
-                        <pre>               return $category[&#039;id&#039;] == $element[&#039;parent&#039;];</pre>
+                        <pre>            function ($element) use ($category) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L160" class="number covered">160</th>
 
                     <td class="covered" >
+                        <pre>               return $category[&#039;id&#039;] == $element[&#039;parent&#039;];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L161" class="number covered">161</th>
+
+                    <td class="covered" >
                         <pre>            }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number ">161</th>
+                    <th id="L162" class="number ">162</th>
 
                     <td class="" >
                         <pre>         );
@@ -1327,28 +1334,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L162" class="number covered">162</th>
+                    <th id="L163" class="number covered">163</th>
 
                     <td class="covered" >
                         <pre>         if (empty($children) &amp;&amp; 0 == $category[&#039;items_count&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L163" class="number uncovered">163</th>
+                    <th id="L164" class="number uncovered">164</th>
 
                     <td class="uncovered" >
                         <pre>            unset($categories[$index]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L164" class="number uncovered">164</th>
+                    <th id="L165" class="number uncovered">165</th>
 
                     <td class="uncovered" >
                         <pre>            continue;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L165" class="number ">165</th>
+                    <th id="L166" class="number ">166</th>
 
                     <td class="" >
                         <pre>         }
@@ -1356,25 +1363,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L166" class="number covered">166</th>
+                    <th id="L167" class="number covered">167</th>
 
                     <td class="covered" >
                         <pre>         $categories[$index][&#039;subcategories&#039;] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L167" class="number ">167</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L168" class="number ">168</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -1382,7 +1381,7 @@ layout: coverage
                     <th id="L169" class="number ">169</th>
 
                     <td class="" >
-                        <pre>      // Create root node
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1390,19 +1389,27 @@ layout: coverage
                     <th id="L170" class="number ">170</th>
 
                     <td class="" >
+                        <pre>      // Create root node
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L171" class="number ">171</th>
+
+                    <td class="" >
                         <pre>      $nodes = [
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number covered">171</th>
+                    <th id="L172" class="number covered">172</th>
 
                     <td class="covered" >
                         <pre>         &#039;name&#039;            =&gt; &#039;&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number ">172</th>
+                    <th id="L173" class="number ">173</th>
 
                     <td class="" >
                         <pre>         &#039;id&#039;              =&gt; 0,
@@ -1410,7 +1417,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L173" class="number ">173</th>
+                    <th id="L174" class="number ">174</th>
 
                     <td class="" >
                         <pre>         &#039;parent&#039;          =&gt; 0,
@@ -1418,7 +1425,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L174" class="number ">174</th>
+                    <th id="L175" class="number ">175</th>
 
                     <td class="" >
                         <pre>         &#039;subcategories&#039;   =&gt; [],
@@ -1426,7 +1433,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number ">175</th>
+                    <th id="L176" class="number ">176</th>
 
                     <td class="" >
                         <pre>      ];
@@ -1434,7 +1441,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number ">176</th>
+                    <th id="L177" class="number ">177</th>
 
                     <td class="" >
                         <pre>      $flat = [
@@ -1442,14 +1449,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L177" class="number covered">177</th>
+                    <th id="L178" class="number covered">178</th>
 
                     <td class="covered" >
                         <pre>         0 =&gt; &amp;$nodes,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L178" class="number ">178</th>
+                    <th id="L179" class="number ">179</th>
 
                     <td class="" >
                         <pre>      ];
@@ -1457,7 +1464,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L179" class="number ">179</th>
+                    <th id="L180" class="number ">180</th>
 
                     <td class="" >
                         <pre>
@@ -1465,7 +1472,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L180" class="number ">180</th>
+                    <th id="L181" class="number ">181</th>
 
                     <td class="" >
                         <pre>      // Build from root node to leaves
@@ -1473,35 +1480,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L181" class="number covered">181</th>
+                    <th id="L182" class="number covered">182</th>
 
                     <td class="covered" >
                         <pre>      $categories = array_reverse($categories);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L182" class="number covered">182</th>
+                    <th id="L183" class="number covered">183</th>
 
                     <td class="covered" >
                         <pre>      foreach ($categories as $item) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L183" class="number covered">183</th>
+                    <th id="L184" class="number covered">184</th>
 
                     <td class="covered" >
                         <pre>         $flat[$item[&#039;id&#039;]] = $item;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L184" class="number covered">184</th>
+                    <th id="L185" class="number covered">185</th>
 
                     <td class="covered" >
                         <pre>         $flat[$item[&#039;parent&#039;]][&#039;subcategories&#039;][] = &amp;$flat[$item[&#039;id&#039;]];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L185" class="number ">185</th>
+                    <th id="L186" class="number ">186</th>
 
                     <td class="" >
                         <pre>      }
@@ -1509,7 +1516,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L186" class="number ">186</th>
+                    <th id="L187" class="number ">187</th>
 
                     <td class="" >
                         <pre>
@@ -1517,21 +1524,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L187" class="number covered">187</th>
+                    <th id="L188" class="number covered">188</th>
 
                     <td class="covered" >
                         <pre>      return $nodes;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L188" class="number unreach">188</th>
+                    <th id="L189" class="number unreach">189</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L189" class="number ">189</th>
+                    <th id="L190" class="number ">190</th>
 
                     <td class="" >
                         <pre>}
