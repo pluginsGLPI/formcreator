@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-success">
-                    77%
-                                            <small>of 69</small>
+                    78%
+                                            <small>of 73</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -93,9 +93,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#getCategoryTree">PluginFormcreatorCategory::getCategoryTree()</a></td>
-                                        <td style="text-align: center">54</td>
+                                        <td style="text-align: center">58</td>
                 <td style="text-align: center">    
-    <span class="label label-success">96%</span>
+    <span class="label label-success">97%</span>
 </td>
                                             </tr>
         </tbody>
@@ -754,7 +754,7 @@ layout: coverage
                     <th id="L84" class="number ">84</th>
 
                     <td class="" id="getCategoryTree">
-                        <pre>   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {<span class="label label-success">96%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function getCategoryTree($rootId = 0, $helpdeskHome = false) {<span class="label label-success">97%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -832,18 +832,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L95" class="number ">95</th>
+                    <th id="L95" class="number covered">95</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>      if (version_compare(GLPI_VERSION, &quot;9.4&quot;) &gt; 0) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L96" class="number ">96</th>
 
                     <td class="" >
-                        <pre>      // Selects categories containing forms or sub-categories
+                        <pre>         // GLPI 9.5 returns an array
 </pre>
                     </td>
                 </tr>
@@ -851,42 +850,44 @@ layout: coverage
                     <th id="L97" class="number covered">97</th>
 
                     <td class="covered" >
-                        <pre>      $categoryFk = self::getForeignKeyField();</pre>
+                        <pre>         $subQuery = new DBMysqlIterator($DB);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L98" class="number covered">98</th>
 
                     <td class="covered" >
-                        <pre>      $dbUtils = new DbUtils();</pre>
+                        <pre>         $subQuery-&gt;buildQuery($query_faqs);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L99" class="number covered">99</th>
 
                     <td class="covered" >
-                        <pre>      $count1 = new QuerySubQuery([</pre>
+                        <pre>         $query_faqs = $subQuery-&gt;getSQL();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L100" class="number covered">100</th>
+                    <th id="L100" class="number ">100</th>
 
-                    <td class="covered" >
-                        <pre>         &#039;COUNT&#039; =&gt; &#039;count&#039;,</pre>
+                    <td class="" >
+                        <pre>      }
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L101" class="number covered">101</th>
+                    <th id="L101" class="number ">101</th>
 
-                    <td class="covered" >
-                        <pre>         &#039;FROM&#039; =&gt; $form_table,</pre>
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L102" class="number ">102</th>
 
                     <td class="" >
-                        <pre>         &#039;WHERE&#039; =&gt; [
+                        <pre>      // Selects categories containing forms or sub-categories
 </pre>
                     </td>
                 </tr>
@@ -894,142 +895,39 @@ layout: coverage
                     <th id="L103" class="number covered">103</th>
 
                     <td class="covered" >
-                        <pre>            &#039;is_active&#039;    =&gt; &#039;1&#039;,</pre>
+                        <pre>      $categoryFk = self::getForeignKeyField();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L104" class="number covered">104</th>
 
                     <td class="covered" >
-                        <pre>            &#039;is_deleted&#039;   =&gt; &#039;0&#039;,</pre>
+                        <pre>      $dbUtils = new DbUtils();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L105" class="number covered">105</th>
 
                     <td class="covered" >
-                        <pre>            &quot;$form_table.plugin_formcreator_categories_id&quot; =&gt; new QueryExpression(&quot;$cat_table.id&quot;),</pre>
+                        <pre>      $count1 = new QuerySubQuery([</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L106" class="number covered">106</th>
 
                     <td class="covered" >
-                        <pre>            &#039;language&#039; =&gt; [$_SESSION[&#039;glpilanguage&#039;], &#039;&#039;, &#039;0&#039;, null],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L107" class="number ">107</th>
-
-                    <td class="" >
-                        <pre>            &#039;OR&#039; =&gt; [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L108" class="number covered">108</th>
-
-                    <td class="covered" >
-                        <pre>               &#039;access_rights&#039; =&gt; [&#039;!=&#039;, PluginFormcreatorForm::ACCESS_RESTRICTED],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L109" class="number covered">109</th>
-
-                    <td class="covered" >
-                        <pre>               &#039;id&#039; =&gt; new QuerySubQuery([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L110" class="number covered">110</th>
-
-                    <td class="covered" >
-                        <pre>                  &#039;SELECT&#039; =&gt; &#039;plugin_formcreator_forms_id&#039;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L111" class="number covered">111</th>
-
-                    <td class="covered" >
-                        <pre>                  &#039;FROM&#039; =&gt; $table_fp,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L112" class="number covered">112</th>
-
-                    <td class="covered" >
-                        <pre>                  &#039;WHERE&#039; =&gt; [&#039;profiles_id&#039; =&gt; $_SESSION[&#039;glpiactiveprofile&#039;][&#039;id&#039;]],</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L113" class="number ">113</th>
-
-                    <td class="" >
-                        <pre>               ])
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L114" class="number ">114</th>
-
-                    <td class="" >
-                        <pre>            ]
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L115" class="number ">115</th>
-
-                    <td class="" >
-                        <pre>         ]
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L116" class="number covered">116</th>
-
-                    <td class="covered" >
-                        <pre>         + ($helpdeskHome ? [&#039;helpdesk_home&#039; =&gt; &#039;1&#039;]: [])</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L117" class="number covered">117</th>
-
-                    <td class="covered" >
-                        <pre>         + $dbUtils-&gt;getEntitiesRestrictCriteria($form_table, &quot;&quot;, &quot;&quot;, true, false),</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L118" class="number ">118</th>
-
-                    <td class="" >
-                        <pre>      ]);
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L119" class="number covered">119</th>
-
-                    <td class="covered" >
-                        <pre>      $count2 = new QuerySubQuery([</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L120" class="number covered">120</th>
-
-                    <td class="covered" >
                         <pre>         &#039;COUNT&#039; =&gt; &#039;count&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L121" class="number covered">121</th>
+                    <th id="L107" class="number covered">107</th>
 
                     <td class="covered" >
-                        <pre>         &#039;FROM&#039; =&gt; (new QueryExpression(&quot;($query_faqs) as faqs&quot;)),</pre>
+                        <pre>         &#039;FROM&#039; =&gt; $form_table,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L122" class="number ">122</th>
+                    <th id="L108" class="number ">108</th>
 
                     <td class="" >
                         <pre>         &#039;WHERE&#039; =&gt; [
@@ -1037,22 +935,94 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L123" class="number covered">123</th>
+                    <th id="L109" class="number covered">109</th>
 
                     <td class="covered" >
-                        <pre>            [(new QueryExpression(&quot;faqs.knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id&quot;))],</pre>
+                        <pre>            &#039;is_active&#039;    =&gt; &#039;1&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L124" class="number ">124</th>
+                    <th id="L110" class="number covered">110</th>
+
+                    <td class="covered" >
+                        <pre>            &#039;is_deleted&#039;   =&gt; &#039;0&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L111" class="number covered">111</th>
+
+                    <td class="covered" >
+                        <pre>            &quot;$form_table.plugin_formcreator_categories_id&quot; =&gt; new QueryExpression(&quot;$cat_table.id&quot;),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L112" class="number covered">112</th>
+
+                    <td class="covered" >
+                        <pre>            &#039;language&#039; =&gt; [$_SESSION[&#039;glpilanguage&#039;], &#039;&#039;, &#039;0&#039;, null],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L113" class="number ">113</th>
 
                     <td class="" >
-                        <pre>            [&quot;faqs.knowbaseitemcategories_id&quot; =&gt; [&#039;!=&#039;, &#039;0&#039;],],
+                        <pre>            &#039;OR&#039; =&gt; [
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L125" class="number ">125</th>
+                    <th id="L114" class="number covered">114</th>
+
+                    <td class="covered" >
+                        <pre>               &#039;access_rights&#039; =&gt; [&#039;!=&#039;, PluginFormcreatorForm::ACCESS_RESTRICTED],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L115" class="number covered">115</th>
+
+                    <td class="covered" >
+                        <pre>               &#039;id&#039; =&gt; new QuerySubQuery([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L116" class="number covered">116</th>
+
+                    <td class="covered" >
+                        <pre>                  &#039;SELECT&#039; =&gt; &#039;plugin_formcreator_forms_id&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L117" class="number covered">117</th>
+
+                    <td class="covered" >
+                        <pre>                  &#039;FROM&#039; =&gt; $table_fp,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L118" class="number covered">118</th>
+
+                    <td class="covered" >
+                        <pre>                  &#039;WHERE&#039; =&gt; [&#039;profiles_id&#039; =&gt; $_SESSION[&#039;glpiactiveprofile&#039;][&#039;id&#039;]],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L119" class="number ">119</th>
+
+                    <td class="" >
+                        <pre>               ])
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L120" class="number ">120</th>
+
+                    <td class="" >
+                        <pre>            ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L121" class="number ">121</th>
 
                     <td class="" >
                         <pre>         ]
@@ -1060,7 +1030,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L126" class="number ">126</th>
+                    <th id="L122" class="number covered">122</th>
+
+                    <td class="covered" >
+                        <pre>         + ($helpdeskHome ? [&#039;helpdesk_home&#039; =&gt; &#039;1&#039;]: [])</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L123" class="number covered">123</th>
+
+                    <td class="covered" >
+                        <pre>         + $dbUtils-&gt;getEntitiesRestrictCriteria($form_table, &quot;&quot;, &quot;&quot;, true, false),</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L124" class="number ">124</th>
 
                     <td class="" >
                         <pre>      ]);
@@ -1068,18 +1052,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L127" class="number ">127</th>
+                    <th id="L125" class="number covered">125</th>
 
-                    <td class="" >
-                        <pre>      $request = [
-</pre>
+                    <td class="covered" >
+                        <pre>      $count2 = new QuerySubQuery([</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L126" class="number covered">126</th>
+
+                    <td class="covered" >
+                        <pre>         &#039;COUNT&#039; =&gt; &#039;count&#039;,</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L127" class="number covered">127</th>
+
+                    <td class="covered" >
+                        <pre>         &#039;FROM&#039; =&gt; (new QueryExpression(&quot;($query_faqs) as faqs&quot;)),</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L128" class="number ">128</th>
 
                     <td class="" >
-                        <pre>         &#039;SELECT&#039; =&gt; [
+                        <pre>         &#039;WHERE&#039; =&gt; [
 </pre>
                     </td>
                 </tr>
@@ -1087,46 +1084,93 @@ layout: coverage
                     <th id="L129" class="number covered">129</th>
 
                     <td class="covered" >
+                        <pre>            [(new QueryExpression(&quot;faqs.knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id&quot;))],</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L130" class="number ">130</th>
+
+                    <td class="" >
+                        <pre>            [&quot;faqs.knowbaseitemcategories_id&quot; =&gt; [&#039;!=&#039;, &#039;0&#039;],],
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L131" class="number ">131</th>
+
+                    <td class="" >
+                        <pre>         ]
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L132" class="number ">132</th>
+
+                    <td class="" >
+                        <pre>      ]);
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L133" class="number ">133</th>
+
+                    <td class="" >
+                        <pre>      $request = [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L134" class="number ">134</th>
+
+                    <td class="" >
+                        <pre>         &#039;SELECT&#039; =&gt; [
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L135" class="number covered">135</th>
+
+                    <td class="covered" >
                         <pre>            &#039;id&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L130" class="number covered">130</th>
+                    <th id="L136" class="number covered">136</th>
 
                     <td class="covered" >
                         <pre>            &#039;name&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L131" class="number covered">131</th>
+                    <th id="L137" class="number covered">137</th>
 
                     <td class="covered" >
                         <pre>            &quot;$categoryFk as parent&quot;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L132" class="number covered">132</th>
+                    <th id="L138" class="number covered">138</th>
 
                     <td class="covered" >
                         <pre>            &#039;level&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L133" class="number covered">133</th>
+                    <th id="L139" class="number covered">139</th>
 
                     <td class="covered" >
                         <pre>            new QueryExpression(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L134" class="number covered">134</th>
+                    <th id="L140" class="number covered">140</th>
 
                     <td class="covered" >
                         <pre>               $count1-&gt;getQuery() . &quot; + &quot; . $count2-&gt;getQuery() . &quot; as items_count&quot;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L135" class="number ">135</th>
+                    <th id="L141" class="number ">141</th>
 
                     <td class="" >
                         <pre>            ),
@@ -1134,7 +1178,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L136" class="number ">136</th>
+                    <th id="L142" class="number ">142</th>
 
                     <td class="" >
                         <pre>         ],
@@ -1142,14 +1186,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L137" class="number covered">137</th>
+                    <th id="L143" class="number covered">143</th>
 
                     <td class="covered" >
                         <pre>         &#039;FROM&#039; =&gt; $cat_table,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L138" class="number ">138</th>
+                    <th id="L144" class="number ">144</th>
 
                     <td class="" >
                         <pre>         &#039;ORDER&#039; =&gt; [&quot;level DESC&quot;, &quot;name DESC&quot;],
@@ -1157,7 +1201,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L139" class="number ">139</th>
+                    <th id="L145" class="number ">145</th>
 
                     <td class="" >
                         <pre>      ];
@@ -1165,14 +1209,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L140" class="number covered">140</th>
+                    <th id="L146" class="number covered">146</th>
 
                     <td class="covered" >
                         <pre>      $result = $DB-&gt;request($request);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number ">141</th>
+                    <th id="L147" class="number ">147</th>
 
                     <td class="" >
                         <pre>
@@ -1180,28 +1224,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L142" class="number covered">142</th>
+                    <th id="L148" class="number covered">148</th>
 
                     <td class="covered" >
                         <pre>      $categories = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L143" class="number covered">143</th>
+                    <th id="L149" class="number covered">149</th>
 
                     <td class="covered" >
                         <pre>      foreach($result as $category) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L144" class="number covered">144</th>
+                    <th id="L150" class="number covered">150</th>
 
                     <td class="covered" >
                         <pre>         $categories[$category[&#039;id&#039;]] = $category;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L145" class="number ">145</th>
+                    <th id="L151" class="number ">151</th>
 
                     <td class="" >
                         <pre>      }
@@ -1209,7 +1253,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L146" class="number ">146</th>
+                    <th id="L152" class="number ">152</th>
 
                     <td class="" >
                         <pre>
@@ -1217,7 +1261,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L147" class="number ">147</th>
+                    <th id="L153" class="number ">153</th>
 
                     <td class="" >
                         <pre>      // Remove categories that have no items and no children
@@ -1225,7 +1269,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L148" class="number ">148</th>
+                    <th id="L154" class="number ">154</th>
 
                     <td class="" >
                         <pre>      // Requires category list to be sorted by level DESC
@@ -1233,49 +1277,49 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L149" class="number covered">149</th>
+                    <th id="L155" class="number covered">155</th>
 
                     <td class="covered" >
                         <pre>      foreach ($categories as $index =&gt; $category) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L150" class="number covered">150</th>
+                    <th id="L156" class="number covered">156</th>
 
                     <td class="covered" >
                         <pre>         $children = array_filter(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L151" class="number covered">151</th>
+                    <th id="L157" class="number covered">157</th>
 
                     <td class="covered" >
                         <pre>            $categories,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L152" class="number covered">152</th>
+                    <th id="L158" class="number covered">158</th>
 
                     <td class="covered" >
                         <pre>            function ($element) use ($category) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L153" class="number covered">153</th>
+                    <th id="L159" class="number covered">159</th>
 
                     <td class="covered" >
                         <pre>               return $category[&#039;id&#039;] == $element[&#039;parent&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L154" class="number covered">154</th>
+                    <th id="L160" class="number covered">160</th>
 
                     <td class="covered" >
                         <pre>            }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L155" class="number ">155</th>
+                    <th id="L161" class="number ">161</th>
 
                     <td class="" >
                         <pre>         );
@@ -1283,28 +1327,28 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L156" class="number covered">156</th>
+                    <th id="L162" class="number covered">162</th>
 
                     <td class="covered" >
                         <pre>         if (empty($children) &amp;&amp; 0 == $category[&#039;items_count&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L157" class="number uncovered">157</th>
+                    <th id="L163" class="number uncovered">163</th>
 
                     <td class="uncovered" >
                         <pre>            unset($categories[$index]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L158" class="number uncovered">158</th>
+                    <th id="L164" class="number uncovered">164</th>
 
                     <td class="uncovered" >
                         <pre>            continue;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L159" class="number ">159</th>
+                    <th id="L165" class="number ">165</th>
 
                     <td class="" >
                         <pre>         }
@@ -1312,64 +1356,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L160" class="number covered">160</th>
+                    <th id="L166" class="number covered">166</th>
 
                     <td class="covered" >
                         <pre>         $categories[$index][&#039;subcategories&#039;] = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number ">161</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L162" class="number ">162</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L163" class="number ">163</th>
-
-                    <td class="" >
-                        <pre>      // Create root node
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L164" class="number ">164</th>
-
-                    <td class="" >
-                        <pre>      $nodes = [
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L165" class="number covered">165</th>
-
-                    <td class="covered" >
-                        <pre>         &#039;name&#039;            =&gt; &#039;&#039;,</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L166" class="number ">166</th>
-
-                    <td class="" >
-                        <pre>         &#039;id&#039;              =&gt; 0,
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L167" class="number ">167</th>
 
                     <td class="" >
-                        <pre>         &#039;parent&#039;          =&gt; 0,
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -1377,7 +1374,7 @@ layout: coverage
                     <th id="L168" class="number ">168</th>
 
                     <td class="" >
-                        <pre>         &#039;subcategories&#039;   =&gt; [],
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1385,7 +1382,7 @@ layout: coverage
                     <th id="L169" class="number ">169</th>
 
                     <td class="" >
-                        <pre>      ];
+                        <pre>      // Create root node
 </pre>
                     </td>
                 </tr>
@@ -1393,7 +1390,7 @@ layout: coverage
                     <th id="L170" class="number ">170</th>
 
                     <td class="" >
-                        <pre>      $flat = [
+                        <pre>      $nodes = [
 </pre>
                     </td>
                 </tr>
@@ -1401,14 +1398,14 @@ layout: coverage
                     <th id="L171" class="number covered">171</th>
 
                     <td class="covered" >
-                        <pre>         0 =&gt; &amp;$nodes,</pre>
+                        <pre>         &#039;name&#039;            =&gt; &#039;&#039;,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L172" class="number ">172</th>
 
                     <td class="" >
-                        <pre>      ];
+                        <pre>         &#039;id&#039;              =&gt; 0,
 </pre>
                     </td>
                 </tr>
@@ -1416,7 +1413,7 @@ layout: coverage
                     <th id="L173" class="number ">173</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>         &#039;parent&#039;          =&gt; 0,
 </pre>
                     </td>
                 </tr>
@@ -1424,48 +1421,43 @@ layout: coverage
                     <th id="L174" class="number ">174</th>
 
                     <td class="" >
-                        <pre>      // Build from root node to leaves
+                        <pre>         &#039;subcategories&#039;   =&gt; [],
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number covered">175</th>
+                    <th id="L175" class="number ">175</th>
 
-                    <td class="covered" >
-                        <pre>      $categories = array_reverse($categories);</pre>
+                    <td class="" >
+                        <pre>      ];
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number covered">176</th>
+                    <th id="L176" class="number ">176</th>
 
-                    <td class="covered" >
-                        <pre>      foreach ($categories as $item) {</pre>
+                    <td class="" >
+                        <pre>      $flat = [
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L177" class="number covered">177</th>
 
                     <td class="covered" >
-                        <pre>         $flat[$item[&#039;id&#039;]] = $item;</pre>
+                        <pre>         0 =&gt; &amp;$nodes,</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L178" class="number covered">178</th>
-
-                    <td class="covered" >
-                        <pre>         $flat[$item[&#039;parent&#039;]][&#039;subcategories&#039;][] = &amp;$flat[$item[&#039;id&#039;]];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L179" class="number ">179</th>
+                    <th id="L178" class="number ">178</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>      ];
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L180" class="number ">180</th>
+                    <th id="L179" class="number ">179</th>
 
                     <td class="" >
                         <pre>
@@ -1473,21 +1465,73 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L180" class="number ">180</th>
+
+                    <td class="" >
+                        <pre>      // Build from root node to leaves
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L181" class="number covered">181</th>
+
+                    <td class="covered" >
+                        <pre>      $categories = array_reverse($categories);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L182" class="number covered">182</th>
+
+                    <td class="covered" >
+                        <pre>      foreach ($categories as $item) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L183" class="number covered">183</th>
+
+                    <td class="covered" >
+                        <pre>         $flat[$item[&#039;id&#039;]] = $item;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L184" class="number covered">184</th>
+
+                    <td class="covered" >
+                        <pre>         $flat[$item[&#039;parent&#039;]][&#039;subcategories&#039;][] = &amp;$flat[$item[&#039;id&#039;]];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L185" class="number ">185</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L186" class="number ">186</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L187" class="number covered">187</th>
 
                     <td class="covered" >
                         <pre>      return $nodes;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L182" class="number unreach">182</th>
+                    <th id="L188" class="number unreach">188</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L183" class="number ">183</th>
+                    <th id="L189" class="number ">189</th>
 
                     <td class="" >
                         <pre>}
