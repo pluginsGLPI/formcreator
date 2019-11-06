@@ -233,7 +233,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
          'Ticket'                         => __('An existing ticket', 'formcreator'),
       ];
       Dropdown::showFromArray('_link_itemtype', $elements, [
-         'on_change' => "plugin_formcretor_updateCompositePeerType($rand)",
+         'on_change' => "plugin_formcreator_updateCompositePeerType($rand)",
          'rand'      => $rand,
       ]);
       echo Html::scriptBlock("plugin_formcreator_updateCompositePeerType($rand);");

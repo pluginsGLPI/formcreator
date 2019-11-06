@@ -1213,3 +1213,13 @@ function plugin_formcreator_changeValidators(value) {
       document.getElementById("validators_groups").style.display = "none";
    }
 }
+
+function plugin_formcreator_updateCompositePeerType(rand) {
+   if ($('#dropdown__link_itemtype' + rand).val() == 'Ticket') {
+      $('#plugin_formcreator_link_ticket').show();
+      $('#plugin_formcreator_link_target').hide();
+   } else {
+      $('#plugin_formcreator_link_ticket').hide();
+      $('#plugin_formcreator_link_target').show();
+   }
+}
