@@ -149,6 +149,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
                         'value'    => $this->value,
                         'comments' => false,
                         'entity'   => $_SESSION['glpiactiveentities'],
+                        'displaywith' => ['id'],
                         'rand'     => $rand];
 
             $dparams_cond_crit = [];

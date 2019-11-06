@@ -262,6 +262,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       echo '<span id="plugin_formcreator_link_ticket">';
       $linkparam = [
          'name'        => '_link_tickets_id',
+         'rand'        => $rand,
          'used'        => $excludedTicketIds,
          'displaywith' => ['id'],
          'display'     => false
@@ -272,28 +273,15 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
       // dropdown of target tickets
       echo '<span id="plugin_formcreator_link_target">';
       $condition = [
-         'id' => new QuerySubQuery([
-            'SELECT' => ['items_id'],
-            'FROM'   => 'glpi_plugin_formcreator_targets AS t1',
-            'WHERE'  => [
-               't1.itemtype'                 => 'PluginFormcreatorTargetTicket',
-               'plugin_formcreator_forms_id' => new QuerySubQuery([
-                  'SELECT' => ['plugin_formcreator_forms_id'],
-                  'FROM'   => 'glpi_plugin_formcreator_targets AS t2',
-                  'WHERE'  => [
-                     't2.itemtype' => 'PluginFormcreatorTargetTicket',
-                     't2.items_id' => $targetTicketId
-                  ]
-               ]),
-            ]
-         ]),
+         'plugin_formcreator_forms_id' => $this->fields['plugin_formcreator_forms_id']
       ];
       echo PluginFormcreatorTargetTicket::dropdown([
-         'name'      => '_link_targettickets_id',
-         'rand'      => $rand,
-         'display'   => false,
-         'used'      => $excludedTargetTicketsIds,
-         'condition' => $condition,
+         'name'        => '_link_targettickets_id',
+         'rand'        => $rand,
+         'display'     => false,
+         'used'        => $excludedTargetTicketsIds,
+         'displaywith' => ['id'],
+         'condition'   => $condition,
       ]);
       echo '</span>';
       echo '</div>';
