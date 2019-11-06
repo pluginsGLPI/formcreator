@@ -129,14 +129,19 @@ class PluginFormcreatorFields
     */
    public static function isVisible($id, $fields) {
       /**
-       * Keep track of questions being evaluated to detect infinite loops
+       * Keep track of questions results and computation status
+       * null = is beinc computed
+       * true or false = result of a previous evaluation
+       * not set = not evaluated yet and not being evaluated
        */
       static $evalQuestion = [];
-      if (isset($evalQuestion[$id])) {
-         // TODO : how to deal a infinite loop while evaluating visibility of question ?
-         return true;
+      if (!isset($evalQuestion[$id])) {
+         $evalQuestion[$id] = null;
+      } else if ($evalQuestion[$id] !== null) {
+         return $evalQuestion[$id];
+      } else {
+         throw new Exception("Infinite loop in show conditions evaluation");
       }
-      $evalQuestion[$id]   = $id;
 
       $question   = new PluginFormcreatorQuestion();
       $question->getFromDB($id);
@@ -144,7 +149,7 @@ class PluginFormcreatorFields
 
       // If the field is always shown
       if ($question->getField('show_rule') == 'always') {
-         unset($evalQuestion[$id]);
+         $evalQuestion[$id] = true;
          return true;
       }
 
@@ -154,7 +159,7 @@ class PluginFormcreatorFields
       $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
       if (count($questionConditions) < 1) {
          // No condition defined, then always show the question
-         unset($evalQuestion[$id]);
+         $evalQuestion[$id] = true;
          return true;
       }
 
@@ -294,15 +299,15 @@ class PluginFormcreatorFields
          $return = ($return xor $lowPrecedenceReturnPart);
       }
 
-      unset($evalQuestion[$id]);
-
       if ($question->fields['show_rule'] == 'hidden') {
          // If the field is hidden by default, show it if condition is true
-         return $return;
+         $evalQuestion[$id] = $return;
       } else {
          // else show it if condition is false
-         return !$return;
+         $evalQuestion[$id] = !$return;
       }
+
+      return $evalQuestion[$id];
    }
 
    /**
