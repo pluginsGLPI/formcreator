@@ -31,6 +31,11 @@
 
 include ('../../../inc/includes.php');
 
-$visibility = PluginFormcreatorFields::updateVisibility($_POST);
+try {
+    $visibility = PluginFormcreatorFields::updateVisibility($_POST);
+} catch (Exception $e) {
+    http_response_code(500);
+    exit();
+}
 echo json_encode($visibility);
 exit();
