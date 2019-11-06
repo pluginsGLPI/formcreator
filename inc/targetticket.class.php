@@ -245,7 +245,7 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
             'plugin_formcreator_targettickets_id' => $targetTicketId
          ]
       ]);
-      $excludedTargetTicketsIds = [];
+      $excludedTargetTicketsIds = [$this->getID()];
       $excludedTicketIds = [];
       foreach ($rows as $row) {
          switch ($row['itemtype']) {
@@ -271,7 +271,6 @@ class PluginFormcreatorTargetTicket extends PluginFormcreatorTargetBase
 
       // dropdown of target tickets
       echo '<span id="plugin_formcreator_link_target">';
-      $excludedTargetTicketsIds[] = $this->getID();
       $condition = [
          'id' => new QuerySubQuery([
             'SELECT' => ['items_id'],
