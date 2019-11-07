@@ -111,8 +111,10 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
                return true;
             }
          } else {
-            if (in_array($row['items_id'], $groups)) {
-               return true;
+            foreach ($groups as $group) {
+               if ($group['id'] == $row['items_id']) {
+                  return true;
+               }
             }
          }
       }
@@ -1081,7 +1083,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
          $targetObject = new $target['itemtype'];
          $targetObject->getFromDB($target['items_id']);
          $generatedTarget = $targetObject->save($this);
-         if ($generatedTarget === false) {
+         if ($generatedTarget === null) {
             $success = false;
             break;
          }

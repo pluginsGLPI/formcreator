@@ -1,3 +1,20 @@
+<a name="2.8.6"></a>
+## [2.8.6](https://github.com/pluginsglpi/formcreator/compare/v2.8.5...v2.8.6) (2019-11-07)
+
+
+### Bug Fixes
+
+* **form:** deny access if form not enabled ([0290a97](https://github.com/pluginsglpi/formcreator/commit/0290a97))
+* **form:** don't access deleted forms ([6169412](https://github.com/pluginsglpi/formcreator/commit/6169412))
+* **formanswer:** bad sql ([023a60e](https://github.com/pluginsglpi/formcreator/commit/023a60e))
+* loading resources for anonymous forms ([58b7141](https://github.com/pluginsglpi/formcreator/commit/58b7141)), closes [#1535](https://github.com/pluginsglpi/formcreator/issues/1535)
+* **formanswer:** canViewItem with group ([4c22600](https://github.com/pluginsglpi/formcreator/commit/4c22600))
+* unexpected redirection while editing a ticket as post-only + service catalog ([63f3cee](https://github.com/pluginsglpi/formcreator/commit/63f3cee)), closes [#1557](https://github.com/pluginsglpi/formcreator/issues/1557)
+* **question_condition:** better performance ([0fc6aea](https://github.com/pluginsglpi/formcreator/commit/0fc6aea))
+* **targetticket,targetchange:** return value of save() method ([cbc2249](https://github.com/pluginsglpi/formcreator/commit/cbc2249))
+
+
+
 <a name="2.8.5"></a>
 ## [2.8.5](https://github.com/pluginsglpi/formcreator/compare/v2.8.4...v2.8.5) (2019-09-02)
 
