@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-warning">
-                    48%
-                                            <small>of 152</small>
+                    47%
+                                            <small>of 154</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -86,9 +86,9 @@ layout: coverage
                                             </tr>
             <tr>
             <td><a href="#isVisible">PluginFormcreatorFields::isVisible()</a></td>
-                                        <td style="text-align: center">100</td>
+                                        <td style="text-align: center">102</td>
                 <td style="text-align: center">    
-    <span class="label label-warning">54%</span>
+    <span class="label label-warning">53%</span>
 </td>
                                             </tr>
             <tr>
@@ -1127,7 +1127,7 @@ layout: coverage
                     <th id="L130" class="number ">130</th>
 
                     <td class="" id="isVisible">
-                        <pre>   public static function isVisible($id, $fields) {<span class="label label-warning">54%</span><div class="btn-group"></div></pre>
+                        <pre>   public static function isVisible($id, $fields) {<span class="label label-warning">53%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1142,7 +1142,7 @@ layout: coverage
                     <th id="L132" class="number ">132</th>
 
                     <td class="" >
-                        <pre>       * Keep track of questions being evaluated to detect infinite loops
+                        <pre>       * Keep track of questions results and computation status
 </pre>
                     </td>
                 </tr>
@@ -1150,88 +1150,89 @@ layout: coverage
                     <th id="L133" class="number ">133</th>
 
                     <td class="" >
-                        <pre>       */
+                        <pre>       * null = is beinc computed
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L134" class="number covered">134</th>
+                    <th id="L134" class="number ">134</th>
 
-                    <td class="covered" >
-                        <pre>      static $evalQuestion = [];</pre>
+                    <td class="" >
+                        <pre>       * true or false = result of a previous evaluation
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L135" class="number covered">135</th>
+                    <th id="L135" class="number ">135</th>
 
-                    <td class="covered" >
-                        <pre>      if (isset($evalQuestion[$id])) {</pre>
+                    <td class="" >
+                        <pre>       * not set = not evaluated yet and not being evaluated
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L136" class="number ">136</th>
 
                     <td class="" >
-                        <pre>         // TODO : how to deal a infinite loop while evaluating visibility of question ?
+                        <pre>       */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L137" class="number uncovered">137</th>
+                    <th id="L137" class="number covered">137</th>
 
-                    <td class="uncovered" >
-                        <pre>         return true;</pre>
+                    <td class="covered" >
+                        <pre>      static $evalQuestion = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L138" class="number ">138</th>
+                    <th id="L138" class="number covered">138</th>
 
-                    <td class="" >
-                        <pre>      }
-</pre>
+                    <td class="covered" >
+                        <pre>      if (!isset($evalQuestion[$id])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L139" class="number covered">139</th>
 
                     <td class="covered" >
-                        <pre>      $evalQuestion[$id]   = $id;</pre>
+                        <pre>         $evalQuestion[$id] = null;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L140" class="number ">140</th>
+                    <th id="L140" class="number uncovered">140</th>
+
+                    <td class="uncovered" >
+                        <pre>      } else if ($evalQuestion[$id] !== null) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L141" class="number uncovered">141</th>
+
+                    <td class="uncovered" >
+                        <pre>         return $evalQuestion[$id];</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L142" class="number ">142</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      } else {
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L141" class="number covered">141</th>
+                    <th id="L143" class="number uncovered">143</th>
 
-                    <td class="covered" >
-                        <pre>      $question   = new PluginFormcreatorQuestion();</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L142" class="number covered">142</th>
-
-                    <td class="covered" >
-                        <pre>      $question-&gt;getFromDB($id);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L143" class="number covered">143</th>
-
-                    <td class="covered" >
-                        <pre>      $conditions = [];</pre>
+                    <td class="uncovered" >
+                        <pre>         throw new Exception(&quot;Infinite loop in show conditions evaluation&quot;);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L144" class="number ">144</th>
 
                     <td class="" >
-                        <pre>
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -1239,7 +1240,7 @@ layout: coverage
                     <th id="L145" class="number ">145</th>
 
                     <td class="" >
-                        <pre>      // If the field is always shown
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1247,28 +1248,28 @@ layout: coverage
                     <th id="L146" class="number covered">146</th>
 
                     <td class="covered" >
-                        <pre>      if ($question-&gt;getField(&#039;show_rule&#039;) == &#039;always&#039;) {</pre>
+                        <pre>      $question   = new PluginFormcreatorQuestion();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L147" class="number covered">147</th>
 
                     <td class="covered" >
-                        <pre>         unset($evalQuestion[$id]);</pre>
+                        <pre>      $question-&gt;getFromDB($id);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L148" class="number covered">148</th>
 
                     <td class="covered" >
-                        <pre>         return true;</pre>
+                        <pre>      $conditions = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L149" class="number ">149</th>
 
                     <td class="" >
-                        <pre>      }
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1276,12 +1277,49 @@ layout: coverage
                     <th id="L150" class="number ">150</th>
 
                     <td class="" >
+                        <pre>      // If the field is always shown
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L151" class="number covered">151</th>
+
+                    <td class="covered" >
+                        <pre>      if ($question-&gt;getField(&#039;show_rule&#039;) == &#039;always&#039;) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L152" class="number covered">152</th>
+
+                    <td class="covered" >
+                        <pre>         $evalQuestion[$id] = true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L153" class="number covered">153</th>
+
+                    <td class="covered" >
+                        <pre>         return true;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L154" class="number ">154</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L155" class="number ">155</th>
+
+                    <td class="" >
                         <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L151" class="number ">151</th>
+                    <th id="L156" class="number ">156</th>
 
                     <td class="" >
                         <pre>      // Get conditions to show or hide field
@@ -1289,35 +1327,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L152" class="number covered">152</th>
+                    <th id="L157" class="number covered">157</th>
 
                     <td class="covered" >
                         <pre>      $questionId = $question-&gt;getID();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L153" class="number covered">153</th>
+                    <th id="L158" class="number covered">158</th>
 
                     <td class="covered" >
                         <pre>      $question_condition = new PluginFormcreatorQuestion_Condition();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L154" class="number covered">154</th>
+                    <th id="L159" class="number covered">159</th>
 
                     <td class="covered" >
                         <pre>      $questionConditions = $question_condition-&gt;getConditionsFromQuestion($questionId);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L155" class="number covered">155</th>
+                    <th id="L160" class="number covered">160</th>
 
                     <td class="covered" >
                         <pre>      if (count($questionConditions) &lt; 1) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L156" class="number ">156</th>
+                    <th id="L161" class="number ">161</th>
 
                     <td class="" >
                         <pre>         // No condition defined, then always show the question
@@ -1325,21 +1363,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L157" class="number uncovered">157</th>
+                    <th id="L162" class="number uncovered">162</th>
 
                     <td class="uncovered" >
-                        <pre>         unset($evalQuestion[$id]);</pre>
+                        <pre>         $evalQuestion[$id] = true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L158" class="number uncovered">158</th>
+                    <th id="L163" class="number uncovered">163</th>
 
                     <td class="uncovered" >
                         <pre>         return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L159" class="number ">159</th>
+                    <th id="L164" class="number ">164</th>
 
                     <td class="" >
                         <pre>      }
@@ -1347,7 +1385,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L160" class="number ">160</th>
+                    <th id="L165" class="number ">165</th>
 
                     <td class="" >
                         <pre>
@@ -1355,49 +1393,49 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L161" class="number covered">161</th>
+                    <th id="L166" class="number covered">166</th>
 
                     <td class="covered" >
                         <pre>      foreach ($questionConditions as $question_condition) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L162" class="number covered">162</th>
+                    <th id="L167" class="number covered">167</th>
 
                     <td class="covered" >
                         <pre>         $conditions[] = [</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L163" class="number covered">163</th>
+                    <th id="L168" class="number covered">168</th>
 
                     <td class="covered" >
                         <pre>            &#039;logic&#039;    =&gt; $question_condition-&gt;fields[&#039;show_logic&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L164" class="number covered">164</th>
+                    <th id="L169" class="number covered">169</th>
 
                     <td class="covered" >
                         <pre>            &#039;field&#039;    =&gt; $question_condition-&gt;fields[&#039;show_field&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L165" class="number covered">165</th>
+                    <th id="L170" class="number covered">170</th>
 
                     <td class="covered" >
                         <pre>            &#039;operator&#039; =&gt; $question_condition-&gt;fields[&#039;show_condition&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L166" class="number covered">166</th>
+                    <th id="L171" class="number covered">171</th>
 
                     <td class="covered" >
                         <pre>            &#039;value&#039;    =&gt; $question_condition-&gt;fields[&#039;show_value&#039;]</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L167" class="number ">167</th>
+                    <th id="L172" class="number ">172</th>
 
                     <td class="" >
                         <pre>         ];
@@ -1405,7 +1443,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L168" class="number ">168</th>
+                    <th id="L173" class="number ">173</th>
 
                     <td class="" >
                         <pre>      }
@@ -1413,7 +1451,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L169" class="number ">169</th>
+                    <th id="L174" class="number ">174</th>
 
                     <td class="" >
                         <pre>
@@ -1421,7 +1459,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L170" class="number ">170</th>
+                    <th id="L175" class="number ">175</th>
 
                     <td class="" >
                         <pre>      // Force the first logic operator to OR
@@ -1429,14 +1467,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L171" class="number covered">171</th>
+                    <th id="L176" class="number covered">176</th>
 
                     <td class="covered" >
                         <pre>      $conditions[0][&#039;logic&#039;]       = &#039;OR&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L172" class="number ">172</th>
+                    <th id="L177" class="number ">177</th>
 
                     <td class="" >
                         <pre>
@@ -1444,56 +1482,56 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L173" class="number covered">173</th>
+                    <th id="L178" class="number covered">178</th>
 
                     <td class="covered" >
                         <pre>      $return                       = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L174" class="number covered">174</th>
+                    <th id="L179" class="number covered">179</th>
 
                     <td class="covered" >
                         <pre>      $lowPrecedenceReturnPart      = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L175" class="number covered">175</th>
+                    <th id="L180" class="number covered">180</th>
 
                     <td class="covered" >
                         <pre>      $lowPrecedenceLogic           = &#039;OR&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L176" class="number covered">176</th>
+                    <th id="L181" class="number covered">181</th>
 
                     <td class="covered" >
                         <pre>      foreach ($conditions as $order =&gt; $condition) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L177" class="number covered">177</th>
+                    <th id="L182" class="number covered">182</th>
 
                     <td class="covered" >
                         <pre>         $currentLogic = $condition[&#039;logic&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L178" class="number covered">178</th>
+                    <th id="L183" class="number covered">183</th>
 
                     <td class="covered" >
                         <pre>         if (isset($conditions[$order + 1])) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L179" class="number covered">179</th>
+                    <th id="L184" class="number covered">184</th>
 
                     <td class="covered" >
                         <pre>            $nextLogic = $conditions[$order + 1][&#039;logic&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L180" class="number ">180</th>
+                    <th id="L185" class="number ">185</th>
 
                     <td class="" >
                         <pre>         } else {
@@ -1501,7 +1539,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L181" class="number ">181</th>
+                    <th id="L186" class="number ">186</th>
 
                     <td class="" >
                         <pre>            // To ensure the low precedence return part is used at the end of the whole evaluation
@@ -1509,14 +1547,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L182" class="number covered">182</th>
+                    <th id="L187" class="number covered">187</th>
 
                     <td class="covered" >
                         <pre>            $nextLogic = &#039;OR&#039;;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L183" class="number ">183</th>
+                    <th id="L188" class="number ">188</th>
 
                     <td class="" >
                         <pre>         }
@@ -1524,7 +1562,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L184" class="number ">184</th>
+                    <th id="L189" class="number ">189</th>
 
                     <td class="" >
                         <pre>
@@ -1532,7 +1570,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L185" class="number ">185</th>
+                    <th id="L190" class="number ">190</th>
 
                     <td class="" >
                         <pre>         // TODO: find the best behavior if the question does not exists
@@ -1540,14 +1578,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L186" class="number covered">186</th>
+                    <th id="L191" class="number covered">191</th>
 
                     <td class="covered" >
                         <pre>         $conditionField = $fields[$condition[&#039;field&#039;]];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L187" class="number ">187</th>
+                    <th id="L192" class="number ">192</th>
 
                     <td class="" >
                         <pre>
@@ -1555,68 +1593,31 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L188" class="number covered">188</th>
+                    <th id="L193" class="number covered">193</th>
 
                     <td class="covered" >
                         <pre>         switch ($condition[&#039;operator&#039;]) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L189" class="number covered">189</th>
+                    <th id="L194" class="number covered">194</th>
 
                     <td class="covered" >
                         <pre>            case &#039;!=&#039; :</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L190" class="number uncovered">190</th>
+                    <th id="L195" class="number uncovered">195</th>
 
                     <td class="uncovered" >
                         <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L191" class="number uncovered">191</th>
-
-                    <td class="uncovered" >
-                        <pre>                  return true;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L192" class="number ">192</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L193" class="number ">193</th>
-
-                    <td class="" >
-                        <pre>               try {
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L194" class="number uncovered">194</th>
-
-                    <td class="uncovered" >
-                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;notEquals($condition[&#039;value&#039;]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L195" class="number uncovered">195</th>
-
-                    <td class="uncovered" >
-                        <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L196" class="number uncovered">196</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = false;</pre>
+                        <pre>                  return true;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1628,51 +1629,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L198" class="number uncovered">198</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L199" class="number ">199</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L200" class="number covered">200</th>
-
-                    <td class="covered" >
-                        <pre>            case &#039;==&#039; :</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L201" class="number covered">201</th>
-
-                    <td class="covered" >
-                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L202" class="number uncovered">202</th>
-
-                    <td class="uncovered" >
-                        <pre>                  return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L203" class="number ">203</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L204" class="number ">204</th>
+                    <th id="L198" class="number ">198</th>
 
                     <td class="" >
                         <pre>               try {
@@ -1680,24 +1637,68 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L205" class="number covered">205</th>
+                    <th id="L199" class="number uncovered">199</th>
 
-                    <td class="covered" >
-                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;equals($condition[&#039;value&#039;]);</pre>
+                    <td class="uncovered" >
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;notEquals($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L206" class="number uncovered">206</th>
+                    <th id="L200" class="number uncovered">200</th>
 
                     <td class="uncovered" >
                         <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L207" class="number uncovered">207</th>
+                    <th id="L201" class="number uncovered">201</th>
 
                     <td class="uncovered" >
                         <pre>                  $value = false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L202" class="number ">202</th>
+
+                    <td class="" >
+                        <pre>               }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L203" class="number uncovered">203</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L204" class="number ">204</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L205" class="number covered">205</th>
+
+                    <td class="covered" >
+                        <pre>            case &#039;==&#039; :</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L206" class="number covered">206</th>
+
+                    <td class="covered" >
+                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L207" class="number uncovered">207</th>
+
+                    <td class="uncovered" >
+                        <pre>                  return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1709,51 +1710,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L209" class="number covered">209</th>
-
-                    <td class="covered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L210" class="number ">210</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L211" class="number uncovered">211</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;&gt;&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L212" class="number uncovered">212</th>
-
-                    <td class="uncovered" >
-                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L213" class="number uncovered">213</th>
-
-                    <td class="uncovered" >
-                        <pre>                  return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L214" class="number ">214</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L215" class="number ">215</th>
+                    <th id="L209" class="number ">209</th>
 
                     <td class="" >
                         <pre>               try {
@@ -1761,24 +1718,68 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L216" class="number uncovered">216</th>
+                    <th id="L210" class="number covered">210</th>
 
-                    <td class="uncovered" >
-                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;greaterThan($condition[&#039;value&#039;]);</pre>
+                    <td class="covered" >
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;equals($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L217" class="number uncovered">217</th>
+                    <th id="L211" class="number uncovered">211</th>
 
                     <td class="uncovered" >
                         <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L218" class="number uncovered">218</th>
+                    <th id="L212" class="number uncovered">212</th>
 
                     <td class="uncovered" >
                         <pre>                  $value = false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L213" class="number ">213</th>
+
+                    <td class="" >
+                        <pre>               }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L214" class="number covered">214</th>
+
+                    <td class="covered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L215" class="number ">215</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L216" class="number uncovered">216</th>
+
+                    <td class="uncovered" >
+                        <pre>            case &#039;&gt;&#039;:</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L217" class="number uncovered">217</th>
+
+                    <td class="uncovered" >
+                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L218" class="number uncovered">218</th>
+
+                    <td class="uncovered" >
+                        <pre>                  return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1790,51 +1791,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L220" class="number uncovered">220</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L221" class="number ">221</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L222" class="number uncovered">222</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;&lt;&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L223" class="number uncovered">223</th>
-
-                    <td class="uncovered" >
-                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L224" class="number uncovered">224</th>
-
-                    <td class="uncovered" >
-                        <pre>                  return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L225" class="number ">225</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L226" class="number ">226</th>
+                    <th id="L220" class="number ">220</th>
 
                     <td class="" >
                         <pre>               try {
@@ -1842,24 +1799,68 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L227" class="number uncovered">227</th>
+                    <th id="L221" class="number uncovered">221</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;lessThan($condition[&#039;value&#039;]);</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;greaterThan($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L228" class="number uncovered">228</th>
+                    <th id="L222" class="number uncovered">222</th>
 
                     <td class="uncovered" >
                         <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L229" class="number uncovered">229</th>
+                    <th id="L223" class="number uncovered">223</th>
 
                     <td class="uncovered" >
                         <pre>                  $value = false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L224" class="number ">224</th>
+
+                    <td class="" >
+                        <pre>               }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L225" class="number uncovered">225</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L226" class="number ">226</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L227" class="number uncovered">227</th>
+
+                    <td class="uncovered" >
+                        <pre>            case &#039;&lt;&#039;:</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L228" class="number uncovered">228</th>
+
+                    <td class="uncovered" >
+                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L229" class="number uncovered">229</th>
+
+                    <td class="uncovered" >
+                        <pre>                  return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -1871,43 +1872,36 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L231" class="number uncovered">231</th>
+                    <th id="L231" class="number ">231</th>
 
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
+                    <td class="" >
+                        <pre>               try {
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L232" class="number ">232</th>
+                    <th id="L232" class="number uncovered">232</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="uncovered" >
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; $conditionField-&gt;lessThan($condition[&#039;value&#039;]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L233" class="number uncovered">233</th>
 
                     <td class="uncovered" >
-                        <pre>            case &#039;&gt;=&#039;:</pre>
+                        <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L234" class="number uncovered">234</th>
 
                     <td class="uncovered" >
-                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
+                        <pre>                  $value = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L235" class="number uncovered">235</th>
-
-                    <td class="uncovered" >
-                        <pre>                  return false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L236" class="number ">236</th>
+                    <th id="L235" class="number ">235</th>
 
                     <td class="" >
                         <pre>               }
@@ -1915,10 +1909,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
+                    <th id="L236" class="number uncovered">236</th>
+
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
                     <th id="L237" class="number ">237</th>
 
                     <td class="" >
-                        <pre>               try {
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -1926,76 +1927,25 @@ layout: coverage
                     <th id="L238" class="number uncovered">238</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; ($conditionField-&gt;greaterThan($condition[&#039;value&#039;])</pre>
+                        <pre>            case &#039;&gt;=&#039;:</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L239" class="number uncovered">239</th>
 
                     <td class="uncovered" >
-                        <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]));</pre>
+                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L240" class="number uncovered">240</th>
 
                     <td class="uncovered" >
-                        <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L241" class="number uncovered">241</th>
-
-                    <td class="uncovered" >
-                        <pre>                  $value = false;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L242" class="number ">242</th>
-
-                    <td class="" >
-                        <pre>               }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L243" class="number uncovered">243</th>
-
-                    <td class="uncovered" >
-                        <pre>               break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L244" class="number ">244</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L245" class="number uncovered">245</th>
-
-                    <td class="uncovered" >
-                        <pre>            case &#039;&lt;=&#039;:</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L246" class="number uncovered">246</th>
-
-                    <td class="uncovered" >
-                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L247" class="number uncovered">247</th>
-
-                    <td class="uncovered" >
                         <pre>                  return false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L248" class="number ">248</th>
+                    <th id="L241" class="number ">241</th>
 
                     <td class="" >
                         <pre>               }
@@ -2003,7 +1953,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L249" class="number ">249</th>
+                    <th id="L242" class="number ">242</th>
 
                     <td class="" >
                         <pre>               try {
@@ -2011,35 +1961,35 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L250" class="number uncovered">250</th>
+                    <th id="L243" class="number uncovered">243</th>
 
                     <td class="uncovered" >
-                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; ($conditionField-&gt;lessThan($condition[&#039;value&#039;])</pre>
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; ($conditionField-&gt;greaterThan($condition[&#039;value&#039;])</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L251" class="number uncovered">251</th>
+                    <th id="L244" class="number uncovered">244</th>
 
                     <td class="uncovered" >
                         <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]));</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L252" class="number uncovered">252</th>
+                    <th id="L245" class="number uncovered">245</th>
 
                     <td class="uncovered" >
                         <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L253" class="number uncovered">253</th>
+                    <th id="L246" class="number uncovered">246</th>
 
                     <td class="uncovered" >
                         <pre>                  $value = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L254" class="number ">254</th>
+                    <th id="L247" class="number ">247</th>
 
                     <td class="" >
                         <pre>               }
@@ -2047,22 +1997,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L255" class="number uncovered">255</th>
+                    <th id="L248" class="number uncovered">248</th>
 
                     <td class="uncovered" >
                         <pre>               break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L256" class="number ">256</th>
-
-                    <td class="" >
-                        <pre>         }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L257" class="number ">257</th>
+                    <th id="L249" class="number ">249</th>
 
                     <td class="" >
                         <pre>
@@ -2070,33 +2012,90 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L258" class="number ">258</th>
+                    <th id="L250" class="number uncovered">250</th>
+
+                    <td class="uncovered" >
+                        <pre>            case &#039;&lt;=&#039;:</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L251" class="number uncovered">251</th>
+
+                    <td class="uncovered" >
+                        <pre>               if (!$conditionField-&gt;isPrerequisites()) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L252" class="number uncovered">252</th>
+
+                    <td class="uncovered" >
+                        <pre>                  return false;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L253" class="number ">253</th>
 
                     <td class="" >
-                        <pre>         // Combine all condition with respect of operator precedence
+                        <pre>               }
 </pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L254" class="number ">254</th>
+
+                    <td class="" >
+                        <pre>               try {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L255" class="number uncovered">255</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $value = self::isVisible($conditionField-&gt;getQuestionId(), $fields) &amp;&amp; ($conditionField-&gt;lessThan($condition[&#039;value&#039;])</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L256" class="number uncovered">256</th>
+
+                    <td class="uncovered" >
+                        <pre>                           || $conditionField-&gt;equals($condition[&#039;value&#039;]));</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L257" class="number uncovered">257</th>
+
+                    <td class="uncovered" >
+                        <pre>               } catch (PluginFormcreatorComparisonException $e) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L258" class="number uncovered">258</th>
+
+                    <td class="uncovered" >
+                        <pre>                  $value = false;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L259" class="number ">259</th>
 
                     <td class="" >
-                        <pre>         // AND has precedence over OR and XOR
+                        <pre>               }
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L260" class="number covered">260</th>
+                    <th id="L260" class="number uncovered">260</th>
 
-                    <td class="covered" >
-                        <pre>         if ($currentLogic != &#039;AND&#039; &amp;&amp; $nextLogic == &#039;AND&#039;) {</pre>
+                    <td class="uncovered" >
+                        <pre>               break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L261" class="number ">261</th>
 
                     <td class="" >
-                        <pre>            // next condition has a higher precedence operator
+                        <pre>         }
 </pre>
                     </td>
                 </tr>
@@ -2104,33 +2103,72 @@ layout: coverage
                     <th id="L262" class="number ">262</th>
 
                     <td class="" >
-                        <pre>            // Save the current computed return and operator to use later
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L263" class="number covered">263</th>
+                    <th id="L263" class="number ">263</th>
 
-                    <td class="covered" >
-                        <pre>            $lowPrecedenceReturnPart = $return;</pre>
+                    <td class="" >
+                        <pre>         // Combine all condition with respect of operator precedence
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L264" class="number covered">264</th>
+                    <th id="L264" class="number ">264</th>
 
-                    <td class="covered" >
-                        <pre>            $lowPrecedenceLogic = $currentLogic;</pre>
+                    <td class="" >
+                        <pre>         // AND has precedence over OR and XOR
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L265" class="number covered">265</th>
 
                     <td class="covered" >
-                        <pre>            $return = $value;</pre>
+                        <pre>         if ($currentLogic != &#039;AND&#039; &amp;&amp; $nextLogic == &#039;AND&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L266" class="number ">266</th>
+
+                    <td class="" >
+                        <pre>            // next condition has a higher precedence operator
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L267" class="number ">267</th>
+
+                    <td class="" >
+                        <pre>            // Save the current computed return and operator to use later
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L268" class="number covered">268</th>
+
+                    <td class="covered" >
+                        <pre>            $lowPrecedenceReturnPart = $return;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L269" class="number covered">269</th>
+
+                    <td class="covered" >
+                        <pre>            $lowPrecedenceLogic = $currentLogic;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L270" class="number covered">270</th>
+
+                    <td class="covered" >
+                        <pre>            $return = $value;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L271" class="number ">271</th>
 
                     <td class="" >
                         <pre>         } else {
@@ -2138,99 +2176,60 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L267" class="number covered">267</th>
+                    <th id="L272" class="number covered">272</th>
 
                     <td class="covered" >
                         <pre>            switch ($currentLogic) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L268" class="number covered">268</th>
+                    <th id="L273" class="number covered">273</th>
 
                     <td class="covered" >
                         <pre>               case &#039;AND&#039; :</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L269" class="number covered">269</th>
+                    <th id="L274" class="number covered">274</th>
 
                     <td class="covered" >
                         <pre>                  $return = ($return and $value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L270" class="number covered">270</th>
+                    <th id="L275" class="number covered">275</th>
 
                     <td class="covered" >
                         <pre>                  break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L271" class="number ">271</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L272" class="number covered">272</th>
-
-                    <td class="covered" >
-                        <pre>               case &#039;OR&#039;  :</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L273" class="number covered">273</th>
-
-                    <td class="covered" >
-                        <pre>                  $return = ($return or $value);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L274" class="number covered">274</th>
-
-                    <td class="covered" >
-                        <pre>                  break;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L275" class="number ">275</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L276" class="number ">276</th>
 
                     <td class="" >
-                        <pre>               default :
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L277" class="number uncovered">277</th>
+                    <th id="L277" class="number covered">277</th>
 
-                    <td class="uncovered" >
-                        <pre>                  $return = $value;</pre>
+                    <td class="covered" >
+                        <pre>               case &#039;OR&#039;  :</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L278" class="number ">278</th>
+                    <th id="L278" class="number covered">278</th>
 
-                    <td class="" >
-                        <pre>            }
-</pre>
+                    <td class="covered" >
+                        <pre>                  $return = ($return or $value);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L279" class="number ">279</th>
+                    <th id="L279" class="number covered">279</th>
 
-                    <td class="" >
-                        <pre>         }
-</pre>
+                    <td class="covered" >
+                        <pre>                  break;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2242,43 +2241,22 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L281" class="number covered">281</th>
-
-                    <td class="covered" >
-                        <pre>         if ($currentLogic == &#039;AND&#039; &amp;&amp; $nextLogic != &#039;AND&#039;) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L282" class="number covered">282</th>
-
-                    <td class="covered" >
-                        <pre>            if ($lowPrecedenceLogic == &#039;OR&#039;) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L283" class="number covered">283</th>
-
-                    <td class="covered" >
-                        <pre>               $return = ($return or $lowPrecedenceReturnPart);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L284" class="number ">284</th>
+                    <th id="L281" class="number ">281</th>
 
                     <td class="" >
-                        <pre>            } else {
+                        <pre>               default :
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L285" class="number uncovered">285</th>
+                    <th id="L282" class="number uncovered">282</th>
 
                     <td class="uncovered" >
-                        <pre>               $return = ($return xor $lowPrecedenceReturnPart);</pre>
+                        <pre>                  $return = $value;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L286" class="number ">286</th>
+                    <th id="L283" class="number ">283</th>
 
                     <td class="" >
                         <pre>            }
@@ -2286,7 +2264,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L287" class="number ">287</th>
+                    <th id="L284" class="number ">284</th>
 
                     <td class="" >
                         <pre>         }
@@ -2294,15 +2272,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L288" class="number ">288</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L289" class="number ">289</th>
+                    <th id="L285" class="number ">285</th>
 
                     <td class="" >
                         <pre>
@@ -2310,7 +2280,75 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L290" class="number ">290</th>
+                    <th id="L286" class="number covered">286</th>
+
+                    <td class="covered" >
+                        <pre>         if ($currentLogic == &#039;AND&#039; &amp;&amp; $nextLogic != &#039;AND&#039;) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L287" class="number covered">287</th>
+
+                    <td class="covered" >
+                        <pre>            if ($lowPrecedenceLogic == &#039;OR&#039;) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L288" class="number covered">288</th>
+
+                    <td class="covered" >
+                        <pre>               $return = ($return or $lowPrecedenceReturnPart);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L289" class="number ">289</th>
+
+                    <td class="" >
+                        <pre>            } else {
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L290" class="number uncovered">290</th>
+
+                    <td class="uncovered" >
+                        <pre>               $return = ($return xor $lowPrecedenceReturnPart);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L291" class="number ">291</th>
+
+                    <td class="" >
+                        <pre>            }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L292" class="number ">292</th>
+
+                    <td class="" >
+                        <pre>         }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L293" class="number ">293</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L294" class="number ">294</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L295" class="number ">295</th>
 
                     <td class="" >
                         <pre>      // Ensure the low precedence part is used if last condition has logic == AND
@@ -2318,21 +2356,21 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L291" class="number covered">291</th>
+                    <th id="L296" class="number covered">296</th>
 
                     <td class="covered" >
                         <pre>      if ($lowPrecedenceLogic == &#039;OR&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L292" class="number covered">292</th>
+                    <th id="L297" class="number covered">297</th>
 
                     <td class="covered" >
                         <pre>         $return = ($return or $lowPrecedenceReturnPart);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L293" class="number ">293</th>
+                    <th id="L298" class="number ">298</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -2340,14 +2378,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L294" class="number uncovered">294</th>
+                    <th id="L299" class="number uncovered">299</th>
 
                     <td class="uncovered" >
                         <pre>         $return = ($return xor $lowPrecedenceReturnPart);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L295" class="number ">295</th>
+                    <th id="L300" class="number ">300</th>
 
                     <td class="" >
                         <pre>      }
@@ -2355,7 +2393,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L296" class="number ">296</th>
+                    <th id="L301" class="number ">301</th>
 
                     <td class="" >
                         <pre>
@@ -2363,29 +2401,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L297" class="number covered">297</th>
-
-                    <td class="covered" >
-                        <pre>      unset($evalQuestion[$id]);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L298" class="number ">298</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L299" class="number covered">299</th>
+                    <th id="L302" class="number covered">302</th>
 
                     <td class="covered" >
                         <pre>      if ($question-&gt;fields[&#039;show_rule&#039;] == &#039;hidden&#039;) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L300" class="number ">300</th>
+                    <th id="L303" class="number ">303</th>
 
                     <td class="" >
                         <pre>         // If the field is hidden by default, show it if condition is true
@@ -2393,14 +2416,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L301" class="number covered">301</th>
+                    <th id="L304" class="number covered">304</th>
 
                     <td class="covered" >
-                        <pre>         return $return;</pre>
+                        <pre>         $evalQuestion[$id] = $return;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L302" class="number ">302</th>
+                    <th id="L305" class="number ">305</th>
 
                     <td class="" >
                         <pre>      } else {
@@ -2408,7 +2431,7 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L303" class="number ">303</th>
+                    <th id="L306" class="number ">306</th>
 
                     <td class="" >
                         <pre>         // else show it if condition is false
@@ -2416,40 +2439,17 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L304" class="number uncovered">304</th>
+                    <th id="L307" class="number uncovered">307</th>
 
                     <td class="uncovered" >
-                        <pre>         return !$return;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L305" class="number ">305</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L306" class="number unreach">306</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L307" class="number ">307</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
+                        <pre>         $evalQuestion[$id] = !$return;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L308" class="number ">308</th>
 
                     <td class="" >
-                        <pre>   /**
+                        <pre>      }
 </pre>
                     </td>
                 </tr>
@@ -2457,31 +2457,29 @@ layout: coverage
                     <th id="L309" class="number ">309</th>
 
                     <td class="" >
-                        <pre>    * compute visibility of all fields of a form
+                        <pre>
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L310" class="number ">310</th>
+                    <th id="L310" class="number covered">310</th>
 
-                    <td class="" >
-                        <pre>    *
-</pre>
+                    <td class="covered" >
+                        <pre>      return $evalQuestion[$id];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L311" class="number ">311</th>
+                    <th id="L311" class="number unreach">311</th>
 
-                    <td class="" >
-                        <pre>    * @param array $input     values of all fields of the form
-</pre>
+                    <td class="unreach" >
+                        <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L312" class="number ">312</th>
 
                     <td class="" >
-                        <pre>    *
+                        <pre>
 </pre>
                     </td>
                 </tr>
@@ -2489,7 +2487,7 @@ layout: coverage
                     <th id="L313" class="number ">313</th>
 
                     <td class="" >
-                        <pre>    * @return array
+                        <pre>   /**
 </pre>
                     </td>
                 </tr>
@@ -2497,26 +2495,66 @@ layout: coverage
                     <th id="L314" class="number ">314</th>
 
                     <td class="" >
+                        <pre>    * compute visibility of all fields of a form
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L315" class="number ">315</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L316" class="number ">316</th>
+
+                    <td class="" >
+                        <pre>    * @param array $input     values of all fields of the form
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L317" class="number ">317</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L318" class="number ">318</th>
+
+                    <td class="" >
+                        <pre>    * @return array
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L319" class="number ">319</th>
+
+                    <td class="" >
                         <pre>    */
 </pre>
                     </td>
                 </tr>
                             <tr class="line" id="updateVisibility">
-                    <th id="L315" class="number ">315</th>
+                    <th id="L320" class="number ">320</th>
 
                     <td class="" id="updateVisibility">
                         <pre>   public static function updateVisibility($input) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L316" class="number covered">316</th>
+                    <th id="L321" class="number covered">321</th>
 
                     <td class="covered" >
                         <pre>      $fields = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L317" class="number ">317</th>
+                    <th id="L322" class="number ">322</th>
 
                     <td class="" >
                         <pre>      // Prepare form fields for validation
@@ -2524,14 +2562,14 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L318" class="number covered">318</th>
+                    <th id="L323" class="number covered">323</th>
 
                     <td class="covered" >
                         <pre>      $question = new PluginFormcreatorQuestion();</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L319" class="number ">319</th>
+                    <th id="L324" class="number ">324</th>
 
                     <td class="" >
                         <pre>
@@ -2539,56 +2577,56 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L320" class="number covered">320</th>
+                    <th id="L325" class="number covered">325</th>
 
                     <td class="covered" >
                         <pre>      $formId = $input[&#039;formcreator_form&#039;];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L321" class="number covered">321</th>
+                    <th id="L326" class="number covered">326</th>
 
                     <td class="covered" >
                         <pre>      $found_questions = $question-&gt;getQuestionsFromForm($formId);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L322" class="number covered">322</th>
+                    <th id="L327" class="number covered">327</th>
 
                     <td class="covered" >
                         <pre>      foreach ($found_questions as $id =&gt; $question) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L323" class="number covered">323</th>
+                    <th id="L328" class="number covered">328</th>
 
                     <td class="covered" >
                         <pre>         $key = &#039;formcreator_field_&#039; . $id;</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L324" class="number covered">324</th>
+                    <th id="L329" class="number covered">329</th>
 
                     <td class="covered" >
                         <pre>         $fields[$id] = PluginFormcreatorFields::getFieldInstance(</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L325" class="number covered">325</th>
+                    <th id="L330" class="number covered">330</th>
 
                     <td class="covered" >
                         <pre>            $question-&gt;fields[&#039;fieldtype&#039;],</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L326" class="number covered">326</th>
+                    <th id="L331" class="number covered">331</th>
 
                     <td class="covered" >
                         <pre>            $question</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L327" class="number ">327</th>
+                    <th id="L332" class="number ">332</th>
 
                     <td class="" >
                         <pre>         );
@@ -2596,47 +2634,10 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L328" class="number covered">328</th>
-
-                    <td class="covered" >
-                        <pre>         $fields[$id]-&gt;parseAnswerValues($input, true);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L329" class="number ">329</th>
-
-                    <td class="" >
-                        <pre>      }
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L330" class="number ">330</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L331" class="number covered">331</th>
-
-                    <td class="covered" >
-                        <pre>      $questionToShow = [];</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L332" class="number covered">332</th>
-
-                    <td class="covered" >
-                        <pre>      foreach ($fields as $id =&gt; $value) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
                     <th id="L333" class="number covered">333</th>
 
                     <td class="covered" >
-                        <pre>         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);</pre>
+                        <pre>         $fields[$id]-&gt;parseAnswerValues($input, true);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -2659,272 +2660,25 @@ layout: coverage
                     <th id="L336" class="number covered">336</th>
 
                     <td class="covered" >
-                        <pre>      return $questionToShow;</pre>
+                        <pre>      $questionToShow = [];</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L337" class="number unreach">337</th>
+                    <th id="L337" class="number covered">337</th>
 
-                    <td class="unreach" >
-                        <pre>   }</pre>
+                    <td class="covered" >
+                        <pre>      foreach ($fields as $id =&gt; $value) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L338" class="number ">338</th>
+                    <th id="L338" class="number covered">338</th>
 
-                    <td class="" >
-                        <pre>
-</pre>
+                    <td class="covered" >
+                        <pre>         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
                     <th id="L339" class="number ">339</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L340" class="number ">340</th>
-
-                    <td class="" >
-                        <pre>    * gets the classname for a field given its type
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L341" class="number ">341</th>
-
-                    <td class="" >
-                        <pre>    *
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L342" class="number ">342</th>
-
-                    <td class="" >
-                        <pre>    * @param string $type type of field to test for existence
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L343" class="number ">343</th>
-
-                    <td class="" >
-                        <pre>    * @return string
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L344" class="number ">344</th>
-
-                    <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getFieldClassname">
-                    <th id="L345" class="number ">345</th>
-
-                    <td class="" id="getFieldClassname">
-                        <pre>   public static function getFieldClassname($type) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L346" class="number covered">346</th>
-
-                    <td class="covered" >
-                        <pre>      return &#039;PluginFormcreator&#039; . ucfirst($type) . &#039;Field&#039;;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L347" class="number unreach">347</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L348" class="number ">348</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L349" class="number ">349</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L350" class="number ">350</th>
-
-                    <td class="" >
-                        <pre>    * checks if a field type exists
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L351" class="number ">351</th>
-
-                    <td class="" >
-                        <pre>    *
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L352" class="number ">352</th>
-
-                    <td class="" >
-                        <pre>    * @param string $type type of field to test for existence
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L353" class="number ">353</th>
-
-                    <td class="" >
-                        <pre>    * @return boolean
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L354" class="number ">354</th>
-
-                    <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="fieldTypeExists">
-                    <th id="L355" class="number ">355</th>
-
-                    <td class="" id="fieldTypeExists">
-                        <pre>   public static function fieldTypeExists($type) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L356" class="number covered">356</th>
-
-                    <td class="covered" >
-                        <pre>      return is_a(self::getFieldClassname($type), PluginFormcreatorFieldInterface::class, true);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L357" class="number unreach">357</th>
-
-                    <td class="unreach" >
-                        <pre>   }</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L358" class="number ">358</th>
-
-                    <td class="" >
-                        <pre>
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L359" class="number ">359</th>
-
-                    <td class="" >
-                        <pre>   /**
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L360" class="number ">360</th>
-
-                    <td class="" >
-                        <pre>    * gets an instance of a field given its type
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L361" class="number ">361</th>
-
-                    <td class="" >
-                        <pre>    *
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L362" class="number ">362</th>
-
-                    <td class="" >
-                        <pre>    * @param string $type type of field to get
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L363" class="number ">363</th>
-
-                    <td class="" >
-                        <pre>    * @param PluginFormcreatorQuestion $question question representing the field
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L364" class="number ">364</th>
-
-                    <td class="" >
-                        <pre>    * @param array $data additional data
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L365" class="number ">365</th>
-
-                    <td class="" >
-                        <pre>    * @return null|PluginFormcreatorFieldInterface
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L366" class="number ">366</th>
-
-                    <td class="" >
-                        <pre>    */
-</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="getFieldInstance">
-                    <th id="L367" class="number ">367</th>
-
-                    <td class="" id="getFieldInstance">
-                        <pre>   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = null) {<span class="label label-success">75%</span><div class="btn-group"></div></pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L368" class="number covered">368</th>
-
-                    <td class="covered" >
-                        <pre>      $className = self::getFieldClassname($type);</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L369" class="number covered">369</th>
-
-                    <td class="covered" >
-                        <pre>      if (!self::fieldTypeExists($type)) {</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L370" class="number uncovered">370</th>
-
-                    <td class="uncovered" >
-                        <pre>         return null;</pre>
-                    </td>
-                </tr>
-                            <tr class="line" id="">
-                    <th id="L371" class="number ">371</th>
 
                     <td class="" >
                         <pre>      }
@@ -2932,21 +2686,305 @@ layout: coverage
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L372" class="number covered">372</th>
+                    <th id="L340" class="number ">340</th>
 
-                    <td class="covered" >
-                        <pre>      return new $className($question-&gt;fields, $data);</pre>
+                    <td class="" >
+                        <pre>
+</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L373" class="number unreach">373</th>
+                    <th id="L341" class="number covered">341</th>
+
+                    <td class="covered" >
+                        <pre>      return $questionToShow;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L342" class="number unreach">342</th>
 
                     <td class="unreach" >
                         <pre>   }</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
-                    <th id="L374" class="number ">374</th>
+                    <th id="L343" class="number ">343</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L344" class="number ">344</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L345" class="number ">345</th>
+
+                    <td class="" >
+                        <pre>    * gets the classname for a field given its type
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L346" class="number ">346</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L347" class="number ">347</th>
+
+                    <td class="" >
+                        <pre>    * @param string $type type of field to test for existence
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L348" class="number ">348</th>
+
+                    <td class="" >
+                        <pre>    * @return string
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L349" class="number ">349</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getFieldClassname">
+                    <th id="L350" class="number ">350</th>
+
+                    <td class="" id="getFieldClassname">
+                        <pre>   public static function getFieldClassname($type) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L351" class="number covered">351</th>
+
+                    <td class="covered" >
+                        <pre>      return &#039;PluginFormcreator&#039; . ucfirst($type) . &#039;Field&#039;;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L352" class="number unreach">352</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L353" class="number ">353</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L354" class="number ">354</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L355" class="number ">355</th>
+
+                    <td class="" >
+                        <pre>    * checks if a field type exists
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L356" class="number ">356</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L357" class="number ">357</th>
+
+                    <td class="" >
+                        <pre>    * @param string $type type of field to test for existence
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L358" class="number ">358</th>
+
+                    <td class="" >
+                        <pre>    * @return boolean
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L359" class="number ">359</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="fieldTypeExists">
+                    <th id="L360" class="number ">360</th>
+
+                    <td class="" id="fieldTypeExists">
+                        <pre>   public static function fieldTypeExists($type) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L361" class="number covered">361</th>
+
+                    <td class="covered" >
+                        <pre>      return is_a(self::getFieldClassname($type), PluginFormcreatorFieldInterface::class, true);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L362" class="number unreach">362</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L363" class="number ">363</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L364" class="number ">364</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L365" class="number ">365</th>
+
+                    <td class="" >
+                        <pre>    * gets an instance of a field given its type
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L366" class="number ">366</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L367" class="number ">367</th>
+
+                    <td class="" >
+                        <pre>    * @param string $type type of field to get
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L368" class="number ">368</th>
+
+                    <td class="" >
+                        <pre>    * @param PluginFormcreatorQuestion $question question representing the field
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L369" class="number ">369</th>
+
+                    <td class="" >
+                        <pre>    * @param array $data additional data
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L370" class="number ">370</th>
+
+                    <td class="" >
+                        <pre>    * @return null|PluginFormcreatorFieldInterface
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L371" class="number ">371</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="getFieldInstance">
+                    <th id="L372" class="number ">372</th>
+
+                    <td class="" id="getFieldInstance">
+                        <pre>   public static function getFieldInstance($type, PluginFormcreatorQuestion $question, $data = null) {<span class="label label-success">75%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L373" class="number covered">373</th>
+
+                    <td class="covered" >
+                        <pre>      $className = self::getFieldClassname($type);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L374" class="number covered">374</th>
+
+                    <td class="covered" >
+                        <pre>      if (!self::fieldTypeExists($type)) {</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L375" class="number uncovered">375</th>
+
+                    <td class="uncovered" >
+                        <pre>         return null;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L376" class="number ">376</th>
+
+                    <td class="" >
+                        <pre>      }
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L377" class="number covered">377</th>
+
+                    <td class="covered" >
+                        <pre>      return new $className($question-&gt;fields, $data);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L378" class="number unreach">378</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L379" class="number ">379</th>
 
                     <td class="" >
                         <pre>}
