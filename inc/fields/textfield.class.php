@@ -105,6 +105,10 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
    }
 
    private function isValidValue($value) {
+      if (strlen($value) == 0) {
+         return true;
+      }
+
       $parameters = $this->getParameters();
 
       // Check the field matches the format regex
@@ -141,14 +145,10 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $fieldType = $this->getFieldTypeName();
       // Add leading and trailing regex marker automaticaly
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
-         // Avoid php notice when validating the regular expression
-         set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
-         $isValid = !(preg_match($input['_parameters'][$fieldType]['regex']['regex'], null) === false);
-         restore_error_handler();
-
-         if (!$isValid) {
+         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
+         $success = $this->checkRegex($regex);
+         if (!$success) {
             Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
-            $success = false;
          }
       }
       if (!$success) {
