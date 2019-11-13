@@ -14,9 +14,13 @@ define('TEST_PLUGIN_NAME', 'formcreator');
 // glpi/inc/oolbox.class.php tests TU_USER to decide if it warns or not about mcrypt extension
 define('TU_USER', '_test_user');
 
+if (!$glpiConfigDir = getenv('GLPI_CONFIG_DIR')) {
+    echo "Environment var GLPI_CONFIG_DIR is not set" . PHP_EOL;
+    exit(1);
+}
+ 
 define('GLPI_ROOT', realpath(__DIR__ . '/../../../'));
-define('GLPI_CONFIG_DIR', GLPI_ROOT . "/tests");
-define('GLPI_CACHE_DIR', GLPI_ROOT . '/tests/files/_cache');
+define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");
 if (!file_exists(GLPI_CONFIG_DIR . '/config_db.php')) {
    echo "config_db.php missing. Did GLPI successfully initialized ?\n";
    exit(1);
