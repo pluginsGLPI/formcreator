@@ -210,4 +210,19 @@ abstract class PluginFormcreatorField implements PluginFormcreatorFieldInterface
    public function getQuestionId() {
       return $this->fields['id'];
    }
+
+   /**
+    * Validate a regular expression
+    *
+    * @param string $regex
+    * @return boolean true if the regex is valid, false otherwise
+    */
+   protected function checkRegex($regex) {
+      // Avoid php notice when validating the regular expression
+      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
+      $isValid = !(preg_match($regex, null) === false);
+      restore_error_handler();
+
+      return $isValid;
+   }
 }

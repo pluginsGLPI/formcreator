@@ -181,6 +181,30 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
             'expectedValue'   => '4',
             'expectedIsValid' => true
          ],
+         [
+            'fields'          => [
+               'fieldtype'       => 'integer',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => '',
+               'order'           => '1',
+               'show_rule'       => 'always',
+               'show_empty'      => '0',
+               'values'          => '',
+               '_parameters'     => [
+                  'integer' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'],
+                  ]
+               ],
+            ],
+            'data'            => null,
+            'expectedValue'   => '4',
+            'expectedIsValid' => true
+         ],
       ];
 
       return $dataset;
