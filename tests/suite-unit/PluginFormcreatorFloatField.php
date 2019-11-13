@@ -150,6 +150,30 @@ class PluginFormcreatorFloatField extends CommonTestCase {
             'expectedValue'   => '3.141592',
             'expectedIsValid' => true
          ],
+         [
+            'fields'          => [
+               'fieldtype'       => 'float',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => "",
+               'order'           => '1',
+               'show_rule'       => 'always',
+               'show_empty'      => '0',
+               'values'          => '',
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => '',
+                        'range_max'       => '',
+                     ],
+                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'],
+                  ]
+               ]
+            ],
+            'data'            => null,
+            'expectedValue'   => '',
+            'expectedIsValid' => true
+         ],
       ];
 
       return $dataset;

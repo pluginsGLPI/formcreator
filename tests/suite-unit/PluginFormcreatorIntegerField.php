@@ -173,6 +173,30 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
             'expectedValue'   => '4',
             'expectedIsValid' => true
          ],
+         [
+            'fields'          => [
+               'fieldtype'       => 'integer',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => '',
+               'order'           => '1',
+               'show_rule'       => 'always',
+               'show_empty'      => '0',
+               'values'          => '',
+               '_parameters'     => [
+                  'integer' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'],
+                  ]
+               ],
+            ],
+            'data'            => null,
+            'expectedValue'   => '4',
+            'expectedIsValid' => true
+         ],
       ];
 
       return $dataset;
@@ -185,9 +209,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
       $instance = new \PluginFormcreatorIntegerField($question);
       $instance->deserializeValue($fields['default_values']);

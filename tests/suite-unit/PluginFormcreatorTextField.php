@@ -160,6 +160,32 @@ class PluginFormcreatorTextField extends CommonTestCase {
             'expectedValue'   => '1',
             'expectedIsValid' => false
          ],
+         'regex with escaped chars' => [
+            'fields'          => [
+               'fieldtype'       => 'text',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => '',
+               'values'          => "",
+               'order'           => '1',
+               'show_rule'       => 'good',
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => [
+                        'regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'
+                     ]
+                  ]
+               ],
+            ],
+            'data'            => null,
+            'expectedValue'   => '',
+            'expectedIsValid' => true
+         ],
       ];
       return $dataset;
    }
@@ -167,16 +193,17 @@ class PluginFormcreatorTextField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
       $question = $this->getQuestion($fields);
 
-      $fieldInstance = new \PluginFormcreatorTextField($question);
+      $instance = new \PluginFormcreatorTextField($question);
+      $instance->deserializeValue($fields['default_values']);
 
-      $isValid = $fieldInstance->isValid($fields['default_values']);
-      $this->boolean($isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+      $isValid = $instance->isValid();
+      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
    }
 
    public function testGetEmptyParameters() {
