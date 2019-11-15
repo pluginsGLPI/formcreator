@@ -41,6 +41,7 @@ class PluginFormcreatorForm extends CommonTestCase {
          case 'testImport':
          case 'testCanPurgeItem':
          case 'testDuplicate':
+         case 'testCreateValidationNotification':
             self::login('glpi', 'glpi');
       }
    }
