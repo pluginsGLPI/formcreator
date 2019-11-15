@@ -36,8 +36,8 @@ layout: coverage
         
                     <td style="text-align: center; width: 100%">
                 <h1 class="text-danger">
-                    25%
-                                            <small>of 104</small>
+                    28%
+                                            <small>of 108</small>
                                     </h1>
                 <strong>Lines</strong>
             </td>
@@ -159,6 +159,13 @@ layout: coverage
                                         <td style="text-align: center">1</td>
                 <td style="text-align: center">    
     <span class="label label-danger">0%</span>
+</td>
+                                            </tr>
+            <tr>
+            <td><a href="#checkRegex">PluginFormcreatorField::checkRegex()</a></td>
+                                        <td style="text-align: center">4</td>
+                <td style="text-align: center">    
+    <span class="label label-success">100%</span>
 </td>
                                             </tr>
             <tr>
@@ -2229,6 +2236,120 @@ layout: coverage
                 </tr>
                             <tr class="line" id="">
                     <th id="L272" class="number ">272</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L273" class="number ">273</th>
+
+                    <td class="" >
+                        <pre>   /**
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L274" class="number ">274</th>
+
+                    <td class="" >
+                        <pre>    * Validate a regular expression
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L275" class="number ">275</th>
+
+                    <td class="" >
+                        <pre>    *
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L276" class="number ">276</th>
+
+                    <td class="" >
+                        <pre>    * @param string $regex
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L277" class="number ">277</th>
+
+                    <td class="" >
+                        <pre>    * @return boolean true if the regex is valid, false otherwise
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L278" class="number ">278</th>
+
+                    <td class="" >
+                        <pre>    */
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="checkRegex">
+                    <th id="L279" class="number ">279</th>
+
+                    <td class="" id="checkRegex">
+                        <pre>   protected function checkRegex($regex) {<span class="label label-success">100%</span><div class="btn-group"></div></pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L280" class="number ">280</th>
+
+                    <td class="" >
+                        <pre>      // Avoid php notice when validating the regular expression
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L281" class="number covered">281</th>
+
+                    <td class="covered" >
+                        <pre>      set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L282" class="number covered">282</th>
+
+                    <td class="covered" >
+                        <pre>      $isValid = !(preg_match($regex, null) === false);</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L283" class="number covered">283</th>
+
+                    <td class="covered" >
+                        <pre>      restore_error_handler();</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L284" class="number ">284</th>
+
+                    <td class="" >
+                        <pre>
+</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L285" class="number covered">285</th>
+
+                    <td class="covered" >
+                        <pre>      return $isValid;</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L286" class="number unreach">286</th>
+
+                    <td class="unreach" >
+                        <pre>   }</pre>
+                    </td>
+                </tr>
+                            <tr class="line" id="">
+                    <th id="L287" class="number ">287</th>
 
                     <td class="" >
                         <pre>}
