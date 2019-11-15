@@ -2336,7 +2336,7 @@ PluginFormcreatorDuplicatableInterface
       if ($this->isNewItem()) {
          return false;
       }
-      return ($this->getField('access_rights') === (string) \PluginFormcreatorForm::ACCESS_PUBLIC);
+      return ($this->fields['access_rights'] == \PluginFormcreatorForm::ACCESS_PUBLIC);
    }
 
    /**
