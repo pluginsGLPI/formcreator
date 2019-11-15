@@ -287,4 +287,10 @@ abstract class CommonTestCase extends CommonDBTestCase
       $this->array($_SESSION['MESSAGE_AFTER_REDIRECT'][$message_type])
          ->containsValues($message);
    }
+
+   protected function sessionHasNoMessage() {
+      $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][INFO]))->isFalse();
+      $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][WARNING]))->isFalse();
+      $this->boolean(isset($_SESSION['MESSAGE_AFTER_REDIRECT'][ERROR]))->isFalse();
+   }
 }

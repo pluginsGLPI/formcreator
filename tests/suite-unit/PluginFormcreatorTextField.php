@@ -58,7 +58,8 @@ class PluginFormcreatorTextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
          [
             'fields'          => [
@@ -83,7 +84,8 @@ class PluginFormcreatorTextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too short (minimum 5 characters): question',
          ],
          [
             'fields'          => [
@@ -108,7 +110,8 @@ class PluginFormcreatorTextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too short (minimum 6 characters): question',
          ],
          [
             'fields'          => [
@@ -116,10 +119,10 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => 'very long',
+               'default_values'  => 'very very long',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -133,7 +136,8 @@ class PluginFormcreatorTextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          [
             'fields'          => [
@@ -141,10 +145,10 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => 'very long',
+               'default_values'  => 'very very long',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'good',
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -158,7 +162,8 @@ class PluginFormcreatorTextField extends CommonTestCase {
                ],
             ],
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          'regex with escaped chars' => [
             'fields'          => [
@@ -169,7 +174,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'good',
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -182,9 +187,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
       ];
       return $dataset;
@@ -193,7 +198,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
@@ -201,9 +206,17 @@ class PluginFormcreatorTextField extends CommonTestCase {
 
       $instance = new \PluginFormcreatorTextField($question);
       $instance->deserializeValue($fields['default_values']);
+      $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
 
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+
+      // Check error message
+      if (!$isValid) {
+         $this->sessionHasMessage($expectedMessage, ERROR);
+      } else {
+         $this->sessionHasNoMessage();
+      }
    }
 
    public function testGetEmptyParameters() {

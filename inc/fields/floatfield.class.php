@@ -139,7 +139,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       } 
 
       if (!empty($value) && !is_numeric($value)) {
-         Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('This is not a number: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
          return false;
       }
 
@@ -150,7 +150,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          $regex = $parameters['regex']->fields['regex'];
          if ($regex !== null && strlen($regex) > 0) {
             if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
+               Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
                return false;
             }
          }
@@ -161,14 +161,14 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          $rangeMin = $parameters['range']->fields['range_min'];
          $rangeMax = $parameters['range']->fields['range_max'];
          if ($rangeMin > 0 && $value < $rangeMin) {
-            $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $rangeMin);
-            Session::addMessageAfterRedirect($message . ' ' . $this->question->fields['name'], false, ERROR);
+            $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->question->fields['name']);
+            Session::addMessageAfterRedirect($message, false, ERROR);
             return false;
          }
 
          if ($rangeMax > 0 && $value > $rangeMax) {
-            $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $rangeMax);
-            Session::addMessageAfterRedirect($message . ' ' . $this->question->fields['name'], false, ERROR);
+            $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->question->fields['name']);
+            Session::addMessageAfterRedirect($message, false, ERROR);
             return false;
          }
       }

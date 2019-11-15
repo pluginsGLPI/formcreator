@@ -36,14 +36,14 @@ class PluginFormcreatorFloatField extends CommonTestCase {
 
    public function provider() {
       $dataset = [
-         [
+         'empty value' => [
             'fields'          => [
                'fieldtype'       => 'float',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -57,16 +57,17 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
-         [
+         'integer value' => [
             'fields'          => [
                'fieldtype'       => 'float',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => '2',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -80,16 +81,17 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
-         [
+         'too low value' => [
             'fields'          => [
                'fieldtype'       => 'float',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => "2",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                '_parameters'     => [
                   'float' => [
@@ -102,16 +104,17 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '2',
-            'expectedIsValid' => false
-         ],
-         [
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The following number must be greater than 3: question',
+          ],
+         'too high value' => [
             'fields'          => [
                'fieldtype'       => 'float',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => "5",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -125,16 +128,17 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '5',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The following number must be lower than 4: question',
          ],
-         [
+         'float iin range' => [
             'fields'          => [
                'fieldtype'       => 'float',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => "3.141592",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -148,16 +152,17 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                ]
             ],
             'expectedValue'   => '3.141592',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
-         [
+         'empty value and regex with backslash' => [
             'fields'          => [
                'fieldtype'       => 'float',
                'name'            => 'question',
                'required'        => '0',
                'default_values'  => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -166,13 +171,61 @@ class PluginFormcreatorFloatField extends CommonTestCase {
                         'range_min'       => '',
                         'range_max'       => '',
                      ],
-                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'],
+                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
                   ]
                ]
             ],
-            'data'            => null,
             'expectedValue'   => '',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
+         ],
+         'value not matching regex' => [
+            'fields'          => [
+               'fieldtype'       => 'float',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => "1.234",
+               'order'           => '1',
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_empty'      => '0',
+               'values'          => '',
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => '',
+                        'range_max'       => '',
+                     ],
+                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
+                  ]
+               ]
+            ],
+            'expectedValue'   => '',
+            'expectedIsValid' => false,
+            'expectedMessage' => 'Specific format does not match: question',
+         ],
+         'value matching regex' => [
+            'fields'          => [
+               'fieldtype'       => 'float',
+               'name'            => 'question',
+               'required'        => '0',
+               'default_values'  => "12.345",
+               'order'           => '1',
+               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_empty'      => '0',
+               'values'          => '',
+               '_parameters'     => [
+                  'float' => [
+                     'range' => [
+                        'range_min'       => '',
+                        'range_max'       => '',
+                     ],
+                     'regex' => ['regex' => '/[0-9]{2}\\\\.[0-9]{3}/'],
+                  ]
+               ]
+            ],
+            'expectedValue'   => '',
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
       ];
 
@@ -182,7 +235,7 @@ class PluginFormcreatorFloatField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
@@ -193,8 +246,17 @@ class PluginFormcreatorFloatField extends CommonTestCase {
 
       $instance = new \PluginFormcreatorFloatField($question);
       $instance->deserializeValue($fields['default_values']);
+      $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
+
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
+
+      // Check error message
+      if (!$isValid) {
+         $this->sessionHasMessage($expectedMessage, ERROR);
+      } else {
+         $this->sessionHasNoMessage();
+      }
    }
 
    public function testGetEmptyParameters() {

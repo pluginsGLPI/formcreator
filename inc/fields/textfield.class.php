@@ -148,7 +148,7 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $regex = $parameters['regex']->fields['regex'];
       if ($regex !== null && strlen($regex) > 0) {
          if (!preg_match($regex, $value)) {
-            Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->question->fields['name'], false, ERROR);
+            Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
             return false;
          }
       }
@@ -157,12 +157,12 @@ class PluginFormcreatorTextField extends PluginFormcreatorField
       $rangeMin = $parameters['range']->fields['range_min'];
       $rangeMax = $parameters['range']->fields['range_max'];
       if ($rangeMin > 0 && strlen($value) < $rangeMin) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters):', 'formcreator'), $rangeMin) . ' ' . $this->question->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too short (minimum %d characters): %s', 'formcreator'), $rangeMin, $this->question->fields['name']), false, ERROR);
          return false;
       }
 
       if ($rangeMax > 0 && strlen($value) > $rangeMax) {
-         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters):', 'formcreator'), $rangeMax) . ' ' . $this->question->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('The text is too long (maximum %d characters): %s', 'formcreator'), $rangeMax, $this->question->fields['name']), false, ERROR);
          return false;
       }
 
