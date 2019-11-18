@@ -866,24 +866,31 @@ function pluginFormcreatorInitializeField(fieldName, rand) {
  */
 function pluginFormcreatorInitializeActor(fieldName, rand, initialValue) {
    var field = $('select[name="' + fieldName + '[]"]');
+   dropdownMax = <?php echo $CFG_GLPI['dropdown_max'] ?>;
    field.select2({
-      tokenSeparators: [",", ";"],
+      width: '80%',
       minimumInputLength: 0,
+      quietMillis: 100,
+      dropdownAutoWidth: true,
+      minimumResultsForSearch: 0,
+      tokenSeparators: [",", ";"],
       tags: true,
       ajax: {
          url: rootDoc + "/ajax/getDropdownUsers.php",
          type: "POST",
          dataType: "json",
-         data: function (params, page) {
+         data: function (params) {
             return {
                entity_restrict: -1,
                searchText: params.term,
-               page_limit: 100,
-               page: page
+               page_limit: dropdownMax,
+               page: params.page || 1
             }
          },
-         results: function (data, page) {
-            var more = (data.count >= 100);
+         processResults: function (data, params) {
+            params.page = params.page || 1;
+
+            var more = (data.count >= dropdownMax);
             return {results: data.results, pagination: {"more": more}};
          }
       },
