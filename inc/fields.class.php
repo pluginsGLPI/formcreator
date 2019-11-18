@@ -106,11 +106,11 @@ class PluginFormcreatorFields
    /**
     * Check if a question should be shown or not
     *
-    * @param   integer     $id         ID of the question tested for visibility
+    * @param   integer     $questionId ID of the question tested for visibility
     * @param   array       $fields     Array of fields instances (question id => instance)
     * @return  boolean                 If true the question should be visible
     */
-   public static function isVisible($id, $fields) {
+   public static function isVisible($questionId, $fields) {
       /**
        * Keep track of questions results and computation status
        * null = is beinc computed
@@ -118,31 +118,30 @@ class PluginFormcreatorFields
        * not set = not evaluated yet and not being evaluated
        */
       static $evalQuestion = [];
-      if (!isset($evalQuestion[$id])) {
-         $evalQuestion[$id] = null;
-      } else if ($evalQuestion[$id] !== null) {
-         return $evalQuestion[$id];
+      if (!isset($evalQuestion[$questionId])) {
+         $evalQuestion[$questionId] = null;
+      } else if ($evalQuestion[$questionId] !== null) {
+         return $evalQuestion[$questionId];
       } else {
          throw new Exception("Infinite loop in show conditions evaluation");
       }
 
       $question   = new PluginFormcreatorQuestion();
-      $question->getFromDB($id);
+      $question->getFromDB($questionId);
       $conditions = [];
 
       // If the field is always shown
       if ($question->getField('show_rule') == PluginFormcreatorQuestion::SHOW_RULE_ALWAYS) {
-         $evalQuestion[$id] = true;
+         $evalQuestion[$questionId] = true;
          return true;
       }
 
       // Get conditions to show or hide field
-      $questionId = $question->getID();
       $question_condition = new PluginFormcreatorQuestion_Condition();
       $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
       if (count($questionConditions) < 1) {
          // No condition defined, then always show the question
-         $evalQuestion[$id] = true;
+         $evalQuestion[$questionId] = true;
          return true;
       }
 
@@ -284,13 +283,13 @@ class PluginFormcreatorFields
 
       if ($question->fields['show_rule'] == PluginFormcreatorQuestion::SHOW_RULE_HIDDEN) {
          // If the field is hidden by default, show it if condition is true
-         $evalQuestion[$id] = $return;
+         $evalQuestion[$questionId] = $return;
       } else {
          // else show it if condition is false
-         $evalQuestion[$id] = !$return;
+         $evalQuestion[$questionId] = !$return;
       }
 
-      return $evalQuestion[$id];
+      return $evalQuestion[$questionId];
    }
 
    /**
