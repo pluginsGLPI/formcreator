@@ -851,7 +851,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public function updateAnswers($input) {
       $form = new PluginFormcreatorForm();
-      $form->getFromDB((int) $_POST['formcreator_form']);
+      $form->getFromDB((int) $input['formcreator_form']);
       $input['status'] = self::STATUS_WAITING;
 
       $fields = $form->getFields();
