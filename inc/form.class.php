@@ -308,23 +308,27 @@ PluginFormcreatorDuplicatableInterface
     * @return Mixed           Value to be displayed
     */
    public static function getSpecificValueToDisplay($field, $values, array $options = []) {
-      global $CFG_GLPI;
       if (!is_array($values)) {
          $values = [$field => $values];
       }
+
+      if (isAPI()) {
+         return parent::getSpecificValueToDisplay($field, $values, $options);
+      }
+
       switch ($field) {
          case 'is_active':
             if ($values[$field] == 0) {
-               $output = '<div style="text-align: center"><img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/inactive.png"
-                           height="16" width="16"
-                           alt="' . __('Inactive') . '"
-                           title="' . __('Inactive') . '" /></div>';
+               $class = "plugin-forcreator-inactive";
+               $title =  __('Inactive');
             } else {
-               $output = '<div style="text-align: center"><img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/active.png"
-                           height="16" width="16"
-                           alt="' . __('Active') . '"
-                           title="' . __('Active') . '" /></div>';
+               $class = "plugin-forcreator-active";
+               $title =  __('Active');
             }
+            $output = '<i class="fa fa-circle '
+            . $class
+            . '" aria-hidden="true" title="' . $title . '"></i>';
+            $output = '<div style="text-align: center">' . $output . '</div>';
             return $output;
             break;
 
@@ -353,6 +357,7 @@ PluginFormcreatorDuplicatableInterface
             }
             break;
       }
+
       return parent::getSpecificValueToDisplay($field, $values, $options);
    }
 

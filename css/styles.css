@@ -1373,6 +1373,17 @@ span.fc_list_icon {
    list-style-type: circle;
 }
 
+
+/* Active / inactive light for forms */
+.plugin-forcreator-active {
+   color: #009933;
+}
+
+.plugin-forcreator-inactive {
+   color: #a0a0a0;
+}
+
+
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {
    form.formcreator_form {
