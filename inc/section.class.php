@@ -346,10 +346,8 @@ PluginFormcreatorDuplicatableInterface
       } else {
          $title =  __('Edit a section', 'formcreator');
       }
-      // echo '<form name="form_section" method="post" action="'.static::getFormURL().'">';
-      // echo '<table class="tab_cadre_fixe">';
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
+      echo '<form name="form_section" method="post" action="'.static::getFormURL().'">';
+      echo '<table class="tab_cadre_fixe">';
      
       echo '<tr>';
       echo '<th colspan="4">';

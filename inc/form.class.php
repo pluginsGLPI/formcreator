@@ -2365,6 +2365,35 @@ PluginFormcreatorDuplicatableInterface
       return $this->getFromDB($section->getField(self::getForeignKeyField()));
    }
 
+   public function getFromDBByQuestion(PluginFormcreatorQuestion $question) {
+      global $DB;
+
+      if ($question->isNewItem()) {
+         return false;
+      }
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $iterator = $DB->request([
+         'SELECT' => self::getForeignKeyField(),
+         'FROM' => PluginFormcreatorSection::getTable(),
+         'INNER JOIN' => [
+            $questionTable => [
+               'FKEY' => [
+                  $sectionTable => PluginFormcreatorSection::getIndexName(),
+                  $questionTable => PluginFormcreatorSection::getForeignKeyField()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            $questionTable . '.' . PluginFormcreatorQuestion::getIndexName() => $question->getID()
+         ]
+      ]);
+      if ($iterator->count() !== 1) {
+         return false;
+      }
+      return $this->getFromDB($iterator->next()[self::getForeignKeyField()]);
+   }
+
    /**
     * Get an array of instances of all fields for the form
     *

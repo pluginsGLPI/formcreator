@@ -36,10 +36,10 @@ class PluginFormcreatorFields extends CommonTestCase {
    public function answersProvider() {
       return [
          'no condition' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+           \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
             [
                'show_logic' => [],
-               'show_field'   => [],
+               'plugin_formcreator_questions_id'   => [],
                'show_condition'  => [],
                'show_value' => [],
             ],
@@ -47,16 +47,16 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'simple condition' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'foo',
@@ -68,16 +68,16 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'failed condition' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'bar',
@@ -89,19 +89,19 @@ class PluginFormcreatorFields extends CommonTestCase {
             false,
          ],
          'multiple condition OR' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                   1,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'val1',
@@ -115,19 +115,19 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'failed multiple condition OR' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                   1,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'val1',
@@ -141,19 +141,19 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'multiple condition AND' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                   1,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'val1',
@@ -167,19 +167,19 @@ class PluginFormcreatorFields extends CommonTestCase {
             true,
          ],
          'failed multiple condition AND' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                   1,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'val1',
@@ -193,25 +193,25 @@ class PluginFormcreatorFields extends CommonTestCase {
             false,
          ],
          'operator priority' => [
-           \PluginFormcreatorQuestion::SHOW_RULE_HIDDEN,
+           \PluginFormcreatorCondition::SHOW_RULE_HIDDEN,
             [
                'show_logic' => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR,
-                  \PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_OR,
+                  \PluginFormcreatorCondition::SHOW_LOGIC_AND,
                ],
-               'show_field'   => [
+               'plugin_formcreator_questions_id'   => [
                   0,
                   1,
                   2,
                   3,
                ],
                'show_condition'  => [
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
-                  \PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
+                  \PluginFormcreatorCondition::SHOW_CONDITION_EQ,
                ],
                'show_value' => [
                   'val1',
@@ -257,7 +257,7 @@ class PluginFormcreatorFields extends CommonTestCase {
          $questionPool[$i] = $item;
       }
 
-      foreach ($conditions['show_field'] as $id => &$showField) {
+      foreach ($conditions['plugin_formcreator_questions_id'] as $id => &$showField) {
          $showField = $questionPool[$showField]->getID();
       }
       $realAnswers = [];
@@ -286,7 +286,7 @@ class PluginFormcreatorFields extends CommonTestCase {
       ];
       $question->update($input);
       $question->updateConditions($input);
-      $isVisible = \PluginFormcreatorFields::isVisible($question->getID(), $realAnswers);
+      $isVisible = \PluginFormcreatorFields::isVisible($question, $realAnswers);
       $this->boolean((boolean) $isVisible)->isEqualTo($expectedVisibility);
    }
 

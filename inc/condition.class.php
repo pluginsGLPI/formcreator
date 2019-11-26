@@ -35,10 +35,11 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorQuestion_Condition extends CommonDBChild implements PluginFormcreatorExportableInterface
+class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreatorExportableInterface
 {
-   static public $itemtype = PluginFormcreatorQuestion::class;
-   static public $items_id = 'plugin_formcreator_questions_id';
+   const SHOW_RULE_ALWAYS = 1;
+   const SHOW_RULE_HIDDEN = 2;
+   const SHOW_RULE_SHOWN = 3;
 
    const SHOW_LOGIC_AND = 1;
    const SHOW_LOGIC_OR = 2;
@@ -85,8 +86,9 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
          throw new ImportFailureException('UUID or ID is mandatory');
       }
 
-      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
-      $input[$questionFk] = $containerId;
+      //$itemtypeFk = $input['itemtype']::getForeignKeyField();
+      //$questionFk = PluginFormcreatorQuestion::getForeignKeyField();
+      $input['items_id'] = $containerId;
 
       $item = new self();
       // Find an existing condition to update, only if an UUID is available
@@ -109,12 +111,12 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       }
 
       // set ID for linked objects
-      $linked = $linker->getObject($input['show_field'], PluginFormcreatorQuestion::class);
+      $linked = $linker->getObject($input['plugin_formcreator_questions_id'], $input['itemtype']);
       if ($linked === false) {
          $linker->postpone($input[$idKey], $item->getType(), $input, $containerId);
          return false;
       }
-      $input['show_field'] = $linked->getID();
+      $input['plugin_formcreator_questions_id'] = $linked->getID();
 
       // Add or update condition
       $originalId = $input[$idKey];
@@ -148,8 +150,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
 
       $condition = $this->fields;
 
-      $questionFk = PluginFormcreatorQuestion::getForeignKeyField();
-      unset($condition[$questionFk]);
+      unset($condition['items_id']);
 
       // remove ID or UUID
       $idToRemove = 'id';
@@ -158,8 +159,8 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       } else {
          // Convert IDs into UUIDs
          $question = new PluginFormcreatorQuestion();
-         $question->getFromDB($condition['show_field']);
-         $condition['show_field'] = $question->fields['uuid'];
+         $question->getFromDB($condition['plugin_formcreator_questions_id']);
+         $condition['plugin_formcreator_questions_id'] = $question->fields['uuid'];
       }
       unset($condition[$idToRemove]);
 
@@ -175,59 +176,147 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
    public function getConditionsFromQuestion($questionId) {
       global $DB;
 
-      $questionConditions = [];
+      $conditions = [];
       $rows = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => self::getTable(),
          'WHERE'  => [
-            'plugin_formcreator_questions_id' => $questionId
+            'itemtype' => PluginFormcreatorQuestion::class,
+            'items_id' => $questionId
          ],
          'ORDER'  => 'order ASC'
       ]);
       foreach ($rows as $row) {
-         $questionCondition = new static();
-         $questionCondition->getFromDB($row['id']);
-         $questionConditions[] = $questionCondition;
+         $condition = new static();
+         $condition->getFromDB($row['id']);
+         $conditions[] = $condition;
       }
 
-      return $questionConditions;
+      return $conditions;
+   }
+
+   /**
+    * get conditions applied to an item
+    *
+    * @param PluginFormcreatorConditionnableInterface $item
+    * @return array array of PluginFotrmcreatorCondition
+    */
+   public function getConditionsFromItem(PluginFormcreatorConditionnableInterface $item) {
+      global $DB;
+
+      if ($item->isNewItem()) {
+         return [];
+      }
+
+      $conditions = [];
+      $rows = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'   => self::getTable(),
+         'WHERE'  => [
+            'itemtype' => get_class($item),
+            'items_id' => $item->getID()
+         ],
+         'ORDER'  => 'order ASC'
+      ]);
+      foreach ($rows as $row) {
+         $condition = new static();
+         $condition->getFromDB($row['id']);
+         $conditions[] = $condition;
+      }
+
+      return $conditions;
+   }
+
+   /**
+    * Display HTML for conditions applied on an item
+    *
+    * @param PluginFormcreatorForm $form form of the item
+    * @param PluginFormcreatorConditionnableInterface $item item where conditions applies to
+    * @return void
+    */
+   public function showConditionsForItem($form, PluginFormcreatorConditionnableInterface $item) {
+      $ID = 0;
+      if (!$item->isNewItem()) {
+         $ID = $item->getID();
+      }
+      $rand = mt_rand();
+      echo '<tr>';
+      echo '<th colspan="4">';
+      echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
+      echo __('Show field', 'formcreator');
+      echo '</label>';
+      echo '</th>';
+      echo '</tr>';
+
+      $conditions = $this->getConditionsFromItem($item);
+      reset($conditions);
+      $condition = array_shift($conditions);
+      if ($condition !== null) {
+         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0, true);
+      }
+      foreach ($conditions as $condition) {
+         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0);
+      }
+
+      echo '<tr">';
+      echo '<td colspan="4">';
+      Dropdown::showFromArray('show_rule', [
+         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
+         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
+         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
+      ], [
+         'value'        => $item->fields['show_rule'],
+         'on_change'    => 'plugin_formcreator_toggleCondition(this);',
+         'rand'         => $rand,
+      ]);
+      echo '</td>';
+      echo '</tr>';
    }
 
    /**
     *
     * return HTML to show a condition line for a question
     *
-    * @param integer $formId ID of the form of the condition
-    * @param integer $questionId ID of the question (or 0 for a new question)
-    * @param string $isFirst true if this is the first condition in all conditions applied to a question
+    * @param PluginFormcreatorForm $form Form of the condition
+    * @param string  $itemtype itemtype of the container of the condition
+    * @param integer $itemId ID of the question (or 0 for a new question)
+    * @param boolean $isFirst true if this is the first condition in all conditions applied to a question
     *
     * @return string
     */
-   public function getConditionHtml($form_id, $questionId = 0, $isFirst = false) {
+   public function getConditionHtml($form, $itemtype, $itemId = 0, $isFirst = false) {
       if ($this->isNewItem()) {
          $show_field       = '';
-         $show_condition   = PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ;
+         $show_condition   = static::SHOW_CONDITION_EQ;
          $show_value       = '';
          $show_logic       = '';
+         $itemId           = 0;
       } else {
-         $show_field       = $this->fields['show_field'];
+         $show_field       = $this->fields['plugin_formcreator_questions_id'];
          $show_condition   = $this->fields['show_condition'];
          $show_value       = $this->fields['show_value'];
          $show_logic       = $this->fields['show_logic'];
-         $questionId       = $this->fields['plugin_formcreator_questions_id'];
+         $itemId           = $this->fields['items_id'];
       }
       $rand = mt_rand();
 
-      $question = new PluginFormcreatorQuestion();
-      $questionsInForm = $question->getQuestionsFromForm($form_id);
+      if (!is_subclass_of($itemtype, PluginFormcreatorConditionnableInterface::class)) {
+         throw new Exception("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
+      }
+      $item = new $itemtype();
+      $questionListCondition = [];
+      if ($itemtype == PluginFormcreatorQuestion::class) {
+         $questionListCondition = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
+      }
+      $questionsInForm = $item->getQuestionsFromForm($form->getID(), $questionListCondition);
       $questions_tab = [];
       foreach ($questionsInForm as $question) {
-         if (strlen($question->getField('name')) > 30) {
-            $questions_tab[$question->getID()] = substr($question->getField('name'),
+         if (strlen($question->fields['name']) > 30) {
+            $questions_tab[$question->getID()] = substr($question->fields['name'],
                   0,
-                  strrpos(substr($question->getField('name'), 0, 30), ' ')) . '...';
+                  strrpos(substr($question->fields['name'], 0, 30), ' ')) . '...';
          } else {
-            $questions_tab[$question->getID()] = $question->getField('name');
+            $questions_tab[$question->getID()] = $question->fields['name'];
          }
       }
 
@@ -239,7 +328,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       $showLogic = $isFirst ? 'style="display: none"' : '';
       $html.= '<div class="div_show_condition_logic"' . $showLogic . '>';
       $html.= Dropdown::showFromArray('show_logic[]',
-            PluginFormcreatorQuestion_Condition::getEnumShowLogic(),
+            static::getEnumShowLogic(),
             [
                'display'               => false,
                'value'                 => $show_logic,
@@ -248,9 +337,9 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
             ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_field">';
-      $html.= Dropdown::showFromArray('show_field[]', $questions_tab, [
+      $html.= Dropdown::showFromArray('plugin_formcreator_questions_id[]', $questions_tab, [
          'display'      => false,
-         'used'         => [$questionId => ''],
+         'used'         => [$itemId => ''],
          'value'        => $show_field,
          'rand'         => $rand,
       ]);
@@ -261,7 +350,7 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
          function ($item) {
             return htmlentities($item);
          },
-         PluginFormcreatorQuestion_Condition::getEnumShowCondition()
+         static::getEnumShowCondition()
       );
 
       $html.= Dropdown::showFromArray(
@@ -274,13 +363,16 @@ class PluginFormcreatorQuestion_Condition extends CommonDBChild implements Plugi
       );
       $html.= '</div>';
       $html.= '<div class="div_show_condition_value">';
-      $html.= '<input type="text" name="show_value[]" id="show_value" class="small_text"'
-              .'value="'. $show_value . '" size="8">';
+      $html.= Html::input('show_value[]', [
+         'class' => 'small_text',
+         'size'  => '8',
+         'value' => $show_value,
+      ]);
       $html.= '</div>';
       $html.= '<div class="div_show_condition_add">';
-      $html.= '<img src="../../../pics/plus.png" onclick="plugin_formcreator_addEmptyCondition(this)"/>&nbsp;</div>';
+      $html.= '<i class="fas fa-plus-circle" style="cursor: pointer;" onclick="plugin_formcreator_addEmptyCondition(this)"></i>&nbsp;</div>';
       $html.= '<div class="div_show_condition_remove">';
-      $html.= '<img src="../../../pics/moins.png" onclick="plugin_formcreator_removeNextCondition(this)"/></div>';
+      $html.= '<i class="fas fa-minus-circle"  style="cursor: pointer;" onclick="plugin_formcreator_removeNextCondition(this)"></i>&nbsp;</div>';
       $html.= '</div>';
       $html.= '</td>';
       $html.= '</tr>';

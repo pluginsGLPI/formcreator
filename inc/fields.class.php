@@ -106,11 +106,12 @@ class PluginFormcreatorFields
    /**
     * Check if a question should be shown or not
     *
-    * @param   integer     $questionId ID of the question tested for visibility
+    * @param   integer     $question   Question tested for visibility
     * @param   array       $fields     Array of fields instances (question id => instance)
     * @return  boolean                 If true the question should be visible
     */
-   public static function isVisible($questionId, $fields) {
+   public static function isVisible($question, $fields) {
+      $questionId = $question->getID();
       /**
        * Keep track of questions results and computation status
        * null = is beinc computed
@@ -126,32 +127,27 @@ class PluginFormcreatorFields
          throw new Exception("Infinite loop in show conditions evaluation");
       }
 
-      $question   = new PluginFormcreatorQuestion();
-      $question->getFromDB($questionId);
-      $conditions = [];
-
       // If the field is always shown
-      if ($question->getField('show_rule') == PluginFormcreatorQuestion::SHOW_RULE_ALWAYS) {
+      if ($question->getField('show_rule') == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          $evalQuestion[$questionId] = true;
          return true;
       }
 
       // Get conditions to show or hide field
-      $question_condition = new PluginFormcreatorQuestion_Condition();
-      $questionConditions = $question_condition->getConditionsFromQuestion($questionId);
-      if (count($questionConditions) < 1) {
+      $conditions = [];
+      $condition = new PluginFormcreatorCondition();
+      foreach ($condition->getConditionsFromQuestion($questionId) as $condition) {
+         $conditions[] = [
+            'logic'    => $condition->fields['show_logic'],
+            'field'    => $condition->fields['plugin_formcreator_questions_id'],
+            'operator' => $condition->fields['show_condition'],
+            'value'    => $condition->fields['show_value']
+         ];
+      }
+      if (count($conditions) < 1) {
          // No condition defined, then always show the question
          $evalQuestion[$questionId] = true;
          return true;
-      }
-
-      foreach ($questionConditions as $question_condition) {
-         $conditions[] = [
-            'logic'    => $question_condition->fields['show_logic'],
-            'field'    => $question_condition->fields['show_field'],
-            'operator' => $question_condition->fields['show_condition'],
-            'value'    => $question_condition->fields['show_value']
-         ];
       }
 
       // Force the first logic operator to OR
@@ -173,68 +169,68 @@ class PluginFormcreatorFields
          $conditionField = $fields[$condition['field']];
 
          switch ($condition['operator']) {
-            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_NE :
+            case PluginFormcreatorCondition::SHOW_CONDITION_NE :
                if (!$conditionField->isPrerequisites()) {
                   return true;
                }
                try {
-                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->notEquals($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->notEquals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
                break;
 
-            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_EQ :
+            case PluginFormcreatorCondition::SHOW_CONDITION_EQ :
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
                try {
-                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->equals($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->equals($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
                break;
 
-            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GT:
+            case PluginFormcreatorCondition::SHOW_CONDITION_GT:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
                try {
-                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->greaterThan($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->greaterThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
                break;
 
-            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LT:
+            case PluginFormcreatorCondition::SHOW_CONDITION_LT:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
                try {
-                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && $conditionField->lessThan($condition['value']);
+                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->lessThan($condition['value']);
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
                break;
 
-            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_GE:
+            case PluginFormcreatorCondition::SHOW_CONDITION_GE:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
                try {
-                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && ($conditionField->greaterThan($condition['value'])
+                  $value = self::isVisible($conditionField->getQuestion(), $fields) && ($conditionField->greaterThan($condition['value'])
                            || $conditionField->equals($condition['value']));
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
                }
                break;
 
-            case PluginFormcreatorQuestion_Condition::SHOW_CONDITION_LE:
+            case PluginFormcreatorCondition::SHOW_CONDITION_LE:
                if (!$conditionField->isPrerequisites()) {
                   return false;
                }
                try {
-                  $value = self::isVisible($conditionField->getQuestionId(), $fields) && ($conditionField->lessThan($condition['value'])
+                  $value = self::isVisible($conditionField->getQuestion(), $fields) && ($conditionField->lessThan($condition['value'])
                            || $conditionField->equals($condition['value']));
                } catch (PluginFormcreatorComparisonException $e) {
                   $value = false;
@@ -244,7 +240,7 @@ class PluginFormcreatorFields
 
          // Combine all condition with respect of operator precedence
          // AND has precedence over OR and XOR
-         if ($currentLogic != PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND && $nextLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND) {
+         if ($currentLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND) {
             // next condition has a higher precedence operator
             // Save the current computed return and operator to use later
             $lowPrecedenceReturnPart = $return;
@@ -252,11 +248,11 @@ class PluginFormcreatorFields
             $return = $value;
          } else {
             switch ($currentLogic) {
-               case PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND :
+               case PluginFormcreatorCondition::SHOW_LOGIC_AND :
                   $return = ($return and $value);
                   break;
 
-               case PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR  :
+               case PluginFormcreatorCondition::SHOW_LOGIC_OR  :
                   $return = ($return or $value);
                   break;
 
@@ -265,8 +261,8 @@ class PluginFormcreatorFields
             }
          }
 
-         if ($currentLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND && $nextLogic != PluginFormcreatorQuestion_Condition::SHOW_LOGIC_AND) {
-            if ($lowPrecedenceLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR) {
+         if ($currentLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND) {
+            if ($lowPrecedenceLogic == PluginFormcreatorCondition::SHOW_LOGIC_OR) {
                $return = ($return or $lowPrecedenceReturnPart);
             } else {
                $return = ($return xor $lowPrecedenceReturnPart);
@@ -275,13 +271,13 @@ class PluginFormcreatorFields
       }
 
       // Ensure the low precedence part is used if last condition has logic == AND
-      if ($lowPrecedenceLogic == PluginFormcreatorQuestion_Condition::SHOW_LOGIC_OR) {
+      if ($lowPrecedenceLogic == PluginFormcreatorCondition::SHOW_LOGIC_OR) {
          $return = ($return or $lowPrecedenceReturnPart);
       } else {
          $return = ($return xor $lowPrecedenceReturnPart);
       }
 
-      if ($question->fields['show_rule'] == PluginFormcreatorQuestion::SHOW_RULE_HIDDEN) {
+      if ($question->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
          // If the field is hidden by default, show it if condition is true
          $evalQuestion[$questionId] = $return;
       } else {
@@ -303,13 +299,13 @@ class PluginFormcreatorFields
       $form = new PluginFormcreatorForm();
       $form->getFromDB((int) $input['plugin_formcreator_forms_id']);
       $fields = $form->getFields();
-      foreach ($fields as $id => $question) {
+      foreach ($fields as $id => $field) {
          $fields[$id]->parseAnswerValues($input, true);
       }
 
       $questionToShow = [];
       foreach ($fields as $id => $value) {
-         $questionToShow[$id] = PluginFormcreatorFields::isVisible($id, $fields);
+         $questionToShow[$id] = PluginFormcreatorFields::isVisible($field->getQuestion(), $fields);
       }
 
       return $questionToShow;

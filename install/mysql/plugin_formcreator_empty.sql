@@ -117,17 +117,19 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions` (
   FULLTEXT KEY `Search` (`name`,`description`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_questions_conditions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plugin_formcreator_questions_id` int(11) NOT NULL,
-  `show_field` int(11) DEFAULT NULL,
-  `show_condition` int(11) NOT NULL DEFAULT '0',
-  `show_value` varchar(255) DEFAULT NULL,
-  `show_logic` int(11) NOT NULL DEFAULT '1',
-  `order` int(11) NOT NULL DEFAULT '1',
-  `uuid` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`)
+CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_conditions` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`itemtype` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci' COMMENT 'itemtype of the item affected by the condition',
+	`items_id` INT(11) NOT NULL DEFAULT '0' COMMENT 'item ID of the item affected by the condition',
+	`plugin_formcreator_questions_id` INT(11) NULL DEFAULT NULL COMMENT 'question to test for the condition',
+	`show_condition` INT(11) NOT NULL DEFAULT '0',
+	`show_value` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',
+	`show_logic` INT(11) NOT NULL DEFAULT '1',
+	`order` INT(11) NOT NULL DEFAULT '1',
+	`uuid` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',
+	PRIMARY KEY (`id`),
+	INDEX `plugin_formcreator_questions_id` (`plugin_formcreator_questions_id`),
+  INDEX `item` (`itemtype`, `items_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (

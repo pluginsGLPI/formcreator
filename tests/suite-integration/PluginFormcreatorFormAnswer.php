@@ -121,7 +121,8 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $form->getFromDB($form->getID());
 
       // Answer the form
-      $form->saveForm(['formcreator_form' => $form->getID()]);
+      $formAnswer = $this->newTestedInstance();
+      $formAnswer->add(['plugin_formcreator_forms_id' => $form->getID()]);
 
       // Check a notification was created with the expected template
       $result = $DB->request([
@@ -193,7 +194,11 @@ class PluginFormcreatorFormAnswer extends CommonTestCase {
       $formAnswer_table = \PluginFormcreatorFormAnswer::getTable();
 
       $result = $DB->query("SELECT MAX(`id`) AS `max_id` FROM `$formAnswer_table`");
-      $maxId = $DB->fetch_assoc($result);
+      if (version_compare(GLPI_VERSION, '9.5') < 0) { 
+         $maxId = $DB->fetch_assoc($result);
+      } else {
+         $maxId = $DB->fetchAssoc($result);
+      }
       $maxId = $maxId['max_id'];
       $maxId === null ? 0 : $maxId;
 

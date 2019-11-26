@@ -759,13 +759,12 @@ function plugin_formcreator_ChangeActorAssigned(value) {
 
 function plugin_formcreator_addEmptyCondition(target) {
    var questionId = $('form[name="form_question"] input[name="id"]').val();
-   var sectionId = $('form[name="form_question"] [name="plugin_formcreator_sections_id"]').val();
    $.ajax({
-      url: rootDoc + '/plugins/formcreator/ajax/question_condition.php',
+      url: rootDoc + '/plugins/formcreator/ajax/condition.php',
       data: {
-         plugin_formcreator_questions_id: questionId,
+         itemtype: 'PluginFormcreatorQuestion',
+         items_id: questionId,
          plugin_formcreator_sections_id: sectionId,
-         _empty: ''
       }
    }).done(function (data) {
       $(target).parents('tr').after(data);

@@ -29,10 +29,11 @@
  * ---------------------------------------------------------------------
  */
 
-interface PluginFormcreatorDuplicatableInterface
+interface PluginFormcreatorConditionnableInterface
 {
    /**
-    * Duplicate the item
+    * get the form of the item
+    * @return boolean|PluginFormcreatorForm the form or false if not found
     */
-   public function duplicate();
+   public function getForm();
 }

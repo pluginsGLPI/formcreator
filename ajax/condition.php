@@ -32,17 +32,40 @@
 include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-if (!isset($_REQUEST['plugin_formcreator_questions_id'])) {
+if (!isset($_REQUEST['items_id'])) {
+   http_response_code(400);
+   exit;
+}
+$itemId = (int) $_REQUEST['items_id'];
+
+if (!isset($_REQUEST['itemtype'])) {
+   http_response_code(400);
+   exit;
+}
+$itemtype = $_REQUEST['itemtype'];
+
+if (!isset($_REQUEST['plugin_formcreator_sections_id'])) {
+   http_response_code(400);
+   exit;
+}
+$sectionId = (int) $_REQUEST['plugin_formcreator_sections_id'];
+
+if (!class_exists($itemtype)) {
+   http_response_code(400);
    exit;
 }
 
-if (isset($_REQUEST['_empty'])) {
-   // get an empty condition HTML table row
-   $questionId = (int) $_REQUEST['plugin_formcreator_questions_id'];
-   $questionCondition = new PluginFormcreatorQuestion_Condition();
-   $section = new PluginFormcreatorSection();
-   $section->getFromDB((int) $_REQUEST['plugin_formcreator_sections_id']);
-   $form = new PluginFormcreatorForm();
-   $form->getFromDBBySection($section);
-   echo $questionCondition->getConditionHtml($form->getID(), $questionId);
+if (!is_subclass_of($itemtype, CommonDBTM::class)) {
+   http_response_code(400);
+   exit;
 }
+
+// get an empty condition HTML table row
+$item = new $itemtype();
+$item->getFromDB($itemId);
+$section = new PluginFormcreatorSection();
+$section->getFromDB($sectionId);
+$form = new PluginFormcreatorForm();
+$form->getFromDBBySection($section);
+$condition = new PluginFormcreatorCondition();
+echo $condition->getConditionHtml($form, $itemtype, $itemId);

@@ -306,6 +306,28 @@ class PluginFormcreatorUpgradeTo2_9 {
       $migration->changeField($table, 'answer', 'answer', 'longtext');
       $table = 'glpi_plugin_formcreator_issues';
       $migration->changeField($table, 'comment', 'comment', 'longtext');
+
+      // Generalize conditions to other itemtypes
+      $table = 'glpi_plugin_formcreator_conditions';
+      if ((new DBUtils)->countElementsInTable($table) == 0) {
+         if ($DB->tableExists('glpi_plugin_formcreator_questions_conditions')) {
+            // Migrate data if the new table is empty and old table exists
+            $migration->addPreQuery("INSERT INTO `$table`
+               (SELECT
+                  `id`,
+                  'plugin_formcreator_question' as `itemtype`,
+                  `plugin_formcreator_questions_id` as `items_id`,
+                  `show_field` as `plugin_formcreator_questions_id`,
+                  `show_condition`,
+                  `show_value`,
+                  `show_logic`,
+                  `order`,
+                  `uuid`
+               FROM `glpi_plugin_formcreator_questions_conditions`)
+            ");
+            $migration->backupTables('glpi_plugin_formcreator_questions_conditions');
+         }
+      }
    }
 
    /**
