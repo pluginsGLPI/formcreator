@@ -525,7 +525,7 @@ var urlFrontSection = rootDoc + "/plugins/formcreator/front/section.form.php";
 
 function plugin_formcreator_addSection(items_id, token) {
    modalWindow.load(urlSection, {
-      form_id: items_id,
+      plugin_formcreator_forms_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
 }
@@ -533,7 +533,7 @@ function plugin_formcreator_addSection(items_id, token) {
 function plugin_formcreator_editSection(items_id, token ,section) {
    modalWindow.load(urlSection, {
       section_id: section,
-      form_id: items_id,
+      plugin_formcreator_forms_id: items_id,
       _glpi_csrf_token: token
    }).dialog("open");
 }

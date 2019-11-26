@@ -761,7 +761,7 @@ PluginFormcreatorDuplicatableInterface
       $form_id = $form->getID();
 
       $rand = mt_rand();
-      $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
+      $action = static::getFormURL();
       echo '<form name="form_question" method="post" action="'.$action.'">';
 
       echo '<table class="tab_cadre_fixe">';
@@ -771,7 +771,7 @@ PluginFormcreatorDuplicatableInterface
       echo '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
 
       // name
       echo '<td width="20%">';
@@ -782,7 +782,13 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
 
       echo '<td width="30%">';
-      echo '<input type="text" name="name" id="name" style="width:90%;" autofocus value="'.$this->fields['name'].'" class="required"';
+      echo '<input type="text" name="name" id="name" autofocus value="'.$this->fields['name'].'" class="required"';
+      echo Html::input('name', [
+         'id' => 'name',
+         'autofocus' => '',
+         'value' => $this->fields['name'],
+         'class' => 'required',
+      ]);
       echo '</td>';
 
       // Section
@@ -808,7 +814,7 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
 
       // Field type
       echo '<td>';
@@ -868,7 +874,7 @@ PluginFormcreatorDuplicatableInterface
       echo '<td></td><td></td><td></td><td></td>';
       echo '</tr>';
 
-      echo '<tr class="line1" id="description_tr">';
+      echo '<tr id="description_tr">';
       // Description of the question
       echo '<td>';
       echo '<label for="description" id="label_description">';
@@ -920,23 +926,15 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
       echo '<td colspan="4" class="center">';
-      echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
-      echo '<input type="hidden" name="id" value="'.$ID.'" />';
-      if (0 == $ID) {
-         echo Html::submit(__('Add'), [
-            'name' => 'add'
-         ]);
-      } else {
-         echo Html::submit(__('Save'), [
-            'name' => 'update'
-         ]);
-      }
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
       echo '</td>';
       echo '</tr>';
-      echo '</table>';
-
+      $this->showFormButtons($options + [
+         'candel' => false
+      ]);
       echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       Html::closeForm();
    }

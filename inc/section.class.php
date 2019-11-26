@@ -340,47 +340,41 @@ PluginFormcreatorDuplicatableInterface
       return $sections;
    }
 
-   public function showSubForm($ID) {
+   public function showForm($ID, $options = []) {
       if ($ID == 0) {
-         $name          = '';
-         $uuid          = '';
+         $title =  __('Add a section', 'formcreator');
       } else {
-         $name          = $this->fields['name'];
-         $uuid          = $this->fields['uuid'];
+         $title =  __('Edit a section', 'formcreator');
       }
-      echo '<form name="form_section" method="post" action="'.static::getFormURL().'">';
-      echo '<table class="tab_cadre_fixe">';
+      // echo '<form name="form_section" method="post" action="'.static::getFormURL().'">';
+      // echo '<table class="tab_cadre_fixe">';
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+     
       echo '<tr>';
-      echo '<th colspan="2">';
-      if ($ID == 0) {
-         echo  __('Add a section', 'formcreator');
-      } else {
-         echo  __('Edit a section', 'formcreator');
-      }
+      echo '<th colspan="4">';
+      echo $title;
       echo '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="20%">'.__('Title').' <span style="color:red;">*</span></td>';
-      echo '<td width="70%"><input type="text" name="name" style="width:100%;" value="'.$name.'" class="required"></td>';
-      echo '</tr>';
-
-      echo '<tr class="line1">';
-      echo '<td colspan="2" class="center">';
-      echo '<input type="hidden" name="id" value="'.$ID.'" />';
-      echo '<input type="hidden" name="uuid" value="'.$uuid.'" />';
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($_REQUEST['form_id']).'" />';
-      if ($ID == 0) {
-         echo '<input type="hidden" name="add" value="1" />';
-         echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
-      } else {
-         echo '<input type="hidden" name="update" value="1" />';
-         echo '<input type="submit" name="update" class="submit_button" value="'.__('Edit').'" />';
-      }
+      echo '<td colspan="3">';
+      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'value' => $this->fields['name']]);
       echo '</td>';
       echo '</tr>';
 
-      echo '</table>';
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
+      echo Html::hidden('plugin_formcreator_forms_id', ['value' => (int) $_REQUEST['plugin_formcreator_forms_id']]);
+      echo '</td>';
+      echo '</tr>';
+
+      $this->showFormButtons($options + [
+         'candel' => false
+      ]);
       Html::closeForm();
    }
 
