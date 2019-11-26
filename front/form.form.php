@@ -139,6 +139,26 @@ if (isset($_POST['add'])) {
          unset($_SESSION['glpiname']);
          Html::redirect('formdisplay.php?answer_saved');
       }
+
+      // redirect to created item
+      if ($_SESSION['glpibackcreated']) {
+         $item_ticket = new Item_Ticket;
+         $tickets = $item_ticket->find([
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id' => $answers_id
+         ]);
+
+         if (count($tickets) === 1) {
+            $current_ticket = array_pop($tickets);
+            $tickets_id = $current_ticket['tickets_id'];
+            Html::redirect(Ticket::getFormURLWithID($tickets_id));
+         }
+
+         if (count($tickets) > 1) {
+            Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($answers_id));
+         }
+      }
+
       if (plugin_formcreator_replaceHelpdesk()) {
          // Form was saved from the service catalog
          Html::redirect('issue.php');
