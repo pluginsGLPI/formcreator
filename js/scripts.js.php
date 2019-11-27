@@ -31,6 +31,8 @@
 
 include ('../../../inc/includes.php');
 header('Content-Type: text/javascript');
+
+$form_link_target = plugin_formcreator_replaceHelpdesk() ? "wizard.php" : "formlist.php";
 ?>
 
 var modalWindow;
@@ -67,7 +69,7 @@ function getTimer(object) {
 // === MENU ===
 var link = '';
 link += '<li id="menu7">';
-link += '<a href="' + rootDoc + '/plugins/formcreator/front/formlist.php" class="itemP">';
+link += '<a href="' + rootDoc + '/plugins/formcreator/front/<?php echo $form_link_target; ?>" class="itemP">';
 link += "<?php echo Toolbox::addslashes_deep(_n('Form', 'Forms', 2, 'formcreator')); ?>";
 link += '</a>';
 link += '</li>';
