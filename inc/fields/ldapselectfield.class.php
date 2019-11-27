@@ -77,9 +77,9 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 
       $additions .= '<td>';
       $additions .= Dropdown::show('RuleRightParameter', [
-         'name'  => 'ldap_attribute',
-         'rand'  => $rand,
-         'value' => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
+         'name'    => 'ldap_attribute',
+         'rand'    => $rand,
+         'value'   => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
          'display' => false,
       ]);
       $additions .= '</td>';
