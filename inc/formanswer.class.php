@@ -980,7 +980,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public function getForm() {
       $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields[$form::getForeignKeyField()]);
+      $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
 
       if ($form->isNewItem()) {
          return null;
