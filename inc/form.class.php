@@ -1297,7 +1297,7 @@ PluginFormcreatorDuplicatableInterface
 
       // Display submit button
       echo '<div class="center">';
-      echo '<input type="submit" name="submit_formcreator" class="submit_button" value="' . __('Send') . '" />';
+      echo Html::submit(__('Send'), ['name' => 'submit_formcreator']);
       echo '</div>';
 
       echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . $this->getID() . '">';
