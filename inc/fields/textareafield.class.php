@@ -47,7 +47,7 @@ class PluginFormcreatorTextareaField extends PluginFormcreatorTextField
       $additions .= Html::textarea([
          'name'             => 'default_values',
          'id'               => 'default_values',
-         'value'            => Html::entities_deep($this->getValueForDesign()),
+         'value'            => $this->getValueForDesign(),
          'enable_rich_text' => true,
          'display'          => false,
       ]);

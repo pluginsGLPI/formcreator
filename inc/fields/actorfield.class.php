@@ -57,7 +57,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
       $additions .= Html::textarea([
          'name'             => 'default_values',
          'id'               => 'default_values',
-         'value'            => $this->question->fields['default_values'],
+         'value'            => Html::entities_deep($this->getValueForDesign()),
          'cols'             => '50',
          'display'          => false,
       ]);
