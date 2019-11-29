@@ -1261,31 +1261,37 @@ PluginFormcreatorDuplicatableInterface
       })');
 
       // Show validator selector
-      if ($this->fields['validation_required'] > 0) {
-         $validators = [0 => Dropdown::EMPTY_VALUE];
-
+      if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
          $formValidator = new PluginFormcreatorForm_Validator();
-         if ($this->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
-            // Groups
-            $validatorType = Group::class;
-            $result = $formValidator->getValidatorsForForm($this, $validatorType);
-            foreach ($result as $validator) {
-               $validators[$validator->getID()] = $validator->fields['completename'];
-            }
-         } else {
-            $validatorType = User::class;
-            // Users
-            $result = $formValidator->getValidatorsForForm($this, $validatorType);
-            foreach ($result as $validator) {
-               $validators[$validator->getID()] = formatUserName($validator->getID(), $validator->fields['name'], $validator->fields['realname'], $validator->fields['firstname']);
-            }
+         switch ($this->fields['validation_required']) {
+            case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
+               $validatorType = Group::class;
+               $result = $formValidator->getValidatorsForForm($this, $validatorType);
+               foreach ($result as $validator) {
+                  $validators[$validator->getID()] = $validator->fields['completename'];
+               }
+               break;
+            case PluginFormcreatorForm_Validator::VALIDATION_USER:
+               $validatorType = User::class;
+               $result = $formValidator->getValidatorsForForm($this, $validatorType);
+               foreach ($result as $validator) {
+                  $validators[$validator->getID()] = formatUserName($validator->getID(), $validator->fields['name'], $validator->fields['realname'], $validator->fields['firstname']);
+               }
+               break;
          }
 
-         echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
-         echo '<div class="form-group required liste" id="form-validator">';
-         echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-         Dropdown::showFromArray('formcreator_validator', $validators);
-         echo '</div>';
+         if ($result->count() > 1) {
+            $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
+            echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
+            echo '<div class="form-group required liste" id="form-validator">';
+            echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+            Dropdown::showFromArray('formcreator_validator', $validators);
+         }
+         if ($result->count() == 1) {
+            reset($validators);
+            $validatorId = key($validators);
+            echo Html::hidden('formcreator_validator', $validatorId);
+         }
       }
 
       echo '</div>';
