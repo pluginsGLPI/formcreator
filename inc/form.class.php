@@ -1300,10 +1300,10 @@ PluginFormcreatorDuplicatableInterface
       echo Html::submit(__('Send'), ['name' => 'submit_formcreator']);
       echo '</div>';
 
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . $this->getID() . '">';
+      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $this->getID()]);
       echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
-      echo '<input type="hidden" name="uuid" value="' .$this->fields['uuid'] . '">';
-      echo '</form>';
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
+      Html::closeForm();
    }
 
    /**
