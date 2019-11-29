@@ -464,7 +464,7 @@ function plugin_formcreator_editQuestion(items_id, token, question, section) {
    }).dialog("open");
 }
 
-function setRequired(token, question_id, val) {
+function plugin_formcreator_setRequired(token, question_id, val) {
    jQuery.ajax({
      url: urlFrontQuestion,
      type: "POST",
@@ -477,7 +477,7 @@ function setRequired(token, question_id, val) {
    }).done(reloadTab);
 }
 
-function moveQuestion(token, question_id, action) {
+function plugin_formcreator_moveQuestion(token, question_id, action) {
    jQuery.ajax({
      url: urlFrontQuestion,
      type: "POST",
@@ -505,7 +505,7 @@ function plugin_formcreator_deleteQuestion(items_id, token, question_id) {
    }
 }
 
-function duplicateQuestion(items_id, token, question_id) {
+function plugin_formcreator_duplicateQuestion(items_id, token, question_id) {
    jQuery.ajax({
      url: urlFrontQuestion,
      type: "POST",
@@ -538,7 +538,7 @@ function plugin_formcreator_editSection(items_id, token ,section) {
    }).dialog("open");
 }
 
-function duplicateSection(items_id, token, section_id) {
+function plugin_formcreator_duplicateSection(items_id, token, section_id) {
    jQuery.ajax({
      url: urlFrontSection,
      type: "POST",
@@ -566,7 +566,7 @@ function plugin_formcreator_deleteSection(items_id, token, section_id) {
    }
 }
 
-function moveSection(token, section_id, action) {
+function plugin_formcreator_moveSection(token, section_id, action) {
    jQuery.ajax({
      url: urlFrontSection,
      type: "POST",

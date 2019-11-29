@@ -152,14 +152,14 @@ PluginFormcreatorDuplicatableInterface
          echo "<span class='form_control pointer'>";
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                   title="' . _sx('button', "Duplicate") . '"
-                  onclick="duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
+                  onclick="plugin_formcreator_duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
          if ($section->fields['order'] != $section_number) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                      title="' . __('Bring down') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section->getID() . ', \'down\');" >';
+                     onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'down\');" >';
          }
          echo "</span>";
 
@@ -167,7 +167,7 @@ PluginFormcreatorDuplicatableInterface
          if ($section->fields['order'] != 1) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                      title="' . __('Bring up') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
+                     onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
          }
          echo "</span>";
           
@@ -208,7 +208,7 @@ PluginFormcreatorDuplicatableInterface
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                      title="' . _sx('button', "Duplicate") . '"
-                     onclick="duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
+                     onclick="plugin_formcreator_duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
             echo "</span>";
 
             if ($classname::canRequire()) {
@@ -216,7 +216,7 @@ PluginFormcreatorDuplicatableInterface
                echo "<span class='form_control pointer'>";
                echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/formcreator/pics/$required_pic.png'
                         title='" . __('Required', 'formcreator') . "'
-                        onclick='setRequired(\"".$token."\", ".$question->getID().", ".($question->fields['required']?0:1).")' > ";
+                        onclick='plugin_formcreator_setRequired(\"".$token."\", ".$question->getID().", ".($question->fields['required']?0:1).")' > ";
                echo "</span>";
             } else {
                echo "<span class='form_control pointer'>";
@@ -228,7 +228,7 @@ PluginFormcreatorDuplicatableInterface
             if ($question->fields['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                         title="' . __('Bring up') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'up\');" align="absmiddle"> ';
+                        onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'up\');" align="absmiddle"> ';
             }
             echo "</span>";
 
