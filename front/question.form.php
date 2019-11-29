@@ -32,7 +32,7 @@
 global $CFG_GLPI;
 include ("../../../inc/includes.php");
 
-Session::checkRight("entity", UPDATE);
+Session::checkRight('entity', UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -46,18 +46,16 @@ $question = new PluginFormcreatorQuestion();
 unset($_POST['_skip_checks']);
 if (isset($_POST["add"])) {
    // Add a new Question
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    if ($newid = $question->add($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
       $_POST['id'] = $newid;
       $question->updateConditions($_POST);
       $question->updateParameters($_POST);
    }
-   $form = new PluginFormcreatorForm();
-   $form->getByQuestionId($question->getID());
-   Html::redirect(PluginFormcreatorForm::getFormURLWithID($form->getID()));
+   Html::back();
 
-} else if (isset($_POST["update"])) {
+} else if (isset($_POST['update'])) {
    // Edit an existing Question
    Session::checkRight("entity", UPDATE);
    if ($question->update($_POST)) {
@@ -65,23 +63,21 @@ if (isset($_POST["add"])) {
       $question->updateConditions($_POST);
       $question->updateParameters($_POST);
    }
-   $form = new PluginFormcreatorForm();
-   $form->getByQuestionId($question->getID());
-   Html::redirect(PluginFormcreatorForm::getFormURLWithID($form->getID()));
+   Html::back();
 
-} else if (isset($_POST["delete_question"])) {
+} else if (isset($_POST['delete_question'])) {
    // Delete a Question
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $question->delete($_POST);
 
 } else if (isset($_POST["duplicate_question"])) {
    // Duplicate a Question
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    if ($question->getFromDB((int) $_POST['id'])) {
       $question->duplicate();
    }
 
-} else if (isset($_POST["set_required"])) {
+} else if (isset($_POST['set_required'])) {
    // Set a Question required
    $question = new PluginFormcreatorQuestion();
    $question->getFromDB((int) $_POST['id']);
@@ -89,7 +85,7 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST["move"])) {
    // Move a Question
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
 
    if ($question->getFromDB((int) $_POST['id'])) {
       if ($_POST['way'] == 'up') {
