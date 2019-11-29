@@ -79,6 +79,14 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       ];
    }
 
+   public function getEnumShowRule() {
+      return [
+         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
+         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
+         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
+      ];
+   }
+
    public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
@@ -168,34 +176,6 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
    }
 
    /**
-    * get show / hide conditions for a question
-    *
-    * @param int $questionId
-    * @return array
-    */
-   public function getConditionsFromQuestion($questionId) {
-      global $DB;
-
-      $conditions = [];
-      $rows = $DB->request([
-         'SELECT' => ['id'],
-         'FROM'   => self::getTable(),
-         'WHERE'  => [
-            'itemtype' => PluginFormcreatorQuestion::class,
-            'items_id' => $questionId
-         ],
-         'ORDER'  => 'order ASC'
-      ]);
-      foreach ($rows as $row) {
-         $condition = new static();
-         $condition->getFromDB($row['id']);
-         $conditions[] = $condition;
-      }
-
-      return $conditions;
-   }
-
-   /**
     * get conditions applied to an item
     *
     * @param PluginFormcreatorConditionnableInterface $item
@@ -235,10 +215,6 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
     * @return void
     */
    public function showConditionsForItem($form, PluginFormcreatorConditionnableInterface $item) {
-      $ID = 0;
-      if (!$item->isNewItem()) {
-         $ID = $item->getID();
-      }
       $rand = mt_rand();
       echo '<tr>';
       echo '<th colspan="4">';
@@ -248,6 +224,7 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       echo '</th>';
       echo '</tr>';
 
+      // Get conditionsexisting conditions for the item
       $conditions = $this->getConditionsFromItem($item);
       reset($conditions);
       $condition = array_shift($conditions);
@@ -260,15 +237,15 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
 
       echo '<tr">';
       echo '<td colspan="4">';
-      Dropdown::showFromArray('show_rule', [
-         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
-         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
-         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
-      ], [
-         'value'        => $item->fields['show_rule'],
-         'on_change'    => 'plugin_formcreator_toggleCondition(this);',
-         'rand'         => $rand,
-      ]);
+      Dropdown::showFromArray(
+         'show_rule', 
+         $this->getEnumShowRule(),
+         [
+            'value'        => $item->fields['show_rule'],
+            'on_change'    => 'plugin_formcreator_toggleCondition(this, "' . get_class($item) . '");',
+            'rand'         => $rand,
+         ]
+      );
       echo '</td>';
       echo '</tr>';
    }
@@ -300,15 +277,15 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       }
       $rand = mt_rand();
 
+      // Get list of question in the form of the item
       if (!is_subclass_of($itemtype, PluginFormcreatorConditionnableInterface::class)) {
          throw new Exception("$itemtype is not a " . PluginFormcreatorConditionnableInterface::class);
       }
-      $item = new $itemtype();
       $questionListCondition = [];
       if ($itemtype == PluginFormcreatorQuestion::class) {
          $questionListCondition = [PluginFormcreatorQuestion::getTable() . '.id' => ['<>', $itemId]];
       }
-      $questionsInForm = $item->getQuestionsFromForm($form->getID(), $questionListCondition);
+      $questionsInForm = (new PluginFormcreatorQuestion)->getQuestionsFromForm($form->getID(), $questionListCondition);
       $questions_tab = [];
       foreach ($questionsInForm as $question) {
          if (strlen($question->fields['name']) > 30) {

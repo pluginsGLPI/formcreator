@@ -44,12 +44,6 @@ if (!isset($_REQUEST['itemtype'])) {
 }
 $itemtype = $_REQUEST['itemtype'];
 
-if (!isset($_REQUEST['plugin_formcreator_sections_id'])) {
-   http_response_code(400);
-   exit;
-}
-$sectionId = (int) $_REQUEST['plugin_formcreator_sections_id'];
-
 if (!class_exists($itemtype)) {
    http_response_code(400);
    exit;
@@ -60,12 +54,35 @@ if (!is_subclass_of($itemtype, CommonDBTM::class)) {
    exit;
 }
 
+$form = new PluginFormcreatorForm();
+switch ($itemtype) {
+   case PluginFormcreatorQuestion::class:
+      if (!isset($_REQUEST['plugin_formcreator_sections_id'])) {
+         http_response_code(400);
+         exit;
+      }
+      $sectionId = (int) $_REQUEST['plugin_formcreator_sections_id'];
+      $section = new PluginFormcreatorSection();
+      $section->getFromDB($sectionId);
+      $form->getFromDBBySection($section);
+      break;
+   case PluginFormcreatorSection::class: 
+      if (!isset($_REQUEST['plugin_formcreator_forms_id'])) {
+         http_response_code(400);
+         exit;
+      }
+      $formId = (int) $_REQUEST['plugin_formcreator_forms_id'];
+      $form->getFromDB($formId);
+      break;
+}
+
+if ($form->isNewItem()) {
+   http_response_code(400);
+   exit;
+}
+
 // get an empty condition HTML table row
 $item = new $itemtype();
 $item->getFromDB($itemId);
-$section = new PluginFormcreatorSection();
-$section->getFromDB($sectionId);
-$form = new PluginFormcreatorForm();
-$form->getFromDBBySection($section);
 $condition = new PluginFormcreatorCondition();
 echo $condition->getConditionHtml($form, $itemtype, $itemId);

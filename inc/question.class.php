@@ -759,13 +759,11 @@ PluginFormcreatorConditionnableInterface
       $section->getFromDB($this->fields[$sectionFk]);
       $form = new PluginFormcreatorForm();
       $form->getFromDBBySection($section);
-      $formId = $form->getID();
 
       $rand = mt_rand();
-      $action = static::getFormURL();
-      echo '<form name="form_question" method="post" action="'.$action.'">';
-
+      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
+
       echo '<tr>';
       echo '<th colspan="4">';
       echo ($ID == 0) ? __('Add a question', 'formcreator') : __('Edit a question', 'formcreator');
@@ -783,7 +781,6 @@ PluginFormcreatorConditionnableInterface
       echo '</td>';
 
       echo '<td width="30%">';
-      echo '<input type="text" name="name" id="name" autofocus value="'.$this->fields['name'].'" class="required"';
       echo Html::input('name', [
          'id' => 'name',
          'autofocus' => '',
@@ -802,7 +799,7 @@ PluginFormcreatorConditionnableInterface
 
       echo '<td width="30%">';
       $sections = [];
-      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($formId) as $section) {
+      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($form->getID()) as $section) {
          $sections[$section->getID()] = $section->getField('name');
       }
       $currentSectionId = ($this->fields['plugin_formcreator_sections_id'])
@@ -1037,41 +1034,6 @@ PluginFormcreatorConditionnableInterface
       unset($question[$idToRemove]);
 
       return $question;
-   }
-
-   /**
-    * get the form belonging to the question
-    *
-    * @return boolean|PluginFormcreatorForm the form or false if not found
-    */
-   public function getForm() {
-      global $DB;
-
-      $form = new PluginFormcreatorForm();
-      $iterator = $DB->request([
-         'SELECT' => $form::getForeignKeyField(),
-         'FROM' => PluginFormcreatorSection::getTable(),
-         'INNER JOIN' => [
-            $this::getTable() => [
-               'FKEY' => [
-                  PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getIndexName(),
-                  $this::getTable() => PluginFormcreatorSection::getForeignKeyField()
-               ]
-            ]
-         ],
-         'WHERE' => [
-            $this::getTable() . '.' . $this::getIndexName() => $this->getID()
-         ]
-      ]);
-      if ($iterator->count() !== 1) {
-         return false;
-      }
-      $form->getFromDB($iterator->next()[$form::getForeignKeyField()]);
-      if ($form->isNewItem()) {
-         return false;
-      }
-
-      return $form;
    }
 
    /**

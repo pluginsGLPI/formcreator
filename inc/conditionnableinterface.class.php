@@ -31,9 +31,10 @@
 
 interface PluginFormcreatorConditionnableInterface
 {
-   /**
-    * get the form of the item
-    * @return boolean|PluginFormcreatorForm the form or false if not found
+      /**
+    * Updates the conditions of the question
+    * @param array $input
+    * @return boolean true if success, false otherwise
     */
-   public function getForm();
+  public function updateConditions($input);
 }

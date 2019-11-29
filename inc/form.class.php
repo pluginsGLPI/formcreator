@@ -1216,7 +1216,8 @@ PluginFormcreatorDuplicatableInterface
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
       // Display form
-      echo "<form name='form' method='post' role='form' enctype='multipart/form-data'
+      $formName = 'plugin_formcreator_form';
+      echo "<form name='$formName' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
@@ -1233,10 +1234,9 @@ PluginFormcreatorDuplicatableInterface
 
       // Get and display sections of the form
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($this->getID());
-      echo '<div class="form_section">';
       foreach ($sections as $section) {
-         echo '<h2>' . $section->getField('name') . '</h2>';
-
+         echo '<div class="form_section" data-section-id="'. $section->getID().'">';
+         echo '<h2>' . $section->fields['name'] . '</h2>';
          // Display all fields of the section
          $questions = (new PluginFormcreatorQuestion())->getQuestionsFromSection($section->getID());
          foreach ($questions as $question) {
@@ -1254,9 +1254,10 @@ PluginFormcreatorDuplicatableInterface
             }
             $field->show();
          }
+         echo '</div>';
       }
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'form\']"));
+         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
       })');
 
       // Show validator selector
@@ -1292,8 +1293,6 @@ PluginFormcreatorDuplicatableInterface
             echo Html::hidden('formcreator_validator', $validatorId);
          }
       }
-
-      echo '</div>';
 
       // Display submit button
       echo '<div class="center">';

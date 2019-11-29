@@ -104,39 +104,59 @@ class PluginFormcreatorFields
    }
 
    /**
-    * Check if a question should be shown or not
+    * Check if an item should be shown or not
     *
-    * @param   integer     $question   Question tested for visibility
+    * @param   integer     $item       Item tested for visibility
     * @param   array       $fields     Array of fields instances (question id => instance)
     * @return  boolean                 If true the question should be visible
     */
-   public static function isVisible($question, $fields) {
-      $questionId = $question->getID();
+   public static function isVisible(PluginFormcreatorConditionnableInterface $item, $fields) {
       /**
        * Keep track of questions results and computation status
-       * null = is beinc computed
+       * null = is being avaluated
        * true or false = result of a previous evaluation
-       * not set = not evaluated yet and not being evaluated
+       * not set = not evaluated yet AND not being evaluated
        */
-      static $evalQuestion = [];
-      if (!isset($evalQuestion[$questionId])) {
-         $evalQuestion[$questionId] = null;
-      } else if ($evalQuestion[$questionId] !== null) {
-         return $evalQuestion[$questionId];
+      static $evalItem = [];
+
+      $itemtype = get_class($item);
+      $itemId = $item->getID();
+      if (!isset($evalItem[$itemtype][$itemId])) {
+         $evalItem[$itemtype][$itemId] = null;
+      } else if ($evalItem[$itemtype][$itemId] !== null) {
+         return $evalItem[$itemtype][$itemId];
       } else {
          throw new Exception("Infinite loop in show conditions evaluation");
       }
 
+      /**
+       * Get inherit visibility from parent item.
+       * @return boolean
+       */
+      $getParentVisibility = function() use ($item, $itemtype, &$evalItem, $itemId, $fields) {
+         // Check if item has a condtionnable visibility parent
+         if ($item instanceof CommonDBChild) {
+            if (is_subclass_of($item::$itemtype, PluginFormcreatorConditionnableInterface::class)) {
+               if ($parent = $item->getItem(true, false)) {
+                  // Use visibility of the parent item
+                  $evalItem[$itemtype][$itemId] = self::isVisible($parent, $fields);
+                  return $evalItem[$itemtype][$itemId];
+               }
+            }
+         }
+         $evalItem[$itemtype][$itemId] = true;
+         return $evalItem[$itemtype][$itemId];
+      };
+
       // If the field is always shown
-      if ($question->getField('show_rule') == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
-         $evalQuestion[$questionId] = true;
-         return true;
+      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         return $getParentVisibility();
       }
 
-      // Get conditions to show or hide field
+      // Get conditions to show or hide the item
       $conditions = [];
       $condition = new PluginFormcreatorCondition();
-      foreach ($condition->getConditionsFromQuestion($questionId) as $condition) {
+      foreach ($condition->getConditionsFromItem($item) as $condition) {
          $conditions[] = [
             'logic'    => $condition->fields['show_logic'],
             'field'    => $condition->fields['plugin_formcreator_questions_id'],
@@ -144,11 +164,11 @@ class PluginFormcreatorFields
             'value'    => $condition->fields['show_value']
          ];
       }
-      if (count($conditions) < 1) {
-         // No condition defined, then always show the question
-         $evalQuestion[$questionId] = true;
-         return true;
+      if ($getParentVisibility() === false || count($conditions) < 1) {
+         // No condition defined or parent hidden
+         return $evalItem[$itemtype][$itemId];
       }
+      $evalItem[$itemtype][$itemId] = null;
 
       // Force the first logic operator to OR
       $conditions[0]['logic']       = 'OR';
@@ -168,76 +188,84 @@ class PluginFormcreatorFields
          // TODO: find the best behavior if the question does not exists
          $conditionField = $fields[$condition['field']];
 
-         switch ($condition['operator']) {
-            case PluginFormcreatorCondition::SHOW_CONDITION_NE :
-               if (!$conditionField->isPrerequisites()) {
-                  return true;
-               }
-               try {
-                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->notEquals($condition['value']);
-               } catch (PluginFormcreatorComparisonException $e) {
-                  $value = false;
-               }
-               break;
+         $value = false;
+         if (self::isVisible($conditionField->getQuestion(), $fields)) {
+            switch ($condition['operator']) {
+               case PluginFormcreatorCondition::SHOW_CONDITION_NE :
+                  if (!$conditionField->isPrerequisites()) {
+                     $evalItem[$itemtype][$itemId] = true;
+                     return $evalItem[$itemtype][$itemId];
+                  }
+                  try {
+                     $value = $conditionField->notEquals($condition['value']);
+                  } catch (PluginFormcreatorComparisonException $e) {
+                     $value = false;
+                  }
+                  break;
 
-            case PluginFormcreatorCondition::SHOW_CONDITION_EQ :
-               if (!$conditionField->isPrerequisites()) {
-                  return false;
-               }
-               try {
-                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->equals($condition['value']);
-               } catch (PluginFormcreatorComparisonException $e) {
-                  $value = false;
-               }
-               break;
+               case PluginFormcreatorCondition::SHOW_CONDITION_EQ :
+                  if (!$conditionField->isPrerequisites()) {
+                     $evalItem[$itemtype][$itemId] = false;
+                     return $evalItem[$itemtype][$itemId];
+                  }
+                  try {
+                     $value = $conditionField->equals($condition['value']);
+                  } catch (PluginFormcreatorComparisonException $e) {
+                     $value = false;
+                  }
+                  break;
 
-            case PluginFormcreatorCondition::SHOW_CONDITION_GT:
-               if (!$conditionField->isPrerequisites()) {
-                  return false;
-               }
-               try {
-                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->greaterThan($condition['value']);
-               } catch (PluginFormcreatorComparisonException $e) {
-                  $value = false;
-               }
-               break;
+               case PluginFormcreatorCondition::SHOW_CONDITION_GT:
+                  if (!$conditionField->isPrerequisites()) {
+                     $evalItem[$itemtype][$itemId] = false;
+                     return $evalItem[$itemtype][$itemId];
+                  }
+                  try {
+                     $value = $conditionField->greaterThan($condition['value']);
+                  } catch (PluginFormcreatorComparisonException $e) {
+                     $value = false;
+                  }
+                  break;
 
-            case PluginFormcreatorCondition::SHOW_CONDITION_LT:
-               if (!$conditionField->isPrerequisites()) {
-                  return false;
-               }
-               try {
-                  $value = self::isVisible($conditionField->getQuestion(), $fields) && $conditionField->lessThan($condition['value']);
-               } catch (PluginFormcreatorComparisonException $e) {
-                  $value = false;
-               }
-               break;
+               case PluginFormcreatorCondition::SHOW_CONDITION_LT:
+                  if (!$conditionField->isPrerequisites()) {
+                     $evalItem[$itemtype][$itemId] = false;
+                     return $evalItem[$itemtype][$itemId];
+                  }
+                  try {
+                     $value = $conditionField->lessThan($condition['value']);
+                  } catch (PluginFormcreatorComparisonException $e) {
+                     $value = false;
+                  }
+                  break;
 
-            case PluginFormcreatorCondition::SHOW_CONDITION_GE:
-               if (!$conditionField->isPrerequisites()) {
-                  return false;
-               }
-               try {
-                  $value = self::isVisible($conditionField->getQuestion(), $fields) && ($conditionField->greaterThan($condition['value'])
-                           || $conditionField->equals($condition['value']));
-               } catch (PluginFormcreatorComparisonException $e) {
-                  $value = false;
-               }
-               break;
+               case PluginFormcreatorCondition::SHOW_CONDITION_GE:
+                  if (!$conditionField->isPrerequisites()) {
+                     $evalItem[$itemtype][$itemId] = false;
+                     return $evalItem[$itemtype][$itemId];
+                  }
+                  try {
+                     $value = ($conditionField->greaterThan($condition['value'])
+                              || $conditionField->equals($condition['value']));
+                  } catch (PluginFormcreatorComparisonException $e) {
+                     $value = false;
+                  }
+                  break;
 
-            case PluginFormcreatorCondition::SHOW_CONDITION_LE:
-               if (!$conditionField->isPrerequisites()) {
-                  return false;
-               }
-               try {
-                  $value = self::isVisible($conditionField->getQuestion(), $fields) && ($conditionField->lessThan($condition['value'])
-                           || $conditionField->equals($condition['value']));
-               } catch (PluginFormcreatorComparisonException $e) {
-                  $value = false;
-               }
-               break;
+               case PluginFormcreatorCondition::SHOW_CONDITION_LE:
+                  if (!$conditionField->isPrerequisites()) {
+                     $evalItem[$itemtype][$itemId] = false;
+                     return $evalItem[$itemtype][$itemId];
+                  }
+                  try {
+                     $value = ($conditionField->lessThan($condition['value'])
+                              || $conditionField->equals($condition['value']));
+                  } catch (PluginFormcreatorComparisonException $e) {
+                     $value = false;
+                  }
+                  break;
+            }
          }
-
          // Combine all condition with respect of operator precedence
          // AND has precedence over OR and XOR
          if ($currentLogic != PluginFormcreatorCondition::SHOW_LOGIC_AND && $nextLogic == PluginFormcreatorCondition::SHOW_LOGIC_AND) {
@@ -277,15 +305,15 @@ class PluginFormcreatorFields
          $return = ($return xor $lowPrecedenceReturnPart);
       }
 
-      if ($question->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
+      if ($item->fields['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_HIDDEN) {
          // If the field is hidden by default, show it if condition is true
-         $evalQuestion[$questionId] = $return;
+         $evalItem[$itemtype][$itemId] = $return;
       } else {
          // else show it if condition is false
-         $evalQuestion[$questionId] = !$return;
+         $evalItem[$itemtype][$itemId] = !$return;
       }
 
-      return $evalQuestion[$questionId];
+      return $evalItem[$itemtype][$itemId];
    }
 
    /**
@@ -303,12 +331,23 @@ class PluginFormcreatorFields
          $fields[$id]->parseAnswerValues($input, true);
       }
 
+      // Get the visibility result of questions
       $questionToShow = [];
-      foreach ($fields as $id => $value) {
+      foreach ($fields as $id => $field) {
          $questionToShow[$id] = PluginFormcreatorFields::isVisible($field->getQuestion(), $fields);
       }
 
-      return $questionToShow;
+      // Get the visibility result of sections
+      $sectionToShow = [];
+      $sections = (new PluginFormcreatorSection)->getSectionsFromForm($form->getID());
+      foreach($sections as $section) {
+         $sectionToShow[$section->getID()] = PluginFormcreatorFields::isVisible($section, $fields);;
+      }
+
+      return [
+         PluginFormcreatorQuestion::class => $questionToShow,
+         PluginFormcreatorSection::class => $sectionToShow,
+      ];
    }
 
    /**

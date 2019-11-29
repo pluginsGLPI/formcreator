@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_sections` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `plugin_formcreator_forms_id` int(11) NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
+  `show_rule` int(11) NOT NULL DEFAULT '1',
   `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `plugin_formcreator_forms_id` (`plugin_formcreator_forms_id`)

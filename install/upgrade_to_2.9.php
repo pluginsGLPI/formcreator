@@ -328,6 +328,10 @@ class PluginFormcreatorUpgradeTo2_9 {
             $migration->backupTables('glpi_plugin_formcreator_questions_conditions');
          }
       }
+
+      // make sections hideable by condition
+      $table = 'glpi_plugin_formcreator_sections';
+      $migration->addField($table, 'show_rule', 'integer', ['value' => '1', 'after' => 'order']);
    }
 
    /**

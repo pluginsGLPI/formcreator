@@ -211,7 +211,7 @@ form.formcreator_form {
    margin: 0 0 10px;
 }
 
-.formcreator_form > .form_section > h2 {
+.formcreator_form  .form_section > h2 {
    background: #1B2F62; /*#E1D39E;*/
    color: #FFF;
    margin:  0 0 10px;
