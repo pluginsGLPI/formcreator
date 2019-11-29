@@ -1221,8 +1221,7 @@ PluginFormcreatorDuplicatableInterface
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
       echo $this->fields['name'] . "&nbsp;";
-      echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
-                 title='" . __("Print this form", 'formcreator') . "' onclick='window.print();'>";
+      echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
       echo '</h1>';
 
       // Form Header
