@@ -224,17 +224,6 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       echo '</th>';
       echo '</tr>';
 
-      // Get conditionsexisting conditions for the item
-      $conditions = $this->getConditionsFromItem($item);
-      reset($conditions);
-      $condition = array_shift($conditions);
-      if ($condition !== null) {
-         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0, true);
-      }
-      foreach ($conditions as $condition) {
-         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0);
-      }
-
       echo '<tr">';
       echo '<td colspan="4">';
       Dropdown::showFromArray(
@@ -248,6 +237,17 @@ class PluginFormcreatorCondition extends CommonDBTM implements PluginFormcreator
       );
       echo '</td>';
       echo '</tr>';
+
+      // Get conditionsexisting conditions for the item
+      $conditions = $this->getConditionsFromItem($item);
+      reset($conditions);
+      $condition = array_shift($conditions);
+      if ($condition !== null) {
+         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0, true);
+      }
+      foreach ($conditions as $condition) {
+         echo $condition->getConditionHtml($form, PluginFormcreatorQuestion::class, 0);
+      }
    }
 
    /**
