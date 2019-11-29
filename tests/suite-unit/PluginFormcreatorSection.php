@@ -154,6 +154,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       $fieldsWithoutID = [
          'name',
          'order',
+         'show_rule',
       ];
       $extraFields = [
          '_questions',
@@ -173,9 +174,10 @@ class PluginFormcreatorSection extends CommonTestCase {
       $form = $this->getForm();
       $uuid = plugin_formcreator_getUuid();
       $input = [
-         'name' => $this->getUniqueString(),
-         'order' => '1',
-         'uuid' => $uuid,
+         'name'       => $this->getUniqueString(),
+         'order'      => '1',
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'uuid'       => $uuid,
       ];
 
       $linker = new \PluginFormcreatorLinker ();

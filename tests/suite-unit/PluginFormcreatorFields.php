@@ -319,8 +319,13 @@ class PluginFormcreatorFields extends CommonTestCase {
       ];
       $output = \PluginFormcreatorFields::updateVisibility($input);
       $this->array($output)->isIdenticalTo([
-         $question1->getID() => true,
-         $question2->getID() => true,
+         \PluginFormcreatorQuestion::class => [
+            $question1->getID() => true,
+            $question2->getID() => true,
+         ],
+         \PluginFormcreatorSection::class => [
+            $section->getID() => true,
+         ],
       ]);
    }
 }
