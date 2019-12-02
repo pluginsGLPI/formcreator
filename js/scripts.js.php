@@ -404,6 +404,10 @@ function buildTiles(list) {
             item.icon_color = '#999999';
          }
 
+         if (item.background_color == '') {
+            item.background_color = '#e7e7e7';
+         }
+
          if (item.type == 'form') {
             forms.push(
                '<div style="background-color: ' + item.background_color + '" class="plugin_formcreator_formTile '+item.type+' '+default_class+'" title="'+item.description+'">'

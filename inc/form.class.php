@@ -919,7 +919,7 @@ PluginFormcreatorDuplicatableInterface
       if (version_compare(GLPI_VERSION, "9.4") > 0) {
          $subQuery = new DBMysqlIterator($DB);
          $subQuery->buildQuery($query_faqs);
-         $query_faqs = '(' . $subQuery->getSQL() . ') AS `faqs`';
+         $query_faqs = '(' . $subQuery->getSQL() . ')';
       }
 
       $query_faqs = [
@@ -933,7 +933,7 @@ PluginFormcreatorDuplicatableInterface
                'FROM' => $table_cat,
                'WHERE' => [
                   'id' => $selectedCategories,
-                  'knowbaseitemcategories_id' => ['<>, 0'],
+                  'knowbaseitemcategories_id' => ['!=', 0],
                ],
             ]),
          ];
@@ -947,7 +947,7 @@ PluginFormcreatorDuplicatableInterface
             ]
          ];
          $query_faqs['WHERE'] = [
-            'faqs.knowbaseitemcategories_id' => ['<>', 0],
+            'faqs.knowbaseitemcategories_id' => ['!=', 0],
          ];
       }
       $result_faqs = $DB->request($query_faqs);
@@ -957,6 +957,9 @@ PluginFormcreatorDuplicatableInterface
             $formList[] = [
                'id'           => $faq['id'],
                'name'         => $faq['name'],
+               'icon'         => '',
+               'icon_color'   => '',
+               'background_color'   => '',
                'description'  => '',
                'type'         => 'faq',
                'usage_count'  => $faq['view'],
