@@ -145,7 +145,7 @@ if (isset($_POST['add'])) {
          $item_ticket = new Item_Ticket;
          $tickets = $item_ticket->find([
             'itemtype' => PluginFormcreatorFormAnswer::class,
-            'items_id' => $answers_id
+            'items_id' => $formAnswer->getID(),
          ]);
 
          if (count($tickets) === 1) {
@@ -155,7 +155,7 @@ if (isset($_POST['add'])) {
          }
 
          if (count($tickets) > 1) {
-            Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($answers_id));
+            Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
          }
       }
 
