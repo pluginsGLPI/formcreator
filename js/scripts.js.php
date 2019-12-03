@@ -1025,6 +1025,19 @@ function pluginFormcreatorInitializeTextarea(fieldName, rand) {
 }
 
 /**
+ * Initialize a time field
+ */
+function pluginFormcreatorInitializeTime(fieldName, rand) {
+   var field = $('input[name="_' + fieldName + '"]');
+   field.on("change", function() {
+      formcreatorShowFields($(field[0].form));
+   });
+   $('#resetdate' + rand).on("click", function() {
+      formcreatorShowFields($(field[0].form));
+   });
+}
+
+/**
  * Initialize a urgency field
  */
 function pluginFormcreatorInitializeUrgency(fieldName, rand) {
