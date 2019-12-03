@@ -46,7 +46,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $env       = new self;
-      $found_env = $env->find();
+      $found_env = $env->find([static::getForeignKeyField() => $item->getID()]);
       $nb        = count($found_env);
       return self::createTabEntry(self::getTypeName($nb), $nb);
    }
