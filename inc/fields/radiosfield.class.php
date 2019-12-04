@@ -242,4 +242,8 @@ class PluginFormcreatorRadiosField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-check-circle" aria-hidden="true"></i>';
+   }
 }

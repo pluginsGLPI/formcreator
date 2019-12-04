@@ -307,4 +307,8 @@ class PluginFormcreatorCheckboxesField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-check-square" aria-hidden="true"></i>';
+   }
 }

@@ -323,4 +323,8 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return false;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-user" aria-hidden="true"></i>';
+   }
 }

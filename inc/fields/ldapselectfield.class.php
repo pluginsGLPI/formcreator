@@ -270,4 +270,8 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
    public function isAnonymousFormCompatible() {
       return false;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-sitemap" aria-hidden="true"></i>';
+   }
 }

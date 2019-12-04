@@ -154,4 +154,8 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-envelope" aria-hidden="true"></i>';
+   }
 }

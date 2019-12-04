@@ -643,4 +643,8 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
       $TRANSLATE->setLocale($oldLocale);
       return $content;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-caret-down" aria-hidden="true"></i>';
+   }
 }

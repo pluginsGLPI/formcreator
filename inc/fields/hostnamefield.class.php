@@ -95,4 +95,8 @@ class PluginFormcreatorHostnameField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-desktop" aria-hidden="true"></i>';
+   }
 }

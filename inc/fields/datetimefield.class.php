@@ -147,4 +147,8 @@ class PluginFormcreatorDatetimeField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-calendar" aria-hidden="true"></i>';
+   }
 }

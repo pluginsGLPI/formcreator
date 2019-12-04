@@ -230,4 +230,8 @@ class PluginFormcreatorDependentField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '';
+   }
 }

@@ -198,4 +198,8 @@ class PluginFormcreatorUrgencyField extends PluginFormcreatorField
    public function isAnonymousFormCompatible() {
       return true;
    }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-exclamation" aria-hidden="true"></i>';
+   }
 }
