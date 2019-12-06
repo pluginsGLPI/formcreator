@@ -125,25 +125,19 @@ PluginFormcreatorDuplicatableInterface
    }
 
    public static function showForForm(CommonDBTM $item, $withtemplate = '') {
-      global $CFG_GLPI, $DB;
+      global $CFG_GLPI;
       // TODO: move the content of this method into a new showForForm() method
       echo '<table class="tab_cadre_fixe">';
 
       // Get sections
-      $found_sections = $DB->request([
-         'FROM'    => PluginFormcreatorSection::getTable(),
-         'WHERE'   => [
-            'plugin_formcreator_forms_id' => (int) $item->getId()
-         ],
-         'ORDER' => 'order'
-      ]);
+      $found_sections = (new PluginFormcreatorSection)->getSectionsFromForm($item->getID());
       $section_number   = count($found_sections);
       $token            = Session::getNewCSRFToken();
       foreach ($found_sections as $section) {
-         echo '<tr class="section_row" id="section_row_' . $section['id'] . '">';
-         echo '<th onclick="plugin_formcreator_editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')">';
+         echo '<tr class="section_row" id="section_row_' . $section->getID() . '">';
+         echo '<th onclick="plugin_formcreator_editSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')">';
          echo "<a href='#'>";
-         echo $section['name'];
+         echo $section->fields['name'];
          echo '</a>';
          echo '</th>';
 
@@ -152,28 +146,28 @@ PluginFormcreatorDuplicatableInterface
          echo "<span class='form_control pointer'>";
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
                   title="' . __('Delete', 'formcreator') . '"
-                  onclick="plugin_formcreator_deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"> ';
+                  onclick="plugin_formcreator_deleteSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                   title="' . _sx('button', "Duplicate") . '"
-                  onclick="duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ')"> ';
+                  onclick="duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
-         if ($section['order'] != $section_number) {
+         if ($section->fields['order'] != $section_number) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                      title="' . __('Bring down') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'down\');" >';
+                     onclick="moveSection(\'' . $token . '\', ' . $section->getID() . ', \'down\');" >';
          }
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
-         if ($section['order'] != 1) {
+         if ($section->fields['order'] != 1) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                      title="' . __('Bring up') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section['id'] . ', \'up\');"> ';
+                     onclick="moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
          }
          echo "</span>";
           
@@ -181,54 +175,48 @@ PluginFormcreatorDuplicatableInterface
          echo '</tr>';
 
          // Get questions
-         $found_questions = $DB->request([
-            'FROM'  => PluginFormcreatorQuestion::getTable(),
-            'WHERE' => [
-               'plugin_formcreator_sections_id' => (int) $section['id']
-            ],
-            'ORDER' => 'order'
-         ]);
+         $found_questions = (new static())->getQuestionsFromSection($section->getID());
          $question_number   = count($found_questions);
          $i = 0;
          foreach ($found_questions as $question) {
-            $fieldType = 'PluginFormcreator' . ucfirst($question['fieldtype']) . 'Field';
+            $fieldType = 'PluginFormcreator' . ucfirst($question->fields['fieldtype']) . 'Field';
             $questionInstance = new PluginFormcreatorQuestion();
-            $questionInstance->getFromDB($question['id']);
+            $questionInstance->getFromDB($question->getID());
             $field = new $fieldType($questionInstance);
             $i++;
-            echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question['id'] . '">';
-            echo '<td onclick="plugin_formcreator_editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ', ' . $section['id'] . ')">';
+            echo '<tr class="line' . ($i % 2) . '" id="question_row_' . $question->getID() . '">';
+            echo '<td onclick="plugin_formcreator_editQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ', ' . $section->getID() . ')">';
             echo "<a href='#'>";
             echo $field->getHtmlIcon();
-            echo $question['name'];
+            echo $question->fields['name'];
             echo "<a>";
             echo '</td>';
 
             echo '<td align="center">';
 
-            $classname = PluginFormcreatorFields::getFieldClassname($question['fieldtype']);
+            $classname = PluginFormcreatorFields::getFieldClassname($question->fields['fieldtype']);
 
             // avoid quote js error
-            $question['name'] = htmlspecialchars_decode($question['name'], ENT_QUOTES);
+            $question->fields['name'] = htmlspecialchars_decode($question->fields['name'], ENT_QUOTES);
 
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/delete.png"
                      title="' . __('Delete', 'formcreator') . '"
-                     onclick="plugin_formcreator_deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
+                     onclick="plugin_formcreator_deleteQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
             echo "</span>";
 
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                      title="' . _sx('button', "Duplicate") . '"
-                     onclick="duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question['id'] . ')"> ';
+                     onclick="duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
             echo "</span>";
 
             if ($classname::canRequire()) {
-               $required_pic = ($question['required'] ? "required": "not-required");
+               $required_pic = ($question->fields['required'] ? "required": "not-required");
                echo "<span class='form_control pointer'>";
                echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/formcreator/pics/$required_pic.png'
                         title='" . __('Required', 'formcreator') . "'
-                        onclick='setRequired(\"".$token."\", ".$question['id'].", ".($question['required']?0:1).")' > ";
+                        onclick='setRequired(\"".$token."\", ".$question->getID().", ".($question->fields['required']?0:1).")' > ";
                echo "</span>";
             } else {
                echo "<span class='form_control pointer'>";
@@ -237,26 +225,26 @@ PluginFormcreatorDuplicatableInterface
             }
 
             echo "<span class='form_control pointer'>";
-            if ($question['order'] != 1) {
+            if ($question->fields['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                         title="' . __('Bring up') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'up\');" align="absmiddle"> ';
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'up\');" align="absmiddle"> ';
             }
             echo "</span>";
 
             echo "<span class='form_control pointer'>";
-            if ($question['order'] != $question_number) {
+            if ($question->fields['order'] != $question_number) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                         title="' . __('Bring down') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'down\');"> ';
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'down\');"> ';
             }
             echo "</span>";
 
             echo "<span class='form_control pointer'>";
-            if ($question['order'] != 1) {
+            if ($question->fields['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/chevron-up.png"
                         title="' . __('Bring top') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question['id'] . ', \'top\');" align="absmiddle"> ';
+                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'top\');" align="absmiddle"> ';
             }
             echo "</span>";
    
@@ -265,8 +253,8 @@ PluginFormcreatorDuplicatableInterface
          }
 
          echo '<tr class="line' . (($i + 1) % 2) . '">';
-         echo '<td colspan="6" id="add_question_td_' . $section['id'] . '" class="add_question_tds">';
-         echo '<a href="javascript:plugin_formcreator_addQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $section['id'] . ');">
+         echo '<td colspan="6" id="add_question_td_' . $section->getID() . '" class="add_question_tds">';
+         echo '<a href="javascript:plugin_formcreator_addQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ');">
                    <img src="'.$CFG_GLPI['root_doc'].'/pics/menu_add.png" alt="+"/>
                    '.__('Add a question', 'formcreator').'
                </a>';
