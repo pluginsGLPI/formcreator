@@ -53,6 +53,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          'name'             => 'default_values',
          'id'               => 'default_values',
          'value'            => $this->question->fields['default_values'],
+         'cols'             => '50',
          'display'          => false,
       ]);
       $additions .= '</td>';
@@ -67,6 +68,7 @@ class PluginFormcreatorMultiSelectField extends PluginFormcreatorField
          'name'             => 'values',
          'id'               => 'values',
          'value'            => $this->question->fields['values'],
+         'cols'             => '50',
          'display'          => false,
       ]);
       $additions .= '</td>';

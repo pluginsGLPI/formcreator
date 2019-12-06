@@ -55,10 +55,10 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       $domId        = $fieldName . '_' . $rand;
       $ip = Toolbox::getRemoteIpAddress();
       $ip = Html::cleanInputText($ip);
-      echo '<input type="hidden" class="form-control"
-         name="' . $fieldName . '"
-         id="' . $domId . '"
-         value="' . $ip . '" />' . PHP_EOL;
+      echo Html::hidden($fieldName, [
+         'id'     => $domId,
+         'value'  => $ip,
+      ]);
    }
 
    public function serializeValue() {

@@ -63,8 +63,10 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       $additions .= '</label>';
       $additions .= '</td>';
       $additions .= '<td>';
-      $additions .= '<input type="text" name="ldap_filter" id="ldap_filter" style="width:98%;"'
-           .'value="'.(isset($ldap_values['ldap_filter']) ? $ldap_values['ldap_filter'] : '').'" />';
+      $additions .= Html::input('ldap_filter', [
+         'id'     => 'ldap_filter',
+         'value'  => (isset($ldap_values['ldap_filter'])) ? $ldap_values['ldap_filter'] : '',
+      ]);
       $additions .= '</td>';
 
       $additions .= '<td>';

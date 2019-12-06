@@ -43,10 +43,10 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
          $domId        = $fieldName . '_' . $rand;
          $defaultValue = Html::cleanInputText($this->value);
 
-         echo '<input type="email" class="form-control"
-                  name="' . $fieldName . '"
-                  id="' . $domId . '"
-                  value="' . $defaultValue . '" />';
+         echo Html::input($fieldName, [
+            'id'    => $domId,
+            'value' => $defaultValue,
+         ]);
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeEmail('$fieldName', '$rand');
          });");

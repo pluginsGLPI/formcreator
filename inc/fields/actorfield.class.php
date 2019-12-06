@@ -58,6 +58,7 @@ class PluginFormcreatorActorField extends PluginFormcreatorField
          'name'             => 'default_values',
          'id'               => 'default_values',
          'value'            => $this->question->fields['default_values'],
+         'cols'             => '50',
          'display'          => false,
       ]);
       $additions .= '</td>';

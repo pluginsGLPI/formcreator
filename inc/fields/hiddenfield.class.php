@@ -46,8 +46,10 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       $additions .= '</td>';
       $additions .= '<td id="dropdown_default_value_field">';
       $value = Html::entities_deep($this->question->fields['default_values']);
-      $additions .= '<input type="text" name="default_values" id="default_values" rows="4" cols="40"'
-         .'style="width: 90%" value="'.$value.'">';
+      $additions .= Html::input('default_values', [
+         'id' => 'default_values',
+         'value' => $value,
+      ]);
       $additions .= '</td>';
       $additions .= '<td></td>';
       $additions .= '<td></td>';
