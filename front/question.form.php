@@ -44,7 +44,7 @@ $question = new PluginFormcreatorQuestion();
 
 // force checks in PrepareInputForAdd or PrepareInputrForUpdate
 unset($_POST['_skip_checks']);
-if (isset($_POST["add"])) {
+if (isset($_POST['add'])) {
    // Add a new Question
    Session::checkRight('entity', UPDATE);
    if ($newid = $question->add($_POST)) {
@@ -57,7 +57,7 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST['update'])) {
    // Edit an existing Question
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    if ($question->update($_POST)) {
       Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
       $question->updateConditions($_POST);
@@ -70,7 +70,7 @@ if (isset($_POST["add"])) {
    Session::checkRight('entity', UPDATE);
    $question->delete($_POST);
 
-} else if (isset($_POST["duplicate_question"])) {
+} else if (isset($_POST['duplicate_question'])) {
    // Duplicate a Question
    Session::checkRight('entity', UPDATE);
    if ($question->getFromDB((int) $_POST['id'])) {
@@ -83,7 +83,7 @@ if (isset($_POST["add"])) {
    $question->getFromDB((int) $_POST['id']);
    $question->setRequired($_POST['value']);
 
-} else if (isset($_POST["move"])) {
+} else if (isset($_POST['move'])) {
    // Move a Question
    Session::checkRight('entity', UPDATE);
 
@@ -99,5 +99,5 @@ if (isset($_POST["add"])) {
 
 } else {
    // Return to form list
-   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.php');
+   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
 }
