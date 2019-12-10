@@ -44,6 +44,11 @@ PluginFormcreatorConditionnableInterface
    static public $items_id = 'plugin_formcreator_forms_id';
 
    /**
+    * Number of columns in a section
+    */
+   public const COLUMNS = 4;
+
+   /**
     * Returns the type name with consideration of plural
     *
     * @param number $nb Number of item(s)

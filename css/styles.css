@@ -153,6 +153,54 @@ input.submit_button:focus {
    background-color: #FFF;
 }
 
+/* 
+ * Form designer
+ */
+
+/* Sections */
+#plugin_formcreator_formDesign > ol {
+   list-style-type: none;
+   text-align: left;
+   padding-left: 0;
+}
+
+#plugin_formcreator_formDesign > ol > .plugin_formcreator_section {
+   line-height: 32px;
+   background: #CCC;
+}
+
+/* questions */
+
+#plugin_formcreator_formDesign .grid-stack {
+   list-style-type: none;
+   text-align: left;
+   padding-left: 0;
+   position: relative;
+}
+
+#plugin_formcreator_formDesign .grid-stack-item {
+   line-height: 32px;
+   background: #F0F0F0;
+   position: absolute;
+}
+
+#plugin_formcreator_formDesign .grid-stack-item .grid-stack-item-content {
+   text-align: left;
+   padding-left: 16px;
+   padding-right: 24px;
+}
+
+#plugin_formcreator_formDesign .grid-stack-item.ui-draggable-dragging {
+   z-index: 100;
+}
+
+/* actions on sections or questions */
+#plugin_formcreator_formDesign .form_control {
+   font-size: larger;
+}
+
+
+
 form.formcreator_form {
    max-width: 950px;
    margin: 10px auto 50px !important;

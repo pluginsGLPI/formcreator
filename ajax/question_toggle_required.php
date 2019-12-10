@@ -29,43 +29,26 @@
  * ---------------------------------------------------------------------
  */
 
-global $CFG_GLPI;
-include ("../../../inc/includes.php");
-
+include ('../../../inc/includes.php');
 Session::checkRight('entity', UPDATE);
 
-// Check if plugin is activated...
-$plugin = new Plugin();
-if (!$plugin->isActivated('formcreator')) {
-   Html::displayNotFoundError();
+if (!isset($_REQUEST['id'])) {
+   http_response_code(400);
+   exit();
 }
 
+if (!isset($_REQUEST['required'])) {
+    http_response_code(400);
+    exit();
+ }
+ 
 $question = new PluginFormcreatorQuestion();
-
-// force checks in PrepareInputForAdd or PrepareInputrForUpdate
-unset($_POST['_skip_checks']);
-if (isset($_POST['add'])) {
-   // Add a new Question
-   Session::checkRight('entity', UPDATE);
-   if ($newid = $question->add($_POST)) {
-      Session::addMessageAfterRedirect(__('The question has been successfully saved!', 'formcreator'), true, INFO);
-      $_POST['id'] = $newid;
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
-   }
-   Html::back();
-
-} else if (isset($_POST['update'])) {
-   // Edit an existing Question
-   Session::checkRight('entity', UPDATE);
-   if ($question->update($_POST)) {
-      Session::addMessageAfterRedirect(__('The question has been successfully updated!', 'formcreator'), true, INFO);
-      $question->updateConditions($_POST);
-      $question->updateParameters($_POST);
-   }
-   Html::back();
-
-} else {
-   // Return to form list
-   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.php');
+$success = $question->update([
+    'id'           => (int) $_REQUEST['id'],
+    '_skip_checks' => true,
+    'required'     => ($_REQUEST['required'] ? '1' : '0'),
+]);
+if (!$success) {
+    http_response_code(400);
+    exit(); 
 }
