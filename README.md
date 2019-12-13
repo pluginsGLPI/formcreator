@@ -20,6 +20,7 @@ Extend GLPI with Plugins.
 * [Versioning](#versioning)
 * [Contact](#contact)
 * [Professional Services](#professional-services)
+* [Build from source](#build-from-source)
 * [Contribute](#contribute)
 * [Copying](#copying)
 
@@ -73,6 +74,14 @@ You can also chat with us via IRC in [#GLPI on freenode](http://webchat.freenode
 The GLPI Network services are available through our [Partner's Network](http://www.teclib-edition.com/en/partners/). We provide special training, bug fixes with editor subscription, contributions for new features, and more.
 
 Obtain a personalized service experience, associated with benefits and opportunities.
+
+## Build from source
+
+To build the plugin you need [Composer](http://getcomposer.org) and an internet access to download some resources from Github.
+
+After dowloading the source of Formcreator, go in its folder and run the following
+* composer install
+* php vendor/bin/robo build:fa-data
 
 ## Contribute
 
