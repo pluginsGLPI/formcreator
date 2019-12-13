@@ -37,7 +37,8 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorSection extends CommonDBChild implements 
 PluginFormcreatorExportableInterface,
-PluginFormcreatorDuplicatableInterface
+PluginFormcreatorDuplicatableInterface,
+PluginFormcreatorConditionnableInterface
 {
    static public $itemtype = PluginFormcreatorForm::class;
    static public $items_id = 'plugin_formcreator_forms_id';
@@ -340,47 +341,45 @@ PluginFormcreatorDuplicatableInterface
       return $sections;
    }
 
-   public function showSubForm($ID) {
+   public function showForm($ID, $options = []) {
       if ($ID == 0) {
-         $name          = '';
-         $uuid          = '';
+         $title =  __('Add a section', 'formcreator');
       } else {
-         $name          = $this->fields['name'];
-         $uuid          = $this->fields['uuid'];
+         $title =  __('Edit a section', 'formcreator');
       }
-      echo '<form name="form_section" method="post" action="'.static::getFormURL().'">';
+      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
+     
       echo '<tr>';
-      echo '<th colspan="2">';
-      if ($ID == 0) {
-         echo  __('Add a section', 'formcreator');
-      } else {
-         echo  __('Edit a section', 'formcreator');
-      }
+      echo '<th colspan="4">';
+      echo $title;
       echo '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="20%">'.__('Title').' <span style="color:red;">*</span></td>';
-      echo '<td width="70%"><input type="text" name="name" style="width:100%;" value="'.$name.'" class="required"></td>';
-      echo '</tr>';
-
-      echo '<tr class="line1">';
-      echo '<td colspan="2" class="center">';
-      echo '<input type="hidden" name="id" value="'.$ID.'" />';
-      echo '<input type="hidden" name="uuid" value="'.$uuid.'" />';
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($_REQUEST['form_id']).'" />';
-      if ($ID == 0) {
-         echo '<input type="hidden" name="add" value="1" />';
-         echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
-      } else {
-         echo '<input type="hidden" name="update" value="1" />';
-         echo '<input type="submit" name="update" class="submit_button" value="'.__('Edit').'" />';
-      }
+      echo '<td colspan="3">';
+      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'value' => $this->fields['name']]);
       echo '</td>';
       echo '</tr>';
 
-      echo '</table>';
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBBySection($this);
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($form, $this);
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
+      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
+      echo '</td>';
+      echo '</tr>';
+
+      $this->showFormButtons($options + [
+         'candel' => false
+      ]);
       Html::closeForm();
    }
 
@@ -431,5 +430,65 @@ PluginFormcreatorDuplicatableInterface
       if (isAPI()) {
          $this->fields += self::getFullData(null, $this->fields['id']);
       }
+   }
+
+   /**
+    * Updates the conditions of the question
+    * @param array $input
+    * @return boolean true if success, false otherwise
+    */
+    public function updateConditions($input) {
+      if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
+         || !isset($input['show_value']) || !isset($input['show_logic'])) {
+         return  false;
+      }
+
+      if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
+         || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
+         return false;
+      }
+
+      // All arrays of condition exists
+      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         return false;
+      }
+
+      if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
+            && count($input['show_value']) == count($input['show_logic'])
+            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
+         return false;
+      }
+
+      // Delete all existing conditions for the question
+      $condition = new PluginFormcreatorCondition();
+      $condition->deleteByCriteria([
+         'itemtype' => static::class,
+         'items_id' => $input['id'],
+      ]);
+
+      // Arrays all have the same count and have at least one item
+      $order = 0;
+      while (count($input['plugin_formcreator_questions_id']) > 0) {
+         $order++;
+         $value            = array_shift($input['show_value']);
+         $questionID       = (int) array_shift($input['plugin_formcreator_questions_id']);
+         $showCondition    = html_entity_decode(array_shift($input['show_condition']));
+         $showLogic        = array_shift($input['show_logic']);
+         $condition = new PluginFormcreatorCondition();
+         $condition->add([
+            'itemtype'                        => static::class,
+            'items_id'                        => $input['id'],
+            'plugin_formcreator_questions_id' => $questionID,
+            'show_condition'                  => $showCondition,
+            'show_value'                      => $value,
+            'show_logic'                      => $showLogic,
+            'order'                           => $order,
+         ]);
+         if ($condition->isNewItem()) {
+            return false;
+         }
+      }
+
+      return true;
    }
 }

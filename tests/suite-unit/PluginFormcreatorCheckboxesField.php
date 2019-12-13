@@ -47,7 +47,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'checkboxes' => [
                      'range' => [
@@ -68,7 +68,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                'default_values'  => '2',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'checkboxes' => [
                      'range' => [
@@ -89,7 +89,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                'default_values'  => "3\r\n5",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'checkboxes' => [
                      'range' => [
@@ -110,7 +110,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                'default_values'  => "3\r\n5",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'checkboxes' => [
                      'range' => [
@@ -131,7 +131,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                'default_values'  => "3\r\n5\r\n6",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'checkboxes' => [
                      'range' => [
@@ -152,7 +152,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
                'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'checkboxes' => [
                      'range' => [
@@ -291,7 +291,7 @@ class PluginFormcreatorCheckboxesField extends CommonTestCase {
          'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
          'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
          'order'           => '1',
-         'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+         'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'range_min'       => 3,
          'range_max'       => 4,
       ]);

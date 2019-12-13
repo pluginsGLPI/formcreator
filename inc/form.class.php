@@ -1216,13 +1216,13 @@ PluginFormcreatorDuplicatableInterface
       echo Html::css("plugins/formcreator/css/print_form.css", ['media' => 'print']);
 
       // Display form
-      echo "<form name='form' method='post' role='form' enctype='multipart/form-data'
+      $formName = 'plugin_formcreator_form';
+      echo "<form name='$formName' method='post' role='form' enctype='multipart/form-data'
                action='". $CFG_GLPI['root_doc'] . "/plugins/formcreator/front/form.form.php'
                class='formcreator_form form_horizontal'>";
       echo "<h1 class='form-title'>";
       echo $this->fields['name'] . "&nbsp;";
-      echo "<img src='".FORMCREATOR_ROOTDOC."/pics/print.png' class='pointer print_button'
-                 title='" . __("Print this form", 'formcreator') . "' onclick='window.print();'>";
+      echo '<i class="fas fa-print" style="cursor: pointer;" onclick="window.print();"></i>';
       echo '</h1>';
 
       // Form Header
@@ -1234,10 +1234,9 @@ PluginFormcreatorDuplicatableInterface
 
       // Get and display sections of the form
       $sections = (new PluginFormcreatorSection)->getSectionsFromForm($this->getID());
-      echo '<div class="form_section">';
       foreach ($sections as $section) {
-         echo '<h2>' . $section->getField('name') . '</h2>';
-
+         echo '<div class="form_section" data-section-id="'. $section->getID().'">';
+         echo '<h2>' . $section->fields['name'] . '</h2>';
          // Display all fields of the section
          $questions = (new PluginFormcreatorQuestion())->getQuestionsFromSection($section->getID());
          foreach ($questions as $question) {
@@ -1255,50 +1254,55 @@ PluginFormcreatorDuplicatableInterface
             }
             $field->show();
          }
+         echo '</div>';
       }
       echo Html::scriptBlock('$(function() {
-         formcreatorShowFields($("form[name=\'form\']"));
+         formcreatorShowFields($("form[name=\'' . $formName . '\']"));
       })');
 
       // Show validator selector
-      if ($this->fields['validation_required'] > 0) {
-         $validators = [0 => Dropdown::EMPTY_VALUE];
-
+      if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
          $formValidator = new PluginFormcreatorForm_Validator();
-         if ($this->fields['validation_required'] == PluginFormcreatorForm_Validator::VALIDATION_GROUP) {
-            // Groups
-            $validatorType = Group::class;
-            $result = $formValidator->getValidatorsForForm($this, $validatorType);
-            foreach ($result as $validator) {
-               $validators[$validator->getID()] = $validator->fields['completename'];
-            }
-         } else {
-            $validatorType = User::class;
-            // Users
-            $result = $formValidator->getValidatorsForForm($this, $validatorType);
-            foreach ($result as $validator) {
-               $validators[$validator->getID()] = formatUserName($validator->getID(), $validator->fields['name'], $validator->fields['realname'], $validator->fields['firstname']);
-            }
+         switch ($this->fields['validation_required']) {
+            case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
+               $validatorType = Group::class;
+               $result = $formValidator->getValidatorsForForm($this, $validatorType);
+               foreach ($result as $validator) {
+                  $validators[$validator->getID()] = $validator->fields['completename'];
+               }
+               break;
+            case PluginFormcreatorForm_Validator::VALIDATION_USER:
+               $validatorType = User::class;
+               $result = $formValidator->getValidatorsForForm($this, $validatorType);
+               foreach ($result as $validator) {
+                  $validators[$validator->getID()] = formatUserName($validator->getID(), $validator->fields['name'], $validator->fields['realname'], $validator->fields['firstname']);
+               }
+               break;
          }
 
-         echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
-         echo '<div class="form-group required liste" id="form-validator">';
-         echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
-         Dropdown::showFromArray('formcreator_validator', $validators);
-         echo '</div>';
+         if ($result->count() > 1) {
+            $validators = [0 => Dropdown::EMPTY_VALUE] + $validators;
+            echo '<h2>' . __('Validation', 'formcreator') . '</h2>';
+            echo '<div class="form-group required liste" id="form-validator">';
+            echo '<label>' . __('Choose a validator', 'formcreator') . ' <span class="red">*</span></label>';
+            Dropdown::showFromArray('formcreator_validator', $validators);
+         }
+         if ($result->count() == 1) {
+            reset($validators);
+            $validatorId = key($validators);
+            echo Html::hidden('formcreator_validator', $validatorId);
+         }
       }
-
-      echo '</div>';
 
       // Display submit button
       echo '<div class="center">';
-      echo '<input type="submit" name="submit_formcreator" class="submit_button" value="' . __('Send') . '" />';
+      echo Html::submit(__('Send'), ['name' => 'submit_formcreator']);
       echo '</div>';
 
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="' . $this->getID() . '">';
+      echo Html::hidden('plugin_formcreator_forms_id', ['value' => $this->getID()]);
       echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
-      echo '<input type="hidden" name="uuid" value="' .$this->fields['uuid'] . '">';
-      echo '</form>';
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
+      Html::closeForm();
    }
 
    /**
@@ -2358,6 +2362,35 @@ PluginFormcreatorDuplicatableInterface
          return false;
       }
       return $this->getFromDB($section->getField(self::getForeignKeyField()));
+   }
+
+   public function getFromDBByQuestion(PluginFormcreatorQuestion $question) {
+      global $DB;
+
+      if ($question->isNewItem()) {
+         return false;
+      }
+      $questionTable = PluginFormcreatorQuestion::getTable();
+      $sectionTable = PluginFormcreatorSection::getTable();
+      $iterator = $DB->request([
+         'SELECT' => self::getForeignKeyField(),
+         'FROM' => PluginFormcreatorSection::getTable(),
+         'INNER JOIN' => [
+            $questionTable => [
+               'FKEY' => [
+                  $sectionTable => PluginFormcreatorSection::getIndexName(),
+                  $questionTable => PluginFormcreatorSection::getForeignKeyField()
+               ]
+            ]
+         ],
+         'WHERE' => [
+            $questionTable . '.' . PluginFormcreatorQuestion::getIndexName() => $question->getID()
+         ]
+      ]);
+      if ($iterator->count() !== 1) {
+         return false;
+      }
+      return $this->getFromDB($iterator->next()[self::getForeignKeyField()]);
    }
 
    /**

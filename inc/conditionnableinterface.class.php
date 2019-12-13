@@ -29,20 +29,12 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
-
-if (!isset($_REQUEST['plugin_formcreator_questions_id'])) {
-   exit;
-}
-
-if (isset($_REQUEST['_empty'])) {
-   // get an empty condition HTML table row
-   $questionId = (int) $_REQUEST['plugin_formcreator_questions_id'];
-   $questionCondition = new PluginFormcreatorQuestion_Condition();
-   $section = new PluginFormcreatorSection();
-   $section->getFromDB((int) $_REQUEST['plugin_formcreator_sections_id']);
-   $form = new PluginFormcreatorForm();
-   $form->getFromDBBySection($section);
-   echo $questionCondition->getConditionHtml($form->getID(), $questionId);
+interface PluginFormcreatorConditionnableInterface
+{
+      /**
+    * Updates the conditions of the question
+    * @param array $input
+    * @return boolean true if success, false otherwise
+    */
+  public function updateConditions($input);
 }

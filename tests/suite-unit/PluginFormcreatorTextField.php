@@ -44,7 +44,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -70,7 +70,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => 'a',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -96,7 +96,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => 'short',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -122,7 +122,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => 'very very long',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -148,7 +148,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => 'very very long',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -174,7 +174,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [

@@ -44,7 +44,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -66,7 +66,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => '3',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -88,7 +88,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => '3',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -110,7 +110,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => "3\r\n4",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -132,7 +132,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => "3\r\n4\r\n2\r\n1\r\n6",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -189,7 +189,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
          'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
          'order'           => '1',
-         'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+         'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          '_parameters'     => [
             'multiselect' => [
                'range' => [

@@ -158,7 +158,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -181,7 +181,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -207,7 +207,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -234,7 +234,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
                'default_values'                 => 'it\'s nice',
                'desription'                     => "it\'s excellent",
                'order'                          => '1',
-               'show_rule'                      => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'                      => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -267,7 +267,7 @@ class PluginFormcreatorQuestion extends CommonTestCase {
          'values' => '',
          'description' => '',
          'order' => '1',
-         'show_rule' => \PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+         'show_rule' => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          'uuid' => $uuid,
       ];
 

@@ -37,17 +37,14 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginFormcreatorQuestion extends CommonDBChild implements 
 PluginFormcreatorExportableInterface,
-PluginFormcreatorDuplicatableInterface
+PluginFormcreatorDuplicatableInterface,
+PluginFormcreatorConditionnableInterface
 {
    static public $itemtype = PluginFormcreatorSection::class;
    static public $items_id = 'plugin_formcreator_sections_id';
 
    /** @var PluginFormcreatorFieldInterface|null $field a field describing the question denpending on its field type  */
    private $field = null;
-
-   const SHOW_RULE_ALWAYS = 1;
-   const SHOW_RULE_HIDDEN = 2;
-   const SHOW_RULE_SHOWN = 3;
 
    /**
     * Returns the type name with consideration of plural
@@ -152,14 +149,14 @@ PluginFormcreatorDuplicatableInterface
          echo "<span class='form_control pointer'>";
          echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                   title="' . _sx('button', "Duplicate") . '"
-                  onclick="duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
+                  onclick="plugin_formcreator_duplicateSection(' . $item->getId() . ', \'' . $token . '\', ' . $section->getID() . ')"> ';
          echo "</span>";
 
          echo "<span class='form_control pointer'>";
          if ($section->fields['order'] != $section_number) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/down.png"
                      title="' . __('Bring down') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section->getID() . ', \'down\');" >';
+                     onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'down\');" >';
          }
          echo "</span>";
 
@@ -167,7 +164,7 @@ PluginFormcreatorDuplicatableInterface
          if ($section->fields['order'] != 1) {
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                      title="' . __('Bring up') . '"
-                     onclick="moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
+                     onclick="plugin_formcreator_moveSection(\'' . $token . '\', ' . $section->getID() . ', \'up\');"> ';
          }
          echo "</span>";
           
@@ -208,7 +205,7 @@ PluginFormcreatorDuplicatableInterface
             echo "<span class='form_control pointer'>";
             echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/clone.png"
                      title="' . _sx('button', "Duplicate") . '"
-                     onclick="duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
+                     onclick="plugin_formcreator_duplicateQuestion(' . $item->getId() . ', \'' . $token . '\', ' . $question->getID() . ')"> ';
             echo "</span>";
 
             if ($classname::canRequire()) {
@@ -216,7 +213,7 @@ PluginFormcreatorDuplicatableInterface
                echo "<span class='form_control pointer'>";
                echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/formcreator/pics/$required_pic.png'
                         title='" . __('Required', 'formcreator') . "'
-                        onclick='setRequired(\"".$token."\", ".$question->getID().", ".($question->fields['required']?0:1).")' > ";
+                        onclick='plugin_formcreator_setRequired(\"".$token."\", ".$question->getID().", ".($question->fields['required']?0:1).")' > ";
                echo "</span>";
             } else {
                echo "<span class='form_control pointer'>";
@@ -228,7 +225,7 @@ PluginFormcreatorDuplicatableInterface
             if ($question->fields['order'] != 1) {
                echo '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/up.png"
                         title="' . __('Bring up') . '"
-                        onclick="moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'up\');" align="absmiddle"> ';
+                        onclick="plugin_formcreator_moveQuestion(\'' . $token . '\', ' . $question->getID() . ', \'up\');" align="absmiddle"> ';
             }
             echo "</span>";
 
@@ -594,49 +591,53 @@ PluginFormcreatorDuplicatableInterface
     * @return boolean true if success, false otherwise
     */
    public function updateConditions($input) {
-      // Delete all existing conditions for the question
-      $question_condition = new PluginFormcreatorQuestion_Condition();
-      $question_condition->deleteByCriteria(['plugin_formcreator_questions_id' => $input['id']]);
-
-      if (!isset($input['show_field']) || !isset($input['show_condition'])
+      if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
          || !isset($input['show_value']) || !isset($input['show_logic'])) {
          return  false;
       }
 
-      if (!is_array($input['show_field']) || !is_array($input['show_condition'])
+      if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
          || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
          return false;
       }
 
       // All arrays of condition exists
-      if ($input['show_rule'] == self::SHOW_RULE_ALWAYS) {
+      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
          return false;
       }
 
-      if (!(count($input['show_field']) == count($input['show_condition'])
+      if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
             && count($input['show_value']) == count($input['show_logic'])
-            && count($input['show_field']) == count($input['show_value']))) {
+            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
          return false;
       }
+
+      // Delete all existing conditions for the question
+      $condition = new PluginFormcreatorCondition();
+      $condition->deleteByCriteria([
+         'itemtype' => static::class,
+         'items_id' => $input['id'],
+      ]);
 
       // Arrays all have the same count and have at least one item
       $order = 0;
-      while (count($input['show_field']) > 0) {
+      while (count($input['plugin_formcreator_questions_id']) > 0) {
          $order++;
          $value            = array_shift($input['show_value']);
-         $showField        = (int) array_shift($input['show_field']);
+         $questionID       = (int) array_shift($input['plugin_formcreator_questions_id']);
          $showCondition    = html_entity_decode(array_shift($input['show_condition']));
          $showLogic        = array_shift($input['show_logic']);
-         $question_condition = new PluginFormcreatorQuestion_Condition();
-         $question_condition->add([
-               'plugin_formcreator_questions_id'   => $input['id'],
-               'show_field'                        => $showField,
-               'show_condition'                    => $showCondition,
-               'show_value'                        => $value,
-               'show_logic'                        => $showLogic,
-               'order'                             => $order,
+         $condition = new PluginFormcreatorCondition();
+         $condition->add([
+            'itemtype'                        => static::class,
+            'items_id'                        => $input['id'],
+            'plugin_formcreator_questions_id' => $questionID,
+            'show_condition'                  => $showCondition,
+            'show_value'                      => $value,
+            'show_logic'                      => $showLogic,
+            'order'                           => $order,
          ]);
-         if ($question_condition->isNewItem()) {
+         if ($condition->isNewItem()) {
             return false;
          }
       }
@@ -710,7 +711,7 @@ PluginFormcreatorDuplicatableInterface
       global $DB;
 
       $table = self::getTable();
-      $question_condition_table = PluginFormcreatorQuestion_Condition::getTable();
+      $condition_table = PluginFormcreatorCondition::getTable();
 
       // Update order of questions
       $order = $this->fields['order'];
@@ -729,19 +730,19 @@ PluginFormcreatorDuplicatableInterface
       $DB->update(
          $table,
          [
-            'show_rule' => PluginFormcreatorQuestion::SHOW_RULE_ALWAYS
+            'show_rule' => PluginFormcreatorCondition::SHOW_RULE_ALWAYS
          ],
          [
             'id' => new QuerySubquery([
                'SELECT' => self::getForeignKeyField(),
-               'FROM' => $question_condition_table,
+               'FROM' => $condition_table,
                'WHERE' => ['show_field' => $questionId]
             ])
          ]
       );
 
       $DB->delete(
-         $question_condition_table,
+         $condition_table,
          [
             'OR' => [
                self::getForeignKeyField() => $questionId,
@@ -758,20 +759,18 @@ PluginFormcreatorDuplicatableInterface
       $section->getFromDB($this->fields[$sectionFk]);
       $form = new PluginFormcreatorForm();
       $form->getFromDBBySection($section);
-      $form_id = $form->getID();
 
       $rand = mt_rand();
-      $action = Toolbox::getItemTypeFormURL('PluginFormcreatorQuestion');
-      echo '<form name="form_question" method="post" action="'.$action.'">';
-
+      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
+
       echo '<tr>';
       echo '<th colspan="4">';
-      echo (0 == $ID) ? __('Add a question', 'formcreator') : __('Edit a question', 'formcreator');
+      echo ($ID == 0) ? __('Add a question', 'formcreator') : __('Edit a question', 'formcreator');
       echo '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
 
       // name
       echo '<td width="20%">';
@@ -782,7 +781,12 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
 
       echo '<td width="30%">';
-      echo '<input type="text" name="name" id="name" style="width:90%;" autofocus value="'.$this->fields['name'].'" class="required"';
+      echo Html::input('name', [
+         'id' => 'name',
+         'autofocus' => '',
+         'value' => $this->fields['name'],
+         'class' => 'required',
+      ]);
       echo '</td>';
 
       // Section
@@ -795,7 +799,7 @@ PluginFormcreatorDuplicatableInterface
 
       echo '<td width="30%">';
       $sections = [];
-      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($form_id) as $section) {
+      foreach ((new PluginFormcreatorSection())->getSectionsFromForm($form->getID()) as $section) {
          $sections[$section->getID()] = $section->getField('name');
       }
       $currentSectionId = ($this->fields['plugin_formcreator_sections_id'])
@@ -808,7 +812,7 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
       echo '</tr>';
 
-      echo '<tr class="line1">';
+      echo '<tr>';
 
       // Field type
       echo '<td>';
@@ -868,7 +872,7 @@ PluginFormcreatorDuplicatableInterface
       echo '<td></td><td></td><td></td><td></td>';
       echo '</tr>';
 
-      echo '<tr class="line1" id="description_tr">';
+      echo '<tr id="description_tr">';
       // Description of the question
       echo '<td>';
       echo '<label for="description" id="label_description">';
@@ -887,56 +891,18 @@ PluginFormcreatorDuplicatableInterface
       echo '</td>';
       echo '</tr>';
 
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($form, $this);
+
       echo '<tr>';
-      echo '<th colspan="4">';
-      echo '<label for="dropdown_show_rule'.$rand.'" id="label_show_type">';
-      echo __('Show field', 'formcreator');
-      echo '</label>';
-      echo '</th>';
-      echo '</tr>';
-
-      $questionCondition = new PluginFormcreatorQuestion_Condition();
-      $questionConditions = $questionCondition->getConditionsFromQuestion($ID);
-      reset($questionConditions);
-      $questionCondition = array_shift($questionConditions);
-      if ($questionCondition !== null) {
-         echo $questionCondition->getConditionHtml($form_id, 0, true);
-      }
-      foreach ($questionConditions as $questionCondition) {
-         echo $questionCondition->getConditionHtml($form_id);
-      }
-
-      echo '<tr">';
-      echo '<td colspan="4">';
-      Dropdown::showFromArray('show_rule', [
-         self::SHOW_RULE_ALWAYS => __('Always displayed', 'formcreator'),
-         self::SHOW_RULE_HIDDEN => __('Hidden unless', 'formcreator'),
-         self::SHOW_RULE_SHOWN  => __('Displayed unless', 'formcreator'),
-      ], [
-         'value'        => $this->fields['show_rule'],
-         'on_change'    => 'plugin_formcreator_toggleCondition(this);',
-         'rand'         => $rand,
-      ]);
-      echo '</td>';
-      echo '</tr>';
-
-      echo '<tr class="line1">';
       echo '<td colspan="4" class="center">';
-      echo '<input type="hidden" name="uuid" value="'.$this->fields['uuid'].'" />';
-      echo '<input type="hidden" name="id" value="'.$ID.'" />';
-      if (0 == $ID) {
-         echo Html::submit(__('Add'), [
-            'name' => 'add'
-         ]);
-      } else {
-         echo Html::submit(__('Save'), [
-            'name' => 'update'
-         ]);
-      }
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
       echo '</td>';
       echo '</tr>';
-      echo '</table>';
-
+      $this->showFormButtons($options + [
+         'candel' => false
+      ]);
       echo Html::scriptBlock("plugin_formcreator_changeQuestionType($rand)");
       Html::closeForm();
    }
@@ -1014,7 +980,7 @@ PluginFormcreatorDuplicatableInterface
       // Import conditions
       if (isset($input['_conditions'])) {
          foreach ($input['_conditions'] as $condition) {
-            PluginFormcreatorQuestion_Condition::import($linker, $condition, $itemId);
+            PluginFormcreatorCondition::import($linker, $condition, $itemId);
          }
          $field = PluginFormcreatorFields::getFieldInstance(
             $input['fieldtype'],
@@ -1046,8 +1012,8 @@ PluginFormcreatorDuplicatableInterface
 
       // get question conditions
       $question['_conditions'] = [];
-      $condition = new PluginFormcreatorQuestion_Condition();
-      $all_conditions = $condition->getConditionsFromQuestion($this->getID());
+      $condition = new PluginFormcreatorCondition();
+      $all_conditions = $condition->getConditionsFromItem($this);
       foreach ($all_conditions as $condition) {
          $question['_conditions'][] = $condition->export($remove_uuid);
       }
@@ -1068,41 +1034,6 @@ PluginFormcreatorDuplicatableInterface
       unset($question[$idToRemove]);
 
       return $question;
-   }
-
-   /**
-    * get the form belonging to the question
-    *
-    * @return boolean|PluginFormcreatorForm the form or false if not found
-    */
-   public function getForm() {
-      global $DB;
-
-      $form = new PluginFormcreatorForm();
-      $iterator = $DB->request([
-         'SELECT' => $form::getForeignKeyField(),
-         'FROM' => PluginFormcreatorSection::getTable(),
-         'INNER JOIN' => [
-            $this::getTable() => [
-               'FKEY' => [
-                  PluginFormcreatorSection::getTable() => PluginFormcreatorSection::getIndexName(),
-                  $this::getTable() => PluginFormcreatorSection::getForeignKeyField()
-               ]
-            ]
-         ],
-         'WHERE' => [
-            $this::getTable() . '.' . $this::getIndexName() => $this->getID()
-         ]
-      ]);
-      if ($iterator->count() !== 1) {
-         return false;
-      }
-      $form->getFromDB($iterator->next()[$form::getForeignKeyField()]);
-      if ($form->isNewItem()) {
-         return false;
-      }
-
-      return $form;
    }
 
    /**
@@ -1242,7 +1173,7 @@ PluginFormcreatorDuplicatableInterface
       global $DB;
 
       $validTargets = [
-         \PluginFormcreatorQuestion_Condition::getTable(),
+         \PluginFormcreatorCondition::getTable(),
          \PluginFormcreatorQuestionRegex::getTable(),
          \PluginFormcreatorQuestionRange::getTable(),
       ];
@@ -1302,7 +1233,7 @@ PluginFormcreatorDuplicatableInterface
 
       // Load conditions, regexes and ranges
       $data['_conditions'] = self::getQuestionDataById(
-         \PluginFormcreatorQuestion_Condition::getTable(),
+         \PluginFormcreatorCondition::getTable(),
          $id
       );
       $data['_regexes'] = self::getQuestionDataById(

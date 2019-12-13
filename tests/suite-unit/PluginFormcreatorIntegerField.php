@@ -43,7 +43,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -66,7 +66,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => '2',
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -89,7 +89,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "2",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                '_parameters'     => [
                   'integer' => [
@@ -111,7 +111,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "5",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -134,7 +134,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "3.4",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [
@@ -157,7 +157,7 @@ class PluginFormcreatorIntegerField extends CommonTestCase {
                'required'        => '0',
                'default_values'  => "4",
                'order'           => '1',
-               'show_rule'       =>\PluginFormcreatorQuestion::SHOW_RULE_ALWAYS,
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                'show_empty'      => '0',
                'values'          => '',
                '_parameters'     => [

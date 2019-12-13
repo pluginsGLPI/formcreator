@@ -233,16 +233,14 @@ PluginFormcreatorTargetInterface
     * get the associated form
     */
    public function getForm() {
-      if ($this->form !== null) {
-         return $this->form;
+      if ($this->form === null) {
+         $form = new PluginFormcreatorForm();
+         if (!$form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()])) {
+            return null;
+         }
+         $this->form = $form;
       }
 
-      $form = new PluginFormcreatorForm();
-      if (!$form->getFromDB($this->fields['plugin_formcreator_forms_id'])) {
-         return null;
-      }
-
-      $this->form = $form;
       return $this->form;
    }
 

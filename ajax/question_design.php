@@ -60,6 +60,7 @@ $json = [
    'may_be_empty' => false,
 ];
 if ($field !== null) {
+   $field->deserializeValue($question->fields['default_values']);
    $json = $field->getDesignSpecializationField();
 }
 echo json_encode($json);

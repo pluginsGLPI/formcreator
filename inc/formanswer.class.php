@@ -584,7 +584,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             $fields[$question_line['id']]->show($canEdit);
          } else {
             if (($question_line['fieldtype'] != "description" && $question_line['fieldtype'] != "hidden")) {
-               if (PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
+               if (PluginFormcreatorFields::isVisible($fields[$question_line['id']], $fields)) {
                   $fields[$question_line['id']]->show($canEdit);
                }
             }
@@ -980,7 +980,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
     */
    public function getForm() {
       $form = new PluginFormcreatorForm();
-      $form->getFromDB($this->fields[$form::getForeignKeyField()]);
+      $form->getFromDB($this->fields[PluginFormcreatorForm::getForeignKeyField()]);
 
       if ($form->isNewItem()) {
          return null;
@@ -1028,7 +1028,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       $questions = $DB->request([
          'SELECT' => [
             $sectionTable => ['name as section_name'],
-            $questionTable => ['*'],
+            $questionTable => ['id', 'fieldtype'],
          ],
          'FROM' => [
             $questionTable,
@@ -1073,7 +1073,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
             continue;
          }
 
-         if (!PluginFormcreatorFields::isVisible($question_line['id'], $fields)) {
+         if (!PluginFormcreatorFields::isVisible($fields[$question_line['id']]->getQuestion(), $fields)) {
             continue;
          }
 
@@ -1200,7 +1200,7 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       }
 
       foreach ($questions as $questionId => $question) {
-         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {
+         if (!PluginFormcreatorFields::isVisible($question, $fields)) {
             $name = '';
             $value = '';
          } else {
@@ -1253,11 +1253,11 @@ class PluginFormcreatorFormAnswer extends CommonDBTM
       // Mandatory field must be filled
       // and fields must contain a value matching the constraints of the field (range for example)
       if ($valid) {
-         foreach ($this->questionFields as $id => $question) {
+         foreach ($this->questionFields as $id => $field) {
             if (!$this->questionFields[$id]->isPrerequisites()) {
                continue;
             }
-            if (PluginFormcreatorFields::isVisible($id, $this->questionFields) && !$this->questionFields[$id]->isValid()) {
+            if (PluginFormcreatorFields::isVisible($field->getQuestion(), $this->questionFields) && !$this->questionFields[$id]->isValid()) {
                $valid = false;
                break;
             }

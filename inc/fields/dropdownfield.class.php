@@ -568,7 +568,7 @@ class PluginFormcreatorDropdownField extends PluginFormcreatorField
 
       // Get ID from question
       // $questionID = $question->fields['id'];
-      $questionID = $this->getQuestionId();
+      $questionID = $this->getQuestion()->getID();
 
       // We need english locale to search searchOptions by name
       $oldLocale = $TRANSLATE->getLocale();
