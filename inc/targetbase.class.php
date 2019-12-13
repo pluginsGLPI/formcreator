@@ -68,10 +68,6 @@ PluginFormcreatorTargetInterface
    /** @var boolean $skipCreateActors Flag to disable creation of actors after creation of the item */
    protected $skipCreateActors = false;
 
-   function isEntityAssign() {
-      return false;
-   }
-
    abstract public function export($remove_uuid = false);
 
    abstract public function save(PluginFormcreatorFormAnswer $formanswer);
