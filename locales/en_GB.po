@@ -570,7 +570,7 @@ msgstr "The section is required"
 #: inc/question.class.php:315
 #, php-format
 msgid "Field type %1$s is not available for question %2$s."
-msgstr "Field type %1$s is not available for question%2$s."
+msgstr "Field type %1$s is not available for question %2$s."
 
 #: inc/question.class.php:335
 msgid "This type of question is not compatible with public forms."
