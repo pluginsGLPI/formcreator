@@ -54,36 +54,38 @@ class PluginFormcreatorUpgradeTo2_9 {
          $migration->addField($table, 'uuid', 'string');
          $migration->migrationOneTable($table);
       }
-      $request = [
-         'FROM' => 'glpi_plugin_formcreator_targets'
-      ];
-      foreach ($DB->request($request) as $target) {
-         $table = '';
-         switch ($target['itemtype']) {
-            case 'PluginFormcreatorTargetTicket':
-               $table = 'glpi_plugin_formcreator_targettickets';
-               break;
-
-            case 'PluginFormcreatorTargetChange':
-               $table = 'glpi_plugin_formcreator_targetchanges';
-               break;
+      if ($DB->tableExists('glpi_plugin_formcreator_targets')) {
+         $request = [
+            'FROM' => 'glpi_plugin_formcreator_targets'
+         ];
+         foreach ($DB->request($request) as $target) {
+            $table = '';
+            switch ($target['itemtype']) {
+               case 'PluginFormcreatorTargetTicket':
+                  $table = 'glpi_plugin_formcreator_targettickets';
+                  break;
+   
+               case 'PluginFormcreatorTargetChange':
+                  $table = 'glpi_plugin_formcreator_targetchanges';
+                  break;
+            }
+            if ($table === '') {
+               continue;
+            }
+            $DB->update(
+               $table,
+               [
+                  $formFk => $target[$formFk],
+                  'uuid'  => $target['uuid'],
+                  'name'  => $target['name'],
+               ],
+               [
+                  'id' => $target['items_id'],
+               ]
+            );
          }
-         if ($table === '') {
-            continue;
-         }
-         $DB->update(
-            $table,
-            [
-               $formFk => $target[$formFk],
-               'uuid'  => $target['uuid'],
-               'name'  => $target['name'],
-            ],
-            [
-               'id' => $target['items_id'],
-            ]
-         );
+         $migration->backupTables(['glpi_plugin_formcreator_targets']);
       }
-      $migration->backupTables(['glpi_plugin_formcreator_targets']);
 
       // Remove enum for formanswer
       $this->enumToInt(
@@ -110,36 +112,6 @@ class PluginFormcreatorUpgradeTo2_9 {
          ],
          [
             'value' => '1'
-         ]
-      );
-
-      // Remove show_logic enum for question conditions
-      $this->enumToInt(
-         'glpi_plugin_formcreator_questions_conditions',
-         'show_logic',
-         [
-            'AND'  => 1,
-            'OR'  => 2,
-         ],
-         [
-            'value' => '1'
-         ]
-      );
-
-      // Remove show_condition  enum for question conditions
-      $this->enumToInt(
-         'glpi_plugin_formcreator_questions_conditions',
-         'show_condition',
-         [
-            '=='  => 1,
-            '!='  => 2,
-            '<'   => 3,
-            '>'   => 4,
-            '<='  => 5,
-            '>='  => 6,
-         ],
-         [
-            'value' => '0'
          ]
       );
 
@@ -309,25 +281,50 @@ class PluginFormcreatorUpgradeTo2_9 {
 
       // Generalize conditions to other itemtypes
       $table = 'glpi_plugin_formcreator_conditions';
-      if ((new DBUtils)->countElementsInTable($table) == 0) {
-         if ($DB->tableExists('glpi_plugin_formcreator_questions_conditions')) {
-            // Migrate data if the new table is empty and old table exists
-            $migration->addPreQuery("INSERT INTO `$table`
-               (SELECT
-                  `id`,
-                  'plugin_formcreator_question' as `itemtype`,
-                  `plugin_formcreator_questions_id` as `items_id`,
-                  `show_field` as `plugin_formcreator_questions_id`,
-                  `show_condition`,
-                  `show_value`,
-                  `show_logic`,
-                  `order`,
-                  `uuid`
-               FROM `glpi_plugin_formcreator_questions_conditions`)
-            ");
-            $migration->backupTables('glpi_plugin_formcreator_questions_conditions');
-         }
+      if (!$DB->tableExists($table)) {
+         $migration->renameTable('glpi_plugin_formcreator_questions_conditions', $table);
       }
+      $migration->addField($table, 'itemtype', 'string', ['after' => 'id', 'value' => '', 'comment' => 'itemtype of the item affected by the condition']);;
+      if (!$DB->fieldExists($table, 'items_id' )) {
+         // changefield would drop plugin_formcreator_questions_id if it already exists, this is not wanted because of show_field rename 
+         $migration->changeField($table, 'plugin_formcreator_questions_id', 'items_id', 'integer', ['comment' => 'item ID of the item affected by the condition']);
+      }
+      $migration->migrationOneTable($table);
+      $migration->changeField($table, 'show_field', 'plugin_formcreator_questions_id', 'integer', ['value' => '0', 'comment' => 'question to test for the condition']);
+      $migration->addKey($table, ['plugin_formcreator_questions_id']);
+      $migration->dropKey($table, 'plugin_formcreator_questions_id');
+      $migration->addKey($table, ['itemtype', 'items_id']);
+      $migration->addPostQuery("UPDATE `$table` SET `itemtype` = 'plugin_formcreator_question' WHERE `itemtype` = ''");
+
+      // Remove show_condition enum for conditions
+      $this->enumToInt(
+         'glpi_plugin_formcreator_conditions',
+         'show_condition',
+         [
+            '=='  => 1,
+            '!='  => 2,
+            '<'   => 3,
+            '>'   => 4,
+            '<='  => 5,
+            '>='  => 6,
+         ],
+         [
+            'value' => '0'
+         ]
+      );
+
+      // Remove show_logic enum for conditions
+      $this->enumToInt(
+         'glpi_plugin_formcreator_conditions',
+         'show_logic',
+         [
+            'AND'  => 1,
+            'OR'  => 2,
+         ],
+         [
+            'value' => '1'
+         ]
+      );
 
       // make sections hideable by condition
       $table = 'glpi_plugin_formcreator_sections';

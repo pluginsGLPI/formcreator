@@ -438,7 +438,7 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorForm_Profile',
          'PluginFormcreatorForm_Validator',
          'PluginFormcreatorForm',
-         'PluginFormcreatorQuestion_Condition',
+         'PluginFormcreatorCondition',
          'PluginFormcreatorQuestion',
          'PluginFormcreatorSection',
          'PluginFormcreatorTargetChange_Actor',
