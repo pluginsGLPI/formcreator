@@ -291,8 +291,8 @@ class PluginFormcreatorUpgradeTo2_9 {
       }
       $migration->migrationOneTable($table);
       $migration->changeField($table, 'show_field', 'plugin_formcreator_questions_id', 'integer', ['value' => '0', 'comment' => 'question to test for the condition']);
-      $migration->addKey($table, ['plugin_formcreator_questions_id']);
       $migration->dropKey($table, 'plugin_formcreator_questions_id');
+      $migration->addKey($table, ['plugin_formcreator_questions_id']);
       $migration->addKey($table, ['itemtype', 'items_id']);
       $migration->addPostQuery("UPDATE `$table` SET `itemtype` = 'plugin_formcreator_question' WHERE `itemtype` = ''");
 
