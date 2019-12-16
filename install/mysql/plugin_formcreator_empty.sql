@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `glpi_plugin_formcreator_conditions` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`itemtype` varchar(255) NOT NULL DEFAULT '' COMMENT 'itemtype of the item affected by the condition',
 	`items_id` INT(11) NOT NULL DEFAULT '0' COMMENT 'item ID of the item affected by the condition',
-	`plugin_formcreator_questions_id` INT(11) NULL DEFAULT NULL COMMENT 'question to test for the condition',
+	`plugin_formcreator_questions_id` INT(11) NOT NULL DEFAULT '0' COMMENT 'question to test for the condition',
 	`show_condition` INT(11) NOT NULL DEFAULT '0',
 	`show_value` VARCHAR(255) NULL DEFAULT NULL,
 	`show_logic` INT(11) NOT NULL DEFAULT '1',
