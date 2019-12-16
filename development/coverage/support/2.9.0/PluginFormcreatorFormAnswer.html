@@ -4703,7 +4703,7 @@ layout: coverage
                     <th id="L587" class="number uncovered">587</th>
 
                     <td class="uncovered" >
-                        <pre>               if (PluginFormcreatorFields::isVisible($question_line[&#039;id&#039;], $fields)) {</pre>
+                        <pre>               if (PluginFormcreatorFields::isVisible($fields[$question_line[&#039;id&#039;]], $fields)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -7643,7 +7643,7 @@ layout: coverage
                     <th id="L983" class="number covered">983</th>
 
                     <td class="covered" >
-                        <pre>      $form-&gt;getFromDB($this-&gt;fields[$form::getForeignKeyField()]);</pre>
+                        <pre>      $form-&gt;getFromDB($this-&gt;fields[PluginFormcreatorForm::getForeignKeyField()]);</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -7999,7 +7999,7 @@ layout: coverage
                     <th id="L1031" class="number ">1031</th>
 
                     <td class="" >
-                        <pre>            $questionTable =&gt; [&#039;*&#039;],
+                        <pre>            $questionTable =&gt; [&#039;id&#039;, &#039;fieldtype&#039;],
 </pre>
                     </td>
                 </tr>
@@ -8341,7 +8341,7 @@ layout: coverage
                     <th id="L1076" class="number covered">1076</th>
 
                     <td class="covered" >
-                        <pre>         if (!PluginFormcreatorFields::isVisible($question_line[&#039;id&#039;], $fields)) {</pre>
+                        <pre>         if (!PluginFormcreatorFields::isVisible($fields[$question_line[&#039;id&#039;]]-&gt;getQuestion(), $fields)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -9289,7 +9289,7 @@ layout: coverage
                     <th id="L1203" class="number covered">1203</th>
 
                     <td class="covered" >
-                        <pre>         if (!PluginFormcreatorFields::isVisible($questionId, $fields)) {</pre>
+                        <pre>         if (!PluginFormcreatorFields::isVisible($question, $fields)) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -9686,7 +9686,7 @@ layout: coverage
                     <th id="L1256" class="number covered">1256</th>
 
                     <td class="covered" >
-                        <pre>         foreach ($this-&gt;questionFields as $id =&gt; $question) {</pre>
+                        <pre>         foreach ($this-&gt;questionFields as $id =&gt; $field) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
@@ -9715,7 +9715,7 @@ layout: coverage
                     <th id="L1260" class="number covered">1260</th>
 
                     <td class="covered" >
-                        <pre>            if (PluginFormcreatorFields::isVisible($id, $this-&gt;questionFields) &amp;&amp; !$this-&gt;questionFields[$id]-&gt;isValid()) {</pre>
+                        <pre>            if (PluginFormcreatorFields::isVisible($field-&gt;getQuestion(), $this-&gt;questionFields) &amp;&amp; !$this-&gt;questionFields[$id]-&gt;isValid()) {</pre>
                     </td>
                 </tr>
                             <tr class="line" id="">
