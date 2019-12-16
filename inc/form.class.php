@@ -1262,6 +1262,7 @@ PluginFormcreatorDuplicatableInterface
 
       // Show validator selector
       if ($this->fields['validation_required'] != PluginFormcreatorForm_Validator::VALIDATION_NONE) {
+         $validators = [];
          $formValidator = new PluginFormcreatorForm_Validator();
          switch ($this->fields['validation_required']) {
             case PluginFormcreatorForm_Validator::VALIDATION_GROUP:
