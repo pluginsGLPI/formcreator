@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -45,7 +44,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -55,7 +54,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => [],
             'expectedIsValid' => true
          ],
@@ -68,7 +66,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => '3',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -78,7 +76,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3'],
             'expectedIsValid' => true
          ],
@@ -91,7 +88,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => '3',
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -101,7 +98,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3'],
             'expectedIsValid' => false
          ],
@@ -114,7 +110,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => "3\r\n4",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -124,7 +120,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3', '4'],
             'expectedIsValid' => true
          ],
@@ -137,7 +132,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                'default_values'  => "3\r\n4\r\n2\r\n1\r\n6",
                'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'multiselect' => [
                      'range' => [
@@ -147,7 +142,6 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => ['3', '4', '2', '1', '6'],
             'expectedIsValid' => false
          ],
@@ -159,8 +153,9 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testGetAvailableValues($fields, $data, $expectedValue, $expectedValidity) {
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($fields, $data);
+   public function testGetAvailableValues($fields, $expectedValue, $expectedValidity) {
+      $question = $this->getQuestion($fields);
+      $fieldInstance = new \PluginFormcreatorMultiSelectField($question);
 
       $availableValues = $fieldInstance->getAvailableValues();
       $expectedAvaliableValues = explode("\r\n", $fields['values']);
@@ -174,17 +169,13 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      // Re-load the question from the DB
-      $question->getFromDB($question->getID());
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
-      $instance = new \PluginFormcreatorMultiSelectField($question->fields, $data);
+      $instance = new \PluginFormcreatorMultiSelectField($question);
       $instance->deserializeValue($fields['default_values']);
       $isValid = $instance->isValid();
       $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity);
@@ -198,7 +189,7 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
          'default_values'  => "1\r\n2\r\n3\r\n5\r\n6",
          'values'          => "1\r\n2\r\n3\r\n4\r\n5\r\n6",
          'order'           => '1',
-         'show_rule'       => 'always',
+         'show_rule'       =>\PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
          '_parameters'     => [
             'multiselect' => [
                'range' => [
@@ -211,11 +202,9 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
-      $fieldInstance = new \PluginFormcreatorMultiSelectField($question->fields);
+      $fieldInstance = new \PluginFormcreatorMultiSelectField($question);
 
       // Test a value is mandatory
       $input = [
@@ -245,13 +234,13 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    }
 
    public function testGetName() {
-      $instance = new \PluginFormcreatorMultiSelectField([]);
+      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
       $output = $instance->getName();
       $this->string($output)->isEqualTo('Multiselect');
    }
 
    public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getEmptyParameters();
       $this->array($output)
          ->hasKey('range')
@@ -261,14 +250,25 @@ class PluginFormcreatorMultiSelectField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorMultiSelectField([]);
+      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorMultiSelectField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -39,7 +38,7 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorTextareaField([]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -61,7 +60,7 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextareaField([]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -86,9 +85,20 @@ class PluginFormcreatorTextareaField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorTextareaField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

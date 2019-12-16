@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,12 +35,44 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default value');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td id="dropdown_default_value_field">';
+      $value = Html::entities_deep($this->question->fields['default_values']);
+      $additions .= Html::input('default_values', [
+         'id' => 'default_values',
+         'value' => $value,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => false,
+      ];
+   }
+
    public function show($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
-      $defaultValue = Html::cleanInputText($this->fields['default_values']);
+      $defaultValue = Html::cleanInputText($this->question->fields['default_values']);
       echo '<input type="hidden" class="form-control"
          name="' . $fieldName . '"
          id="' . $domId . '"
@@ -77,34 +107,18 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
       return [];
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 0,
-         'default_values' => 1,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 0,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
+   public static function canRequire() {
+      return false;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }
 
       $this->value = $input[$key];
       return true;
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['hidden'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
    public function equals($value) {
@@ -125,5 +139,9 @@ class PluginFormcreatorHiddenField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
    }
 }

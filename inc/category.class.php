@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -40,13 +38,17 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    // Activate translation on GLPI 0.85
    var $can_be_translated = true;
 
+   static function canView() {
+      return true;
+   }
+
    public static function getTypeName($nb = 1) {
       return _n('Form category', 'Form categories', $nb, 'formcreator');
    }
 
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $env       = new self;
-      $found_env = $env->find();
+      $found_env = $env->find([static::getForeignKeyField() => $item->getID()]);
       $nb        = count($found_env);
       return self::createTabEntry(self::getTypeName($nb), $nb);
    }
@@ -85,47 +87,68 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $cat_table  = PluginFormcreatorCategory::getTable();
       $form_table = PluginFormcreatorForm::getTable();
       $table_fp   = PluginFormcreatorForm_Profile::getTable();
-      $helpdesk   = '';
-      if ($helpdeskHome) {
-         $helpdesk   = "AND $form_table.`helpdesk_home` = 1";
-      }
 
       $query_faqs = KnowbaseItem::getListRequest([
          'faq'      => '1',
          'contains' => ''
       ]);
+      if (version_compare(GLPI_VERSION, "9.4") > 0) {
+         // GLPI 9.5 returns an array
+         $subQuery = new DBMysqlIterator($DB);
+         $subQuery->buildQuery($query_faqs);
+         $query_faqs = $subQuery->getSQL();
+      }
 
+      // Selects categories containing forms or sub-categories
       $categoryFk = self::getForeignKeyField();
-      $query = "SELECT `id`, `name`, `$categoryFk` as `parent`, `level`, (
-         (
-            SELECT COUNT($form_table.id)
-            FROM $form_table
-            WHERE $form_table.`plugin_formcreator_categories_id` = $cat_table.`id`
-            AND $form_table.`is_active` = 1
-            AND $form_table.`is_deleted` = 0
-            $helpdesk
-            AND $form_table.`language` IN ('".$_SESSION['glpilanguage']."', '', NULL, '0')
-            AND ".getEntitiesRestrictRequest("", $form_table, "", "", true, false)."
-            AND ($form_table.`access_rights` != ".PluginFormcreatorForm::ACCESS_RESTRICTED." OR $form_table.`id` IN (
-            SELECT plugin_formcreator_forms_id
-            FROM $table_fp
-            WHERE profiles_id = ".$_SESSION['glpiactiveprofile']['id']."))
-         )
-         + (
-            SELECT COUNT(*)
-            FROM ($query_faqs) AS `faqs`
-            WHERE `faqs`.`knowbaseitemcategories_id` = `$cat_table`.`knowbaseitemcategories_id`
-            AND `faqs`.`knowbaseitemcategories_id` <> '0'
-         )
-      ) as `items_count`
-      FROM $cat_table
-      ORDER BY `level` DESC, `name` DESC";
+      $dbUtils = new DbUtils();
+      $count1 = new QuerySubQuery([
+         'COUNT' => 'count',
+         'FROM' => $form_table,
+         'WHERE' => [
+            'is_active'    => '1',
+            'is_deleted'   => '0',
+            "$form_table.plugin_formcreator_categories_id" => new QueryExpression("$cat_table.id"),
+            'language' => [$_SESSION['glpilanguage'], '', '0', null],
+            'OR' => [
+               'access_rights' => ['!=', PluginFormcreatorForm::ACCESS_RESTRICTED],
+               'id' => new QuerySubQuery([
+                  'SELECT' => 'plugin_formcreator_forms_id',
+                  'FROM' => $table_fp,
+                  'WHERE' => ['profiles_id' => $_SESSION['glpiactiveprofile']['id']],
+               ])
+            ]
+         ]
+         + ($helpdeskHome ? ['helpdesk_home' => '1']: [])
+         + $dbUtils->getEntitiesRestrictCriteria($form_table, "", "", true, false),
+      ]);
+      $count2 = new QuerySubQuery([
+         'COUNT' => 'count',
+         'FROM' => (new QueryExpression("($query_faqs) as faqs")),
+         'WHERE' => [
+            [(new QueryExpression("faqs.knowbaseitemcategories_id = $cat_table.knowbaseitemcategories_id"))],
+            ["faqs.knowbaseitemcategories_id" => ['!=', '0'],],
+         ]
+      ]);
+      $request = [
+         'SELECT' => [
+            'id',
+            'name',
+            "$categoryFk as parent",
+            'level',
+            new QueryExpression(
+               $count1->getQuery() . " + " . $count2->getQuery() . " as items_count"
+            ),
+         ],
+         'FROM' => $cat_table,
+         'ORDER' => ["level DESC", "name DESC"],
+      ];
+      $result = $DB->request($request);
 
       $categories = [];
-      if ($result = $DB->query($query)) {
-         while ($category = $DB->fetch_assoc($result)) {
-            $categories[$category['id']] = $category;
-         }
+      foreach($result as $category) {
+         $category['name'] = Dropdown::getDropdownName($cat_table, $category['id'], 0, true, false);
+         $categories[$category['id']] = $category;
       }
 
       // Remove categories that have no items and no children
@@ -137,7 +160,6 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
                return $category['id'] == $element['parent'];
             }
          );
-
          if (empty($children) && 0 == $category['items_count']) {
             unset($categories[$index]);
             continue;
@@ -158,9 +180,9 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
 
       // Build from root node to leaves
       $categories = array_reverse($categories);
-      foreach ($categories as $category) {
-         $flat[$category['id']] = $category;
-         $flat[$category['parent']]['subcategories'][] = &$flat[$category['id']];
+      foreach ($categories as $item) {
+         $flat[$item['id']] = $item;
+         $flat[$item['parent']]['subcategories'][] = &$flat[$item['id']];
       }
 
       return $nodes;

@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -38,10 +37,6 @@ class PluginFormcreatorSection extends CommonTestCase {
       $form           = new \PluginFormcreatorForm;
       $form_section   = new \PluginFormcreatorSection;
       $form_question  = new \PluginFormcreatorQuestion;
-      $form_condition = new \PluginFormcreatorQuestion_Condition;
-      $form_validator = new \PluginFormcreatorForm_Validator;
-      $form_target    = new \PluginFormcreatorTarget;
-      $form_profile   = new \PluginFormcreatorForm_Profile;
 
       // create objects
       $forms_id = $form->add([
@@ -55,16 +50,24 @@ class PluginFormcreatorSection extends CommonTestCase {
          'plugin_formcreator_forms_id' => $forms_id
       ]);
 
-      $questions_id_1 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 1",
          'fieldtype'                      => 'text',
          'plugin_formcreator_sections_id' => $sections_id
       ]);
-      $questions_id_2 = $form_question->add([
+      $form_question->add([
          'name'                           => "test clone question 2",
          'fieldtype'                      => 'textarea',
          'plugin_formcreator_sections_id' => $sections_id
       ]);
+   }
+
+   public function beforeTestMethod($method) {
+      parent::beforeTestMethod($method);
+      switch ($method) {
+         case 'testImport':
+            self::login('glpi', 'glpi');
+      }
    }
 
    /**
@@ -74,7 +77,7 @@ class PluginFormcreatorSection extends CommonTestCase {
       global $DB;
 
       // instanciate classes
-      $form           = new \PluginFormcreatorForm;
+      $form      = new \PluginFormcreatorForm;
       $section   = new \PluginFormcreatorSection;
       $question  = new \PluginFormcreatorQuestion;
 
@@ -84,15 +87,15 @@ class PluginFormcreatorSection extends CommonTestCase {
                                    'validation_required' => \PluginFormcreatorForm_Validator::VALIDATION_USER]);
       $sections_id = $section->add(['name'                        => "test clone section",
                                          'plugin_formcreator_forms_id' => $forms_id]);
-      $questions_id_1 = $question->add(['name'                           => "test clone question 1",
+      $question->add(['name'                           => "test clone question 1",
                                              'fieldtype'                      => 'text',
                                              'plugin_formcreator_sections_id' => $sections_id]);
-      $questions_id_2 = $question->add(['name'                           => "test clone question 2",
+      $question->add(['name'                           => "test clone question 2",
                                              'fieldtype'                      => 'textarea',
                                              'plugin_formcreator_sections_id' => $sections_id]);
 
       //get section
-      plugin_formcreator_getFromDBByField($section, 'name', "test clone section");
+      $section->getFromDB($sections_id);
 
       //clone it
       $newSection_id = $section->duplicate();
@@ -131,6 +134,69 @@ class PluginFormcreatorSection extends CommonTestCase {
          $new_uuids[] = $question['uuid'];
       }
       $this->integer(count(array_diff($new_uuids, $uuids)))->isEqualTo(count($new_uuids));
+   }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $instance = $this->getSection();
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+         'name',
+         'order',
+         'show_rule',
+      ];
+      $extraFields = [
+         '_questions',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
+
+   public function testImport() {
+      $form = $this->getForm();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         'name'       => $this->getUniqueString(),
+         'order'      => '1',
+         'show_rule'  => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+         'uuid'       => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker ();
+      $sectionId = \PluginFormcreatorSection::import($linker, $input, $form->getID());
+      $this->integer($sectionId)->isGreaterThan(0);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input, $form) {
+            \PluginFormcreatorSection::import($linker, $input, $form->getID());
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+      ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $sectionId;
+      $sectionId2 = \PluginFormcreatorSection::import($linker, $input, $form->getID());
+      $this->variable($sectionId2)->isNotFalse();
+      $this->integer((int) $sectionId)->isNotEqualTo($sectionId2);
    }
 
    public function testMoveUp() {

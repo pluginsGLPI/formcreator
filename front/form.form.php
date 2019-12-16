@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
+global $CFG_GLPI, $DB;
 include ("../../../inc/includes.php");
 
 // Check if plugin is activated...
@@ -41,36 +40,45 @@ if (!$plugin->isActivated("formcreator")) {
 
 $form = new PluginFormcreatorForm();
 
-if (isset($_POST["add"])) {
+if (isset($_POST['add'])) {
    // Add a new Form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $newID = $form->add($_POST);
+   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
 
-   Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $newID);
-
-} else if (isset($_POST["update"])) {
+} else if (isset($_POST['update'])) {
    // Edit an existing form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->update($_POST);
    Html::back();
 
-} else if (isset($_POST["delete"])) {
+} else if (isset($_POST['delete'])) {
    // Delete a form (is_deleted = true)
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->delete($_POST);
    $form->redirectToList();
 
-} else if (isset($_POST["restore"])) {
+} else if (isset($_POST['restore'])) {
    // Restore a deleteted form (is_deleted = false)
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->restore($_POST);
    $form->redirectToList();
 
-} else if (isset($_POST["purge"])) {
+} else if (isset($_POST['purge'])) {
    // Delete defenitively a form from DB and all its datas
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->delete($_POST, 1);
    $form->redirectToList();
+
+} else if (isset($_POST['add_target'])) {
+   Session::checkRight('entity', UPDATE);
+   $form->addTarget($_POST);
+   Html::back();
+
+} else if (isset($_POST['delete_target'])) {
+   Session::checkRight('entity', UPDATE);
+   $form->deleteTarget($_POST);
+   Html::redirect($CFG_GLPI['root_doc'] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
 
 } else if (isset($_POST['filetype_create'])) {
    $documentType = new DocumentType();
@@ -88,9 +96,9 @@ if (isset($_POST["add"])) {
    }
    Html::back();
 
-} else if (isset($_GET["import_form"])) {
+} else if (isset($_GET['import_form'])) {
    // Import form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    Html::header(
       PluginFormcreatorForm::getTypeName(2),
       $_SERVER['PHP_SELF'],
@@ -104,15 +112,15 @@ if (isset($_POST["add"])) {
    $form->showImportForm();
    Html::footer();
 
-} else if (isset($_POST["import_send"])) {
+} else if (isset($_POST['import_send'])) {
    // Import form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
    $form->importJson($_REQUEST);
    Html::back();
 
 } else if (isset($_POST['submit_formcreator'])) {
    // Save form to target
-   if ($form->getFromDB($_POST['formcreator_form'])) {
+   if ($form->getFromDB($_POST['plugin_formcreator_forms_id'])) {
 
       // If user is not authenticated, create temporary user
       if (!isset($_SESSION['glpiname'])) {
@@ -120,7 +128,8 @@ if (isset($_POST["add"])) {
       }
 
       // Save form
-      if ($form->saveForm($_POST) === false) {
+      $formAnswer = new PluginFormcreatorFormAnswer();
+      if ($formAnswer->add($_POST) === false) {
          Html::back();
       }
       $form->increaseUsageCount();
@@ -130,6 +139,26 @@ if (isset($_POST["add"])) {
          unset($_SESSION['glpiname']);
          Html::redirect('formdisplay.php?answer_saved');
       }
+
+      // redirect to created item
+      if ($_SESSION['glpibackcreated']) {
+         $item_ticket = new Item_Ticket;
+         $tickets = $item_ticket->find([
+            'itemtype' => PluginFormcreatorFormAnswer::class,
+            'items_id' => $formAnswer->getID(),
+         ]);
+
+         if (count($tickets) === 1) {
+            $current_ticket = array_pop($tickets);
+            $tickets_id = $current_ticket['tickets_id'];
+            Html::redirect(Ticket::getFormURLWithID($tickets_id));
+         }
+
+         if (count($tickets) > 1) {
+            Html::redirect(PluginFormcreatorFormAnswer::getFormURLWithID($formAnswer->getID()));
+         }
+      }
+
       if (plugin_formcreator_replaceHelpdesk()) {
          // Form was saved from the service catalog
          Html::redirect('issue.php');
@@ -144,7 +173,7 @@ if (isset($_POST["add"])) {
 
 } else {
    // Show forms form
-   Session::checkRight("entity", UPDATE);
+   Session::checkRight('entity', UPDATE);
 
    Html::header(
       PluginFormcreatorForm::getTypeName(2),

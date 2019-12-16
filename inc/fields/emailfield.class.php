@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -39,17 +37,16 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
          $domId        = $fieldName . '_' . $rand;
-         $required     = $this->fields['required'] ? ' required' : '';
          $defaultValue = Html::cleanInputText($this->value);
 
-         echo '<input type="email" class="form-control"
-                  name="' . $fieldName . '"
-                  id="' . $domId . '"
-                  value="' . $defaultValue . '" />';
+         echo Html::input($fieldName, [
+            'id'    => $domId,
+            'value' => $defaultValue,
+         ]);
          echo Html::scriptBlock("$(function() {
             pluginFormcreatorInitializeEmail('$fieldName', '$rand');
          });");
@@ -112,24 +109,8 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
       return _n('Email', 'Emails', 1);
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['email'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    public function prepareQuestionInputForSave($input) {
@@ -139,7 +120,7 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }
@@ -172,5 +153,9 @@ class PluginFormcreatorEmailField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-envelope" aria-hidden="true"></i>';
    }
 }

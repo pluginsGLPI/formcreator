@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,7 +36,6 @@ class PluginFormcreatorUpgradeTo2_7 {
       global $DB;
 
       // Rename PluginFormcreatorForm_Answer into PluginFormcreatorFormAnswer
-      $displayPreference = new DisplayPreference();
       $DB->update(
          'glpi_displaypreferences', [
             'itemtype' => 'PluginFormcreatorFormAnswer',
@@ -107,6 +105,7 @@ class PluginFormcreatorUpgradeTo2_7 {
       $migration->backupTables([$table]);
       $migration->renameTable('glpi_plugin_formcreator_forms_answers', $table);
       $migration->migrationOneTable($table);
+      $DB->delete($table, ['is_deleted' => '1']);
       $migration->dropField($table, 'is_deleted');
       $table = 'glpi_plugin_formcreator_answers';
       $migration->changeField(

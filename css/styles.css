@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -213,7 +211,7 @@ form.formcreator_form {
    margin: 0 0 10px;
 }
 
-.formcreator_form > .form_section > h2 {
+.formcreator_form  .form_section > h2 {
    background: #1B2F62; /*#E1D39E;*/
    color: #FFF;
    margin:  0 0 10px;
@@ -505,12 +503,6 @@ form.formcreator_form {
 
 #footer-login{
    display: none;
-}
-
-.validators_bloc .select2-container {
-   float: left;
-   width: 13% !important;
-   margin: 0 1% 0 0;
 }
 
 #tag_question_value .select2-container, #tag_specific_value .select2-container {
@@ -818,7 +810,6 @@ form.formcreator_form {
    cursor: pointer;
    border-radius: 0;
    box-sizing: border-box;
-   background-color: #E7E7E7;
    animation-name: fadeInUp ;
    animation-iteration-count: 1;
    animation-timing-function: ease-in;
@@ -835,20 +826,19 @@ form.formcreator_form {
 a.plugin_formcreator_formTile_title {
    font-size: 1.1em;
    padding: 10px 40px 15px 10px;
+   //height: 33px;
    display: block;
-   background: transparent no-repeat top 10px right 10px;
 }
 
 .plugin_formcreator_formTile:hover a.plugin_formcreator_formTile_title {
    cursor: pointer;
 }
 
-.plugin_formcreator_formTile.form a.plugin_formcreator_formTile_title {
-   background-image: url(../pics/form.png);
-}
-
-.plugin_formcreator_formTile.faq a.plugin_formcreator_formTile_title {
-   background-image: url(../pics/faq.png);
+.plugin_formcreator_formTile  i.fa, .plugin_formcreator_formTile  i.fab, .plugin_formcreator_formTile  i.fas {
+   font-size: 2.5em;
+   margin-right: 10px;
+   float: left;
+   margin: 10px;
 }
 
 .plugin_formcreator_formTile_description {
@@ -1252,7 +1242,6 @@ span.fc_list_icon {
 }
 
 #plugin_formcreator_avatar {
-   display: inline-block;
    border: 2px inset white;
    border-radius: 50%;
    padding: 2px;
@@ -1276,7 +1265,6 @@ span.fc_list_icon {
 
 .plugin_formcreator_userMenu_icons {
    float: right;
-   display: inline-block;
    margin: 12px 8px 0 8px;
 }
 
@@ -1384,6 +1372,17 @@ span.fc_list_icon {
 .form_header ul ul, .form_section ul ul, .form_header ol ul, .form_section ol ul {
    list-style-type: circle;
 }
+
+
+/* Active / inactive light for forms */
+.plugin-forcreator-active {
+   color: #009933;
+}
+
+.plugin-forcreator-inactive {
+   color: #a0a0a0;
+}
+
 
 /* ################--------------- Responsive  ---------------#################### */
 @media screen and (max-width: 700px) {

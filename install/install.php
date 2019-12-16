@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -63,6 +61,7 @@ class PluginFormcreatorInstall {
       '2.6.1'  => '2.6.3',
       '2.6.3'  => '2.7',
       '2.7'    => '2.8',
+      '2.8'    => '2.9',
    ];
 
    /**
@@ -234,7 +233,11 @@ class PluginFormcreatorInstall {
       if (!$DB->numrows($result) > 0) {
          $query = "INSERT INTO `glpi_requesttypes` SET `name` = 'Formcreator';";
          $DB->query($query) or die ($DB->error());
-         $DB->insert_id();
+         if (version_compare(GLPI_VERSION, '9.5') < 0) {
+            $DB->insert_id();
+         } else {
+            $DB->insertId();
+         }
       }
    }
 
@@ -410,8 +413,6 @@ class PluginFormcreatorInstall {
    }
 
    protected function deleteTicketRelation() {
-      global $CFG_GLPI;
-
       // Delete relations with tickets with email notifications disabled
       $use_mailing = PluginFormcreatorCommon::isNotificationEnabled();
       PluginFormcreatorCommon::setNotification(false);
@@ -437,10 +438,9 @@ class PluginFormcreatorInstall {
          'PluginFormcreatorForm_Profile',
          'PluginFormcreatorForm_Validator',
          'PluginFormcreatorForm',
-         'PluginFormcreatorQuestion_Condition',
+         'PluginFormcreatorCondition',
          'PluginFormcreatorQuestion',
          'PluginFormcreatorSection',
-         'PluginFormcreatorTarget',
          'PluginFormcreatorTargetChange_Actor',
          'PluginFormcreatorTargetChange',
          'PluginFormcreatorTargetTicket_Actor',

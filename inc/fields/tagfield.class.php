@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,10 +35,25 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       return class_exists(PluginTagTag::class);
    }
 
+   public function getDesignSpecializationField() {
+      $label = '';
+      $field = '';
+
+      $additions = '';
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+   
    public function displayField($canEdit = true) {
       global $DB;
 
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       if ($canEdit) {
@@ -102,7 +115,6 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function deserializeValue($value) {
-      $deserialized  = [];
       $this->value = ($value !== null && $value !== '')
                   ? explode("\r\n", $value)
                   : [];
@@ -140,7 +152,7 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = [];
       } else {
@@ -157,24 +169,8 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
       return _n('Tag', 'Tags', 2, 'tag');
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 0,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['tag'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return false;
    }
 
    public function equals($value) {
@@ -221,5 +217,11 @@ class PluginFormcreatorTagField extends PluginFormcreatorDropdownField
 
    public function isAnonymousFormCompatible() {
       return false;
+   }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-tag-field.png" title="" />';
    }
 }

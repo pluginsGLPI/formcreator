@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -33,12 +31,85 @@
 
 class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 {
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '<label for="dropdown_ldap_auth'.$rand.'">';
+      $label .= _n('LDAP directory', 'LDAP directories', 1);
+      $label .= '</label>';
+
+      $ldap_values = json_decode(plugin_formcreator_decode($this->question->fields['values']), JSON_OBJECT_AS_ARRAY);
+      if ($ldap_values === null) {
+         $ldap_values = [];
+      }
+      $current_entity = $_SESSION['glpiactive_entity'];
+      $auth_ldap_condition = '';
+      if ($current_entity != 0) {
+         $auth_ldap_condition = "glpi_authldaps.id = (select glpi_entities.authldaps_id from glpi_entities where id=${current_entity})";
+      }
+      $field = Dropdown::show(AuthLDAP::class, [
+         'name'      => 'ldap_auth',
+         'condition' => $auth_ldap_condition,
+         'rand'      => $rand,
+         'value'     => (isset($ldap_values['ldap_auth'])) ? $ldap_values['ldap_auth'] : '',
+         'on_change' => 'plugin_formcreator_changeLDAP(this)',
+         'display'   => false,
+      ]);
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="ldap_filter">';
+      $additions .= __('Filter', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= Html::input('ldap_filter', [
+         'id'     => 'ldap_filter',
+         'value'  => (isset($ldap_values['ldap_filter'])) ? $ldap_values['ldap_filter'] : '',
+      ]);
+      $additions .= '</td>';
+
+      $additions .= '<td>';
+      $additions .= '<label for="ldap_attribute">';
+      $additions .= __('Attribute', 'formcreator');
+      $additions .= '</label>';
+      $additions .= '</td>';
+
+      $additions .= '<td>';
+      $additions .= Dropdown::show('RuleRightParameter', [
+         'name'    => 'ldap_attribute',
+         'rand'    => $rand,
+         'value'   => (isset($ldap_values['ldap_attribute'])) ? $ldap_values['ldap_attribute'] : '',
+         'display' => false,
+      ]);
+      $additions .= '</td>';
+      $additions .= '</tr>';
+      $additions .= '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td>';
+      $additions .= '</td>';
+      $additions .= '<td colspan="2">&nbsp;</td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => true,
+         'may_be_required' => true,
+      ];
+   }
+
    public function getAvailableValues() {
-      if (empty($this->fields['values'])) {
+      if (empty($this->question->fields['values'])) {
          return [];
       }
 
-      $ldap_values   = json_decode(plugin_formcreator_decode($this->fields['values']));
+      $ldap_values   = json_decode(plugin_formcreator_decode($this->question->fields['values']));
       $ldap_dropdown = new RuleRightParameter();
       if (!$ldap_dropdown->getFromDB($ldap_values->ldap_attribute)) {
          return [];
@@ -149,7 +220,7 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
          ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
          ldap_control_paged_result($ds, 1);
          $sn            = ldap_search($ds, $config_ldap->fields['basedn'], $input['ldap_filter'], $attribute);
-         $entries       = ldap_get_entries($ds, $sn);
+         ldap_get_entries($ds, $sn);
       } catch (Exception $e) {
          Session::addMessageAfterRedirect(__('Cannot recover LDAP informations!', 'formcreator'), false, ERROR);
       }
@@ -165,28 +236,12 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
       return $input;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 1,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 1,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['ldapselect'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!isset($input[$key])) {
          $input[$key] = '';
       }
@@ -216,5 +271,9 @@ class PluginFormcreatorLdapselectField extends PluginFormcreatorSelectField
 
    public function isAnonymousFormCompatible() {
       return false;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-sitemap" aria-hidden="true"></i>';
    }
 }

@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,15 +36,15 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
       return [
          [
             0,
-            'Targets'
+            'Access types'
          ],
          [
             1,
-            'Target'
+            'Access type'
          ],
          [
             2,
-            'Targets'
+            'Access types'
          ],
       ];
    }
@@ -58,7 +57,7 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
     * @return void
     */
    public function testGetTypeName($nb, $expected) {
-      $instance = new $this->newTestedInstance();
+      $instance = $this->newTestedInstance();
       $output = $instance->getTypeName($nb);
       $this->string($output)->isEqualTo($expected);
    }
@@ -68,7 +67,7 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
       $item = new \Computer();
       $output = $instance->getTabNameForItem($item);
 
-      $this->string($output)->isEqualTo('Targets');
+      $this->string($output)->isEqualTo('Access types');
    }
 
    public function testPrepareInputForAdd() {
@@ -84,5 +83,76 @@ class PluginFormcreatorForm_Profile extends CommonTestCase {
 
       $this->array($output)->HasKey('uuid');
       $this->string($output['uuid']);
+   }
+
+   public function testExport() {
+      $instance = $this->newTestedInstance();
+
+      // Try to export an empty item
+      $output = $instance->export();
+      $this->boolean($output)->isFalse();
+
+      // Prepare an item to export
+      $form = $this->getForm();
+      $formFk = \PluginFormcreatorForm::getForeignKeyField();
+      $profile = new \Profile();
+      $profile->getFromDBByCrit([
+         'name' => 'Super-Admin'
+      ]);
+      $instance->add([
+         $formFk => $form->getID(),
+         'profiles_id' => $profile->getID(),
+      ]);
+      $instance->getFromDB($instance->getID());
+
+      // Export the item without the ID and with UUID
+      $output = $instance->export(false);
+
+      // Test the exported data
+      $fieldsWithoutID = [
+      ];
+      $extraFields = [
+         '_profile',
+      ];
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['uuid'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+
+      // Export the item without the UUID and with ID
+      $output = $instance->export(true);
+      $this->array($output)
+         ->hasKeys($fieldsWithoutID + $extraFields + ['id'])
+         ->hasSize(1 + count($fieldsWithoutID) + count($extraFields));
+   }
+
+   public function testImport() {
+      $form = $this->getForm();
+      $uuid = plugin_formcreator_getUuid();
+      $input = [
+         '_profile' => 'Technician',
+         'uuid' => $uuid,
+      ];
+
+      $linker = new \PluginFormcreatorLinker();
+      $formProfileId = \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
+      $this->integer($formProfileId)->isGreaterThan(0);
+
+      $instance = $this->newTestedInstance();
+      $instance->delete([
+         'id' => $formProfileId
+      ], 1);
+
+      unset($input['uuid']);
+
+      $this->exception(
+         function() use($linker, $input, $form) {
+            \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
+         }
+      )->isInstanceOf(\GlpiPlugin\Formcreator\Exception\ImportFailureException::class)
+         ->hasMessage('UUID or ID is mandatory'); // passes
+
+      $input['id'] = $formProfileId;
+      $formProfileId2 = \PluginFormcreatorForm_Profile::import($linker, $input, $form->getID());
+      $this->integer((int) $formProfileId)->isNotEqualTo($formProfileId2);
    }
 }

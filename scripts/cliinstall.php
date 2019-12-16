@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -45,11 +43,11 @@ $doc = <<<DOC
 cliinstall.php
 
 Usage:
-   cliinstall.php [--as-user USER] [ --tests ] [ --force-upgrade | --force-install ]
+   cliinstall.php [--as-user USER] [ --tests CONFIG_DIR ] [ --force-upgrade | --force-install ]
 
 Options:
    --as-user USER       Do install/upgrade as specified USER. If not provided, 'glpi' user will be used
-   --tests              Use GLPI test database
+   --tests CONFIG_DIR   Use GLPI test database
    --force-upgrade      Force upgrade to the latest version
    --force-install      ignore previous instalation and install from scratch
 
@@ -58,6 +56,7 @@ DOC;
 $docopt = new \Docopt\Handler();
 $args = $docopt->handle($doc);
 $args = $args->args;
+$pluginName = basename(dirname(__DIR__));
 
 $asUser = 'glpi';
 if (isset($args)) {
@@ -67,9 +66,9 @@ if (isset($args)) {
    if (isset($args['--tests']) &&  $args['--tests'] !== false) {
       // Use test GLPi's database
       // Requires use of cliinstall of GLPI with --tests argument
+      $glpiConfigDir = $args['--tests'];
       define('GLPI_ROOT', dirname(dirname(dirname(__DIR__))));
-      define('GLPI_CACHE_DIR', GLPI_ROOT . '/tests/files/_cache');
-      define("GLPI_CONFIG_DIR", GLPI_ROOT . "/tests");
+      define("GLPI_CONFIG_DIR", GLPI_ROOT . "/$glpiConfigDir");
    }
 }
 
@@ -113,16 +112,16 @@ $plugin = new Plugin();
 
 // Install the plugin
 $plugin->checkStates(true);
-if (!$plugin->getFromDBbyDir("formcreator")) {
+if (!$plugin->getFromDBbyDir($pluginName)) {
    print("Failed : GLPi does not find the plugin" . PHP_EOL);
    exit(1);
 }
 print("Installing Plugin Id: " . $plugin->fields['id'] . " version " . $plugin->fields['version'] . "...\n");
 if ($args['--force-install']) {
-   $_SESSION['plugin_formcreator']['cli'] = 'force-install';
+   $_SESSION["plugin_$pluginName"]['cli'] = 'force-install';
 }
 if ($args['--force-upgrade']) {
-   $_SESSION['plugin_formcreator']['cli'] = 'force-upgrade';
+   $_SESSION["plugin_$pluginName"]['cli'] = 'force-upgrade';
 }
 ob_start(function($in) { return ''; });
 $plugin->install($plugin->fields['id']);
@@ -139,5 +138,5 @@ print("Activation Done" . PHP_EOL);
 
 //Load the plugin
 print("Loading Plugin..." . PHP_EOL);
-$plugin->load("formcreator");
+$plugin->load($pluginName);
 print("Load Done..." . PHP_EOL);

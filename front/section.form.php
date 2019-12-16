@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,9 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
+global $CFG_GLPI;
 include ("../../../inc/includes.php");
 
-Session::checkRight("entity", UPDATE);
+Session::checkRight('entity', UPDATE);
 
 // Check if plugin is activated...
 $plugin = new Plugin();
@@ -42,33 +41,35 @@ if ($plugin->isActivated("formcreator")) {
 
    if (isset($_POST["add"])) {
       // Add a new Section
-      Session::checkRight("entity", UPDATE);
+      Session::checkRight('entity', UPDATE);
       $section->add($_POST);
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+      $section->updateConditions($_POST);
+      Html::back();
 
-   } else if (isset($_POST["update"])) {
+   } else if (isset($_POST['update'])) {
       // Edit an existing section
       Session::checkRight("entity", UPDATE);
       $section->update($_POST);
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
+      $section->updateConditions($_POST);
+      Html::back();
 
-   } else if (isset($_POST["delete_section"])) {
+   } else if (isset($_POST['delete_section'])) {
       // Delete a Section
-      Session::checkRight("entity", UPDATE);
+      Session::checkRight('entity', UPDATE);
       $section->delete($_POST);
       // Page refresh handled by Javascript
 
-   } else if (isset($_POST["duplicate_section"])) {
+   } else if (isset($_POST['duplicate_section'])) {
       // Duplicate a Section
-      Session::checkRight("entity", UPDATE);
+      Session::checkRight('entity', UPDATE);
       if ($section->getFromDB((int) $_POST['id'])) {
          $section->duplicate();
       }
       // Page refresh handled by Javascript
 
-   } else if (isset($_POST["move"])) {
+   } else if (isset($_POST['move'])) {
       // Move a Section
-      Session::checkRight("entity", UPDATE);
+      Session::checkRight('entity', UPDATE);
 
       if ($section->getFromDB((int) $_POST['id'])) {
          if ($_POST["way"] == 'up') {

@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -123,7 +121,12 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $countQuery = "SELECT COUNT(*) AS `cpt` FROM ($query) AS `issues`";
       $result = $DB->query($countQuery);
       if ($result !== false) {
-         $count = $DB->fetch_assoc($result);
+         if (version_compare(GLPI_VERSION, '9.5') < 0) {
+            $fa = 'fetch_assoc';
+         } else {
+            $fa = 'fetchAssoc';
+         }
+         $count = $DB->$fa($result);
          $table = static::getTable();
          if (countElementsInTable($table) != $count['cpt']) {
             if ($DB->query("TRUNCATE `$table`")) {
@@ -145,15 +148,11 @@ class PluginFormcreatorIssue extends CommonDBTM {
     * @see CommonGLPI::display()
     */
    public function display($options = []) {
-      global $CFG_GLPI;
-
       $itemtype = $options['sub_itemtype'];
       if (!in_array($itemtype, [Ticket::class, PluginFormcreatorFormAnswer::class])) {
          html::displayRightError();
       }
-      if (version_compare(PluginFormcreatorCommon::getGlpiVersion(), 9.4) >= 0 || $CFG_GLPI['use_rich_text']) {
-         Html::requireJs('tinymce');
-      }
+      Html::requireJs('tinymce');
       if (plugin_formcreator_replaceHelpdesk() == PluginFormcreatorEntityconfig::CONFIG_SIMPLIFIED_SERVICE_CATALOG) {
          $this->displaySimplified($options);
       } else {
@@ -465,7 +464,6 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
-
       if (!is_array($values)) {
          $values = [$field => $values];
       }
@@ -478,8 +476,8 @@ class PluginFormcreatorIssue extends CommonDBTM {
                                             'value'   => $values[$field]]);
          case 'status' :
             $ticket_opts = Ticket::getAllStatusArray(true);
-            $ticket_opts['waiting'] = __('Not validated');
-            $ticket_opts['refused'] = __('Refused');
+            $ticket_opts[PluginFormcreatorFormAnswer::STATUS_WAITING] = __('Not validated', 'formcreator');
+            $ticket_opts[PluginFormcreatorFormAnswer::STATUS_REFUSED] = __('Refused', 'formcreator');
             return Dropdown::showFromArray($name, $ticket_opts, ['display' => false,
                                                                  'value'   => $values[$field]]);
             break;
@@ -489,10 +487,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
 
-
-
    static function getDefaultSearchRequest() {
-
       $search = ['criteria' => [0 => ['field'      => 4,
                                       'searchtype' => 'equals',
                                       'value'      => 'notclosed']],
@@ -510,11 +505,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $table = $searchopt[$option_id]["table"];
       $field = $searchopt[$option_id]["field"];
 
-      if (version_compare(GLPI_VERSION, '9.4') < 0) {
-         $rawColumn = 'ITEM_0_display_id';
-      } else {
-         $rawColumn = 'ITEM_PluginFormcreatorIssue_1_display_id';
-      }
+      $rawColumn = 'ITEM_PluginFormcreatorIssue_1_display_id';
       if (isset($data['raw'][$rawColumn])) {
          $matches = null;
          preg_match('/[tf]+_([0-9]*)/', $data['raw'][$rawColumn], $matches);
@@ -562,15 +553,15 @@ class PluginFormcreatorIssue extends CommonDBTM {
                   return Ticket::getStatusIcon($data['raw']["ITEM_$num"])." ".$status;
 
                case PluginFormcreatorFormAnswer::class:
+                  $elements = PluginFormcreatorFormAnswer::getStatuses();
                   return PluginFormcreatorFormAnswer::getSpecificValueToDisplay('status', $data['raw']["ITEM_$num"])
-                     ." ".__($data['raw']["ITEM_$num"], 'formcreator');
+                     ." ".__($elements[$data['raw']["ITEM_$num"]], 'formcreator');
             }
             break;
       }
 
       return '';
    }
-
 
    static function getClosedStatusArray() {
       return Ticket::getClosedStatusArray();
@@ -581,7 +572,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
    }
 
    static function getNewStatusArray() {
-      return [Ticket::INCOMING, 'waiting', 'accepted', 'refused'];
+      return [Ticket::INCOMING, PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
    }
 
    static function getProcessStatusArray() {
@@ -594,7 +585,7 @@ class PluginFormcreatorIssue extends CommonDBTM {
 
    static function getAllStatusArray($withmetaforsearch = false) {
       $ticket_status = Ticket::getAllStatusArray($withmetaforsearch);
-      $form_status = ['waiting', 'accepted', 'refused'];
+      $form_status = [PluginFormcreatorFormAnswer::STATUS_WAITING, PluginFormcreatorFormAnswer::STATUS_ACCEPTED, PluginFormcreatorFormAnswer::STATUS_REFUSED];
       $form_status = array_combine($form_status, $form_status);
       $all_status = $ticket_status + $form_status;
       return $all_status;
@@ -647,10 +638,28 @@ class PluginFormcreatorIssue extends CommonDBTM {
       $currentUser = Session::getLoginUserID();
       return ['criteria' => [['field' => 4,
                               'searchtype' => 'equals',
-                              'value'      => 'old'],
-                              ['field'      => 8,
+                              'value'      => 'old',
+                              'link'       => 'AND'],
+                             ['field'      => 8,
                               'searchtype'  => 'equals',
-                              'value'       => $currentUser]],
+                              'value'       => $currentUser,
+                              'link'       => 'AND'],
+                             ['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'refused',
+                              'link'       => 'OR'],
+                             ['field'      => 8,
+                              'searchtype'  => 'equals',
+                              'value'       => $currentUser,
+                              'link'       => 'AND'],
+                             ['field' => 4,
+                              'searchtype' => 'equals',
+                              'value'      => 'refused',
+                              'link'       => 'OR'],
+                             ['field'      => 9,
+                              'searchtype'  => 'equals',
+                              'value'       => $currentUser,
+                              'link'       => 'AND']],
               'reset'    => 'reset'];
    }
 

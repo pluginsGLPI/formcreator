@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -35,13 +34,13 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 
 class PluginFormcreatorFileField extends CommonTestCase {
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testDeserializeValue() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $instance->deserializeValue('invalid Json');
       $this->string($instance->getValueForTargetText(true))
          ->isEqualTo('No attached document');
@@ -57,5 +56,11 @@ class PluginFormcreatorFileField extends CommonTestCase {
       $instance->deserializeValue('[1,2]');
       $this->string($instance->getValueForTargetText(true))
          ->isEqualTo('Attached document');
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorFileField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
    }
 }

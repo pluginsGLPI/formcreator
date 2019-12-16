@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,6 +29,7 @@
  * ---------------------------------------------------------------------
  */
 
+global $CFG_GLPI;
 require_once ('../../../inc/includes.php');
 
 // Check if plugin is activated...
@@ -50,7 +49,7 @@ $_SESSION['glpilayout'] = "lefttab";
 $issue = new PluginFormcreatorIssue();
 if (isset($_POST['save_formanswer'])) {
    $_POST['plugin_formcreator_forms_id'] = intval($_POST['formcreator_form']);
-   $_POST['status']                      = 'waiting';
+   $_POST['status']                      = PluginFormcreatorFormAnswer::STATUS_WAITING;
    $issue->saveAnswers($_POST);
    Html::back();
 } else {

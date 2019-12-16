@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -49,8 +48,8 @@ class Config extends CommonTestCase {
 
          case 'testUpgradedPlugin':
             $this->olddb = new \DB();
-            $this->string(getenv('OLDDBNAME'));
-            $oldDbName = getenv('OLDDBNAME');
+            $this->string(getenv('OLD_DB_NAME'));
+            $oldDbName = getenv('OLD_DB_NAME');
             $this->olddb->dbdefault = $oldDbName;
             $this->olddb->connect();
             $this->boolean($this->olddb->connected)->isTrue();
@@ -70,20 +69,25 @@ class Config extends CommonTestCase {
    public function testInstallPlugin() {
       global $DB;
 
-      $pluginname = TEST_PLUGIN_NAME;
+      $pluginName = TEST_PLUGIN_NAME;
 
       $this->given(self::setupGLPIFramework())
            ->and($this->boolean($DB->connected)->isTrue());
 
       //Drop plugin configuration if exists
       $config = $this->newTestedInstance();
-      $config->deleteByCriteria(['context' => $pluginname]);
+      $config->deleteByCriteria(['context' => $pluginName]);
 
       // Drop tables of the plugin if they exist
       $query = "SHOW TABLES";
       $result = $DB->query($query);
-      while ($data = $DB->fetch_array($result)) {
-         if (strstr($data[0], "glpi_plugin_$pluginname") !== false) {
+      if (version_compare(GLPI_VERSION, '9.5') >= 0) {
+         $fa = 'fetchArray';
+      } else {
+         $fa = 'fetch_array';
+      }
+      while ($data = $DB->$fa($result)) {
+         if (strstr($data[0], "glpi_plugin_$pluginName") !== false) {
             $DB->query("DROP TABLE " . $data[0]);
          }
       }
@@ -94,28 +98,22 @@ class Config extends CommonTestCase {
       $plugin = new \Plugin();
       // Since GLPI 9.4 plugins list is cached
       $plugin->checkStates(true);
-      $plugin->getFromDBbyDir($pluginname);
+      $plugin->getFromDBbyDir($pluginName);
 
       // Install the plugin
-      ob_start(function($in) { return ''; });
+      ob_start(function($in) { return $in; });
       $plugin->install($plugin->fields['id']);
+      $installOutput = ob_get_contents();
       ob_end_clean();
+      $this->boolean($plugin->isInstalled($pluginName))->isTrue($installOutput);
 
       // Enable the plugin
       $plugin->activate($plugin->fields['id']);
-      $this->boolean($plugin->isActivated($pluginname))->isTrue('Cannot enable the plugin');
+      $this->boolean($plugin->isActivated($pluginName))->isTrue('Cannot enable the plugin');
 
       // Check the version saved in configuration
       $this->checkConfig();
       $this->testPluginName();
-
-      // Take a snapshot of the database before any test
-      $this->mysql_dump($DB->dbuser, $DB->dbhost, $DB->dbpassword, $DB->dbdefault, './save.sql');
-
-      $this->boolean(file_exists("./save.sql"))->isTrue();
-      $filestats = stat("./save.sql");
-      $length = $filestats[7];
-      $this->integer($length)->isGreaterThan(0);
    }
 
    public function testUpgradedPlugin() {

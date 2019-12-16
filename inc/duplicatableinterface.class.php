@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,17 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
-Session::checkRight('entity', UPDATE);
-
-if (!isset($_REQUEST['plugin_formcreator_questions_id'])) {
-   exit;
-}
-
-if (isset($_REQUEST['_empty'])) {
-   // get an empty condition HTML table row
-   $formId = (int) $_REQUEST['plugin_formcreator_forms_id'];
-   $questionId = (int) $_REQUEST['plugin_formcreator_questions_id'];
-   $questionCondition = new PluginFormcreatorQuestion_Condition();
-   echo $questionCondition->getConditionHtml($formId, $questionId);
+interface PluginFormcreatorDuplicatableInterface
+{
+   /**
+    * Duplicate the item
+    */
+   public function duplicate();
 }

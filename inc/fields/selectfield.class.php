@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -39,14 +37,13 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
 
    public function displayField($canEdit = true) {
       if ($canEdit) {
-         $id           = $this->fields['id'];
+         $id           = $this->question->getID();
          $rand         = mt_rand();
          $fieldName    = 'formcreator_field_' . $id;
-         $domId        = $fieldName . $rand;
          $values       = $this->getAvailableValues();
          $tab_values   = [];
 
-         if (!empty($this->fields['values'])) {
+         if (!empty($this->question->fields['values'])) {
             foreach ($values as $value) {
                if ((trim($value) != '')) {
                   $tab_values[$value] = $value;
@@ -54,7 +51,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
             }
 
             Dropdown::showFromArray($fieldName, $tab_values, [
-               'display_emptychoice' => $this->fields['show_empty'] == 1,
+               'display_emptychoice' => $this->question->fields['show_empty'] == 1,
                'value'     => $this->value,
                'values'    => [],
                'rand'      => $rand,
@@ -82,7 +79,7 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }
@@ -131,24 +128,12 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
       return true;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 1,
-         'values'         => 1,
-         'range'          => 0,
-         'show_empty'     => 1,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
+   public static function canRequire() {
+      return true;
    }
 
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['select'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public function getEmptyParameters() {
+      return [];
    }
 
    public function getEmptyParameters() {
@@ -173,5 +158,11 @@ class PluginFormcreatorSelectField extends PluginFormcreatorMultiselectField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-select-field.png" title="" />';
    }
 }

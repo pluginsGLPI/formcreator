@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -66,7 +65,12 @@ class Config extends CommonTestCase
       // Check all plugin's tables are dropped
       $tables = [];
       $result = $DB->query("SHOW TABLES LIKE 'glpi_plugin_" . $pluginName . "_%'");
-      while ($row = $DB->fetch_assoc($result)) {
+      if (version_compare(GLPI_VERSION, '9.5') < 0) {
+         $fa = 'fetch_assoc';
+      } else {
+         $fa = 'fetchAssoc';
+      }
+      while ($row = $DB->$fa($result)) {
          $tables[] = array_pop($row);
       }
       $this->integer(count($tables))->isEqualTo(0, "not deleted tables \n" . json_encode($tables, JSON_PRETTY_PRINT));

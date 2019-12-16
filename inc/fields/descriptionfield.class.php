@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,9 +35,22 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $common = $common = parent::getDesignSpecializationField();
+      $additions = $common['additions'];
+
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => false,
+      ];
+   }
+
    public function show($canEdit = true) {
-      echo '<div class="description_field form-group" id="form-group-field-' . $this->fields['id'] . '">';
-      echo nl2br(html_entity_decode($this->fields['description']));
+      echo '<div class="description_field form-group" id="form-group-field-' . $this->question->getID() . '">';
+      echo nl2br(html_entity_decode($this->question->fields['description']));
       echo '</div>' . PHP_EOL;
    }
 
@@ -86,24 +97,8 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
       return $input;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 0,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['description'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return false;
    }
 
    public function equals($value) {
@@ -128,5 +123,11 @@ class PluginFormcreatorDescriptionField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-description-field.png" title="" />';
    }
 }

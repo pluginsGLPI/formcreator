@@ -116,6 +116,42 @@ class PluginFormcreatorCommon extends CommonTestCase {
       $this->string($output)->isEqualTo($expected);
    }
 
+
+   public function providerGetPictoFilename() {
+      return [
+         [
+            'version' => '9.3.0',
+            'expected' => 'data/font-awesome_9.3.php',
+         ],
+         [
+            'version' => '9.3.1',
+            'expected' => 'data/font-awesome_9.3.php',
+         ],
+         [
+            'version' => '9.4.0',
+            'expected' => 'data/font-awesome_9.4.php',
+         ],
+         [
+            'version' => '9.5.0',
+            'expected' => 'data/font-awesome_9.5.php',
+         ],
+         [
+            'version' => '9.9.0',
+            'expected' => '',
+         ]
+      ];
+   }
+
+   /**
+    * Undocumented function
+    *
+    * @dataProvider providerGetPictoFilename
+    */
+   public function testGetPictoFilename($version, $expected) {
+      $output = \PluginFormcreatorCommon::getPictoFilename($version);
+      $this->string($output)->isEqualTo($expected);
+   }
+
    public function providerPrepareBooleanKeywords() {
       return [
          [

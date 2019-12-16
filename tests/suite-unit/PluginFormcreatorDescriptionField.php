@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,10 +35,7 @@ use GlpiPlugin\Formcreator\Tests\CommonTestCase;
 class PluginFormcreatorDescriptionField extends CommonTestCase {
 
    public function testIsValid() {
-      $instance = new \PluginFormcreatorDescriptionField([
-         'name' => $this->getUniqueString(),
-      ],
-      []);
+      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
       $this->boolean($instance->isValid(''))->isTrue();
    }
 
@@ -77,9 +72,7 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
     * @dataProvider providerPrepareQuestionInputForSave
     */
    public function testPrepareQuestionInputForSave($input, $expected, $message) {
-      $instance = new \PluginFormcreatorDescriptionField([
-         'name' => $this->getUniqueString(),
-      ]);
+      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
       $output = $instance->prepareQuestionInputForSave($input);
       if (count($expected) === 0 || $expected === false) {
          $this->string($_SESSION["MESSAGE_AFTER_REDIRECT"][ERROR][0])
@@ -95,20 +88,25 @@ class PluginFormcreatorDescriptionField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorDescriptionField([]);
+      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
 
    public function testIsPrerequisites() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->isPrerequisites();
       $this->boolean($output)->isEqualTo(true);
    }
 
    public function testGetDocumentsForTarget() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorDescriptionField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isFalse();
+   }
 }

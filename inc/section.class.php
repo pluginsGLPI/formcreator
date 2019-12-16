@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,32 +29,19 @@
  * ---------------------------------------------------------------------
  */
 
+use GlpiPlugin\Formcreator\Exception\ImportFailureException;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreatorExportableInterface
+class PluginFormcreatorSection extends CommonDBChild implements 
+PluginFormcreatorExportableInterface,
+PluginFormcreatorDuplicatableInterface,
+PluginFormcreatorConditionnableInterface
 {
    static public $itemtype = PluginFormcreatorForm::class;
-   static public $items_id = "plugin_formcreator_forms_id";
-
-   /**
-    * Check if current user have the right to create and modify requests
-    *
-    * @return boolean True if he can create and modify requests
-    */
-   public static function canCreate() {
-      return true;
-   }
-
-   /**
-    * Check if current user have the right to read requests
-    *
-    * @return boolean True if he can read requests
-    */
-   public static function canView() {
-      return true;
-   }
+   static public $items_id = 'plugin_formcreator_forms_id';
 
    /**
     * Returns the type name with consideration of plural
@@ -140,15 +125,19 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
    public function post_purgeItem() {
       global $DB;
 
-      $table = self::getTable();
-      $query = "UPDATE `$table` SET
-                  `order` = `order` - 1
-                WHERE `order` > {$this->fields['order']}
-                AND plugin_formcreator_forms_id = {$this->fields['plugin_formcreator_forms_id']}";
-      $DB->query($query);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $DB->update(
+         self::getTable(),
+         new QueryExpression("`order` = `order` - 1"),
+         [
+            'order' => ['>', $this->fields['order']],
+            $formFk => $this->fields[$formFk]
+         ]
+      );
 
+      $sectionFk = PluginFormcreatorSection::getForeignKeyField();
       $question = new PluginFormcreatorQuestion();
-      $question->deleteByCriteria(['plugin_formcreator_sections_id' => $this->getID()], 1);
+      $question->deleteByCriteria([$sectionFk => $this->getID()], 1);
    }
 
    /**
@@ -157,100 +146,19 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
     * @return integer|boolean ID of the new section, false otherwise
     */
    public function duplicate() {
-      global $DB;
+      $linker = new PluginFormcreatorLinker();
 
-      $oldSectionId        = $this->getID();
-      $newSection          = new static();
-      $section_question    = new PluginFormcreatorQuestion();
-      $question_condition  = new PluginFormcreatorQuestion_Condition();
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $export = $this->export(true);
+      $newSectionId = static::import($linker, $export, $this->fields[$formFk]);
 
-      $tab_questions       = [];
-
-      $row = $this->fields;
-      unset($row['id'],
-            $row['uuid']);
-
-      // escape text fields
-      foreach (['name'] as $key) {
-         $row[$key] = $DB->escape($row[$key]);
-      }
-
-      $newSection_id = $newSection->add($row);
-      if ($newSection_id === false) {
+      if ($newSectionId === false) {
          return false;
       }
+      $linker->linkPostponed();
 
-      // Form questions
-      $rows = $DB->request([
-         'FROM'  => $section_question::getTable(),
-         'WHERE' => [
-            'plugin_formcreator_sections_id' => $oldSectionId
-         ],
-         'ORDER' => 'order ASC'
-      ]);
-      foreach ($rows as $questions_id => $row) {
-         unset($row['id'],
-               $row['uuid']);
-         $row['plugin_formcreator_sections_id'] = $newSection_id;
-         $row['_skip_checks'] = true;
-
-         // escape text fields
-         foreach (['name', 'description'] as $key) {
-            $row[$key] = $DB->escape($row[$key]);
-         }
-
-         if (!$new_questions_id = $section_question->add($row)) {
-            return false;
-         }
-
-         $tab_questions[$questions_id] = $new_questions_id;
-      }
-
-      // Form questions parameters
-      foreach ($tab_questions as $questions_id => $new_questions_id) {
-         $oldQuestion = new PluginFormcreatorQuestion();
-         $oldQuestion->getFromDB($questions_id);
-         $this->field = PluginFormcreatorFields::getFieldInstance(
-            $oldQuestion->getField('fieldtype'),
-            $oldQuestion
-         );
-         $parameters = $this->field->getParameters();
-         foreach ($parameters as $parameter) {
-            if (!$parameter->isNewItem()) {
-               // Should always happen
-               $newQuestion = new PluginFormcreatorQuestion();
-               $newQuestion->getFromDB($new_questions_id);
-               $parameter = $parameter->duplicate($newQuestion, $tab_questions);
-               $parameter->add($parameter->fields);
-            }
-         }
-      }
-
-      // Form questions conditions
-      if (count($tab_questions) > 0) {
-         $rows = $DB->request([
-            'FROM'    => $question_condition::getTable(),
-            'WHERE'   => [
-               'plugin_formcreator_questions_id' => $tab_questions
-            ]
-         ]);
-         foreach ($rows as $row) {
-            unset($row['id'],
-                  $row['uuid']);
-            if (isset($tab_questions[$row['show_field']])) {
-               // update show_field if id in show_field belongs to the section being duplicated
-               $row['show_field'] = $tab_questions[$row['show_field']];
-            }
-            $row['plugin_formcreator_questions_id'] = $tab_questions[$row['plugin_formcreator_questions_id']];
-            if (!$question_condition->add($row)) {
-               return false;
-            }
-         }
-      }
-
-      return $newSection_id;
+      return $newSectionId;
    }
-
 
    public function moveUp() {
       $order         = $this->fields['order'];
@@ -304,123 +212,91 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       }
    }
 
-   /**
-    * Import a form's section into the db
-    * @see PluginFormcreatorForm::importJson
-    *
-    * @param  integer $forms_id  id of the parent form
-    * @param  array   $section the section data (match the section table)
-    * @return integer the section's id
-    */
-   /*
-   public static function import($forms_id = 0, $section = []) {
-      $item = new self;
-
-      $section['plugin_formcreator_forms_id'] = $forms_id;
-      $section['_skip_checks']                = true;
-
-      if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
-         // add id key
-         $section['id'] = $sections_id;
-
-         // update section
-         $item->update($section);
-      } else {
-         //create section
-         $sections_id = $item->add($section);
-      }
-
-      if ($sections_id
-          && isset($section['_questions'])) {
-         // sort questions by order
-         usort($section['_questions'], function ($a, $b) {
-            if ($a['order'] == $b['order']) {
-               return 0;
-            }
-            return ($a['order'] < $b['order']) ? -1 : 1;
-         }
-         );
-
-         foreach ($section['_questions'] as $question) {
-            PluginFormcreatorQuestion::import($sections_id, $question);
-         }
-      }
-
-      return $sections_id;
-   }
-   */
-
-   public static function import(PluginFormcreatorImportLinker $importLinker, $forms_id = 0, $section = []) {
+   public static function import(PluginFormcreatorLinker $linker, $input = [], $containerId = 0) {
       global $DB;
 
-      $item = new self;
+      if (!isset($input['uuid']) && !isset($input['id'])) {
+         throw new ImportFailureException('UUID or ID is mandatory');
+      }
 
-      $section['plugin_formcreator_forms_id'] = $forms_id;
-      $section['_skip_checks']                = true;
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      $input[$formFk]        = $containerId;
+      $input['_skip_checks'] = true;
 
-      // escape text fields
+      $item = new self();
+      // Find an existing section to update, only if an UUID is available
+      $itemId = false;
+       /** @var string $idKey key to use as ID (id or uuid) */
+       $idKey = 'id';
+      if (isset($input['uuid'])) {
+         // Try to find an existing item to update
+         $idKey = 'uuid';
+         $itemId = plugin_formcreator_getFromDBByField(
+           $item,
+           'uuid',
+           $input['uuid']
+         );
+      }
+
+      // Escape text fields
       foreach (['name'] as $key) {
-         $section[$key] = $DB->escape($section[$key]);
+         $input[$key] = $DB->escape($input[$key]);
       }
 
-      if ($sections_id = plugin_formcreator_getFromDBByField($item, 'uuid', $section['uuid'])) {
-         // add id key
-         $section['id'] = $sections_id;
-
-         // update section
-         $item->update($section);
+      // Add or update section
+      $originalId = $input[$idKey];
+      if ($itemId !== false) {
+         $input['id'] = $itemId;
+         $item->update($input);
       } else {
-         //create section
-         $sections_id = $item->add($section);
+         unset($input['id']);
+         $itemId = $item->add($input);
+      }
+      if ($itemId === false) {
+         throw new ImportFailureException('failed to add or update the item');
       }
 
-      if ($sections_id
-          && isset($section['_questions'])) {
-         $importLinker->addImportedObject($section['uuid'], $item);
+      // add the section to the linker
+      $linker->addObject($originalId, $item);
+
+      if (isset($input['_questions'])) {
          // sort questions by order
-         usort($section['_questions'], function ($a, $b) {
+         usort($input['_questions'], function ($a, $b) {
             if ($a['order'] == $b['order']) {
                return 0;
             }
             return ($a['order'] < $b['order']) ? -1 : 1;
-         }
-         );
+         });
 
-         foreach ($section['_questions'] as $question) {
-            PluginFormcreatorQuestion::import($importLinker, $sections_id, $question);
+         foreach ($input['_questions'] as $question) {
+            PluginFormcreatorQuestion::import($linker, $question, $itemId);
          }
       }
 
-      return $sections_id;
+      return $itemId;
    }
 
-   /**
-    * Export in an array all the data of the current instanciated section
-    * @param boolean $remove_uuid remove the uuid key
-    *
-    * @return array the array with all data (with sub tables)
-    */
    public function export($remove_uuid = false) {
       global $DB;
 
-      if (!$this->getID()) {
+      if ($this->isNewItem()) {
          return false;
       }
 
-      $form_question = new PluginFormcreatorQuestion;
       $section       = $this->fields;
 
       // remove key and fk
-      unset($section['id'],
-            $section['plugin_formcreator_forms_id']);
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      unset($section[$formFk]);
 
       // get questions
+      $form_question = new PluginFormcreatorQuestion;
       $section['_questions'] = [];
       $all_questions = $DB->request([
          'SELECT' => ['id'],
          'FROM'   => $form_question::getTable(),
          'WHERE'  => [
-            'plugin_formcreator_sections_id' => $this->getID()
+            self::getForeignKeyField() => $this->getID()
          ]
       ]);
       foreach ($all_questions as $question) {
@@ -429,9 +305,12 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
          }
       }
 
+      // remove ID or UUID
+      $idToRemove = 'id';
       if ($remove_uuid) {
-         $section['uuid'] = '';
+         $idToRemove = 'uuid';
       }
+      unset($section[$idToRemove]);
 
       return $section;
    }
@@ -462,47 +341,154 @@ class PluginFormcreatorSection extends CommonDBChild implements PluginFormcreato
       return $sections;
    }
 
-   public function showSubForm($ID) {
+   public function showForm($ID, $options = []) {
       if ($ID == 0) {
-         $name          = '';
-         $uuid          = '';
+         $title =  __('Add a section', 'formcreator');
       } else {
-         $name          = $this->fields['name'];
-         $uuid          = $this->fields['uuid'];
+         $title =  __('Edit a section', 'formcreator');
       }
-      echo '<form name="form_section" method="post" action="'.static::getFormURL().'">';
+      echo '<form name="plugin_formcreator_form" method="post" action="'.static::getFormURL().'">';
       echo '<table class="tab_cadre_fixe">';
+     
       echo '<tr>';
-      echo '<th colspan="2">';
-      if ($ID == 0) {
-         echo  __('Add a section', 'formcreator');
-      } else {
-         echo  __('Edit a section', 'formcreator');
-      }
+      echo '<th colspan="4">';
+      echo $title;
       echo '</th>';
       echo '</tr>';
 
-      echo '<tr class="line0">';
+      echo '<tr>';
       echo '<td width="20%">'.__('Title').' <span style="color:red;">*</span></td>';
-      echo '<td width="70%"><input type="text" name="name" style="width:100%;" value="'.$name.'" class="required"></td>';
-      echo '</tr>';
-
-      echo '<tr class="line1">';
-      echo '<td colspan="2" class="center">';
-      echo '<input type="hidden" name="id" value="'.$ID.'" />';
-      echo '<input type="hidden" name="uuid" value="'.$uuid.'" />';
-      echo '<input type="hidden" name="plugin_formcreator_forms_id" value="'.intval($_REQUEST['form_id']).'" />';
-      if ($ID == 0) {
-         echo '<input type="hidden" name="add" value="1" />';
-         echo '<input type="submit" name="add" class="submit_button" value="'.__('Add').'" />';
-      } else {
-         echo '<input type="hidden" name="update" value="1" />';
-         echo '<input type="submit" name="update" class="submit_button" value="'.__('Edit').'" />';
-      }
+      echo '<td colspan="3">';
+      echo Html::input('name', ['style' => 'width: calc(100% - 20px)', 'value' => $this->fields['name']]);
       echo '</td>';
       echo '</tr>';
 
-      echo '</table>';
+      $form = new PluginFormcreatorForm();
+      $form->getFromDBBySection($this);
+      $condition = new PluginFormcreatorCondition();
+      $condition->showConditionsForItem($form, $this);
+
+      echo '<tr>';
+      echo '<td colspan="4" class="center">';
+      $formFk = PluginFormcreatorForm::getForeignKeyField();
+      echo Html::hidden('id', ['value' => $ID]);
+      echo Html::hidden('uuid', ['value' => $this->fields['uuid']]);
+      echo Html::hidden($formFk, ['value' => $this->fields[$formFk]]);
+      echo '</td>';
+      echo '</tr>';
+
+      $this->showFormButtons($options + [
+         'candel' => false
+      ]);
       Html::closeForm();
+   }
+
+   /**
+    * Get either:
+    *  - section and questions of the target parent form
+    *  - questions of target section
+    *
+    * @param int $parent target parent form
+    * @param int $id target section
+    * @return array
+    */
+   public static function getFullData($parent, $id = null) {
+      global $DB;
+
+      if ($parent) {
+         $data = [];
+         $data['_sections'] = iterator_to_array($DB->request([
+            'FROM' => \PluginFormcreatorSection::getTable(),
+            'WHERE' => ["plugin_formcreator_forms_id" => $parent]
+         ]));
+
+         $ids = [];
+         foreach ($data['_sections'] as $section) {
+            $ids[] = $section['id'];
+         }
+
+         if (!count($ids)) {
+            $ids[] = -1;
+         }
+
+         $data = $data + \PluginFormcreatorQuestion::getFullData($ids);
+      } else {
+         if ($id == null) {
+            throw new \InvalidArgumentException(
+               "Parameter 'id' can't be null if parameter 'parent' is not specified"
+            );
+         }
+
+         $data = \PluginFormcreatorQuestion::getFullData(null, $id);
+      }
+
+      return $data;
+   }
+
+   public function post_getFromDB() {
+      // Set additional data for the API
+      if (isAPI()) {
+         $this->fields += self::getFullData(null, $this->fields['id']);
+      }
+   }
+
+   /**
+    * Updates the conditions of the question
+    * @param array $input
+    * @return boolean true if success, false otherwise
+    */
+    public function updateConditions($input) {
+      if (!isset($input['plugin_formcreator_questions_id']) || !isset($input['show_condition'])
+         || !isset($input['show_value']) || !isset($input['show_logic'])) {
+         return  false;
+      }
+
+      if (!is_array($input['plugin_formcreator_questions_id']) || !is_array($input['show_condition'])
+         || !is_array($input['show_value']) || !is_array($input['show_logic'])) {
+         return false;
+      }
+
+      // All arrays of condition exists
+      if ($input['show_rule'] == PluginFormcreatorCondition::SHOW_RULE_ALWAYS) {
+         return false;
+      }
+
+      if (!(count($input['plugin_formcreator_questions_id']) == count($input['show_condition'])
+            && count($input['show_value']) == count($input['show_logic'])
+            && count($input['plugin_formcreator_questions_id']) == count($input['show_value']))) {
+         return false;
+      }
+
+      // Delete all existing conditions for the question
+      $condition = new PluginFormcreatorCondition();
+      $condition->deleteByCriteria([
+         'itemtype' => static::class,
+         'items_id' => $input['id'],
+      ]);
+
+      // Arrays all have the same count and have at least one item
+      $order = 0;
+      while (count($input['plugin_formcreator_questions_id']) > 0) {
+         $order++;
+         $value            = array_shift($input['show_value']);
+         $questionID       = (int) array_shift($input['plugin_formcreator_questions_id']);
+         $showCondition    = html_entity_decode(array_shift($input['show_condition']));
+         $showLogic        = array_shift($input['show_logic']);
+         $condition = new PluginFormcreatorCondition();
+         $condition->add([
+            'itemtype'                        => static::class,
+            'items_id'                        => $input['id'],
+            'plugin_formcreator_questions_id' => $questionID,
+            'show_condition'                  => $showCondition,
+            'show_value'                      => $value,
+            'show_logic'                      => $showLogic,
+            'order'                           => $order,
+         ]);
+         if ($condition->isNewItem()) {
+            return false;
+         }
+      }
+
+      return true;
    }
 }

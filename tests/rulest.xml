@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="glpi">
+  <description>GLPI Coding standard</description>
+
+  <rule ref="VariableAnalysis">
+    <properties>
+        <property name="allowUnusedFunctionParameters" value="true"/>
+    </properties>
+  </rule>
+  <!-- cameCase format for methods and functions names -->
+  <!--rule ref="Generic.NamingConventions.CamelCapsFunctionName" /-->
+</ruleset>

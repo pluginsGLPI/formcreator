@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -45,7 +44,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => '',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -58,9 +57,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
-            'expectedIsValid' => true
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
          [
             'fields'          => [
@@ -71,7 +70,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => 'a',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -84,9 +83,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too short (minimum 5 characters): question',
          ],
          [
             'fields'          => [
@@ -97,7 +96,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'default_values'  => 'short',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -110,9 +109,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too short (minimum 6 characters): question',
          ],
          [
             'fields'          => [
@@ -120,10 +119,10 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => 'very long',
+               'default_values'  => 'very very long',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'always',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -136,9 +135,9 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too long (maximum 8 characters): question',
          ],
          [
             'fields'          => [
@@ -146,10 +145,10 @@ class PluginFormcreatorTextField extends CommonTestCase {
                'name'            => 'question',
                'required'        => '0',
                'show_empty'      => '0',
-               'default_values'  => 'very long',
+               'default_values'  => 'very very long',
                'values'          => "",
                'order'           => '1',
-               'show_rule'       => 'good',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
                '_parameters'     => [
                   'text' => [
                      'range' => [
@@ -162,9 +161,35 @@ class PluginFormcreatorTextField extends CommonTestCase {
                   ]
                ],
             ],
-            'data'            => null,
             'expectedValue'   => '1',
-            'expectedIsValid' => false
+            'expectedIsValid' => false,
+            'expectedMessage' => 'The text is too long (maximum 8 characters): question',
+         ],
+         'regex with escaped chars' => [
+            'fields'          => [
+               'fieldtype'       => 'text',
+               'name'            => 'question',
+               'required'        => '0',
+               'show_empty'      => '0',
+               'default_values'  => '',
+               'values'          => "",
+               'order'           => '1',
+               'show_rule'       => \PluginFormcreatorCondition::SHOW_RULE_ALWAYS,
+               '_parameters'     => [
+                  'text' => [
+                     'range' => [
+                        'range_min' => '',
+                        'range_max' => '',
+                     ],
+                     'regex' => [
+                        'regex' => '/[0-9]{2}\\\\.[0-9]{3}\\\\.[0-9]{3}\\\\/[0-9]{4}-[0-9]{2}/'
+                     ]
+                  ]
+               ],
+            ],
+            'expectedValue'   => '',
+            'expectedIsValid' => true,
+            'expectedMessage' => '',
          ],
       ];
       return $dataset;
@@ -173,22 +198,29 @@ class PluginFormcreatorTextField extends CommonTestCase {
    /**
     * @dataProvider provider
     */
-   public function testFieldIsValid($fields, $data, $expectedValue, $expectedValidity) {
+   public function testIsValid($fields, $expectedValue, $expectedValidity, $expectedMessage) {
       $section = $this->getSection();
       $fields[$section::getForeignKeyField()] = $section->getID();
 
-      $question = new \PluginFormcreatorQuestion();
-      $question->add($fields);
-      $question->updateParameters($fields);
+      $question = $this->getQuestion($fields);
 
-      $fieldInstance = new \PluginFormcreatorTextField($question->fields, $data);
+      $instance = new \PluginFormcreatorTextField($question);
+      $instance->deserializeValue($fields['default_values']);
+      $_SESSION["MESSAGE_AFTER_REDIRECT"] = [];
 
-      $isValid = $fieldInstance->isValid($fields['default_values']);
-      $this->boolean($isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+      $isValid = $instance->isValid();
+      $this->boolean((boolean) $isValid)->isEqualTo($expectedValidity, json_encode($_SESSION['MESSAGE_AFTER_REDIRECT'], JSON_PRETTY_PRINT));
+
+      // Check error message
+      if (!$isValid) {
+         $this->sessionHasMessage($expectedMessage, ERROR);
+      } else {
+         $this->sessionHasNoMessage();
+      }
    }
 
    public function testGetEmptyParameters() {
-      $instance = $this->newTestedInstance([]);
+      $instance = $this->newTestedInstance($this->getQuestion());
       $output = $instance->getEmptyParameters();
       $this->array($output)
          ->hasKey('range')
@@ -206,7 +238,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
    }
 
    public function testIsAnonymousFormCompatible() {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $output = $instance->isAnonymousFormCompatible();
       $this->boolean($output)->isTrue();
    }
@@ -228,7 +260,7 @@ class PluginFormcreatorTextField extends CommonTestCase {
     * @dataProvider providerSerializeValue
     */
    public function testSerializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $instance->prepareQuestionInputForSave([
          'default_values' => $value,
       ]);
@@ -253,9 +285,20 @@ class PluginFormcreatorTextField extends CommonTestCase {
     * @dataProvider providerDeserializeValue
     */
    public function testDeserializeValue($value, $expected) {
-      $instance = new \PluginFormcreatorTextField([]);
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
       $instance->deserializeValue($value);
       $output = $instance->getValueForTargetText(false);
       $this->string($output)->isEqualTo($expected);
+   }
+
+   public function testCanRequire() {
+      $instance = new \PluginFormcreatorTextField($this->getQuestion());
+      $output = $instance->canRequire();
+      $this->boolean($output)->isTrue();
+   }
+
+   public function testGetDocumentsForTarget() {
+      $instance = $this->newTestedInstance($this->getQuestion());
+      $this->array($instance->getDocumentsForTarget())->hasSize(0);
    }
 }

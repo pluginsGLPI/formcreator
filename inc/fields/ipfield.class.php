@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,17 +35,30 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $common = $common = parent::getDesignSpecializationField();
+      $additions = $common['additions'];
+
+      return [
+         'label' => '',
+         'field' => '',
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => false,
+      ];
+   }
+
    public function show($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
       $ip = Toolbox::getRemoteIpAddress();
       $ip = Html::cleanInputText($ip);
-      echo '<input type="hidden" class="form-control"
-         name="' . $fieldName . '"
-         id="' . $domId . '"
-         value="' . $ip . '" />' . PHP_EOL;
+      echo Html::hidden($fieldName, [
+         'id'     => $domId,
+         'value'  => $ip,
+      ]);
    }
 
    public function serializeValue() {
@@ -88,34 +99,18 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
       return _n('IP address', 'Adresses IP', 1);
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 0,
-         'default_values' => 0,
-         'values'         => 0,
-         'range'          => 0,
-         'show_empty'     => 0,
-         'regex'          => 0,
-         'show_type'      => 0,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
+   public static function canRequire() {
+      return false;
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }
 
       $this->value = $input[$key];
       return true;
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['ip'] = 'showFields(" . implode(', ', $prefs) . ");';";
    }
 
    public function equals($value) {
@@ -136,5 +131,9 @@ class PluginFormcreatorIpField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      return '<i class="fa fa-desktop" aria-hidden="true"></i>';
    }
 }

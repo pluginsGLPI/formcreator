@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -31,33 +29,10 @@
  * ---------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+namespace GlpiPlugin\Formcreator\Exception;
 
-Session::checkRight("entity", UPDATE);
-
-// Check if plugin is activated...
-$plugin = new Plugin();
-if ($plugin->isActivated("formcreator")) {
-   $target = new PluginFormcreatorTarget();
-
-   // Add a new target
-   if (isset($_POST["add"]) && !empty($_POST['plugin_formcreator_forms_id'])) {
-      $target->add($_POST);
-      Html::back();
-
-      // Delete a target
-   } else if (isset($_POST["delete_target"])) {
-      $target->delete($_POST);
-      Html::redirect($CFG_GLPI["root_doc"] . '/plugins/formcreator/front/form.form.php?id=' . $_POST['plugin_formcreator_forms_id']);
-
-   } else if (isset($_GET['id'])) {
-      $target->getFromDB($_GET['id']);
-      Html::redirect(Toolbox::getItemTypeFormURL($target->fields['itemtype']) . '?id=' . $_GET['id']);
-   } else {
-      Html::back();
-   }
-
-   // Or display a "Not found" error
-} else {
-   Html::displayNotFoundError();
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access this file directly");
 }
+
+class ImportFailureException extends \Exception {}

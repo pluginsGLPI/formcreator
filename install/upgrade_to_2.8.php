@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- *
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -30,16 +29,19 @@
  * ---------------------------------------------------------------------
  */
 class PluginFormcreatorUpgradeTo2_8 {
+
+   protected $migration;
+
    /**
     * @param Migration $migration
     */
    public function upgrade(Migration $migration) {
-      global $DB;
+      $this->migration = $migration;
 
       // Rename the plugin
       $plugin = new Plugin();
       $plugin->getFromDBbyDir('formcreator');
-      $success = $plugin->update([
+      $plugin->update([
          'id' => $plugin->getID(),
          'name' => 'Form Creator',
       ]);
@@ -50,5 +52,13 @@ class PluginFormcreatorUpgradeTo2_8 {
          'actor_type',
          "ENUM('creator','validator','person','question_person','group','question_group','supplier','question_supplier','question_actors') NOT NULL"
       );
+
+      // Rename the plugin
+      $plugin = new Plugin();
+      $plugin->getFromDBbyDir('formcreator');
+      $plugin->update([
+         'id' => $plugin->getID(),
+         'name' => 'Form Creator',
+      ]);
    }
 }

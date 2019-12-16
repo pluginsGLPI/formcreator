@@ -21,8 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
- * @author    Thierry Bugier
- * @author    Jérémy Moreau
  * @copyright Copyright © 2011 - 2019 Teclib'
  * @license   http://www.gnu.org/licenses/gpl.txt GPLv3+
  * @link      https://github.com/pluginsGLPI/formcreator/
@@ -37,8 +35,43 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       return true;
    }
 
+   public function getDesignSpecializationField() {
+      $rand = mt_rand();
+
+      $label = '';
+      $field = '';
+
+      $additions = '<tr class="plugin_formcreator_question_specific">';
+      $additions .= '<td>';
+      $additions .= '<label for="dropdown_default_values'.$rand.'">';
+      $additions .= __('Default value');
+      $additions .= '</label>';
+      $additions .= '</td>';
+      $additions .= '<td id="dropdown_default_value_field">';
+      $value = Html::entities_deep($this->question->fields['default_values']);
+      $additions .= Html::input('default_values', [
+         'id' => 'default_values',
+         'value' => $value,
+      ]);
+      $additions .= '</td>';
+      $additions .= '<td></td>';
+      $additions .= '<td></td>';
+      $additions .= '</tr>';
+
+      $common = $common = parent::getDesignSpecializationField();
+      $additions .= $common['additions'];
+
+      return [
+         'label' => $label,
+         'field' => $field,
+         'additions' => $additions,
+         'may_be_empty' => false,
+         'may_be_required' => true,
+      ];
+   }
+
    public function displayField($canEdit = true) {
-      $id           = $this->fields['id'];
+      $id           = $this->question->getID();
       $rand         = mt_rand();
       $fieldName    = 'formcreator_field_' . $id;
       $domId        = $fieldName . '_' . $rand;
@@ -103,8 +136,12 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    private function isValidValue($value) {
+      if (strlen($value) == 0) {
+         return true;
+      } 
+
       if (!empty($value) && !is_numeric($value)) {
-         Session::addMessageAfterRedirect(__('This is not a number:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+         Session::addMessageAfterRedirect(sprintf(__('This is not a number: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
          return false;
       }
 
@@ -115,7 +152,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          $regex = $parameters['regex']->fields['regex'];
          if ($regex !== null && strlen($regex) > 0) {
             if (!preg_match($regex, $value)) {
-               Session::addMessageAfterRedirect(__('Specific format does not match:', 'formcreator') . ' ' . $this->fields['name'], false, ERROR);
+               Session::addMessageAfterRedirect(sprintf(__('Specific format does not match: %s', 'formcreator'), $this->question->fields['name']), false, ERROR);
                return false;
             }
          }
@@ -126,14 +163,14 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
          $rangeMin = $parameters['range']->fields['range_min'];
          $rangeMax = $parameters['range']->fields['range_max'];
          if ($rangeMin > 0 && $value < $rangeMin) {
-            $message = sprintf(__('The following number must be greater than %d:', 'formcreator'), $rangeMin);
-            Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
+            $message = sprintf(__('The following number must be greater than %d: %s', 'formcreator'), $rangeMin, $this->question->fields['name']);
+            Session::addMessageAfterRedirect($message, false, ERROR);
             return false;
          }
 
          if ($rangeMax > 0 && $value > $rangeMax) {
-            $message = sprintf(__('The following number must be lower than %d:', 'formcreator'), $rangeMax);
-            Session::addMessageAfterRedirect($message . ' ' . $this->fields['name'], false, ERROR);
+            $message = sprintf(__('The following number must be lower than %d: %s', 'formcreator'), $rangeMax, $this->question->fields['name']);
+            Session::addMessageAfterRedirect($message, false, ERROR);
             return false;
          }
       }
@@ -150,14 +187,10 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
       $fieldType = $this->getFieldTypeName();
       // Add leading and trailing regex marker automaticaly
       if (isset($input['_parameters'][$fieldType]['regex']['regex']) && !empty($input['_parameters'][$fieldType]['regex']['regex'])) {
-         // Avoid php notice when validating the regular expression
-         set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {});
-         $isValid = !(preg_match($input['_parameters'][$fieldType]['regex']['regex'], null) === false);
-         restore_error_handler();
-
-         if (!$isValid) {
+         $regex = Toolbox::stripslashes_deep($input['_parameters'][$fieldType]['regex']['regex']);
+         $success = $this->checkRegex($regex);
+         if (!$success) {
             Session::addMessageAfterRedirect(__('The regular expression is invalid', 'formcreator'), false, ERROR);
-            $success = false;
          }
       }
       if (!$success) {
@@ -177,7 +210,7 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
    }
 
    public function parseAnswerValues($input, $nonDestructive = false) {
-      $key = 'formcreator_field_' . $this->fields['id'];
+      $key = 'formcreator_field_' . $this->question->getID();
       if (!is_string($input[$key])) {
          return false;
       }
@@ -187,24 +220,8 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
        return true;
    }
 
-   public static function getPrefs() {
-      return [
-         'required'       => 1,
-         'default_values' => 1,
-         'values'         => 0,
-         'range'          => 1,
-         'show_empty'     => 0,
-         'regex'          => 1,
-         'show_type'      => 1,
-         'dropdown_value' => 0,
-         'glpi_objects'   => 0,
-         'ldap_values'    => 0,
-      ];
-   }
-
-   public static function getJSFields() {
-      $prefs = self::getPrefs();
-      return "tab_fields_fields['float'] = 'showFields(" . implode(', ', $prefs) . ");';";
+   public static function canRequire() {
+      return true;
    }
 
    public function getEmptyParameters() {
@@ -251,5 +268,11 @@ class PluginFormcreatorFloatField extends PluginFormcreatorField
 
    public function isAnonymousFormCompatible() {
       return true;
+   }
+
+   public function getHtmlIcon() {
+      global $CFG_GLPI;
+
+      return '<img src="' . $CFG_GLPI['root_doc'] . '/plugins/formcreator/pics/ui-float-field.png" title="" />';
    }
 }
